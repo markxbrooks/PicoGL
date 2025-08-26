@@ -40,7 +40,7 @@ from picogl.buffers.vertex.aliases import NAME_ALIASES
 from picogl.logger import Logger as log
 
 
-class VertexArrayGroup(VertexBase):
+class VertexBufferGroup(VertexBase):
     """Container for legacy VBOs, mimicking VAO interface."""
 
     def __init__(self):
