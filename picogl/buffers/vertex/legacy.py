@@ -104,7 +104,7 @@ class VertexBufferGroup(VertexBase):
         except Exception as ex:
             log.error(f"error {ex} occurred")
 
-    def draw(self, count: int = 0, mode=GL_POINTS):
+    def draw(self, index_count: int = 0, mode=GL_POINTS):
         """
         draw
 
@@ -113,14 +113,14 @@ class VertexBufferGroup(VertexBase):
         Enable legacy client states, bind VBOs, draw, and clean up.
         """
 
-        if not count:
-            count = self.index_count
+        if not index_count:
+            index_count = self.index_count
         with self:
             with legacy_client_states(GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_NORMAL_ARRAY):
                 for vbo in self.named_vbos.values():
                     vbo.bind()
                 # Issue draw call
-                glDrawArrays(mode, 0, count)
+                glDrawArrays(mode, 0, index_count)
 
     def add_vbo(self, name: str, **kwargs):
         """High-level shortcut: pick the right VBO subclass and delegate."""

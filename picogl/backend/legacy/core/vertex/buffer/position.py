@@ -2,7 +2,7 @@ import numpy as np
 from OpenGL.GL import glDrawElements, glVertexPointer
 from OpenGL.raw.GL._types import GL_BYTE, GL_FLOAT, GL_INT, GL_SHORT
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT
-from OpenGL.raw.GL.VERSION.GL_1_1 import GL_DOUBLE, GL_VERTEX_ARRAY, glEnableClientState
+from OpenGL.raw.GL.VERSION.GL_1_1 import GL_DOUBLE, GL_VERTEX_ARRAY, glEnableClientState, glDrawArrays
 from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ARRAY_BUFFER
 
 from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
@@ -26,6 +26,12 @@ class LegacyPositionVBO(LegacyVBO):
         self.data = data
         if data is not None:
             self.set_data(data)
+
+    def draw_arrays(self, count: int = None, mode: int = GL_TRIANGLES):
+        if count is None:
+            count = len(self.data) // self.size
+        with legacy_client_states(GL_VERTEX_ARRAY):
+            glDrawArrays(mode, 0, count)
 
     def draw(self, index_count: int = None, index_type: int = GL_UNSIGNED_INT, mode: int = GL_TRIANGLES):
         """
