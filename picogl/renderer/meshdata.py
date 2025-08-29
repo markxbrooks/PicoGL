@@ -25,6 +25,15 @@ class MeshData:
 
         self.vertex_count = len(vbo.flatten()) // 3 if vbo is not None else None
 
+    def as_ribbon_args(self) -> dict:
+        """Convert into arguments for setup_ribbon_buffers."""
+        return {
+            "positions": self.vbo,
+            "colors": self.cbo,
+            "normals": self.nbo,
+            "indices": self.ebo,
+        }
+
     def __str__(self):
         return f"{self.vbo} {self.uvs} {self.cbo} "
 
