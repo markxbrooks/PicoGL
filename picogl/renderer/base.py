@@ -4,8 +4,10 @@ Base Renderer Class
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import glFlush
 
+from picogl.renderer.abstract import AbstractRenderer
 
-class RendererBase:
+
+class RendererBase(AbstractRenderer):
     """Base Renderer Class"""
 
     def __init__(self, parent: object = None):
@@ -79,3 +81,7 @@ class RendererBase:
         draw_selection
         """
         raise NotImplementedError("Subclasses must implement the method.")
+
+    def set_visibility(self, visible: bool) -> None:
+        """Set the visibility of the object."""
+        pass

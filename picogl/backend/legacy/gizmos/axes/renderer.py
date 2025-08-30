@@ -12,9 +12,10 @@ from typing import Optional, Dict, Tuple
 
 from elmo.gl.buffers.factory.abstract import create_layout, create_common_attributes
 from picogl.backend.legacy.gizmos.axes.array import AxesVBG
-from picogl.backend.legacy.gizmos.axes.unit_cell_coords import UnitCellCoordinateGenerator
+from elmo.xtal.unit_cell_coords import UnitCellCoordinateGenerator
 
 from picogl.logger import Logger as log
+from picogl.renderer.abstract import AbstractRenderer
 
 # Initialize GLUT once when the module is imported
 try:
@@ -27,7 +28,7 @@ else:
     GLUT_AVAILABLE = True
 
 
-class AxesRenderer:
+class AxesRenderer(AbstractRenderer):
     """
     Renders coordinate axes as colored lines with labels.
 
@@ -61,53 +62,35 @@ class AxesRenderer:
                 - 'alpha', 'beta', 'gamma': Unit cell angles in degrees
                 - 'space_group': Space group information (optional)
         """
+
         if not unit_cell_info:
             log.warning("No unit cell information provided")
             return
 
         self.unit_cell_info = unit_cell_info
-        
-        # Use Gemmi to generate crystallographically accurate coordinates
-        if self.coord_generator.set_unit_cell(unit_cell_info):
-            log.info("✅ Gemmi unit cell set successfully")
-            self._generate_geometry_with_gemmi()
-        else:
-            log.warning("⚠️ Gemmi unit cell setup failed, falling back to simplified geometry")
-            self._generate_geometry()
-            
+        self._generate_geometry()
         self.initialize_buffers()
-        # Note: is_initialized is now set in initialize_buffers() after successful initialization
-        
-        # Log unit cell information
-        if self.coord_generator.unit_cell:
-            volume = self.coord_generator.get_unit_cell_volume()
-            log.info(
-                f"✅ Axes set for unit cell: a={unit_cell_info['a']:.2f}, "
-                f"b={unit_cell_info['b']:.2f}, c={unit_cell_info['c']:.2f} Å"
-            )
-            if volume:
-                log.info(f"📦 Unit cell volume: {volume:.1f} Å³")
-        else:
-            log.info(
-                f"✅ Axes set for unit cell: a={unit_cell_info['a']:.2f}, "
-                f"b={unit_cell_info['b']:.2f}, c={unit_cell_info['c']:.2f} Å"
-            )
+        self.is_initialized = True
+        log.info(
+            f"✅ Axes set for unit cell: a={unit_cell_info['a']:.2f}, "
+            f"b={unit_cell_info['b']:.2f}, c={unit_cell_info['c']:.2f} Å"
+        )
 
     def _generate_geometry(self) -> None:
-        """Generate simplified axes vertices and colors (fallback method)."""
+        """Generate the axes vertices and colors."""
         # Create three axes: X (red), Y (green), Z (blue)
         # Each axis is a line from origin to axis_length
         self.vertices = np.array([
             # X-axis (red)
-            0.0, 0.0, 0.0,      # Origin
+            0.0, 0.0, 0.0,  # Origin
             self.axis_length, 0.0, 0.0,  # X endpoint
-            
-            # Y-axis (green)  
-            0.0, 0.0, 0.0,      # Origin
+
+            # Y-axis (green)
+            0.0, 0.0, 0.0,  # Origin
             0.0, self.axis_length, 0.0,  # Y endpoint
-            
+
             # Z-axis (blue)
-            0.0, 0.0, 0.0,      # Origin
+            0.0, 0.0, 0.0,  # Origin
             0.0, 0.0, self.axis_length,  # Z endpoint
         ], dtype=np.float32)
         

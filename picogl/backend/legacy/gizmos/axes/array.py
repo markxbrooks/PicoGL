@@ -61,5 +61,5 @@ class AxesVBG(VertexBufferGroup):
                     glDisableClientState(GL_VERTEX_ARRAY)
                     
         except Exception as e:
-            log.error(f"Error in AxesVBG.draw(): {e}")
+            print(f"Error in AxesVBG.draw(): {e}")
             raise
