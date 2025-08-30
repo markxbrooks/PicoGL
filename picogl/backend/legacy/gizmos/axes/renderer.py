@@ -8,9 +8,11 @@ as colored lines with labels.
 import numpy as np
 from OpenGL import GL
 from OpenGL.GLUT import glutInit, glutBitmapCharacter, GLUT_BITMAP_HELVETICA_12
+from typing import Optional, Dict, Tuple
 
 from elmo.gl.buffers.factory.abstract import create_layout, create_common_attributes
 from picogl.backend.legacy.gizmos.axes.array import AxesVBG
+from picogl.backend.legacy.gizmos.axes.unit_cell_coords import UnitCellCoordinateGenerator
 
 from picogl.logger import Logger as log
 
@@ -45,10 +47,13 @@ class AxesRenderer:
         self.line_width = 2.0
         self.axis_length = 50.0  # Length of axes in Angstroms
         self.label_offset = 5.0  # Offset for labels from axis endpoints
+        
+        # Initialize the Gemmi-based coordinate generator
+        self.coord_generator = UnitCellCoordinateGenerator()
 
     def set_unit_cell(self, unit_cell_info: dict) -> None:
         """
-        Set the unit cell parameters and generate the geometry.
+        Set the unit cell parameters and generate the geometry using Gemmi.
 
         Args:
             unit_cell_info: Dictionary containing unit cell parameters:
@@ -61,16 +66,35 @@ class AxesRenderer:
             return
 
         self.unit_cell_info = unit_cell_info
-        self._generate_geometry()
+        
+        # Use Gemmi to generate crystallographically accurate coordinates
+        if self.coord_generator.set_unit_cell(unit_cell_info):
+            log.info("✅ Gemmi unit cell set successfully")
+            self._generate_geometry_with_gemmi()
+        else:
+            log.warning("⚠️ Gemmi unit cell setup failed, falling back to simplified geometry")
+            self._generate_geometry()
+            
         self.initialize_buffers()
         # Note: is_initialized is now set in initialize_buffers() after successful initialization
-        log.info(
-            f"✅ Axes set for unit cell: a={unit_cell_info['a']:.2f}, "
-            f"b={unit_cell_info['b']:.2f}, c={unit_cell_info['c']:.2f} Å"
-        )
+        
+        # Log unit cell information
+        if self.coord_generator.unit_cell:
+            volume = self.coord_generator.get_unit_cell_volume()
+            log.info(
+                f"✅ Axes set for unit cell: a={unit_cell_info['a']:.2f}, "
+                f"b={unit_cell_info['b']:.2f}, c={unit_cell_info['c']:.2f} Å"
+            )
+            if volume:
+                log.info(f"📦 Unit cell volume: {volume:.1f} Å³")
+        else:
+            log.info(
+                f"✅ Axes set for unit cell: a={unit_cell_info['a']:.2f}, "
+                f"b={unit_cell_info['b']:.2f}, c={unit_cell_info['c']:.2f} Å"
+            )
 
     def _generate_geometry(self) -> None:
-        """Generate the axes vertices and colors."""
+        """Generate simplified axes vertices and colors (fallback method)."""
         # Create three axes: X (red), Y (green), Z (blue)
         # Each axis is a line from origin to axis_length
         self.vertices = np.array([
@@ -100,6 +124,40 @@ class AxesRenderer:
             0.0, 0.0, 1.0,      # Origin
             0.0, 0.0, 1.0,      # Z endpoint
         ], dtype=np.float32)
+        
+    def _generate_geometry_with_gemmi(self) -> None:
+        """Generate crystallographically accurate axes using Gemmi."""
+        try:
+            # Use Gemmi to generate proper crystallographic axes
+            result = self.coord_generator.generate_axes_coordinates(self.axis_length)
+            
+            if result is not None:
+                vertices, colors = result
+                
+                # Flatten the vertices array for OpenGL
+                self.vertices = vertices.flatten().astype(np.float32)
+                self.colors = colors.flatten().astype(np.float32)
+                
+                log.info("✅ Generated crystallographically accurate axes using Gemmi")
+                
+                # Log the actual axis vectors for debugging
+                if self.coord_generator.unit_cell:
+                    import gemmi
+                    a_vec = self.coord_generator.unit_cell.orthogonalize(gemmi.Fractional(1.0, 0.0, 0.0))
+                    b_vec = self.coord_generator.unit_cell.orthogonalize(gemmi.Fractional(0.0, 1.0, 0.0))
+                    c_vec = self.coord_generator.unit_cell.orthogonalize(gemmi.Fractional(0.0, 0.0, 1.0))
+                    
+                    log.debug(f"📐 A-axis vector: [{a_vec[0]:.2f}, {a_vec[1]:.2f}, {a_vec[2]:.2f}]")
+                    log.debug(f"📐 B-axis vector: [{b_vec[0]:.2f}, {b_vec[1]:.2f}, {b_vec[2]:.2f}]")
+                    log.debug(f"📐 C-axis vector: [{c_vec[0]:.2f}, {b_vec[1]:.2f}, {c_vec[2]:.2f}]")
+            else:
+                log.warning("⚠️ Gemmi coordinate generation failed, falling back to simplified geometry")
+                self._generate_geometry()
+                
+        except Exception as e:
+            log.error(f"Error generating Gemmi geometry: {e}")
+            log.info("Falling back to simplified geometry")
+            self._generate_geometry()
 
     def initialize_buffers(self) -> None:
         """Initialize the vertex buffer objects for rendering."""
@@ -432,7 +490,7 @@ class AxesRenderer:
                 
     def get_status(self) -> dict:
         """Get the current status of the renderer for debugging."""
-        return {
+        status = {
             'is_initialized': self.is_initialized,
             'visible': self.visible,
             'show_labels': self.show_labels,
@@ -443,6 +501,19 @@ class AxesRenderer:
             'line_width': self.line_width,
             'unit_cell_info': self.unit_cell_info
         }
+        
+        # Add Gemmi-specific information if available
+        if self.coord_generator.unit_cell:
+            gemmi_info = self.coord_generator.get_unit_cell_info()
+            if gemmi_info:
+                status['gemmi_unit_cell'] = gemmi_info
+                status['using_gemmi'] = True
+            else:
+                status['using_gemmi'] = False
+        else:
+            status['using_gemmi'] = False
+            
+        return status
         
     def test_render(self) -> bool:
         """Test if the renderer can render by checking all components."""
@@ -510,3 +581,66 @@ class AxesRenderer:
             self.vbg = None
             self.vertices = None
             self.colors = None
+            
+    def get_unit_cell_volume(self) -> Optional[float]:
+        """Get the unit cell volume in cubic Angstroms."""
+        if self.coord_generator.unit_cell:
+            return self.coord_generator.get_unit_cell_volume()
+        return None
+        
+    def get_crystallographic_axes(self) -> Optional[Dict[str, np.ndarray]]:
+        """Get the crystallographic axis vectors in orthogonal coordinates."""
+        if not self.coord_generator.unit_cell:
+            return None
+            
+        try:
+            # Get the unit vectors along crystallographic axes
+            import gemmi
+            a_vec = self.coord_generator.unit_cell.orthogonalize(gemmi.Fractional(1.0, 0.0, 0.0))
+            b_vec = self.coord_generator.unit_cell.orthogonalize(gemmi.Fractional(0.0, 1.0, 0.0))
+            c_vec = self.coord_generator.unit_cell.orthogonalize(gemmi.Fractional(0.0, 0.0, 1.0))
+            
+            return {
+                'a_axis': a_vec,
+                'b_axis': b_vec,
+                'c_axis': c_vec
+            }
+        except Exception as e:
+            log.error(f"Error getting crystallographic axes: {e}")
+            return None
+            
+    def generate_unit_cell_wireframe(self) -> Optional[Tuple[np.ndarray, np.ndarray]]:
+        """Generate a wireframe representation of the unit cell."""
+        if not self.coord_generator.unit_cell:
+            return None
+            
+        try:
+            result = self.coord_generator.generate_unit_cell_edges()
+            if result:
+                corners, edges = result
+                
+                # Convert edges to line segments
+                vertices = []
+                colors = []
+                
+                # Use white color for unit cell edges
+                edge_color = [1.0, 1.0, 1.0]
+                
+                for edge in edges:
+                    start, end = edge
+                    vertices.extend([corners[start], corners[end]])
+                    colors.extend([edge_color, edge_color])
+                
+                # Flatten arrays for OpenGL
+                vertices_array = np.array(vertices, dtype=np.float32).flatten()
+                colors_array = np.array(colors, dtype=np.float32).flatten()
+                
+                return vertices_array, colors_array
+                
+        except Exception as e:
+            log.error(f"Error generating unit cell wireframe: {e}")
+            return None
+            
+    def is_using_gemmi(self) -> bool:
+        """Check if the renderer is using Gemmi for crystallographic calculations."""
+        return self.coord_generator.unit_cell is not None
