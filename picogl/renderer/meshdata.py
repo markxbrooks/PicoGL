@@ -3,6 +3,7 @@ GLContext class
 """
 
 import numpy as np
+from OpenGL import GL
 
 
 class MeshData:
@@ -68,6 +69,36 @@ class MeshData:
         # Simple default: red color per vertex
         colors = np.tile(np.array([1.0, 0.0, 0.0], dtype=np.float32), (vertex_count, 1))
         return colors.reshape(-1)
+
+    def __enter__(self):
+        self.bind()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.unbind()
+
+    def bind(self):
+        if self.vbo is not None:
+            GL.glEnableClientState(GL.GL_VERTEX_ARRAY)
+            GL.glVertexPointer(3, GL.GL_FLOAT, 0, self.vbo)
+        if self.nbo is not None:
+            GL.glEnableClientState(GL.GL_NORMAL_ARRAY)
+            GL.glNormalPointer(GL.GL_FLOAT, 0, self.nbo)
+        if self.cbo is not None:
+            GL.glEnableClientState(GL.GL_COLOR_ARRAY)
+            GL.glColorPointer(3, GL.GL_FLOAT, 0, self.cbo)
+        if self.uvs is not None:
+            GL.glEnableClientState(GL.GL_TEXTURE_COORD_ARRAY)
+            GL.glTexCoordPointer(2, GL.GL_FLOAT, 0, self.uvs)
+
+    def unbind(self):
+        if self.uvs is not None:
+            GL.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY)
+        if self.cbo is not None:
+            GL.glDisableClientState(GL.GL_COLOR_ARRAY)
+        if self.nbo is not None:
+            GL.glDisableClientState(GL.GL_NORMAL_ARRAY)
+        if self.vbo is not None:
+            GL.glDisableClientState(GL.GL_VERTEX_ARRAY)
 
     @classmethod
     def from_raw(
@@ -135,3 +166,22 @@ class MeshData:
             ebo=indices_arr
         )
 
+    def draw(self, color: tuple, line_width: float = 1.0, mode: int = GL.GL_TRIANGLES, fill: bool = False):
+        """draw"""
+        if fill:
+            fill_mode = GL.GL_FILL
+        else:
+            fill_mode = GL.GL_LINE
+        # Set material properties for the isosurface
+        GL.glLineWidth(line_width)
+        GL.glColor4f(0.0, 0.0, 1.0, 0.8)
+
+        # Draw as wireframe for better visibility
+        GL.glPolygonMode(GL.GL_FRONT_AND_BACK, fill_mode)
+        GL.glColor3f(*color)
+        # Draw the mesh
+        GL.glDrawElements(
+            mode, len(self.ebo) * 3, GL.GL_UNSIGNED_INT, self.ebo
+        )
+        # Restore fill mode
+        GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL)
