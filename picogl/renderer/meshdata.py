@@ -166,22 +166,46 @@ class MeshData:
             ebo=indices_arr
         )
 
-    def draw(self, color: tuple, line_width: float = 1.0, mode: int = GL.GL_TRIANGLES, fill: bool = False):
-        """draw"""
+    def draw(self, color: tuple = None, line_width: float = 1.0, mode: int = GL.GL_TRIANGLES, fill: bool = False):
+        """
+        Draw the mesh with optional color override.
+        
+        Args:
+            color: Optional color override. If None and vertex colors exist, uses vertex colors.
+            line_width: Line width for wireframe mode
+            mode: OpenGL drawing mode
+            fill: Whether to fill or use wireframe
+        """
         if fill:
             fill_mode = GL.GL_FILL
         else:
             fill_mode = GL.GL_LINE
+            
         # Set material properties for the isosurface
         GL.glLineWidth(line_width)
-        GL.glColor4f(0.0, 0.0, 1.0, 0.8)
+        
+        # Check if we should use vertex colors or override color
+        if color is None and self.cbo is not None:
+            # Use vertex colors (for fo-fc maps)
+            GL.glEnableClientState(GL.GL_COLOR_ARRAY)
+            GL.glColorPointer(3, GL.GL_FLOAT, 0, self.cbo)
+        else:
+            # Use override color
+            if color is None:
+                color = (0.0, 0.0, 1.0)  # Default blue
+            GL.glColor3f(*color)
 
         # Draw as wireframe for better visibility
         GL.glPolygonMode(GL.GL_FRONT_AND_BACK, fill_mode)
-        GL.glColor3f(*color)
+        
         # Draw the mesh
         GL.glDrawElements(
             mode, len(self.ebo) * 3, GL.GL_UNSIGNED_INT, self.ebo
         )
+        
         # Restore fill mode
         GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL)
+        
+        # Clean up color array state if we used it
+        if color is None and self.cbo is not None:
+            GL.glDisableClientState(GL.GL_COLOR_ARRAY)
