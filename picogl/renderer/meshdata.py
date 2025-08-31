@@ -103,22 +103,22 @@ class MeshData:
     @classmethod
     def from_raw(
         cls,
-        vertices,
-        normals=None,
-        uvs=None,
-        colors=None,
-        indices=None,
-        color_per_vertex=None,  # optional override for generated colors
+        vertices: np.ndarray,
+        normals: np.ndarray = None,
+        uvs: np.ndarray = None,
+        colors: np.ndarray = None,
+        indices: np.ndarray = None,
+        color_per_vertex: np.ndarray = None,  # optional override for generated colors
     ):
         """
         Build a MeshData from raw/python inputs.
 
-        - vertices: required, list/array of x,y,z triplets
-        - normals: optional, list/array of x,y,z triplets
-        - uvs: optional, list/array of u,v pairs
-        - indices: optional int indices
-        - colors: optional per-vertex colors (flat float32 array)
-        - color_per_vertex: if provided and colors is None, generate per-vertex colors
+        :param vertices: np.ndarray required, list/array of x,y,z triplets
+        :param normals: np.ndarray optional, list/array of x,y,z triplets
+        :param uvs: np.ndarray optional, list/array of u,v pairs
+        :param indices: np.ndarray optional int indices
+        :param colors: np.ndarray optional per-vertex colors (flat float32 array)
+        :param color_per_vertex: np.ndarray if provided and colors is None, generate per-vertex colors
         """
         vbo = cls._to_float32_flat(vertices, "vertices", required=True)
         vertex_count = len(vbo) // 3 if vbo is not None else 0
