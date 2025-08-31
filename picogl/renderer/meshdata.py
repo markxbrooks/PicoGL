@@ -4,6 +4,7 @@ GLContext class
 
 import numpy as np
 from OpenGL import GL
+from OpenGL.GL import GL_BLEND, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA
 
 
 class MeshData:
@@ -166,15 +167,16 @@ class MeshData:
             ebo=indices_arr
         )
 
-    def draw(self, color: tuple = None, line_width: float = 1.0, mode: int = GL.GL_TRIANGLES, fill: bool = False):
+    def draw(self, color: tuple = None, line_width: float = 1.0, mode: int = GL.GL_TRIANGLES, fill: bool = False, alpha: float = 1.0):
         """
-        Draw the mesh with optional color override.
+        Draw the mesh with optional color override and transparency.
         
         Args:
             color: Optional color override. If None and vertex colors exist, uses vertex colors.
             line_width: Line width for wireframe mode
             mode: OpenGL drawing mode
             fill: Whether to fill or use wireframe
+            alpha: Transparency value from 0.0 (opaque) to 1.0 (fully transparent)
         """
         if fill:
             fill_mode = GL.GL_FILL
@@ -184,16 +186,26 @@ class MeshData:
         # Set material properties for the isosurface
         GL.glLineWidth(line_width)
         
+        # Enable alpha blending for transparency
+        if alpha < 1.0:
+            GL.glEnable(GL.GL_BLEND)
+            GL.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
+        else:
+            GL.glDisable(GL.GL_BLEND)
+        
         # Check if we should use vertex colors or override color
         if color is None and self.cbo is not None:
             # Use vertex colors (for fo-fc maps)
             GL.glEnableClientState(GL.GL_COLOR_ARRAY)
             GL.glColorPointer(3, GL.GL_FLOAT, 0, self.cbo)
+            # Note: Alpha blending for vertex colors would require 4-component colors
+            # For now, we'll use the alpha value for the overall transparency
         else:
             # Use override color
             if color is None:
                 color = (0.0, 0.0, 1.0)  # Default blue
-            GL.glColor3f(*color)
+            # Use glColor4f to include alpha value
+            GL.glColor4f(color[0], color[1], color[2], 1.0 - alpha)
 
         # Draw as wireframe for better visibility
         GL.glPolygonMode(GL.GL_FRONT_AND_BACK, fill_mode)
