@@ -4,7 +4,6 @@ GLContext class
 
 import numpy as np
 from OpenGL import GL
-from OpenGL.GL import GL_BLEND, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA
 
 
 class MeshData:

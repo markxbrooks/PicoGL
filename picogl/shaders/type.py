@@ -8,6 +8,7 @@ class ShaderType(str, Enum):
     DEFAULT = "default"
     CALPHAS = "calphas"
     RIBBONS = "ribbons"
+    ISOSURFACE = "isosurface"
 
     def __str__(self):
         return self.value
