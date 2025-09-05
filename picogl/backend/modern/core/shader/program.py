@@ -157,3 +157,6 @@ class ShaderProgram:
 
     def release(self):
         gl.glUseProgram(0)
+
+    def delete(self):
+        self.release()

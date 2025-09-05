@@ -31,12 +31,19 @@ class Atom:
     b_factor: float = 0.0
 
 
+class BondType:
+    SINGLE: str = "single"
+    DOUBLE: str = "double"
+    TRIPLE: str = "triple"
+    AROMATIC: str = "aromatic"
+
+
 @dataclass
 class Bond:
     """Represents a bond between two atoms"""
     atom1_idx: int
     atom2_idx: int
-    bond_type: str = "single"  # single, double, triple, aromatic
+    bond_type: BondType = BondType.SINGLE
 
 
 @dataclass
@@ -71,6 +78,34 @@ class PDBStructure:
         if 0 <= residue_idx < len(self.residues):
             return self.residues[residue_idx].atoms
         return []
+
+
+def atoms_should_bond(atom1: Atom, atom2: Atom, distance: float) -> bool:
+    """Determine if two atoms should be bonded based on distance and element types"""
+    # Common covalent bond lengths (in Angstroms)
+    bond_lengths = {
+        ('C', 'C'): 1.54,
+        ('C', 'N'): 1.47,
+        ('C', 'O'): 1.43,
+        ('C', 'S'): 1.82,
+        ('N', 'N'): 1.45,
+        ('N', 'O'): 1.36,
+        ('O', 'O'): 1.48,
+        ('S', 'S'): 2.05,
+    }
+
+    # Check if we have a known bond length
+    key = tuple(sorted([atom1.element, atom2.element]))
+    if key in bond_lengths:
+        expected_length = bond_lengths[key]
+        # Allow some tolerance (20%)
+        return distance <= expected_length * 1.2
+
+    # Fallback: use a general rule based on element types
+    if atom1.element in ['C', 'N', 'O', 'S'] and atom2.element in ['C', 'N', 'O', 'S']:
+        return distance <= 2.0
+
+    return False
 
 
 class PDBLoader:
@@ -247,38 +282,11 @@ class PDBLoader:
                                  (atom1.z - atom2.z)**2)
                     
                     # Simple bond detection based on distance and element types
-                    if self._should_bond(atom1, atom2, dist):
+                    if atoms_should_bond(atom1, atom2, dist):
                         bonds.append(Bond(atom1_idx=i, atom2_idx=j, bond_type="single"))
         
         return bonds
-    
-    def _should_bond(self, atom1: Atom, atom2: Atom, distance: float) -> bool:
-        """Determine if two atoms should be bonded based on distance and element types"""
-        # Common covalent bond lengths (in Angstroms)
-        bond_lengths = {
-            ('C', 'C'): 1.54,
-            ('C', 'N'): 1.47,
-            ('C', 'O'): 1.43,
-            ('C', 'S'): 1.82,
-            ('N', 'N'): 1.45,
-            ('N', 'O'): 1.36,
-            ('O', 'O'): 1.48,
-            ('S', 'S'): 2.05,
-        }
-        
-        # Check if we have a known bond length
-        key = tuple(sorted([atom1.element, atom2.element]))
-        if key in bond_lengths:
-            expected_length = bond_lengths[key]
-            # Allow some tolerance (20%)
-            return distance <= expected_length * 1.2
-        
-        # Fallback: use a general rule based on element types
-        if atom1.element in ['C', 'N', 'O', 'S'] and atom2.element in ['C', 'N', 'O', 'S']:
-            return distance <= 2.0
-        
-        return False
-    
+
     def to_molviewspec(self) -> Dict:
         """Convert PDB structure to MolViewSpec format"""
         if not self.structure:
