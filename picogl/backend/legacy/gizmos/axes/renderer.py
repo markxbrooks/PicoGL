@@ -20,7 +20,7 @@ from picogl.renderer.abstract import AbstractRenderer
 # Initialize GLUT once when the module is imported
 try:
     glutInit()
-    log.info("✅ GLUT initialized successfully for text rendering")
+    log.info("✅ GLUT _initialized successfully for text rendering")
 except Exception as e:
     log.warning(f"⚠️ GLUT initialization failed: {e}. Text labels will be disabled.")
     GLUT_AVAILABLE = False
@@ -145,7 +145,7 @@ class AxesRenderer(AbstractRenderer):
     def initialize_buffers(self) -> None:
         """Initialize the vertex buffer objects for rendering."""
         if self.is_initialized:
-            log.message("Axes buffers already initialized")
+            log.message("Axes buffers already _initialized")
             return
             
         # Check if we have a valid OpenGL context
@@ -177,7 +177,7 @@ class AxesRenderer(AbstractRenderer):
                 return
                 
             self.is_initialized = True
-            log.info("✅ Axes buffers initialized successfully")
+            log.info("✅ Axes buffers _initialized successfully")
             
         except Exception as e:
             log.error(f"Error initializing axes buffers: {e}")

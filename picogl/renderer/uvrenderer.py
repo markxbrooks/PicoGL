@@ -32,7 +32,7 @@ class UvRenderer(RendererBase):
         """
         Initialize OpenGL resources. Overrides RendererBase.initialize().
         """
-        if self.initialized:
+        if self._initialized:
             return
 
         # Any additional initialization logic can go here
@@ -58,6 +58,7 @@ class UvRenderer(RendererBase):
         self.uv_buffer = uv_buffer
         self.indices_buffer = indices_buffer
         self.index_count = index_count
+        self.initialize()
 
     def _draw_model(self) -> None:
         """

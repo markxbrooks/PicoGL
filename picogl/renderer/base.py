@@ -18,7 +18,7 @@ class RendererBase(AbstractRenderer):
         """
         self.show_model = False
         self.parent = parent
-        self.initialized = False
+        self._initialized = False
 
     @property
     def dispatch_list(self):
@@ -28,14 +28,14 @@ class RendererBase(AbstractRenderer):
         ]
         return dispatch_list
 
-    def initialize(self):
+    def initialize(self) -> None:
         """
         Initialize OpenGL resources (shaders, atoms_buffers, etc.).
         """
-        if self.initialized:
+        if self._initialized:
             return
 
-        self.initialized = True
+        self._initialized = True
 
     def render(self) -> None:
         """

@@ -180,7 +180,7 @@ class ShaderManager:
             )
 
         self.initialized = True
-        log.message("✅ GLState initialized and src loaded (including fallback).")
+        log.message("✅ GLState _initialized and src loaded (including fallback).")
         self.use_default_shader()
         self.current_shader_program = self.current_shader.program_id()
         self.current_shader.bind()
