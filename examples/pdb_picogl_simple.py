@@ -11,15 +11,10 @@ import os
 import sys
 from pathlib import Path
 
+from examples.utils.pdb_loader import PDBLoader
+
 # Add the utils directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'utils'))
-
-try:
-    from pdb_loader import PDBLoader
-except ImportError as e:
-    print(f"Error importing PDB loader: {e}")
-    print("Make sure you're running this from the examples directory")
-    sys.exit(1)
 
 from picogl.renderer import MeshData
 from picogl.ui.backend.glut.window.object import RenderWindow

@@ -10,6 +10,8 @@ and uses legacy client states and immediate mode rendering.
 """
 
 from pathlib import Path
+from typing import Optional
+
 import numpy as np
 from OpenGL.GL import *
 from OpenGL.GLU import *
@@ -20,10 +22,14 @@ from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.utils.loader.object import ObjectLoader
 
 
-class LegacyTeapotRenderer:
+class LegacyRenderer:
     """Legacy teapot renderer using immediate mode OpenGL."""
     
-    def __init__(self, width=800, height=600, title="Legacy Teapot"):
+    def __init__(self,
+                 width: int = 800, 
+                 height: int = 600,
+                 title: str ="Legacy Renderer",
+                 object_file_name: Optional[str | Path] = None):
         self.width = width
         self.height = height
         self.title = title
@@ -33,6 +39,7 @@ class LegacyTeapotRenderer:
         self.last_mouse_x = None
         self.last_mouse_y = None
         self.zoom_distance = 5.0
+        self.object_file_name = object_file_name
         
     def init_glut(self):
         """Initialize GLUT window."""
@@ -69,17 +76,17 @@ class LegacyTeapotRenderer:
         glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
         glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50.0)
         
-    def load_teapot_data(self, obj_file_path):
+    def load_object_data(self, obj_file_path):
         """Load teapot data from OBJ file."""
         try:
             obj_loader = ObjectLoader(obj_file_path)
-            teapot_data = obj_loader.to_array_style()
+            object_data = obj_loader.to_array_style()
             
             # Create mesh data
             mesh_data = MeshData.from_raw(
-                vertices=teapot_data.vertices,
-                normals=teapot_data.normals,
-                colors=([[1.0, 0.0, 0.0]] * (len(teapot_data.vertices) // 3))
+                vertices=object_data.vertices,
+                normals=object_data.normals,
+                colors=([[1.0, 0.0, 0.0]] * (len(object_data.vertices) // 3))
             )
             
             # Create legacy mesh
@@ -92,7 +99,7 @@ class LegacyTeapotRenderer:
             
             # Upload mesh to GPU
             self.mesh.upload()
-            print(f"✅ Loaded teapot with {len(teapot_data.vertices) // 3} vertices")
+            print(f"✅ Loaded teapot with {len(object_data.vertices) // 3} vertices")
             return True
             
         except Exception as e:
@@ -193,15 +200,11 @@ class LegacyTeapotRenderer:
         self.init_glut()
         self.init_gl()
         
-        # Load teapot data
-        base_dir = Path(__file__).resolve().parent
-        obj_file_path = base_dir / "data" / "teapot.obj"
-        
-        if not obj_file_path.exists():
+        if not self.object_file_name.exists():
             print(f"❌ Teapot OBJ file not found at {obj_file_path}")
             print("   Using fallback wireframe teapot instead.")
         else:
-            if not self.load_teapot_data(str(obj_file_path)):
+            if not self.load_object_data(str(self.object_file_name)):
                 print("   Using fallback wireframe teapot instead.")
         
         print("\n🎮 Controls:")
@@ -219,10 +222,14 @@ class LegacyTeapotRenderer:
 def main():
     """Main function."""
     try:
-        renderer = LegacyTeapotRenderer(
+        # Load teapot data
+        base_dir = Path(__file__).resolve().parent
+        obj_file_path = base_dir / "data" / "teapot.obj"
+        renderer = LegacyRenderer(
             width=800,
             height=600,
-            title="Legacy PicoGL Teapot (OpenGL 1.x/2.x Compatible)"
+            title="Legacy PicoGL Teapot (OpenGL 1.x/2.x Compatible)",
+            object_file_name=obj_file_path
         )
         renderer.run()
     except Exception as e:

@@ -15,11 +15,14 @@ from pathlib import Path
 
 import numpy as np
 
+from examples.utils.pdb_loader import PDBLoader
+
 # Add the current directory to the path to find pdb_loader.py
 sys.path.insert(0, os.path.dirname(__file__))
 
 try:
-    from pdb_loader import PDBLoader
+    # from pdb_loader import PDBLoader
+    pass
 except ImportError as e:
     print(f"Error importing PDB loader: {e}")
     print("Make sure pdb_loader.py is in the examples directory")
@@ -27,7 +30,6 @@ except ImportError as e:
 
 from OpenGL.GL import *
 
-from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.renderer import MeshData
 from picogl.ui.backend.glut.window.object import RenderWindow
