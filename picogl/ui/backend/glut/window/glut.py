@@ -42,7 +42,7 @@ class GlutRendererWindow(GLWindow):
         log.message("Initializing OpenGL context...")
         execute_gl_tasks(init_gl_list)
         self.renderer.initialize_shaders()
-        self.renderer.initialize_buffers()
+        self.renderer.initialize()
 
     def calculate_mvp_matrix(self, width: int = 1920, height: int = 1080):
         """calculate_mvp_matrix"""
@@ -134,6 +134,5 @@ class GlutRendererWindow(GLWindow):
 
 
 if __name__ == "__main__":
-
     win = GlutRendererWindow(width=1024, height=768)
     win.run()

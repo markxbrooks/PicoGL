@@ -74,6 +74,8 @@ class LegacyVBO(VertexBuffer):
         """Configure the buffer (default implementation does nothing)."""
         pass
 
-    def draw(self, index_count: int, index_type: int = GL_UNSIGNED_INT, mode: int = GL_LINES):
+    def draw(
+        self, index_count: int, index_type: int = GL_UNSIGNED_INT, mode: int = GL_LINES
+    ):
         """Draw call (must be implemented in subclasses)."""
         raise NotImplementedError("Subclasses must implement draw()!")

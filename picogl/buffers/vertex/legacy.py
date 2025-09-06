@@ -90,19 +90,13 @@ class VertexBufferGroup(VertexBase):
         self.layout = None
 
     @property
-    def index_count(self) -> str | int | None:
+    def index_count(self) -> int:
         """
         Return the number of indices in the EBO.
 
         :return: int
         """
-        try:
-            if self.ebo:
-                if hasattr(self.ebo, "data"):
-                    return len(self.ebo.data)
-            return 0
-        except Exception as ex:
-            log.error(f"error {ex} occurred")
+        return len(self.ebo.data) if self.ebo and hasattr(self.ebo, "data") else 0
 
     def draw(self, index_count: int = 0, mode: int = GL_POINTS):
         """
@@ -202,18 +196,50 @@ class VertexBufferGroup(VertexBase):
                 vbo = self.named_vbos.get(canonical)
                 if not vbo:
                     continue
-                glBindBuffer(GL_ARRAY_BUFFER, getattr(vbo, "_id", vbo))
-                glEnableVertexAttribArray(attr.index)
+                # Debug the glBindBuffer call
+                buffer_handle = getattr(vbo, "_id", vbo)
+                glBindBuffer(GL_ARRAY_BUFFER, buffer_handle)
+
+                # Debug the glEnableVertexAttribArray call
+                attr_index = int(attr.index)
+                glEnableVertexAttribArray(attr_index)
+                # Convert IntConstant to raw int for OpenGL
+                # Try multiple ways to extract the integer value from IntConstant
+                try:
+                    if hasattr(attr.type, "value"):
+                        gl_type = attr.type.value
+                    elif hasattr(attr.type, "real"):
+                        gl_type = attr.type.real
+                    else:
+                        gl_type = int(attr.type)
+                except (ValueError, TypeError):
+                    # Fallback: try to access the underlying value directly
+                    gl_type = (
+                        attr.type.__int__() if hasattr(attr.type, "__int__") else 0x1406
+                    )  # GL_FLOAT fallback
+
+                # Ensure offset is properly converted
+                offset_ptr = (
+                    ctypes.c_void_p(int(attr.offset)) if int(attr.offset) != 0 else None
+                )
+
                 glVertexAttribPointer(
-                    attr.index,
-                    attr.size,
-                    attr.type,
-                    attr.normalized,
-                    attr.stride,
-                    ctypes.c_void_p(attr.offset),
+                    int(attr.index),
+                    int(attr.size),
+                    gl_type,
+                    bool(attr.normalized),
+                    int(attr.stride),
+                    offset_ptr,
                 )
         except Exception as ex:
-            log.error(f"error {ex} occurred")
+            log.error(f"error {ex} occurred in VertexBufferGroup")
+            for attr in self.layout.attributes:
+                log.parameter("attr", attr)
+                log.parameter("attr.index", attr.index)
+                log.parameter("attr.size", attr.size)
+                log.parameter("attr.type", int(attr.type))
+                log.parameter("attr.normalized", attr.normalized)
+                log.parameter("attr.stride", attr.stride)
 
     def unbind(self) -> None:
         """Disable attribute arrays and unbind the array buffer."""

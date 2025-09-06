@@ -1,7 +1,9 @@
 """
 Base Renderer Class
 """
+from typing import Optional
 
+import numpy as np
 from OpenGL.raw.GL.VERSION.GL_1_0 import glFlush
 
 from picogl.renderer.abstract import AbstractRenderer
@@ -18,7 +20,7 @@ class RendererBase(AbstractRenderer):
         """
         self.show_model = False
         self.parent = parent
-        self.initialized = False
+        self._initialized = False
 
     @property
     def dispatch_list(self):
@@ -28,16 +30,20 @@ class RendererBase(AbstractRenderer):
         ]
         return dispatch_list
 
-    def initialize(self):
+    def initialize(self) -> None:
         """
         Initialize OpenGL resources (shaders, atoms_buffers, etc.).
         """
-        if self.initialized:
+        if self._initialized:
             return
 
-        self.initialized = True
+        self._initialized = True
 
-    def render(self) -> None:
+    @property
+    def initialized(self) -> bool:
+        return self._initialized
+
+    def render(self, mvp_matrix: Optional[np.ndarray] = None) -> None:
         """
         render dispatcher
         :return: None
@@ -52,7 +58,7 @@ class RendererBase(AbstractRenderer):
 
         self._finalize_render()
 
-    def initialize_buffers(self) -> None:
+    def initialize(self) -> None:
         """
         initialize_rendering_buffers
 
@@ -62,7 +68,7 @@ class RendererBase(AbstractRenderer):
 
     def initialize_rendering_buffers(self):
         """For back compatibility"""
-        self.initialize_buffers()
+        self.initialize()
 
     def _finalize_render(self):
         """

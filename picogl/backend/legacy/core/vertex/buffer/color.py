@@ -24,4 +24,3 @@ class LegacyColorVBO(LegacyVBO):
     def configure(self):
         """Configure vertex attribute pointer for colors."""
         glColorPointer(self.size, self.dtype, self.stride, self.pointer)
-

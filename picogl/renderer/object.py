@@ -56,7 +56,7 @@ class ObjectRenderer(RendererBase):
             glsl_dir=self.glsl_dir,
         )
 
-    def initialize_buffers(self):
+    def initialize(self):
         """Create VAO and VBOs once."""
         if self.context.vaos is None:
             self.context.vaos = {}

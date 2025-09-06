@@ -56,7 +56,7 @@ class ShaderManager:
     current_shader_type: ShaderType = ShaderType.DEFAULT
     current_shader: Optional[ShaderProgram] = None
     current_shader_program: Optional[int] = None
-    initialized: bool = False
+    _initialized: bool = False
     shader_directory: str = ""
     fallback_shader_directory: str = ""
 
@@ -179,8 +179,8 @@ class ShaderManager:
                 f"⚠️ Shader fallback used for: {', '.join(st.value for st in failed)}"
             )
 
-        self.initialized = True
-        log.message("✅ GLState initialized and src loaded (including fallback).")
+        self._initialized = True
+        log.message("✅ GLState _initialized and src loaded (including fallback).")
         self.use_default_shader()
         self.current_shader_program = self.current_shader.program_id()
         self.current_shader.bind()
@@ -226,9 +226,7 @@ class ShaderManager:
                     "fragment", self.shader_directory
                 )
                 self.fallback_shader = compile_shaders(vert, frag, "fallback")
-                log.message(
-                    "✅ Fallback shader_manager.current_shader_program compiled"
-                )
+                log.message("✅ Fallback shader_manager.current_shader_program compiled")
             except Exception as ex:
                 log.error(
                     f"❌ Fallback shader_manager.current_shader_program setup failed: {ex}"
