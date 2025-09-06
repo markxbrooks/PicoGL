@@ -1,6 +1,7 @@
 """Minimal PicoGL Cube. Compare to tu_01_color_cube.py"""
 
 from pathlib import Path
+
 from examples.data.cube_data import g_color_buffer_data, g_vertex_buffer_data
 from picogl.renderer import MeshData
 from picogl.ui.backend.glut.window.object import RenderWindow

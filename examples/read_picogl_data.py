@@ -8,9 +8,9 @@ This script demonstrates how to:
 4. Display the molecular structure
 """
 
+import json
 import os
 import sys
-import json
 from pathlib import Path
 
 from picogl.renderer import MeshData

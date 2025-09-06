@@ -6,7 +6,6 @@ from picogl.renderer import MeshData
 from picogl.ui.backend.glut.window.object import RenderWindow
 from picogl.utils.loader.object import ObjectLoader
 
-
 BASE_DIR = Path(__file__).resolve().parent
 GLSL_DIR = Path(__file__).parent / "glsl" / "teapot"
 

@@ -6,9 +6,9 @@ This script demonstrates how to read and analyze PicoGL data files
 without requiring the full rendering system.
 """
 
+import json
 import os
 import sys
-import json
 from pathlib import Path
 
 

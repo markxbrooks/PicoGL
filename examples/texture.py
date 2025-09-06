@@ -4,7 +4,7 @@ Demonstrating textures - compare to tu02_texture_without_normal.py
 
 from pathlib import Path
 
-from examples import g_vertex_buffer_data, g_uv_buffer_data
+from examples import g_uv_buffer_data, g_vertex_buffer_data
 from picogl.renderer import MeshData
 from picogl.ui.backend.glut.window.texture import TextureWindow
 

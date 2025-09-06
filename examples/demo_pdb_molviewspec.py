@@ -8,9 +8,9 @@ This script demonstrates how to:
 3. Save the results for portable viewing
 """
 
+import json
 import os
 import sys
-import json
 from pathlib import Path
 
 # Add the utils directory to the path
@@ -27,7 +27,7 @@ except ImportError as e:
 def download_sample_pdb():
     """Download a sample PDB file for demonstration"""
     import urllib.request
-    
+
     # Download a small protein structure (Crambin - 46 residues)
     pdb_id = "1CRN"
     url = f"https://files.rcsb.org/download/{pdb_id}.pdb"

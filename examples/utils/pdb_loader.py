@@ -9,9 +9,10 @@ This module provides functionality to:
 
 import os
 from dataclasses import dataclass
-from typing import List, Dict, Optional, Tuple
-import numpy as np
 from pathlib import Path
+from typing import Dict, List, Optional, Tuple
+
+import numpy as np
 
 
 @dataclass

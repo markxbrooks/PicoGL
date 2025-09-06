@@ -1,11 +1,13 @@
 
 
-from pyglm import glm
 from OpenGL.GL import *  # pylint: disable=W0614
 from OpenGL.GLUT import *  # pylint: disable=W0614
+from pyglm import glm
 
-from picogl.backend.modern.core.shader.program import ShaderProgram
+from examples.utils.world_sheet import WorldSheet
+from picogl.backend.modern.core.shader.mvp.controller import MVPController
 from picogl.ui.backend.glut.window.gl import GLWindow
+from picogl.logger import Logger as log
 
 
 class MeshViewWindow(GLWindow):
@@ -13,19 +15,23 @@ class MeshViewWindow(GLWindow):
     def __init__(self, *args, **kwargs):
 
         super().__init__(*args, **kwargs)
+        self.menu = None
+        self.meshes: Optional[list] = None
         self._mvp = None
         self.controller: MVPController = MVPController(self.update_if)
 
     def initializeGL(self):
+        """initializeGL"""
         glClearColor(0.1, 0.1, 0.1, 0.8)
         glDepthFunc(GL_LESS)
         glEnable(GL_DEPTH_TEST)
-        #glEnable(GL_CULL_FACE)
 
-    def add_mesh(self, mesh_with_render):
+    def add_mesh(self, mesh_with_render: object):
+        """add_mesh"""
         self.meshes.append(mesh_with_render.make_context())
 
-    def init_context(self):        
+    def init_context(self):
+        """init_context"""
         self.meshes = []
 
     def calc_mvp(self, width: int = 0, height: int = 0):
@@ -33,17 +39,16 @@ class MeshViewWindow(GLWindow):
         if width!=0:
             self.controller.resize(width, height)
         self._mvp = self.controller.calc_mvp(glm.mat4(1.0))
-        # self.MVPPtr = glm.value_ptr(self._MVP)
-        # self.ViewPtr = glm.value_ptr(self.controller.ViewMatrix)
-        # self.ProjectionPtr = glm.value_ptr(self.controller.ProjectionMatrix)
 
     def resizeGL(self, width, height):
-        print("resize")
+        """resizeGL"""
+        log.message("resizeGL")
         glViewport(0, 0, width, height)
         self.calc_mvp(width, height)
 
     def paintGL(self):
-        print("draw")
+        """paintGL"""
+        log.message("paintGL")
         self.calc_mvp()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         for mesh in self.meshes:
@@ -64,11 +69,11 @@ class MeshViewWindow(GLWindow):
         return 0
 
     def init_default(self):
-        from worldsheet import worldSheet
+        """init_default"""
         self.controller = MVPController(self.update_if)
         self.initializeGL()
         self.init_context()    
-        self.add_mesh(WorldSheet())
+        self.add_mesh(WorldSheet(base_dir="."))
         self.menu = glutCreateMenu(self.processMenuEvents)
         glutAddMenuEntry("UV MAP",1)
         glutAddMenuEntry("WireFrame Mode",2)
@@ -78,23 +83,3 @@ class MeshViewWindow(GLWindow):
         return self
 
 
-class meshWithRender(object):
-
-    def makeContext(self):
-        self.loadShader()
-        self.loadObject()
-        self.loadTexture()
-        return self
-    def loadShader(self):
-        self.shader = ShaderProgram()
-        
-    def loadObject(self):
-        self.mesh = None
-        print "Make and fill OPENGL buffers,vertex,uv,normal,trangent,indices"
-    def loadTexture(self):
-        self.texture = None
-        print "No texture for this object"
-    
-    def rendering(self,MVPptr,ViewPtr,ProjectionPtr):
-        print "override rendering process"
-        pass

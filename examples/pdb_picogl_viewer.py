@@ -8,11 +8,12 @@ This script demonstrates how to:
 4. Display atoms and bonds in 3D space
 """
 
+import json
 import os
 import sys
-import json
-import numpy as np
 from pathlib import Path
+
+import numpy as np
 
 # Add the current directory to the path to find pdb_loader.py
 sys.path.insert(0, os.path.dirname(__file__))
@@ -24,11 +25,12 @@ except ImportError as e:
     print("Make sure pdb_loader.py is in the examples directory")
     sys.exit(1)
 
+from OpenGL.GL import *
+
+from picogl.backend.modern.core.shader.program import ShaderProgram
+from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.renderer import MeshData
 from picogl.ui.backend.glut.window.object import RenderWindow
-from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
-from picogl.backend.modern.core.shader.program import ShaderProgram
-from OpenGL.GL import *
 
 
 class MolecularRenderWindow(RenderWindow):

@@ -9,15 +9,17 @@ This example demonstrates how to:
 import os
 import sys
 from pathlib import Path
+
 import numpy as np
 from OpenGL.GL import *
+from utils.pdb_loader import PDBLoader
 
+from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.renderer import MeshData
-from picogl.ui.backend.glut.window.object import RenderWindow
 from picogl.shaders.registry import ShaderRegistry
 from picogl.shaders.type import ShaderType
-from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
-from utils.pdb_loader import PDBLoader
+from picogl.ui.backend.glut.window.object import RenderWindow
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 class MolecularViewer:
