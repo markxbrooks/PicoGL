@@ -7,6 +7,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.logger import Logger as log
 from picogl.renderer import GLContext, MeshData, RendererBase
+from picogl.utils.loader.texture import TextureLoader
 from picogl.utils.texture import bind_texture_array
 
 
