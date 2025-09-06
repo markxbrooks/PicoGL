@@ -70,6 +70,12 @@ class MeshData:
         colors = np.tile(np.array([1.0, 0.0, 0.0], dtype=np.float32), (vertex_count, 1))
         return colors.reshape(-1)
 
+    @classmethod
+    def _default_normals_for_vertices(cls, vertex_count: int) -> np.ndarray:
+        # Simple default: red color per vertex
+        normals = np.tile([0.0, 0.0, 1.0], (vertex_count, 1)).astype(np.float32)
+        return normals.reshape(-1)
+
     def __enter__(self):
         self.bind()
 
@@ -123,11 +129,16 @@ class MeshData:
         vbo = cls._to_float32_flat(vertices, "vertices", required=True)
         vertex_count = len(vbo) // 3 if vbo is not None else 0
 
+        num_vertices = len(vertices)
         if normals is None:
-            normals = np.zeros((len(vertices), 3), dtype=np.float32) # default normals vased on vertices
+            normals = np.zeros((num_vertices, 3), dtype=np.float32)
+
         nbo = cls._to_float32_flat_or_none(normals, "normals")
-        if nbo is not None and len(nbo) // 3 != vertex_count:
-            raise ValueError("normals length must be 3 * vertex_count")
+
+        if nbo is not None:
+            expected = num_vertices * 3
+            if len(nbo) != expected:
+                raise ValueError(f"normals length {len(nbo)} does not match 3 * num_vertices ({expected})")
 
         uvs_arr = cls._to_float32_flat_or_none(uvs, "uvs")
         if uvs_arr is not None and len(uvs_arr) // 2 != vertex_count:
