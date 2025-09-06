@@ -2,13 +2,9 @@
 
 from pathlib import Path
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES
-
 from picogl.renderer import GLContext, MeshData
 from picogl.renderer.object import ObjectRenderer
-from picogl.utils.gl_init import execute_gl_tasks, paint_gl_list
 from picogl.utils.loader.texture import TextureLoader
-from picogl.utils.texture import bind_texture_array
 
 
 class TextureRenderer(ObjectRenderer):
@@ -48,7 +44,7 @@ class TextureRenderer(ObjectRenderer):
         # Build paths
         texture_path = self.get_texture_filename()
         self.texture = texture = TextureLoader(texture_path)
-        self.context.texture_id = texture.texture_glid
+        self.context.texture_id = texture.texture_gl_id
         if texture.inversed_v_coords:
             for index, _ in enumerate(data.uvs):
                 if index % 2:
@@ -82,17 +78,6 @@ class TextureRenderer(ObjectRenderer):
         :param subdir: str
         """
         self.resource_full_path = base_path.absolute() / "resources" / subdir
-
-    def _draw_model_old(self):
-        """Draw the model_matrix"""
-        execute_gl_tasks(paint_gl_list)
-        model_vao = self.context.vaos["model"]
-        shader = self.context.shader
-        with shader, model_vao:
-            shader.uniform("mvp_matrix", self.context.mvp_matrix)
-            bind_texture_array(self.context.texture_id)
-            shader.uniform("texture0", 0)
-            model_vao.draw(mode=GL_TRIANGLES, index_count=self.data.vertex_count)
 
     def _draw_selection(self):
         """Draw selection"""

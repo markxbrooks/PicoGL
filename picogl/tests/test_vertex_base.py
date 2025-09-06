@@ -71,7 +71,7 @@ class TestVertexBase(unittest.TestCase):
         # Test calling the method (it may not do anything in base class)
         try:
             self.vertex_base.bind()
-        except Exception as e:
+        except Exception:
             # If it raises an exception, that's fine - we're just testing it exists
             pass
 
@@ -82,7 +82,7 @@ class TestVertexBase(unittest.TestCase):
         # Test calling the method
         try:
             self.vertex_base.unbind()
-        except Exception as e:
+        except Exception:
             # If it raises an exception, that's fine - we're just testing it exists
             pass
 
@@ -93,7 +93,7 @@ class TestVertexBase(unittest.TestCase):
         # Test calling the method
         try:
             self.vertex_base.delete()
-        except Exception as e:
+        except Exception:
             # If it raises an exception, that's fine - we're just testing it exists
             pass
 
@@ -104,7 +104,7 @@ class TestVertexBase(unittest.TestCase):
         # Test calling the method
         try:
             self.vertex_base.set_layout()
-        except Exception as e:
+        except Exception:
             # If it raises an exception, that's fine - we're just testing it exists
             pass
 
@@ -115,7 +115,7 @@ class TestVertexBase(unittest.TestCase):
         # Test calling the method
         try:
             self.vertex_base.attach_buffers()
-        except Exception as e:
+        except Exception:
             # If it raises an exception, that's fine - we're just testing it exists
             pass
 
@@ -129,7 +129,7 @@ class TestVertexBase(unittest.TestCase):
         try:
             with self.vertex_base as vbo:
                 self.assertEqual(vbo, self.vertex_base)
-        except Exception as e:
+        except Exception:
             # If it raises an exception, that's fine - we're just testing the interface
             pass
 
@@ -142,14 +142,14 @@ class TestVertexBase(unittest.TestCase):
         try:
             result = self.vertex_base.__enter__()
             self.assertEqual(result, self.vertex_base)
-        except Exception as e:
+        except Exception:
             # If it raises an exception, that's fine
             pass
 
         # Test __exit__ with mock parameters
         try:
             self.vertex_base.__exit__(None, None, None)
-        except Exception as e:
+        except Exception:
             # If it raises an exception, that's fine
             pass
 

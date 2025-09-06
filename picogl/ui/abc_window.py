@@ -29,6 +29,7 @@ class AbstractGLWindow(ABC):
         self.width = width
         self.height = height
         self.window = None
+        self.title = title
 
     @abstractmethod
     def initializeGL(self) -> None:

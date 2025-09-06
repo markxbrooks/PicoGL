@@ -112,7 +112,7 @@ class Tu01Win(GLWindow):
 
 		texture = TextureLoader("resources/tu02/uvtemplate.tga")
 
-		self.context.textureGLID = texture.texture_glid
+		self.context.textureGLID = texture.texture_gl_id
 
 		self.context.vertexbuffer  = glGenBuffers(1)
 		glBindBuffer(GL_ARRAY_BUFFER,self.context.vertexbuffer)

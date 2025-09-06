@@ -32,6 +32,7 @@ from typing import Dict, Optional
 from picogl.backend.modern.core.shader.load import load_shader
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.logger import Logger as log
+from picogl.shaders.compile import compile_shaders
 from picogl.shaders.type import ShaderType
 
 
@@ -48,7 +49,7 @@ class ShaderRegistry:
         try:
             vertex_src = load_shader(shader_type.vertex_path())
             fragment_src = load_shader(shader_type.fragment_path())
-            program = qt_compile_shaders(vertex_src, fragment_src)
+            program = compile_shaders(vertex_src, fragment_src, shader_name="default")
             if program:
                 self.shaders[shader_type] = program
             return program

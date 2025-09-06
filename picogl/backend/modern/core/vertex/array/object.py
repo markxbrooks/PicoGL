@@ -77,6 +77,7 @@ class VertexArrayObject(VertexBase):
 
         :param handle: int Handle (ID) of the OpenGL Vertex Array Object (VAO).
         """
+        self._configured: bool = False
         if not handle or handle is None:
             if glGenVertexArrays:
                 handle = gl_gen_safe(glGenVertexArrays)
@@ -178,7 +179,7 @@ class VertexArrayObject(VertexBase):
 
         return vbo
 
-    def get_vbo_object(_self, name: str) -> "LegacyVBO":
+    def get_vbo_object(self, name: str) -> "LegacyVBO":
         """Retrieve a VBO by its semantic or shorthand name."""
         canonical = NAME_ALIASES.get(name, name)
         return self.named_vbos.get(canonical)
