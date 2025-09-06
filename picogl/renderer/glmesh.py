@@ -7,7 +7,6 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT
 
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.buffers.glcleanup import delete_buffer_object
-from picogl.renderer import MeshData
 
 
 class GLMesh:
@@ -52,7 +51,7 @@ class GLMesh:
         self.index_count: int = 0
 
     @classmethod
-    def from_mesh_data(cls, mesh: MeshData) -> "GLMesh":
+    def from_mesh_data(cls, mesh: "MeshData") -> "GLMesh":
         """
         Construct a GLMesh from a MeshData container.
 
