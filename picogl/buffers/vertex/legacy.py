@@ -104,10 +104,11 @@ class VertexBufferGroup(VertexBase):
         except Exception as ex:
             log.error(f"error {ex} occurred")
 
-    def draw(self, index_count: int = 0, mode=GL_POINTS):
+    def draw(self, index_count: int = 0, mode: int = GL_POINTS):
         """
         draw
 
+        :param index_count:
         :param count: int
         :param mode: int
         Enable legacy client states, bind VBOs, draw, and clean up.

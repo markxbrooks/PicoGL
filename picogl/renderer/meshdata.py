@@ -123,6 +123,8 @@ class MeshData:
         vbo = cls._to_float32_flat(vertices, "vertices", required=True)
         vertex_count = len(vbo) // 3 if vbo is not None else 0
 
+        if normals is None:
+            normals = np.zeros((len(vertices), 3), dtype=np.float32) # default normals vased on vertices
         nbo = cls._to_float32_flat_or_none(normals, "normals")
         if nbo is not None and len(nbo) // 3 != vertex_count:
             raise ValueError("normals length must be 3 * vertex_count")
