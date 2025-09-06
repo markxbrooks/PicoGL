@@ -38,9 +38,7 @@ class UvRenderer(RendererBase):
         # Any additional initialization logic can go here
         self._initialized = True
 
-    def initialize(
-        self, uv_buffer: int, indices_buffer: int, index_count: int
-    ) -> None:
+    def initialize(self, uv_buffer: int, indices_buffer: int, index_count: int) -> None:
         """
         Bind the UV and index buffers to the renderer.
 

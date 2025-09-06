@@ -16,27 +16,37 @@ class GLMesh:
     It does not know anything about shaders or matrices.
     """
 
-    def __init__(self, vertices: np.ndarray, faces: np.ndarray,
-                 colors: Optional[np.ndarray] = None,
-                 normals: Optional[np.ndarray] = None,
-                 uvs: Optional[np.ndarray] = None):
+    def __init__(
+        self,
+        vertices: np.ndarray,
+        faces: np.ndarray,
+        colors: Optional[np.ndarray] = None,
+        normals: Optional[np.ndarray] = None,
+        uvs: Optional[np.ndarray] = None,
+    ):
         # strict (N, 3)
         self.vertices = np.asarray(vertices, dtype=np.float32).reshape(-1, 3)
-        self.indices  = np.asarray(faces,    dtype=np.uint32).reshape(-1)
+        self.indices = np.asarray(faces, dtype=np.uint32).reshape(-1)
         nverts = self.vertices.shape[0]
 
         if self.indices.size == 0:
             raise ValueError("GLMesh requires non-empty faces")
 
-        self.colors  = (np.asarray(colors, dtype=np.float32).reshape(-1, 3)
-                        if colors is not None
-                        else np.tile((0.0, 0.0, 1.0), (nverts, 1)).astype(np.float32))
-        self.normals = (np.asarray(normals, dtype=np.float32).reshape(-1, 3)
-                        if normals is not None
-                        else np.zeros_like(self.vertices))
-        self.uvs = (np.asarray(uvs, dtype=np.float32).reshape(-1, 2)
-                    if uvs is not None
-                    else np.zeros((nverts, 2), dtype=np.float32))
+        self.colors = (
+            np.asarray(colors, dtype=np.float32).reshape(-1, 3)
+            if colors is not None
+            else np.tile((0.0, 0.0, 1.0), (nverts, 1)).astype(np.float32)
+        )
+        self.normals = (
+            np.asarray(normals, dtype=np.float32).reshape(-1, 3)
+            if normals is not None
+            else np.zeros_like(self.vertices)
+        )
+        self.uvs = (
+            np.asarray(uvs, dtype=np.float32).reshape(-1, 2)
+            if uvs is not None
+            else np.zeros((nverts, 2), dtype=np.float32)
+        )
 
         self.vao: Optional[VertexArrayObject] = None
         self.index_count: int = 0
@@ -56,11 +66,13 @@ class GLMesh:
         GLMesh
             Ready-to-upload mesh (GPU buffers are allocated only when `upload()` is called).
         """
-        return cls(vertices=mesh.vbo,
-                   faces=mesh.ebo,
-                   colors=mesh.cbo,
-                   normals=mesh.nbo,
-                   uvs=getattr(mesh, "uvs", None))
+        return cls(
+            vertices=mesh.vbo,
+            faces=mesh.ebo,
+            colors=mesh.cbo,
+            normals=mesh.nbo,
+            uvs=getattr(mesh, "uvs", None),
+        )
 
     def upload(self) -> None:
         """Allocate & fill GPU buffers."""
@@ -69,8 +81,8 @@ class GLMesh:
 
         vao = VertexArrayObject()
         vao.add_vbo(data=self.vertices, index=0, size=3)
-        vao.add_vbo(data=self.colors,   index=1, size=3)
-        vao.add_vbo(data=self.normals,  index=2, size=3)
+        vao.add_vbo(data=self.colors, index=1, size=3)
+        vao.add_vbo(data=self.normals, index=2, size=3)
         if self.uvs is not None:
             vao.add_vbo(data=self.uvs, index=3, size=2)
         vao.add_ebo(data=self.indices)
@@ -81,7 +93,7 @@ class GLMesh:
     def bind(self):
         if not self.vao:
             raise RuntimeError("GLMesh not uploaded")
-        self.vao.__enter__()   # context protocol
+        self.vao.__enter__()  # context protocol
 
     def unbind(self):
         if self.vao:
@@ -94,8 +106,12 @@ class GLMesh:
             self.vao = None
             self.index_count = 0
 
-    def __enter__(self): self.bind(); return self
-    def __exit__(self, exc_type, exc, tb): self.unbind()
+    def __enter__(self):
+        self.bind()
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        self.unbind()
 
     def draw(self) -> None:
         """Draw the mesh."""
@@ -103,6 +119,8 @@ class GLMesh:
             if not self.vao:
                 raise RuntimeError("GLMesh not uploaded. Call upload() first.")
             with self.vao:
-                glDrawElements(GL_TRIANGLES, self.index_count, GL_UNSIGNED_INT, ctypes.c_void_p(0))
+                glDrawElements(
+                    GL_TRIANGLES, self.index_count, GL_UNSIGNED_INT, ctypes.c_void_p(0)
+                )
         except Exception as ex:
             print(ex)

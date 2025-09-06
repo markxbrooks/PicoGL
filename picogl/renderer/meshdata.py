@@ -158,18 +158,19 @@ class MeshData:
         # Indices (optional)
         indices_arr = cls._to_int32_flat(indices, "indices", required=False)
 
-        return cls(
-            vbo=vbo,
-            nbo=nbo,
-            uvs=uvs_arr,
-            cbo=cbo_arr,
-            ebo=indices_arr
-        )
+        return cls(vbo=vbo, nbo=nbo, uvs=uvs_arr, cbo=cbo_arr, ebo=indices_arr)
 
-    def draw(self, color: tuple = None, line_width: float = 1.0, mode: int = GL.GL_TRIANGLES, fill: bool = False, alpha: float = 1.0):
+    def draw(
+        self,
+        color: tuple = None,
+        line_width: float = 1.0,
+        mode: int = GL.GL_TRIANGLES,
+        fill: bool = False,
+        alpha: float = 1.0,
+    ):
         """
         Draw the mesh with optional color override and transparency.
-        
+
         Args:
             color: Optional color override. If None and vertex colors exist, uses vertex colors.
             line_width: Line width for wireframe mode
@@ -181,17 +182,17 @@ class MeshData:
             fill_mode = GL.GL_FILL
         else:
             fill_mode = GL.GL_LINE
-            
+
         # Set material properties for the isosurface
         GL.glLineWidth(line_width)
-        
+
         # Enable alpha blending for transparency
         if alpha < 1.0:
             GL.glEnable(GL.GL_BLEND)
             GL.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
         else:
             GL.glDisable(GL.GL_BLEND)
-        
+
         # Check if we should use vertex colors or override color
         if color is None and self.cbo is not None:
             # Use vertex colors (for fo-fc maps)
@@ -208,15 +209,13 @@ class MeshData:
 
         # Draw as wireframe for better visibility
         GL.glPolygonMode(GL.GL_FRONT_AND_BACK, fill_mode)
-        
+
         # Draw the mesh
-        GL.glDrawElements(
-            mode, len(self.ebo) * 3, GL.GL_UNSIGNED_INT, self.ebo
-        )
-        
+        GL.glDrawElements(mode, len(self.ebo) * 3, GL.GL_UNSIGNED_INT, self.ebo)
+
         # Restore fill mode
         GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL)
-        
+
         # Clean up color array state if we used it
         if color is None and self.cbo is not None:
             GL.glDisableClientState(GL.GL_COLOR_ARRAY)

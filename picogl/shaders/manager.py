@@ -226,9 +226,7 @@ class ShaderManager:
                     "fragment", self.shader_directory
                 )
                 self.fallback_shader = compile_shaders(vert, frag, "fallback")
-                log.message(
-                    "✅ Fallback shader_manager.current_shader_program compiled"
-                )
+                log.message("✅ Fallback shader_manager.current_shader_program compiled")
             except Exception as ex:
                 log.error(
                     f"❌ Fallback shader_manager.current_shader_program setup failed: {ex}"

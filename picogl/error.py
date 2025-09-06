@@ -1,8 +1,8 @@
+from elmo.logger import Logger as log
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_NO_ERROR, glGetError
 from OpenGL.raw.GL.VERSION.GL_4_5 import GL_NO_ERROR
 from OpenGL.raw.GLU import gluErrorString
 
-from elmo.logger import Logger as log
 from picogl.logger import Logger as log
 
 

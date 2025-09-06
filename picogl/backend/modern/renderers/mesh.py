@@ -27,7 +27,12 @@ class ShaderMeshRenderer:
         """Load texture (optional)."""
         self.texture = None  # subclasses may override
 
-    def render(self, mvp_matrix: np.ndarray, view_matrix: np.ndarray, projection_matrix: np.ndarray):
+    def render(
+        self,
+        mvp_matrix: np.ndarray,
+        view_matrix: np.ndarray,
+        projection_matrix: np.ndarray,
+    ):
         """Render the object. Subclasses should override this."""
         raise NotImplementedError("Subclass must implement render()")
 

@@ -198,26 +198,30 @@ class VertexBufferGroup(VertexBase):
                 # Debug the glBindBuffer call
                 buffer_handle = getattr(vbo, "_id", vbo)
                 glBindBuffer(GL_ARRAY_BUFFER, buffer_handle)
-                
+
                 # Debug the glEnableVertexAttribArray call
                 attr_index = int(attr.index)
                 glEnableVertexAttribArray(attr_index)
                 # Convert IntConstant to raw int for OpenGL
                 # Try multiple ways to extract the integer value from IntConstant
                 try:
-                    if hasattr(attr.type, 'value'):
+                    if hasattr(attr.type, "value"):
                         gl_type = attr.type.value
-                    elif hasattr(attr.type, 'real'):
+                    elif hasattr(attr.type, "real"):
                         gl_type = attr.type.real
                     else:
                         gl_type = int(attr.type)
                 except (ValueError, TypeError):
                     # Fallback: try to access the underlying value directly
-                    gl_type = attr.type.__int__() if hasattr(attr.type, '__int__') else 0x1406  # GL_FLOAT fallback
-                
+                    gl_type = (
+                        attr.type.__int__() if hasattr(attr.type, "__int__") else 0x1406
+                    )  # GL_FLOAT fallback
+
                 # Ensure offset is properly converted
-                offset_ptr = ctypes.c_void_p(int(attr.offset)) if int(attr.offset) != 0 else None
-                
+                offset_ptr = (
+                    ctypes.c_void_p(int(attr.offset)) if int(attr.offset) != 0 else None
+                )
+
                 glVertexAttribPointer(
                     int(attr.index),
                     int(attr.size),

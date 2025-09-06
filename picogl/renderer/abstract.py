@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 
 
 class AbstractRenderer(ABC):
-
     @abstractmethod
     def initialize(self) -> None:
         """Subclasses must implement buffer setup."""

@@ -12,7 +12,6 @@ from picogl.ui.abc_window import AbstractGLWindow
 
 
 class GLWindow(AbstractGLWindow):
-
     def __init__(self, title: str = "window", *args, **kwargs):
         """__init__"""
         super().__init__()
@@ -112,6 +111,5 @@ class GLWindow(AbstractGLWindow):
 
 
 if __name__ == "__main__":
-
     win = GLWindow()
     win.run()

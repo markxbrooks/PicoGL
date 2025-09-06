@@ -134,6 +134,5 @@ class GlutRendererWindow(GLWindow):
 
 
 if __name__ == "__main__":
-
     win = GlutRendererWindow(width=1024, height=768)
     win.run()
