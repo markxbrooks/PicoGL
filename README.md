@@ -38,7 +38,7 @@ On MacOS, Modern OpenGL (With Vertex and Pixel Shaders) has been deprecated for 
 Using the Legacy profile and Vertex Arrays (actually an equivalent called Vertex Buffer Groups in PicoGL) 
 we can produce similar OpenGL applications with respectable performance.
 
-```python
+```python see qt_cube.py
     def initialize(self):
         if self._initialized:
             return
@@ -58,7 +58,7 @@ we can produce similar OpenGL applications with respectable performance.
         if self.gl_data is not None:
             self.gl_data.draw()
 ```
-![cube](rotating_cube.png)
+![cube](rotating_cube.gif)
 
 ## 📖 Documentation
 In depth documentation can be found here, or in the Docs directory.
