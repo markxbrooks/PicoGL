@@ -14,6 +14,7 @@ from elmo.gl.buffers.factory.abstract import create_layout, create_common_attrib
 from elmo.gl.renderers.gizmos.cartesian_axes import CartesianAxesRenderer
 from picogl.backend.legacy.gizmos.axes.array import AxesVBG
 from elmo.xtal.unit_cell_coords import UnitCellCoordinateGenerator
+from picogl.buffers.glcleanup import delete_buffer_object
 
 from picogl.logger import Logger as log
 
@@ -398,10 +399,9 @@ class LegacyCartesianAxesRenderer(CartesianAxesRenderer):
                 if hasattr(self.vbg, 'named_vbos'):
                     for vbo in self.vbg.named_vbos.values():
                         try:
-                            if hasattr(vbo, 'delete'):
-                                vbo.delete()
-                        except Exception as e:
-                            log.error(f"Error deleting VBO: {e}")
+                            delete_buffer_object(vbo)
+                        except Exception as ex:
+                            log.error(f"Error deleting VBO: {ex}")
                             
                 # Clean up the VBG itself
                 try:
