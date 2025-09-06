@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Development &#8212; PicoGL 1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b3523f8e" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=039e1c02" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=af2ce170"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Testing" href="testing.html" />
+    <link rel="prev" title="Utils API" href="api/utils.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="development">
+<h1>Development<a class="headerlink" href="#development" title="Permalink to this heading">¶</a></h1>
+<p>This section provides information for developers who want to contribute to PicoGL or understand its internal architecture.</p>
+<section id="project-structure">
+<h2>Project Structure<a class="headerlink" href="#project-structure" title="Permalink to this heading">¶</a></h2>
+<p>PicoGL follows a modular architecture with clear separation of concerns:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>picogl/
+├── backend/           # OpenGL backend implementations
+│   ├── modern/        # Modern OpenGL 3.3+ backend
+│   └── legacy/        # Legacy OpenGL 1.x/2.x backend
+├── buffers/           # Buffer management
+│   ├── vertex/        # Vertex buffer implementations
+│   └── attributes/    # Attribute specifications
+├── renderer/          # Core rendering classes
+│   ├── meshdata.py    # Mesh data management
+│   ├── object.py      # Object renderer
+│   └── texture.py     # Texture renderer
+├── shaders/           # Shader management
+│   ├── compile.py     # Shader compilation
+│   ├── load.py        # Shader loading
+│   └── manager.py     # Shader manager
+├── ui/                # User interface
+│   └── backend/       # UI backends (GLUT, Qt)
+├── utils/             # Utility functions
+│   ├── loader/        # Data loaders
+│   └── texture.py     # Texture utilities
+└── tests/             # Unit tests
+</pre></div>
+</div>
+</section>
+<section id="architecture-overview">
+<h2>Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permalink to this heading">¶</a></h2>
+<p>PicoGL uses a layered architecture:</p>
+<dl class="simple">
+<dt><strong>Application Layer</strong></dt><dd><ul class="simple">
+<li><p>User applications and examples</p></li>
+<li><p>High-level API usage</p></li>
+</ul>
+</dd>
+<dt><strong>Renderer Layer</strong></dt><dd><ul class="simple">
+<li><p>ObjectRenderer, TextureRenderer</p></li>
+<li><p>MeshData, GLContext</p></li>
+<li><p>High-level rendering abstractions</p></li>
+</ul>
+</dd>
+<dt><strong>Backend Layer</strong></dt><dd><ul class="simple">
+<li><p>Modern OpenGL 3.3+ implementation</p></li>
+<li><p>Legacy OpenGL 1.x/2.x implementation</p></li>
+<li><p>Platform-specific optimizations</p></li>
+</ul>
+</dd>
+<dt><strong>OpenGL Layer</strong></dt><dd><ul class="simple">
+<li><p>Direct OpenGL calls</p></li>
+<li><p>Buffer management</p></li>
+<li><p>Shader compilation</p></li>
+</ul>
+</dd>
+<dt><strong>Platform Layer</strong></dt><dd><ul class="simple">
+<li><p>GLUT, Qt backends</p></li>
+<li><p>Input handling</p></li>
+<li><p>Window management</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="design-principles">
+<h2>Design Principles<a class="headerlink" href="#design-principles" title="Permalink to this heading">¶</a></h2>
+<dl class="simple">
+<dt><strong>Compatibility First</strong></dt><dd><ul class="simple">
+<li><p>Support for both modern and legacy OpenGL</p></li>
+<li><p>Graceful degradation when features unavailable</p></li>
+<li><p>Cross-platform compatibility</p></li>
+</ul>
+</dd>
+<dt><strong>Educational Focus</strong></dt><dd><ul class="simple">
+<li><p>Clean, well-documented code</p></li>
+<li><p>Clear separation of concerns</p></li>
+<li><p>Easy to understand and modify</p></li>
+</ul>
+</dd>
+<dt><strong>Performance Aware</strong></dt><dd><ul class="simple">
+<li><p>Efficient rendering pipelines</p></li>
+<li><p>Minimal overhead</p></li>
+<li><p>Platform-specific optimizations</p></li>
+</ul>
+</dd>
+<dt><strong>Extensible Design</strong></dt><dd><ul class="simple">
+<li><p>Modular architecture</p></li>
+<li><p>Plugin system for backends</p></li>
+<li><p>Easy to add new features</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="backend-system">
+<h2>Backend System<a class="headerlink" href="#backend-system" title="Permalink to this heading">¶</a></h2>
+<section id="modern-backend">
+<h3>Modern Backend<a class="headerlink" href="#modern-backend" title="Permalink to this heading">¶</a></h3>
+<p>The modern backend provides OpenGL 3.3+ functionality:</p>
+<p><strong>Features</strong>:
+* Vertex Array Objects (VAOs)
+* Modern shader pipeline
+* Advanced uniform types
+* Efficient buffer management</p>
+<p><strong>Key Classes</strong>:
+* <code class="docutils literal notranslate"><span class="pre">VertexArrayObject</span></code>: VAO management
+* <code class="docutils literal notranslate"><span class="pre">ModernVBO</span></code>: Modern vertex buffers
+* <code class="docutils literal notranslate"><span class="pre">ModernEBO</span></code>: Modern element buffers
+* <code class="docutils literal notranslate"><span class="pre">ShaderProgram</span></code>: Shader management</p>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>from picogl.backend.modern.core.vertex.array.object import VertexArrayObject</p>
+<p># Create VAO
+vao = VertexArrayObject()
+vao.add_vbo(index=0, data=vertices, size=3)
+vao.add_vbo(index=1, data=colors, size=3)
+vao.add_ebo(data=indices)</p>
+<p># Draw
+with vao:</p>
+<blockquote>
+<div><p>vao.draw(mode=GL_TRIANGLES, index_count=len(indices))</p>
+</div></blockquote>
+</div></blockquote>
+</section>
+<section id="legacy-backend">
+<h3>Legacy Backend<a class="headerlink" href="#legacy-backend" title="Permalink to this heading">¶</a></h3>
+<p>The legacy backend provides OpenGL 1.x/2.x compatibility:</p>
+<p><strong>Features</strong>:
+* Immediate mode rendering
+* Legacy VBOs
+* Fixed function pipeline
+* Client state management</p>
+<p><strong>Key Classes</strong>:
+* <code class="docutils literal notranslate"><span class="pre">VertexBufferGroup</span></code>: Legacy buffer management
+* <code class="docutils literal notranslate"><span class="pre">LegacyVBO</span></code>: Legacy vertex buffers
+* <code class="docutils literal notranslate"><span class="pre">LegacyEBO</span></code>: Legacy element buffers
+* <code class="docutils literal notranslate"><span class="pre">LegacyGLMesh</span></code>: Legacy mesh rendering</p>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>from picogl.buffers.vertex.legacy import VertexBufferGroup</p>
+<p># Create vertex buffer group
+vbg = VertexBufferGroup()
+vbg.add_vbo(“position”, vertices, 3)
+vbg.add_vbo(“color”, colors, 3)
+vbg.add_ebo(indices)</p>
+<p># Draw
+vbg.bind()
+vbg.draw(mode=GL_TRIANGLES)
+vbg.unbind()</p>
+</div></blockquote>
+</section>
+<section id="backend-selection">
+<h3>Backend Selection<a class="headerlink" href="#backend-selection" title="Permalink to this heading">¶</a></h3>
+<p>PicoGL automatically selects the appropriate backend:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">select_backend</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">has_modern_opengl</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">ModernBackend</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">has_legacy_opengl</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">LegacyBackend</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ImmediateModeBackend</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="testing-framework">
+<h2>Testing Framework<a class="headerlink" href="#testing-framework" title="Permalink to this heading">¶</a></h2>
+<section id="unit-tests">
+<h3>Unit Tests<a class="headerlink" href="#unit-tests" title="Permalink to this heading">¶</a></h3>
+<p>PicoGL includes comprehensive unit tests:</p>
+<p><strong>Test Structure</strong>:
+.. code-block:: text</p>
+<blockquote>
+<div><p>tests/
+├── test_vertex_array_object.py
+├── test_vertex_buffer_group.py
+├── test_meshdata.py
+├── test_glmesh.py
+├── test_legacy_glmesh.py
+├── test_object_renderer.py
+└── test_texture_renderer.py</p>
+</div></blockquote>
+<p><strong>Running Tests</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p># Run all tests
+python -m unittest discover tests</p>
+<p># Run specific test
+python -m unittest tests.test_vertex_array_object</p>
+<p># Run with coverage
+python -m pytest tests/ –cov=picogl</p>
+</div></blockquote>
+<p><strong>Test Features</strong>:
+* Mock OpenGL functions to avoid context requirements
+* Comprehensive error handling tests
+* Edge case testing
+* Performance benchmarks</p>
+<p><strong>Example Test</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>import unittest
+from unittest.mock import MagicMock, patch
+from picogl.backend.modern.core.vertex.array.object import VertexArrayObject</p>
+<dl>
+<dt>class TestVertexArrayObject(unittest.TestCase):</dt><dd><dl>
+<dt>def setUp(self):</dt><dd><p># Mock OpenGL functions
+self.gl_patches = [</p>
+<blockquote>
+<div><p>patch(‘picogl.backend.modern.core.vertex.array.object.glGenVertexArrays’),
+patch(‘picogl.backend.modern.core.vertex.array.object.glBindVertexArray’),
+# … more patches</p>
+</div></blockquote>
+<p>]
+for patch_obj in self.gl_patches:</p>
+<blockquote>
+<div><p>patch_obj.start()</p>
+</div></blockquote>
+</dd>
+<dt>def tearDown(self):</dt><dd><dl class="simple">
+<dt>for patch_obj in self.gl_patches:</dt><dd><p>patch_obj.stop()</p>
+</dd>
+</dl>
+</dd>
+<dt>def test_initialization(self):</dt><dd><p>vao = VertexArrayObject()
+self.assertIsNotNone(vao)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="integration-tests">
+<h3>Integration Tests<a class="headerlink" href="#integration-tests" title="Permalink to this heading">¶</a></h3>
+<p>Integration tests verify end-to-end functionality:</p>
+<p><strong>Test Categories</strong>:
+* Rendering pipeline tests
+* Cross-platform compatibility tests
+* Performance regression tests
+* Memory leak tests</p>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><dl>
+<dt>def test_rendering_pipeline():</dt><dd><p># Create mesh data
+data = MeshData.from_raw(vertices=vertices, colors=colors)</p>
+<p># Create renderer
+renderer = ObjectRenderer(context=context, data=data)</p>
+<p># Test initialization
+renderer.initialize_shaders()
+renderer.initialize()</p>
+<p># Test rendering
+renderer.render()</p>
+<p># Verify no errors
+self.assertFalse(has_gl_errors())</p>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+</section>
+<section id="build-system">
+<h2>Build System<a class="headerlink" href="#build-system" title="Permalink to this heading">¶</a></h2>
+<section id="setup-configuration">
+<h3>Setup Configuration<a class="headerlink" href="#setup-configuration" title="Permalink to this heading">¶</a></h3>
+<p>PicoGL uses setuptools for packaging:</p>
+<p><strong>pyproject.toml</strong>:
+.. code-block:: toml</p>
+<blockquote>
+<div><p>[build-system]
+requires = [“setuptools&gt;=45”, “wheel”]
+build-backend = “setuptools.build_meta”</p>
+<p>[project]
+name = “picogl”
+version = “1.0.0”
+description = “Lightweight Python OpenGL wrapper”
+requires-python = “&gt;=3.7”
+dependencies = [</p>
+<blockquote>
+<div><p>“numpy&gt;=1.19.0”,
+“PyOpenGL&gt;=3.1.0”,
+“PyOpenGL-accelerate&gt;=3.1.0”,
+“pyglm&gt;=2.0.0”,
+“Pillow&gt;=8.0.0”</p>
+</div></blockquote>
+<p>]</p>
+<p>[project.optional-dependencies]
+dev = [</p>
+<blockquote>
+<div><p>“pytest&gt;=6.0.0”,
+“pytest-cov&gt;=2.0.0”,
+“black&gt;=21.0.0”,
+“flake8&gt;=3.8.0”,
+“mypy&gt;=0.800”</p>
+</div></blockquote>
+<p>]
+qt = [</p>
+<blockquote>
+<div><p>“PyQt5&gt;=5.15.0”,
+“PyQt6&gt;=6.0.0”</p>
+</div></blockquote>
+<p>]</p>
+</div></blockquote>
+<p><strong>setup.py</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>from setuptools import setup, find_packages</p>
+<dl>
+<dt>setup(</dt><dd><p>name=”picogl”,
+version=”1.0.0”,
+packages=find_packages(),
+python_requires=”&gt;=3.7”,
+install_requires=[</p>
+<blockquote>
+<div><p>“numpy&gt;=1.19.0”,
+“PyOpenGL&gt;=3.1.0”,
+“PyOpenGL-accelerate&gt;=3.1.0”,
+“pyglm&gt;=2.0.0”,
+“Pillow&gt;=8.0.0”</p>
+</div></blockquote>
+<p>],
+extras_require={</p>
+<blockquote>
+<div><dl class="simple">
+<dt>“dev”: [</dt><dd><p>“pytest&gt;=6.0.0”,
+“pytest-cov&gt;=2.0.0”,
+“black&gt;=21.0.0”,
+“flake8&gt;=3.8.0”,
+“mypy&gt;=0.800”</p>
+</dd>
+</dl>
+<p>],
+“qt”: [</p>
+<blockquote>
+<div><p>“PyQt5&gt;=5.15.0”,
+“PyQt6&gt;=6.0.0”</p>
+</div></blockquote>
+<p>]</p>
+</div></blockquote>
+<p>}</p>
+</dd>
+</dl>
+<p>)</p>
+</div></blockquote>
+</section>
+<section id="development-dependencies">
+<h3>Development Dependencies<a class="headerlink" href="#development-dependencies" title="Permalink to this heading">¶</a></h3>
+<p><strong>Core Dependencies</strong>:
+* Python 3.7+
+* NumPy
+* PyOpenGL
+* PyGLM
+* Pillow</p>
+<p><strong>Development Dependencies</strong>:
+* pytest: Testing framework
+* pytest-cov: Coverage testing
+* black: Code formatting
+* flake8: Linting
+* mypy: Type checking</p>
+<p><strong>Installation</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p># Install in development mode
+pip install -e .</p>
+<p># Install with development dependencies
+pip install -e .[dev]</p>
+<p># Install with all optional dependencies
+pip install -e .[dev,qt]</p>
+</div></blockquote>
+</section>
+</section>
+<section id="code-style">
+<h2>Code Style<a class="headerlink" href="#code-style" title="Permalink to this heading">¶</a></h2>
+<section id="formatting">
+<h3>Formatting<a class="headerlink" href="#formatting" title="Permalink to this heading">¶</a></h3>
+<p>PicoGL uses Black for code formatting:</p>
+<p><strong>Configuration</strong>:
+.. code-block:: toml</p>
+<blockquote>
+<div><p>[tool.black]
+line-length = 88
+target-version = [‘py37’]
+include = ‘.pyi?$’
+extend-exclude = ‘’’
+/(</p>
+<blockquote>
+<div><blockquote>
+<div><p>.git</p>
+</div></blockquote>
+<div class="line-block">
+<div class="line">.mypy_cache</div>
+<div class="line">.tox</div>
+<div class="line">.venv</div>
+<div class="line">_build</div>
+<div class="line">buck-out</div>
+<div class="line">build</div>
+<div class="line">dist</div>
+</div>
+</div></blockquote>
+</div></blockquote>
+<p><strong>Usage</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p># Format all Python files
+black picogl/</p>
+<p># Check formatting
+black –check picogl/</p>
+</div></blockquote>
+</section>
+<section id="linting">
+<h3>Linting<a class="headerlink" href="#linting" title="Permalink to this heading">¶</a></h3>
+<p>PicoGL uses flake8 for linting:</p>
+<p><strong>Configuration</strong>:
+.. code-block:: ini</p>
+<blockquote>
+<div><p>[flake8]
+max-line-length = 88
+extend-ignore = E203, W503
+exclude =</p>
+<blockquote>
+<div><p>.git,
+__pycache__,
+.venv,
+_build,
+dist</p>
+</div></blockquote>
+</div></blockquote>
+<p><strong>Usage</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p># Lint all Python files
+flake8 picogl/</p>
+<p># Lint specific file
+flake8 picogl/renderer/meshdata.py</p>
+</div></blockquote>
+</section>
+<section id="type-checking">
+<h3>Type Checking<a class="headerlink" href="#type-checking" title="Permalink to this heading">¶</a></h3>
+<p>PicoGL uses mypy for type checking:</p>
+<p><strong>Configuration</strong>:
+.. code-block:: ini</p>
+<blockquote>
+<div><p>[mypy]
+python_version = 3.7
+warn_return_any = True
+warn_unused_configs = True
+disallow_untyped_defs = True
+disallow_incomplete_defs = True
+check_untyped_defs = True
+disallow_untyped_decorators = True
+no_implicit_optional = True
+warn_redundant_casts = True
+warn_unused_ignores = True
+warn_no_return = True
+warn_unreachable = True
+strict_equality = True</p>
+</div></blockquote>
+<p><strong>Usage</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p># Type check all Python files
+mypy picogl/</p>
+<p># Type check specific file
+mypy picogl/renderer/meshdata.py</p>
+</div></blockquote>
+</section>
+</section>
+<section id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this heading">¶</a></h2>
+<section id="sphinx-configuration">
+<h3>Sphinx Configuration<a class="headerlink" href="#sphinx-configuration" title="Permalink to this heading">¶</a></h3>
+<p>PicoGL uses Sphinx for documentation:</p>
+<p><strong>conf.py</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>import os
+import sys</p>
+<p>sys.path.insert(0, os.path.abspath(‘..’))</p>
+<p>project = ‘PicoGL’
+copyright = ‘2025, PicoGL Contributors’
+author = ‘PicoGL Contributors’
+release = ‘1.0.0’</p>
+<dl class="simple">
+<dt>extensions = [</dt><dd><p>‘sphinx.ext.autodoc’,
+‘sphinx.ext.viewcode’,
+‘sphinx.ext.napoleon’,
+‘sphinx.ext.intersphinx’,
+‘sphinx.ext.todo’,
+‘sphinx.ext.coverage’,
+‘sphinx.ext.mathjax’,
+‘sphinx.ext.ifconfig’,
+‘sphinx.ext.githubpages’,</p>
+</dd>
+</dl>
+<p>]</p>
+<p>html_theme = ‘sphinx_rtd_theme’
+latex_engine = ‘xelatex’</p>
+</div></blockquote>
+<p><strong>Building Documentation</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p># Build HTML documentation
+sphinx-build -b html doc/ doc/_build/html</p>
+<p># Build PDF documentation
+sphinx-build -b latex doc/ doc/_build/latex
+cd doc/_build/latex &amp;&amp; make</p>
+</div></blockquote>
+</section>
+<section id="docstring-style">
+<h3>Docstring Style<a class="headerlink" href="#docstring-style" title="Permalink to this heading">¶</a></h3>
+<p>PicoGL uses Google-style docstrings:</p>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><dl>
+<dt>def create_mesh_data(vertices, colors, normals=None):</dt><dd><p>“””Create mesh data from vertex information.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>vertices: Array of vertex positions (N, 3)
+colors: Array of vertex colors (N, 3)
+normals: Optional array of vertex normals (N, 3)</p>
+</dd>
+<dt>Returns:</dt><dd><p>MeshData: Mesh data object</p>
+</dd>
+<dt>Raises:</dt><dd><p>ValueError: If vertices or colors are invalid
+TypeError: If input types are incorrect</p>
+</dd>
+</dl>
+<p>“””
+pass</p>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+</section>
+<section id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Permalink to this heading">¶</a></h2>
+<section id="getting-started">
+<h3>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Fork the repository</strong> on GitHub</p></li>
+<li><p><strong>Clone your fork</strong> locally</p></li>
+<li><p><strong>Create a feature branch</strong></p></li>
+<li><p><strong>Make your changes</strong></p></li>
+<li><p><strong>Add tests</strong> for new functionality</p></li>
+<li><p><strong>Run the test suite</strong></p></li>
+<li><p><strong>Submit a pull request</strong></p></li>
+</ol>
+<p><strong>Example</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p># Fork and clone
+git clone <a class="reference external" href="https://github.com/your-username/picogl.git">https://github.com/your-username/picogl.git</a>
+cd picogl</p>
+<p># Create feature branch
+git checkout -b feature/new-feature</p>
+<p># Make changes
+# … edit files …</p>
+<p># Run tests
+python -m unittest discover tests</p>
+<p># Commit changes
+git add .
+git commit -m “Add new feature”</p>
+<p># Push to fork
+git push origin feature/new-feature</p>
+<p># Create pull request on GitHub</p>
+</div></blockquote>
+</section>
+<section id="code-review-process">
+<h3>Code Review Process<a class="headerlink" href="#code-review-process" title="Permalink to this heading">¶</a></h3>
+<p><strong>Pull Request Requirements</strong>:
+* All tests must pass
+* Code must be formatted with Black
+* Code must pass flake8 linting
+* Code must pass mypy type checking
+* New functionality must have tests
+* Documentation must be updated</p>
+<p><strong>Review Checklist</strong>:
+* [ ] Code follows project style guidelines
+* [ ] Tests cover new functionality
+* [ ] Documentation is updated
+* [ ] No breaking changes without discussion
+* [ ] Performance impact is considered
+* [ ] Cross-platform compatibility is maintained</p>
+</section>
+</section>
+<section id="release-process">
+<h2>Release Process<a class="headerlink" href="#release-process" title="Permalink to this heading">¶</a></h2>
+<section id="version-numbering">
+<h3>Version Numbering<a class="headerlink" href="#version-numbering" title="Permalink to this heading">¶</a></h3>
+<p>PicoGL uses semantic versioning (MAJOR.MINOR.PATCH):</p>
+<ul class="simple">
+<li><p><strong>MAJOR</strong>: Breaking changes</p></li>
+<li><p><strong>MINOR</strong>: New features (backward compatible)</p></li>
+<li><p><strong>PATCH</strong>: Bug fixes (backward compatible)</p></li>
+</ul>
+<p><strong>Examples</strong>:
+* 1.0.0: Initial release
+* 1.1.0: New features added
+* 1.1.1: Bug fixes
+* 2.0.0: Breaking changes</p>
+</section>
+<section id="release-steps">
+<h3>Release Steps<a class="headerlink" href="#release-steps" title="Permalink to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Update version numbers</strong> in all relevant files</p></li>
+<li><p><strong>Update CHANGELOG.md</strong> with new features and fixes</p></li>
+<li><p><strong>Run full test suite</strong> to ensure everything works</p></li>
+<li><p><strong>Build documentation</strong> and verify it’s correct</p></li>
+<li><p><strong>Create release tag</strong> on GitHub</p></li>
+<li><p><strong>Build and upload</strong> to PyPI</p></li>
+<li><p><strong>Announce release</strong> to community</p></li>
+</ol>
+<p><strong>Example</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p># Update version
+sed -i ‘s/version = “1.0.0”/version = “1.1.0”/’ pyproject.toml</p>
+<p># Update changelog
+# … edit CHANGELOG.md …</p>
+<p># Run tests
+python -m unittest discover tests</p>
+<p># Build documentation
+sphinx-build -b html doc/ doc/_build/html</p>
+<p># Create tag
+git tag -a v1.1.0 -m “Release version 1.1.0”
+git push origin v1.1.0</p>
+<p># Build and upload
+python -m build
+python -m twine upload dist/*</p>
+</div></blockquote>
+</section>
+</section>
+<section id="performance-considerations">
+<h2>Performance Considerations<a class="headerlink" href="#performance-considerations" title="Permalink to this heading">¶</a></h2>
+<section id="rendering-performance">
+<h3>Rendering Performance<a class="headerlink" href="#rendering-performance" title="Permalink to this heading">¶</a></h3>
+<p><strong>Modern OpenGL</strong>:
+* Use VAOs for efficient rendering
+* Minimize state changes
+* Use instanced rendering for repeated objects
+* Implement frustum culling</p>
+<p><strong>Legacy OpenGL</strong>:
+* Use VBOs when available
+* Minimize immediate mode calls
+* Batch similar operations
+* Use display lists for static geometry</p>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p># Efficient rendering
+def render_scene(self):</p>
+<blockquote>
+<div><p># Set up state once
+glEnable(GL_DEPTH_TEST)
+glEnable(GL_CULL_FACE)</p>
+<p># Render all objects with same state
+for obj in self.objects:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>if obj.visible:</dt><dd><p>obj.render()</p>
+</dd>
+</dl>
+</div></blockquote>
+<p># Clean up state
+glDisable(GL_CULL_FACE)
+glDisable(GL_DEPTH_TEST)</p>
+</div></blockquote>
+</div></blockquote>
+</section>
+<section id="memory-management">
+<h3>Memory Management<a class="headerlink" href="#memory-management" title="Permalink to this heading">¶</a></h3>
+<p><strong>Buffer Management</strong>:
+* Upload data once and reuse
+* Delete unused buffers
+* Use appropriate buffer types
+* Monitor memory usage</p>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><dl>
+<dt>class MeshManager:</dt><dd><dl>
+<dt>def __init__(self):</dt><dd><p>self.meshes = {}
+self.buffers = {}</p>
+</dd>
+<dt>def load_mesh(self, name, data):</dt><dd><dl class="simple">
+<dt>if name not in self.meshes:</dt><dd><p># Create new mesh
+mesh = self.create_mesh(data)
+self.meshes[name] = mesh
+self.buffers[name] = mesh.get_buffers()</p>
+</dd>
+</dl>
+<p>return self.meshes[name]</p>
+</dd>
+<dt>def cleanup(self):</dt><dd><dl class="simple">
+<dt>for buffers in self.buffers.values():</dt><dd><dl class="simple">
+<dt>for buffer in buffers:</dt><dd><p>buffer.delete()</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>self.buffers.clear()
+self.meshes.clear()</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+</section>
+<section id="debugging">
+<h2>Debugging<a class="headerlink" href="#debugging" title="Permalink to this heading">¶</a></h2>
+<section id="opengl-debugging">
+<h3>OpenGL Debugging<a class="headerlink" href="#opengl-debugging" title="Permalink to this heading">¶</a></h3>
+<p><strong>Error Checking</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><dl>
+<dt>def check_gl_error():</dt><dd><p>error = glGetError()
+if error != GL_NO_ERROR:</p>
+<blockquote>
+<div><p>print(f”OpenGL error: {error}”)
+return False</p>
+</div></blockquote>
+<p>return True</p>
+</dd>
+</dl>
+<p># Use after OpenGL calls
+glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, None)
+check_gl_error()</p>
+</div></blockquote>
+<p><strong>Debug Output</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def debug_print_gl_info():</dt><dd><p>print(f”OpenGL version: {glGetString(GL_VERSION)}”)
+print(f”Vendor: {glGetString(GL_VENDOR)}”)
+print(f”Renderer: {glGetString(GL_RENDERER)}”)
+print(f”Extensions: {glGetString(GL_EXTENSIONS)}”)</p>
+</dd>
+</dl>
+</div></blockquote>
+<p><strong>Performance Profiling</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>import time</p>
+<dl>
+<dt>def profile_render():</dt><dd><p>start_time = time.time()</p>
+<p># Render scene
+self.render_scene()</p>
+<p>end_time = time.time()
+frame_time = end_time - start_time
+fps = 1.0 / frame_time</p>
+<p>print(f”Frame time: {frame_time:.3f}s, FPS: {fps:.1f}”)</p>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+</section>
+<section id="common-issues">
+<h2>Common Issues<a class="headerlink" href="#common-issues" title="Permalink to this heading">¶</a></h2>
+<p><strong>OpenGL Context Issues</strong>:
+* Ensure OpenGL context is created before use
+* Check for context loss
+* Handle context recreation</p>
+<p><strong>Memory Issues</strong>:
+* Monitor buffer usage
+* Clean up unused resources
+* Use appropriate data types</p>
+<p><strong>Performance Issues</strong>:
+* Profile rendering code
+* Optimize draw calls
+* Use appropriate rendering techniques</p>
+<p><strong>Cross-platform Issues</strong>:
+* Test on multiple platforms
+* Handle platform-specific differences
+* Use fallback implementations</p>
+<p>For more information, see the <a class="reference internal" href="troubleshooting.html"><span class="doc">Troubleshooting</span></a> guide.</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">PicoGL</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="legacy_examples.html">Legacy Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/renderer.html">Renderer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/buffers.html">Buffers API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/shaders.html">Shaders API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/ui.html">UI API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/utils.html">Utils API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Development</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#project-structure">Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#architecture-overview">Architecture Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#design-principles">Design Principles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#backend-system">Backend System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing-framework">Testing Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#build-system">Build System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#code-style">Code Style</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contributing">Contributing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#release-process">Release Process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#performance-considerations">Performance Considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#debugging">Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#common-issues">Common Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="api/utils.html" title="previous chapter">Utils API</a></li>
+      <li>Next: <a href="testing.html" title="next chapter">Testing</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2025, PicoGL Contributors.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/development.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

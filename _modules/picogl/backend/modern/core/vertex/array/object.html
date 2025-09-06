@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>picogl.backend.modern.core.vertex.array.object &#8212; PicoGL 1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/pygments.css?v=b3523f8e" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/alabaster.css?v=039e1c02" />
+    <script data-url_root="../../../../../../../" id="documentation_options" src="../../../../../../../_static/documentation_options.js?v=af2ce170"></script>
+    <script src="../../../../../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../../../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="index" title="Index" href="../../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for picogl.backend.modern.core.vertex.array.object</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">vertex_array_object.py</span>
+
+<span class="sd">This module defines the `VertexArrayObject` class, which encapsulates the creation, management,</span>
+<span class="sd">and usage of OpenGL Vertex Array Objects (VAOs) in modern OpenGL rendering workflows.</span>
+
+<span class="sd">The `VertexArrayObject` class inherits from `VertexBuffer` and provides</span>
+<span class="sd">a clean, object-oriented interface for managing VAO handles and vertex</span>
+<span class="sd">attribute configurations.</span>
+
+<span class="sd">It supports binding/unbinding operations,</span>
+<span class="sd">attribute registration, and rendering via `glDrawArrays`.</span>
+
+<span class="sd">Features:</span>
+<span class="sd">- Automatic VAO generation if none is provided</span>
+<span class="sd">- Storage and enabling of vertex attribute definitions</span>
+<span class="sd">- Integration with VBOs via `ModernVBO` (used as context managers)</span>
+<span class="sd">- Simplified draw calls for points or other primitive modes</span>
+<span class="sd">- Graceful deletion and handle management</span>
+
+<span class="sd">Dependencies:</span>
+<span class="sd">- numpy</span>
+<span class="sd">- PyOpenGL (OpenGL.GL and OpenGL.raw.GL)</span>
+
+<span class="sd">Example usage:</span>
+<span class="sd">==============</span>
+<span class="sd">&gt;&gt;&gt;vao = VertexArrayObject()</span>
+<span class="sd">...vao.add_attribute(index=0, vbo=vbo, size=3)</span>
+<span class="sd">...vao.add_attribute(index=1, vbo=colors, size=3)</span>
+<span class="sd">...vao.update(index_count=100)</span>
+
+<span class="sd">Intended for OpenGL 3.0+ with VAO support.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">ctypes</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">OpenGL.GL</span> <span class="kn">import</span> <span class="n">glDeleteVertexArrays</span><span class="p">,</span> <span class="n">glGenVertexArrays</span>
+<span class="kn">from</span> <span class="nn">OpenGL.raw.GL._types</span> <span class="kn">import</span> <span class="n">GL_FLOAT</span><span class="p">,</span> <span class="n">GL_UNSIGNED_INT</span>
+<span class="kn">from</span> <span class="nn">OpenGL.raw.GL.ARB.vertex_array_object</span> <span class="kn">import</span> <span class="n">glBindVertexArray</span>
+<span class="kn">from</span> <span class="nn">OpenGL.raw.GL.VERSION.GL_1_0</span> <span class="kn">import</span> <span class="n">GL_POINTS</span>
+<span class="kn">from</span> <span class="nn">OpenGL.raw.GL.VERSION.GL_1_1</span> <span class="kn">import</span> <span class="n">glDrawArrays</span><span class="p">,</span> <span class="n">glDrawElements</span>
+<span class="kn">from</span> <span class="nn">OpenGL.raw.GL.VERSION.GL_1_5</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">GL_ARRAY_BUFFER</span><span class="p">,</span>
+    <span class="n">GL_ELEMENT_ARRAY_BUFFER</span><span class="p">,</span>
+    <span class="n">GL_STATIC_DRAW</span><span class="p">,</span>
+    <span class="n">glBindBuffer</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">OpenGL.raw.GL.VERSION.GL_2_0</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">glEnableVertexAttribArray</span><span class="p">,</span>
+    <span class="n">glVertexAttribPointer</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">picogl.backend.modern.core.vertex.array.helpers</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">enable_points_rendering_state</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">picogl.backend.modern.core.vertex.base</span> <span class="kn">import</span> <span class="n">VertexBuffer</span>
+<span class="kn">from</span> <span class="nn">picogl.backend.modern.core.vertex.buffer.element</span> <span class="kn">import</span> <span class="n">ModernEBO</span>
+<span class="kn">from</span> <span class="nn">picogl.backend.modern.core.vertex.buffer.object</span> <span class="kn">import</span> <span class="n">ModernVBO</span>
+<span class="kn">from</span> <span class="nn">picogl.buffers.attributes</span> <span class="kn">import</span> <span class="n">LayoutDescriptor</span>
+<span class="kn">from</span> <span class="nn">picogl.buffers.base</span> <span class="kn">import</span> <span class="n">VertexBase</span>
+<span class="kn">from</span> <span class="nn">picogl.buffers.glcleanup</span> <span class="kn">import</span> <span class="n">delete_buffer</span>
+<span class="kn">from</span> <span class="nn">picogl.buffers.vertex.aliases</span> <span class="kn">import</span> <span class="n">NAME_ALIASES</span>
+<span class="kn">from</span> <span class="nn">picogl.logger</span> <span class="kn">import</span> <span class="n">Logger</span> <span class="k">as</span> <span class="n">log</span>
+<span class="kn">from</span> <span class="nn">picogl.safe</span> <span class="kn">import</span> <span class="n">gl_gen_safe</span>
+
+
+<div class="viewcode-block" id="VertexArrayObject"><a class="viewcode-back" href="../../../../../../../api/buffers.html#picogl.backend.modern.core.vertex.array.object.VertexArrayObject">[docs]</a><span class="k">class</span> <span class="nc">VertexArrayObject</span><span class="p">(</span><span class="n">VertexBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    OpenGL Vertex Array Objects (VAO) class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="VertexArrayObject.__init__"><a class="viewcode-back" href="../../../../../../../api/buffers.html#picogl.backend.modern.core.vertex.array.object.VertexArrayObject.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handle</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        VertexArrayObject</span>
+
+<span class="sd">        :param handle: int Handle (ID) of the OpenGL Vertex Array Object (VAO).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_configured</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">handle</span> <span class="ow">or</span> <span class="n">handle</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">glGenVertexArrays</span><span class="p">:</span>
+                <span class="n">handle</span> <span class="o">=</span> <span class="n">gl_gen_safe</span><span class="p">(</span><span class="n">glGenVertexArrays</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                    <span class="s2">&quot;glGenVertexArrays not available — OpenGL context not ready&quot;</span>
+                <span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vbos</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">named_vbos</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">VertexBuffer</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vao</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Bonds Vertex Array Object. Does absolutely nothing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vbo</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Atom Vertex Buffer Object</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cbo</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Color Vertex Buffer Object</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nbo</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Normal Vertex Buffer Object</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ebo</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Bond Index Buffer Object</span>
+        <span class="c1"># self.named_vbos: dict[str, LegacyVBO] = {}  # store by semantic name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ebo</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ebo</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">LayoutDescriptor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># self.named_vbos: dict[str, ModernVBO] = {}  # store by semantic name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="VertexArrayObject.bind"><a class="viewcode-back" href="../../../../../../../api/buffers.html#picogl.backend.modern.core.vertex.array.object.VertexArrayObject.bind">[docs]</a>    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Bind the VAO for use in rendering.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">glBindVertexArray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="VertexArrayObject.unbind"><a class="viewcode-back" href="../../../../../../../api/buffers.html#picogl.backend.modern.core.vertex.array.object.VertexArrayObject.unbind">[docs]</a>    <span class="k">def</span> <span class="nf">unbind</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Unbind the VAO by binding to zero.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">glBindVertexArray</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="VertexArrayObject.delete"><a class="viewcode-back" href="../../../../../../../api/buffers.html#picogl.backend.modern.core.vertex.array.object.VertexArrayObject.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Delete the VAO from GPU memory.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">glDeleteVertexArrays</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="VertexArrayObject.set_layout"><a class="viewcode-back" href="../../../../../../../api/buffers.html#picogl.backend.modern.core.vertex.array.object.VertexArrayObject.set_layout">[docs]</a>    <span class="k">def</span> <span class="nf">set_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layout</span><span class="p">:</span> <span class="n">LayoutDescriptor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        set_layout</span>
+
+<span class="sd">        :param layout: LayoutDescriptor: The layout descriptor to define the vertex attribute format.</span>
+<span class="sd">        :raises: None</span>
+
+<span class="sd">        Sets the layout for the rendering setup by binding the buffers and configuring the attributes.</span>
+<span class="sd">        The state is stored in the Vertex Array Object (VAO). This method assumes a single Vertex Buffer</span>
+<span class="sd">        Object (VBO) holds all position data but can be adapted as required. Handles optional usage of</span>
+<span class="sd">        Normal Buffer Object (NBO) and Element Buffer Object (EBO) if present.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">layout</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vao</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span>
+            <span class="n">glBindVertexArray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vbo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">glBindBuffer</span><span class="p">(</span><span class="n">GL_ARRAY_BUFFER</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vbo</span><span class="p">,</span> <span class="s2">&quot;_id&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vbo</span><span class="p">))</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nbo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># If you have multiple buffers, bind as needed per attribute</span>
+                <span class="k">pass</span>  <span class="c1"># adapt as needed</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">layout</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">attributes</span><span class="p">:</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">parameter</span><span class="p">(</span><span class="s2">&quot;attr&quot;</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+                    <span class="n">glEnableVertexAttribArray</span><span class="p">(</span><span class="n">attr</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+                    <span class="n">glVertexAttribPointer</span><span class="p">(</span>
+                        <span class="n">attr</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                        <span class="n">attr</span><span class="o">.</span><span class="n">size</span><span class="p">,</span>
+                        <span class="n">attr</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
+                        <span class="n">attr</span><span class="o">.</span><span class="n">normalized</span><span class="p">,</span>
+                        <span class="n">attr</span><span class="o">.</span><span class="n">stride</span><span class="p">,</span>
+                        <span class="n">ctypes</span><span class="o">.</span><span class="n">c_void_p</span><span class="p">(</span><span class="n">attr</span><span class="o">.</span><span class="n">offset</span><span class="p">),</span>
+                    <span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ebo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">glBindBuffer</span><span class="p">(</span>
+                    <span class="n">GL_ELEMENT_ARRAY_BUFFER</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ebo</span><span class="p">,</span> <span class="s2">&quot;_id&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ebo</span><span class="p">)</span>
+                <span class="p">)</span>
+
+            <span class="n">glBindVertexArray</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_configured</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;error </span><span class="si">{</span><span class="n">ex</span><span class="si">}</span><span class="s2"> occurred setting layout&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="VertexArrayObject.add_vbo_object"><a class="viewcode-back" href="../../../../../../../api/buffers.html#picogl.backend.modern.core.vertex.array.object.VertexArrayObject.add_vbo_object">[docs]</a>    <span class="k">def</span> <span class="nf">add_vbo_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">vbo</span><span class="p">:</span> <span class="s2">&quot;LegacyVBO&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;LegacyVBO&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register a VBO by semantic name or shorthand alias.&quot;&quot;&quot;</span>
+        <span class="c1"># normalize to canonical key</span>
+        <span class="n">canonical</span> <span class="o">=</span> <span class="n">NAME_ALIASES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+        <span class="c1"># store consistently</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">named_vbos</span><span class="p">[</span><span class="n">canonical</span><span class="p">]</span> <span class="o">=</span> <span class="n">vbo</span>
+
+        <span class="c1"># and assign to attribute if it exists</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">canonical</span><span class="p">):</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">canonical</span><span class="p">,</span> <span class="n">vbo</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">vbo</span></div>
+
+<div class="viewcode-block" id="VertexArrayObject.get_vbo_object"><a class="viewcode-back" href="../../../../../../../api/buffers.html#picogl.backend.modern.core.vertex.array.object.VertexArrayObject.get_vbo_object">[docs]</a>    <span class="k">def</span> <span class="nf">get_vbo_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;LegacyVBO&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve a VBO by its semantic or shorthand name.&quot;&quot;&quot;</span>
+        <span class="n">canonical</span> <span class="o">=</span> <span class="n">NAME_ALIASES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">named_vbos</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">canonical</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="VertexArrayObject.add_vbo"><a class="viewcode-back" href="../../../../../../../api/buffers.html#picogl.backend.modern.core.vertex.array.object.VertexArrayObject.add_vbo">[docs]</a>    <span class="k">def</span> <span class="nf">add_vbo</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">dtype</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">GL_FLOAT</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">handle</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModernVBO</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a Vertex Buffer Object (VBO) to the VAO and set its attributes.</span>
+
+<span class="sd">        :param handle:</span>
+<span class="sd">        :param index: VAO attribute index</span>
+<span class="sd">        :param data: Vertex data</span>
+<span class="sd">        :param size: Size per vertex (e.g., 3 for vec3)</span>
+<span class="sd">        :param dtype: OpenGL data type (e.g., GL_FLOAT)</span>
+<span class="sd">        :param name: Optional semantic name (e.g., &quot;position&quot;, &quot;color&quot;)</span>
+<span class="sd">        :return: OpenGL buffer handle (GLuint)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vbo</span> <span class="o">=</span> <span class="n">ModernVBO</span><span class="p">(</span><span class="n">handle</span><span class="o">=</span><span class="n">handle</span><span class="p">)</span>
+        <span class="n">vbo</span><span class="o">.</span><span class="n">bind</span><span class="p">()</span>
+        <span class="n">vbo</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">vbo</span><span class="o">.</span><span class="n">set_vertex_attributes</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="n">vbo</span><span class="o">.</span><span class="n">configure</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">index</span><span class="p">,</span> <span class="n">vbo</span><span class="o">.</span><span class="n">handle</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vbos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vbo</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">named_vbos</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">vbo</span>
+        <span class="k">return</span> <span class="n">vbo</span></div>
+
+<div class="viewcode-block" id="VertexArrayObject.delete_buffers"><a class="viewcode-back" href="../../../../../../../api/buffers.html#picogl.backend.modern.core.vertex.array.object.VertexArrayObject.delete_buffers">[docs]</a>    <span class="k">def</span> <span class="nf">delete_buffers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        delete_buffers</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">vbo</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vbos</span><span class="p">:</span>
+            <span class="n">delete_buffer</span><span class="p">(</span><span class="n">vbo</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vbos</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ebo</span><span class="p">:</span>
+            <span class="n">delete_buffer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ebo</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ebo</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">named_vbos</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="VertexArrayObject.add_attribute"><a class="viewcode-back" href="../../../../../../../api/buffers.html#picogl.backend.modern.core.vertex.array.object.VertexArrayObject.add_attribute">[docs]</a>    <span class="k">def</span> <span class="nf">add_attribute</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">vbo</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="n">dtype</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">GL_FLOAT</span><span class="p">,</span>
+        <span class="n">normalized</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">stride</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        add_attribute</span>
+
+<span class="sd">        :param index: int Index of the vertex attribute.</span>
+<span class="sd">        :param vbo: int Vertex Buffer Object (VBO) associated with this attribute.</span>
+<span class="sd">        :param size: int Size of the vertex attribute (e.g., 3 for a 3D vector).</span>
+<span class="sd">        :param dtype: int Data type of the vertex attribute (default is GL_FLOAT).</span>
+<span class="sd">        :param normalized: bool Whether the data is normalized (default is False).</span>
+<span class="sd">        :param stride: int Byte offset between consecutive vertex attributes (default is 0).</span>
+<span class="sd">        :param offset: int Byte offset to the first component of the</span>
+<span class="sd">        vertex attribute (default is 0).</span>
+<span class="sd">        Add a vertex attribute to the VAO.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">index</span><span class="p">,</span> <span class="n">vbo</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">normalized</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">offset</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="VertexArrayObject.add_ebo"><a class="viewcode-back" href="../../../../../../../api/buffers.html#picogl.backend.modern.core.vertex.array.object.VertexArrayObject.add_ebo">[docs]</a>    <span class="k">def</span> <span class="nf">add_ebo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModernEBO</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        add_ebo</span>
+
+<span class="sd">        :param data: np.ndarray</span>
+<span class="sd">        :return: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ebo</span> <span class="o">=</span> <span class="n">ModernEBO</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">ebo</span><span class="o">.</span><span class="n">bind</span><span class="p">()</span>
+        <span class="n">ebo</span><span class="o">.</span><span class="n">set_element_attributes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">nbytes</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">GL_STATIC_DRAW</span><span class="p">)</span>
+        <span class="n">ebo</span><span class="o">.</span><span class="n">configure</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ebo</span> <span class="o">=</span> <span class="n">ebo</span>
+        <span class="k">return</span> <span class="n">ebo</span></div>
+
+<div class="viewcode-block" id="VertexArrayObject.set_ebo"><a class="viewcode-back" href="../../../../../../../api/buffers.html#picogl.backend.modern.core.vertex.array.object.VertexArrayObject.set_ebo">[docs]</a>    <span class="k">def</span> <span class="nf">set_ebo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ebo</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        add_ebo</span>
+
+<span class="sd">        :param ebo: int</span>
+<span class="sd">        :return: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ebo</span> <span class="o">=</span> <span class="n">ModernEBO</span><span class="p">(</span><span class="n">handle</span><span class="o">=</span><span class="n">ebo</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ebo</span><span class="o">.</span><span class="n">bind</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">ebo</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">index_count</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the number of indices in the EBO.</span>
+
+<span class="sd">        :return: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ebo</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ebo</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ebo</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;error </span><span class="si">{</span><span class="n">ex</span><span class="si">}</span><span class="s2"> occurred&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="VertexArrayObject.draw"><a class="viewcode-back" href="../../../../../../../api/buffers.html#picogl.backend.modern.core.vertex.array.object.VertexArrayObject.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">index_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">dtype</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">GL_UNSIGNED_INT</span><span class="p">,</span>
+        <span class="n">mode</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">GL_POINTS</span><span class="p">,</span>
+        <span class="n">pointer</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_void_p</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        draw</span>
+
+<span class="sd">        :param pointer: ctypes.c_void_p(0)</span>
+<span class="sd">        :param dtype: GL_UNSIGNED_INT</span>
+<span class="sd">        :param index_count: int Number of vertices to draw.</span>
+<span class="sd">        :param mode: int e.g. GL_POINT</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">atom_count</span> <span class="o">=</span> <span class="n">index_count</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">index_count</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">GL_POINTS</span><span class="p">:</span>
+            <span class="n">enable_points_rendering_state</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ebo</span><span class="p">:</span>
+            <span class="n">glDrawElements</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">atom_count</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">pointer</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">glDrawArrays</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">atom_count</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../../../../../index.html">PicoGL</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../legacy_examples.html">Legacy Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../troubleshooting.html">Troubleshooting</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../api/renderer.html">Renderer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../api/buffers.html">Buffers API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../api/shaders.html">Shaders API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../api/ui.html">UI API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../api/utils.html">Utils API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2025, PicoGL Contributors.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

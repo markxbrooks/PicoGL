@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Troubleshooting &#8212; PicoGL 1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b3523f8e" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=039e1c02" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=af2ce170"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Renderer API" href="api/renderer.html" />
+    <link rel="prev" title="Legacy Examples" href="legacy_examples.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="troubleshooting">
+<h1>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this heading">¶</a></h1>
+<p>This guide helps you diagnose and fix common issues with PicoGL.</p>
+<section id="common-issues">
+<h2>Common Issues<a class="headerlink" href="#common-issues" title="Permalink to this heading">¶</a></h2>
+<section id="installation-problems">
+<h3>Installation Problems<a class="headerlink" href="#installation-problems" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt><strong>“No module named ‘picogl’” error</strong></dt><dd><ul class="simple">
+<li><p>Ensure PicoGL is installed: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">picogl</span></code></p></li>
+<li><p>Check Python path and virtual environment</p></li>
+<li><p>Verify installation: <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-c</span> <span class="pre">&quot;import</span> <span class="pre">picogl&quot;</span></code></p></li>
+</ul>
+</dd>
+<dt><strong>“No module named ‘OpenGL’” error</strong></dt><dd><ul class="simple">
+<li><p>Install PyOpenGL: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">PyOpenGL</span> <span class="pre">PyOpenGL-accelerate</span></code></p></li>
+<li><p>Check OpenGL installation on your system</p></li>
+</ul>
+</dd>
+<dt><strong>“No module named ‘numpy’” error</strong></dt><dd><ul class="simple">
+<li><p>Install NumPy: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">numpy</span></code></p></li>
+<li><p>Check NumPy version compatibility</p></li>
+</ul>
+</dd>
+<dt><strong>“No module named ‘pyglm’” error</strong></dt><dd><ul class="simple">
+<li><p>Install PyGLM: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">pyglm</span></code></p></li>
+<li><p>Check PyGLM version compatibility</p></li>
+</ul>
+</dd>
+<dt><strong>“No module named ‘PIL’” error</strong></dt><dd><ul class="simple">
+<li><p>Install Pillow: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">Pillow</span></code></p></li>
+<li><p>Check Pillow version compatibility</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="opengl-context-issues">
+<h3>OpenGL Context Issues<a class="headerlink" href="#opengl-context-issues" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt><strong>“No OpenGL context” error</strong></dt><dd><ul class="simple">
+<li><p>Run from Terminal.app (macOS) or command prompt (Windows)</p></li>
+<li><p>Check display environment variables</p></li>
+<li><p>Verify OpenGL drivers are installed</p></li>
+</ul>
+</dd>
+<dt><strong>“OpenGL context creation failed” error</strong></dt><dd><ul class="simple">
+<li><p>Update graphics drivers</p></li>
+<li><p>Check OpenGL support on your system</p></li>
+<li><p>Try software rendering</p></li>
+</ul>
+</dd>
+<dt><strong>“Segmentation fault” error</strong></dt><dd><ul class="simple">
+<li><p>Run from Terminal.app (macOS)</p></li>
+<li><p>Check OpenGL drivers</p></li>
+<li><p>Try different OpenGL settings</p></li>
+</ul>
+</dd>
+<dt><strong>“Black screen” or no rendering</strong></dt><dd><ul class="simple">
+<li><p>Check OpenGL support</p></li>
+<li><p>Try legacy examples for better compatibility</p></li>
+<li><p>Update graphics drivers</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="shader-compilation-issues">
+<h3>Shader Compilation Issues<a class="headerlink" href="#shader-compilation-issues" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt><strong>“Shader compilation failed” error</strong></dt><dd><ul class="simple">
+<li><p>Use legacy examples (no shaders required)</p></li>
+<li><p>Check OpenGL version support</p></li>
+<li><p>Update graphics drivers</p></li>
+</ul>
+</dd>
+<dt><strong>“Shader link failed” error</strong></dt><dd><ul class="simple">
+<li><p>Check shader compatibility</p></li>
+<li><p>Verify shader source code</p></li>
+<li><p>Check OpenGL version</p></li>
+</ul>
+</dd>
+<dt><strong>“Uniform not found” error</strong></dt><dd><ul class="simple">
+<li><p>Check uniform names in shaders</p></li>
+<li><p>Verify uniform types</p></li>
+<li><p>Check shader program binding</p></li>
+</ul>
+</dd>
+<dt><strong>“Texture loading failed” error</strong></dt><dd><ul class="simple">
+<li><p>Check texture file format</p></li>
+<li><p>Verify texture file path</p></li>
+<li><p>Check OpenGL texture support</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+</section>
+<section id="platform-specific-issues">
+<h2>Platform-Specific Issues<a class="headerlink" href="#platform-specific-issues" title="Permalink to this heading">¶</a></h2>
+<section id="macos-issues">
+<h3>macOS Issues<a class="headerlink" href="#macos-issues" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt><strong>“No display available” error</strong></dt><dd><ul class="simple">
+<li><p>Install XQuartz: <code class="docutils literal notranslate"><span class="pre">brew</span> <span class="pre">install</span> <span class="pre">--cask</span> <span class="pre">xquartz</span></code></p></li>
+<li><p>Check DISPLAY environment variable</p></li>
+<li><p>Restart XQuartz</p></li>
+</ul>
+</dd>
+<dt><strong>“OpenGL not supported” error</strong></dt><dd><ul class="simple">
+<li><p>Check OpenGL version: <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-c</span> <span class="pre">&quot;import</span> <span class="pre">OpenGL.GL</span> <span class="pre">as</span> <span class="pre">GL;</span> <span class="pre">print(GL.glGetString(GL.GL_VERSION))&quot;</span></code></p></li>
+<li><p>Update graphics drivers</p></li>
+<li><p>Try software rendering</p></li>
+</ul>
+</dd>
+<dt><strong>“Segmentation fault” error</strong></dt><dd><ul class="simple">
+<li><p>Run from Terminal.app or iTerm2</p></li>
+<li><p>Check OpenGL drivers</p></li>
+<li><p>Try different OpenGL settings</p></li>
+</ul>
+</dd>
+<dt><strong>“Shader compilation failed” error</strong></dt><dd><ul class="simple">
+<li><p>Use legacy examples instead</p></li>
+<li><p>Check OpenGL version support</p></li>
+<li><p>Try software rendering</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Troubleshooting Steps</strong>:
+1. Run from Terminal.app or iTerm2
+2. Check OpenGL version and support
+3. Install XQuartz if needed
+4. Try legacy examples for compatibility
+5. Update graphics drivers</p>
+</section>
+<section id="windows-issues">
+<h3>Windows Issues<a class="headerlink" href="#windows-issues" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt><strong>“DLL load failed” error</strong></dt><dd><ul class="simple">
+<li><p>Install Visual C++ Redistributable</p></li>
+<li><p>Check Python architecture (32-bit vs 64-bit)</p></li>
+<li><p>Reinstall PyOpenGL</p></li>
+</ul>
+</dd>
+<dt><strong>“OpenGL not supported” error</strong></dt><dd><ul class="simple">
+<li><p>Update graphics drivers</p></li>
+<li><p>Check OpenGL support in graphics settings</p></li>
+<li><p>Try software rendering</p></li>
+</ul>
+</dd>
+<dt><strong>“Microsoft Visual C++ 14.0 is required” error</strong></dt><dd><ul class="simple">
+<li><p>Install Visual Studio Build Tools</p></li>
+<li><p>Or install pre-compiled wheels</p></li>
+</ul>
+</dd>
+<dt><strong>“Permission denied” error</strong></dt><dd><ul class="simple">
+<li><p>Run as administrator</p></li>
+<li><p>Check file permissions</p></li>
+<li><p>Check antivirus software</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Troubleshooting Steps</strong>:
+1. Update graphics drivers
+2. Install Visual C++ Redistributable
+3. Check Python architecture
+4. Try running as administrator
+5. Check antivirus software</p>
+</section>
+<section id="linux-issues">
+<h3>Linux Issues<a class="headerlink" href="#linux-issues" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt><strong>“No display available” error</strong></dt><dd><ul class="simple">
+<li><p>Ensure X11 or Wayland is running</p></li>
+<li><p>Check DISPLAY environment variable</p></li>
+<li><p>Install display server</p></li>
+</ul>
+</dd>
+<dt><strong>“OpenGL not supported” error</strong></dt><dd><ul class="simple">
+<li><p>Install mesa libraries: <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">install</span> <span class="pre">libgl1-mesa-dev</span> <span class="pre">libglu1-mesa</span></code></p></li>
+<li><p>Check graphics drivers</p></li>
+<li><p>Try software rendering</p></li>
+</ul>
+</dd>
+<dt><strong>“Permission denied” error</strong></dt><dd><ul class="simple">
+<li><p>Run with appropriate permissions</p></li>
+<li><p>Check file permissions</p></li>
+<li><p>Check SELinux/AppArmor</p></li>
+</ul>
+</dd>
+<dt><strong>“Library not found” error</strong></dt><dd><ul class="simple">
+<li><p>Install required libraries</p></li>
+<li><p>Check library paths</p></li>
+<li><p>Update package manager</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Troubleshooting Steps</strong>:
+1. Install mesa libraries
+2. Check display server
+3. Update graphics drivers
+4. Check library paths
+5. Try software rendering</p>
+</section>
+</section>
+<section id="performance-issues">
+<h2>Performance Issues<a class="headerlink" href="#performance-issues" title="Permalink to this heading">¶</a></h2>
+<section id="slow-rendering">
+<h3>Slow Rendering<a class="headerlink" href="#slow-rendering" title="Permalink to this heading">¶</a></h3>
+<p><strong>Causes</strong>:
+* Too many draw calls
+* Inefficient shaders
+* Large textures
+* Poor buffer management</p>
+<p><strong>Solutions</strong>:
+* Use instanced rendering
+* Optimize shaders
+* Use appropriate texture sizes
+* Batch similar operations</p>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p># Inefficient rendering
+for obj in objects:</p>
+<blockquote>
+<div><p>obj.render()  # Many draw calls</p>
+</div></blockquote>
+<p># Efficient rendering
+batch_objects(objects)
+render_batch()  # Single draw call</p>
+</div></blockquote>
+</section>
+<section id="memory-issues">
+<h3>Memory Issues<a class="headerlink" href="#memory-issues" title="Permalink to this heading">¶</a></h3>
+<p><strong>Causes</strong>:
+* Large textures
+* Too many buffers
+* Memory leaks
+* Inefficient data structures</p>
+<p><strong>Solutions</strong>:
+* Use appropriate texture sizes
+* Clean up unused buffers
+* Monitor memory usage
+* Use efficient data types</p>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p># Memory leak
+def create_mesh():</p>
+<blockquote>
+<div><p>vao = VertexArrayObject()
+# … use vao …
+# Forgot to delete vao</p>
+</div></blockquote>
+<p># Fixed
+def create_mesh():</p>
+<blockquote>
+<div><p>vao = VertexArrayObject()
+try:</p>
+<blockquote>
+<div><p># … use vao …</p>
+</div></blockquote>
+<dl class="simple">
+<dt>finally:</dt><dd><p>vao.delete()</p>
+</dd>
+</dl>
+</div></blockquote>
+</div></blockquote>
+</section>
+<section id="frame-rate-issues">
+<h3>Frame Rate Issues<a class="headerlink" href="#frame-rate-issues" title="Permalink to this heading">¶</a></h3>
+<p><strong>Causes</strong>:
+* VSync enabled
+* Too many operations per frame
+* Inefficient rendering
+* Poor OpenGL state management</p>
+<p><strong>Solutions</strong>:
+* Disable VSync if needed
+* Optimize rendering loop
+* Use efficient rendering techniques
+* Minimize state changes</p>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p># Inefficient rendering
+def render():</p>
+<blockquote>
+<div><p>glEnable(GL_DEPTH_TEST)
+draw_object1()
+glDisable(GL_DEPTH_TEST)
+glEnable(GL_DEPTH_TEST)
+draw_object2()</p>
+</div></blockquote>
+<p># Efficient rendering
+def render():</p>
+<blockquote>
+<div><p>glEnable(GL_DEPTH_TEST)
+draw_object1()
+draw_object2()
+glDisable(GL_DEPTH_TEST)</p>
+</div></blockquote>
+</div></blockquote>
+</section>
+</section>
+<section id="debugging-techniques">
+<h2>Debugging Techniques<a class="headerlink" href="#debugging-techniques" title="Permalink to this heading">¶</a></h2>
+<section id="enable-debug-output">
+<h3>Enable Debug Output<a class="headerlink" href="#enable-debug-output" title="Permalink to this heading">¶</a></h3>
+<p><strong>OpenGL Error Checking</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><dl>
+<dt>def check_gl_error():</dt><dd><p>error = glGetError()
+if error != GL_NO_ERROR:</p>
+<blockquote>
+<div><p>print(f”OpenGL error: {error}”)
+return False</p>
+</div></blockquote>
+<p>return True</p>
+</dd>
+</dl>
+<p># Use after OpenGL calls
+glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, None)
+check_gl_error()</p>
+</div></blockquote>
+<p><strong>Debug Information</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def print_gl_info():</dt><dd><p>print(f”OpenGL version: {glGetString(GL_VERSION)}”)
+print(f”Vendor: {glGetString(GL_VENDOR)}”)
+print(f”Renderer: {glGetString(GL_RENDERER)}”)
+print(f”Extensions: {glGetString(GL_EXTENSIONS)}”)</p>
+</dd>
+</dl>
+</div></blockquote>
+<p><strong>Performance Profiling</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>import time</p>
+<dl class="simple">
+<dt>def profile_render():</dt><dd><p>start_time = time.time()
+self.render_scene()
+end_time = time.time()
+frame_time = end_time - start_time
+fps = 1.0 / frame_time
+print(f”Frame time: {frame_time:.3f}s, FPS: {fps:.1f}”)</p>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="use-diagnostic-tools">
+<h3>Use Diagnostic Tools<a class="headerlink" href="#use-diagnostic-tools" title="Permalink to this heading">¶</a></h3>
+<p><strong>OpenGL Setup Test</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>python examples/test_opengl_setup.py</p>
+</div></blockquote>
+<p><strong>Cube Data Test</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>python examples/test_cube_data.py</p>
+</div></blockquote>
+<p><strong>Legacy Examples</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p># Try minimal examples for compatibility
+python examples/legacy_cube_minimal.py
+python examples/legacy_teapot_minimal.py</p>
+</div></blockquote>
+</section>
+<section id="check-system-information">
+<h3>Check System Information<a class="headerlink" href="#check-system-information" title="Permalink to this heading">¶</a></h3>
+<p><strong>Python Information</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>import sys
+import platform
+print(f”Python: {sys.version}”)
+print(f”Platform: {platform.platform()}”)
+print(f”Architecture: {platform.architecture()}”)</p>
+</div></blockquote>
+<p><strong>OpenGL Information</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>import OpenGL.GL as GL
+print(f”OpenGL version: {GL.glGetString(GL.GL_VERSION)}”)
+print(f”Vendor: {GL.glGetString(GL.GL_VENDOR)}”)
+print(f”Renderer: {GL.glGetString(GL.GL_RENDERER)}”)</p>
+</div></blockquote>
+<p><strong>Package Information</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>import pkg_resources
+packages = [‘picogl’, ‘numpy’, ‘PyOpenGL’, ‘pyglm’, ‘Pillow’]
+for package in packages:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>try:</dt><dd><p>version = pkg_resources.get_distribution(package).version
+print(f”{package}: {version}”)</p>
+</dd>
+<dt>except pkg_resources.DistributionNotFound:</dt><dd><p>print(f”{package}: Not installed”)</p>
+</dd>
+</dl>
+</div></blockquote>
+</div></blockquote>
+</section>
+</section>
+<section id="common-solutions">
+<h2>Common Solutions<a class="headerlink" href="#common-solutions" title="Permalink to this heading">¶</a></h2>
+<section id="try-legacy-examples">
+<h3>Try Legacy Examples<a class="headerlink" href="#try-legacy-examples" title="Permalink to this heading">¶</a></h3>
+<p>If modern examples don’t work, try legacy examples:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Minimal examples (maximum compatibility)</span>
+python<span class="w"> </span>examples/legacy_cube_minimal.py
+python<span class="w"> </span>examples/legacy_teapot_minimal.py
+
+<span class="c1"># Fixed examples (PicoGL integration)</span>
+python<span class="w"> </span>examples/legacy_cube_fixed.py
+python<span class="w"> </span>examples/legacy_teapot_fixed.py
+</pre></div>
+</div>
+</section>
+<section id="update-dependencies">
+<h3>Update Dependencies<a class="headerlink" href="#update-dependencies" title="Permalink to this heading">¶</a></h3>
+<p>Update all dependencies to latest versions:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>picogl<span class="w"> </span>numpy<span class="w"> </span>PyOpenGL<span class="w"> </span>PyOpenGL-accelerate<span class="w"> </span>pyglm<span class="w"> </span>Pillow
+</pre></div>
+</div>
+</section>
+<section id="check-opengl-support">
+<h3>Check OpenGL Support<a class="headerlink" href="#check-opengl-support" title="Permalink to this heading">¶</a></h3>
+<p>Verify OpenGL support on your system:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">OpenGL.GL</span> <span class="k">as</span> <span class="nn">GL</span>
+
+<span class="c1"># Check OpenGL version</span>
+<span class="n">version</span> <span class="o">=</span> <span class="n">GL</span><span class="o">.</span><span class="n">glGetString</span><span class="p">(</span><span class="n">GL</span><span class="o">.</span><span class="n">GL_VERSION</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;OpenGL version: </span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Check extensions</span>
+<span class="n">extensions</span> <span class="o">=</span> <span class="n">GL</span><span class="o">.</span><span class="n">glGetString</span><span class="p">(</span><span class="n">GL</span><span class="o">.</span><span class="n">GL_EXTENSIONS</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Extensions: </span><span class="si">{</span><span class="n">extensions</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="use-software-rendering">
+<h3>Use Software Rendering<a class="headerlink" href="#use-software-rendering" title="Permalink to this heading">¶</a></h3>
+<p>If hardware rendering fails, try software rendering:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set environment variable</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">MESA_GL_VERSION_OVERRIDE</span><span class="o">=</span><span class="m">3</span>.3
+python<span class="w"> </span>examples/cube.py
+</pre></div>
+</div>
+</section>
+<section id="check-display-environment">
+<h3>Check Display Environment<a class="headerlink" href="#check-display-environment" title="Permalink to this heading">¶</a></h3>
+<p>Verify display environment:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check display</span>
+<span class="nb">echo</span><span class="w"> </span><span class="nv">$DISPLAY</span>
+
+<span class="c1"># Check X11</span>
+xdpyinfo
+
+<span class="c1"># Check Wayland</span>
+<span class="nb">echo</span><span class="w"> </span><span class="nv">$WAYLAND_DISPLAY</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="report-issues">
+<h2>Report Issues<a class="headerlink" href="#report-issues" title="Permalink to this heading">¶</a></h2>
+<p>When reporting issues, include:</p>
+<ol class="arabic simple">
+<li><p><strong>System Information</strong>:
+- Operating system and version
+- Python version
+- Graphics card and drivers
+- OpenGL version</p></li>
+<li><p><strong>Error Information</strong>:
+- Complete error message
+- Steps to reproduce
+- Expected vs actual behavior</p></li>
+<li><p><strong>Environment Information</strong>:
+- Virtual environment details
+- Package versions
+- Display environment</p></li>
+<li><p><strong>Code Information</strong>:
+- Minimal code to reproduce
+- Full traceback
+- Relevant configuration</p></li>
+</ol>
+<p><strong>Example Issue Report</strong>:
+.. code-block:: text</p>
+<blockquote>
+<div><p><strong>System</strong>: macOS 12.0, Python 3.9, Intel HD Graphics 6000
+<strong>Error</strong>: “No OpenGL context” when running cube.py
+<strong>Steps</strong>:
+1. Install PicoGL: pip install picogl
+2. Run: python examples/cube.py
+3. Get error: “No OpenGL context”
+<strong>Expected</strong>: Cube window should appear
+<strong>Actual</strong>: Error message and no window
+<strong>Code</strong>: Standard cube.py example
+<strong>Environment</strong>: Terminal.app, XQuartz installed</p>
+</div></blockquote>
+</section>
+<section id="getting-help">
+<h2>Getting Help<a class="headerlink" href="#getting-help" title="Permalink to this heading">¶</a></h2>
+<p><strong>Documentation</strong>:
+* Check this troubleshooting guide
+* Read the API documentation
+* Look at example code</p>
+<p><strong>Community</strong>:
+* Search existing issues on GitHub
+* Create a new issue with detailed information
+* Join community discussions</p>
+<p><strong>Professional Support</strong>:
+* Contact maintainers directly
+* Consider commercial support options
+* Hire OpenGL experts for complex issues</p>
+<p><strong>Resources</strong>:
+* OpenGL documentation
+* PyOpenGL documentation
+* Platform-specific OpenGL guides
+* Graphics driver documentation</p>
+<p>Remember: Most issues can be resolved by using the appropriate legacy examples for your system’s OpenGL capabilities.</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">PicoGL</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="legacy_examples.html">Legacy Examples</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Troubleshooting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#common-issues">Common Issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#platform-specific-issues">Platform-Specific Issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#performance-issues">Performance Issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#debugging-techniques">Debugging Techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#common-solutions">Common Solutions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#report-issues">Report Issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#getting-help">Getting Help</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/renderer.html">Renderer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/buffers.html">Buffers API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/shaders.html">Shaders API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/ui.html">UI API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/utils.html">Utils API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="legacy_examples.html" title="previous chapter">Legacy Examples</a></li>
+      <li>Next: <a href="api/renderer.html" title="next chapter">Renderer API</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2025, PicoGL Contributors.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/troubleshooting.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

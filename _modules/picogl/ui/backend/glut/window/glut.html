@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>picogl.ui.backend.glut.window.glut &#8212; PicoGL 1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=b3523f8e" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/alabaster.css?v=039e1c02" />
+    <script data-url_root="../../../../../../" id="documentation_options" src="../../../../../../_static/documentation_options.js?v=af2ce170"></script>
+    <script src="../../../../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for picogl.ui.backend.glut.window.glut</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">OpenGL.raw.GL.VERSION.GL_1_0</span> <span class="kn">import</span> <span class="n">glViewport</span>
+<span class="kn">from</span> <span class="nn">pyglm</span> <span class="kn">import</span> <span class="n">glm</span>
+
+<span class="kn">from</span> <span class="nn">picogl.logger</span> <span class="kn">import</span> <span class="n">Logger</span> <span class="k">as</span> <span class="n">log</span>
+<span class="kn">from</span> <span class="nn">picogl.logger</span> <span class="kn">import</span> <span class="n">setup_logging</span>
+<span class="kn">from</span> <span class="nn">picogl.renderer</span> <span class="kn">import</span> <span class="n">GLContext</span>
+<span class="kn">from</span> <span class="nn">picogl.ui.backend.glut.window.gl</span> <span class="kn">import</span> <span class="n">GLWindow</span>
+<span class="kn">from</span> <span class="nn">picogl.utils.gl_init</span> <span class="kn">import</span> <span class="n">execute_gl_tasks</span><span class="p">,</span> <span class="n">init_gl_list</span><span class="p">,</span> <span class="n">paint_gl_list</span>
+
+
+<div class="viewcode-block" id="GlutRendererWindow"><a class="viewcode-back" href="../../../../../../api/ui.html#picogl.ui.backend.glut.window.glut.GlutRendererWindow">[docs]</a><span class="k">class</span> <span class="nc">GlutRendererWindow</span><span class="p">(</span><span class="n">GLWindow</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Glut Rendered Window&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="GlutRendererWindow.__init__"><a class="viewcode-back" href="../../../../../../api/ui.html#picogl.ui.backend.glut.window.glut.GlutRendererWindow.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">width</span><span class="p">,</span>
+        <span class="n">height</span><span class="p">,</span>
+        <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">context</span><span class="p">:</span> <span class="n">GLContext</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="n">GLContext</span><span class="p">()</span> <span class="k">if</span> <span class="n">context</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">context</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
+        <span class="c1"># Mouse interaction state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_mouse_x</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_mouse_y</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rotation_x</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rotation_y</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">setup_logging</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zoom_fov</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">45</span>  <span class="c1"># field of view</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zoom_distance</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># camera backwards in Z</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distance_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">5.0</span></div>
+
+<div class="viewcode-block" id="GlutRendererWindow.initializeGL"><a class="viewcode-back" href="../../../../../../api/ui.html#picogl.ui.backend.glut.window.glut.GlutRendererWindow.initializeGL">[docs]</a>    <span class="k">def</span> <span class="nf">initializeGL</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initial OpenGL configuration.&quot;&quot;&quot;</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="s2">&quot;Initializing OpenGL context...&quot;</span><span class="p">)</span>
+        <span class="n">execute_gl_tasks</span><span class="p">(</span><span class="n">init_gl_list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">initialize_shaders</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="GlutRendererWindow.calculate_mvp_matrix"><a class="viewcode-back" href="../../../../../../api/ui.html#picogl.ui.backend.glut.window.glut.GlutRendererWindow.calculate_mvp_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_mvp_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1920</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1080</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;calculate_mvp_matrix&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">projection</span> <span class="o">=</span> <span class="n">glm</span><span class="o">.</span><span class="n">perspective</span><span class="p">(</span>
+            <span class="n">glm</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zoom_fov</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">width</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">height</span><span class="p">),</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">1000.0</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">eye</span> <span class="o">=</span> <span class="n">glm</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">zoom_distance</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="n">glm</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">up</span> <span class="o">=</span> <span class="n">glm</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">view</span> <span class="o">=</span> <span class="n">glm</span><span class="o">.</span><span class="n">lookAt</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">eye</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">center</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">up</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">model_matrix</span> <span class="o">=</span> <span class="n">glm</span><span class="o">.</span><span class="n">mat4</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+
+        <span class="c1"># The camera position in world space is just the eye</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">eye_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">eye</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">mvp_matrix</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">projection</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">view</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">model_matrix</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="GlutRendererWindow.resizeGL"><a class="viewcode-back" href="../../../../../../api/ui.html#picogl.ui.backend.glut.window.glut.GlutRendererWindow.resizeGL">[docs]</a>    <span class="k">def</span> <span class="nf">resizeGL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;resizeGL&quot;&quot;&quot;</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Resizing viewport to </span><span class="si">{</span><span class="n">width</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">height</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
+        <span class="n">glViewport</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">calculate_mvp_matrix</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GlutRendererWindow.paintGL"><a class="viewcode-back" href="../../../../../../api/ui.html#picogl.ui.backend.glut.window.glut.GlutRendererWindow.paintGL">[docs]</a>    <span class="k">def</span> <span class="nf">paintGL</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;paintGL&quot;&quot;&quot;</span>
+        <span class="n">execute_gl_tasks</span><span class="p">(</span><span class="n">paint_gl_list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">render</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="GlutRendererWindow.update_mvp"><a class="viewcode-back" href="../../../../../../api/ui.html#picogl.ui.backend.glut.window.glut.GlutRendererWindow.update_mvp">[docs]</a>    <span class="k">def</span> <span class="nf">update_mvp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Base perspective matrix from your existing method&quot;&quot;&quot;</span>
+        <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_size</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">calculate_mvp_matrix</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+        <span class="c1"># Apply rotations</span>
+        <span class="n">rotation_matrix</span> <span class="o">=</span> <span class="n">glm</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span>
+            <span class="n">glm</span><span class="o">.</span><span class="n">mat4</span><span class="p">(</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">glm</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rotation_x</span><span class="p">),</span> <span class="n">glm</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">rotation_matrix</span> <span class="o">=</span> <span class="n">glm</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span>
+            <span class="n">rotation_matrix</span><span class="p">,</span> <span class="n">glm</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rotation_y</span><span class="p">),</span> <span class="n">glm</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">mvp_matrix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">mvp_matrix</span> <span class="o">*</span> <span class="n">rotation_matrix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>  <span class="c1"># Trigger repaint</span></div>
+
+<div class="viewcode-block" id="GlutRendererWindow.mousePressEvent"><a class="viewcode-back" href="../../../../../../api/ui.html#picogl.ui.backend.glut.window.glut.GlutRendererWindow.mousePressEvent">[docs]</a>    <span class="k">def</span> <span class="nf">mousePressEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">button</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;mousePressEvent&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">state</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># Mouse button pressed</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">last_mouse_x</span> <span class="o">=</span> <span class="n">x</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">last_mouse_y</span> <span class="o">=</span> <span class="n">y</span></div>
+
+<div class="viewcode-block" id="GlutRendererWindow.mouseMoveEvent"><a class="viewcode-back" href="../../../../../../api/ui.html#picogl.ui.backend.glut.window.glut.GlutRendererWindow.mouseMoveEvent">[docs]</a>    <span class="k">def</span> <span class="nf">mouseMoveEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;mouseMoveEvent&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_mouse_x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_mouse_y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dx</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_mouse_x</span>
+            <span class="n">dy</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_mouse_y</span>
+            <span class="c1"># Adjust sensitivity as needed</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rotation_x</span> <span class="o">+=</span> <span class="n">dy</span> <span class="o">*</span> <span class="mf">0.5</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rotation_y</span> <span class="o">+=</span> <span class="n">dx</span> <span class="o">*</span> <span class="mf">0.5</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_mvp</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_mouse_x</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_mouse_y</span> <span class="o">=</span> <span class="n">y</span></div>
+
+<div class="viewcode-block" id="GlutRendererWindow.wheelEvent"><a class="viewcode-back" href="../../../../../../api/ui.html#picogl.ui.backend.glut.window.glut.GlutRendererWindow.wheelEvent">[docs]</a>    <span class="k">def</span> <span class="nf">wheelEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wheel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Mouse wheel zoom: adjusts distance if far, FOV if close.</span>
+<span class="sd">        Positive direction -&gt; zoom in, Negative -&gt; zoom out.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">zoom_step</span> <span class="o">=</span> <span class="n">direction</span> <span class="o">*</span> <span class="mf">0.5</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">zoom_distance</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance_threshold</span><span class="p">:</span>
+            <span class="c1"># Distance zoom</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">zoom_distance</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">zoom_distance</span> <span class="o">-</span> <span class="n">zoom_step</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># FOV zoom</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">zoom_fov</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">10.0</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="mf">90.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">zoom_fov</span> <span class="o">-</span> <span class="n">zoom_step</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Zoom mode: </span><span class="si">{</span><span class="s1">&#39;distance&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">zoom_distance</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">distance_threshold</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;fov&#39;</span><span class="si">}</span><span class="s2"> &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;| Distance: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">zoom_distance</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> | FOV: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">zoom_fov</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_mvp</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="GlutRendererWindow.get_size"><a class="viewcode-back" href="../../../../../../api/ui.html#picogl.ui.backend.glut.window.glut.GlutRendererWindow.get_size">[docs]</a>    <span class="k">def</span> <span class="nf">get_size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">win</span> <span class="o">=</span> <span class="n">GlutRendererWindow</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">768</span><span class="p">)</span>
+    <span class="n">win</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../../../../index.html">PicoGL</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../legacy_examples.html">Legacy Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../troubleshooting.html">Troubleshooting</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../api/renderer.html">Renderer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../api/buffers.html">Buffers API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../api/shaders.html">Shaders API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../api/ui.html">UI API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../api/utils.html">Utils API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2025, PicoGL Contributors.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

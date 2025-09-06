@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>picogl.shaders.compile &#8212; PicoGL 1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b3523f8e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=039e1c02" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=af2ce170"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for picogl.shaders.compile</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Open GL shader_manager.current_shader_program compilation</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+
+<span class="kn">from</span> <span class="nn">picogl.backend.modern.core.shader.program</span> <span class="kn">import</span> <span class="n">ShaderProgram</span>
+<span class="kn">from</span> <span class="nn">picogl.logger</span> <span class="kn">import</span> <span class="n">Logger</span> <span class="k">as</span> <span class="n">log</span>
+
+<span class="n">VERTEX_SHADER_SRC_HARDCODED_TEST</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;#version 330 core</span>
+
+<span class="s2">layout(location = 0) in vec3 in_position;</span>
+<span class="s2">layout(location = 1) in vec3 in_color;</span>
+
+<span class="s2">uniform mat4 mvp_matrix;</span>
+<span class="s2">uniform float u_base_point_size;</span>
+
+<span class="s2">out vec3 frag_color;</span>
+
+<span class="s2">void main() {</span>
+<span class="s2">    gl_Position = mvp_matrix * vec4(in_position, 1.0);</span>
+<span class="s2">    frag_color = in_color;</span>
+<span class="s2">    gl_PointSize = u_base_point_size;</span>
+<span class="s2">}</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="compile_shaders"><a class="viewcode-back" href="../../../api/shaders.html#picogl.shaders.compile.compile_shaders">[docs]</a><span class="k">def</span> <span class="nf">compile_shaders</span><span class="p">(</span>
+    <span class="n">vertex_src</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fragment_src</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">shader_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ShaderProgram</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compiles and links a vertex + fragment shader_manager.current_shader_program shader_program using Qt&#39;s OpenGL API.</span>
+
+<span class="sd">    :param shader_name: str</span>
+<span class="sd">    :param vertex_src: Vertex shader_manager.current_shader_program GLSL code.</span>
+<span class="sd">    :param fragment_src: Fragment shader_manager.current_shader_program GLSL code.</span>
+<span class="sd">    :return: Linked PicoGLShader or None on failure.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">picogl_program</span> <span class="o">=</span> <span class="n">ShaderProgram</span><span class="p">(</span><span class="n">shader_name</span><span class="o">=</span><span class="n">shader_name</span><span class="p">)</span>
+    <span class="n">picogl_program</span><span class="o">.</span><span class="n">init_shader_from_glsl</span><span class="p">(</span><span class="n">vertex_src</span><span class="p">,</span> <span class="n">fragment_src</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">picogl_program</span></div>
+
+
+<span class="k">def</span> <span class="nf">_log_shader_preview</span><span class="p">(</span><span class="n">vertex_src</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fragment_src</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">preview_len</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    _log_shader_preview</span>
+
+<span class="sd">    :param vertex_src: str</span>
+<span class="sd">    :param fragment_src: str</span>
+<span class="sd">    :param preview_len: int</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📄 Vertex Shader Preview:</span><span class="se">\n</span><span class="si">{</span><span class="n">vertex_src</span><span class="p">[:</span><span class="n">preview_len</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📄 Fragment Shader Preview:</span><span class="se">\n</span><span class="si">{</span><span class="n">fragment_src</span><span class="p">[:</span><span class="n">preview_len</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">PicoGL</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../legacy_examples.html">Legacy Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../troubleshooting.html">Troubleshooting</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/renderer.html">Renderer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/buffers.html">Buffers API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/shaders.html">Shaders API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/ui.html">UI API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/utils.html">Utils API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2025, PicoGL Contributors.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

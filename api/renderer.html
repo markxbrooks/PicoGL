@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Renderer API &#8212; PicoGL 1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b3523f8e" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=039e1c02" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=af2ce170"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Buffers API" href="buffers.html" />
+    <link rel="prev" title="Troubleshooting" href="../troubleshooting.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="renderer-api">
+<h1>Renderer API<a class="headerlink" href="#renderer-api" title="Permalink to this heading">¶</a></h1>
+<p>The renderer module provides the core rendering functionality for PicoGL, including mesh data management, OpenGL context handling, and various renderer implementations.</p>
+<section id="core-classes">
+<h2>Core Classes<a class="headerlink" href="#core-classes" title="Permalink to this heading">¶</a></h2>
+<section id="meshdata">
+<h3>MeshData<a class="headerlink" href="#meshdata" title="Permalink to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="picogl.renderer.meshdata.MeshData">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">picogl.renderer.meshdata.</span></span><span class="sig-name descname"><span class="pre">MeshData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vbo</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nbo</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uvs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cbo</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ebo</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/renderer/meshdata.html#MeshData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.meshdata.MeshData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Holds OpenGL-related state objects for rendering.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.meshdata.MeshData.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vbo</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nbo</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uvs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cbo</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ebo</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/renderer/meshdata.html#MeshData.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.meshdata.MeshData.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>set up the OpenGL context</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.meshdata.MeshData.as_ribbon_args">
+<span class="sig-name descname"><span class="pre">as_ribbon_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><span class="pre">dict</span></a></span></span><a class="reference internal" href="../_modules/picogl/renderer/meshdata.html#MeshData.as_ribbon_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.meshdata.MeshData.as_ribbon_args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert into arguments for setup_ribbon_buffers.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.meshdata.MeshData.bind">
+<span class="sig-name descname"><span class="pre">bind</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/renderer/meshdata.html#MeshData.bind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.meshdata.MeshData.bind" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.meshdata.MeshData.unbind">
+<span class="sig-name descname"><span class="pre">unbind</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/renderer/meshdata.html#MeshData.unbind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.meshdata.MeshData.unbind" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.meshdata.MeshData.from_raw">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_raw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">normals</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uvs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_per_vertex</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/renderer/meshdata.html#MeshData.from_raw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.meshdata.MeshData.from_raw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build a MeshData from raw/python inputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vertices</strong> – np.ndarray required, list/array of x,y,z triplets</p></li>
+<li><p><strong>normals</strong> – np.ndarray optional, list/array of x,y,z triplets</p></li>
+<li><p><strong>uvs</strong> – np.ndarray optional, list/array of u,v pairs</p></li>
+<li><p><strong>indices</strong> – np.ndarray optional int indices</p></li>
+<li><p><strong>colors</strong> – np.ndarray optional per-vertex colors (flat float32 array)</p></li>
+<li><p><strong>color_per_vertex</strong> – np.ndarray if provided and colors is None, generate per-vertex colors</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.meshdata.MeshData.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><span class="pre">tuple</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">OpenGL.GL.GL_TRIANGLES</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/renderer/meshdata.html#MeshData.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.meshdata.MeshData.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw the mesh with optional color override and transparency.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>color</strong> – Optional color override. If None and vertex colors exist, uses vertex colors.</p></li>
+<li><p><strong>line_width</strong> – Line width for wireframe mode</p></li>
+<li><p><strong>mode</strong> – OpenGL drawing mode</p></li>
+<li><p><strong>fill</strong> – Whether to fill or use wireframe</p></li>
+<li><p><strong>alpha</strong> – Transparency value from 0.0 (opaque) to 1.0 (fully transparent)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<p>The <code class="docutils literal notranslate"><span class="pre">MeshData</span></code> class is the central data structure for storing 3D mesh information including vertices, colors, normals, and texture coordinates.</p>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>from picogl.renderer import MeshData
+import numpy as np</p>
+<p># Create mesh data
+vertices = np.array([[0, 0, 0], [1, 0, 0], [0, 1, 0]], dtype=np.float32)
+colors = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype=np.float32)</p>
+<p>data = MeshData.from_raw(vertices=vertices, colors=colors)</p>
+</div></blockquote>
+</section>
+<section id="glcontext">
+<h3>GLContext<a class="headerlink" href="#glcontext" title="Permalink to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="picogl.renderer.glcontext.GLContext">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">picogl.renderer.glcontext.</span></span><span class="sig-name descname"><span class="pre">GLContext</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vaos:</span> <span class="pre">dict[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">picogl.backend.modern.core.vertex.array.object.VertexArrayObject]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertex_array:</span> <span class="pre">~picogl.backend.modern.core.vertex.array.object.VertexArrayObject</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shader:</span> <span class="pre">~picogl.backend.modern.core.shader.program.ShaderProgram</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">texture_id:</span> <span class="pre">int</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mvp_matrix:</span> <span class="pre">~numpy.ndarray</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_matrix:</span> <span class="pre">~numpy.ndarray</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view:</span> <span class="pre">~numpy.ndarray</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eye_np:</span> <span class="pre">~numpy.ndarray</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/renderer/glcontext.html#GLContext"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.glcontext.GLContext" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Stores dynamic OpenGL-related state (VAO, shader, texture handles, etc.).
+Does NOT store raw vertex data.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="picogl.renderer.glcontext.GLContext.vaos">
+<span class="sig-name descname"><span class="pre">vaos</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="buffers.html#picogl.backend.modern.core.vertex.array.object.VertexArrayObject" title="picogl.backend.modern.core.vertex.array.object.VertexArrayObject"><span class="pre">picogl.backend.modern.core.vertex.array.object.VertexArrayObject</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#picogl.renderer.glcontext.GLContext.vaos" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="picogl.renderer.glcontext.GLContext.vertex_array">
+<span class="sig-name descname"><span class="pre">vertex_array</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="buffers.html#picogl.backend.modern.core.vertex.array.object.VertexArrayObject" title="picogl.backend.modern.core.vertex.array.object.VertexArrayObject"><span class="pre">VertexArrayObject</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#picogl.renderer.glcontext.GLContext.vertex_array" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="picogl.renderer.glcontext.GLContext.shader">
+<span class="sig-name descname"><span class="pre">shader</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="shaders.html#picogl.backend.modern.core.shader.program.ShaderProgram" title="picogl.backend.modern.core.shader.program.ShaderProgram"><span class="pre">ShaderProgram</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#picogl.renderer.glcontext.GLContext.shader" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="picogl.renderer.glcontext.GLContext.texture_id">
+<span class="sig-name descname"><span class="pre">texture_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#picogl.renderer.glcontext.GLContext.texture_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="picogl.renderer.glcontext.GLContext.mvp_matrix">
+<span class="sig-name descname"><span class="pre">mvp_matrix</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></em><a class="headerlink" href="#picogl.renderer.glcontext.GLContext.mvp_matrix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="picogl.renderer.glcontext.GLContext.model_matrix">
+<span class="sig-name descname"><span class="pre">model_matrix</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></em><a class="headerlink" href="#picogl.renderer.glcontext.GLContext.model_matrix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="picogl.renderer.glcontext.GLContext.view">
+<span class="sig-name descname"><span class="pre">view</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></em><a class="headerlink" href="#picogl.renderer.glcontext.GLContext.view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="picogl.renderer.glcontext.GLContext.eye_np">
+<span class="sig-name descname"><span class="pre">eye_np</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></em><a class="headerlink" href="#picogl.renderer.glcontext.GLContext.eye_np" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.glcontext.GLContext.create_shader_program">
+<span class="sig-name descname"><span class="pre">create_shader_program</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertex_source_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">fragment_source_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">glsl_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/picogl/renderer/glcontext.html#GLContext.create_shader_program"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.glcontext.GLContext.create_shader_program" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vertex_source_file</strong> – str</p></li>
+<li><p><strong>fragment_source_file</strong> – str</p></li>
+<li><p><strong>glsl_dir</strong> – str</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.glcontext.GLContext.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vaos:</span> <span class="pre">dict[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">picogl.backend.modern.core.vertex.array.object.VertexArrayObject]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertex_array:</span> <span class="pre">~picogl.backend.modern.core.vertex.array.object.VertexArrayObject</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shader:</span> <span class="pre">~picogl.backend.modern.core.shader.program.ShaderProgram</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">texture_id:</span> <span class="pre">int</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mvp_matrix:</span> <span class="pre">~numpy.ndarray</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_matrix:</span> <span class="pre">~numpy.ndarray</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view:</span> <span class="pre">~numpy.ndarray</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eye_np:</span> <span class="pre">~numpy.ndarray</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#picogl.renderer.glcontext.GLContext.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<p>The <code class="docutils literal notranslate"><span class="pre">GLContext</span></code> class manages OpenGL-related state including VAOs, shaders, textures, and transformation matrices.</p>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>from picogl.renderer import GLContext</p>
+<p># Create OpenGL context
+context = GLContext()</p>
+<p># Create shader program
+context.create_shader_program(</p>
+<blockquote>
+<div><p>vertex_source_file=”vertex.glsl”,
+fragment_source_file=”fragment.glsl”</p>
+</div></blockquote>
+<p>)</p>
+</div></blockquote>
+</section>
+</section>
+<section id="renderer-classes">
+<h2>Renderer Classes<a class="headerlink" href="#renderer-classes" title="Permalink to this heading">¶</a></h2>
+<section id="objectrenderer">
+<h3>ObjectRenderer<a class="headerlink" href="#objectrenderer" title="Permalink to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="picogl.renderer.object.ObjectRenderer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">picogl.renderer.object.</span></span><span class="sig-name descname"><span class="pre">ObjectRenderer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#picogl.renderer.glcontext.GLContext" title="picogl.renderer.glcontext.GLContext"><span class="pre">GLContext</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#picogl.renderer.meshdata.MeshData" title="picogl.renderer.meshdata.MeshData"><span class="pre">MeshData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">glsl_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_texture</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">texture_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resource_subdir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'tu02'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/renderer/object.html#ObjectRenderer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.object.ObjectRenderer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#picogl.renderer.base.RendererBase" title="picogl.renderer.base.RendererBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">RendererBase</span></code></a></p>
+<p>Unified renderer for textured and untextured objects.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.object.ObjectRenderer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#picogl.renderer.glcontext.GLContext" title="picogl.renderer.glcontext.GLContext"><span class="pre">GLContext</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#picogl.renderer.meshdata.MeshData" title="picogl.renderer.meshdata.MeshData"><span class="pre">MeshData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">glsl_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_texture</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">texture_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resource_subdir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'tu02'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/renderer/object.html#ObjectRenderer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.object.ObjectRenderer.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the renderer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> – Application state object for accessing shared data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.object.ObjectRenderer.initialize_shaders">
+<span class="sig-name descname"><span class="pre">initialize_shaders</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/renderer/object.html#ObjectRenderer.initialize_shaders"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.object.ObjectRenderer.initialize_shaders" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load and compile shaders.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.object.ObjectRenderer.initialize">
+<span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/renderer/object.html#ObjectRenderer.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.object.ObjectRenderer.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create VAO and VBOs once.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.object.ObjectRenderer.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/picogl/renderer/object.html#ObjectRenderer.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.object.ObjectRenderer.render" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dispatch render pass.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p>The <code class="docutils literal notranslate"><span class="pre">ObjectRenderer</span></code> class provides unified rendering for both textured and untextured objects using modern OpenGL.</p>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>from picogl.renderer import GLContext, MeshData
+from picogl.renderer.object import ObjectRenderer</p>
+<p># Create renderer
+context = GLContext()
+data = MeshData.from_raw(vertices=vertices, colors=colors)</p>
+<dl class="simple">
+<dt>renderer = ObjectRenderer(</dt><dd><p>context=context,
+data=data,
+use_texture=False</p>
+</dd>
+</dl>
+<p>)</p>
+<p># Initialize and render
+renderer.initialize_shaders()
+renderer.initialize()
+renderer.render()</p>
+</div></blockquote>
+</section>
+<section id="texturerenderer">
+<h3>TextureRenderer<a class="headerlink" href="#texturerenderer" title="Permalink to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="picogl.renderer.texture.TextureRenderer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">picogl.renderer.texture.</span></span><span class="sig-name descname"><span class="pre">TextureRenderer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#picogl.renderer.glcontext.GLContext" title="picogl.renderer.glcontext.GLContext"><span class="pre">GLContext</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#picogl.renderer.meshdata.MeshData" title="picogl.renderer.meshdata.MeshData"><span class="pre">MeshData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">glsl_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_texture</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">texture_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resource_subdir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/renderer/texture.html#TextureRenderer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.texture.TextureRenderer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#picogl.renderer.object.ObjectRenderer" title="picogl.renderer.object.ObjectRenderer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ObjectRenderer</span></code></a></p>
+<p>Basic renderer class</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.texture.TextureRenderer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#picogl.renderer.glcontext.GLContext" title="picogl.renderer.glcontext.GLContext"><span class="pre">GLContext</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#picogl.renderer.meshdata.MeshData" title="picogl.renderer.meshdata.MeshData"><span class="pre">MeshData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">glsl_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_texture</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">texture_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resource_subdir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/renderer/texture.html#TextureRenderer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.texture.TextureRenderer.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the renderer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> – Application state object for accessing shared data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.texture.TextureRenderer.initialize_textures">
+<span class="sig-name descname"><span class="pre">initialize_textures</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/renderer/texture.html#TextureRenderer.initialize_textures"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.texture.TextureRenderer.initialize_textures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.texture.TextureRenderer.get_texture_filename">
+<span class="sig-name descname"><span class="pre">get_texture_filename</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/renderer/texture.html#TextureRenderer.get_texture_filename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.texture.TextureRenderer.get_texture_filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>get texture filename</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>texture filename: str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.texture.TextureRenderer.set_texture_filename">
+<span class="sig-name descname"><span class="pre">set_texture_filename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/renderer/texture.html#TextureRenderer.set_texture_filename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.texture.TextureRenderer.set_texture_filename" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_name</strong> – str = None</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.texture.TextureRenderer.set_resource_path">
+<span class="sig-name descname"><span class="pre">set_resource_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/renderer/texture.html#TextureRenderer.set_resource_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.texture.TextureRenderer.set_resource_path" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>base_path</strong> – str | Path</p></li>
+<li><p><strong>subdir</strong> – str</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<p>The <code class="docutils literal notranslate"><span class="pre">TextureRenderer</span></code> class extends <code class="docutils literal notranslate"><span class="pre">ObjectRenderer</span></code> to provide specialized texture rendering capabilities.</p>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>from picogl.renderer.texture import TextureRenderer</p>
+<p># Create texture renderer
+renderer = TextureRenderer(</p>
+<blockquote>
+<div><p>context=context,
+data=data,
+base_dir=”path/to/resources”,
+use_texture=True,
+texture_file=”texture.png”</p>
+</div></blockquote>
+<p>)</p>
+<p># Initialize textures
+renderer.initialize_textures()</p>
+</div></blockquote>
+</section>
+<section id="legacyglmesh">
+<h3>LegacyGLMesh<a class="headerlink" href="#legacyglmesh" title="Permalink to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">LegacyGLMesh</span></code> class provides OpenGL 1.x/2.x compatible mesh rendering for systems without modern OpenGL support.</p>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>from picogl.renderer.legacy_glmesh import LegacyGLMesh</p>
+<p># Create legacy mesh
+mesh = LegacyGLMesh(</p>
+<blockquote>
+<div><p>vertices=vertices,
+faces=faces,
+colors=colors,
+normals=normals</p>
+</div></blockquote>
+<p>)</p>
+<p># Upload to GPU and draw
+mesh.upload()
+mesh.draw()</p>
+</div></blockquote>
+</section>
+<section id="glmesh">
+<h3>GLMesh<a class="headerlink" href="#glmesh" title="Permalink to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="picogl.renderer.glmesh.GLMesh">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">picogl.renderer.glmesh.</span></span><span class="sig-name descname"><span class="pre">GLMesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">faces</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normals</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uvs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/renderer/glmesh.html#GLMesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.glmesh.GLMesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>GPU‐resident mesh: owns VAO/VBO/EBO/CBO/NBO for an indexed triangle mesh.
+It does not know anything about shaders or matrices.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.glmesh.GLMesh.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">faces</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normals</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uvs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/renderer/glmesh.html#GLMesh.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.glmesh.GLMesh.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.glmesh.GLMesh.from_mesh_data">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_mesh_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#picogl.renderer.meshdata.MeshData" title="picogl.renderer.meshdata.MeshData"><span class="pre">MeshData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#picogl.renderer.glmesh.GLMesh" title="picogl.renderer.glmesh.GLMesh"><span class="pre">GLMesh</span></a></span></span><a class="reference internal" href="../_modules/picogl/renderer/glmesh.html#GLMesh.from_mesh_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.glmesh.GLMesh.from_mesh_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct a GLMesh from a MeshData container.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mesh</strong> (<a class="reference internal" href="#picogl.renderer.meshdata.MeshData" title="picogl.renderer.meshdata.MeshData"><em>MeshData</em></a>) – Must have .vbo (Nx3), .ebo (Mx1), optional .cbo (Nx3), .nbo (Nx3), uvs (Nx2)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Ready-to-upload mesh (GPU buffers are allocated only when <cite>upload()</cite> is called).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#picogl.renderer.glmesh.GLMesh" title="picogl.renderer.glmesh.GLMesh">GLMesh</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.glmesh.GLMesh.upload">
+<span class="sig-name descname"><span class="pre">upload</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/picogl/renderer/glmesh.html#GLMesh.upload"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.glmesh.GLMesh.upload" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate &amp; fill GPU buffers.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.glmesh.GLMesh.bind">
+<span class="sig-name descname"><span class="pre">bind</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/renderer/glmesh.html#GLMesh.bind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.glmesh.GLMesh.bind" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.glmesh.GLMesh.unbind">
+<span class="sig-name descname"><span class="pre">unbind</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/renderer/glmesh.html#GLMesh.unbind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.glmesh.GLMesh.unbind" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.glmesh.GLMesh.delete">
+<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/renderer/glmesh.html#GLMesh.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.glmesh.GLMesh.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Free GPU resources.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.glmesh.GLMesh.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/picogl/renderer/glmesh.html#GLMesh.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.glmesh.GLMesh.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw the mesh.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p>The <code class="docutils literal notranslate"><span class="pre">GLMesh</span></code> class provides modern OpenGL mesh rendering with VAO/VBO support.</p>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>from picogl.renderer.glmesh import GLMesh</p>
+<p># Create modern mesh
+mesh = GLMesh(</p>
+<blockquote>
+<div><p>vertices=vertices,
+faces=faces,
+colors=colors,
+normals=normals</p>
+</div></blockquote>
+<p>)</p>
+<p># Upload to GPU and draw
+mesh.upload()
+mesh.draw()</p>
+</div></blockquote>
+</section>
+</section>
+<section id="base-classes">
+<h2>Base Classes<a class="headerlink" href="#base-classes" title="Permalink to this heading">¶</a></h2>
+<section id="rendererbase">
+<h3>RendererBase<a class="headerlink" href="#rendererbase" title="Permalink to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="picogl.renderer.base.RendererBase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">picogl.renderer.base.</span></span><span class="sig-name descname"><span class="pre">RendererBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><span class="pre">object</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/renderer/base.html#RendererBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.base.RendererBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#picogl.renderer.abstract.AbstractRenderer" title="picogl.renderer.abstract.AbstractRenderer"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractRenderer</span></code></a></p>
+<p>Base Renderer Class</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.base.RendererBase.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><span class="pre">object</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/renderer/base.html#RendererBase.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.base.RendererBase.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the renderer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> – Application state object for accessing shared data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="picogl.renderer.base.RendererBase.dispatch_list">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dispatch_list</span></span><a class="headerlink" href="#picogl.renderer.base.RendererBase.dispatch_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="picogl.renderer.base.RendererBase.initialized">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">initialized</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#picogl.renderer.base.RendererBase.initialized" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.base.RendererBase.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mvp_matrix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/picogl/renderer/base.html#RendererBase.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.base.RendererBase.render" title="Permalink to this definition">¶</a></dt>
+<dd><p>render dispatcher
+:return: None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.base.RendererBase.initialize">
+<span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/picogl/renderer/base.html#RendererBase.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.base.RendererBase.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>initialize_rendering_buffers</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.base.RendererBase.initialize_rendering_buffers">
+<span class="sig-name descname"><span class="pre">initialize_rendering_buffers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/renderer/base.html#RendererBase.initialize_rendering_buffers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.base.RendererBase.initialize_rendering_buffers" title="Permalink to this definition">¶</a></dt>
+<dd><p>For back compatibility</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.base.RendererBase.set_visibility">
+<span class="sig-name descname"><span class="pre">set_visibility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">visible</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/picogl/renderer/base.html#RendererBase.set_visibility"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.base.RendererBase.set_visibility" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the visibility of the object.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p>The <code class="docutils literal notranslate"><span class="pre">RendererBase</span></code> class provides the base functionality for all renderers in PicoGL.</p>
+</section>
+<section id="abstractrenderer">
+<h3>AbstractRenderer<a class="headerlink" href="#abstractrenderer" title="Permalink to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="picogl.renderer.abstract.AbstractRenderer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">picogl.renderer.abstract.</span></span><span class="sig-name descname"><span class="pre">AbstractRenderer</span></span><a class="reference internal" href="../_modules/picogl/renderer/abstract.html#AbstractRenderer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.abstract.AbstractRenderer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.abstract.AbstractRenderer.initialize">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/picogl/renderer/abstract.html#AbstractRenderer.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.abstract.AbstractRenderer.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subclasses must implement buffer setup.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.abstract.AbstractRenderer.set_visibility">
+<span class="sig-name descname"><span class="pre">set_visibility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">visible</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/picogl/renderer/abstract.html#AbstractRenderer.set_visibility"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.abstract.AbstractRenderer.set_visibility" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the visibility of the object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.abstract.AbstractRenderer.render">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/renderer/abstract.html#AbstractRenderer.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.abstract.AbstractRenderer.render" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<p>The <code class="docutils literal notranslate"><span class="pre">AbstractRenderer</span></code> class defines the interface that all renderers must implement.</p>
+</section>
+</section>
+<section id="utility-classes">
+<h2>Utility Classes<a class="headerlink" href="#utility-classes" title="Permalink to this heading">¶</a></h2>
+<section id="uvrenderer">
+<h3>UvRenderer<a class="headerlink" href="#uvrenderer" title="Permalink to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="picogl.renderer.uvrenderer.UvRenderer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">picogl.renderer.uvrenderer.</span></span><span class="sig-name descname"><span class="pre">UvRenderer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><span class="pre">object</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertex_shader_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'glsl/utils/uv2d/vertex.glsl'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fragment_shader_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'glsl/utils/uv2d/fragment.glsl'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/renderer/uvrenderer.html#UvRenderer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.uvrenderer.UvRenderer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#picogl.renderer.base.RendererBase" title="picogl.renderer.base.RendererBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">RendererBase</span></code></a></p>
+<p>2D UV Renderer that draws a mesh using UV coordinates and indices.
+Follows the RendererBase interface.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.uvrenderer.UvRenderer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><span class="pre">object</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertex_shader_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'glsl/utils/uv2d/vertex.glsl'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fragment_shader_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'glsl/utils/uv2d/fragment.glsl'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/renderer/uvrenderer.html#UvRenderer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.uvrenderer.UvRenderer.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the renderer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> – Application state object for accessing shared data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.renderer.uvrenderer.UvRenderer.initialize">
+<span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uv_buffer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices_buffer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/picogl/renderer/uvrenderer.html#UvRenderer.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.renderer.uvrenderer.UvRenderer.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bind the UV and index buffers to the renderer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>uv_buffer</strong> – OpenGL buffer ID containing UVs</p></li>
+<li><p><strong>indices_buffer</strong> – OpenGL buffer ID containing indices</p></li>
+<li><p><strong>index_count</strong> – Number of indices to draw</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<p>The <code class="docutils literal notranslate"><span class="pre">UvRenderer</span></code> class provides 2D UV coordinate rendering for texture visualization.</p>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>from picogl.renderer.uvrenderer import UvRenderer</p>
+<p># Create UV renderer
+renderer = UvRenderer()</p>
+<p># Initialize with UV data
+renderer.initialize(uv_buffer, indices_buffer, index_count)
+renderer.render()</p>
+</div></blockquote>
+</section>
+</section>
+<section id="data-structures">
+<h2>Data Structures<a class="headerlink" href="#data-structures" title="Permalink to this heading">¶</a></h2>
+<p>The renderer module uses several data structures to represent 3D mesh information:</p>
+<p><strong>Vertices</strong>: 3D positions of mesh vertices
+<strong>Colors</strong>: RGB color values for each vertex
+<strong>Normals</strong>: Surface normal vectors for lighting
+<strong>UVs</strong>: Texture coordinates for texture mapping
+<strong>Faces</strong>: Triangle indices defining mesh topology</p>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p># Vertex data (N, 3) array
+vertices = np.array([</p>
+<blockquote>
+<div><p>[0, 0, 0],  # Vertex 0
+[1, 0, 0],  # Vertex 1
+[0, 1, 0]   # Vertex 2</p>
+</div></blockquote>
+<p>], dtype=np.float32)</p>
+<p># Color data (N, 3) array
+colors = np.array([</p>
+<blockquote>
+<div><p>[1, 0, 0],  # Red
+[0, 1, 0],  # Green
+[0, 0, 1]   # Blue</p>
+</div></blockquote>
+<p>], dtype=np.float32)</p>
+<p># Face data (M, 3) array
+faces = np.array([</p>
+<blockquote>
+<div><p>[0, 1, 2]   # Triangle connecting vertices 0, 1, 2</p>
+</div></blockquote>
+<p>], dtype=np.uint32)</p>
+</div></blockquote>
+</section>
+<section id="rendering-pipeline">
+<h2>Rendering Pipeline<a class="headerlink" href="#rendering-pipeline" title="Permalink to this heading">¶</a></h2>
+<p>The PicoGL rendering pipeline follows these steps:</p>
+<ol class="arabic simple">
+<li><p><strong>Data Preparation</strong>: Create MeshData with vertices, colors, normals, etc.</p></li>
+<li><p><strong>Context Setup</strong>: Initialize GLContext with shaders and OpenGL state</p></li>
+<li><p><strong>Renderer Creation</strong>: Create appropriate renderer (ObjectRenderer, TextureRenderer, etc.)</p></li>
+<li><p><strong>Initialization</strong>: Call renderer.initialize() to set up OpenGL resources</p></li>
+<li><p><strong>Rendering</strong>: Call renderer.render() to draw the mesh</p></li>
+</ol>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p># 1. Prepare data
+data = MeshData.from_raw(vertices=vertices, colors=colors)</p>
+<p># 2. Setup context
+context = GLContext()
+context.create_shader_program(“vertex.glsl”, “fragment.glsl”)</p>
+<p># 3. Create renderer
+renderer = ObjectRenderer(context=context, data=data)</p>
+<p># 4. Initialize
+renderer.initialize_shaders()
+renderer.initialize()</p>
+<p># 5. Render (in main loop)
+renderer.render()</p>
+</div></blockquote>
+</section>
+<section id="error-handling">
+<h2>Error Handling<a class="headerlink" href="#error-handling" title="Permalink to this heading">¶</a></h2>
+<p>PicoGL renderers include comprehensive error handling:</p>
+<p><strong>OpenGL Context Errors</strong>: Fallback to legacy rendering
+<strong>Shader Compilation Errors</strong>: Use fallback shaders
+<strong>Texture Loading Errors</strong>: Skip texture rendering
+<strong>Mesh Upload Errors</strong>: Use immediate mode rendering</p>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><dl class="simple">
+<dt>try:</dt><dd><p>renderer.initialize()</p>
+</dd>
+<dt>except OpenGLError as e:</dt><dd><p>print(f”OpenGL error: {e}”)
+# Fallback to legacy rendering</p>
+</dd>
+<dt>except Exception as e:</dt><dd><p>print(f”Unexpected error: {e}”)
+# Handle gracefully</p>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="performance-considerations">
+<h2>Performance Considerations<a class="headerlink" href="#performance-considerations" title="Permalink to this heading">¶</a></h2>
+<p><strong>Modern Renderers</strong> (ObjectRenderer, TextureRenderer):
+* Best performance with modern OpenGL
+* Requires OpenGL 3.3+ support
+* Uses VAO/VBO for efficient rendering
+* Supports advanced features</p>
+<p><strong>Legacy Renderers</strong> (LegacyGLMesh):
+* Compatible with older OpenGL versions
+* Uses immediate mode or legacy VBOs
+* Good performance on older hardware
+* Limited feature set</p>
+<p><strong>Minimal Renderers</strong> (Immediate mode):
+* Maximum compatibility
+* Uses glBegin/glEnd for rendering
+* Lower performance but works everywhere
+* No advanced features</p>
+</section>
+<section id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p><strong>Choose the right renderer</strong> for your target platform</p></li>
+<li><p><strong>Use MeshData.from_raw()</strong> for easy data creation</p></li>
+<li><p><strong>Initialize renderers once</strong> and reuse them</p></li>
+<li><p><strong>Handle errors gracefully</strong> with fallbacks</p></li>
+<li><p><strong>Test on multiple platforms</strong> for compatibility</p></li>
+</ol>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p># Choose renderer based on OpenGL support
+if has_modern_opengl():</p>
+<blockquote>
+<div><p>renderer = ObjectRenderer(context, data)</p>
+</div></blockquote>
+<dl class="simple">
+<dt>elif has_legacy_opengl():</dt><dd><p>renderer = LegacyGLMesh(vertices, faces, colors)</p>
+</dd>
+<dt>else:</dt><dd><p># Use immediate mode fallback
+renderer = ImmediateModeRenderer(vertices, colors)</p>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">PicoGL</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../legacy_examples.html">Legacy Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../troubleshooting.html">Troubleshooting</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Renderer API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#core-classes">Core Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#renderer-classes">Renderer Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#base-classes">Base Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#utility-classes">Utility Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-structures">Data Structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rendering-pipeline">Rendering Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#error-handling">Error Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#performance-considerations">Performance Considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#best-practices">Best Practices</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="buffers.html">Buffers API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shaders.html">Shaders API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ui.html">UI API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Utils API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../troubleshooting.html" title="previous chapter">Troubleshooting</a></li>
+      <li>Next: <a href="buffers.html" title="next chapter">Buffers API</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2025, PicoGL Contributors.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../_sources/api/renderer.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
