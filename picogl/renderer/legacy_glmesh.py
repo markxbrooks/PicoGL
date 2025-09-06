@@ -1,0 +1,135 @@
+import ctypes
+from typing import Optional
+
+import numpy as np
+from OpenGL.GL import glDrawElements
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT, GL_LINES
+from OpenGL.raw.GL.VERSION.GL_1_1 import GL_VERTEX_ARRAY, GL_COLOR_ARRAY
+
+from elmo.gl.buffers.factory.abstract import create_layout, create_common_attributes
+from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
+from picogl.buffers.glcleanup import delete_buffer_object
+from picogl.buffers.vertex.legacy import VertexBufferGroup
+
+
+class LegacyGLMesh:
+    """
+    GL Mesh fir Compatibility Profile
+
+    GPU‐resident mesh: owns VAO/VBO/EBO/CBO/NBO for an indexed triangle mesh.
+    It does not know anything about shaders or matrices.
+    """
+
+    def __init__(
+        self,
+        vertices: np.ndarray,
+        faces: np.ndarray,
+        colors: Optional[np.ndarray] = None,
+        normals: Optional[np.ndarray] = None,
+        uvs: Optional[np.ndarray] = None,
+    ):
+        # strict (N, 3)
+        self.vertices = np.asarray(vertices, dtype=np.float32).reshape(-1, 3)
+        self.indices = np.asarray(faces, dtype=np.uint32).reshape(-1)
+        nverts = self.vertices.shape[0]
+
+        if self.indices.size == 0:
+            raise ValueError("GLMesh requires non-empty faces")
+
+        self.colors = (
+            np.asarray(colors, dtype=np.float32).reshape(-1, 3)
+            if colors is not None
+            else np.tile((0.0, 0.0, 1.0), (nverts, 1)).astype(np.float32)
+        )
+        self.normals = (
+            np.asarray(normals, dtype=np.float32).reshape(-1, 3)
+            if normals is not None
+            else np.zeros_like(self.vertices)
+        )
+        self.uvs = (
+            np.asarray(uvs, dtype=np.float32).reshape(-1, 2)
+            if uvs is not None
+            else np.zeros((nverts, 2), dtype=np.float32)
+        )
+
+        self.vao: Optional[VertexBufferGroup] = None
+        self.index_count: int = 0
+
+    @classmethod
+    def from_mesh_data(cls, mesh: "MeshData") -> "LegacyGLMesh":
+        """
+        Construct a GLMesh from a MeshData container.
+
+        Parameters
+        ----------
+        mesh : MeshData
+            Must have .vbo (Nx3), .ebo (Mx1), optional .cbo (Nx3), .nbo (Nx3), uvs (Nx2)
+
+        Returns
+        -------
+        LegacyGLMesh
+            Ready-to-upload mesh (GPU buffers are allocated only when `upload()` is called).
+        """
+        return cls(
+            vertices=mesh.vbo,
+            faces=mesh.ebo,
+            colors=mesh.cbo,
+            normals=mesh.nbo,
+            uvs=getattr(mesh, "uvs", None),
+        )
+
+    def upload(self) -> None:
+        """Allocate & fill GPU buffers."""
+        if self.vao:
+            return  # already uploaded
+
+        # Create layout for legacy OpenGL
+        axes_layout = create_layout(create_common_attributes())
+        self.vao = vao = VertexBufferGroup()
+        vao.add_vbo(data=self.vertices, name="vbo", size=3)
+        vao.add_vbo(data=self.colors, name="cbo", size=3)
+        vao.add_vbo(data=self.normals, name="nbo", size=3)
+        if self.uvs is not None:
+            vao.add_vbo(data=self.uvs, name="uvs", size=2)
+        vao.add_ebo(data=self.indices)
+        vao.set_layout(axes_layout)
+
+        self.index_count = self.indices.size
+
+    def bind(self):
+        if not self.vao:
+            raise RuntimeError("GLMesh not uploaded")
+        self.vao.__enter__()  # context protocol
+
+    def unbind(self):
+        if self.vao:
+            self.vao.__exit__(None, None, None)
+
+    def delete(self):
+        """Free GPU resources."""
+        if self.vao:
+            delete_buffer_object(self.vao)
+            self.vao = None
+            self.index_count = 0
+
+    def __enter__(self):
+        self.bind()
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        self.unbind()
+
+    def draw(self, mode=GL_TRIANGLES) -> None:
+        """Draw the mesh."""
+        try:
+            if not self.vao:
+                raise RuntimeError("GLMesh not uploaded. Call upload() first.")
+            
+            # Use legacy client states and individual VBOs to bypass the problematic bind() method
+            with legacy_client_states(GL_VERTEX_ARRAY, GL_COLOR_ARRAY):
+                with self.vao.vbo, self.vao.cbo, self.vao.ebo:
+                    glDrawElements(
+                        mode, int(self.index_count), GL_UNSIGNED_INT, ctypes.c_void_p(0)
+                    )
+        except Exception as ex:
+            print(f"Error drawing mesh: {ex}")

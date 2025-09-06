@@ -23,13 +23,13 @@ class RendererBase(AbstractRenderer):
         self.parent = parent
         self._initialized = False
 
-    def _set_line_state(self):
+    def _set_gl_state(self):
         """Set the line width and disable depth test."""
         glLineWidth(self.line_width)
         glDisable(GL_DEPTH_TEST)
         glEnable(GL_LINE_SMOOTH)
 
-    def _restore_state(self):
+    def _restore_gl_state(self):
         """Restore the original line width and depth test state."""
         glEnable(GL_DEPTH_TEST)
 

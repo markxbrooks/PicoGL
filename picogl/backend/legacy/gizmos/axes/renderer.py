@@ -99,7 +99,7 @@ class LegacyCartesianAxesRenderer(CartesianAxesRenderer):
         """Draw axes lines, plus optional labels."""
         if not self.is_ready():
             return
-        self._set_line_state()
+        self._set_gl_state()
         try:
             self.mesh_vbg.draw()
         except Exception as exc:
@@ -111,7 +111,7 @@ class LegacyCartesianAxesRenderer(CartesianAxesRenderer):
                     self._render_labels()
                 except Exception as exc:
                     log.warning(f"Axes label draw failed: {exc}")
-            self._restore_state()
+            self._restore_gl_state()
 
     # ---------------------------------------------------------------- labels
     def _render_labels(self) -> None:
