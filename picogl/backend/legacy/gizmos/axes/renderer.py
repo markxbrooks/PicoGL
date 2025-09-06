@@ -11,11 +11,11 @@ from OpenGL.GLUT import glutInit, glutBitmapCharacter, GLUT_BITMAP_HELVETICA_12
 from typing import Optional, Dict, Tuple
 
 from elmo.gl.buffers.factory.abstract import create_layout, create_common_attributes
+from elmo.gl.renderers.gizmos.cartesian_axes import CartesianAxesRenderer
 from picogl.backend.legacy.gizmos.axes.array import AxesVBG
 from elmo.xtal.unit_cell_coords import UnitCellCoordinateGenerator
 
 from picogl.logger import Logger as log
-from picogl.renderer.abstract import AbstractRenderer
 
 # Initialize GLUT once when the module is imported
 try:
@@ -28,7 +28,7 @@ else:
     GLUT_AVAILABLE = True
 
 
-class AxesRenderer(AbstractRenderer):
+class LegacyCartesianAxesRenderer(CartesianAxesRenderer):
     """
     Renders coordinate axes as colored lines with labels.
 
@@ -38,11 +38,12 @@ class AxesRenderer(AbstractRenderer):
 
     def __init__(self):
         """Initialize the axes renderer."""
+        super().__init__()
         self.vbg = None
         self.unit_cell_info = None
         self.vertices = None
         self.colors = None
-        self.is_initialized = False
+        self._initialized = False
         self.visible = True
         self.show_labels = True  # Whether to show axis labels
         self.line_width = 2.0
@@ -69,8 +70,8 @@ class AxesRenderer(AbstractRenderer):
 
         self.unit_cell_info = unit_cell_info
         self._generate_geometry()
-        self.initialize_buffers()
-        self.is_initialized = True
+        self.initialize()
+        self._initialized = True
         log.info(
             f"✅ Axes set for unit cell: a={unit_cell_info['a']:.2f}, "
             f"b={unit_cell_info['b']:.2f}, c={unit_cell_info['c']:.2f} Å"
@@ -142,9 +143,9 @@ class AxesRenderer(AbstractRenderer):
             log.info("Falling back to simplified geometry")
             self._generate_geometry()
 
-    def initialize_buffers(self) -> None:
+    def initialize(self) -> None:
         """Initialize the vertex buffer objects for rendering."""
-        if self.is_initialized:
+        if self._initialized:
             log.message("Axes buffers already _initialized")
             return
             
@@ -153,7 +154,7 @@ class AxesRenderer(AbstractRenderer):
             GL.glGetError()  # Clear any previous errors
         except Exception as e:
             log.error(f"OpenGL context not available during buffer initialization: {e}")
-            self.is_initialized = False
+            self._initialized = False
             return
             
         try:
@@ -162,7 +163,7 @@ class AxesRenderer(AbstractRenderer):
             # Validate that we have data to work with
             if self.vertices is None or self.colors is None:
                 log.error("No vertex or color data available for buffer initialization")
-                self.is_initialized = False
+                self._initialized = False
                 return
             axes_layout = create_layout(create_common_attributes())
             # Add position VBO (vertices)
@@ -173,15 +174,15 @@ class AxesRenderer(AbstractRenderer):
             # Verify that VBOs were created successfully
             if not hasattr(self.vbg, 'named_vbos') or len(self.vbg.named_vbos) < 2:
                 log.error("Failed to create required VBOs")
-                self.is_initialized = False
+                self._initialized = False
                 return
                 
-            self.is_initialized = True
+            self._initialized = True
             log.info("✅ Axes buffers _initialized successfully")
             
         except Exception as e:
             log.error(f"Error initializing axes buffers: {e}")
-            self.is_initialized = False
+            self._initialized = False
 
     def render(self) -> None:
         """Draw the axes using vertex buffer objects."""
@@ -190,8 +191,8 @@ class AxesRenderer(AbstractRenderer):
         
     def _render_array_safe(self) -> None:
         """Safe implementation of render_array with comprehensive error checking."""
-        if not self.is_initialized or not self.visible:
-            log.debug(f"Axes not ready: is_initialized={self.is_initialized}, visible={self.visible}")
+        if not self._initialized or not self.visible:
+            log.debug(f"Axes not ready: _initialized={self._initialized}, visible={self.visible}")
             return
             
         if self.vbg is None:
@@ -284,46 +285,6 @@ class AxesRenderer(AbstractRenderer):
         except Exception as e:
             log.error(f"Error in immediate mode fallback: {e}")
 
-    def render_instanced(self) -> None:
-        """Render the coordinate axes using OpenGL 2.1 compatible code."""
-        if not self.is_initialized or not self.visible:
-            return
-
-        # Save current OpenGL state - only push necessary attributes
-        GL.glPushAttrib(GL.GL_LINE_BIT | GL.GL_DEPTH_BUFFER_BIT | GL.GL_COLOR_BUFFER_BIT)
-
-        # Set line properties
-        GL.glLineWidth(self.line_width)
-        GL.glDisable(GL.GL_DEPTH_TEST)  # Draw on top
-        GL.glEnable(GL.GL_LINE_SMOOTH)
-
-        # Use immediate mode rendering for simplicity
-        GL.glBegin(GL.GL_LINES)
-        
-        # X-axis (red)
-        GL.glColor3f(1.0, 0.0, 0.0)
-        GL.glVertex3f(0.0, 0.0, 0.0)
-        GL.glVertex3f(self.axis_length, 0.0, 0.0)
-        
-        # Y-axis (green)
-        GL.glColor3f(0.0, 1.0, 0.0)
-        GL.glVertex3f(0.0, 0.0, 0.0)
-        GL.glVertex3f(0.0, self.axis_length, 0.0)
-        
-        # Z-axis (blue)
-        GL.glColor3f(0.0, 0.0, 1.0)
-        GL.glVertex3f(0.0, 0.0, 0.0)
-        GL.glVertex3f(0.0, 0.0, self.axis_length)
-        
-        GL.glEnd()
-
-        # Render labels if enabled
-        if self.show_labels:
-            self._render_labels()
-
-        # Restore OpenGL state
-        GL.glPopAttrib()
-
     def _render_labels(self) -> None:
         """Render text labels for the axes."""
         if not GLUT_AVAILABLE:
@@ -334,14 +295,14 @@ class AxesRenderer(AbstractRenderer):
         # Set text color to white for better visibility
         GL.glColor3f(1.0, 1.0, 1.0)
         
-        # X-axis label
-        self._render_text_label("X", self.axis_length + self.label_offset, 0.0, 0.0)
+        # a-axis label
+        self._render_text_label("a", self.axis_length + self.label_offset, 0.0, 0.0)
         
-        # Y-axis label  
-        self._render_text_label("Y", 0.0, self.axis_length + self.label_offset, 0.0)
+        # b-axis label
+        self._render_text_label("b", 0.0, self.axis_length + self.label_offset, 0.0)
         
-        # Z-axis label
-        self._render_text_label("Z", 0.0, 0.0, self.axis_length + self.label_offset)
+        # c-axis label
+        self._render_text_label("c", 0.0, 0.0, self.axis_length + self.label_offset)
 
     def _render_text_label(self, text: str, x: float, y: float, z: float) -> None:
         """
@@ -452,7 +413,7 @@ class AxesRenderer(AbstractRenderer):
             self.vbg = None
             self.vertices = None
             self.colors = None
-            self.is_initialized = False
+            self._initialized = False
             log.info("✅ Axes OpenGL resources cleaned up")
             
         except Exception as e:
@@ -461,11 +422,11 @@ class AxesRenderer(AbstractRenderer):
             self.vbg = None
             self.vertices = None
             self.colors = None
-            self.is_initialized = False
+            self._initialized = False
         
     def is_ready(self) -> bool:
         """Check if the renderer is ready to render."""
-        return (self.is_initialized and 
+        return (self._initialized and 
                 self.visible and 
                 self.vbg is not None and 
                 self.vertices is not None and 
@@ -474,7 +435,7 @@ class AxesRenderer(AbstractRenderer):
     def get_status(self) -> dict:
         """Get the current status of the renderer for debugging."""
         status = {
-            'is_initialized': self.is_initialized,
+            '_initialized': self._initialized,
             'visible': self.visible,
             'show_labels': self.show_labels,
             'vbg_exists': self.vbg is not None,
@@ -560,7 +521,7 @@ class AxesRenderer(AbstractRenderer):
         except Exception as e:
             log.error(f"Error resetting renderer: {e}")
             # Force a clean state
-            self.is_initialized = False
+            self._initialized = False
             self.vbg = None
             self.vertices = None
             self.colors = None
