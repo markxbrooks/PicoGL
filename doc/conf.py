@@ -31,7 +31,7 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.ifconfig',
     'sphinx.ext.githubpages',
-    'sphinxcontrib.rsvgconverter'
+    # 'sphinxcontrib.rsvgconverter'
 ]
 
 templates_path = ['_templates']
