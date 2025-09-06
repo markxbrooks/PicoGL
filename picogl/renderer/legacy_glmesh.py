@@ -3,11 +3,13 @@ from typing import Optional
 
 import numpy as np
 from OpenGL.GL import glDrawElements
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT, GL_LINES
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT
 from OpenGL.raw.GL.VERSION.GL_1_1 import GL_VERTEX_ARRAY, GL_COLOR_ARRAY
+from OpenGL.raw.GL._types import GL_FLOAT
 
-from elmo.gl.buffers.factory.abstract import create_layout, create_common_attributes
+from elmo.gl.buffers.factory.abstract import create_layout
 from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
+from picogl.buffers.attributes import AttributeSpec
 from picogl.buffers.glcleanup import delete_buffer_object
 from picogl.buffers.vertex.legacy import VertexBufferGroup
 
@@ -83,8 +85,9 @@ class LegacyGLMesh:
         if self.vao:
             return  # already uploaded
 
-        # Create layout for legacy OpenGL
-        axes_layout = create_layout(create_common_attributes())
+        attributes = self.generate_dynamic_attributes()
+        vao_layout = create_layout(attributes)
+
         self.vao = vao = VertexBufferGroup()
         vao.add_vbo(data=self.vertices, name="vbo", size=3)
         vao.add_vbo(data=self.colors, name="cbo", size=3)
@@ -92,9 +95,59 @@ class LegacyGLMesh:
         if self.uvs is not None:
             vao.add_vbo(data=self.uvs, name="uvs", size=2)
         vao.add_ebo(data=self.indices)
-        vao.set_layout(axes_layout)
+        vao.set_layout(vao_layout)
 
         self.index_count = self.indices.size
+
+    def generate_dynamic_attributes(self):
+        """
+        generate_dynamic_attributes
+
+        Create layout that matches the VBOs being added
+        """
+        attributes = [
+            AttributeSpec(
+                name="positions",
+                index=0,
+                size=3,
+                type=GL_FLOAT,
+                normalized=False,
+                stride=0,
+                offset=0,
+            ),
+            AttributeSpec(
+                name="colors",
+                index=1,
+                size=3,
+                type=GL_FLOAT,
+                normalized=False,
+                stride=0,
+                offset=0,
+            ),
+            AttributeSpec(
+                name="normals",
+                index=2,
+                size=3,
+                type=GL_FLOAT,
+                normalized=False,
+                stride=0,
+                offset=0,
+            ),
+        ]
+        # Add UVs attribute if UVs are provided
+        if self.uvs is not None:
+            attributes.append(
+                AttributeSpec(
+                    name="uvs",
+                    index=3,
+                    size=2,
+                    type=GL_FLOAT,
+                    normalized=False,
+                    stride=0,
+                    offset=0,
+                )
+            )
+        return attributes
 
     def bind(self):
         if not self.vao:
