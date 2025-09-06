@@ -3,13 +3,22 @@ World Sheet Widget
 """
 
 import numpy as np
-from OpenGL.GL import glGetUniformLocation, glGenBuffers, glUniformMatrix4fv
+from OpenGL.GL import glGenBuffers, glGetUniformLocation, glUniformMatrix4fv
 from OpenGL.GL.shaders import GL_FALSE
 from OpenGL.raw.GL.ARB.vertex_shader import GL_FLOAT
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_LINES
 from OpenGL.raw.GL.VERSION.GL_1_1 import glDrawArrays
-from OpenGL.raw.GL.VERSION.GL_1_5 import glBindBuffer, GL_ARRAY_BUFFER, glBufferData, GL_STATIC_DRAW
-from OpenGL.raw.GL.VERSION.GL_2_0 import glEnableVertexAttribArray, glVertexAttribPointer, glDisableVertexAttribArray
+from OpenGL.raw.GL.VERSION.GL_1_5 import (
+    GL_ARRAY_BUFFER,
+    GL_STATIC_DRAW,
+    glBindBuffer,
+    glBufferData,
+)
+from OpenGL.raw.GL.VERSION.GL_2_0 import (
+    glDisableVertexAttribArray,
+    glEnableVertexAttribArray,
+    glVertexAttribPointer,
+)
 from pyglm import glm
 
 from picogl.backend.modern.core.shader.program import ShaderProgram
@@ -32,7 +41,7 @@ class WorldSheet(ShaderMeshRenderer):
         self.shader = ShaderProgram(
             "glsl/utils/worldsheet/vertex.glsl",
             "glsl/utils/worldsheet/fragment.glsl",
-            glsl_dir=self.base_dir
+            glsl_dir=self.base_dir,
         )
         self.mvp_id = glGetUniformLocation(self.shader.program, "mvp_matrix")
         if self.mvp_id == -1:

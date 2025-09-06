@@ -199,10 +199,14 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
         """
         delta = event.angleDelta().y()
         step = 5  # You can adjust sensitivity
-        new_val = (
-            self.zoom_value - step if delta > 0 else self.zoom_value + step
-        )  # Negative zoom increases
-        log.message(f"zoom level: {new_val}", silent=True)
+        try:
+            new_val = (
+                self.zoom_value - step if delta > 0 else self.zoom_value + step
+            )  # Negative zoom increases
+            log.message(f"zoom level: {new_val}", silent=True)
+        except Exception:
+            pass
+
 
     def mouseReleaseEvent(self, event: QMouseEvent) -> None:
         """
@@ -249,5 +253,5 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
         :return: None
         Apply delta rotation based on mouse movement
         """
-        self.camera_parameter.rotation_x_axis += dy * 0.5
-        self.camera_parameter.rotation_y_axis += dx * 0.5
+        self.camera_parameters.rotation_x_axis += dy * 0.5
+        self.camera_parameters.rotation_y_axis += dx * 0.5

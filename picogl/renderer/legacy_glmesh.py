@@ -32,7 +32,10 @@ class LegacyGLMesh:
     ):
         # strict (N, 3)
         self.vertices = np.asarray(vertices, dtype=np.float32).reshape(-1, 3)
-        self.indices = np.asarray(faces, dtype=np.uint32).reshape(-1)
+        if faces is not None:
+            self.indices = np.asarray(faces, dtype=np.uint32).reshape(-1)
+        else:
+            self.indices = np.array([], dtype=np.uint32)
         nverts = self.vertices.shape[0]
 
         if self.indices.size == 0:

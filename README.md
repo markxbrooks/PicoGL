@@ -32,6 +32,34 @@ or for an editable version:
 ```
 PyPi version coming soon!
 
+## 🖥️ No Shaders, No Problem!!
+On MacOS, Modern OpenGL (With Vertex and Pixel Shaders) has been deprecated for a while.
+
+Using the Legacy profile and Vertex Arrays (actually an equivalent called Vertex Buffer Groups in PicoGL) 
+we can produce similar OpenGL applications with respectable performance.
+
+```python
+    def initialize(self):
+        if self._initialized:
+            return
+        self.mesh_data = MeshData.from_raw(
+            vertices=self.vertices,
+            colors=self.colors,
+            indices=self.indices
+        )
+        self.gl_data = LegacyGLMesh.from_mesh_data(mesh=self.mesh_data)
+        self.gl_data.upload()
+        self._initialized = True
+        log.message("✅ Qt Cube Renderer initialized")
+
+    def draw(self):
+        """Draw the cube using LegacyGLMesh"""
+        # Draw using LegacyGLMesh (already created and uploaded in initializeGL)
+        if self.gl_data is not None:
+            self.gl_data.draw()
+```
+![cube](rotating_cube.png)
+
 ## 📖 Documentation
 In depth documentation can be found here, or in the Docs directory.
 [https://github.com/markxbrooks/PicoGL/blob/main/doc/_build/picogl2.pdf]
