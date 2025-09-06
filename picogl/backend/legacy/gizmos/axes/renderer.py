@@ -7,7 +7,6 @@ as colored lines with labels.
 from typing import Optional
 
 import numpy as np
-
 from elmo.gl.backend.legacy.gizmos.axes.setup import setup_buffers_from_mesh_data
 from elmo.gl.renderers.gizmos.cartesian_axes import CartesianAxesRenderer
 from elmo.xtal.unit_cell_coords import UnitCellCoordinateGenerator
@@ -58,7 +57,12 @@ class LegacyCartesianAxesRenderer(CartesianAxesRenderer):
     # ------------------------------------------------------------------ utils
     def is_ready(self) -> bool:
         """True if buffers are built and renderer visible."""
-        return self._initialized and self.visible and self.mesh_vbg and self.vertices is not None
+        return (
+            self._initialized
+            and self.visible
+            and self.mesh_vbg
+            and self.vertices is not None
+        )
 
     # ---------------------------------------------------------------- init/destroy
     def initialize(self) -> None:
@@ -132,16 +136,21 @@ class LegacyCartesianAxesRenderer(CartesianAxesRenderer):
 
     def _render_fallback_indicators(self) -> None:
         """render_fallback_indicators."""
-        GL.glColor3f(1, 0, 0); self._render_axis_indicator(self.axis_length + self.label_offset, 0, 0)
-        GL.glColor3f(0, 1, 0); self._render_axis_indicator(0, self.axis_length + self.label_offset, 0)
-        GL.glColor3f(0, 0, 1); self._render_axis_indicator(0, 0, self.axis_length + self.label_offset)
+        GL.glColor3f(1, 0, 0)
+        self._render_axis_indicator(self.axis_length + self.label_offset, 0, 0)
+        GL.glColor3f(0, 1, 0)
+        self._render_axis_indicator(0, self.axis_length + self.label_offset, 0)
+        GL.glColor3f(0, 0, 1)
+        self._render_axis_indicator(0, 0, self.axis_length + self.label_offset)
 
     def _render_axis_indicator(self, x: float, y: float, z: float) -> None:
         """Draw a small cross at the endpoint."""
         s = 2.0
         GL.glBegin(GL.GL_LINES)
-        GL.glVertex3f(x - s, y, z); GL.glVertex3f(x + s, y, z)
-        GL.glVertex3f(x, y - s, z); GL.glVertex3f(x, y + s, z)
+        GL.glVertex3f(x - s, y, z)
+        GL.glVertex3f(x + s, y, z)
+        GL.glVertex3f(x, y - s, z)
+        GL.glVertex3f(x, y + s, z)
         GL.glEnd()
 
     def gl_get_error(self):
@@ -151,4 +160,3 @@ class LegacyCartesianAxesRenderer(CartesianAxesRenderer):
         except Exception as exc:
             log.error(f"OpenGL context unavailable: {exc}")
             return
-

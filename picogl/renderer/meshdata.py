@@ -138,7 +138,9 @@ class MeshData:
         if nbo is not None:
             expected = num_vertices * 3
             if len(nbo) != expected:
-                raise ValueError(f"normals length {len(nbo)} does not match 3 * num_vertices ({expected})")
+                raise ValueError(
+                    f"normals length {len(nbo)} does not match 3 * num_vertices ({expected})"
+                )
 
         uvs_arr = cls._to_float32_flat_or_none(uvs, "uvs")
         if uvs_arr is not None and len(uvs_arr) // 2 != vertex_count:

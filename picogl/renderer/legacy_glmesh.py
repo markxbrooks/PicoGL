@@ -2,12 +2,12 @@ import ctypes
 from typing import Optional
 
 import numpy as np
-from OpenGL.GL import glDrawElements
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT
-from OpenGL.raw.GL.VERSION.GL_1_1 import GL_VERTEX_ARRAY, GL_COLOR_ARRAY
-from OpenGL.raw.GL._types import GL_FLOAT
-
 from elmo.gl.buffers.factory.abstract import create_layout
+from OpenGL.GL import glDrawElements
+from OpenGL.raw.GL._types import GL_FLOAT
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT
+from OpenGL.raw.GL.VERSION.GL_1_1 import GL_COLOR_ARRAY, GL_VERTEX_ARRAY
+
 from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
 from picogl.buffers.attributes import AttributeSpec
 from picogl.buffers.glcleanup import delete_buffer_object
@@ -177,7 +177,7 @@ class LegacyGLMesh:
         try:
             if not self.vao:
                 raise RuntimeError("GLMesh not uploaded. Call upload() first.")
-            
+
             # Use legacy client states and individual VBOs to bypass the problematic bind() method
             with legacy_client_states(GL_VERTEX_ARRAY, GL_COLOR_ARRAY):
                 with self.vao.vbo, self.vao.cbo, self.vao.ebo:
