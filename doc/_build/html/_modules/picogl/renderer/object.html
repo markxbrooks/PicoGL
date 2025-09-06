@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>picogl.renderer.object &#8212; PicoGL 1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b3523f8e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=039e1c02" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=af2ce170"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for picogl.renderer.object</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Object renderer module.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span> <span class="nn">OpenGL.raw.GL.VERSION.GL_1_0</span> <span class="kn">import</span> <span class="n">GL_TRIANGLES</span>
+
+<span class="kn">from</span> <span class="nn">picogl.backend.modern.core.vertex.array.object</span> <span class="kn">import</span> <span class="n">VertexArrayObject</span>
+<span class="kn">from</span> <span class="nn">picogl.logger</span> <span class="kn">import</span> <span class="n">Logger</span> <span class="k">as</span> <span class="n">log</span>
+<span class="kn">from</span> <span class="nn">picogl.renderer</span> <span class="kn">import</span> <span class="n">GLContext</span><span class="p">,</span> <span class="n">MeshData</span><span class="p">,</span> <span class="n">RendererBase</span>
+<span class="kn">from</span> <span class="nn">picogl.utils.loader.texture</span> <span class="kn">import</span> <span class="n">TextureLoader</span>
+<span class="kn">from</span> <span class="nn">picogl.utils.texture</span> <span class="kn">import</span> <span class="n">bind_texture_array</span>
+
+
+<div class="viewcode-block" id="ObjectRenderer"><a class="viewcode-back" href="../../../api/renderer.html#picogl.renderer.object.ObjectRenderer">[docs]</a><span class="k">class</span> <span class="nc">ObjectRenderer</span><span class="p">(</span><span class="n">RendererBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Unified renderer for textured and untextured objects.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ObjectRenderer.__init__"><a class="viewcode-back" href="../../../api/renderer.html#picogl.renderer.object.ObjectRenderer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">context</span><span class="p">:</span> <span class="n">GLContext</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">MeshData</span><span class="p">,</span>
+        <span class="n">base_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">glsl_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">use_texture</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">texture_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">resource_subdir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;tu02&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">=</span> <span class="n">base_dir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resource_subdir</span> <span class="o">=</span> <span class="n">resource_subdir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">texture_file</span> <span class="o">=</span> <span class="n">texture_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="n">context</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">vertex_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">vbo</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span> <span class="o">//</span> <span class="mi">3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_model</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">glsl_dir</span> <span class="o">=</span> <span class="n">glsl_dir</span>
+
+        <span class="c1"># Texture-related</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_texture</span> <span class="o">=</span> <span class="n">use_texture</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">parameter</span><span class="p">(</span><span class="s2">&quot;Using texture&quot;</span><span class="p">,</span> <span class="n">use_texture</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">texture</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">use_texture</span><span class="p">:</span>
+            <span class="n">base_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">base_dir</span><span class="p">)</span> <span class="k">if</span> <span class="n">base_dir</span> <span class="k">else</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+            <span class="n">resource_path</span> <span class="o">=</span> <span class="n">base_path</span> <span class="o">/</span> <span class="s2">&quot;resources&quot;</span> <span class="o">/</span> <span class="n">resource_subdir</span>
+            <span class="k">if</span> <span class="n">texture_file</span><span class="p">:</span>
+                <span class="n">texture_path</span> <span class="o">=</span> <span class="n">resource_path</span> <span class="o">/</span> <span class="n">texture_file</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">texture</span> <span class="o">=</span> <span class="n">TextureLoader</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">texture_path</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">texture_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">texture_glid</span></div>
+
+<div class="viewcode-block" id="ObjectRenderer.initialize_shaders"><a class="viewcode-back" href="../../../api/renderer.html#picogl.renderer.object.ObjectRenderer.initialize_shaders">[docs]</a>    <span class="k">def</span> <span class="nf">initialize_shaders</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load and compile shaders.&quot;&quot;&quot;</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="s2">&quot;Loading shaders...&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="n">GLContext</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">create_shader_program</span><span class="p">(</span>
+            <span class="n">vertex_source_file</span><span class="o">=</span><span class="s2">&quot;vertex.glsl&quot;</span><span class="p">,</span>
+            <span class="n">fragment_source_file</span><span class="o">=</span><span class="s2">&quot;fragment.glsl&quot;</span><span class="p">,</span>
+            <span class="n">glsl_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">glsl_dir</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="ObjectRenderer.initialize"><a class="viewcode-back" href="../../../api/renderer.html#picogl.renderer.object.ObjectRenderer.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create VAO and VBOs once.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">vaos</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">vaos</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">model_vao</span> <span class="o">=</span> <span class="n">VertexArrayObject</span><span class="p">()</span>
+        <span class="n">model_vao</span><span class="o">.</span><span class="n">add_vbo</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">vbo</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_texture</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">uvs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">model_vao</span><span class="o">.</span><span class="n">add_vbo</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">uvs</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">vaos</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_vao</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># fall back to colors + normals</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">cbo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">model_vao</span><span class="o">.</span><span class="n">add_vbo</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">cbo</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">nbo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">model_vao</span><span class="o">.</span><span class="n">add_vbo</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">nbo</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">vaos</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_vao</span></div>
+
+<div class="viewcode-block" id="ObjectRenderer.render"><a class="viewcode-back" href="../../../api/renderer.html#picogl.renderer.object.ObjectRenderer.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Dispatch render pass.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_model</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_draw_model</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_finalize_render</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">_draw_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Draw the model&quot;&quot;&quot;</span>
+        <span class="n">model_vao</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">vaos</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span>
+        <span class="n">shader</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">shader</span>
+        <span class="k">with</span> <span class="n">shader</span><span class="p">,</span> <span class="n">model_vao</span><span class="p">:</span>
+            <span class="n">shader</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="s2">&quot;mvp_matrix&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">mvp_matrix</span><span class="p">)</span>
+            <span class="n">shader</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="s2">&quot;model_matrix&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">model_matrix</span><span class="p">)</span>
+            <span class="n">shader</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="s2">&quot;viewPos&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">eye_np</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_texture</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">texture</span><span class="p">:</span>
+                <span class="n">bind_texture_array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">texture_id</span><span class="p">)</span>
+                <span class="n">shader</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="s2">&quot;texture0&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+            <span class="n">model_vao</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="n">GL_TRIANGLES</span><span class="p">,</span> <span class="n">index_count</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">vertex_count</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">PicoGL</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../legacy_examples.html">Legacy Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../troubleshooting.html">Troubleshooting</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/renderer.html">Renderer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/buffers.html">Buffers API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/shaders.html">Shaders API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/ui.html">UI API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/utils.html">Utils API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2025, PicoGL Contributors.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

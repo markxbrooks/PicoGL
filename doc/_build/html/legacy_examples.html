@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Legacy Examples &#8212; PicoGL 1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b3523f8e" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=039e1c02" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=af2ce170"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Troubleshooting" href="troubleshooting.html" />
+    <link rel="prev" title="Examples" href="examples.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="legacy-examples">
+<h1>Legacy Examples<a class="headerlink" href="#legacy-examples" title="Permalink to this heading">¶</a></h1>
+<p>PicoGL includes comprehensive legacy examples designed to work on systems with limited OpenGL support, including older macOS systems and systems without modern shader support.</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">¶</a></h2>
+<p>The legacy examples provide multiple fallback renderers that work on systems with limited OpenGL support:</p>
+<ul class="simple">
+<li><p><strong>Minimal versions</strong>: Use only PyOpenGL, maximum compatibility</p></li>
+<li><p><strong>Fixed versions</strong>: Use PicoGL with legacy rendering, medium compatibility</p></li>
+<li><p><strong>Original versions</strong>: Use modern OpenGL 3.3+, low compatibility</p></li>
+</ul>
+</section>
+<section id="why-legacy-examples">
+<h2>Why Legacy Examples?<a class="headerlink" href="#why-legacy-examples" title="Permalink to this heading">¶</a></h2>
+<p>Modern OpenGL (3.3+) requires:
+* Shader compilation support
+* Vertex Array Objects (VAOs)
+* Modern graphics drivers
+* Specific OpenGL context requirements</p>
+<p>Legacy examples work on:
+* Older macOS systems
+* Systems without shader support
+* Systems with limited OpenGL drivers
+* Headless environments (with proper setup)
+* Educational environments with restricted OpenGL</p>
+</section>
+<section id="legacy-teapot-examples">
+<h2>Legacy Teapot Examples<a class="headerlink" href="#legacy-teapot-examples" title="Permalink to this heading">¶</a></h2>
+<section id="legacy-teapot-minimal">
+<h3>Legacy Teapot (Minimal)<a class="headerlink" href="#legacy-teapot-minimal" title="Permalink to this heading">¶</a></h3>
+<p><strong>File</strong>: <code class="docutils literal notranslate"><span class="pre">examples/legacy_teapot_minimal.py</span></code></p>
+<p>The most compatible teapot renderer, using only built-in OpenGL primitives.</p>
+<p><strong>Features</strong>:
+* Uses <code class="docutils literal notranslate"><span class="pre">glutSolidTeapot()</span></code> built-in primitive
+* No external dependencies beyond PyOpenGL
+* OpenGL 1.x immediate mode rendering
+* Interactive rotation and zoom
+* Multiple rendering modes</p>
+<p><strong>Controls</strong>:
+* Mouse drag: Rotate view
+* Mouse wheel: Zoom in/out
+* R: Reset rotation
+* W: Toggle wireframe mode
+* F: Fill mode
+* +/-: Zoom in/out
+* Space: Toggle auto-rotation
+* ESC: Exit</p>
+<p><strong>Run</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>python examples/legacy_teapot_minimal.py</p>
+</div></blockquote>
+<p><strong>Compatibility</strong>: Maximum (works on any OpenGL system)</p>
+</section>
+<section id="legacy-teapot-fixed">
+<h3>Legacy Teapot (Fixed)<a class="headerlink" href="#legacy-teapot-fixed" title="Permalink to this heading">¶</a></h3>
+<p><strong>File</strong>: <code class="docutils literal notranslate"><span class="pre">examples/legacy_teapot_fixed.py</span></code></p>
+<p>PicoGL-integrated legacy teapot with OBJ file support.</p>
+<p><strong>Features</strong>:
+* Uses <code class="docutils literal notranslate"><span class="pre">LegacyGLMesh</span></code> for OpenGL 1.x/2.x compatibility
+* Loads teapot data from OBJ file
+* Falls back to wireframe teapot if OBJ loading fails
+* Full PicoGL integration
+* Interactive controls</p>
+<p><strong>Controls</strong>:
+* Mouse drag: Rotate view
+* Mouse wheel: Zoom in/out
+* R: Reset rotation
+* W: Toggle wireframe mode
+* F: Fill mode
+* +/-: Zoom in/out
+* Space: Toggle auto-rotation
+* ESC: Exit</p>
+<p><strong>Run</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>python examples/legacy_teapot_fixed.py</p>
+</div></blockquote>
+<p><strong>Compatibility</strong>: Medium (requires PicoGL library)</p>
+</section>
+</section>
+<section id="legacy-cube-examples">
+<h2>Legacy Cube Examples<a class="headerlink" href="#legacy-cube-examples" title="Permalink to this heading">¶</a></h2>
+<section id="legacy-cube-minimal">
+<h3>Legacy Cube (Minimal)<a class="headerlink" href="#legacy-cube-minimal" title="Permalink to this heading">¶</a></h3>
+<p><strong>File</strong>: <code class="docutils literal notranslate"><span class="pre">examples/legacy_cube_minimal.py</span></code></p>
+<p>The most compatible cube renderer, using immediate mode OpenGL.</p>
+<p><strong>Features</strong>:
+* Uses immediate mode OpenGL (<code class="docutils literal notranslate"><span class="pre">glBegin</span></code>/<code class="docutils literal notranslate"><span class="pre">glEnd</span></code>)
+* No external dependencies beyond PyOpenGL
+* Same vertex and color data as original cube
+* Interactive rotation and zoom
+* Multiple rendering modes
+* Normal vector display</p>
+<p><strong>Controls</strong>:
+* Mouse drag: Rotate view
+* Mouse wheel: Zoom in/out
+* R: Reset rotation
+* W: Toggle wireframe mode
+* F: Fill mode
+* N: Toggle normals display
+* +/-: Zoom in/out
+* Space: Toggle auto-rotation
+* ESC: Exit</p>
+<p><strong>Run</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>python examples/legacy_cube_minimal.py</p>
+</div></blockquote>
+<p><strong>Compatibility</strong>: Maximum (works on any OpenGL system)</p>
+</section>
+<section id="legacy-cube-fixed">
+<h3>Legacy Cube (Fixed)<a class="headerlink" href="#legacy-cube-fixed" title="Permalink to this heading">¶</a></h3>
+<p><strong>File</strong>: <code class="docutils literal notranslate"><span class="pre">examples/legacy_cube_fixed.py</span></code></p>
+<p>PicoGL-integrated legacy cube using LegacyGLMesh.</p>
+<p><strong>Features</strong>:
+* Uses <code class="docutils literal notranslate"><span class="pre">LegacyGLMesh</span></code> for OpenGL 1.x/2.x compatibility
+* Loads cube data using PicoGL MeshData
+* Falls back to wireframe cube if mesh loading fails
+* Full PicoGL integration
+* Interactive controls</p>
+<p><strong>Controls</strong>:
+* Mouse drag: Rotate view
+* Mouse wheel: Zoom in/out
+* R: Reset rotation
+* W: Toggle wireframe mode
+* F: Fill mode
+* +/-: Zoom in/out
+* Space: Toggle auto-rotation
+* ESC: Exit</p>
+<p><strong>Run</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>python examples/legacy_cube_fixed.py</p>
+</div></blockquote>
+<p><strong>Compatibility</strong>: Medium (requires PicoGL library)</p>
+</section>
+</section>
+<section id="diagnostic-tools">
+<h2>Diagnostic Tools<a class="headerlink" href="#diagnostic-tools" title="Permalink to this heading">¶</a></h2>
+<section id="opengl-setup-test">
+<h3>OpenGL Setup Test<a class="headerlink" href="#opengl-setup-test" title="Permalink to this heading">¶</a></h3>
+<p><strong>File</strong>: <code class="docutils literal notranslate"><span class="pre">examples/test_opengl_setup.py</span></code></p>
+<p>Comprehensive diagnostic tool for OpenGL setup issues.</p>
+<p><strong>Features</strong>:
+* Tests OpenGL imports
+* Tests display environment
+* Tests OpenGL context creation
+* Tests PicoGL imports
+* Provides troubleshooting guidance</p>
+<p><strong>Run</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>python examples/test_opengl_setup.py</p>
+</div></blockquote>
+<p><strong>Output</strong>: Detailed report of OpenGL capabilities and issues</p>
+</section>
+<section id="cube-data-test">
+<h3>Cube Data Test<a class="headerlink" href="#cube-data-test" title="Permalink to this heading">¶</a></h3>
+<p><strong>File</strong>: <code class="docutils literal notranslate"><span class="pre">examples/test_cube_data.py</span></code></p>
+<p>Tests cube data structure and PicoGL imports without requiring a display.</p>
+<p><strong>Features</strong>:
+* Validates cube vertex and color data
+* Tests triangle structure
+* Tests PicoGL imports
+* Tests mesh creation
+* Provides troubleshooting guidance</p>
+<p><strong>Run</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>python examples/test_cube_data.py</p>
+</div></blockquote>
+<p><strong>Output</strong>: Validation report of cube data and imports</p>
+</section>
+</section>
+<section id="installation-and-setup">
+<h2>Installation and Setup<a class="headerlink" href="#installation-and-setup" title="Permalink to this heading">¶</a></h2>
+<section id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">¶</a></h3>
+<p><strong>Minimal Examples</strong>:
+* Python 3.7+
+* PyOpenGL
+* GLUT (usually included with PyOpenGL)</p>
+<p><strong>Fixed Examples</strong>:
+* Python 3.7+
+* PyOpenGL
+* GLUT
+* NumPy
+* PicoGL library</p>
+</section>
+<section id="installation">
+<h3>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install minimal requirements</span>
+pip<span class="w"> </span>install<span class="w"> </span>PyOpenGL<span class="w"> </span>PyOpenGL_accelerate<span class="w"> </span>numpy
+
+<span class="c1"># For fixed examples (PicoGL integration)</span>
+pip<span class="w"> </span>install<span class="w"> </span>picogl
+</pre></div>
+</div>
+</section>
+<section id="platform-specific-setup">
+<h3>Platform-Specific Setup<a class="headerlink" href="#platform-specific-setup" title="Permalink to this heading">¶</a></h3>
+<section id="macos">
+<h4>macOS<a class="headerlink" href="#macos" title="Permalink to this heading">¶</a></h4>
+<ol class="arabic">
+<li><p><strong>Install XQuartz</strong> (for X11 support):
+.. code-block:: bash</p>
+<blockquote>
+<div><p>brew install –cask xquartz</p>
+</div></blockquote>
+</li>
+<li><p><strong>Run from Terminal.app or iTerm2</strong> (not from IDE)</p></li>
+<li><p><strong>Check OpenGL support</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>import OpenGL.GL as GL
+print(GL.glGetString(GL.GL_VERSION))</p>
+</div></blockquote>
+</li>
+</ol>
+</section>
+<section id="windows">
+<h4>Windows<a class="headerlink" href="#windows" title="Permalink to this heading">¶</a></h4>
+<ol class="arabic simple">
+<li><p><strong>Update graphics drivers</strong> to latest version</p></li>
+<li><p><strong>Install Visual C++ Redistributable</strong> if needed</p></li>
+<li><p><strong>Run from command prompt</strong> (not from IDE)</p></li>
+</ol>
+</section>
+<section id="linux">
+<h4>Linux<a class="headerlink" href="#linux" title="Permalink to this heading">¶</a></h4>
+<ol class="arabic">
+<li><p><strong>Install OpenGL libraries</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p># Ubuntu/Debian
+sudo apt install libgl1-mesa-dev libglu1-mesa</p>
+<p># CentOS/RHEL
+sudo yum install mesa-libGL mesa-libGLU</p>
+</div></blockquote>
+</li>
+<li><p><strong>Ensure X11 or Wayland is running</strong></p></li>
+<li><p><strong>Check display environment</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>echo $DISPLAY</p>
+</div></blockquote>
+</li>
+</ol>
+</section>
+</section>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this heading">¶</a></h2>
+<section id="common-issues">
+<h3>Common Issues<a class="headerlink" href="#common-issues" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt><strong>“No OpenGL context” error</strong></dt><dd><ul class="simple">
+<li><p>Use minimal versions instead</p></li>
+<li><p>Run from Terminal.app (macOS) or command prompt (Windows)</p></li>
+<li><p>Check display environment</p></li>
+</ul>
+</dd>
+<dt><strong>“Shader compilation failed” error</strong></dt><dd><ul class="simple">
+<li><p>Use minimal versions (no shaders required)</p></li>
+<li><p>Check OpenGL version support</p></li>
+<li><p>Update graphics drivers</p></li>
+</ul>
+</dd>
+<dt><strong>“PicoGL import failed” error</strong></dt><dd><ul class="simple">
+<li><p>Use minimal versions (no PicoGL required)</p></li>
+<li><p>Or install PicoGL: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">picogl</span></code></p></li>
+</ul>
+</dd>
+<dt><strong>“Segmentation fault” error</strong></dt><dd><ul class="simple">
+<li><p>Use minimal versions</p></li>
+<li><p>Check OpenGL drivers</p></li>
+<li><p>Try software rendering</p></li>
+</ul>
+</dd>
+<dt><strong>“Black screen” error</strong></dt><dd><ul class="simple">
+<li><p>Check OpenGL support</p></li>
+<li><p>Use minimal versions</p></li>
+<li><p>Try different OpenGL settings</p></li>
+</ul>
+</dd>
+<dt><strong>“No display available” error</strong></dt><dd><ul class="simple">
+<li><p>Check display environment</p></li>
+<li><p>Install XQuartz (macOS)</p></li>
+<li><p>Ensure X11/Wayland is running (Linux)</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="macos-specific-issues">
+<h3>macOS Specific Issues<a class="headerlink" href="#macos-specific-issues" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt><strong>OpenGL context creation fails</strong></dt><dd><ul class="simple">
+<li><p>Run from Terminal.app or iTerm2</p></li>
+<li><p>Check if XQuartz is installed and running</p></li>
+<li><p>Try software rendering: <code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">MESA_GL_VERSION_OVERRIDE=3.3</span></code></p></li>
+</ul>
+</dd>
+<dt><strong>Segmentation fault</strong></dt><dd><ul class="simple">
+<li><p>Run from Terminal.app</p></li>
+<li><p>Check OpenGL drivers</p></li>
+<li><p>Try different OpenGL settings</p></li>
+</ul>
+</dd>
+<dt><strong>“No display available” error</strong></dt><dd><ul class="simple">
+<li><p>Install XQuartz: <code class="docutils literal notranslate"><span class="pre">brew</span> <span class="pre">install</span> <span class="pre">--cask</span> <span class="pre">xquartz</span></code></p></li>
+<li><p>Check DISPLAY environment variable</p></li>
+<li><p>Restart XQuartz</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="windows-specific-issues">
+<h3>Windows Specific Issues<a class="headerlink" href="#windows-specific-issues" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt><strong>“DLL load failed” error</strong></dt><dd><ul class="simple">
+<li><p>Install Visual C++ Redistributable</p></li>
+<li><p>Check Python architecture (32-bit vs 64-bit)</p></li>
+</ul>
+</dd>
+<dt><strong>“OpenGL not supported” error</strong></dt><dd><ul class="simple">
+<li><p>Update graphics drivers</p></li>
+<li><p>Check OpenGL support in graphics settings</p></li>
+</ul>
+</dd>
+<dt><strong>“Microsoft Visual C++ 14.0 is required”</strong></dt><dd><ul class="simple">
+<li><p>Install Visual Studio Build Tools</p></li>
+<li><p>Or install pre-compiled wheels</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="linux-specific-issues">
+<h3>Linux Specific Issues<a class="headerlink" href="#linux-specific-issues" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt><strong>“No display available” error</strong></dt><dd><ul class="simple">
+<li><p>Ensure X11 or Wayland is running</p></li>
+<li><p>Check DISPLAY environment variable</p></li>
+</ul>
+</dd>
+<dt><strong>“OpenGL not supported” error</strong></dt><dd><ul class="simple">
+<li><p>Install mesa libraries</p></li>
+<li><p>Check graphics drivers</p></li>
+</ul>
+</dd>
+<dt><strong>“Permission denied” error</strong></dt><dd><ul class="simple">
+<li><p>Run with appropriate permissions</p></li>
+<li><p>Check file permissions</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+</section>
+<section id="performance-notes">
+<h2>Performance Notes<a class="headerlink" href="#performance-notes" title="Permalink to this heading">¶</a></h2>
+<p><strong>Minimal Versions</strong>:
+* Fastest performance
+* Uses hardware-optimized primitives
+* Immediate mode rendering
+* No shader compilation overhead</p>
+<p><strong>Fixed Versions</strong>:
+* Medium performance
+* Uses legacy VBOs
+* Some shader compilation
+* Better integration with PicoGL</p>
+<p><strong>Original Versions</strong>:
+* Slowest performance
+* Full shader pipeline
+* Modern VAO/VBO usage
+* Maximum feature set</p>
+</section>
+<section id="choosing-the-right-version">
+<h2>Choosing the Right Version<a class="headerlink" href="#choosing-the-right-version" title="Permalink to this heading">¶</a></h2>
+<p><strong>Use Minimal Versions When</strong>:
+* Maximum compatibility is required
+* OpenGL support is limited
+* Performance is critical
+* No PicoGL integration needed</p>
+<p><strong>Use Fixed Versions When</strong>:
+* PicoGL integration is desired
+* Some OpenGL support is available
+* Balance between compatibility and features
+* OBJ file loading is needed</p>
+<p><strong>Use Original Versions When</strong>:
+* Full OpenGL 3.3+ support is available
+* Maximum features are needed
+* Modern shader pipeline is required
+* Best visual quality is desired</p>
+</section>
+<section id="development-notes">
+<h2>Development Notes<a class="headerlink" href="#development-notes" title="Permalink to this heading">¶</a></h2>
+<p><strong>Adding New Legacy Examples</strong>:</p>
+<ol class="arabic simple">
+<li><p><strong>Follow the naming convention</strong>: <code class="docutils literal notranslate"><span class="pre">legacy_&lt;name&gt;_&lt;type&gt;.py</span></code></p></li>
+<li><p><strong>Provide both minimal and fixed versions</strong> when possible</p></li>
+<li><p><strong>Include comprehensive error handling</strong></p></li>
+<li><p><strong>Test on multiple platforms</strong></p></li>
+<li><p><strong>Document compatibility requirements</strong></p></li>
+</ol>
+<p><strong>Example Structure</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><dl class="simple">
+<dt>class LegacyExampleRenderer:</dt><dd><dl class="simple">
+<dt>def __init__(self, width=800, height=600, title=”Example”):</dt><dd><p># Initialize renderer</p>
+</dd>
+<dt>def init_glut(self):</dt><dd><p># Initialize GLUT window</p>
+</dd>
+<dt>def init_gl(self):</dt><dd><p># Initialize OpenGL state</p>
+</dd>
+<dt>def display(self):</dt><dd><p># Render the scene</p>
+</dd>
+<dt>def run(self):</dt><dd><p># Main loop</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<p><strong>Error Handling</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><dl class="simple">
+<dt>try:</dt><dd><p># OpenGL operations</p>
+</dd>
+<dt>except Exception as e:</dt><dd><p>print(f”Warning: OpenGL issue: {e}”)
+# Fallback behavior</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>For more information, see the <a class="reference internal" href="contributing.html"><span class="doc">Contributing</span></a> guide.</p>
+</section>
+<section id="license">
+<h2>License<a class="headerlink" href="#license" title="Permalink to this heading">¶</a></h2>
+<p>The legacy examples are part of the PicoGL project and follow the same license terms.</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">PicoGL</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Legacy Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#why-legacy-examples">Why Legacy Examples?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#legacy-teapot-examples">Legacy Teapot Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#legacy-cube-examples">Legacy Cube Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#diagnostic-tools">Diagnostic Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation-and-setup">Installation and Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#performance-notes">Performance Notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#choosing-the-right-version">Choosing the Right Version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#development-notes">Development Notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#license">License</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/renderer.html">Renderer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/buffers.html">Buffers API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/shaders.html">Shaders API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/ui.html">UI API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/utils.html">Utils API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="examples.html" title="previous chapter">Examples</a></li>
+      <li>Next: <a href="troubleshooting.html" title="next chapter">Troubleshooting</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2025, PicoGL Contributors.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/legacy_examples.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

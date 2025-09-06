@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Shaders API &#8212; PicoGL 1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b3523f8e" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=039e1c02" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=af2ce170"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="UI API" href="ui.html" />
+    <link rel="prev" title="Buffers API" href="buffers.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="shaders-api">
+<h1>Shaders API<a class="headerlink" href="#shaders-api" title="Permalink to this heading">¶</a></h1>
+<p>The shaders module provides OpenGL shader management functionality for PicoGL, including shader compilation, program creation, and uniform management.</p>
+<section id="core-classes">
+<h2>Core Classes<a class="headerlink" href="#core-classes" title="Permalink to this heading">¶</a></h2>
+<section id="shaderprogram">
+<h3>ShaderProgram<a class="headerlink" href="#shaderprogram" title="Permalink to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.shader.program.ShaderProgram">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">picogl.backend.modern.core.shader.program.</span></span><span class="sig-name descname"><span class="pre">ShaderProgram</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shader_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertex_source_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fragment_source_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">glsl_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/backend/modern/core/shader/program.html#ShaderProgram"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.shader.program.ShaderProgram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>OpenGL Shader program manager for vertex and fragment shaders.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.shader.program.ShaderProgram.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shader_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertex_source_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fragment_source_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">glsl_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/backend/modern/core/shader/program.html#ShaderProgram.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.shader.program.ShaderProgram.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>constructor</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.shader.program.ShaderProgram.program_id">
+<span class="sig-name descname"><span class="pre">program_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/backend/modern/core/shader/program.html#ShaderProgram.program_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.shader.program.ShaderProgram.program_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.shader.program.ShaderProgram.init_shader_from_glsl_files">
+<span class="sig-name descname"><span class="pre">init_shader_from_glsl_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertex_source_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">fragment_source_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">glsl_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/picogl/backend/modern/core/shader/program.html#ShaderProgram.init_shader_from_glsl_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.shader.program.ShaderProgram.init_shader_from_glsl_files" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>glsl_dir</strong> – directory containing vertex shaders</p></li>
+<li><p><strong>vertex_source_file</strong> – list of paths to vertex shaders</p></li>
+<li><p><strong>fragment_source_file</strong> – list of paths to fragment shaders</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.shader.program.ShaderProgram.init_shader_from_glsl">
+<span class="sig-name descname"><span class="pre">init_shader_from_glsl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertex_source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">fragment_source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/picogl/backend/modern/core/shader/program.html#ShaderProgram.init_shader_from_glsl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.shader.program.ShaderProgram.init_shader_from_glsl" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vertex_source</strong> – list of paths to vertex shaders</p></li>
+<li><p><strong>fragment_source</strong> – list of paths to fragment shaders</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.shader.program.ShaderProgram.init_shader">
+<span class="sig-name descname"><span class="pre">init_shader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertex_source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">fragment_source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/backend/modern/core/shader/program.html#ShaderProgram.init_shader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.shader.program.ShaderProgram.init_shader" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vertex_source</strong> – list of paths to vertex shaders</p></li>
+<li><p><strong>fragment_source</strong> – list of paths to fragment shaders</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p>Create, compile, and link shaders into a program.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.shader.program.ShaderProgram.uniform">
+<span class="sig-name descname"><span class="pre">uniform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/backend/modern/core/shader/program.html#ShaderProgram.uniform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.shader.program.ShaderProgram.uniform" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – str - uniform name</p></li>
+<li><p><strong>value</strong> – value to set (float, int, vec2, vec3, vec4, mat4, or np.ndarray)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>self - for chaining</p>
+</dd>
+</dl>
+<p>Set uniform value (auto-detect type)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.shader.program.ShaderProgram.create_shader_program">
+<span class="sig-name descname"><span class="pre">create_shader_program</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/backend/modern/core/shader/program.html#ShaderProgram.create_shader_program"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.shader.program.ShaderProgram.create_shader_program" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.shader.program.ShaderProgram.link_shader_program">
+<span class="sig-name descname"><span class="pre">link_shader_program</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/backend/modern/core/shader/program.html#ShaderProgram.link_shader_program"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.shader.program.ShaderProgram.link_shader_program" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.shader.program.ShaderProgram.get_uniform_location">
+<span class="sig-name descname"><span class="pre">get_uniform_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uniform_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/backend/modern/core/shader/program.html#ShaderProgram.get_uniform_location"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.shader.program.ShaderProgram.get_uniform_location" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.shader.program.ShaderProgram.begin">
+<span class="sig-name descname"><span class="pre">begin</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/backend/modern/core/shader/program.html#ShaderProgram.begin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.shader.program.ShaderProgram.begin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.shader.program.ShaderProgram.end">
+<span class="sig-name descname"><span class="pre">end</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/backend/modern/core/shader/program.html#ShaderProgram.end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.shader.program.ShaderProgram.end" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.shader.program.ShaderProgram.bind">
+<span class="sig-name descname"><span class="pre">bind</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/backend/modern/core/shader/program.html#ShaderProgram.bind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.shader.program.ShaderProgram.bind" title="Permalink to this definition">¶</a></dt>
+<dd><p>begin</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.shader.program.ShaderProgram.unbind">
+<span class="sig-name descname"><span class="pre">unbind</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/backend/modern/core/shader/program.html#ShaderProgram.unbind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.shader.program.ShaderProgram.unbind" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.shader.program.ShaderProgram.release">
+<span class="sig-name descname"><span class="pre">release</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/backend/modern/core/shader/program.html#ShaderProgram.release"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.shader.program.ShaderProgram.release" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.shader.program.ShaderProgram.delete">
+<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/backend/modern/core/shader/program.html#ShaderProgram.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.shader.program.ShaderProgram.delete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<p>The <code class="docutils literal notranslate"><span class="pre">ShaderProgram</span></code> class manages OpenGL shader programs, including vertex and fragment shaders.</p>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>from picogl.backend.modern.core.shader.program import ShaderProgram</p>
+<p># Create shader program
+shader = ShaderProgram(</p>
+<blockquote>
+<div><p>vertex_source_file=”vertex.glsl”,
+fragment_source_file=”fragment.glsl”</p>
+</div></blockquote>
+<p>)</p>
+<p># Use shader
+with shader:</p>
+<blockquote>
+<div><p>shader.uniform(“mvp_matrix”, mvp_matrix)
+shader.uniform(“color”, [1.0, 0.0, 0.0])
+# Draw calls here</p>
+</div></blockquote>
+</div></blockquote>
+</section>
+<section id="shadermanager">
+<h3>ShaderManager<a class="headerlink" href="#shadermanager" title="Permalink to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">ShaderManager</span></code> class provides centralized shader management for multiple shader programs.</p>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>from picogl.shaders.manager import ShaderManager</p>
+<p># Create shader manager
+manager = ShaderManager(shader_directory=”glsl/”)</p>
+<p># Load shaders
+manager.load_shader(ShaderType.BASIC, 1)
+manager.load_shader(ShaderType.TEXTURE, 2)</p>
+<p># Use shader
+shader = manager.get(ShaderType.BASIC)
+with shader:</p>
+<blockquote>
+<div><p># Draw calls here</p>
+</div></blockquote>
+</div></blockquote>
+</section>
+</section>
+<section id="shader-types">
+<h2>Shader Types<a class="headerlink" href="#shader-types" title="Permalink to this heading">¶</a></h2>
+<section id="shadertype">
+<h3>ShaderType<a class="headerlink" href="#shadertype" title="Permalink to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="picogl.shaders.type.ShaderType">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">picogl.shaders.type.</span></span><span class="sig-name descname"><span class="pre">ShaderType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/shaders/type.html#ShaderType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.shaders.type.ShaderType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.Enum" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="picogl.shaders.type.ShaderType.AXIS">
+<span class="sig-name descname"><span class="pre">AXIS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'axis'</span></em><a class="headerlink" href="#picogl.shaders.type.ShaderType.AXIS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="picogl.shaders.type.ShaderType.ATOMS">
+<span class="sig-name descname"><span class="pre">ATOMS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'atoms'</span></em><a class="headerlink" href="#picogl.shaders.type.ShaderType.ATOMS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="picogl.shaders.type.ShaderType.BONDS">
+<span class="sig-name descname"><span class="pre">BONDS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'bonds'</span></em><a class="headerlink" href="#picogl.shaders.type.ShaderType.BONDS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="picogl.shaders.type.ShaderType.DEFAULT">
+<span class="sig-name descname"><span class="pre">DEFAULT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'default'</span></em><a class="headerlink" href="#picogl.shaders.type.ShaderType.DEFAULT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="picogl.shaders.type.ShaderType.CALPHAS">
+<span class="sig-name descname"><span class="pre">CALPHAS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'calphas'</span></em><a class="headerlink" href="#picogl.shaders.type.ShaderType.CALPHAS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="picogl.shaders.type.ShaderType.RIBBONS">
+<span class="sig-name descname"><span class="pre">RIBBONS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ribbons'</span></em><a class="headerlink" href="#picogl.shaders.type.ShaderType.RIBBONS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="picogl.shaders.type.ShaderType.ISOSURFACE">
+<span class="sig-name descname"><span class="pre">ISOSURFACE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'isosurface'</span></em><a class="headerlink" href="#picogl.shaders.type.ShaderType.ISOSURFACE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.shaders.type.ShaderType.get_name">
+<span class="sig-name descname"><span class="pre">get_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/shaders/type.html#ShaderType.get_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.shaders.type.ShaderType.get_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.shaders.type.ShaderType.get_display_name">
+<span class="sig-name descname"><span class="pre">get_display_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/shaders/type.html#ShaderType.get_display_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.shaders.type.ShaderType.get_display_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.shaders.type.ShaderType.vertex_path">
+<span class="sig-name descname"><span class="pre">vertex_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/shaders/type.html#ShaderType.vertex_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.shaders.type.ShaderType.vertex_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.shaders.type.ShaderType.fragment_path">
+<span class="sig-name descname"><span class="pre">fragment_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/shaders/type.html#ShaderType.fragment_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.shaders.type.ShaderType.fragment_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<p>The <code class="docutils literal notranslate"><span class="pre">ShaderType</span></code> enum defines the available shader types in PicoGL.</p>
+<p><strong>Available Types</strong>:
+* <code class="docutils literal notranslate"><span class="pre">BASIC</span></code>: Basic color shader
+* <code class="docutils literal notranslate"><span class="pre">TEXTURE</span></code>: Texture mapping shader
+* <code class="docutils literal notranslate"><span class="pre">LIGHTING</span></code>: Lighting and shading shader
+* <code class="docutils literal notranslate"><span class="pre">NORMAL_MAPPING</span></code>: Normal mapping shader
+* <code class="docutils literal notranslate"><span class="pre">TRANSPARENT</span></code>: Transparent rendering shader
+* <code class="docutils literal notranslate"><span class="pre">TEXT</span></code>: Text rendering shader</p>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>from picogl.shaders.type import ShaderType</p>
+<p># Use shader type
+shader_type = ShaderType.BASIC
+shader = manager.get(shader_type)</p>
+</div></blockquote>
+</section>
+</section>
+<section id="shader-compilation">
+<h2>Shader Compilation<a class="headerlink" href="#shader-compilation" title="Permalink to this heading">¶</a></h2>
+<section id="compile-shaders">
+<h3>Compile Shaders<a class="headerlink" href="#compile-shaders" title="Permalink to this heading">¶</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="picogl.shaders.compile.compile_shaders">
+<span class="sig-prename descclassname"><span class="pre">picogl.shaders.compile.</span></span><span class="sig-name descname"><span class="pre">compile_shaders</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertex_src</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">fragment_src</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">shader_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#picogl.backend.modern.core.shader.program.ShaderProgram" title="picogl.backend.modern.core.shader.program.ShaderProgram"><span class="pre">ShaderProgram</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/picogl/shaders/compile.html#compile_shaders"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.shaders.compile.compile_shaders" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compiles and links a vertex + fragment shader_manager.current_shader_program shader_program using Qt’s OpenGL API.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>shader_name</strong> – str</p></li>
+<li><p><strong>vertex_src</strong> – Vertex shader_manager.current_shader_program GLSL code.</p></li>
+<li><p><strong>fragment_src</strong> – Fragment shader_manager.current_shader_program GLSL code.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Linked PicoGLShader or None on failure.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>Compiles vertex and fragment shader source code into OpenGL shaders.</p>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>from picogl.shaders.compile import compile_shaders</p>
+<p># Compile shaders
+vertex_source = “””
+#version 330 core
+layout(location = 0) in vec3 position;
+uniform mat4 mvp_matrix;
+void main() {</p>
+<blockquote>
+<div><p>gl_Position = mvp_matrix * vec4(position, 1.0);</p>
+</div></blockquote>
+<p>fragment_source = “””
+#version 330 core
+out vec4 color;
+uniform vec3 color_uniform;
+void main() {</p>
+<blockquote>
+<div><p>color = vec4(color_uniform, 1.0);</p>
+</div></blockquote>
+<p>shader = compile_shaders(vertex_source, fragment_source, “basic”)</p>
+</div></blockquote>
+</section>
+<section id="load-shaders">
+<h3>Load Shaders<a class="headerlink" href="#load-shaders" title="Permalink to this heading">¶</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="picogl.shaders.load.load_fragment_and_vertex_for_shader_type">
+<span class="sig-prename descclassname"><span class="pre">picogl.shaders.load.</span></span><span class="sig-name descname"><span class="pre">load_fragment_and_vertex_for_shader_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shader_type_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">shader_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/picogl/shaders/load.html#load_fragment_and_vertex_for_shader_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.shaders.load.load_fragment_and_vertex_for_shader_type" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>shader_directory</strong> – str</p></li>
+<li><p><strong>shader_type_value</strong> – ShaderType</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>Loads vertex and fragment shader source code from files.</p>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>from picogl.shaders.load import load_fragment_and_vertex_for_shader_type</p>
+<p># Load shader files
+vertex_src, fragment_src = load_fragment_and_vertex_for_shader_type(</p>
+<blockquote>
+<div><p>“basic”, “glsl/”</p>
+</div></blockquote>
+<p>)</p>
+<p># Compile shaders
+shader = compile_shaders(vertex_src, fragment_src, “basic”)</p>
+</div></blockquote>
+</section>
+</section>
+<section id="uniform-management">
+<h2>Uniform Management<a class="headerlink" href="#uniform-management" title="Permalink to this heading">¶</a></h2>
+<section id="shaderuniform">
+<h3>ShaderUniform<a class="headerlink" href="#shaderuniform" title="Permalink to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="picogl.shaders.shader_uniform.ShaderUniform">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">picogl.shaders.shader_uniform.</span></span><span class="sig-name descname"><span class="pre">ShaderUniform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">numpy.ndarray</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">NoneType</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uniform_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">picogl.shaders.shader_uniform.UniformKind</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/shaders/shader_uniform.html#ShaderUniform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.shaders.shader_uniform.ShaderUniform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="picogl.shaders.shader_uniform.ShaderUniform.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#picogl.shaders.shader_uniform.ShaderUniform.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="picogl.shaders.shader_uniform.ShaderUniform.location">
+<span class="sig-name descname"><span class="pre">location</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></em><a class="headerlink" href="#picogl.shaders.shader_uniform.ShaderUniform.location" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="picogl.shaders.shader_uniform.ShaderUniform.value">
+<span class="sig-name descname"><span class="pre">value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Sequence" title="(in Python v3.13)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#picogl.shaders.shader_uniform.ShaderUniform.value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="picogl.shaders.shader_uniform.ShaderUniform.uniform_type">
+<span class="sig-name descname"><span class="pre">uniform_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">UniformKind</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#picogl.shaders.shader_uniform.ShaderUniform.uniform_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.shaders.shader_uniform.ShaderUniform.infer_type">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">infer_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">UniformKind</span></span></span><a class="reference internal" href="../_modules/picogl/shaders/shader_uniform.html#ShaderUniform.infer_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.shaders.shader_uniform.ShaderUniform.infer_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.shaders.shader_uniform.ShaderUniform.upload">
+<span class="sig-name descname"><span class="pre">upload</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gl_module</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/picogl/shaders/shader_uniform.html#ShaderUniform.upload"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.shaders.shader_uniform.ShaderUniform.upload" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upload the current value to the bound GL program using PyOpenGL-like calls.
+If location &lt; 0 (GL returns -1 when not found/used), this is a no-op.</p>
+<ul class="simple">
+<li><p>gl_module: optional OpenGL.GL-like module. If None, will try to import PyOpenGL
+(from OpenGL import GL as GL) at call time.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.shaders.shader_uniform.ShaderUniform.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Sequence" title="(in Python v3.13)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uniform_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">UniformKind</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#picogl.shaders.shader_uniform.ShaderUniform.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<p>The <code class="docutils literal notranslate"><span class="pre">ShaderUniform</span></code> class manages OpenGL shader uniforms.</p>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>from picogl.shaders.shader_uniform import ShaderUniform</p>
+<p># Create uniform
+uniform = ShaderUniform(shader, “mvp_matrix”)</p>
+<p># Set uniform value
+uniform.set(mvp_matrix)</p>
+</div></blockquote>
+</section>
+<section id="uniform-types">
+<h3>Uniform Types<a class="headerlink" href="#uniform-types" title="Permalink to this heading">¶</a></h3>
+<p>PicoGL supports various uniform types:</p>
+<p><strong>Matrix Uniforms</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p># 4x4 matrix
+shader.uniform(“mvp_matrix”, mvp_matrix)</p>
+<p># 3x3 matrix
+shader.uniform(“normal_matrix”, normal_matrix)</p>
+</div></blockquote>
+<p><strong>Vector Uniforms</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p># 3D vector
+shader.uniform(“color”, [1.0, 0.0, 0.0])</p>
+<p># 4D vector
+shader.uniform(“position”, [0.0, 0.0, 0.0, 1.0])</p>
+</div></blockquote>
+<p><strong>Scalar Uniforms</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p># Float
+shader.uniform(“time”, 0.5)</p>
+<p># Integer
+shader.uniform(“texture_sampler”, 0)</p>
+</div></blockquote>
+<p><strong>Boolean Uniforms</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p># Boolean
+shader.uniform(“use_texture”, True)</p>
+</div></blockquote>
+</section>
+</section>
+<section id="built-in-shaders">
+<h2>Built-in Shaders<a class="headerlink" href="#built-in-shaders" title="Permalink to this heading">¶</a></h2>
+<p>PicoGL includes several built-in shader programs:</p>
+<section id="basic-color-shader">
+<h3>Basic Color Shader<a class="headerlink" href="#basic-color-shader" title="Permalink to this heading">¶</a></h3>
+<p><strong>Vertex Shader</strong>:
+.. code-block:: glsl</p>
+<blockquote>
+<div><p>#version 330 core
+layout(location = 0) in vec3 position;
+layout(location = 1) in vec3 color;</p>
+<p>uniform mat4 mvp_matrix;</p>
+<p>out vec3 fragment_color;</p>
+<dl class="simple">
+<dt>void main() {</dt><dd><p>gl_Position = mvp_matrix * vec4(position, 1.0);
+fragment_color = color;</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+<p><strong>Fragment Shader</strong>:
+.. code-block:: glsl</p>
+<blockquote>
+<div><p>#version 330 core
+in vec3 fragment_color;
+out vec4 color;</p>
+<dl class="simple">
+<dt>void main() {</dt><dd><p>color = vec4(fragment_color, 1.0);</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+</section>
+<section id="texture-shader">
+<h3>Texture Shader<a class="headerlink" href="#texture-shader" title="Permalink to this heading">¶</a></h3>
+<p><strong>Vertex Shader</strong>:
+.. code-block:: glsl</p>
+<blockquote>
+<div><p>#version 330 core
+layout(location = 0) in vec3 position;
+layout(location = 1) in vec2 uv;</p>
+<p>uniform mat4 mvp_matrix;</p>
+<p>out vec2 fragment_uv;</p>
+<dl class="simple">
+<dt>void main() {</dt><dd><p>gl_Position = mvp_matrix * vec4(position, 1.0);
+fragment_uv = uv;</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+<p><strong>Fragment Shader</strong>:
+.. code-block:: glsl</p>
+<blockquote>
+<div><p>#version 330 core
+in vec2 fragment_uv;</p>
+<p>uniform sampler2D texture0;</p>
+<p>out vec4 color;</p>
+<dl class="simple">
+<dt>void main() {</dt><dd><p>color = texture(texture0, fragment_uv);</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+</section>
+<section id="lighting-shader">
+<h3>Lighting Shader<a class="headerlink" href="#lighting-shader" title="Permalink to this heading">¶</a></h3>
+<p><strong>Vertex Shader</strong>:
+.. code-block:: glsl</p>
+<blockquote>
+<div><p>#version 330 core
+layout(location = 0) in vec3 position;
+layout(location = 1) in vec3 normal;</p>
+<p>uniform mat4 mvp_matrix;
+uniform mat4 model_matrix;</p>
+<p>out vec3 frag_position;
+out vec3 frag_normal;</p>
+<dl class="simple">
+<dt>void main() {</dt><dd><p>gl_Position = mvp_matrix * vec4(position, 1.0);
+frag_position = vec3(model_matrix * vec4(position, 1.0));
+frag_normal = mat3(transpose(inverse(model_matrix))) * normal;</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+<p><strong>Fragment Shader</strong>:
+.. code-block:: glsl</p>
+<blockquote>
+<div><p>#version 330 core
+in vec3 frag_position;
+in vec3 frag_normal;</p>
+<p>uniform vec3 light_pos;
+uniform vec3 view_pos;
+uniform vec3 object_color;</p>
+<p>out vec4 color;</p>
+<dl>
+<dt>void main() {</dt><dd><p>vec3 norm = normalize(frag_normal);
+vec3 light_dir = normalize(light_pos - frag_position);</p>
+<p>float diff = max(dot(norm, light_dir), 0.0);
+vec3 diffuse = diff * object_color;</p>
+<p>vec3 ambient = 0.1 * object_color;
+vec3 result = ambient + diffuse;</p>
+<p>color = vec4(result, 1.0);</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+</section>
+<section id="fallback-shaders">
+<h3>Fallback Shaders<a class="headerlink" href="#fallback-shaders" title="Permalink to this heading">¶</a></h3>
+<p>PicoGL includes fallback shaders for systems with limited OpenGL support:</p>
+<p><strong>Fallback Vertex Shader</strong>:
+.. code-block:: glsl</p>
+<blockquote>
+<div><p>#version 120
+attribute vec3 in_position;
+uniform mat4 mvp;</p>
+<dl class="simple">
+<dt>void main() {</dt><dd><p>gl_Position = mvp * vec4(in_position, 1.0);</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+<p><strong>Fallback Fragment Shader</strong>:
+.. code-block:: glsl</p>
+<blockquote>
+<div><p>#version 120
+void main() {</p>
+<blockquote>
+<div><p>gl_FragColor = vec4(1.0, 0.0, 1.0, 1.0);  // Hot pink</p>
+</div></blockquote>
+<p>}</p>
+</div></blockquote>
+</section>
+</section>
+<section id="shader-usage">
+<h2>Shader Usage<a class="headerlink" href="#shader-usage" title="Permalink to this heading">¶</a></h2>
+<section id="creating-shader-programs">
+<h3>Creating Shader Programs<a class="headerlink" href="#creating-shader-programs" title="Permalink to this heading">¶</a></h3>
+<p><strong>From Files</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>from picogl.backend.modern.core.shader.program import ShaderProgram</p>
+<p># Create shader from files
+shader = ShaderProgram(</p>
+<blockquote>
+<div><p>vertex_source_file=”vertex.glsl”,
+fragment_source_file=”fragment.glsl”,
+glsl_dir=”glsl/”</p>
+</div></blockquote>
+<p>)</p>
+</div></blockquote>
+<p><strong>From Source</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p># Create shader from source code
+shader = ShaderProgram(</p>
+<blockquote>
+<div><p>vertex_source=vertex_source,
+fragment_source=fragment_source</p>
+</div></blockquote>
+<p>)</p>
+</div></blockquote>
+</section>
+<section id="using-shaders">
+<h3>Using Shaders<a class="headerlink" href="#using-shaders" title="Permalink to this heading">¶</a></h3>
+<p><strong>Basic Usage</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p># Use shader
+with shader:</p>
+<blockquote>
+<div><p>shader.uniform(“mvp_matrix”, mvp_matrix)
+shader.uniform(“color”, [1.0, 0.0, 0.0])
+# Draw calls here</p>
+</div></blockquote>
+</div></blockquote>
+<p><strong>Advanced Usage</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p># Bind shader
+shader.bind()</p>
+<p># Set uniforms
+shader.uniform(“mvp_matrix”, mvp_matrix)
+shader.uniform(“model_matrix”, model_matrix)
+shader.uniform(“view_pos”, camera_position)</p>
+<p># Draw
+mesh.draw()</p>
+<p># Unbind shader
+shader.unbind()</p>
+</div></blockquote>
+</section>
+</section>
+<section id="error-handling">
+<h2>Error Handling<a class="headerlink" href="#error-handling" title="Permalink to this heading">¶</a></h2>
+<p>Shader operations include comprehensive error handling:</p>
+<p><strong>Compilation Errors</strong>: Check shader source code
+<strong>Link Errors</strong>: Check shader program compatibility
+<strong>Uniform Errors</strong>: Validate uniform names and types
+<strong>Context Errors</strong>: Check OpenGL context</p>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><dl>
+<dt>try:</dt><dd><dl class="simple">
+<dt>shader = ShaderProgram(</dt><dd><p>vertex_source_file=”vertex.glsl”,
+fragment_source_file=”fragment.glsl”</p>
+</dd>
+</dl>
+<p>)</p>
+</dd>
+<dt>except ShaderCompilationError as e:</dt><dd><p>print(f”Shader compilation error: {e}”)
+# Check shader source code</p>
+</dd>
+<dt>except ShaderLinkError as e:</dt><dd><p>print(f”Shader link error: {e}”)
+# Check shader compatibility</p>
+</dd>
+<dt>except Exception as e:</dt><dd><p>print(f”Unexpected error: {e}”)
+# Handle gracefully</p>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="performance-considerations">
+<h2>Performance Considerations<a class="headerlink" href="#performance-considerations" title="Permalink to this heading">¶</a></h2>
+<p><strong>Modern Shaders (OpenGL 3.3+)</strong>:
+* Best performance and features
+* Full shader pipeline support
+* Advanced uniform types
+* Requires modern OpenGL</p>
+<p><strong>Legacy Shaders (OpenGL 1.x/2.x)</strong>:
+* Compatible with older OpenGL versions
+* Limited shader features
+* Uses fixed function pipeline
+* Good performance on older hardware</p>
+<p><strong>Fallback Shaders</strong>:
+* Maximum compatibility
+* Basic functionality only
+* Uses immediate mode rendering
+* Works on any OpenGL system</p>
+</section>
+<section id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p><strong>Use appropriate shader type</strong> for your target platform</p></li>
+<li><p><strong>Compile shaders once</strong> and reuse them</p></li>
+<li><p><strong>Handle compilation errors</strong> gracefully</p></li>
+<li><p><strong>Use fallback shaders</strong> for compatibility</p></li>
+<li><p><strong>Test on multiple platforms</strong> for compatibility</p></li>
+</ol>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p># Choose shader based on OpenGL support
+if has_modern_opengl():</p>
+<blockquote>
+<div><dl class="simple">
+<dt>shader = ShaderProgram(</dt><dd><p>vertex_source_file=”vertex.glsl”,
+fragment_source_file=”fragment.glsl”</p>
+</dd>
+</dl>
+<p>)</p>
+</div></blockquote>
+<dl>
+<dt>elif has_legacy_opengl():</dt><dd><dl class="simple">
+<dt>shader = ShaderProgram(</dt><dd><p>vertex_source_file=”legacy_vertex.glsl”,
+fragment_source_file=”legacy_fragment.glsl”</p>
+</dd>
+</dl>
+<p>)</p>
+</dd>
+<dt>else:</dt><dd><p># Use fallback shader
+shader = ShaderProgram(</p>
+<blockquote>
+<div><p>vertex_source=fallback_vertex_source,
+fragment_source=fallback_fragment_source</p>
+</div></blockquote>
+<p>)</p>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">PicoGL</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../legacy_examples.html">Legacy Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../troubleshooting.html">Troubleshooting</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="renderer.html">Renderer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="buffers.html">Buffers API</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Shaders API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#core-classes">Core Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#shader-types">Shader Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#shader-compilation">Shader Compilation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#uniform-management">Uniform Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#built-in-shaders">Built-in Shaders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#shader-usage">Shader Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#error-handling">Error Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#performance-considerations">Performance Considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#best-practices">Best Practices</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ui.html">UI API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Utils API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="buffers.html" title="previous chapter">Buffers API</a></li>
+      <li>Next: <a href="ui.html" title="next chapter">UI API</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2025, PicoGL Contributors.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../_sources/api/shaders.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

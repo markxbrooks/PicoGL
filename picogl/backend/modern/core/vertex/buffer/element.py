@@ -20,6 +20,7 @@ Example usage:
 ...ebo.configure()
 ...ebo.unbind()
 """
+from typing import Optional
 
 import numpy as np
 from OpenGL.GL import glBufferData, glGenBuffers
@@ -35,8 +36,8 @@ class ModernEBO(VertexBuffer):
 
     def __init__(
         self,
-        handle: int = None,
-        data: np.ndarray = None,
+        handle: Optional[int] = None,
+        data: Optional[np.ndarray] = None,
         size: int = 3,
         target: int = GL_ELEMENT_ARRAY_BUFFER,
     ):

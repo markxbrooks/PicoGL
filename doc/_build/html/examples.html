@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Examples &#8212; PicoGL 1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b3523f8e" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=039e1c02" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=af2ce170"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Legacy Examples" href="legacy_examples.html" />
+    <link rel="prev" title="Quick Start Guide" href="quickstart.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="examples">
+<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">¶</a></h1>
+<p>PicoGL comes with a comprehensive set of examples demonstrating various features and use cases. This section provides an overview of all available examples and how to run them.</p>
+<section id="basic-examples">
+<h2>Basic Examples<a class="headerlink" href="#basic-examples" title="Permalink to this heading">¶</a></h2>
+<section id="cube-example">
+<h3>Cube Example<a class="headerlink" href="#cube-example" title="Permalink to this heading">¶</a></h3>
+<p><strong>File</strong>: <code class="docutils literal notranslate"><span class="pre">examples/cube.py</span></code></p>
+<p>A simple colored cube demonstrating basic mesh rendering.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">picogl.renderer</span> <span class="kn">import</span> <span class="n">MeshData</span>
+<span class="kn">from</span> <span class="nn">picogl.ui.backend.glut.window.object</span> <span class="kn">import</span> <span class="n">RenderWindow</span>
+<span class="kn">from</span> <span class="nn">examples.data.cube_data</span> <span class="kn">import</span> <span class="n">g_vertex_buffer_data</span><span class="p">,</span> <span class="n">g_color_buffer_data</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">MeshData</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">vertices</span><span class="o">=</span><span class="n">g_vertex_buffer_data</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="n">g_color_buffer_data</span><span class="p">)</span>
+<span class="n">window</span> <span class="o">=</span> <span class="n">RenderWindow</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Cube&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+<span class="n">window</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+<span class="n">window</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><strong>Features</strong>:
+* 36 vertices forming 12 triangles
+* Per-vertex coloring
+* Interactive rotation and zoom
+* Modern OpenGL 3.3+ shaders</p>
+<p><strong>Run</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>python examples/cube.py</p>
+</div></blockquote>
+</section>
+<section id="teapot-example">
+<h3>Teapot Example<a class="headerlink" href="#teapot-example" title="Permalink to this heading">¶</a></h3>
+<p><strong>File</strong>: <code class="docutils literal notranslate"><span class="pre">examples/teapot.py</span></code></p>
+<p>A 3D teapot model with lighting and shading.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">picogl.renderer</span> <span class="kn">import</span> <span class="n">MeshData</span>
+<span class="kn">from</span> <span class="nn">picogl.ui.backend.glut.window.object</span> <span class="kn">import</span> <span class="n">RenderWindow</span>
+<span class="kn">from</span> <span class="nn">picogl.utils.loader.object</span> <span class="kn">import</span> <span class="n">ObjectLoader</span>
+
+<span class="c1"># Load teapot data</span>
+<span class="n">obj_loader</span> <span class="o">=</span> <span class="n">ObjectLoader</span><span class="p">(</span><span class="s2">&quot;data/teapot.obj&quot;</span><span class="p">)</span>
+<span class="n">teapot_data</span> <span class="o">=</span> <span class="n">obj_loader</span><span class="o">.</span><span class="n">to_array_style</span><span class="p">()</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">MeshData</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span>
+    <span class="n">vertices</span><span class="o">=</span><span class="n">teapot_data</span><span class="o">.</span><span class="n">vertices</span><span class="p">,</span>
+    <span class="n">normals</span><span class="o">=</span><span class="n">teapot_data</span><span class="o">.</span><span class="n">normals</span><span class="p">,</span>
+    <span class="n">colors</span><span class="o">=</span><span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">teapot_data</span><span class="o">.</span><span class="n">vertices</span><span class="p">)</span> <span class="o">//</span> <span class="mi">3</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">window</span> <span class="o">=</span> <span class="n">RenderWindow</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Teapot&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+<span class="n">window</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+<span class="n">window</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><strong>Features</strong>:
+* Loaded from OBJ file
+* Surface normals for lighting
+* Phong shading
+* Interactive controls</p>
+<p><strong>Run</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>python examples/teapot.py</p>
+</div></blockquote>
+</section>
+</section>
+<section id="legacy-examples">
+<h2>Legacy Examples<a class="headerlink" href="#legacy-examples" title="Permalink to this heading">¶</a></h2>
+<p>For systems with limited OpenGL support (older macOS, etc.), use the legacy examples:</p>
+<section id="legacy-cube-minimal">
+<h3>Legacy Cube (Minimal)<a class="headerlink" href="#legacy-cube-minimal" title="Permalink to this heading">¶</a></h3>
+<p><strong>File</strong>: <code class="docutils literal notranslate"><span class="pre">examples/legacy_cube_minimal.py</span></code></p>
+<p>Maximum compatibility cube renderer using only PyOpenGL.</p>
+<p><strong>Features</strong>:
+* OpenGL 1.x immediate mode
+* No external dependencies beyond PyOpenGL
+* Works on any system with basic OpenGL support
+* Same visual appearance as modern version</p>
+<p><strong>Run</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>python examples/legacy_cube_minimal.py</p>
+</div></blockquote>
+</section>
+<section id="legacy-cube-fixed">
+<h3>Legacy Cube (Fixed)<a class="headerlink" href="#legacy-cube-fixed" title="Permalink to this heading">¶</a></h3>
+<p><strong>File</strong>: <code class="docutils literal notranslate"><span class="pre">examples/legacy_cube_fixed.py</span></code></p>
+<p>PicoGL-integrated legacy cube using LegacyGLMesh.</p>
+<p><strong>Features</strong>:
+* OpenGL 1.x/2.x compatibility
+* Uses PicoGL LegacyGLMesh
+* Falls back to wireframe if mesh loading fails
+* Better integration with PicoGL ecosystem</p>
+<p><strong>Run</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>python examples/legacy_cube_fixed.py</p>
+</div></blockquote>
+</section>
+<section id="legacy-teapot-minimal">
+<h3>Legacy Teapot (Minimal)<a class="headerlink" href="#legacy-teapot-minimal" title="Permalink to this heading">¶</a></h3>
+<p><strong>File</strong>: <code class="docutils literal notranslate"><span class="pre">examples/legacy_teapot_minimal.py</span></code></p>
+<p>Maximum compatibility teapot using built-in OpenGL primitives.</p>
+<p><strong>Features</strong>:
+* Uses <code class="docutils literal notranslate"><span class="pre">glutSolidTeapot()</span></code> built-in primitive
+* No external files required
+* Maximum compatibility
+* Interactive controls</p>
+<p><strong>Run</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>python examples/legacy_teapot_minimal.py</p>
+</div></blockquote>
+</section>
+<section id="legacy-teapot-fixed">
+<h3>Legacy Teapot (Fixed)<a class="headerlink" href="#legacy-teapot-fixed" title="Permalink to this heading">¶</a></h3>
+<p><strong>File</strong>: <code class="docutils literal notranslate"><span class="pre">examples/legacy_teapot_fixed.py</span></code></p>
+<p>PicoGL-integrated legacy teapot with OBJ file support.</p>
+<p><strong>Features</strong>:
+* Loads teapot from OBJ file
+* Uses LegacyGLMesh for rendering
+* Falls back to wireframe teapot if OBJ loading fails
+* Full PicoGL integration</p>
+<p><strong>Run</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>python examples/legacy_teapot_fixed.py</p>
+</div></blockquote>
+</section>
+</section>
+<section id="advanced-examples">
+<h2>Advanced Examples<a class="headerlink" href="#advanced-examples" title="Permalink to this heading">¶</a></h2>
+<section id="molecular-visualization">
+<h3>Molecular Visualization<a class="headerlink" href="#molecular-visualization" title="Permalink to this heading">¶</a></h3>
+<p><strong>File</strong>: <code class="docutils literal notranslate"><span class="pre">examples/molecular_viewer.py</span></code></p>
+<p>Complex molecular visualization with atom and bond rendering.</p>
+<p><strong>Features</strong>:
+* PDB file loading
+* Atom and bond rendering
+* Multiple rendering modes
+* Interactive controls
+* Scientific visualization</p>
+<p><strong>Run</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>python examples/molecular_viewer.py</p>
+</div></blockquote>
+</section>
+<section id="texture-examples">
+<h3>Texture Examples<a class="headerlink" href="#texture-examples" title="Permalink to this heading">¶</a></h3>
+<p><strong>File</strong>: <code class="docutils literal notranslate"><span class="pre">examples/texture.py</span></code></p>
+<p>Demonstrates texture mapping and UV coordinates.</p>
+<p><strong>Features</strong>:
+* Texture loading from image files
+* UV coordinate mapping
+* Multiple texture formats
+* Texture filtering and wrapping</p>
+<p><strong>Run</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>python examples/texture.py</p>
+</div></blockquote>
+</section>
+<section id="shader-examples">
+<h3>Shader Examples<a class="headerlink" href="#shader-examples" title="Permalink to this heading">¶</a></h3>
+<p><strong>Directory</strong>: <code class="docutils literal notranslate"><span class="pre">examples/glsl/</span></code></p>
+<p>Various shader examples demonstrating different rendering techniques:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tu01/</span></code> - Basic color cube</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tu02/</span></code> - Texture mapping</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tu04/</span></code> - Lighting and shading</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tu07/</span></code> - Standard shading</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tu08/</span></code> - Transparent shading</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tu09/</span></code> - Text rendering</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tu10/</span></code> - Normal mapping</p></li>
+</ul>
+<p><strong>Run</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p># Run specific shader example
+python examples/tu_01_color_cube.py
+python examples/tu_02_texture_without_normal.py
+python examples/tu_04_lighting.py</p>
+</div></blockquote>
+</section>
+</section>
+<section id="utility-examples">
+<h2>Utility Examples<a class="headerlink" href="#utility-examples" title="Permalink to this heading">¶</a></h2>
+<section id="mesh-viewer">
+<h3>Mesh Viewer<a class="headerlink" href="#mesh-viewer" title="Permalink to this heading">¶</a></h3>
+<p><strong>File</strong>: <code class="docutils literal notranslate"><span class="pre">examples/utils/meshViewer.py</span></code></p>
+<p>Generic mesh viewer for OBJ files.</p>
+<p><strong>Features</strong>:
+* Load any OBJ file
+* Interactive viewing
+* Multiple rendering modes
+* Export capabilities</p>
+<p><strong>Run</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>python examples/utils/meshViewer.py path/to/model.obj</p>
+</div></blockquote>
+</section>
+<section id="test-window">
+<h3>Test Window<a class="headerlink" href="#test-window" title="Permalink to this heading">¶</a></h3>
+<p><strong>File</strong>: <code class="docutils literal notranslate"><span class="pre">examples/utils/test_window.py</span></code></p>
+<p>Simple test window for debugging.</p>
+<p><strong>Features</strong>:
+* Basic OpenGL context testing
+* Simple rendering
+* Debug information
+* Error reporting</p>
+<p><strong>Run</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>python examples/utils/test_window.py</p>
+</div></blockquote>
+</section>
+</section>
+<section id="running-examples">
+<h2>Running Examples<a class="headerlink" href="#running-examples" title="Permalink to this heading">¶</a></h2>
+<section id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">¶</a></h3>
+<p>Before running examples, ensure you have:</p>
+<ol class="arabic simple">
+<li><p><strong>PicoGL installed</strong> (see <a class="reference internal" href="installation.html"><span class="doc">Installation</span></a>)</p></li>
+<li><p><strong>Required dependencies</strong>:
+- PyOpenGL
+- NumPy
+- PyGLM
+- Pillow (for texture examples)</p></li>
+<li><p><strong>OpenGL support</strong> on your system</p></li>
+</ol>
+</section>
+<section id="basic-usage">
+<h3>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this heading">¶</a></h3>
+<p>Most examples can be run directly:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Navigate to the examples directory</span>
+<span class="nb">cd</span><span class="w"> </span>examples
+
+<span class="c1"># Run a basic example</span>
+python<span class="w"> </span>cube.py
+
+<span class="c1"># Run a legacy example</span>
+python<span class="w"> </span>legacy_cube_minimal.py
+</pre></div>
+</div>
+</section>
+<section id="interactive-controls">
+<h3>Interactive Controls<a class="headerlink" href="#interactive-controls" title="Permalink to this heading">¶</a></h3>
+<p>Most examples support these controls:</p>
+<ul class="simple">
+<li><p><strong>Mouse drag</strong>: Rotate the view</p></li>
+<li><p><strong>Mouse wheel</strong>: Zoom in/out</p></li>
+<li><p><strong>R key</strong>: Reset rotation</p></li>
+<li><p><strong>W key</strong>: Toggle wireframe mode</p></li>
+<li><p><strong>F key</strong>: Fill mode</p></li>
+<li><p><strong>ESC key</strong>: Exit</p></li>
+</ul>
+<p>Some examples have additional controls:</p>
+<ul class="simple">
+<li><p><strong>N key</strong>: Toggle normals display</p></li>
+<li><p><strong>Space</strong>: Toggle auto-rotation</p></li>
+<li><p><strong>+/-</strong>: Zoom in/out</p></li>
+</ul>
+</section>
+</section>
+<section id="troubleshooting-examples">
+<h2>Troubleshooting Examples<a class="headerlink" href="#troubleshooting-examples" title="Permalink to this heading">¶</a></h2>
+<section id="common-issues">
+<h3>Common Issues<a class="headerlink" href="#common-issues" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt><strong>“No OpenGL context” error</strong></dt><dd><ul class="simple">
+<li><p>Try legacy examples instead</p></li>
+<li><p>Run from Terminal.app (macOS) or command prompt (Windows)</p></li>
+<li><p>Check display environment</p></li>
+</ul>
+</dd>
+<dt><strong>“Shader compilation failed” error</strong></dt><dd><ul class="simple">
+<li><p>Use legacy examples (no shaders required)</p></li>
+<li><p>Check OpenGL version support</p></li>
+<li><p>Update graphics drivers</p></li>
+</ul>
+</dd>
+<dt><strong>“Import error” for PicoGL modules</strong></dt><dd><ul class="simple">
+<li><p>Install PicoGL: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">picogl</span></code></p></li>
+<li><p>Check Python path and virtual environment</p></li>
+</ul>
+</dd>
+<dt><strong>“File not found” error for data files</strong></dt><dd><ul class="simple">
+<li><p>Ensure you’re running from the examples directory</p></li>
+<li><p>Check that data files exist in the correct location</p></li>
+</ul>
+</dd>
+<dt><strong>Black screen or no rendering</strong></dt><dd><ul class="simple">
+<li><p>Try legacy examples for better compatibility</p></li>
+<li><p>Check OpenGL support</p></li>
+<li><p>Update graphics drivers</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="platform-specific-issues">
+<h3>Platform-Specific Issues<a class="headerlink" href="#platform-specific-issues" title="Permalink to this heading">¶</a></h3>
+<section id="macos">
+<h4>macOS<a class="headerlink" href="#macos" title="Permalink to this heading">¶</a></h4>
+<dl class="simple">
+<dt><strong>Segmentation fault</strong></dt><dd><ul class="simple">
+<li><p>Run from Terminal.app or iTerm2</p></li>
+<li><p>Check OpenGL drivers</p></li>
+<li><p>Try software rendering</p></li>
+</ul>
+</dd>
+<dt><strong>“No display available” error</strong></dt><dd><ul class="simple">
+<li><p>Install XQuartz</p></li>
+<li><p>Check DISPLAY environment variable</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="windows">
+<h4>Windows<a class="headerlink" href="#windows" title="Permalink to this heading">¶</a></h4>
+<dl class="simple">
+<dt><strong>“DLL load failed” error</strong></dt><dd><ul class="simple">
+<li><p>Install Visual C++ Redistributable</p></li>
+<li><p>Check Python architecture (32-bit vs 64-bit)</p></li>
+</ul>
+</dd>
+<dt><strong>“OpenGL not supported” error</strong></dt><dd><ul class="simple">
+<li><p>Update graphics drivers</p></li>
+<li><p>Check OpenGL support in graphics settings</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="linux">
+<h4>Linux<a class="headerlink" href="#linux" title="Permalink to this heading">¶</a></h4>
+<dl class="simple">
+<dt><strong>“No display available” error</strong></dt><dd><ul class="simple">
+<li><p>Ensure X11 or Wayland is running</p></li>
+<li><p>Check DISPLAY environment variable</p></li>
+</ul>
+</dd>
+<dt><strong>“Permission denied” error</strong></dt><dd><ul class="simple">
+<li><p>Run with appropriate permissions</p></li>
+<li><p>Check file permissions</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+</section>
+</section>
+<section id="example-selection-guide">
+<h2>Example Selection Guide<a class="headerlink" href="#example-selection-guide" title="Permalink to this heading">¶</a></h2>
+<p>Choose the right example for your needs:</p>
+<dl class="simple">
+<dt><strong>Learning OpenGL basics</strong></dt><dd><ul class="simple">
+<li><p>Start with <code class="docutils literal notranslate"><span class="pre">cube.py</span></code> or <code class="docutils literal notranslate"><span class="pre">legacy_cube_minimal.py</span></code></p></li>
+<li><p>Try <code class="docutils literal notranslate"><span class="pre">teapot.py</span></code> for more complex geometry</p></li>
+</ul>
+</dd>
+<dt><strong>Compatibility issues</strong></dt><dd><ul class="simple">
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">legacy_*_minimal.py</span></code> examples</p></li>
+<li><p>These work on any system with basic OpenGL support</p></li>
+</ul>
+</dd>
+<dt><strong>Advanced features</strong></dt><dd><ul class="simple">
+<li><p>Try <code class="docutils literal notranslate"><span class="pre">molecular_viewer.py</span></code> for complex rendering</p></li>
+<li><p>Explore shader examples in <code class="docutils literal notranslate"><span class="pre">glsl/</span></code> directory</p></li>
+</ul>
+</dd>
+<dt><strong>Texture mapping</strong></dt><dd><ul class="simple">
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">texture.py</span></code> or <code class="docutils literal notranslate"><span class="pre">tu02/</span></code> shader example</p></li>
+<li><p>Check <code class="docutils literal notranslate"><span class="pre">legacy_teapot_fixed.py</span></code> for legacy texture support</p></li>
+</ul>
+</dd>
+<dt><strong>Scientific visualization</strong></dt><dd><ul class="simple">
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">molecular_viewer.py</span></code></p></li>
+<li><p>Check <code class="docutils literal notranslate"><span class="pre">examples/README_MOLECULAR.md</span></code> for detailed guide</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="customizing-examples">
+<h2>Customizing Examples<a class="headerlink" href="#customizing-examples" title="Permalink to this heading">¶</a></h2>
+<p>You can modify examples to suit your needs:</p>
+<ol class="arabic simple">
+<li><p><strong>Change colors</strong>: Modify the color arrays</p></li>
+<li><p><strong>Add more objects</strong>: Create additional MeshData objects</p></li>
+<li><p><strong>Change lighting</strong>: Modify shader parameters</p></li>
+<li><p><strong>Add textures</strong>: Load and apply texture images</p></li>
+<li><p><strong>Modify controls</strong>: Change keyboard/mouse bindings</p></li>
+</ol>
+<p>For more information, see the <a class="reference internal" href="api/renderer.html"><span class="doc">Renderer API</span></a> documentation.</p>
+</section>
+<section id="contributing-examples">
+<h2>Contributing Examples<a class="headerlink" href="#contributing-examples" title="Permalink to this heading">¶</a></h2>
+<p>We welcome contributions of new examples! When contributing:</p>
+<ol class="arabic simple">
+<li><p><strong>Follow the existing style</strong> and structure</p></li>
+<li><p><strong>Include comprehensive comments</strong> explaining the code</p></li>
+<li><p><strong>Test on multiple platforms</strong> if possible</p></li>
+<li><p><strong>Provide both modern and legacy versions</strong> when appropriate</p></li>
+<li><p><strong>Update this documentation</strong> to include your example</p></li>
+</ol>
+<p>For more information, see the <a class="reference internal" href="contributing.html"><span class="doc">Contributing</span></a> guide.</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">PicoGL</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#basic-examples">Basic Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#legacy-examples">Legacy Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#advanced-examples">Advanced Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#utility-examples">Utility Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-examples">Running Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#troubleshooting-examples">Troubleshooting Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-selection-guide">Example Selection Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#customizing-examples">Customizing Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contributing-examples">Contributing Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="legacy_examples.html">Legacy Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/renderer.html">Renderer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/buffers.html">Buffers API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/shaders.html">Shaders API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/ui.html">UI API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/utils.html">Utils API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="quickstart.html" title="previous chapter">Quick Start Guide</a></li>
+      <li>Next: <a href="legacy_examples.html" title="next chapter">Legacy Examples</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2025, PicoGL Contributors.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/examples.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

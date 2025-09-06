@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Testing &#8212; PicoGL 1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b3523f8e" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=039e1c02" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=af2ce170"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Contributing" href="contributing.html" />
+    <link rel="prev" title="Development" href="development.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="testing">
+<h1>Testing<a class="headerlink" href="#testing" title="Permalink to this heading">¶</a></h1>
+<p>PicoGL includes a comprehensive testing framework to ensure reliability and compatibility across different platforms and OpenGL versions.</p>
+<section id="test-structure">
+<h2>Test Structure<a class="headerlink" href="#test-structure" title="Permalink to this heading">¶</a></h2>
+<p>The test suite is organized as follows:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>tests/
+├── test_vertex_array_object.py      # VAO tests
+├── test_vertex_buffer_group.py      # Legacy VBO tests
+├── test_meshdata.py                 # MeshData tests
+├── test_glmesh.py                   # Modern GLMesh tests
+├── test_legacy_glmesh.py            # Legacy GLMesh tests
+├── test_object_renderer.py          # ObjectRenderer tests
+└── test_texture_renderer.py         # TextureRenderer tests
+</pre></div>
+</div>
+</section>
+<section id="running-tests">
+<h2>Running Tests<a class="headerlink" href="#running-tests" title="Permalink to this heading">¶</a></h2>
+<section id="basic-test-execution">
+<h3>Basic Test Execution<a class="headerlink" href="#basic-test-execution" title="Permalink to this heading">¶</a></h3>
+<p><strong>Run all tests</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>python -m unittest discover tests</p>
+</div></blockquote>
+<p><strong>Run specific test file</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>python -m unittest tests.test_vertex_array_object</p>
+</div></blockquote>
+<p><strong>Run specific test method</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>python -m unittest tests.test_vertex_array_object.TestVertexArrayObject.test_initialization</p>
+</div></blockquote>
+<p><strong>Run with verbose output</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>python -m unittest discover tests -v</p>
+</div></blockquote>
+</section>
+<section id="using-pytest">
+<h3>Using pytest<a class="headerlink" href="#using-pytest" title="Permalink to this heading">¶</a></h3>
+<p><strong>Install pytest</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>pip install pytest pytest-cov</p>
+</div></blockquote>
+<p><strong>Run tests with pytest</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>pytest tests/</p>
+</div></blockquote>
+<p><strong>Run with coverage</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>pytest tests/ –cov=picogl</p>
+</div></blockquote>
+<p><strong>Run specific test</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>pytest tests/test_vertex_array_object.py::TestVertexArrayObject::test_initialization</p>
+</div></blockquote>
+</section>
+</section>
+<section id="test-categories">
+<h2>Test Categories<a class="headerlink" href="#test-categories" title="Permalink to this heading">¶</a></h2>
+<section id="unit-tests">
+<h3>Unit Tests<a class="headerlink" href="#unit-tests" title="Permalink to this heading">¶</a></h3>
+<p>Unit tests verify individual components in isolation:</p>
+<p><strong>VertexArrayObject Tests</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><dl class="simple">
+<dt>class TestVertexArrayObject(unittest.TestCase):</dt><dd><dl class="simple">
+<dt>def test_initialization(self):</dt><dd><p>vao = VertexArrayObject()
+self.assertIsNotNone(vao)</p>
+</dd>
+<dt>def test_add_vbo(self):</dt><dd><p>vao = VertexArrayObject()
+vao.add_vbo(index=0, data=vertices, size=3)
+self.assertEqual(len(vao.vbos), 1)</p>
+</dd>
+<dt>def test_add_ebo(self):</dt><dd><p>vao = VertexArrayObject()
+vao.add_ebo(data=indices)
+self.assertIsNotNone(vao.ebo)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<p><strong>MeshData Tests</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><dl class="simple">
+<dt>class TestMeshData(unittest.TestCase):</dt><dd><dl class="simple">
+<dt>def test_from_raw(self):</dt><dd><p>data = MeshData.from_raw(vertices=vertices, colors=colors)
+self.assertIsNotNone(data)
+self.assertEqual(data.vertex_count, len(vertices) // 3)</p>
+</dd>
+<dt>def test_draw(self):</dt><dd><p>data = MeshData.from_raw(vertices=vertices, colors=colors)
+data.draw()  # Should not raise exception</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="integration-tests">
+<h3>Integration Tests<a class="headerlink" href="#integration-tests" title="Permalink to this heading">¶</a></h3>
+<p>Integration tests verify component interactions:</p>
+<p><strong>Renderer Integration</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><dl class="simple">
+<dt>class TestRendererIntegration(unittest.TestCase):</dt><dd><dl class="simple">
+<dt>def test_object_renderer_initialization(self):</dt><dd><p>context = GLContext()
+data = MeshData.from_raw(vertices=vertices, colors=colors)
+renderer = ObjectRenderer(context=context, data=data)
+renderer.initialize()
+self.assertTrue(renderer.initialized)</p>
+</dd>
+<dt>def test_texture_renderer_initialization(self):</dt><dd><p>context = GLContext()
+data = MeshData.from_raw(vertices=vertices, uvs=uvs)
+renderer = TextureRenderer(context=context, data=data)
+renderer.initialize_textures()
+self.assertIsNotNone(renderer.texture)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="performance-tests">
+<h3>Performance Tests<a class="headerlink" href="#performance-tests" title="Permalink to this heading">¶</a></h3>
+<p>Performance tests verify rendering performance:</p>
+<p><strong>Rendering Performance</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><dl>
+<dt>class TestRenderingPerformance(unittest.TestCase):</dt><dd><dl>
+<dt>def test_render_performance(self):</dt><dd><p>start_time = time.time()
+for _ in range(1000):</p>
+<blockquote>
+<div><p>renderer.render()</p>
+</div></blockquote>
+<p>end_time = time.time()
+frame_time = (end_time - start_time) / 1000
+self.assertLess(frame_time, 0.016)  # 60 FPS</p>
+</dd>
+<dt>def test_memory_usage(self):</dt><dd><p>initial_memory = psutil.Process().memory_info().rss
+# Create and use renderer
+renderer = create_renderer()
+renderer.render()
+final_memory = psutil.Process().memory_info().rss
+memory_increase = final_memory - initial_memory
+self.assertLess(memory_increase, 100 * 1024 * 1024)  # 100MB</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="compatibility-tests">
+<h3>Compatibility Tests<a class="headerlink" href="#compatibility-tests" title="Permalink to this heading">¶</a></h3>
+<p>Compatibility tests verify cross-platform functionality:</p>
+<p><strong>OpenGL Version Compatibility</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><dl class="simple">
+<dt>class TestOpenGLCompatibility(unittest.TestCase):</dt><dd><dl class="simple">
+<dt>def test_modern_opengl(self):</dt><dd><dl class="simple">
+<dt>if has_modern_opengl():</dt><dd><p>vao = VertexArrayObject()
+self.assertIsNotNone(vao)</p>
+</dd>
+</dl>
+</dd>
+<dt>def test_legacy_opengl(self):</dt><dd><dl class="simple">
+<dt>if has_legacy_opengl():</dt><dd><p>vbg = VertexBufferGroup()
+self.assertIsNotNone(vbg)</p>
+</dd>
+</dl>
+</dd>
+<dt>def test_immediate_mode(self):</dt><dd><p># Test immediate mode fallback
+pass</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+</section>
+<section id="test-mocking">
+<h2>Test Mocking<a class="headerlink" href="#test-mocking" title="Permalink to this heading">¶</a></h2>
+<section id="opengl-mocking">
+<h3>OpenGL Mocking<a class="headerlink" href="#opengl-mocking" title="Permalink to this heading">¶</a></h3>
+<p>Since OpenGL requires a graphics context, tests use mocking:</p>
+<p><strong>Global OpenGL Mocking</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><dl>
+<dt>class TestVertexArrayObject(unittest.TestCase):</dt><dd><dl>
+<dt>def setUp(self):</dt><dd><p># Mock all OpenGL functions
+self.gl_patches = [</p>
+<blockquote>
+<div><p>patch(‘picogl.backend.modern.core.vertex.array.object.glGenVertexArrays’),
+patch(‘picogl.backend.modern.core.vertex.array.object.glBindVertexArray’),
+patch(‘picogl.backend.modern.core.vertex.array.object.glDeleteVertexArrays’),
+# … more patches</p>
+</div></blockquote>
+<p>]
+for patch_obj in self.gl_patches:</p>
+<blockquote>
+<div><p>patch_obj.start()</p>
+</div></blockquote>
+</dd>
+<dt>def tearDown(self):</dt><dd><dl class="simple">
+<dt>for patch_obj in self.gl_patches:</dt><dd><p>patch_obj.stop()</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<p><strong>Specific Function Mocking</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><dl>
+<dt>def test_error_handling(self):</dt><dd><dl>
+<dt>with patch(‘picogl.backend.modern.core.vertex.array.object.glGenVertexArrays’) as mock_gen:</dt><dd><p>mock_gen.side_effect = OpenGLError(“Context not available”)
+with self.assertRaises(OpenGLError):</p>
+<blockquote>
+<div><p>VertexArrayObject()</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="dependency-mocking">
+<h3>Dependency Mocking<a class="headerlink" href="#dependency-mocking" title="Permalink to this heading">¶</a></h3>
+<p>Mock external dependencies:</p>
+<p><strong>NumPy Mocking</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>&#64;patch(‘numpy.array’)
+def test_array_creation(self, mock_array):</p>
+<blockquote>
+<div><p>mock_array.return_value = np.array([1, 2, 3])
+result = create_vertex_array()
+mock_array.assert_called_once()</p>
+</div></blockquote>
+</div></blockquote>
+<p><strong>PIL Mocking</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>&#64;patch(‘PIL.Image.open’)
+def test_texture_loading(self, mock_open):</p>
+<blockquote>
+<div><p>mock_image = MagicMock()
+mock_open.return_value = mock_image
+texture = load_texture(“test.png”)
+mock_open.assert_called_once_with(“test.png”)</p>
+</div></blockquote>
+</div></blockquote>
+</section>
+</section>
+<section id="test-data">
+<h2>Test Data<a class="headerlink" href="#test-data" title="Permalink to this heading">¶</a></h2>
+<section id="test-fixtures">
+<h3>Test Fixtures<a class="headerlink" href="#test-fixtures" title="Permalink to this heading">¶</a></h3>
+<p>Create reusable test data:</p>
+<p><strong>Vertex Data</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><dl>
+<dt>class TestData:</dt><dd><p>&#64;staticmethod
+def create_triangle_vertices():</p>
+<blockquote>
+<div><dl class="simple">
+<dt>return np.array([</dt><dd><p>[0, 0, 0],
+[1, 0, 0],
+[0, 1, 0]</p>
+</dd>
+</dl>
+<p>], dtype=np.float32)</p>
+</div></blockquote>
+<p>&#64;staticmethod
+def create_triangle_colors():</p>
+<blockquote>
+<div><dl class="simple">
+<dt>return np.array([</dt><dd><p>[1, 0, 0],
+[0, 1, 0],
+[0, 0, 1]</p>
+</dd>
+</dl>
+<p>], dtype=np.float32)</p>
+</div></blockquote>
+<p>&#64;staticmethod
+def create_triangle_faces():</p>
+<blockquote>
+<div><dl class="simple">
+<dt>return np.array([</dt><dd><p>[0, 1, 2]</p>
+</dd>
+</dl>
+<p>], dtype=np.uint32)</p>
+</div></blockquote>
+</dd>
+</dl>
+</div></blockquote>
+<p><strong>Mock Objects</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><dl class="simple">
+<dt>class MockGLContext:</dt><dd><dl class="simple">
+<dt>def __init__(self):</dt><dd><p>self.vaos = {}
+self.shader = MagicMock()
+self.mvp_matrix = np.identity(4, dtype=np.float32)</p>
+</dd>
+<dt>def create_shader_program(self, vertex_file, fragment_file):</dt><dd><p>self.shader = MagicMock()
+return self.shader</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="test-utilities">
+<h3>Test Utilities<a class="headerlink" href="#test-utilities" title="Permalink to this heading">¶</a></h3>
+<p>Create helper functions for testing:</p>
+<p><strong>OpenGL Context Testing</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><dl>
+<dt>def create_mock_opengl_context():</dt><dd><p>“””Create a mock OpenGL context for testing.”””
+with patch(‘OpenGL.GL.glGetString’) as mock_get_string:</p>
+<blockquote>
+<div><p>mock_get_string.return_value = b”OpenGL 3.3.0”
+return mock_get_string</p>
+</div></blockquote>
+</dd>
+</dl>
+</div></blockquote>
+<p><strong>Error Testing</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><dl>
+<dt>def test_with_gl_error(error_code, expected_exception):</dt><dd><p>“””Test function with specific OpenGL error.”””
+with patch(‘OpenGL.GL.glGetError’) as mock_get_error:</p>
+<blockquote>
+<div><p>mock_get_error.return_value = error_code
+with pytest.raises(expected_exception):</p>
+<blockquote>
+<div><p>function_that_uses_opengl()</p>
+</div></blockquote>
+</div></blockquote>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+</section>
+<section id="continuous-integration">
+<h2>Continuous Integration<a class="headerlink" href="#continuous-integration" title="Permalink to this heading">¶</a></h2>
+<section id="github-actions">
+<h3>GitHub Actions<a class="headerlink" href="#github-actions" title="Permalink to this heading">¶</a></h3>
+<p><strong>Test Workflow</strong>:
+.. code-block:: yaml</p>
+<blockquote>
+<div><p>name: Tests
+on: [push, pull_request]</p>
+<dl>
+<dt>jobs:</dt><dd><dl>
+<dt>test:</dt><dd><p>runs-on: ${{ matrix.os }}
+strategy:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>matrix:</dt><dd><p>os: [ubuntu-latest, windows-latest, macos-latest]
+python-version: [3.7, 3.8, 3.9, ‘3.10’, ‘3.11’]</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>steps:
+- uses: <a class="reference external" href="mailto:actions/checkout&#37;&#52;&#48;v2">actions/checkout<span>&#64;</span>v2</a>
+- name: Set up Python</p>
+<blockquote>
+<div><p>uses: <a class="reference external" href="mailto:actions/setup-python&#37;&#52;&#48;v2">actions/setup-python<span>&#64;</span>v2</a>
+with:</p>
+<blockquote>
+<div><p>python-version: ${{ matrix.python-version }}</p>
+</div></blockquote>
+</div></blockquote>
+<ul>
+<li><p>name: Install dependencies
+run: |</p>
+<blockquote>
+<div><p>pip install -e .[dev]</p>
+</div></blockquote>
+</li>
+<li><p>name: Run tests
+run: |</p>
+<blockquote>
+<div><p>python -m unittest discover tests</p>
+</div></blockquote>
+</li>
+<li><p>name: Run coverage
+run: |</p>
+<blockquote>
+<div><p>pytest tests/ –cov=picogl –cov-report=xml</p>
+</div></blockquote>
+</li>
+<li><p>name: Upload coverage
+uses: <a class="reference external" href="mailto:codecov/codecov-action&#37;&#52;&#48;v1">codecov/codecov-action<span>&#64;</span>v1</a></p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<p><strong>Build Workflow</strong>:
+.. code-block:: yaml</p>
+<blockquote>
+<div><p>name: Build
+on: [push, release]</p>
+<dl>
+<dt>jobs:</dt><dd><dl>
+<dt>build:</dt><dd><p>runs-on: ${{ matrix.os }}
+strategy:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>matrix:</dt><dd><p>os: [ubuntu-latest, windows-latest, macos-latest]</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>steps:
+- uses: <a class="reference external" href="mailto:actions/checkout&#37;&#52;&#48;v2">actions/checkout<span>&#64;</span>v2</a>
+- name: Set up Python</p>
+<blockquote>
+<div><p>uses: <a class="reference external" href="mailto:actions/setup-python&#37;&#52;&#48;v2">actions/setup-python<span>&#64;</span>v2</a>
+with:</p>
+<blockquote>
+<div><p>python-version: ‘3.9’</p>
+</div></blockquote>
+</div></blockquote>
+<ul>
+<li><p>name: Install dependencies
+run: |</p>
+<blockquote>
+<div><p>pip install build twine</p>
+</div></blockquote>
+</li>
+<li><p>name: Build package
+run: |</p>
+<blockquote>
+<div><p>python -m build</p>
+</div></blockquote>
+</li>
+<li><p>name: Upload artifacts
+uses: <a class="reference external" href="mailto:actions/upload-artifact&#37;&#52;&#48;v2">actions/upload-artifact<span>&#64;</span>v2</a>
+with:</p>
+<blockquote>
+<div><p>name: dist
+path: dist/</p>
+</div></blockquote>
+</li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+</section>
+<section id="test-coverage">
+<h2>Test Coverage<a class="headerlink" href="#test-coverage" title="Permalink to this heading">¶</a></h2>
+<section id="coverage-requirements">
+<h3>Coverage Requirements<a class="headerlink" href="#coverage-requirements" title="Permalink to this heading">¶</a></h3>
+<p><strong>Minimum Coverage</strong>:
+* Overall: 80%
+* Critical modules: 90%
+* New code: 95%</p>
+<p><strong>Coverage Exclusions</strong>:
+* Test files
+* Example files
+* Platform-specific code
+* Fallback implementations</p>
+<p><strong>Coverage Report</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>pytest tests/ –cov=picogl –cov-report=html –cov-report=term</p>
+</div></blockquote>
+<p><strong>Coverage Configuration</strong>:
+.. code-block:: ini</p>
+<blockquote>
+<div><p>[coverage:run]
+source = picogl
+omit =</p>
+<blockquote>
+<div><p><em>/tests/</em>
+<em>/examples/</em>
+<em>/__pycache__/</em>
+<em>/legacy/</em></p>
+</div></blockquote>
+<p>[coverage:report]
+exclude_lines =</p>
+<blockquote>
+<div><p>pragma: no cover
+def __repr__
+raise AssertionError
+raise NotImplementedError</p>
+</div></blockquote>
+</div></blockquote>
+</section>
+</section>
+<section id="code-quality">
+<h2>Code Quality<a class="headerlink" href="#code-quality" title="Permalink to this heading">¶</a></h2>
+<section id="linting">
+<h3>Linting<a class="headerlink" href="#linting" title="Permalink to this heading">¶</a></h3>
+<p><strong>flake8 Configuration</strong>:
+.. code-block:: ini</p>
+<blockquote>
+<div><p>[flake8]
+max-line-length = 88
+extend-ignore = E203, W503
+exclude =</p>
+<blockquote>
+<div><p>.git,
+__pycache__,
+.venv,
+_build,
+dist</p>
+</div></blockquote>
+</div></blockquote>
+<p><strong>Run Linting</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>flake8 picogl/
+flake8 tests/</p>
+</div></blockquote>
+</section>
+<section id="type-checking">
+<h3>Type Checking<a class="headerlink" href="#type-checking" title="Permalink to this heading">¶</a></h3>
+<p><strong>mypy Configuration</strong>:
+.. code-block:: ini</p>
+<blockquote>
+<div><p>[mypy]
+python_version = 3.7
+warn_return_any = True
+warn_unused_configs = True
+disallow_untyped_defs = True
+disallow_incomplete_defs = True
+check_untyped_defs = True
+disallow_untyped_decorators = True
+no_implicit_optional = True
+warn_redundant_casts = True
+warn_unused_ignores = True
+warn_no_return = True
+warn_unreachable = True
+strict_equality = True</p>
+</div></blockquote>
+<p><strong>Run Type Checking</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>mypy picogl/
+mypy tests/</p>
+</div></blockquote>
+</section>
+<section id="formatting">
+<h3>Formatting<a class="headerlink" href="#formatting" title="Permalink to this heading">¶</a></h3>
+<p><strong>black Configuration</strong>:
+.. code-block:: toml</p>
+<blockquote>
+<div><p>[tool.black]
+line-length = 88
+target-version = [‘py37’]
+include = ‘.pyi?$’
+extend-exclude = ‘’’
+/(</p>
+<blockquote>
+<div><blockquote>
+<div><p>.git</p>
+</div></blockquote>
+<div class="line-block">
+<div class="line">.mypy_cache</div>
+<div class="line">.tox</div>
+<div class="line">.venv</div>
+<div class="line">_build</div>
+<div class="line">buck-out</div>
+<div class="line">build</div>
+<div class="line">dist</div>
+</div>
+</div></blockquote>
+</div></blockquote>
+<p><strong>Run Formatting</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>black picogl/
+black tests/</p>
+</div></blockquote>
+</section>
+</section>
+<section id="test-best-practices">
+<h2>Test Best Practices<a class="headerlink" href="#test-best-practices" title="Permalink to this heading">¶</a></h2>
+<section id="writing-tests">
+<h3>Writing Tests<a class="headerlink" href="#writing-tests" title="Permalink to this heading">¶</a></h3>
+<p><strong>Test Naming</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def test_initialization_with_valid_data(self):</dt><dd><p>“””Test initialization with valid input data.”””
+pass</p>
+</dd>
+<dt>def test_initialization_raises_error_with_invalid_data(self):</dt><dd><p>“””Test initialization raises error with invalid data.”””
+pass</p>
+</dd>
+</dl>
+</div></blockquote>
+<p><strong>Test Structure</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><dl>
+<dt>def test_functionality(self):</dt><dd><p># Arrange
+input_data = create_test_data()
+expected_result = create_expected_result()</p>
+<p># Act
+actual_result = function_under_test(input_data)</p>
+<p># Assert
+self.assertEqual(actual_result, expected_result)</p>
+</dd>
+</dl>
+</div></blockquote>
+<p><strong>Test Documentation</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><dl>
+<dt>def test_complex_functionality(self):</dt><dd><p>“””Test complex functionality with multiple inputs.</p>
+<p>This test verifies that the function handles:
+- Valid input data
+- Edge cases
+- Error conditions</p>
+<p>Expected behavior:
+- Returns correct result for valid input
+- Handles edge cases gracefully
+- Raises appropriate errors for invalid input
+“””
+pass</p>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="test-maintenance">
+<h3>Test Maintenance<a class="headerlink" href="#test-maintenance" title="Permalink to this heading">¶</a></h3>
+<p><strong>Keep Tests Simple</strong>:
+* One assertion per test
+* Clear test names
+* Minimal setup</p>
+<p><strong>Avoid Test Dependencies</strong>:
+* Tests should be independent
+* No shared state
+* Clean up after tests</p>
+<p><strong>Regular Test Updates</strong>:
+* Update tests when code changes
+* Remove obsolete tests
+* Add tests for new features</p>
+<p><strong>Test Performance</strong>:
+* Keep tests fast
+* Use mocking to avoid slow operations
+* Parallel test execution when possible</p>
+</section>
+<section id="debugging-tests">
+<h3>Debugging Tests<a class="headerlink" href="#debugging-tests" title="Permalink to this heading">¶</a></h3>
+<p><strong>Verbose Output</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>python -m unittest discover tests -v</p>
+</div></blockquote>
+<p><strong>Debug Specific Test</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>import pdb</p>
+<dl class="simple">
+<dt>def test_debugging(self):</dt><dd><p>pdb.set_trace()  # Set breakpoint
+# Test code here</p>
+</dd>
+</dl>
+</div></blockquote>
+<p><strong>Test Isolation</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def test_isolated(self):</dt><dd><p># Use fresh instances
+context = GLContext()
+data = MeshData.from_raw(vertices=vertices, colors=colors)
+# Test without side effects</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>For more information about testing, see the <a class="reference internal" href="development.html"><span class="doc">Development</span></a> guide.</p>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">PicoGL</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="legacy_examples.html">Legacy Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/renderer.html">Renderer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/buffers.html">Buffers API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/shaders.html">Shaders API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/ui.html">UI API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/utils.html">Utils API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Testing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#test-structure">Test Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-tests">Running Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#test-categories">Test Categories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#test-mocking">Test Mocking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#test-data">Test Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#continuous-integration">Continuous Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#test-coverage">Test Coverage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#code-quality">Code Quality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#test-best-practices">Test Best Practices</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="development.html" title="previous chapter">Development</a></li>
+      <li>Next: <a href="contributing.html" title="next chapter">Contributing</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2025, PicoGL Contributors.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/testing.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

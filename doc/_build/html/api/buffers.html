@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Buffers API &#8212; PicoGL 1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b3523f8e" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=039e1c02" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=af2ce170"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Shaders API" href="shaders.html" />
+    <link rel="prev" title="Renderer API" href="renderer.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="buffers-api">
+<h1>Buffers API<a class="headerlink" href="#buffers-api" title="Permalink to this heading">¶</a></h1>
+<p>The buffers module provides OpenGL buffer management functionality for PicoGL, including vertex buffers, element buffers, and vertex array objects.</p>
+<section id="core-classes">
+<h2>Core Classes<a class="headerlink" href="#core-classes" title="Permalink to this heading">¶</a></h2>
+<section id="vertexarrayobject">
+<h3>VertexArrayObject<a class="headerlink" href="#vertexarrayobject" title="Permalink to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.vertex.array.object.VertexArrayObject">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">picogl.backend.modern.core.vertex.array.object.</span></span><span class="sig-name descname"><span class="pre">VertexArrayObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/backend/modern/core/vertex/array/object.html#VertexArrayObject"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.vertex.array.object.VertexArrayObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#picogl.buffers.base.VertexBase" title="picogl.buffers.base.VertexBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">VertexBase</span></code></a></p>
+<p>OpenGL Vertex Array Objects (VAO) class</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.vertex.array.object.VertexArrayObject.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/backend/modern/core/vertex/array/object.html#VertexArrayObject.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.vertex.array.object.VertexArrayObject.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>VertexArrayObject</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>handle</strong> – int Handle (ID) of the OpenGL Vertex Array Object (VAO).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.vertex.array.object.VertexArrayObject.bind">
+<span class="sig-name descname"><span class="pre">bind</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/backend/modern/core/vertex/array/object.html#VertexArrayObject.bind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.vertex.array.object.VertexArrayObject.bind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bind the VAO for use in rendering.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.vertex.array.object.VertexArrayObject.unbind">
+<span class="sig-name descname"><span class="pre">unbind</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/backend/modern/core/vertex/array/object.html#VertexArrayObject.unbind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.vertex.array.object.VertexArrayObject.unbind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unbind the VAO by binding to zero.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.vertex.array.object.VertexArrayObject.delete">
+<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/backend/modern/core/vertex/array/object.html#VertexArrayObject.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.vertex.array.object.VertexArrayObject.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete the VAO from GPU memory.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.vertex.array.object.VertexArrayObject.set_layout">
+<span class="sig-name descname"><span class="pre">set_layout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#picogl.buffers.factory.layout.LayoutDescriptor" title="picogl.buffers.attributes.LayoutDescriptor"><span class="pre">LayoutDescriptor</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/picogl/backend/modern/core/vertex/array/object.html#VertexArrayObject.set_layout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.vertex.array.object.VertexArrayObject.set_layout" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>layout</strong> – LayoutDescriptor: The layout descriptor to define the vertex attribute format.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p>Sets the layout for the rendering setup by binding the buffers and configuring the attributes.
+The state is stored in the Vertex Array Object (VAO). This method assumes a single Vertex Buffer
+Object (VBO) holds all position data but can be adapted as required. Handles optional usage of
+Normal Buffer Object (NBO) and Element Buffer Object (EBO) if present.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.vertex.array.object.VertexArrayObject.add_vbo_object">
+<span class="sig-name descname"><span class="pre">add_vbo_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">vbo</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LegacyVBO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">LegacyVBO</span></span></span><a class="reference internal" href="../_modules/picogl/backend/modern/core/vertex/array/object.html#VertexArrayObject.add_vbo_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.vertex.array.object.VertexArrayObject.add_vbo_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a VBO by semantic name or shorthand alias.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.vertex.array.object.VertexArrayObject.get_vbo_object">
+<span class="sig-name descname"><span class="pre">get_vbo_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">LegacyVBO</span></span></span><a class="reference internal" href="../_modules/picogl/backend/modern/core/vertex/array/object.html#VertexArrayObject.get_vbo_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.vertex.array.object.VertexArrayObject.get_vbo_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a VBO by its semantic or shorthand name.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.vertex.array.object.VertexArrayObject.add_vbo">
+<span class="sig-name descname"><span class="pre">add_vbo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">OpenGL.raw.GL._types.GL_FLOAT</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ModernVBO</span></span></span><a class="reference internal" href="../_modules/picogl/backend/modern/core/vertex/array/object.html#VertexArrayObject.add_vbo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.vertex.array.object.VertexArrayObject.add_vbo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a Vertex Buffer Object (VBO) to the VAO and set its attributes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>handle</strong> – </p></li>
+<li><p><strong>index</strong> – VAO attribute index</p></li>
+<li><p><strong>data</strong> – Vertex data</p></li>
+<li><p><strong>size</strong> – Size per vertex (e.g., 3 for vec3)</p></li>
+<li><p><strong>dtype</strong> – OpenGL data type (e.g., GL_FLOAT)</p></li>
+<li><p><strong>name</strong> – Optional semantic name (e.g., “position”, “color”)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>OpenGL buffer handle (GLuint)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.vertex.array.object.VertexArrayObject.delete_buffers">
+<span class="sig-name descname"><span class="pre">delete_buffers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/backend/modern/core/vertex/array/object.html#VertexArrayObject.delete_buffers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.vertex.array.object.VertexArrayObject.delete_buffers" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.vertex.array.object.VertexArrayObject.add_attribute">
+<span class="sig-name descname"><span class="pre">add_attribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">vbo</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">OpenGL.raw.GL._types.GL_FLOAT</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalized</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stride</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/backend/modern/core/vertex/array/object.html#VertexArrayObject.add_attribute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.vertex.array.object.VertexArrayObject.add_attribute" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index</strong> – int Index of the vertex attribute.</p></li>
+<li><p><strong>vbo</strong> – int Vertex Buffer Object (VBO) associated with this attribute.</p></li>
+<li><p><strong>size</strong> – int Size of the vertex attribute (e.g., 3 for a 3D vector).</p></li>
+<li><p><strong>dtype</strong> – int Data type of the vertex attribute (default is GL_FLOAT).</p></li>
+<li><p><strong>normalized</strong> – bool Whether the data is normalized (default is False).</p></li>
+<li><p><strong>stride</strong> – int Byte offset between consecutive vertex attributes (default is 0).</p></li>
+<li><p><strong>offset</strong> – int Byte offset to the first component of the</p></li>
+</ul>
+</dd>
+</dl>
+<p>vertex attribute (default is 0).
+Add a vertex attribute to the VAO.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.vertex.array.object.VertexArrayObject.add_ebo">
+<span class="sig-name descname"><span class="pre">add_ebo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#picogl.backend.modern.core.vertex.buffer.element.ModernEBO" title="picogl.backend.modern.core.vertex.buffer.element.ModernEBO"><span class="pre">ModernEBO</span></a></span></span><a class="reference internal" href="../_modules/picogl/backend/modern/core/vertex/array/object.html#VertexArrayObject.add_ebo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.vertex.array.object.VertexArrayObject.add_ebo" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> – np.ndarray</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.vertex.array.object.VertexArrayObject.set_ebo">
+<span class="sig-name descname"><span class="pre">set_ebo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ebo</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></span><a class="reference internal" href="../_modules/picogl/backend/modern/core/vertex/array/object.html#VertexArrayObject.set_ebo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.vertex.array.object.VertexArrayObject.set_ebo" title="Permalink to this definition">¶</a></dt>
+<dd><p>add_ebo</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ebo</strong> – int</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.vertex.array.object.VertexArrayObject.index_count">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">index_count</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></em><a class="headerlink" href="#picogl.backend.modern.core.vertex.array.object.VertexArrayObject.index_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of indices in the EBO.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.vertex.array.object.VertexArrayObject.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">OpenGL.raw.GL._types.GL_UNSIGNED_INT</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">OpenGL.raw.GL.VERSION.GL_1_0.GL_POINTS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pointer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">c_void_p(None)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/backend/modern/core/vertex/array/object.html#VertexArrayObject.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.vertex.array.object.VertexArrayObject.draw" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pointer</strong> – ctypes.c_void_p(0)</p></li>
+<li><p><strong>dtype</strong> – GL_UNSIGNED_INT</p></li>
+<li><p><strong>index_count</strong> – int Number of vertices to draw.</p></li>
+<li><p><strong>mode</strong> – int e.g. GL_POINT</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<p>The <code class="docutils literal notranslate"><span class="pre">VertexArrayObject</span></code> class manages OpenGL Vertex Array Objects (VAOs) for modern OpenGL rendering.</p>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>from picogl.backend.modern.core.vertex.array.object import VertexArrayObject</p>
+<p># Create VAO
+vao = VertexArrayObject()</p>
+<p># Add vertex buffer
+vao.add_vbo(index=0, data=vertices, size=3)</p>
+<p># Add color buffer
+vao.add_vbo(index=1, data=colors, size=3)</p>
+<p># Add element buffer
+vao.add_ebo(data=indices)</p>
+<p># Draw
+vao.draw(mode=GL_TRIANGLES, index_count=len(indices))</p>
+</div></blockquote>
+</section>
+<section id="vertexbuffergroup">
+<h3>VertexBufferGroup<a class="headerlink" href="#vertexbuffergroup" title="Permalink to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">VertexBufferGroup</span></code> class provides legacy OpenGL buffer management for systems without VAO support.</p>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>from picogl.buffers.vertex.legacy import VertexBufferGroup</p>
+<p># Create vertex buffer group
+vbg = VertexBufferGroup()</p>
+<p># Add vertex buffer
+vbg.add_vbo(“position”, vertices, 3)</p>
+<p># Add color buffer
+vbg.add_vbo(“color”, colors, 3)</p>
+<p># Add element buffer
+vbg.add_ebo(indices)</p>
+<p># Bind and draw
+vbg.bind()
+vbg.draw(mode=GL_TRIANGLES)</p>
+</div></blockquote>
+</section>
+</section>
+<section id="buffer-classes">
+<h2>Buffer Classes<a class="headerlink" href="#buffer-classes" title="Permalink to this heading">¶</a></h2>
+<section id="modern-buffers">
+<h3>Modern Buffers<a class="headerlink" href="#modern-buffers" title="Permalink to this heading">¶</a></h3>
+<section id="modernvbo">
+<h4>ModernVBO<a class="headerlink" href="#modernvbo" title="Permalink to this heading">¶</a></h4>
+</section>
+<section id="modernebo">
+<h4>ModernEBO<a class="headerlink" href="#modernebo" title="Permalink to this heading">¶</a></h4>
+<dl class="py class">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.vertex.buffer.element.ModernEBO">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">picogl.backend.modern.core.vertex.buffer.element.</span></span><span class="sig-name descname"><span class="pre">ModernEBO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">OpenGL.raw.GL.VERSION.GL_1_5.GL_ELEMENT_ARRAY_BUFFER</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/backend/modern/core/vertex/buffer/element.html#ModernEBO"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.vertex.buffer.element.ModernEBO" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">VertexBuffer</span></code></p>
+<p>OpenGL element data buffer (also known as an index buffer)</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.vertex.buffer.element.ModernEBO.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">OpenGL.raw.GL.VERSION.GL_1_5.GL_ELEMENT_ARRAY_BUFFER</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/backend/modern/core/vertex/buffer/element.html#ModernEBO.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.vertex.buffer.element.ModernEBO.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.vertex.buffer.element.ModernEBO.set_element_attributes">
+<span class="sig-name descname"><span class="pre">set_element_attributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">OpenGL.raw.GL.VERSION.GL_1_5.GL_STATIC_DRAW</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/backend/modern/core/vertex/buffer/element.html#ModernEBO.set_element_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.vertex.buffer.element.ModernEBO.set_element_attributes" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – np.ndarray</p></li>
+<li><p><strong>size</strong> – int</p></li>
+<li><p><strong>dtype</strong> – int</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.backend.modern.core.vertex.buffer.element.ModernEBO.configure">
+<span class="sig-name descname"><span class="pre">configure</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/backend/modern/core/vertex/buffer/element.html#ModernEBO.configure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.modern.core.vertex.buffer.element.ModernEBO.configure" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+<section id="legacy-buffers">
+<h3>Legacy Buffers<a class="headerlink" href="#legacy-buffers" title="Permalink to this heading">¶</a></h3>
+<section id="legacyvbo">
+<h4>LegacyVBO<a class="headerlink" href="#legacyvbo" title="Permalink to this heading">¶</a></h4>
+</section>
+<section id="legacypositionvbo">
+<h4>LegacyPositionVBO<a class="headerlink" href="#legacypositionvbo" title="Permalink to this heading">¶</a></h4>
+</section>
+<section id="legacycolorvbo">
+<h4>LegacyColorVBO<a class="headerlink" href="#legacycolorvbo" title="Permalink to this heading">¶</a></h4>
+</section>
+<section id="legacynormalvbo">
+<h4>LegacyNormalVBO<a class="headerlink" href="#legacynormalvbo" title="Permalink to this heading">¶</a></h4>
+</section>
+<section id="legacyebo">
+<h4>LegacyEBO<a class="headerlink" href="#legacyebo" title="Permalink to this heading">¶</a></h4>
+</section>
+</section>
+</section>
+<section id="base-classes">
+<h2>Base Classes<a class="headerlink" href="#base-classes" title="Permalink to this heading">¶</a></h2>
+<section id="vertexbase">
+<h3>VertexBase<a class="headerlink" href="#vertexbase" title="Permalink to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="picogl.buffers.base.VertexBase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">picogl.buffers.base.</span></span><span class="sig-name descname"><span class="pre">VertexBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/buffers/base.html#VertexBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.buffers.base.VertexBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractVertexGroup</span></code></p>
+<p>Generic OpenGL object interface with binding lifecycle.</p>
+<p>Provides handle + context manager, leaves binding to subclasses.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.buffers.base.VertexBase.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/buffers/base.html#VertexBase.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.buffers.base.VertexBase.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.buffers.base.VertexBase.bind">
+<span class="sig-name descname"><span class="pre">bind</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/buffers/base.html#VertexBase.bind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.buffers.base.VertexBase.bind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bind the underlying VAO/state for rendering.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.buffers.base.VertexBase.unbind">
+<span class="sig-name descname"><span class="pre">unbind</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/buffers/base.html#VertexBase.unbind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.buffers.base.VertexBase.unbind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optionally unbind the VAO/state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.buffers.base.VertexBase.delete">
+<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/buffers/base.html#VertexBase.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.buffers.base.VertexBase.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Release resources (VAO or equivalent).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.buffers.base.VertexBase.attach_buffers">
+<span class="sig-name descname"><span class="pre">attach_buffers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nbo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cbo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vbo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ebo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/picogl/buffers/base.html#VertexBase.attach_buffers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.buffers.base.VertexBase.attach_buffers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attach the buffers that the VAO/group should coordinate.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.buffers.base.VertexBase.set_layout">
+<span class="sig-name descname"><span class="pre">set_layout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#picogl.buffers.factory.layout.LayoutDescriptor" title="picogl.buffers.attributes.LayoutDescriptor"><span class="pre">LayoutDescriptor</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/picogl/buffers/base.html#VertexBase.set_layout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.buffers.base.VertexBase.set_layout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the attribute layout for this VAO/group.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p>The <code class="docutils literal notranslate"><span class="pre">VertexBase</span></code> class provides the base functionality for all vertex buffer classes.</p>
+</section>
+<section id="vertexbuffer">
+<h3>VertexBuffer<a class="headerlink" href="#vertexbuffer" title="Permalink to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">VertexBuffer</span></code> class provides the base functionality for vertex buffer objects.</p>
+</section>
+</section>
+<section id="data-structures">
+<h2>Data Structures<a class="headerlink" href="#data-structures" title="Permalink to this heading">¶</a></h2>
+<section id="layoutdescriptor">
+<h3>LayoutDescriptor<a class="headerlink" href="#layoutdescriptor" title="Permalink to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="picogl.buffers.factory.layout.LayoutDescriptor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">picogl.buffers.factory.layout.</span></span><span class="sig-name descname"><span class="pre">LayoutDescriptor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attributes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#picogl.buffers.attributes.AttributeSpec" title="picogl.buffers.attributes.AttributeSpec"><span class="pre">picogl.buffers.attributes.AttributeSpec</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/buffers/attributes.html#LayoutDescriptor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.buffers.factory.layout.LayoutDescriptor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="picogl.buffers.factory.layout.LayoutDescriptor.attributes">
+<span class="sig-name descname"><span class="pre">attributes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#picogl.buffers.attributes.AttributeSpec" title="picogl.buffers.attributes.AttributeSpec"><span class="pre">AttributeSpec</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#picogl.buffers.factory.layout.LayoutDescriptor.attributes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.buffers.factory.layout.LayoutDescriptor.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attributes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#picogl.buffers.attributes.AttributeSpec" title="picogl.buffers.attributes.AttributeSpec"><span class="pre">AttributeSpec</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#picogl.buffers.factory.layout.LayoutDescriptor.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<p>The <code class="docutils literal notranslate"><span class="pre">LayoutDescriptor</span></code> class describes the layout of vertex attributes in a buffer.</p>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>from picogl.buffers.factory.layout import create_layout</p>
+<p># Create layout descriptor
+layout = create_layout([</p>
+<blockquote>
+<div><p>AttributeSpec(name=”position”, size=3, type=GL_FLOAT),
+AttributeSpec(name=”color”, size=3, type=GL_FLOAT),
+AttributeSpec(name=”normal”, size=3, type=GL_FLOAT)</p>
+</div></blockquote>
+<p>])</p>
+</div></blockquote>
+</section>
+<section id="attributespec">
+<h3>AttributeSpec<a class="headerlink" href="#attributespec" title="Permalink to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="picogl.buffers.attributes.AttributeSpec">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">picogl.buffers.attributes.</span></span><span class="sig-name descname"><span class="pre">AttributeSpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalized</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">stride</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/buffers/attributes.html#AttributeSpec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.buffers.attributes.AttributeSpec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="picogl.buffers.attributes.AttributeSpec.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#picogl.buffers.attributes.AttributeSpec.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="picogl.buffers.attributes.AttributeSpec.index">
+<span class="sig-name descname"><span class="pre">index</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></em><a class="headerlink" href="#picogl.buffers.attributes.AttributeSpec.index" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="picogl.buffers.attributes.AttributeSpec.size">
+<span class="sig-name descname"><span class="pre">size</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></em><a class="headerlink" href="#picogl.buffers.attributes.AttributeSpec.size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="picogl.buffers.attributes.AttributeSpec.type">
+<span class="sig-name descname"><span class="pre">type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></em><a class="headerlink" href="#picogl.buffers.attributes.AttributeSpec.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="picogl.buffers.attributes.AttributeSpec.normalized">
+<span class="sig-name descname"><span class="pre">normalized</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#picogl.buffers.attributes.AttributeSpec.normalized" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="picogl.buffers.attributes.AttributeSpec.stride">
+<span class="sig-name descname"><span class="pre">stride</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></em><a class="headerlink" href="#picogl.buffers.attributes.AttributeSpec.stride" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="picogl.buffers.attributes.AttributeSpec.offset">
+<span class="sig-name descname"><span class="pre">offset</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></em><a class="headerlink" href="#picogl.buffers.attributes.AttributeSpec.offset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.buffers.attributes.AttributeSpec.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalized</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">stride</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#picogl.buffers.attributes.AttributeSpec.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<p>The <code class="docutils literal notranslate"><span class="pre">AttributeSpec</span></code> class describes a single vertex attribute.</p>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>from picogl.buffers.attributes import AttributeSpec</p>
+<p># Create attribute specification
+position_attr = AttributeSpec(</p>
+<blockquote>
+<div><p>name=”position”,
+size=3,
+type=GL_FLOAT,
+normalized=False,
+stride=0,
+offset=0</p>
+</div></blockquote>
+<p>)</p>
+</div></blockquote>
+</section>
+</section>
+<section id="buffer-management">
+<h2>Buffer Management<a class="headerlink" href="#buffer-management" title="Permalink to this heading">¶</a></h2>
+<section id="creating-buffers">
+<h3>Creating Buffers<a class="headerlink" href="#creating-buffers" title="Permalink to this heading">¶</a></h3>
+<p><strong>Modern OpenGL (VAO/VBO)</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>from picogl.backend.modern.core.vertex.array.object import VertexArrayObject</p>
+<p># Create VAO
+vao = VertexArrayObject()</p>
+<p># Add vertex buffer
+vao.add_vbo(index=0, data=vertices, size=3)</p>
+<p># Add color buffer
+vao.add_vbo(index=1, data=colors, size=3)</p>
+<p># Add element buffer
+vao.add_ebo(data=indices)</p>
+</div></blockquote>
+<p><strong>Legacy OpenGL (VBO only)</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>from picogl.buffers.vertex.legacy import VertexBufferGroup</p>
+<p># Create vertex buffer group
+vbg = VertexBufferGroup()</p>
+<p># Add vertex buffer
+vbg.add_vbo(“position”, vertices, 3)</p>
+<p># Add color buffer
+vbg.add_vbo(“color”, colors, 3)</p>
+<p># Add element buffer
+vbg.add_ebo(indices)</p>
+</div></blockquote>
+</section>
+<section id="binding-buffers">
+<h3>Binding Buffers<a class="headerlink" href="#binding-buffers" title="Permalink to this heading">¶</a></h3>
+<p><strong>Modern OpenGL</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p># Bind VAO (automatically binds all VBOs)
+with vao:</p>
+<blockquote>
+<div><p># Draw calls here
+vao.draw(mode=GL_TRIANGLES, index_count=len(indices))</p>
+</div></blockquote>
+</div></blockquote>
+<p><strong>Legacy OpenGL</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p># Bind vertex buffer group
+vbg.bind()</p>
+<p># Draw calls here
+vbg.draw(mode=GL_TRIANGLES)</p>
+<p># Unbind
+vbg.unbind()</p>
+</div></blockquote>
+</section>
+</section>
+<section id="buffer-types">
+<h2>Buffer Types<a class="headerlink" href="#buffer-types" title="Permalink to this heading">¶</a></h2>
+<section id="vertex-buffers">
+<h3>Vertex Buffers<a class="headerlink" href="#vertex-buffers" title="Permalink to this heading">¶</a></h3>
+<p>Vertex buffers store vertex data such as positions, colors, normals, and texture coordinates.</p>
+<p><strong>Position Buffer</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p># 3D positions (N, 3) array
+vertices = np.array([</p>
+<blockquote>
+<div><p>[0, 0, 0],  # Vertex 0
+[1, 0, 0],  # Vertex 1
+[0, 1, 0]   # Vertex 2</p>
+</div></blockquote>
+<p>], dtype=np.float32)</p>
+</div></blockquote>
+<p><strong>Color Buffer</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p># RGB colors (N, 3) array
+colors = np.array([</p>
+<blockquote>
+<div><p>[1, 0, 0],  # Red
+[0, 1, 0],  # Green
+[0, 0, 1]   # Blue</p>
+</div></blockquote>
+<p>], dtype=np.float32)</p>
+</div></blockquote>
+<p><strong>Normal Buffer</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p># Surface normals (N, 3) array
+normals = np.array([</p>
+<blockquote>
+<div><p>[0, 0, 1],  # Normal 0
+[0, 0, 1],  # Normal 1
+[0, 0, 1]   # Normal 2</p>
+</div></blockquote>
+<p>], dtype=np.float32)</p>
+</div></blockquote>
+<p><strong>UV Buffer</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p># Texture coordinates (N, 2) array
+uvs = np.array([</p>
+<blockquote>
+<div><p>[0, 0],  # UV 0
+[1, 0],  # UV 1
+[0, 1]   # UV 2</p>
+</div></blockquote>
+<p>], dtype=np.float32)</p>
+</div></blockquote>
+</section>
+<section id="element-buffers">
+<h3>Element Buffers<a class="headerlink" href="#element-buffers" title="Permalink to this heading">¶</a></h3>
+<p>Element buffers store indices that define the topology of the mesh.</p>
+<p><strong>Element Buffer</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p># Triangle indices (M, 3) array
+indices = np.array([</p>
+<blockquote>
+<div><p>[0, 1, 2]  # Triangle connecting vertices 0, 1, 2</p>
+</div></blockquote>
+<p>], dtype=np.uint32)</p>
+</div></blockquote>
+</section>
+</section>
+<section id="buffer-operations">
+<h2>Buffer Operations<a class="headerlink" href="#buffer-operations" title="Permalink to this heading">¶</a></h2>
+<section id="uploading-data">
+<h3>Uploading Data<a class="headerlink" href="#uploading-data" title="Permalink to this heading">¶</a></h3>
+<p><strong>Modern OpenGL</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p># Upload vertex data
+vao.add_vbo(index=0, data=vertices, size=3)</p>
+<p># Upload color data
+vao.add_vbo(index=1, data=colors, size=3)</p>
+<p># Upload element data
+vao.add_ebo(data=indices)</p>
+</div></blockquote>
+<p><strong>Legacy OpenGL</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p># Upload vertex data
+vbg.add_vbo(“position”, vertices, 3)</p>
+<p># Upload color data
+vbg.add_vbo(“color”, colors, 3)</p>
+<p># Upload element data
+vbg.add_ebo(indices)</p>
+</div></blockquote>
+</section>
+<section id="drawing">
+<h3>Drawing<a class="headerlink" href="#drawing" title="Permalink to this heading">¶</a></h3>
+<p><strong>Modern OpenGL</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p># Draw with VAO
+with vao:</p>
+<blockquote>
+<div><p>vao.draw(mode=GL_TRIANGLES, index_count=len(indices))</p>
+</div></blockquote>
+</div></blockquote>
+<p><strong>Legacy OpenGL</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p># Draw with vertex buffer group
+vbg.bind()
+vbg.draw(mode=GL_TRIANGLES)
+vbg.unbind()</p>
+</div></blockquote>
+</section>
+<section id="cleanup">
+<h3>Cleanup<a class="headerlink" href="#cleanup" title="Permalink to this heading">¶</a></h3>
+<p><strong>Modern OpenGL</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p># Cleanup VAO
+vao.delete()</p>
+</div></blockquote>
+<p><strong>Legacy OpenGL</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p># Cleanup vertex buffer group
+vbg.delete()</p>
+</div></blockquote>
+</section>
+</section>
+<section id="error-handling">
+<h2>Error Handling<a class="headerlink" href="#error-handling" title="Permalink to this heading">¶</a></h2>
+<p>Buffer operations include comprehensive error handling:</p>
+<p><strong>OpenGL Context Errors</strong>: Check for valid OpenGL context
+<strong>Buffer Creation Errors</strong>: Handle OpenGL buffer creation failures
+<strong>Data Upload Errors</strong>: Validate data before uploading
+<strong>Drawing Errors</strong>: Handle OpenGL drawing failures</p>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><dl class="simple">
+<dt>try:</dt><dd><p>vao.add_vbo(index=0, data=vertices, size=3)</p>
+</dd>
+<dt>except OpenGLError as e:</dt><dd><p>print(f”OpenGL error: {e}”)
+# Handle gracefully</p>
+</dd>
+<dt>except ValueError as e:</dt><dd><p>print(f”Data error: {e}”)
+# Validate data</p>
+</dd>
+<dt>except Exception as e:</dt><dd><p>print(f”Unexpected error: {e}”)
+# Handle gracefully</p>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="performance-considerations">
+<h2>Performance Considerations<a class="headerlink" href="#performance-considerations" title="Permalink to this heading">¶</a></h2>
+<p><strong>Modern Buffers (VAO/VBO)</strong>:
+* Best performance with modern OpenGL
+* Efficient GPU memory usage
+* Fast drawing operations
+* Requires OpenGL 3.0+ support</p>
+<p><strong>Legacy Buffers (VBO only)</strong>:
+* Compatible with older OpenGL versions
+* Good performance on older hardware
+* Uses client state management
+* Limited feature set</p>
+<p><strong>Immediate Mode</strong>:
+* Maximum compatibility
+* Uses glBegin/glEnd for rendering
+* Lower performance but works everywhere
+* No buffer management</p>
+</section>
+<section id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p><strong>Use appropriate buffer type</strong> for your target platform</p></li>
+<li><p><strong>Upload data once</strong> and reuse buffers</p></li>
+<li><p><strong>Use VAOs</strong> for modern OpenGL when possible</p></li>
+<li><p><strong>Handle errors gracefully</strong> with fallbacks</p></li>
+<li><p><strong>Clean up resources</strong> when done</p></li>
+</ol>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p># Choose buffer type based on OpenGL support
+if has_modern_opengl():</p>
+<blockquote>
+<div><p>vao = VertexArrayObject()
+vao.add_vbo(index=0, data=vertices, size=3)</p>
+</div></blockquote>
+<dl class="simple">
+<dt>elif has_legacy_opengl():</dt><dd><p>vbg = VertexBufferGroup()
+vbg.add_vbo(“position”, vertices, 3)</p>
+</dd>
+<dt>else:</dt><dd><p># Use immediate mode fallback
+pass</p>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">PicoGL</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../legacy_examples.html">Legacy Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../troubleshooting.html">Troubleshooting</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="renderer.html">Renderer API</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Buffers API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#core-classes">Core Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#buffer-classes">Buffer Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#base-classes">Base Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-structures">Data Structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#buffer-management">Buffer Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#buffer-types">Buffer Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#buffer-operations">Buffer Operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#error-handling">Error Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#performance-considerations">Performance Considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#best-practices">Best Practices</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="shaders.html">Shaders API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ui.html">UI API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Utils API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="renderer.html" title="previous chapter">Renderer API</a></li>
+      <li>Next: <a href="shaders.html" title="next chapter">Shaders API</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2025, PicoGL Contributors.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../_sources/api/buffers.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
