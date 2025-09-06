@@ -32,6 +32,10 @@ or for an editable version:
 ```
 PyPi version coming soon!
 
+## 📖 Documentation
+In depth documentation can be found here, or in the Docs directory.
+[https://github.com/markxbrooks/PicoGL/blob/main/doc/_build/picogl2.pdf]
+
 ##  Example usage to show a cube:
 Found in the Examples directory, with mouse control
 
