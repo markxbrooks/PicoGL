@@ -2,7 +2,7 @@ import ctypes
 from typing import Optional
 
 import numpy as np
-from elmo.gl.buffers.factory.abstract import create_layout
+from picogl.buffers.factory.layout import create_layout
 from OpenGL.GL import glDrawElements
 from OpenGL.raw.GL._types import GL_FLOAT
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT

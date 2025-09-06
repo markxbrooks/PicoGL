@@ -1,11 +1,9 @@
 
 
 from pyglm import glm
-from elmo.gl.backend.modern.shaders.mvp.controller import MVPController
 from OpenGL.GL import *  # pylint: disable=W0614
 from OpenGL.GLUT import *  # pylint: disable=W0614
 
-from elmo.utils.worldsheet import WorldSheet
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.ui.backend.glut.window.gl import GLWindow
 
