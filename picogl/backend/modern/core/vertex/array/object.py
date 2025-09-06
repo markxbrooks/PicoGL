@@ -41,7 +41,7 @@ from OpenGL.GL import glDeleteVertexArrays, glGenVertexArrays
 from OpenGL.raw.GL._types import GL_FLOAT, GL_UNSIGNED_INT
 from OpenGL.raw.GL.ARB.vertex_array_object import glBindVertexArray
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POINTS
-from OpenGL.raw.GL.VERSION.GL_1_1 import glDrawArrays
+from OpenGL.raw.GL.VERSION.GL_1_1 import glDrawArrays, glDrawElements
 from OpenGL.raw.GL.VERSION.GL_1_5 import (
     GL_ELEMENT_ARRAY_BUFFER,
     GL_STATIC_DRAW,
