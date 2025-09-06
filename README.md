@@ -60,9 +60,19 @@ we can produce similar OpenGL applications with respectable performance.
 ```
 ![cube](rotating_cube.gif)
 
-## 📖 Documentation
-In depth documentation can be found here, or in the Docs directory.
-[https://github.com/markxbrooks/PicoGL/blob/main/doc/_build/picogl2.pdf]
+📖 Documentation
+Access PicoGL documentation in the format that works best for you:
+
+Available Formats:
+HTML Documentation:
+Explore the full API reference, guides, and examples online:
+https://markxbrooks.github.io/PicoGL/
+PDF Documentation:
+Download a convenient PDF version for offline reading or printing:
+https://github.com/markxbrooks/PicoGL/blob/main/doc/_build/picogl2.pdf
+Local Documentation:
+The Docs directory within this repository contains the source files and additional reference materials for offline access or custom builds.
+Whether you prefer browsing online, reading offline, or exploring the raw documentation files, PicoGL’s documentation provides comprehensive guidance for using the library effectively.
 
 ##  Example usage to show a cube:
 Found in the Examples directory, with mouse control
