@@ -6,7 +6,6 @@ from pathlib import Path
 
 from picogl.renderer import GLContext, MeshData
 from picogl.renderer.object import ObjectRenderer
-from picogl.renderer.texture import TextureRenderer
 from picogl.ui.backend.glut.window.glut import GlutRendererWindow
 
 

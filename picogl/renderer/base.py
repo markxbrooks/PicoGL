@@ -4,7 +4,14 @@ Base Renderer Class
 from typing import Optional
 
 import numpy as np
-from OpenGL.raw.GL.VERSION.GL_1_0 import glFlush
+from OpenGL.raw.GL.VERSION.GL_1_0 import (
+    GL_DEPTH_TEST,
+    GL_LINE_SMOOTH,
+    glDisable,
+    glEnable,
+    glFlush,
+    glLineWidth,
+)
 
 from picogl.renderer.abstract import AbstractRenderer
 
@@ -18,9 +25,20 @@ class RendererBase(AbstractRenderer):
 
         :param state: Application state object for accessing shared data.
         """
+        self.line_width = 2.0
         self.show_model = False
         self.parent = parent
         self._initialized = False
+
+    def _set_gl_state(self):
+        """Set the line width and disable depth test."""
+        glLineWidth(self.line_width)
+        glDisable(GL_DEPTH_TEST)
+        glEnable(GL_LINE_SMOOTH)
+
+    def _restore_gl_state(self):
+        """Restore the original line width and depth test state."""
+        glEnable(GL_DEPTH_TEST)
 
     @property
     def dispatch_list(self):

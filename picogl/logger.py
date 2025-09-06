@@ -120,6 +120,7 @@ def decorate_log_message(message: str, level: int) -> str:
 
 
 class Logger:
+    """Logger class"""
     def __init__(self):
         pass
 
@@ -171,8 +172,8 @@ class Logger:
 
         try:
             compact_json = json.dumps(data, separators=(",", ":"))
-        except (TypeError, ValueError) as e:
-            Logger.error("Failed to serialize JSON", e)
+        except (TypeError, ValueError) as ex:
+            Logger.error("Failed to serialize JSON", ex)
             return
 
         if not silent:

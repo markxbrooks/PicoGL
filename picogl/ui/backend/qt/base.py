@@ -21,7 +21,6 @@ from PySide6.QtWidgets import QWidget
 
 from picogl.backend.legacy.core.camera.lighting import set_background_color
 from picogl.backend.legacy.core.camera.matrices.setup import setup_matrices
-from picogl.backend.legacy.core.camera.matrix import update_camera_matrix
 from picogl.backend.legacy.core.camera.setup import calculate_aspect
 from picogl.error import check_errors
 from picogl.frame import prepare_viewport

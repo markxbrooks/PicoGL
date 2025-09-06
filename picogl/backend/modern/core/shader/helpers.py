@@ -1,7 +1,11 @@
-import os
+"""
+Shader Compilation
+"""
+
 from pathlib import Path
 
-from OpenGL import GL as gl
+from OpenGL import GL
+from OpenGL.raw.GLU import gluErrorString
 
 from picogl.logger import Logger as log
 
@@ -10,9 +14,9 @@ def log_gl_error():
     """
     log_gl_error
     """
-    err = gl.glGetError()  # pylint: disable=E1111
-    if err != gl.GL_NO_ERROR:
-        log.error(f"GL ERROR: {gl.gluErrorString(err)}")  # pylint: disable=E1101
+    err = GL.glGetError()  # pylint: disable=E1111
+    if err != GL.GL_NO_ERROR:
+        log.error(f"GL ERROR: {gluErrorString(err)}")  # pylint: disable=E1101
 
 
 def compile_shader(program: int, shader: int, shader_source_list: str):
@@ -23,12 +27,12 @@ def compile_shader(program: int, shader: int, shader_source_list: str):
     :param shader: int
     :param shader_source_list: list
     """
-    gl.glShaderSource(shader, shader_source_list)
-    gl.glCompileShader(shader)
-    if gl.GL_TRUE != gl.glGetShaderiv(shader, gl.GL_COMPILE_STATUS):
-        err = gl.glGetShaderInfoLog(shader)
+    GL.glShaderSource(shader, shader_source_list)
+    GL.glCompileShader(shader)
+    if GL.GL_TRUE != GL.glGetShaderiv(shader, GL.GL_COMPILE_STATUS):
+        err = GL.glGetShaderInfoLog(shader)
         raise Exception(err)
-    gl.glAttachShader(program, shader)
+    GL.glAttachShader(program, shader)
 
 
 def read_shader_source(
@@ -50,5 +54,5 @@ def read_shader_source(
 
     try:
         return abs_path.read_text()
-    except FileNotFoundError as e:
-        raise FileNotFoundError(f"Shader file not found: {abs_path}") from e
+    except FileNotFoundError as ex:
+        raise FileNotFoundError(f"Shader file not found: {abs_path}") from ex
