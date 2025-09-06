@@ -35,7 +35,7 @@ class TextureRenderer(ObjectRenderer):
         self.data.vertex_count = len(self.data.vbo.flatten()) // 3
         self.show_model = True
         self.base_dir = base_dir
-        self.base_path = Path(base_dir)
+        self.base_path = Path(base_dir) if base_dir is not None else Path(".")
         self.glsl_dir = glsl_dir
 
         self.initialize_textures()
@@ -46,9 +46,9 @@ class TextureRenderer(ObjectRenderer):
         self.texture = texture = TextureLoader(texture_path)
         self.context.texture_id = texture.texture_gl_id
         if texture.inversed_v_coords:
-            for index, _ in enumerate(data.uvs):
+            for index, _ in enumerate(self.data.uvs):
                 if index % 2:
-                    data.uvs[index] = 1.0 - data.uvs[index]
+                    self.data.uvs[index] = 1.0 - self.data.uvs[index]
 
     def get_texture_filename(self):
         """
@@ -68,7 +68,10 @@ class TextureRenderer(ObjectRenderer):
         :param file_name: str = None
         :return: None
         """
-        self.texture_full_path = self.resource_full_path / file_name
+        if file_name is not None:
+            self.texture_full_path = self.resource_full_path / file_name
+        else:
+            self.texture_full_path = self.resource_full_path / "default_texture.tga"
 
     def set_resource_path(self, base_path: str | Path, subdir: str):
         """
@@ -77,7 +80,8 @@ class TextureRenderer(ObjectRenderer):
         :param base_path: str | Path
         :param subdir: str
         """
-        self.resource_full_path = base_path.absolute() / "resources" / subdir
+        base_path_obj = Path(base_path) if isinstance(base_path, str) else base_path
+        self.resource_full_path = base_path_obj.absolute() / "resources" / subdir
 
     def _draw_selection(self):
         """Draw selection"""
