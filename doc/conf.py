@@ -35,9 +35,10 @@ extensions = [
     'sphinx.ext.autosummary',
     # 'sphinxcontrib.rsvgconverter'
 ]
+
 # Document Python Code
 autoapi_type = 'python'
-autoapi_dirs = '../picogl'
+autoapi_dirs = ['../picogl']
 autosummary_generate = True  # Turn on sphinx.ext.autosummary
 
 templates_path = ['_templates']
