@@ -345,40 +345,40 @@ Let's compare setting up a Vertex Array Object (VAO) containing positions and no
 
 ### 'Raw' WebGL
 ```javascript
-  vertexArray = gl.createBuffer(1)
-  gl.bindVertexArray(vertexArray);
-  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-  gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 0, 0);
-  gl.enableVertexAttribArray(0);
-  
-  gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
-  gl.vertexAttribPointer(1, 3, gl.FLOAT, false, 0, 0);
-  gl.enableVertexAttribArray(1);  
-  gl.bindVertexArray(null);
+      vertexArray = gl.createBuffer(1)
+      gl.bindVertexArray(vertexArray);
+      gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+      gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 0, 0);
+      gl.enableVertexAttribArray(0);
+      
+      gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
+      gl.vertexAttribPointer(1, 3, gl.FLOAT, false, 0, 0);
+      gl.enableVertexAttribArray(1);  
+      gl.bindVertexArray(null);
 ```
 
 ### PicoGL.js
 ```javascript
-  var vertexArray = app.createVertexArray()
-  .vertexAttributeBuffer(0, positionBuffer)
-  .vertexAttributeBuffer(1, normalBuffer);
+      var vertexArray = app.createVertexArray()
+      .vertexAttributeBuffer(0, positionBuffer)
+      .vertexAttributeBuffer(1, normalBuffer);
 ```
 Taken from: https://tsherif.github.io/khronos-meetup-picogl/#/7
 
 ### Python 🐍 'raw' Open GL
 ```python
-vertex_array = glGenVertexArrays(1)
-glBindVertexArray(vertex_array)
-
-glBindBuffer(GL_ARRAY_BUFFER, position_buffer)
-glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, None)
-glEnableVertexAttribArray(0)
-
-glBindBuffer(GL_ARRAY_BUFFER, normal_buffer)
-glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, None)
-glEnableVertexAttribArray(1)
-
-glBindVertexArray(0)
+    vertex_array = glGenVertexArrays(1)
+    glBindVertexArray(vertex_array)
+    
+    glBindBuffer(GL_ARRAY_BUFFER, position_buffer)
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, None)
+    glEnableVertexAttribArray(0)
+    
+    glBindBuffer(GL_ARRAY_BUFFER, normal_buffer)
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, None)
+    glEnableVertexAttribArray(1)
+    
+    glBindVertexArray(0)
 ```
 
 ### PicoGL for Python 🐍
