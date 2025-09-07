@@ -255,3 +255,6 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
         """
         self.camera_parameters.rotation_x_axis += dy * 0.5
         self.camera_parameters.rotation_y_axis += dx * 0.5
+
+    def _emit_rotation_feedback(self):
+        pass

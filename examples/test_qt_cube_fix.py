@@ -77,13 +77,13 @@ def test_qt_cube_initialization():
         ), mock.patch(
             "OpenGL.GLU"
         ):
-            from examples.qt_cube import QtCubeRenderer
+            from picogl.ui.backend.qt.renderer import QtObjectRenderer
 
             # Create a mock parent widget
             mock_parent = mock.MagicMock()
 
             # Create renderer instance
-            renderer = QtCubeRenderer(mock_parent)
+            renderer = QtObjectRenderer(mock_parent)
 
             # Check that mvp_parameters are initialized
             assert renderer.mvp_parameters.rotation_x == 0.0, "rotation_x should be 0.0"
@@ -118,10 +118,10 @@ def test_rotation_operations():
         ), mock.patch(
             "OpenGL.GLU"
         ):
-            from examples.qt_cube import QtCubeRenderer
+            from picogl.ui.backend.qt.renderer import QtObjectRenderer
 
             # Create renderer instance
-            renderer = QtCubeRenderer()
+            renderer = QtObjectRenderer()
 
             # Test rotation updates
             renderer.rotation_x += 15.5

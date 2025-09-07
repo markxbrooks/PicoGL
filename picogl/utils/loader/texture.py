@@ -62,62 +62,98 @@ class TextureLoader:
         """
         Load a DDS texture from file.
         Supports DXT1, DXT3, DXT5 compressed textures.
+        Falls back to PIL loading if compressed texture loading fails.
         """
-        with open(file_name, "rb") as dds_file:
-            dfs_tag = dds_file.read(4)
-            if dfs_tag != b"DDS ":
-                raise ValueError(f"Invalid DDS file: {file_name}")
+        try:
+            with open(file_name, "rb") as dds_file:
+                dfs_tag = dds_file.read(4)
+                if dfs_tag != b"DDS ":
+                    raise ValueError(f"Invalid DDS file: {file_name}")
 
-            head = dds_file.read(124)
-            self.height = struct.unpack("<I", head[8:12])[0]
-            self.width = struct.unpack("<I", head[12:16])[0]
-            linear_size = struct.unpack("<I", head[16:20])[0]
-            mip_map_count = struct.unpack("<I", head[24:28])[0]
-            four_cc = head[80:84].decode("ascii")
+                head = dds_file.read(124)
+                self.height = struct.unpack("<I", head[8:12])[0]
+                self.width = struct.unpack("<I", head[12:16])[0]
+                linear_size = struct.unpack("<I", head[16:20])[0]
+                mip_map_count = struct.unpack("<I", head[24:28])[0]
+                four_cc = head[80:84].decode("ascii")
 
-        supported_dds = ["DXT1", "DXT3", "DXT5"]
-        if four_cc not in supported_dds:
-            raise ValueError(f"Not supported DDS file: {four_cc}")
+            supported_dds = ["DXT1", "DXT3", "DXT5"]
+            if four_cc not in supported_dds:
+                raise ValueError(f"Not supported DDS file: {four_cc}")
 
-        self.format = four_cc
+            self.format = four_cc
 
-        block_size = 8 if four_cc == "DXT1" else 16
-        gl_format = {
-            "DXT1": GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,
-            "DXT3": GL_COMPRESSED_RGBA_S3TC_DXT3_EXT,
-            "DXT5": GL_COMPRESSED_RGBA_S3TC_DXT5_EXT,
-        }[four_cc]
+            block_size = 8 if four_cc == "DXT1" else 16
+            gl_format = {
+                "DXT1": GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,
+                "DXT3": GL_COMPRESSED_RGBA_S3TC_DXT3_EXT,
+                "DXT5": GL_COMPRESSED_RGBA_S3TC_DXT5_EXT,
+            }[four_cc]
 
-        buffer_size = linear_size * 2 if mip_map_count > 1 else linear_size
+            buffer_size = linear_size * 2 if mip_map_count > 1 else linear_size
 
-        with open(file_name, "rb") as dds_file:
-            dds_file.seek(128)  # skip DDS header
-            dds_buffer = dds_file.read(buffer_size)
+            with open(file_name, "rb") as dds_file:
+                dds_file.seek(128)  # skip DDS header
+                dds_buffer = dds_file.read(buffer_size)
 
-        self.texture_gl_id = glGenTextures(1)
-        glBindTexture(GL_TEXTURE_2D, self.texture_gl_id)
+            self.texture_gl_id = glGenTextures(1)
+            glBindTexture(GL_TEXTURE_2D, self.texture_gl_id)
 
-        offset = 0
-        w, h = self.width, self.height
-        for level in range(mip_map_count):
-            size = ((w + 3) // 4) * ((h + 3) // 4) * block_size
-            glCompressedTexImage2D(
-                GL_TEXTURE_2D,
-                level,
-                gl_format,
-                w,
-                h,
-                0,
-                size,
-                dds_buffer[offset: offset + size],
-            )
-            offset += size
-            w //= 2
-            h //= 2
-            if w == 0 or h == 0:
-                break
+            offset = 0
+            w, h = self.width, self.height
+            for level in range(mip_map_count):
+                size = ((w + 3) // 4) * ((h + 3) // 4) * block_size
+                try:
+                    glCompressedTexImage2D(
+                        GL_TEXTURE_2D,
+                        level,
+                        gl_format,
+                        w,
+                        h,
+                        0,
+                        size,
+                        dds_buffer[offset: offset + size],
+                    )
+                except Exception as e:
+                    # Fallback: try with explicit byte array conversion
+                    try:
+                        import array
+                        byte_array = array.array('B', dds_buffer[offset: offset + size])
+                        glCompressedTexImage2D(
+                            GL_TEXTURE_2D,
+                            level,
+                            gl_format,
+                            w,
+                            h,
+                            0,
+                            size,
+                            byte_array,
+                        )
+                    except Exception as e2:
+                        raise RuntimeError(f"Failed to load DDS compressed texture: {e2}")
+                
+                offset += size
+                w //= 2
+                h //= 2
+                if w == 0 or h == 0:
+                    break
 
-        self.inversed_v_coords = True
+            # Set texture parameters for DDS
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR)
+
+            self.inversed_v_coords = True
+            
+        except Exception as e:
+            # Fallback: try to load as regular image with PIL
+            print(f"⚠️  DDS compressed loading failed: {e}")
+            print(f"🔄 Falling back to PIL loading for: {file_name}")
+            try:
+                self.load_by_pil(file_name, "RGBA")
+            except Exception as e2:
+                raise RuntimeError(f"Failed to load DDS file with both compressed and PIL methods: {e2}")
 
     def load_by_pil(self, file_name: str, mode: str) -> None:
         """

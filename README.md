@@ -40,23 +40,24 @@ we can produce similar OpenGL applications with respectable performance.
 
 ```python see qt_cube.py
     def initialize(self):
-        if self._initialized:
-            return
-        self.mesh_data = MeshData.from_raw(
-            vertices=self.vertices,
-            colors=self.colors,
-            indices=self.indices
-        )
-        self.gl_data = LegacyGLMesh.from_mesh_data(mesh=self.mesh_data)
-        self.gl_data.upload()
-        self._initialized = True
-        log.message("✅ Qt Cube Renderer initialized")
+    if self._initialized:
+        return
+    self.mesh_data = MeshData.from_raw(
+        vertices=self.vertices,
+        colors=self.colors,
+        indices=self.indices
+    )
+    self.gl_mesh_data = LegacyGLMesh.from_mesh_data(mesh=self.mesh_data)
+    self.gl_mesh_data.upload()
+    self._initialized = True
+    log.message("✅ Qt Cube Renderer initialized")
 
-    def draw(self):
-        """Draw the cube using LegacyGLMesh"""
-        # Draw using LegacyGLMesh (already created and uploaded in initializeGL)
-        if self.gl_data is not None:
-            self.gl_data.draw()
+
+def draw(self):
+    """Draw the cube using LegacyGLMesh"""
+    # Draw using LegacyGLMesh (already created and uploaded in initializeGL)
+    if self.gl_mesh_data is not None:
+        self.gl_mesh_data.draw()
 ```
 ![cube](rotating_cube.gif)
 

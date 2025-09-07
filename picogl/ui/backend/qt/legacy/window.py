@@ -32,7 +32,6 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from picogl.ui.backend.qt.renderer import QtObjectRenderer
 
 # OpenGL imports
 try:
@@ -49,8 +48,9 @@ class QtObjectWindow(QMainWindow):
     Main window for the Qt Object renderer
     """
 
-    def __init__(self):
+    def __init__(self, parent, gl_use_legacy=True):
         super().__init__()
+        self.gl_use_legacy = gl_use_legacy
         self.layout: Optional[QVBoxLayout] = None
         self.gl_widget: Optional[QtObjectRenderer] = None
         self.setWindowTitle("PicoGL Qt Object Renderer - Legacy OpenGL")
