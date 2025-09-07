@@ -1,4 +1,7 @@
+![OpenGL Logo](Opengl-logo.png)
 # PicoGL
+![PicoGL_Mascot](PicoGL_Mascot_320.png)
+Peacock with goggles, geddit? 😊
 
 **PicoGL** is a lightweight, Pythonic wrapper around Modern (and some Legacy) OpenGL — designed to make GPU programming simple, readable, and fun without sacrificing low-level control.
 
