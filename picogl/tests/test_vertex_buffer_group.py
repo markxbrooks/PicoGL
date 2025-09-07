@@ -170,16 +170,72 @@ class TestVertexBufferGroup(unittest.TestCase):
         mock_vbo_class.return_value = mock_vbo
         
         with patch.object(vbg, 'get_buffer_class', return_value=mock_vbo_class):
-            # Test adding position VBO
+            # Test adding position VBO with default parameters
             result = vbg.add_vbo("vbo", data=self.test_data)
             
             # Verify get_buffer_class was called
             vbg.get_buffer_class.assert_called_once_with("vbo")
             
-            # Verify VBO was created and added
-            mock_vbo_class.assert_called_once_with(data=self.test_data)
+            # Verify VBO was created and added with default parameters
+            mock_vbo_class.assert_called_once_with(
+                data=self.test_data, 
+                size=3, 
+                handle=None, 
+                dtype=GL_FLOAT
+            )
             self.assertEqual(result, mock_vbo)
             self.assertEqual(vbg.named_vbos["vbo"], mock_vbo)
+    
+    def test_add_vbo_with_custom_parameters(self):
+        """Test add_vbo method with custom parameters."""
+        vbg = VertexBufferGroup()
+        
+        # Mock the get_buffer_class method to return a mock class
+        mock_vbo_class = MagicMock()
+        mock_vbo = MagicMock()
+        mock_vbo_class.return_value = mock_vbo
+        
+        with patch.object(vbg, 'get_buffer_class', return_value=mock_vbo_class):
+            # Test adding VBO with custom parameters
+            custom_handle = 123
+            custom_size = 4
+            custom_dtype = GL_UNSIGNED_INT
+            
+            result = vbg.add_vbo(
+                "vbo", 
+                data=self.test_data, 
+                size=custom_size, 
+                handle=custom_handle, 
+                dtype=custom_dtype
+            )
+            
+            # Verify get_buffer_class was called
+            vbg.get_buffer_class.assert_called_once_with("vbo")
+            
+            # Verify VBO was created with custom parameters
+            mock_vbo_class.assert_called_once_with(
+                data=self.test_data, 
+                size=custom_size, 
+                handle=custom_handle, 
+                dtype=custom_dtype
+            )
+            self.assertEqual(result, mock_vbo)
+            self.assertEqual(vbg.named_vbos["vbo"], mock_vbo)
+    
+    def test_add_vbo_invalid_parameters(self):
+        """Test add_vbo method with invalid parameters."""
+        vbg = VertexBufferGroup()
+        
+        # Test with None data
+        with self.assertRaises(ValueError):
+            vbg.add_vbo("vbo", data=None)
+        
+        # Test with size <= 0
+        with self.assertRaises(ValueError):
+            vbg.add_vbo("vbo", data=self.test_data, size=0)
+        
+        with self.assertRaises(ValueError):
+            vbg.add_vbo("vbo", data=self.test_data, size=-1)
 
     def test_add_ebo(self):
         """Test add_ebo method."""
@@ -481,13 +537,12 @@ class TestVertexBufferGroup(unittest.TestCase):
         mock_vbo_class.side_effect = Exception("VBO creation error")
         
         with patch.object(vbg, 'get_buffer_class', return_value=mock_vbo_class):
-            with patch('picogl.logger.Logger.error') as mock_log_error:
-                result = vbg.add_vbo("vbo", data=self.test_data)
-                
-                # Should return None on error
-                self.assertIsNone(result)
-                mock_log_error.assert_called_once()
-                self.assertIn("error", mock_log_error.call_args[0][0])
+            # The new add_vbo method should let exceptions propagate
+            with self.assertRaises(Exception) as context:
+                vbg.add_vbo("vbo", data=self.test_data)
+            
+            # Verify the exception message
+            self.assertIn("VBO creation error", str(context.exception))
 
     def test_error_handling_in_bind(self):
         """Test error handling in bind method."""

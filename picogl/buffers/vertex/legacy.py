@@ -117,15 +117,6 @@ class VertexBufferGroup(VertexBase):
                 # Issue draw call
                 glDrawArrays(mode, 0, index_count)
 
-    def add_vbo_old(self, name: str, **kwargs):
-        """High-level shortcut: pick the right VBO subclass and delegate."""
-        try:
-            vbo_class = self.get_buffer_class(name)
-            vbo = vbo_class(**kwargs)
-            return self.add_vbo_object(name, vbo)
-        except Exception as ex:
-            log.error(f"error {ex} occurred adding vbo")
-
     def add_vbo(
             self,
             name: str,
