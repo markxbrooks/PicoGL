@@ -13,7 +13,7 @@ After writing the code and naming it PicoGL, we realize there is a Javascript Li
  - It looks vaguely similar to this Python syntactically
  - The existence of both could help porting Python to WebGL and vice-versa
 
-Let's compare setting up a Vertex Array Object (VAO) containing positions and colors in both languages.
+Let's compare setting up a Vertex Array Object (VAO) containing positions and normals in both languages:
 
 ### PicoGL.js
 ```javascript
