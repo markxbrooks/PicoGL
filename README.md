@@ -12,12 +12,16 @@ After writing the code and naming it PicoGL, we realize there is a Javascript Li
 ### It looks similar in ethos to this Python version
 ### It looks vaguely similar to this Python syntactically
 ### The existence of both could help porting python to WebGL and vice-versa
+
+###PicoGl.js
 ```javascript
   var vertexArray = app.createVertexArray()
   .vertexAttributeBuffer(0, positionBuffer)
   .vertexAttributeBuffer(1, normalBuffer);
 ```
 Taken from: https://tsherif.github.io/khronos-meetup-picogl/#/7
+
+###PicoGL for Python 🐍
 ```python
     vertex_array = VertexArrayObject()
     vertex_array.add_vbo(index=0, data=positions, size=3)
