@@ -21,11 +21,12 @@ from PySide6.QtOpenGLWidgets import QOpenGLWidget
 from PySide6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QLabel, QPushButton, QHBoxLayout, \
     QMessageBox, QSplitter
 
-from examples.utils.pdb_loader import PDBLoader
+from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
 
 # Add the examples directory to the path so we can import the PDB loader
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'utils'))
 
+from pdb_loader import PDBLoader, Atom
 
 
 class QtLegacyMolecularViewer(QOpenGLWidget):
@@ -50,8 +51,55 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
         self.last_mouse_pos = None
         self.mouse_pressed = False
         
+        # Rendering mode
+        self.wireframe_mode = False
+        
         # Load the PDB structure
         self._load_pdb_structure()
+    
+    def initializeGL(self):
+        """Initialize OpenGL settings"""
+        glEnable(GL_DEPTH_TEST)
+        glEnable(GL_LIGHTING)
+        glEnable(GL_LIGHT0)
+        glEnable(GL_COLOR_MATERIAL)
+        glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
+        
+        # Set up lighting
+        glLightfv(GL_LIGHT0, GL_POSITION, [1.0, 1.0, 1.0, 0.0])
+        glLightfv(GL_LIGHT0, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
+        glLightfv(GL_LIGHT0, GL_DIFFUSE, [0.8, 0.8, 0.8, 1.0])
+        glLightfv(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
+        
+        # Set material properties
+        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
+        glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, [0.8, 0.8, 0.8, 1.0])
+        glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
+        glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50.0)
+        
+        glClearColor(0.0, 0.0, 0.0, 1.0)
+    
+    def resizeGL(self, width, height):
+        """Handle window resize"""
+        glViewport(0, 0, width, height)
+        glMatrixMode(GL_PROJECTION)
+        glLoadIdentity()
+        gluPerspective(45.0, width / height, 0.1, 100.0)
+        glMatrixMode(GL_MODELVIEW)
+    
+    def paintGL(self):
+        """Main rendering function"""
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        glLoadIdentity()
+        
+        # Apply transformations
+        glTranslatef(self.translation_x, self.translation_y, -5.0)
+        glRotatef(self.rotation_x, 1.0, 0.0, 0.0)
+        glRotatef(self.rotation_y, 0.0, 1.0, 0.0)
+        glScalef(self.zoom, self.zoom, self.zoom)
+        
+        # Render the molecular structure
+        self._render_molecular_structure()
         
     def _load_pdb_structure(self):
         """Load PDB structure and extract C-alpha atoms"""
@@ -166,13 +214,23 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
         self._render_calpha_bonds()
     
     def _render_calpha_atoms(self):
-        """Render C-alpha atoms as white wireframe spheres"""
+        """Render C-alpha atoms as colored wireframe spheres based on chain"""
         if self.calpha_positions is None:
             return
         
-        glColor3f(1.0, 1.0, 1.0)  # White color
-        
-        for pos in self.calpha_positions:
+        for i, pos in enumerate(self.calpha_positions):
+            # Get the atom to determine chain
+            atom = self.calpha_atoms[i]
+            chain_id = atom.chain_id
+            
+            # Set color based on chain
+            if chain_id == 'A':
+                glColor3f(0.0, 1.0, 0.0)  # Green for chain A
+            elif chain_id == 'B':
+                glColor3f(0.0, 0.0, 1.0)  # Blue for chain B
+            else:
+                glColor3f(1.0, 1.0, 1.0)  # White for other chains
+            
             glPushMatrix()
             glTranslatef(pos[0], pos[1], pos[2])
             
@@ -182,15 +240,26 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
             glPopMatrix()
     
     def _render_calpha_bonds(self):
-        """Render bonds between C-alpha atoms as white lines"""
+        """Render bonds between C-alpha atoms with chain-based colors"""
         if not self.calpha_bonds or self.calpha_positions is None:
             return
         
-        glColor3f(1.0, 1.0, 1.0)  # White color
         glBegin(GL_LINES)
         
         for atom1_idx, atom2_idx in self.calpha_bonds:
             if 0 <= atom1_idx < len(self.calpha_positions) and 0 <= atom2_idx < len(self.calpha_positions):
+                # Get the chain ID for the first atom to determine color
+                atom1 = self.calpha_atoms[atom1_idx]
+                chain_id = atom1.chain_id
+                
+                # Set color based on chain
+                if chain_id == 'A':
+                    glColor3f(0.0, 1.0, 0.0)  # Green for chain A
+                elif chain_id == 'B':
+                    glColor3f(0.0, 0.0, 1.0)  # Blue for chain B
+                else:
+                    glColor3f(1.0, 1.0, 1.0)  # White for other chains
+                
                 pos1 = self.calpha_positions[atom1_idx]
                 pos2 = self.calpha_positions[atom2_idx]
                 
@@ -200,7 +269,7 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
         glEnd()
     
     def _draw_wireframe_sphere(self, radius, slices, stacks):
-        """Draw a wireframe sphere using legacy OpenGL"""
+        """Draw a sphere (filled or wireframe) using legacy OpenGL"""
         import math
         
         for i in range(stacks):
@@ -212,6 +281,33 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
             z1 = radius * math.sin(lat1)
             zr1 = radius * math.cos(lat1)
             
+            if not self.wireframe_mode:
+                # Draw filled triangles between the two latitude rings
+                glBegin(GL_TRIANGLE_STRIP)
+                for j in range(slices + 1):
+                    lng = 2 * math.pi * j / slices
+                    x = math.cos(lng)
+                    y = math.sin(lng)
+                    
+                    # Calculate normals for proper lighting
+                    nx0 = x * math.cos(lat0)
+                    ny0 = y * math.cos(lat0)
+                    nz0 = math.sin(lat0)
+                    
+                    nx1 = x * math.cos(lat1)
+                    ny1 = y * math.cos(lat1)
+                    nz1 = math.sin(lat1)
+                    
+                    # First vertex of the strip
+                    glNormal3f(nx0, ny0, nz0)
+                    glVertex3f(x * zr0, y * zr0, z0)
+                    
+                    # Second vertex of the strip
+                    glNormal3f(nx1, ny1, nz1)
+                    glVertex3f(x * zr1, y * zr1, z1)
+                glEnd()
+            
+            # Draw wireframe lines for the latitude rings
             glBegin(GL_LINE_LOOP)
             for j in range(slices + 1):
                 lng = 2 * math.pi * j / slices
@@ -221,6 +317,7 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
                 glVertex3f(x * zr0, y * zr0, z0)
             glEnd()
             
+            # Draw vertical lines connecting the rings
             glBegin(GL_LINES)
             for j in range(slices + 1):
                 lng = 2 * math.pi * j / slices
@@ -230,31 +327,31 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
                 glVertex3f(x * zr0, y * zr0, z0)
                 glVertex3f(x * zr1, y * zr1, z1)
             glEnd()
-    
+
     def mousePressEvent(self, event):
         """Handle mouse press for rotation"""
         if event.button() == Qt.LeftButton:
             self.mouse_pressed = True
             self.last_mouse_pos = event.position().toPoint()
-    
+
     def mouseMoveEvent(self, event):
         """Handle mouse movement for rotation"""
         if self.mouse_pressed and self.last_mouse_pos:
             current_pos = event.position().toPoint()
             dx = current_pos.x() - self.last_mouse_pos.x()
             dy = current_pos.y() - self.last_mouse_pos.y()
-            
+
             self.rotation_y += dx * 0.5
             self.rotation_x += dy * 0.5
-            
+
             self.last_mouse_pos = current_pos
             self.update()
-    
+
     def mouseReleaseEvent(self, event):
         """Handle mouse release"""
         if event.button() == Qt.LeftButton:
             self.mouse_pressed = False
-    
+
     def wheelEvent(self, event):
         """Handle mouse wheel for zooming"""
         delta = event.angleDelta().y()
@@ -262,7 +359,7 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
         self.zoom *= zoom_factor
         self.zoom = max(0.1, min(10.0, self.zoom))  # Clamp zoom
         self.update()
-    
+
     def keyPressEvent(self, event):
         """Handle keyboard input"""
         if event.key() == Qt.Key_R:
@@ -273,34 +370,45 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
             self.translation_x = 0.0
             self.translation_y = 0.0
             self.update()
+        elif event.key() == Qt.Key_W:
+            # Toggle wireframe mode
+            self.wireframe_mode = not self.wireframe_mode
+            print(f"Wireframe mode: {'ON' if self.wireframe_mode else 'OFF'}")
+            self.update()
         elif event.key() == Qt.Key_Escape:
             self.close()
 
 
-class MolecularViewerWindow(QMainWindow):
+class LegacyMolecularViewerWindow(LegacyQtObjectWindow):
     """Main window for the molecular viewer"""
     
-    def __init__(self, pdb_path: str):
-        super().__init__()
+    def __init__(self, object_file_path: str = None):
+        # Store the object file path before calling parent constructor
+        self._pdb_path = object_file_path
+        super().__init__(parent=None)
+        # Set the object file path after parent constructor (which sets it to None)
+        self.object_file_path = object_file_path
         self.gl_widget = None
-        self.pdb_path = pdb_path
-        self.init_ui()
     
-    def init_ui(self):
-        """Initialize the user interface"""
-        self.setWindowTitle("Qt Legacy Molecular Viewer - 2VUG C-alpha Wireframe")
-        self.setGeometry(100, 100, 1200, 800)
-        
+    def ui_init(self):
+        """Override ui_init to delay layout creation until we have the PDB path"""
         # Create central widget
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
-        
         # Create layout
-        layout = QVBoxLayout()
-        central_widget.setLayout(layout)
-        
+        self.layout = QVBoxLayout(central_widget)
+        # Create info label
+        self.set_layout(self.layout)
+    
+    def init_ui(self):
+        """Initialize the user interface"""
+        self.setWindowTitle("Qt Legacy Molecular Viewer - 2VUG C-alpha Wireframe (Chain A: Green, Chain B: Blue)")
+        self.setGeometry(100, 100, 1200, 800)
+
+    def set_layout(self, layout):
+        """set layout"""
         # Add info label
-        info_label = QLabel("2VUG PDB Structure - C-alpha Atoms (White Wireframe)")
+        info_label = QLabel("2VUG PDB Structure - C-alpha Atoms (Chain A: Green, Chain B: Blue)")
         info_label.setStyleSheet("font-size: 14px; font-weight: bold; padding: 10px;")
 
         splitter = QSplitter(Qt.Vertical)
@@ -330,8 +438,9 @@ class MolecularViewerWindow(QMainWindow):
         controls_layout.addStretch()
         upper_layout.addLayout(controls_layout)
         
-        # Create OpenGL widget
-        self.gl_widget = QtLegacyMolecularViewer(self.pdb_path)
+        # Create OpenGL widget with the PDB path
+        pdb_path = getattr(self, '_pdb_path', None) or self.object_file_path
+        self.gl_widget = QtLegacyMolecularViewer(pdb_path)
         lower_layout.addWidget(self.gl_widget)
         
         # Add instructions
@@ -340,19 +449,12 @@ class MolecularViewerWindow(QMainWindow):
             "• Left mouse: Rotate\n"
             "• Mouse wheel: Zoom\n"
             "• R key: Reset view\n"
-            "• ESC: Exit"
+            "• W key: Toggle wireframe/filled\n"
+            "• ESC: Exit\n"
+            "• Chain A: Green, Chain B: Blue"
         )
         instructions.setStyleSheet("font-size: 12px; padding: 10px; background-color: #f0f0f0;")
         upper_layout.addWidget(instructions)
-    
-    def reset_view(self):
-        """Reset the view to default"""
-        self.gl_widget.rotation_x = 0.0
-        self.gl_widget.rotation_y = 0.0
-        self.gl_widget.zoom = 1.0
-        self.gl_widget.translation_x = 0.0
-        self.gl_widget.translation_y = 0.0
-        self.gl_widget.update()
     
     def show_info(self):
         """Show structure information"""
@@ -375,6 +477,9 @@ def main():
     
     # Path to the 2VUG.pdb file
     pdb_path = os.path.join(os.path.dirname(__file__), "data", "2VUG.pdb")
+    print(pdb_path)
+    pdb_path = os.path.abspath(pdb_path)
+    print(pdb_path)
     
     if not os.path.exists(pdb_path):
         print(f"Error: PDB file not found at {pdb_path}")
@@ -382,7 +487,7 @@ def main():
         return 1
     
     # Create and show the main window
-    window = MolecularViewerWindow(pdb_path)
+    window = LegacyMolecularViewerWindow(object_file_path=pdb_path)
     window.show()
     
     return app.exec()

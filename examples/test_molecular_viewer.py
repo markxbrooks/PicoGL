@@ -51,9 +51,10 @@ def test_pdb_loading():
                 chain_id = atom.chain_id
                 chain_counts[chain_id] = chain_counts.get(chain_id, 0) + 1
             
-            print(f"   C-alpha atoms per chain:")
-            for chain_id, count in chain_counts.items():
-                print(f"     Chain {chain_id}: {count} atoms")
+        print(f"   C-alpha atoms per chain:")
+        for chain_id, count in chain_counts.items():
+            color = "Green" if chain_id == 'A' else "Blue" if chain_id == 'B' else "White"
+            print(f"     Chain {chain_id}: {count} atoms ({color})")
             
             # Show first few C-alpha atoms
             print(f"\n📍 First 5 C-alpha atoms:")
@@ -97,7 +98,8 @@ def test_pdb_loading():
         
         print(f"   C-alpha bonds per chain:")
         for chain_id, count in chain_bonds.items():
-            print(f"     Chain {chain_id}: {count} bonds")
+            color = "Green" if chain_id == 'A' else "Blue" if chain_id == 'B' else "White"
+            print(f"     Chain {chain_id}: {count} bonds ({color})")
         
         print(f"\n✅ All tests passed!")
         return True
@@ -116,9 +118,9 @@ def test_molecular_viewer_import():
     
     try:
         # Try to import the molecular viewer
-        from qt_legacy_molecular_viewer import QtLegacyMolecularViewer, MolecularViewerWindow
+        from qt_legacy_molecular_viewer import QtLegacyMolecularViewer, LegacyMolecularViewerWindow
         print("✅ Successfully imported QtLegacyMolecularViewer")
-        print("✅ Successfully imported MolecularViewerWindow")
+        print("✅ Successfully imported LegacyMolecularViewerWindow")
         return True
     except ImportError as e:
         print(f"❌ Import error: {e}")
@@ -155,6 +157,13 @@ def main():
         print("🎉 All tests passed! The molecular viewer is ready to use.")
         print("\n🚀 To run the molecular viewer:")
         print("   python qt_legacy_molecular_viewer.py")
+        print("")
+        print("🎮 Controls:")
+        print("   • Left mouse: Rotate")
+        print("   • Mouse wheel: Zoom")
+        print("   • R key: Reset view")
+        print("   • W key: Toggle wireframe/filled spheres")
+        print("   • ESC: Exit")
     else:
         print("⚠️  Some tests failed. Please check the errors above.")
     

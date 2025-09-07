@@ -50,11 +50,13 @@ class LegacyQtObjectWindow(QMainWindow):
 
     def __init__(self, parent, gl_use_legacy=True):
         super().__init__()
+        self.parent = parent
         self.gl_use_legacy = gl_use_legacy
         self.layout: Optional[QVBoxLayout] = None
         self.gl_widget: Optional[QtObjectRenderer] = None
         self.setWindowTitle("PicoGL Qt Object Renderer - Legacy OpenGL")
         self.setGeometry(100, 100, 800, 600)
+        self.object_file_path = None
         self.ui_init()
 
     def ui_init(self):
