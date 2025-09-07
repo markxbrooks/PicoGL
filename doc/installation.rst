@@ -129,7 +129,7 @@ From Source
 
    .. code-block:: bash
 
-      git clone https://github.com/your-org/picogl.git
+      git clone https://github.com/markxbrooks/picogl.git
       cd picogl
 
 2. **Install in development mode**:

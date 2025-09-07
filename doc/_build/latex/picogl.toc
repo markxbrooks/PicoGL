@@ -355,3 +355,4 @@
 \contentsline {section}{\numberline {6.14}Changelog}{93}{section.6.14}%
 \contentsline {subsection}{\numberline {6.14.1}Version 1.0.0 (2025\sphinxhyphen {}01\sphinxhyphen {}06)}{93}{subsection.6.14.1}%
 \contentsline {chapter}{\numberline {7}Indices and tables}{94}{chapter.7}%
+\contentsline {chapter}{Index}{95}{section*.396}%
