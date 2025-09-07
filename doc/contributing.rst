@@ -24,14 +24,14 @@ Fork and Clone
 
    .. code-block:: bash
 
-      git clone https://github.com/your-username/picogl.git
+      git clone https://github.com/markxbrooks/picogl.git
       cd picogl
 
 3. **Add upstream remote**:
 
    .. code-block:: bash
 
-      git remote add upstream https://github.com/original-org/picogl.git
+      git remote add upstream https://github.com/markxbrooks/picogl.git
 
 4. **Create a feature branch**:
 
