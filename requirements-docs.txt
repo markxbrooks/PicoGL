@@ -1,0 +1,7 @@
+# Essential dependencies for documentation build
+sphinx>=7.0.0
+alabaster>=0.7.16
+numpy
+pillow
+pyglm
+PyOpenGL
