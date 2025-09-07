@@ -30,7 +30,7 @@ class LegacyPositionVBO(LegacyVBO):
         handle: int = None,
         data: np.ndarray = None,
         size: int = 3,
-        target: int = GL_ARRAY_BUFFER,
+        target: int = GL_ARRAY_BUFFER
     ):
         """Initialize the position VBO."""
         super().__init__(handle=handle, size=size, data=data, target=target)
