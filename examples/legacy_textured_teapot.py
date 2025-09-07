@@ -25,8 +25,8 @@ from typing import Optional
 from PySide6.QtWidgets import QApplication, QVBoxLayout, QWidget, QLabel, QPushButton, QComboBox
 from PySide6.QtCore import Qt, QTimer
 
-from picogl.ui.backend.qt.legacy.renderer import QtObjectRenderer
-from picogl.ui.backend.qt.legacy.window import QtObjectWindow
+from picogl.ui.backend.qt.legacy.renderer import LegacyQtObjectRenderer
+from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
 
 # OpenGL imports
 try:
@@ -45,7 +45,7 @@ from picogl.utils.loader.texture import TextureLoader
 BASE_DIR = Path(__file__).resolve().parent
 
 
-class LegacyTexturedTeapotRenderer(QtObjectRenderer):
+class LegacyTexturedTeapotRenderer(LegacyQtObjectRenderer):
     """
     Legacy textured teapot renderer using OpenGL 1.x/2.x
     
@@ -202,7 +202,7 @@ class LegacyTexturedTeapotRenderer(QtObjectRenderer):
             print(f"🔄 Changed texture to: {texture_name}")
 
 
-class LegacyTexturedTeapotWindow(QtObjectWindow):
+class LegacyTexturedTeapotWindow(LegacyQtObjectWindow):
     """
     Main window for the legacy textured teapot renderer
     """

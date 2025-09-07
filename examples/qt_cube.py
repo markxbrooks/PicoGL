@@ -34,8 +34,8 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from picogl.ui.backend.qt.renderer import QtObjectRenderer
-from picogl.ui.backend.qt.window import QtObjectWindow
+from picogl.ui.backend.qt.legacy.renderer import LegacyQtObjectRenderer
+from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
 
 # OpenGL imports
 try:
@@ -47,15 +47,15 @@ except ImportError as e:
     sys.exit(1)
 
 
-class QtCubeWindow(QtObjectWindow):
+class QtCubeWindow(LegacyQtObjectWindow):
     """
     Main window for the Qt Object renderer
     """
 
     def __init__(self):
-        super().__init__()
+        super().__init__(parent=self)
         self.layout: Optional[QVBoxLayout] = None
-        self.gl_widget: Optional[QtObjectRenderer] = None
+        self.gl_widget: Optional[LegacyQtObjectRenderer] = None
         self.setWindowTitle("PicoGL Qt Object Renderer - Legacy OpenGL")
         self.setGeometry(100, 100, 800, 600)
         self.ui_init()
@@ -90,7 +90,7 @@ class QtCubeWindow(QtObjectWindow):
         info_label.setMaximumHeight(150)
         layout.addWidget(info_label)
         # Create OpenGL widget
-        self.gl_widget = QtObjectRenderer()
+        self.gl_widget = LegacyQtObjectRenderer()
         layout.addWidget(self.gl_widget)
         # Create control buttons
         button_layout = QVBoxLayout()

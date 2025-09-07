@@ -17,7 +17,7 @@ from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.ui.backend.qt.base import GLBase
 
 
-class QtObjectRenderer(GLBase):
+class LegacyQtObjectRenderer(GLBase):
     """
     Qt-based cube renderer using legacy OpenGL
 

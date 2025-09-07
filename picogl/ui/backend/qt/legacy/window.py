@@ -43,7 +43,7 @@ except ImportError as e:
     sys.exit(1)
 
 
-class QtObjectWindow(QMainWindow):
+class LegacyQtObjectWindow(QMainWindow):
     """
     Main window for the Qt Object renderer
     """
