@@ -367,18 +367,18 @@ Taken from: https://tsherif.github.io/khronos-meetup-picogl/#/7
 
 ### Python 🐍 'raw' Open GL
 ```python
-    vertex_array = glGenVertexArrays(1)
-    glBindVertexArray(vertex_array)
+    vertex_array = GL.glGenVertexArrays(1)
+    GL.glBindVertexArray(vertex_array)
     
-    glBindBuffer(GL_ARRAY_BUFFER, position_buffer)
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, None)
-    glEnableVertexAttribArray(0)
+    GL.glBindBuffer(GL_ARRAY_BUFFER, position_buffer)
+    GL.glVertexAttribPointer(0, 3, GL.GL_FLOAT, GL.GL_FALSE, 0, None)
+    GL.glEnableVertexAttribArray(0)
     
-    glBindBuffer(GL_ARRAY_BUFFER, normal_buffer)
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, None)
-    glEnableVertexAttribArray(1)
+    GL.glBindBuffer(GL.GL_ARRAY_BUFFER, normal_buffer)
+    GL.glVertexAttribPointer(1, 3, GL.GL_FLOAT, GL.GL_FALSE, 0, None)
+    GL.glEnableVertexAttribArray(1)
     
-    glBindVertexArray(0)
+    GL.glBindVertexArray(0)
 ```
 
 ### PicoGL for Python 🐍
