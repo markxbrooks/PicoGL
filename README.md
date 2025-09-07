@@ -7,29 +7,6 @@ Peacock with goggles, geddit? 😊
 
 Whether you’re building interactive visualizations, scientific simulations, or games for fun, PicoGL gives you a clean, high-level API to work with shaders, buffers, and pipelines — while still letting you drop down to raw OpenGL when you need it.
 
-# 🔔 What this is not!
-After writing the code and naming it PicoGL, we realize there is a Javascript Library called PicoGL.js
- - It looks similar in ethos to this Python version
- - It looks vaguely similar to this Python syntactically
- - The existence of both could help porting Python to WebGL and vice-versa
-
-Let's compare setting up a Vertex Array Object (VAO) containing positions and normals in both languages:
-
-### PicoGL.js
-```javascript
-  var vertexArray = app.createVertexArray()
-  .vertexAttributeBuffer(0, positionBuffer)
-  .vertexAttributeBuffer(1, normalBuffer);
-```
-Taken from: https://tsherif.github.io/khronos-meetup-picogl/#/7
-
-### PicoGL for Python 🐍
-```python
-    vertex_array = VertexArrayObject()
-    vertex_array.add_vbo(index=0, data=positions, size=3)
-    vertex_array.add_vbo(index=1, data=normals, size=3)
-```
-
 ---
 ![teapot](newell_teapot.PNG)
 
@@ -356,4 +333,57 @@ qt_legacy_glmesh_molecular_viewer.py
                 colors=bond_colors_rgb
             )
             self.bonds_mesh.upload()
+```
+
+# 🔔 What this is not!
+After writing the code and naming it PicoGL, we realize there is a Javascript Library called PicoGL.js
+ - It looks similar in ethos to this Python version
+ - It looks vaguely similar to this Python syntactically
+ - The existence of both could help porting Python to WebGL and vice-versa
+
+Let's compare setting up a Vertex Array Object (VAO) containing positions and normals in both languages:
+
+### 'Raw' WebGL
+```javascript
+  vertexArray = gl.createBuffer(1)
+  gl.bindVertexArray(vertexArray);
+  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+  gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(0);
+  
+  gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
+  gl.vertexAttribPointer(1, 3, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(1);  
+  gl.bindVertexArray(null);
+```
+
+### PicoGL.js
+```javascript
+  var vertexArray = app.createVertexArray()
+  .vertexAttributeBuffer(0, positionBuffer)
+  .vertexAttributeBuffer(1, normalBuffer);
+```
+Taken from: https://tsherif.github.io/khronos-meetup-picogl/#/7
+
+### Python 🐍 'raw' Open GL
+```python
+vertex_array = glGenVertexArrays(1)
+glBindVertexArray(vertex_array)
+
+glBindBuffer(GL_ARRAY_BUFFER, position_buffer)
+glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, None)
+glEnableVertexAttribArray(0)
+
+glBindBuffer(GL_ARRAY_BUFFER, normal_buffer)
+glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, None)
+glEnableVertexAttribArray(1)
+
+glBindVertexArray(0)
+```
+
+### PicoGL for Python 🐍
+```python
+    vertex_array = VertexArrayObject()
+    vertex_array.add_vbo(index=0, data=positions, size=3)
+    vertex_array.add_vbo(index=1, data=normals, size=3)
 ```
