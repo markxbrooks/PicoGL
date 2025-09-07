@@ -1,7 +1,0 @@
-This is makeindex, version 2.17 [TeX Live 2025] (kpathsea + Thai support).
-Scanning style file ./python.ist.......done (7 attributes redefined, 0 ignored).
-Scanning input file picogl.idx....done (184 entries accepted, 0 rejected).
-Sorting entries....done (1454 comparisons).
-Generating output file picogl.ind....done (375 lines written, 0 warnings).
-Output written in picogl.ind.
-Transcript written in picogl.ilg.

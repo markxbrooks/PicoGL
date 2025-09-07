@@ -196,6 +196,7 @@ Texture Loading
 ~~~~~~~~~~~~~~~
 
 **Basic Loading**:
+
 .. code-block:: python
 
    from picogl.utils.loader.texture import TextureLoader
@@ -208,6 +209,7 @@ Texture Loading
    texture.bind()
 
 **Advanced Loading**:
+
 .. code-block:: python
 
    # Load with options
@@ -221,6 +223,7 @@ Texture Loading
    texture = loader.load()
 
 **Error Handling**:
+
 .. code-block:: python
 
    try:
@@ -240,6 +243,7 @@ Mesh Data Processing
 ~~~~~~~~~~~~~~~~~~~~
 
 **Vertex Processing**:
+
 .. code-block:: python
 
    import numpy as np

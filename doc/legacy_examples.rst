@@ -56,6 +56,7 @@ The most compatible teapot renderer, using only built-in OpenGL primitives.
 * ESC: Exit
 
 **Run**:
+
 .. code-block:: bash
 
    python examples/legacy_teapot_minimal.py
@@ -87,6 +88,7 @@ PicoGL-integrated legacy teapot with OBJ file support.
 * ESC: Exit
 
 **Run**:
+
 .. code-block:: bash
 
    python examples/legacy_teapot_fixed.py

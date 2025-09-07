@@ -1955,12 +1955,10 @@ The most compatible teapot renderer, using only built\sphinxhyphen{}in OpenGL pr
 
 \sphinxAtStartPar
 \sphinxstylestrong{Run}:
-.. code\sphinxhyphen{}block:: bash
-\begin{quote}
 
-\sphinxAtStartPar
-python examples/legacy\_teapot\_minimal.py
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+python\PYG{+w}{ }examples/legacy\PYGZus{}teapot\PYGZus{}minimal.py
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Compatibility}: Maximum (works on any OpenGL system)
@@ -1995,12 +1993,10 @@ PicoGL\sphinxhyphen{}integrated legacy teapot with OBJ file support.
 
 \sphinxAtStartPar
 \sphinxstylestrong{Run}:
-.. code\sphinxhyphen{}block:: bash
-\begin{quote}
 
-\sphinxAtStartPar
-python examples/legacy\_teapot\_fixed.py
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+python\PYG{+w}{ }examples/legacy\PYGZus{}teapot\PYGZus{}fixed.py
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Compatibility}: Medium (requires PicoGL library)
@@ -3657,21 +3653,17 @@ The \sphinxcode{\sphinxupquote{MeshData}} class is the central data structure fo
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.renderer import MeshData
-import numpy as np
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{renderer}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{MeshData}
+\PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{numpy}\PYG{+w}{ }\PYG{k}{as}\PYG{+w}{ }\PYG{n+nn}{np}
 
-\sphinxAtStartPar
-\# Create mesh data
-vertices = np.array({[}{[}0, 0, 0{]}, {[}1, 0, 0{]}, {[}0, 1, 0{]}{]}, dtype=np.float32)
-colors = np.array({[}{[}1, 0, 0{]}, {[}0, 1, 0{]}, {[}0, 0, 1{]}{]}, dtype=np.float32)
+\PYG{c+c1}{\PYGZsh{} Create mesh data}
+\PYG{n}{vertices} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}\PYG{p}{[}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{]}\PYG{p}{,} \PYG{n}{dtype}\PYG{o}{=}\PYG{n}{np}\PYG{o}{.}\PYG{n}{float32}\PYG{p}{)}
+\PYG{n}{colors} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}\PYG{p}{[}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{]}\PYG{p}{,} \PYG{n}{dtype}\PYG{o}{=}\PYG{n}{np}\PYG{o}{.}\PYG{n}{float32}\PYG{p}{)}
 
-\sphinxAtStartPar
-data = MeshData.from\_raw(vertices=vertices, colors=colors)
-\end{quote}
+\PYG{n}{data} \PYG{o}{=} \PYG{n}{MeshData}\PYG{o}{.}\PYG{n}{from\PYGZus{}raw}\PYG{p}{(}\PYG{n}{vertices}\PYG{o}{=}\PYG{n}{vertices}\PYG{p}{,} \PYG{n}{colors}\PYG{o}{=}\PYG{n}{colors}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsubsection{GLContext}

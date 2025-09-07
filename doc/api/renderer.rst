@@ -17,6 +17,7 @@ MeshData
 The ``MeshData`` class is the central data structure for storing 3D mesh information including vertices, colors, normals, and texture coordinates.
 
 **Example**:
+
 .. code-block:: python
 
    from picogl.renderer import MeshData
