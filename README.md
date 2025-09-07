@@ -78,7 +78,7 @@ https://github.com/markxbrooks/PicoGL/blob/main/doc/_build/latex/picogl.pdf
 The Docs directory within this repository contains the source files and additional reference materials for offline access or custom builds.
 Whether you prefer browsing online, reading offline, or exploring the raw documentation files, PicoGL’s documentation provides comprehensive guidance for using the library effectively.
 
-##  Example usage to show a cube:
+## 🎲  Example usage to show a cube:
 Found in the Examples directory, with mouse control
 
 ![cube](cube.png)
@@ -109,7 +109,7 @@ if __name__ == "__main__":
     main()
 
 ```
-### With a corresponding renderer
+### 🎨With a corresponding renderer
 
 ```python
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES
@@ -166,7 +166,7 @@ class ObjectRenderer(RendererBase):
             cube_vao.draw(mode=GL_TRIANGLES, index_count=self.data.vertex_count)
 
 ```
-## Textured object
+## ␨ Textured object
 ![texture](texture.PNG)
 
 ```python
@@ -204,7 +204,7 @@ if __name__ == "__main__":
     main()
 ```
 
-## Teapot object
+## 🫖Teapot object
 ![teapot](newell_teapot.PNG)
 
 ```python
@@ -243,4 +243,93 @@ def main():
 if __name__ == "__main__":
     """Run the main function."""
     main()
+```
+
+
+## ⚛Protein Molecule 
+
+Training wheels off now...
+![pdb molecule viewer](pdb_viewer_320.gif)
+
+qt_legacy_glmesh_molecular_viewer.py
+```python
+    def _load_pdb_structure(self):
+        """Load PDB structure and extract C-alpha atoms"""
+        print(f"Loading PDB structure from: {self.pdb_path}")
+
+        try:
+            self.pdb_loader = PDBLoader(self.pdb_path)
+            structure = self.pdb_loader.structure
+
+            print(f"✓ Found {len(structure.atoms)} total atoms")
+            print(f"✓ Structure: {structure.title}")
+            print(f"✓ Chains: {structure.chains}")
+            print(f"✓ Residues: {len(structure.residues)}")
+
+            # Extract C-alpha atoms
+            self.calpha_atoms = [atom for atom in structure.atoms if atom.name == "CA"]
+            print(f"✓ Found {len(self.calpha_atoms)} C-alpha atoms")
+
+            # Generate C-alpha bonds (sequential bonds within each chain)
+            self.calpha_bonds = self._generate_calpha_bonds()
+            print(f"✓ Generated {len(self.calpha_bonds)} C-alpha bonds")
+
+            # Note: Mesh data will be created in initializeGL when OpenGL context is ready
+
+        except Exception as e:
+            print(f"Error loading PDB file: {e}")
+            QMessageBox.critical(None, "Error", f"Failed to load PDB file: {e}")
+
+    def _generate_calpha_bonds(self):
+        """Generate bonds between consecutive C-alpha atoms in the same chain"""
+        bonds = []
+
+        # Group atoms by chain
+        chain_atoms = {}
+        for atom in self.calpha_atoms:
+            if atom.chain_id not in chain_atoms:
+                chain_atoms[atom.chain_id] = []
+            chain_atoms[atom.chain_id].append(atom)
+
+        # Create bonds within each chain
+        for chain_id, atoms in chain_atoms.items():
+            # Sort atoms by residue number
+            atoms.sort(key=lambda a: a.res_seq)
+
+            # Create bonds between consecutive atoms
+            for i in range(len(atoms) - 1):
+                bonds.append((atoms[i], atoms[i + 1]))
+
+        return bonds
+
+    def _create_mesh_data(self):
+        """Create MeshData for atoms and bonds using PicoGL"""
+        # Create sphere mesh data for atoms
+        if self._initialized:
+            return
+        atom_vertices, atom_normals, atom_colors_rgba, atom_indices = self._create_sphere_mesh_data()
+
+        # Create line mesh data for bonds
+        bond_vertices, bond_colors, bond_indices = self._create_bond_mesh_data()
+        # Convert RGBA colors to RGB for LegacyGLMesh
+        atom_colors_rgb = atom_colors_rgba[:, :3]  # Remove alpha channel
+        mesh_data = MeshData.from_raw(vertices=atom_vertices,
+                                      indices=atom_indices,
+                                      colors=atom_colors_rgb)
+
+        # Create atoms mesh
+        if atom_vertices is not None:
+            self.atoms_mesh = LegacyGLMesh.from_mesh_data(mesh_data)
+            self.atoms_mesh.upload()
+
+        # Create bonds mesh
+        if bond_vertices is not None:
+            # Convert RGBA colors to RGB for LegacyGLMesh
+            bond_colors_rgb = bond_colors[:, :3]  # Remove alpha channel
+            self.bonds_mesh = LegacyGLMesh(
+                vertices=bond_vertices,
+                faces=bond_indices,
+                colors=bond_colors_rgb
+            )
+            self.bonds_mesh.upload()
 ```

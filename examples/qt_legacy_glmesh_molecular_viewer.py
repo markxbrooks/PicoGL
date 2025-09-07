@@ -439,7 +439,7 @@ class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
     def set_layout(self, layout):
         """set layout"""
         # Add info label
-        info_label = QLabel("2VUG PDB Structure - C-alpha Atoms using LegacyGLMesh (Chain A: Green, Chain B: Blue)")
+        info_label = QLabel("PDB Structure - C-alpha Atoms (Chain A: Green, Chain B: Blue)")
         info_label.setStyleSheet("font-size: 14px; font-weight: bold; padding: 10px;")
 
         splitter = QSplitter(Qt.Vertical)
