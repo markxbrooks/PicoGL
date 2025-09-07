@@ -11,7 +11,7 @@ Whether you’re building interactive visualizations, scientific simulations, or
 After writing the code and naming it PicoGL, we realize there is a Javascript Library called PicoGL.js
  - It looks similar in ethos to this Python version
  - It looks vaguely similar to this Python syntactically
- - The existence of both could help porting python to WebGL and vice-versa
+ - The existence of both could help porting Python to WebGL and vice-versa
 
 ### PicoGL.js
 ```javascript
