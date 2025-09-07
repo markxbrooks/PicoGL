@@ -13,7 +13,7 @@ After writing the code and naming it PicoGL, we realize there is a Javascript Li
 ### It looks vaguely similar to this Python syntactically
 ### The existence of both could help porting python to WebGL and vice-versa
 
-### PicoGl.js
+### PicoGL.js
 ```javascript
   var vertexArray = app.createVertexArray()
   .vertexAttributeBuffer(0, positionBuffer)
