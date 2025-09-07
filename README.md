@@ -42,7 +42,7 @@ Using the Legacy profile and Vertex Arrays (actually an equivalent called Vertex
 we can produce similar OpenGL applications with respectable performance.
 
 ```python see qt_cube.py
-    def initialize(self):
+def initialize(self):
     if self._initialized:
         return
     self.mesh_data = MeshData.from_raw(
