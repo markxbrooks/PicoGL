@@ -384,6 +384,6 @@ Taken from: https://tsherif.github.io/khronos-meetup-picogl/#/7
 ### PicoGL for Python 🐍
 ```python
     vertex_array = VertexArrayObject()
-    vertex_array.add_vbo(index=0, data=positions, size=3)
-    vertex_array.add_vbo(index=1, data=normals, size=3)
+    vertex_array.add_vbo(index=0, data=position_buffer, size=3)
+    vertex_array.add_vbo(index=1, data=normal_buffer, size=3)
 ```
