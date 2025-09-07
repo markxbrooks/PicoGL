@@ -366,10 +366,10 @@ Uploading Data
 .. code-block:: python
 
    # Upload vertex data
-   vbg.add_vbo("position", vertices, 3)
+   vbg.add_vbo(index=0, vbo_name="position", data=vertices, size=3)
    
    # Upload color data
-   vbg.add_vbo("color", colors, 3)
+   vbg.add_vbo(index=1, vbo_name="color", data=colors, size=3)
    
    # Upload element data
    vbg.add_ebo(indices)

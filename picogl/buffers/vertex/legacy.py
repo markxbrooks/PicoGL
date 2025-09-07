@@ -138,7 +138,7 @@ class VertexBufferGroup(VertexBase):
         vbo_class = self.get_buffer_class(name)
         if data is None or size <= 0:
             raise ValueError("data must be a numpy array, size > 0")
-        vbo = vbo_class(data=data, size=size, handle=handle)
+        vbo = vbo_class(data=data, size=size, handle=handle, dtype=dtype)
         return self.add_vbo_object(name, vbo)
 
     def get_buffer_class(self, name: str = "vbo") -> type[LegacyVBO]:

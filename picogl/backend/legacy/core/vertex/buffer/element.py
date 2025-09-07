@@ -1,7 +1,7 @@
 import ctypes
 
 import numpy as np
-from OpenGL.GL import glDrawElements
+from OpenGL.GL import glDrawElements, GL_FLOAT
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_LINES, GL_UNSIGNED_INT
 from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ELEMENT_ARRAY_BUFFER
 
@@ -17,9 +17,10 @@ class LegacyEBO(LegacyVBO):
         data: np.ndarray = None,
         target: int = GL_ELEMENT_ARRAY_BUFFER,
         size: int = 3,
+        dtype: int = GL_FLOAT
     ):
         """constructor"""
-        super().__init__(handle=handle, data=data, target=target, size=size)
+        super().__init__(handle=handle, data=data, target=target, size=size, dtype=dtype)
 
     def draw(
         self,
