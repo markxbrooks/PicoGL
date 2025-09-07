@@ -1,0 +1,30 @@
+picogl.backend.legacy.core.camera.setup.smooth
+==============================================
+
+.. py:module:: picogl.backend.legacy.core.camera.setup.smooth
+
+.. autoapi-nested-parse::
+
+   Enable Smoothing
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.backend.legacy.core.camera.setup.smooth.enable_smoothing
+
+
+Module Contents
+---------------
+
+.. py:function:: enable_smoothing() -> None
+
+   enable_smoothing
+
+   :return: None
+   setup smoothing in legacy picogl
+
+

@@ -1,0 +1,54 @@
+picogl.ui.backend.glut.window.object
+====================================
+
+.. py:module:: picogl.ui.backend.glut.window.object
+
+.. autoapi-nested-parse::
+
+   Object Window for displaying Mesh Data
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.ui.backend.glut.window.object.RenderWindow
+
+
+Module Contents
+---------------
+
+.. py:class:: RenderWindow(width: int = 800, height: int = 600, title: str = 'RenderWindow', data: picogl.renderer.MeshData | None = None, base_dir: str | pathlib.Path | None = None, glsl_dir: str | pathlib.Path | None = None, use_texture: bool = False, texture_file: str | None = None, resource_subdir: str = 'tu02', *args, **kwargs)
+
+   Bases: :py:obj:`picogl.ui.backend.glut.window.glut.GlutRendererWindow`
+
+
+   Unified render window supporting textured or untextured rendering.
+
+
+   .. py:attribute:: context
+
+
+   .. py:attribute:: data
+      :value: None
+
+
+
+   .. py:attribute:: base_dir
+      :value: None
+
+
+
+   .. py:attribute:: glsl_dir
+      :value: None
+
+
+
+   .. py:attribute:: renderer
+
+
+   .. py:method:: initialize()
+
+

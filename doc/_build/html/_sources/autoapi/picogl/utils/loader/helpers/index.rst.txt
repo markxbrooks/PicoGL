@@ -1,0 +1,27 @@
+picogl.utils.loader.helpers
+===========================
+
+.. py:module:: picogl.utils.loader.helpers
+
+.. autoapi-nested-parse::
+
+   Log properties from an ObjectLoader
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.utils.loader.helpers.log_properties
+
+
+Module Contents
+---------------
+
+.. py:function:: log_properties(loader: ObjectLoader)
+
+   log object properties
+
+

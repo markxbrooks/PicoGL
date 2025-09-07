@@ -1,0 +1,232 @@
+picogl.backend.modern.core.vertex.array.object
+==============================================
+
+.. py:module:: picogl.backend.modern.core.vertex.array.object
+
+.. autoapi-nested-parse::
+
+   vertex_array_object.py
+
+   This module defines the `VertexArrayObject` class, which encapsulates the creation, management,
+   and usage of OpenGL Vertex Array Objects (VAOs) in modern OpenGL rendering workflows.
+
+   The `VertexArrayObject` class inherits from `VertexBuffer` and provides
+   a clean, object-oriented interface for managing VAO handles and vertex
+   attribute configurations.
+
+   It supports binding/unbinding operations,
+   attribute registration, and rendering via `glDrawArrays`.
+
+   Features:
+   - Automatic VAO generation if none is provided
+   - Storage and enabling of vertex attribute definitions
+   - Integration with VBOs via `ModernVBO` (used as context managers)
+   - Simplified draw calls for points or other primitive modes
+   - Graceful deletion and handle management
+
+   Dependencies:
+   - numpy
+   - PyOpenGL (OpenGL.GL and OpenGL.raw.GL)
+
+   Example usage:
+   ==============
+   >>>vao = VertexArrayObject()
+   ...vao.add_attribute(index=0, vbo=vbo, size=3)
+   ...vao.add_attribute(index=1, vbo=colors, size=3)
+   ...vao.update(index_count=100)
+
+   Intended for OpenGL 3.0+ with VAO support.
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.backend.modern.core.vertex.array.object.VertexArrayObject
+
+
+Module Contents
+---------------
+
+.. py:class:: VertexArrayObject(handle: int = None)
+
+   Bases: :py:obj:`picogl.buffers.base.VertexBase`
+
+
+   OpenGL Vertex Array Objects (VAO) class
+
+
+   .. py:attribute:: _configured
+      :type:  bool
+      :value: False
+
+
+
+   .. py:attribute:: attributes
+      :value: []
+
+
+
+   .. py:attribute:: vbos
+      :value: []
+
+
+
+   .. py:attribute:: named_vbos
+      :type:  dict[str, picogl.backend.modern.core.vertex.base.VertexBuffer]
+
+
+   .. py:attribute:: vao
+      :value: None
+
+
+
+   .. py:attribute:: vbo
+      :value: None
+
+
+
+   .. py:attribute:: cbo
+      :value: None
+
+
+
+   .. py:attribute:: nbo
+      :value: None
+
+
+
+   .. py:attribute:: ebo
+      :value: None
+
+
+
+   .. py:attribute:: layout
+      :type:  Optional[picogl.buffers.attributes.LayoutDescriptor]
+      :value: None
+
+
+
+   .. py:method:: bind()
+
+      Bind the VAO for use in rendering.
+
+
+
+   .. py:method:: unbind()
+
+      Unbind the VAO by binding to zero.
+
+
+
+   .. py:method:: delete()
+
+      Delete the VAO from GPU memory.
+
+
+
+   .. py:method:: set_layout(layout: picogl.buffers.attributes.LayoutDescriptor) -> None
+
+      set_layout
+
+      :param layout: LayoutDescriptor: The layout descriptor to define the vertex attribute format.
+      :raises: None
+
+      Sets the layout for the rendering setup by binding the buffers and configuring the attributes.
+      The state is stored in the Vertex Array Object (VAO). This method assumes a single Vertex Buffer
+      Object (VBO) holds all position data but can be adapted as required. Handles optional usage of
+      Normal Buffer Object (NBO) and Element Buffer Object (EBO) if present.
+
+
+
+   .. py:method:: add_vbo_object(name: str, vbo: LegacyVBO) -> LegacyVBO
+
+      Register a VBO by semantic name or shorthand alias.
+
+
+
+   .. py:method:: get_vbo_object(name: str) -> LegacyVBO
+
+      Retrieve a VBO by its semantic or shorthand name.
+
+
+
+   .. py:method:: add_vbo(index: int, data: numpy.ndarray, size: int, dtype: int = GL_FLOAT, name: str = None, handle: int = None) -> picogl.backend.modern.core.vertex.buffer.object.ModernVBO
+
+      Add a Vertex Buffer Object (VBO) to the VAO and set its attributes.
+
+      :param handle:
+      :param index: VAO attribute index
+      :param data: Vertex data
+      :param size: Size per vertex (e.g., 3 for vec3)
+      :param dtype: OpenGL data type (e.g., GL_FLOAT)
+      :param name: Optional semantic name (e.g., "position", "color")
+      :return: OpenGL buffer handle (GLuint)
+
+
+
+   .. py:method:: delete_buffers()
+
+      delete_buffers
+
+      :return: None
+
+
+
+   .. py:method:: add_attribute(index: int, vbo: int, size: int = 3, dtype: int = GL_FLOAT, normalized: bool = False, stride: int = 0, offset: int = 0)
+
+      add_attribute
+
+      :param index: int Index of the vertex attribute.
+      :param vbo: int Vertex Buffer Object (VBO) associated with this attribute.
+      :param size: int Size of the vertex attribute (e.g., 3 for a 3D vector).
+      :param dtype: int Data type of the vertex attribute (default is GL_FLOAT).
+      :param normalized: bool Whether the data is normalized (default is False).
+      :param stride: int Byte offset between consecutive vertex attributes (default is 0).
+      :param offset: int Byte offset to the first component of the
+      vertex attribute (default is 0).
+      Add a vertex attribute to the VAO.
+
+
+
+   .. py:method:: add_ebo(data: numpy.ndarray) -> picogl.backend.modern.core.vertex.buffer.element.ModernEBO
+
+      add_ebo
+
+      :param data: np.ndarray
+      :return: int
+
+
+
+   .. py:method:: set_ebo(ebo: int) -> int
+
+      add_ebo
+
+      :param ebo: int
+      :return: int
+
+
+
+   .. py:property:: index_count
+      :type: str | int | None
+
+
+      Return the number of indices in the EBO.
+
+      :return: int
+
+
+   .. py:method:: draw(index_count: int = None, dtype: int = GL_UNSIGNED_INT, mode: int = GL_POINTS, pointer: int = ctypes.c_void_p(0))
+
+      draw
+
+      :param pointer: ctypes.c_void_p(0)
+      :param dtype: GL_UNSIGNED_INT
+      :param index_count: int Number of vertices to draw.
+      :param mode: int e.g. GL_POINT
+      :return: None
+
+
+

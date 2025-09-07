@@ -1,0 +1,95 @@
+picogl.renderer.object
+======================
+
+.. py:module:: picogl.renderer.object
+
+.. autoapi-nested-parse::
+
+   Object renderer module.
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.renderer.object.ObjectRenderer
+
+
+Module Contents
+---------------
+
+.. py:class:: ObjectRenderer(context: picogl.renderer.GLContext, data: picogl.renderer.MeshData, base_dir: str | pathlib.Path | None = None, glsl_dir: str | pathlib.Path | None = None, use_texture: bool = False, texture_file: str | None = None, resource_subdir: str = 'tu02')
+
+   Bases: :py:obj:`picogl.renderer.RendererBase`
+
+
+   Unified renderer for textured and untextured objects.
+
+
+   .. py:attribute:: base_dir
+      :value: None
+
+
+
+   .. py:attribute:: resource_subdir
+      :value: 'tu02'
+
+
+
+   .. py:attribute:: texture_file
+      :value: None
+
+
+
+   .. py:attribute:: context
+
+
+   .. py:attribute:: data
+
+
+   .. py:attribute:: show_model
+      :value: True
+
+
+
+   .. py:attribute:: glsl_dir
+      :value: None
+
+
+
+   .. py:attribute:: use_texture
+      :value: False
+
+
+
+   .. py:attribute:: texture
+      :value: None
+
+
+
+   .. py:method:: initialize_shaders()
+
+      Load and compile shaders.
+
+
+
+   .. py:method:: initialize()
+
+      Create VAO and VBOs once.
+
+
+
+   .. py:method:: render() -> None
+
+      Dispatch render pass.
+
+
+
+   .. py:method:: _draw_model()
+
+      Draw the model
+
+
+

@@ -1,0 +1,45 @@
+picogl.backend.modern.core.shader.mvp.key
+=========================================
+
+.. py:module:: picogl.backend.modern.core.shader.mvp.key
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.backend.modern.core.shader.mvp.key.Key
+
+
+Module Contents
+---------------
+
+.. py:class:: Key
+
+   Bases: :py:obj:`enum.Enum`
+
+
+   Generic enumeration.
+
+   Derive from this class to define new enumerations.
+
+
+   .. py:attribute:: UP
+
+
+   .. py:attribute:: DOWN
+
+
+   .. py:attribute:: LEFT
+
+
+   .. py:attribute:: RIGHT
+
+
+   .. py:attribute:: ESCAPE
+
+
+   .. py:attribute:: SPACE
+
+

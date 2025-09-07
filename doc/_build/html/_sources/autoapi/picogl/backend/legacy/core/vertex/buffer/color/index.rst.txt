@@ -1,0 +1,31 @@
+picogl.backend.legacy.core.vertex.buffer.color
+==============================================
+
+.. py:module:: picogl.backend.legacy.core.vertex.buffer.color
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.backend.legacy.core.vertex.buffer.color.LegacyColorVBO
+
+
+Module Contents
+---------------
+
+.. py:class:: LegacyColorVBO(handle: int = None, data: numpy.ndarray = None, size: int = 3)
+
+   Bases: :py:obj:`picogl.backend.legacy.core.vertex.buffer.vertex.LegacyVBO`
+
+
+   Specialized VBO class for color attributes.
+
+
+   .. py:method:: configure()
+
+      Configure vertex attribute pointer for colors.
+
+
+

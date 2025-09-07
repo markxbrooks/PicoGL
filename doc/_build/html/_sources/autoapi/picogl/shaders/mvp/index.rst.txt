@@ -1,0 +1,36 @@
+picogl.shaders.mvp
+==================
+
+.. py:module:: picogl.shaders.mvp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.shaders.mvp.calculate_mvp_matrix
+   picogl.shaders.mvp.set_mvp_matrix_to_uniform_id
+
+
+Module Contents
+---------------
+
+.. py:function:: calculate_mvp_matrix(context: object, width: int = 1920, height: int = 1080)
+
+   calculate_mvp_matrix
+
+   :param context: GlContext
+   :param width: int
+   :param height: int
+
+
+.. py:function:: set_mvp_matrix_to_uniform_id(mvp_id: int, mvp_matrix: numpy.ndarray) -> None
+
+   set_mvp_matrix_to_uniform_id
+
+   :param mvp_id: int
+   :param mvp_matrix: np.ndarray
+   :return: None
+
+

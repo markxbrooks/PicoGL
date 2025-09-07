@@ -187,6 +187,7 @@ Slow Rendering
 * Batch similar operations
 
 **Example**:
+
 .. code-block:: python
 
    # Inefficient rendering
@@ -213,6 +214,7 @@ Memory Issues
 * Use efficient data types
 
 **Example**:
+
 .. code-block:: python
 
    # Memory leak
@@ -245,6 +247,7 @@ Frame Rate Issues
 * Minimize state changes
 
 **Example**:
+
 .. code-block:: python
 
    # Inefficient rendering
@@ -269,6 +272,7 @@ Enable Debug Output
 ~~~~~~~~~~~~~~~~~~~
 
 **OpenGL Error Checking**:
+
 .. code-block:: python
 
    def check_gl_error():
@@ -283,6 +287,7 @@ Enable Debug Output
    check_gl_error()
 
 **Debug Information**:
+
 .. code-block:: python
 
    def print_gl_info():
@@ -292,6 +297,7 @@ Enable Debug Output
        print(f"Extensions: {glGetString(GL_EXTENSIONS)}")
 
 **Performance Profiling**:
+
 .. code-block:: python
 
    import time
@@ -460,6 +466,7 @@ When reporting issues, include:
    - Relevant configuration
 
 **Example Issue Report**:
+
 .. code-block:: text
 
    **System**: macOS 12.0, Python 3.9, Intel HD Graphics 6000

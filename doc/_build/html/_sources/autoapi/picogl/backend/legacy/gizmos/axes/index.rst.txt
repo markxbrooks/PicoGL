@@ -1,0 +1,6 @@
+picogl.backend.legacy.gizmos.axes
+=================================
+
+.. py:module:: picogl.backend.legacy.gizmos.axes
+
+

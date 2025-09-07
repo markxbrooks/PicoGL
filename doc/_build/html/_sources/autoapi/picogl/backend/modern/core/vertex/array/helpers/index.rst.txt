@@ -1,0 +1,29 @@
+picogl.backend.modern.core.vertex.array.helpers
+===============================================
+
+.. py:module:: picogl.backend.modern.core.vertex.array.helpers
+
+.. autoapi-nested-parse::
+
+   Enable points rendering state
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.backend.modern.core.vertex.array.helpers.enable_points_rendering_state
+
+
+Module Contents
+---------------
+
+.. py:function:: enable_points_rendering_state() -> None
+
+   enable_points_rendering_state
+
+   :return: None
+
+

@@ -1,0 +1,18 @@
+picogl.backend.modern.core.camera.matrix
+========================================
+
+.. py:module:: picogl.backend.modern.core.camera.matrix
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/picogl/backend/modern/core/camera/matrix/projection/index
+   /autoapi/picogl/backend/modern/core/camera/matrix/rotation/index
+   /autoapi/picogl/backend/modern/core/camera/matrix/update/index
+   /autoapi/picogl/backend/modern/core/camera/matrix/view/index
+
+

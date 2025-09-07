@@ -26,21 +26,25 @@ Basic Test Execution
 ~~~~~~~~~~~~~~~~~~~~
 
 **Run all tests**:
+
 .. code-block:: bash
 
    python -m unittest discover tests
 
 **Run specific test file**:
+
 .. code-block:: bash
 
    python -m unittest tests.test_vertex_array_object
 
 **Run specific test method**:
+
 .. code-block:: bash
 
    python -m unittest tests.test_vertex_array_object.TestVertexArrayObject.test_initialization
 
 **Run with verbose output**:
+
 .. code-block:: bash
 
    python -m unittest discover tests -v
@@ -49,21 +53,25 @@ Using pytest
 ~~~~~~~~~~~~
 
 **Install pytest**:
+
 .. code-block:: bash
 
    pip install pytest pytest-cov
 
 **Run tests with pytest**:
+
 .. code-block:: bash
 
    pytest tests/
 
 **Run with coverage**:
+
 .. code-block:: bash
 
    pytest tests/ --cov=picogl
 
 **Run specific test**:
+
 .. code-block:: bash
 
    pytest tests/test_vertex_array_object.py::TestVertexArrayObject::test_initialization
@@ -77,6 +85,7 @@ Unit Tests
 Unit tests verify individual components in isolation:
 
 **VertexArrayObject Tests**:
+
 .. code-block:: python
 
    class TestVertexArrayObject(unittest.TestCase):
@@ -95,6 +104,7 @@ Unit tests verify individual components in isolation:
            self.assertIsNotNone(vao.ebo)
 
 **MeshData Tests**:
+
 .. code-block:: python
 
    class TestMeshData(unittest.TestCase):
@@ -113,6 +123,7 @@ Integration Tests
 Integration tests verify component interactions:
 
 **Renderer Integration**:
+
 .. code-block:: python
 
    class TestRendererIntegration(unittest.TestCase):
@@ -136,6 +147,7 @@ Performance Tests
 Performance tests verify rendering performance:
 
 **Rendering Performance**:
+
 .. code-block:: python
 
    class TestRenderingPerformance(unittest.TestCase):
@@ -162,6 +174,7 @@ Compatibility Tests
 Compatibility tests verify cross-platform functionality:
 
 **OpenGL Version Compatibility**:
+
 .. code-block:: python
 
    class TestOpenGLCompatibility(unittest.TestCase):
@@ -188,6 +201,7 @@ OpenGL Mocking
 Since OpenGL requires a graphics context, tests use mocking:
 
 **Global OpenGL Mocking**:
+
 .. code-block:: python
 
    class TestVertexArrayObject(unittest.TestCase):
@@ -207,6 +221,7 @@ Since OpenGL requires a graphics context, tests use mocking:
                patch_obj.stop()
 
 **Specific Function Mocking**:
+
 .. code-block:: python
 
    def test_error_handling(self):
@@ -221,6 +236,7 @@ Dependency Mocking
 Mock external dependencies:
 
 **NumPy Mocking**:
+
 .. code-block:: python
 
    @patch('numpy.array')
@@ -230,6 +246,7 @@ Mock external dependencies:
        mock_array.assert_called_once()
 
 **PIL Mocking**:
+
 .. code-block:: python
 
    @patch('PIL.Image.open')
@@ -248,6 +265,7 @@ Test Fixtures
 Create reusable test data:
 
 **Vertex Data**:
+
 .. code-block:: python
 
    class TestData:
@@ -274,6 +292,7 @@ Create reusable test data:
            ], dtype=np.uint32)
 
 **Mock Objects**:
+
 .. code-block:: python
 
    class MockGLContext:
@@ -292,6 +311,7 @@ Test Utilities
 Create helper functions for testing:
 
 **OpenGL Context Testing**:
+
 .. code-block:: python
 
    def create_mock_opengl_context():
@@ -301,6 +321,7 @@ Create helper functions for testing:
            return mock_get_string
 
 **Error Testing**:
+
 .. code-block:: python
 
    def test_with_gl_error(error_code, expected_exception):
@@ -317,6 +338,7 @@ GitHub Actions
 ~~~~~~~~~~~~~~
 
 **Test Workflow**:
+
 .. code-block:: yaml
 
    name: Tests
@@ -353,6 +375,7 @@ GitHub Actions
          uses: codecov/codecov-action@v1
 
 **Build Workflow**:
+
 .. code-block:: yaml
 
    name: Build
@@ -404,11 +427,13 @@ Coverage Requirements
 * Fallback implementations
 
 **Coverage Report**:
+
 .. code-block:: bash
 
    pytest tests/ --cov=picogl --cov-report=html --cov-report=term
 
 **Coverage Configuration**:
+
 .. code-block:: ini
 
    [coverage:run]
@@ -433,6 +458,7 @@ Linting
 ~~~~~~~
 
 **flake8 Configuration**:
+
 .. code-block:: ini
 
    [flake8]
@@ -446,6 +472,7 @@ Linting
        dist
 
 **Run Linting**:
+
 .. code-block:: bash
 
    flake8 picogl/
@@ -455,6 +482,7 @@ Type Checking
 ~~~~~~~~~~~~~
 
 **mypy Configuration**:
+
 .. code-block:: ini
 
    [mypy]
@@ -473,6 +501,7 @@ Type Checking
    strict_equality = True
 
 **Run Type Checking**:
+
 .. code-block:: bash
 
    mypy picogl/
@@ -482,6 +511,7 @@ Formatting
 ~~~~~~~~~~
 
 **black Configuration**:
+
 .. code-block:: toml
 
    [tool.black]
@@ -502,6 +532,7 @@ Formatting
    '''
 
 **Run Formatting**:
+
 .. code-block:: bash
 
    black picogl/
@@ -514,6 +545,7 @@ Writing Tests
 ~~~~~~~~~~~~~
 
 **Test Naming**:
+
 .. code-block:: python
 
    def test_initialization_with_valid_data(self):
@@ -525,6 +557,7 @@ Writing Tests
        pass
 
 **Test Structure**:
+
 .. code-block:: python
 
    def test_functionality(self):
@@ -539,6 +572,7 @@ Writing Tests
        self.assertEqual(actual_result, expected_result)
 
 **Test Documentation**:
+
 .. code-block:: python
 
    def test_complex_functionality(self):
@@ -583,11 +617,13 @@ Debugging Tests
 ~~~~~~~~~~~~~~~
 
 **Verbose Output**:
+
 .. code-block:: bash
 
    python -m unittest discover tests -v
 
 **Debug Specific Test**:
+
 .. code-block:: python
 
    import pdb
@@ -597,6 +633,7 @@ Debugging Tests
        # Test code here
 
 **Test Isolation**:
+
 .. code-block:: python
 
    def test_isolated(self):

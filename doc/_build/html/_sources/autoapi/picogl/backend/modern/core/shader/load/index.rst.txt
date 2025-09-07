@@ -1,0 +1,25 @@
+picogl.backend.modern.core.shader.load
+======================================
+
+.. py:module:: picogl.backend.modern.core.shader.load
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.backend.modern.core.shader.load.load_shader
+
+
+Module Contents
+---------------
+
+.. py:function:: load_shader(shader_type: picogl.shaders.type.ShaderType)
+
+   A decorator to load the shader and set the MVP matrix.
+
+   :param shader_type: The type of shader to use.
+   :type shader_type: ShaderType
+
+

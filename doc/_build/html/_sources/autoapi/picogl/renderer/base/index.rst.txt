@@ -1,0 +1,118 @@
+picogl.renderer.base
+====================
+
+.. py:module:: picogl.renderer.base
+
+.. autoapi-nested-parse::
+
+   Base Renderer Class
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.renderer.base.RendererBase
+
+
+Module Contents
+---------------
+
+.. py:class:: RendererBase(parent: object = None)
+
+   Bases: :py:obj:`picogl.renderer.abstract.AbstractRenderer`
+
+
+   Base Renderer Class
+
+
+   .. py:attribute:: line_width
+      :value: 2.0
+
+
+
+   .. py:attribute:: show_model
+      :value: False
+
+
+
+   .. py:attribute:: parent
+      :value: None
+
+
+
+   .. py:attribute:: _initialized
+      :value: False
+
+
+
+   .. py:method:: _set_gl_state()
+
+      Set the line width and disable depth test.
+
+
+
+   .. py:method:: _restore_gl_state()
+
+      Restore the original line width and depth test state.
+
+
+
+   .. py:property:: dispatch_list
+
+
+   .. py:method:: initialize() -> None
+
+      Initialize OpenGL resources (shaders, atoms_buffers, etc.).
+
+
+
+   .. py:property:: initialized
+      :type: bool
+
+
+
+   .. py:method:: render(mvp_matrix: Optional[numpy.ndarray] = None) -> None
+
+      render dispatcher
+
+      :return: None
+
+
+
+   .. py:method:: initialize_rendering_buffers()
+
+      For back compatibility
+
+
+
+   .. py:method:: _finalize_render()
+
+      Finalize the rendering (e.g., flush or swap atoms_buffers).
+
+
+
+   .. py:method:: _draw_model()
+      :abstractmethod:
+
+
+      draw_model
+
+
+
+   .. py:method:: _draw_selection()
+      :abstractmethod:
+
+
+      draw_selection
+
+
+
+   .. py:method:: set_visibility(visible: bool) -> None
+
+      Set the visibility of the object.
+
+
+

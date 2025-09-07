@@ -1,0 +1,26 @@
+picogl.backend.modern.core.shader.bind
+======================================
+
+.. py:module:: picogl.backend.modern.core.shader.bind
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.backend.modern.core.shader.bind.bind_shader
+
+
+Module Contents
+---------------
+
+.. py:function:: bind_shader(shader: PicoGLShader = None) -> None
+
+   bind_shader
+
+   :param shader:
+   :return: None
+   Bind the shader program for rendering.
+
+

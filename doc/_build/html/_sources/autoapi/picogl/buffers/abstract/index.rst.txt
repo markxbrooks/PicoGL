@@ -1,0 +1,70 @@
+picogl.buffers.abstract
+=======================
+
+.. py:module:: picogl.buffers.abstract
+
+.. autoapi-nested-parse::
+
+   Abstract render atoms_buffers class
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.buffers.abstract.AbstractVertexGroup
+
+
+Module Contents
+---------------
+
+.. py:class:: AbstractVertexGroup
+
+   Bases: :py:obj:`abc.ABC`
+
+
+   Public façade
+
+
+   .. py:method:: bind() -> None
+      :abstractmethod:
+
+
+      Bind the underlying VAO/state for rendering.
+
+
+
+   .. py:method:: unbind() -> None
+      :abstractmethod:
+
+
+      Optionally unbind the VAO/state.
+
+
+
+   .. py:method:: delete() -> None
+      :abstractmethod:
+
+
+      Release resources (VAO or equivalent).
+
+
+
+   .. py:method:: set_layout(layout: picogl.buffers.attributes.LayoutDescriptor) -> None
+      :abstractmethod:
+
+
+      Define the attribute layout for this VAO/group.
+
+
+
+   .. py:method:: attach_buffers(nbo=None, cbo=None, vbo=None, ebo=None) -> None
+      :abstractmethod:
+
+
+      Attach the buffers that the VAO/group should coordinate.
+
+
+

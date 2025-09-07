@@ -1,0 +1,74 @@
+mesh
+====
+
+.. py:module:: mesh
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   mesh.ShaderMeshRenderer
+
+
+Module Contents
+---------------
+
+.. py:class:: ShaderMeshRenderer(mesh=None, shader=None, texture=None)
+
+   Base class for a renderable mesh with shader and texture.
+
+
+   .. py:attribute:: mesh
+      :value: None
+
+
+
+   .. py:attribute:: shader
+      :value: None
+
+
+
+   .. py:attribute:: texture
+      :value: None
+
+
+
+   .. py:method:: make_context()
+
+
+   .. py:method:: load_shader()
+
+      Load or compile the shader program.
+
+
+
+   .. py:method:: load_mesh()
+      :abstractmethod:
+
+
+      Load mesh and setup OpenGL buffers (VAO, VBO, EBO).
+
+
+
+   .. py:method:: load_texture()
+
+      Load texture (optional).
+
+
+
+   .. py:method:: render(mvp_matrix: numpy.ndarray, view_matrix: numpy.ndarray, projection_matrix: numpy.ndarray)
+      :abstractmethod:
+
+
+      Render the object. Subclasses should override this.
+
+
+
+   .. py:method:: cleanup()
+
+      Free OpenGL resources.
+
+
+

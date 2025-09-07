@@ -1,0 +1,56 @@
+picogl.buffers.vertex.modern
+============================
+
+.. py:module:: picogl.buffers.vertex.modern
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.buffers.vertex.modern.ModernVertexArrayGroup
+
+
+Module Contents
+---------------
+
+.. py:class:: ModernVertexArrayGroup
+
+   Bases: :py:obj:`BaseVertexBuffer`
+
+
+   ModernVertexArrayGroup
+
+   Modern backend (uses a real VAO)
+
+
+   .. py:method:: init()
+
+
+   .. py:method:: attach_buffers(nbo=None, cbo=None, vbo=None, ebo=None) -> None
+
+
+   .. py:method:: set_layout(layout: picogl.buffers.attributes.LayoutDescriptor) -> None
+
+      set_layout
+
+      :param layout: LayoutDescriptor: The layout descriptor to define the vertex attribute format.
+      :raises: None
+
+      Sets the layout for the rendering setup by binding the buffers and configuring the attributes.
+      The state is stored in the Vertex Array Object (VAO). This method assumes a single Vertex Buffer
+      Object (VBO) holds all position data but can be adapted as required. Handles optional usage of
+      Normal Buffer Object (NBO) and Element Buffer Object (EBO) if present.
+
+
+
+   .. py:method:: bind() -> None
+
+
+   .. py:method:: unbind() -> None
+
+
+   .. py:method:: delete() -> None
+
+

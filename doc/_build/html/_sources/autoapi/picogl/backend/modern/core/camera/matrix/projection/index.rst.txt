@@ -1,0 +1,26 @@
+picogl.backend.modern.core.camera.matrix.projection
+===================================================
+
+.. py:module:: picogl.backend.modern.core.camera.matrix.projection
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.backend.modern.core.camera.matrix.projection.calculate_projection_matrix
+
+
+Module Contents
+---------------
+
+.. py:function:: calculate_projection_matrix(width: int, height: int) -> pyrr.Matrix44
+
+   calculate_projection_matrix
+
+   :param width: int
+   :param height: int
+   :return: Matrix44
+
+

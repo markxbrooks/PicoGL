@@ -1,0 +1,217 @@
+picogl.tests.test_object_renderer
+=================================
+
+.. py:module:: picogl.tests.test_object_renderer
+
+.. autoapi-nested-parse::
+
+   Unit tests for the ObjectRenderer class in the PicoGL OpenGL backend.
+
+   This module contains a comprehensive suite of unit tests for verifying the correctness,
+   robustness, and interface of the :class:`picogl.renderer.object.ObjectRenderer`
+   class, which provides unified rendering for textured and untextured objects.
+
+   The tests cover:
+
+   - Object initialization with various parameters
+   - Shader initialization and compilation
+   - VAO and VBO setup for different data types
+   - Rendering pipeline and drawing operations
+   - Texture loading and binding
+   - Error handling and edge cases
+   - Data validation and type conversion
+
+   Dependencies:
+       - unittest (standard library)
+       - unittest.mock.MagicMock for OpenGL function mocking
+       - numpy for test data
+       - picogl.renderer.object.ObjectRenderer
+       - picogl.renderer.meshdata.MeshData
+
+   To run the tests::
+
+       python -m unittest picogl.tests.test_object_renderer
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.tests.test_object_renderer.TestObjectRenderer
+
+
+Module Contents
+---------------
+
+.. py:class:: TestObjectRenderer(methodName='runTest')
+
+   Bases: :py:obj:`unittest.TestCase`
+
+
+   Test cases for ObjectRenderer class.
+
+
+   .. py:method:: setUp()
+
+      Set up test fixtures before each test method.
+
+
+
+   .. py:method:: tearDown()
+
+      Clean up after each test method.
+
+
+
+   .. py:method:: test_initialization_without_texture()
+
+      Test ObjectRenderer initialization without texture.
+
+
+
+   .. py:method:: test_initialization_with_texture()
+
+      Test ObjectRenderer initialization with texture.
+
+
+
+   .. py:method:: test_initialization_with_path_objects()
+
+      Test ObjectRenderer initialization with Path objects.
+
+
+
+   .. py:method:: test_initialization_with_none_context()
+
+      Test ObjectRenderer initialization with None context.
+
+
+
+   .. py:method:: test_initialize_shaders_with_existing_context()
+
+      Test initialize_shaders with existing context.
+
+
+
+   .. py:method:: test_initialize_shaders_with_custom_glsl_dir()
+
+      Test initialize_shaders with custom GLSL directory.
+
+
+
+   .. py:method:: test_initialize_shaders_with_none_context()
+
+      Test initialize_shaders with None context creates new one.
+
+
+
+   .. py:method:: test_initialize_with_texture_and_uvs()
+
+      Test initialize method with texture and UVs.
+
+
+
+   .. py:method:: test_initialize_without_texture_with_colors_and_normals()
+
+      Test initialize method without texture, with colors and normals.
+
+
+
+   .. py:method:: test_initialize_without_texture_without_colors()
+
+      Test initialize method without texture and without colors.
+
+
+
+   .. py:method:: test_initialize_with_existing_vaos()
+
+      Test initialize method with existing VAOs dictionary.
+
+
+
+   .. py:method:: test_render_with_show_model_true()
+
+      Test render method with show_model=True.
+
+
+
+   .. py:method:: test_render_with_show_model_false()
+
+      Test render method with show_model=False.
+
+
+
+   .. py:method:: test_draw_model_without_texture()
+
+      Test _draw_model method without texture.
+
+
+
+   .. py:method:: test_draw_model_with_texture()
+
+      Test _draw_model method with texture.
+
+
+
+   .. py:method:: test_draw_model_without_texture_object()
+
+      Test _draw_model method with use_texture=True but no texture object.
+
+
+
+   .. py:method:: test_vertex_count_calculation()
+
+      Test vertex count calculation in initialization.
+
+
+
+   .. py:method:: test_texture_loading_with_valid_path()
+
+      Test texture loading with valid path.
+
+
+
+   .. py:method:: test_texture_loading_without_texture_file()
+
+      Test texture loading without texture file.
+
+
+
+   .. py:method:: test_texture_loading_without_base_dir()
+
+      Test texture loading without base directory.
+
+
+
+   .. py:method:: test_renderer_base_inheritance()
+
+      Test that ObjectRenderer inherits from RendererBase.
+
+
+
+   .. py:method:: test_initialization_with_minimal_mesh_data()
+
+      Test initialization with minimal mesh data (only vertices).
+
+
+
+   .. py:method:: test_initialization_with_texture_but_no_uvs()
+
+      Test initialization with texture enabled but no UVs in mesh data.
+
+
+
+   .. py:method:: test_log_parameter_calls()
+
+      Test that log.parameter is called for texture usage.
+
+
+
+   .. py:method:: test_finalize_render_inheritance()
+
+      Test that _finalize_render is inherited from RendererBase.
+
+
+

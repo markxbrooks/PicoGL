@@ -1,0 +1,230 @@
+picogl.tests.test_vertex_buffer_group
+=====================================
+
+.. py:module:: picogl.tests.test_vertex_buffer_group
+
+.. autoapi-nested-parse::
+
+   Unit tests for the VertexBufferGroup class in the PicoGL OpenGL backend.
+
+   This module contains a comprehensive suite of unit tests for verifying the correctness,
+   robustness, and interface of the :class:`picogl.buffers.vertex.legacy.VertexBufferGroup`
+   class, which manages legacy OpenGL vertex buffer objects and mimics VAO functionality.
+
+   The tests cover:
+
+   - Object initialization and setup
+   - VBO management and attribute configuration
+   - EBO (Element Buffer Object) management
+   - Layout descriptor configuration
+   - Drawing operations with various modes
+   - Buffer cleanup and memory management
+   - Error handling and edge cases
+   - Legacy client state management
+
+   Dependencies:
+       - unittest (standard library)
+       - unittest.mock.MagicMock for OpenGL function mocking
+       - numpy for test data
+       - picogl.buffers.vertex.legacy.VertexBufferGroup
+       - picogl.buffers.attributes.LayoutDescriptor
+
+   To run the tests::
+
+       python -m unittest picogl.tests.test_vertex_buffer_group
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.tests.test_vertex_buffer_group.TestVertexBufferGroup
+
+
+Module Contents
+---------------
+
+.. py:class:: TestVertexBufferGroup(methodName='runTest')
+
+   Bases: :py:obj:`unittest.TestCase`
+
+
+   Test cases for VertexBufferGroup class.
+
+
+   .. py:method:: setUp()
+
+      Set up test fixtures before each test method.
+
+
+
+   .. py:method:: tearDown()
+
+      Clean up after each test method.
+
+
+
+   .. py:method:: test_initialization()
+
+      Test VertexBufferGroup initialization.
+
+
+
+   .. py:method:: test_add_vbo_object()
+
+      Test add_vbo_object method for VBO management.
+
+
+
+   .. py:method:: test_get_vbo_object()
+
+      Test get_vbo_object method for VBO retrieval.
+
+
+
+   .. py:method:: test_index_count_property()
+
+      Test index_count property.
+
+
+
+   .. py:method:: test_add_vbo()
+
+      Test add_vbo method with different buffer types.
+
+
+
+   .. py:method:: test_add_ebo()
+
+      Test add_ebo method.
+
+
+
+   .. py:method:: test_get_buffer_class()
+
+      Test get_buffer_class method.
+
+
+
+   .. py:method:: test_draw_with_arrays()
+
+      Test draw method with vertex arrays.
+
+
+
+   .. py:method:: test_draw_with_auto_index_count()
+
+      Test draw method with automatic index count.
+
+
+
+   .. py:method:: test_draw_elements()
+
+      Test draw_elements method.
+
+
+
+   .. py:method:: test_draw_elements_without_ebo()
+
+      Test draw_elements method without EBO raises error.
+
+
+
+   .. py:method:: test_draw_elements_with_auto_count()
+
+      Test draw_elements method with automatic count.
+
+
+
+   .. py:method:: test_set_layout()
+
+      Test set_layout method.
+
+
+
+   .. py:method:: test_bind_with_layout()
+
+      Test bind method with layout.
+
+
+
+   .. py:method:: test_bind_without_layout()
+
+      Test bind method without layout.
+
+
+
+   .. py:method:: test_bind_with_missing_vbo()
+
+      Test bind method with missing VBO in layout.
+
+
+
+   .. py:method:: test_unbind_with_layout()
+
+      Test unbind method with layout.
+
+
+
+   .. py:method:: test_unbind_without_layout()
+
+      Test unbind method without layout.
+
+
+
+   .. py:method:: test_delete()
+
+      Test delete method.
+
+
+
+   .. py:method:: test_delete_with_none_buffers()
+
+      Test delete method with None buffers.
+
+
+
+   .. py:method:: test_context_manager()
+
+      Test that VertexBufferGroup can be used as a context manager.
+
+
+
+   .. py:method:: test_error_handling_in_add_vbo()
+
+      Test error handling in add_vbo method.
+
+
+
+   .. py:method:: test_error_handling_in_bind()
+
+      Test error handling in bind method.
+
+
+
+   .. py:method:: test_type_conversion_in_bind()
+
+      Test type conversion handling in bind method.
+
+
+
+   .. py:method:: test_repr_string()
+
+      Test string representation of VertexBufferGroup.
+
+
+
+   .. py:method:: test_vbo_classes_mapping()
+
+      Test VBO classes mapping is correct.
+
+
+
+   .. py:method:: test_legacy_client_states_integration()
+
+      Test integration with legacy client states.
+
+
+

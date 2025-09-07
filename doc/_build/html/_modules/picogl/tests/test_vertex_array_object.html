@@ -1,0 +1,1280 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>picogl.tests.test_vertex_array_object &mdash; PicoGL 0.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=938c9ccc"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            PicoGL
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#platform-specific-requirements">Platform-Specific Requirements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../installation.html#windows">Windows</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../installation.html#macos">macOS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../installation.html#linux-ubuntu-debian">Linux (Ubuntu/Debian)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../installation.html#linux-centos-rhel-fedora">Linux (CentOS/RHEL/Fedora)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#installation-methods">Installation Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../installation.html#from-pypi-recommended-coming-soon">From PyPI (Recommended) *Coming Soon!</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../installation.html#from-source">From Source</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../installation.html#from-conda-coming-soon">From Conda *Coming Soon!</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#dependencies">Dependencies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../installation.html#core-dependencies">Core Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../installation.html#optional-dependencies">Optional Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../installation.html#development-dependencies">Development Dependencies</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#installation-verification">Installation Verification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#troubleshooting">Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../installation.html#common-issues">Common Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../installation.html#macos-specific-issues">macOS Specific Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../installation.html#windows-specific-issues">Windows Specific Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../installation.html#linux-specific-issues">Linux Specific Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#getting-help">Getting Help</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#system-information">System Information</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../quickstart.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../quickstart.html#your-first-picogl-program">Your First PicoGL Program</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../quickstart.html#understanding-the-code">Understanding the Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../quickstart.html#key-concepts">Key Concepts</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../quickstart.html#meshdata">MeshData</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../quickstart.html#renderwindow">RenderWindow</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../quickstart.html#interactive-controls">Interactive Controls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../quickstart.html#adding-more-features">Adding More Features</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../quickstart.html#textures">Textures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../quickstart.html#lighting">Lighting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../quickstart.html#multiple-objects">Multiple Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../quickstart.html#legacy-compatibility">Legacy Compatibility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../quickstart.html#common-issues">Common Issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../quickstart.html#next-steps">Next Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../quickstart.html#examples-to-try">Examples to Try</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../quickstart.html#troubleshooting">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples.html#basic-examples">Basic Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples.html#cube-example">Cube Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples.html#teapot-example">Teapot Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples.html#legacy-examples">Legacy Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples.html#legacy-cube-minimal">Legacy Cube (Minimal)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples.html#legacy-cube-fixed">Legacy Cube (Fixed)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples.html#legacy-teapot-minimal">Legacy Teapot (Minimal)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples.html#legacy-teapot-fixed">Legacy Teapot (Fixed)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples.html#advanced-examples">Advanced Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples.html#molecular-visualization">Molecular Visualization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples.html#texture-examples">Texture Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples.html#shader-examples">Shader Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples.html#utility-examples">Utility Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples.html#mesh-viewer">Mesh Viewer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples.html#test-window">Test Window</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples.html#running-examples">Running Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples.html#interactive-controls">Interactive Controls</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples.html#troubleshooting-examples">Troubleshooting Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples.html#common-issues">Common Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples.html#platform-specific-issues">Platform-Specific Issues</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../examples.html#macos">macOS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../examples.html#windows">Windows</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../examples.html#linux">Linux</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples.html#example-selection-guide">Example Selection Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples.html#customizing-examples">Customizing Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples.html#contributing-examples">Contributing Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../legacy_examples.html">Legacy Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../legacy_examples.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../legacy_examples.html#why-legacy-examples">Why Legacy Examples?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../legacy_examples.html#legacy-teapot-examples">Legacy Teapot Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../legacy_examples.html#legacy-teapot-minimal">Legacy Teapot (Minimal)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../legacy_examples.html#legacy-teapot-fixed">Legacy Teapot (Fixed)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../legacy_examples.html#legacy-cube-examples">Legacy Cube Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../legacy_examples.html#legacy-cube-minimal">Legacy Cube (Minimal)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../legacy_examples.html#legacy-cube-fixed">Legacy Cube (Fixed)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../legacy_examples.html#diagnostic-tools">Diagnostic Tools</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../legacy_examples.html#opengl-setup-test">OpenGL Setup Test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../legacy_examples.html#cube-data-test">Cube Data Test</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../legacy_examples.html#installation-and-setup">Installation and Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../legacy_examples.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../legacy_examples.html#installation">Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../legacy_examples.html#platform-specific-setup">Platform-Specific Setup</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../legacy_examples.html#macos">macOS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../legacy_examples.html#windows">Windows</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../legacy_examples.html#linux">Linux</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../legacy_examples.html#troubleshooting">Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../legacy_examples.html#common-issues">Common Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../legacy_examples.html#macos-specific-issues">macOS Specific Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../legacy_examples.html#windows-specific-issues">Windows Specific Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../legacy_examples.html#linux-specific-issues">Linux Specific Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../legacy_examples.html#performance-notes">Performance Notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../legacy_examples.html#choosing-the-right-version">Choosing the Right Version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../legacy_examples.html#development-notes">Development Notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../legacy_examples.html#license">License</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../troubleshooting.html">Troubleshooting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../troubleshooting.html#common-issues">Common Issues</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../troubleshooting.html#installation-problems">Installation Problems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../troubleshooting.html#opengl-context-issues">OpenGL Context Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../troubleshooting.html#shader-compilation-issues">Shader Compilation Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../troubleshooting.html#platform-specific-issues">Platform-Specific Issues</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../troubleshooting.html#macos-issues">macOS Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../troubleshooting.html#windows-issues">Windows Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../troubleshooting.html#linux-issues">Linux Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../troubleshooting.html#performance-issues">Performance Issues</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../troubleshooting.html#slow-rendering">Slow Rendering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../troubleshooting.html#memory-issues">Memory Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../troubleshooting.html#frame-rate-issues">Frame Rate Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../troubleshooting.html#debugging-techniques">Debugging Techniques</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../troubleshooting.html#enable-debug-output">Enable Debug Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../troubleshooting.html#use-diagnostic-tools">Use Diagnostic Tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../troubleshooting.html#check-system-information">Check System Information</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../troubleshooting.html#common-solutions">Common Solutions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../troubleshooting.html#try-legacy-examples">Try Legacy Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../troubleshooting.html#update-dependencies">Update Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../troubleshooting.html#check-opengl-support">Check OpenGL Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../troubleshooting.html#use-software-rendering">Use Software Rendering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../troubleshooting.html#check-display-environment">Check Display Environment</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../troubleshooting.html#report-issues">Report Issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../troubleshooting.html#getting-help">Getting Help</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/renderer.html">Renderer API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/renderer.html#core-classes">Core Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/renderer.html#meshdata">MeshData</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/renderer.html#picogl.renderer.meshdata.MeshData"><code class="docutils literal notranslate"><span class="pre">MeshData</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/renderer.html#glcontext">GLContext</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/renderer.html#picogl.renderer.glcontext.GLContext"><code class="docutils literal notranslate"><span class="pre">GLContext</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/renderer.html#renderer-classes">Renderer Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/renderer.html#objectrenderer">ObjectRenderer</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/renderer.html#picogl.renderer.object.ObjectRenderer"><code class="docutils literal notranslate"><span class="pre">ObjectRenderer</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/renderer.html#texturerenderer">TextureRenderer</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/renderer.html#picogl.renderer.texture.TextureRenderer"><code class="docutils literal notranslate"><span class="pre">TextureRenderer</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/renderer.html#legacyglmesh">LegacyGLMesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/renderer.html#glmesh">GLMesh</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/renderer.html#picogl.renderer.glmesh.GLMesh"><code class="docutils literal notranslate"><span class="pre">GLMesh</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/renderer.html#base-classes">Base Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/renderer.html#rendererbase">RendererBase</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/renderer.html#picogl.renderer.base.RendererBase"><code class="docutils literal notranslate"><span class="pre">RendererBase</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/renderer.html#abstractrenderer">AbstractRenderer</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/renderer.html#picogl.renderer.abstract.AbstractRenderer"><code class="docutils literal notranslate"><span class="pre">AbstractRenderer</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/renderer.html#utility-classes">Utility Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/renderer.html#uvrenderer">UvRenderer</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/renderer.html#picogl.renderer.uvrenderer.UvRenderer"><code class="docutils literal notranslate"><span class="pre">UvRenderer</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/renderer.html#data-structures">Data Structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/renderer.html#rendering-pipeline">Rendering Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/renderer.html#error-handling">Error Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/renderer.html#performance-considerations">Performance Considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/renderer.html#best-practices">Best Practices</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/buffers.html">Buffers API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/buffers.html#core-classes">Core Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/buffers.html#vertexarrayobject">VertexArrayObject</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/buffers.html#picogl.backend.modern.core.vertex.array.object.VertexArrayObject"><code class="docutils literal notranslate"><span class="pre">VertexArrayObject</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/buffers.html#vertexbuffergroup">VertexBufferGroup</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/buffers.html#buffer-classes">Buffer Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/buffers.html#modern-buffers">Modern Buffers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/buffers.html#modernvbo">ModernVBO</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/buffers.html#modernebo">ModernEBO</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/buffers.html#legacy-buffers">Legacy Buffers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/buffers.html#legacyvbo">LegacyVBO</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/buffers.html#legacypositionvbo">LegacyPositionVBO</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/buffers.html#legacycolorvbo">LegacyColorVBO</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/buffers.html#legacynormalvbo">LegacyNormalVBO</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/buffers.html#legacyebo">LegacyEBO</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/buffers.html#base-classes">Base Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/buffers.html#vertexbase">VertexBase</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/buffers.html#picogl.buffers.base.VertexBase"><code class="docutils literal notranslate"><span class="pre">VertexBase</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/buffers.html#vertexbuffer">VertexBuffer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/buffers.html#data-structures">Data Structures</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/buffers.html#layoutdescriptor">LayoutDescriptor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/buffers.html#picogl.buffers.factory.layout.LayoutDescriptor"><code class="docutils literal notranslate"><span class="pre">LayoutDescriptor</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/buffers.html#attributespec">AttributeSpec</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/buffers.html#picogl.buffers.attributes.AttributeSpec"><code class="docutils literal notranslate"><span class="pre">AttributeSpec</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/buffers.html#buffer-management">Buffer Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/buffers.html#creating-buffers">Creating Buffers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/buffers.html#binding-buffers">Binding Buffers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/buffers.html#buffer-types">Buffer Types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/buffers.html#vertex-buffers">Vertex Buffers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/buffers.html#element-buffers">Element Buffers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/buffers.html#buffer-operations">Buffer Operations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/buffers.html#uploading-data">Uploading Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/buffers.html#drawing">Drawing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/buffers.html#cleanup">Cleanup</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/buffers.html#error-handling">Error Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/buffers.html#performance-considerations">Performance Considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/buffers.html#best-practices">Best Practices</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/shaders.html">Shaders API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/shaders.html#core-classes">Core Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/shaders.html#shaderprogram">ShaderProgram</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/shaders.html#picogl.backend.modern.core.shader.program.ShaderProgram"><code class="docutils literal notranslate"><span class="pre">ShaderProgram</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/shaders.html#shadermanager">ShaderManager</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/shaders.html#shader-types">Shader Types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/shaders.html#shadertype">ShaderType</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/shaders.html#picogl.shaders.type.ShaderType"><code class="docutils literal notranslate"><span class="pre">ShaderType</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/shaders.html#shader-compilation">Shader Compilation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/shaders.html#compile-shaders">Compile Shaders</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/shaders.html#picogl.shaders.compile.compile_shaders"><code class="docutils literal notranslate"><span class="pre">compile_shaders()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/shaders.html#load-shaders">Load Shaders</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/shaders.html#picogl.shaders.load.load_fragment_and_vertex_for_shader_type"><code class="docutils literal notranslate"><span class="pre">load_fragment_and_vertex_for_shader_type()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/shaders.html#uniform-management">Uniform Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/shaders.html#shaderuniform">ShaderUniform</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/shaders.html#picogl.shaders.shader_uniform.ShaderUniform"><code class="docutils literal notranslate"><span class="pre">ShaderUniform</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/shaders.html#uniform-types">Uniform Types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/shaders.html#built-in-shaders">Built-in Shaders</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/shaders.html#basic-color-shader">Basic Color Shader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/shaders.html#texture-shader">Texture Shader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/shaders.html#lighting-shader">Lighting Shader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/shaders.html#fallback-shaders">Fallback Shaders</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/shaders.html#shader-usage">Shader Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/shaders.html#creating-shader-programs">Creating Shader Programs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/shaders.html#using-shaders">Using Shaders</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/shaders.html#error-handling">Error Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/shaders.html#performance-considerations">Performance Considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/shaders.html#best-practices">Best Practices</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/ui.html">UI API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ui.html#core-classes">Core Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ui.html#abstractglwindow">AbstractGLWindow</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ui.html#picogl.ui.abc_window.AbstractGLWindow"><code class="docutils literal notranslate"><span class="pre">AbstractGLWindow</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ui.html#window-backends">Window Backends</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ui.html#glut-backend">GLUT Backend</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ui.html#glwindow">GLWindow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ui.html#glutrendererwindow">GlutRendererWindow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ui.html#renderwindow">RenderWindow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ui.html#texturewindow">TextureWindow</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ui.html#qt-backend">Qt Backend</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ui.html#glbase">GLBase</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ui.html#input-handling">Input Handling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ui.html#mouse-input">Mouse Input</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ui.html#keyboard-input">Keyboard Input</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ui.html#window-management">Window Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ui.html#creating-windows">Creating Windows</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ui.html#window-properties">Window Properties</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ui.html#rendering-loop">Rendering Loop</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ui.html#display-function">Display Function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ui.html#resize-handling">Resize Handling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ui.html#event-handling">Event Handling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ui.html#event-loop">Event Loop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ui.html#timer-events">Timer Events</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ui.html#platform-specific-features">Platform-Specific Features</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ui.html#macos">macOS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ui.html#windows">Windows</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ui.html#linux">Linux</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ui.html#error-handling">Error Handling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ui.html#window-creation-errors">Window Creation Errors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ui.html#input-errors">Input Errors</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ui.html#performance-considerations">Performance Considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ui.html#best-practices">Best Practices</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/utils.html">Utils API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/utils.html#core-classes">Core Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#objectloader">ObjectLoader</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/utils.html#picogl.utils.loader.object.ObjectLoader"><code class="docutils literal notranslate"><span class="pre">ObjectLoader</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#textureloader">TextureLoader</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/utils.html#picogl.utils.loader.texture.TextureLoader"><code class="docutils literal notranslate"><span class="pre">TextureLoader</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/utils.html#helper-functions">Helper Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#gl-initialization">GL Initialization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/utils.html#picogl.utils.gl_init.execute_gl_tasks"><code class="docutils literal notranslate"><span class="pre">execute_gl_tasks()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/utils.html#picogl.utils.gl_init.init_gl_list"><code class="docutils literal notranslate"><span class="pre">init_gl_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/utils.html#picogl.utils.gl_init.paint_gl_list"><code class="docutils literal notranslate"><span class="pre">paint_gl_list()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#texture-utilities">Texture Utilities</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/utils.html#picogl.utils.texture.bind_texture_array"><code class="docutils literal notranslate"><span class="pre">bind_texture_array()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#normal-generation">Normal Generation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/utils.html#picogl.utils.normal.compute_vertex_normals"><code class="docutils literal notranslate"><span class="pre">compute_vertex_normals()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#reshape-utilities">Reshape Utilities</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/utils.html#picogl.utils.reshape.float32_row"><code class="docutils literal notranslate"><span class="pre">float32_row()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/utils.html#data-loading">Data Loading</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#obj-file-loading">OBJ File Loading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#texture-loading">Texture Loading</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/utils.html#data-processing">Data Processing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#mesh-data-processing">Mesh Data Processing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#texture-processing">Texture Processing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/utils.html#file-management">File Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#path-handling">Path Handling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/utils.html#error-handling">Error Handling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#loading-errors">Loading Errors</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/utils.html#performance-considerations">Performance Considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/utils.html#best-practices">Best Practices</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../development.html">Development</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../development.html#project-structure">Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../development.html#architecture-overview">Architecture Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../development.html#design-principles">Design Principles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../development.html#backend-system">Backend System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../development.html#modern-backend">Modern Backend</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development.html#legacy-backend">Legacy Backend</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development.html#backend-selection">Backend Selection</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../development.html#testing-framework">Testing Framework</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../development.html#unit-tests">Unit Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development.html#integration-tests">Integration Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../development.html#build-system">Build System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../development.html#setup-configuration">Setup Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development.html#development-dependencies">Development Dependencies</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../development.html#code-style">Code Style</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../development.html#formatting">Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development.html#linting">Linting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development.html#type-checking">Type Checking</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../development.html#documentation">Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../development.html#sphinx-configuration">Sphinx Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development.html#docstring-style">Docstring Style</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../development.html#contributing">Contributing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../development.html#getting-started">Getting Started</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development.html#code-review-process">Code Review Process</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../development.html#release-process">Release Process</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../development.html#version-numbering">Version Numbering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development.html#release-steps">Release Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../development.html#performance-considerations">Performance Considerations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../development.html#rendering-performance">Rendering Performance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development.html#memory-management">Memory Management</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../development.html#debugging">Debugging</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../development.html#opengl-debugging">OpenGL Debugging</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../development.html#common-issues">Common Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../testing.html">Testing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../testing.html#test-structure">Test Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../testing.html#running-tests">Running Tests</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../testing.html#basic-test-execution">Basic Test Execution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../testing.html#using-pytest">Using pytest</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../testing.html#test-categories">Test Categories</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../testing.html#unit-tests">Unit Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../testing.html#integration-tests">Integration Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../testing.html#performance-tests">Performance Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../testing.html#compatibility-tests">Compatibility Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../testing.html#test-mocking">Test Mocking</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../testing.html#opengl-mocking">OpenGL Mocking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../testing.html#dependency-mocking">Dependency Mocking</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../testing.html#test-data">Test Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../testing.html#test-fixtures">Test Fixtures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../testing.html#test-utilities">Test Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../testing.html#continuous-integration">Continuous Integration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../testing.html#github-actions">GitHub Actions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../testing.html#test-coverage">Test Coverage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../testing.html#coverage-requirements">Coverage Requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../testing.html#code-quality">Code Quality</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../testing.html#linting">Linting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../testing.html#type-checking">Type Checking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../testing.html#formatting">Formatting</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../testing.html#test-best-practices">Test Best Practices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../testing.html#writing-tests">Writing Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../testing.html#test-maintenance">Test Maintenance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../testing.html#debugging-tests">Debugging Tests</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#getting-started">Getting Started</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#fork-and-clone">Fork and Clone</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#development-setup">Development Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#install-dependencies">Install Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#set-up-pre-commit-hooks">Set Up Pre-commit Hooks</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#development-workflow">Development Workflow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#making-changes">Making Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#code-style">Code Style</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#formatting">Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#linting">Linting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#type-checking">Type Checking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#documentation">Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#testing">Testing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#writing-tests">Writing Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#running-tests">Running Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#test-requirements">Test Requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#id1">Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#updating-documentation">Updating Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#building-documentation">Building Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#pull-request-process">Pull Request Process</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#creating-pull-requests">Creating Pull Requests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#pull-request-template">Pull Request Template</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#review-process">Review Process</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#types-of-contributions">Types of Contributions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#bug-fixes">Bug Fixes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#feature-requests">Feature Requests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#documentation-improvements">Documentation Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#performance-improvements">Performance Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#code-quality-improvements">Code Quality Improvements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#community-guidelines">Community Guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#code-of-conduct">Code of Conduct</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#communication">Communication</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#getting-help">Getting Help</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#recognition">Recognition</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-1-0-0-2025-01-06">Version 1.0.0 (2025-01-06)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../autoapi/mesh/index.html">mesh</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/mesh/index.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/mesh/index.html#module-contents">Module Contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/mesh/index.html#mesh.ShaderMeshRenderer"><code class="docutils literal notranslate"><span class="pre">ShaderMeshRenderer</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../autoapi/picogl/index.html">picogl</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/picogl/index.html#submodules">Submodules</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/picogl/backend/index.html">picogl.backend</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/picogl/buffers/index.html">picogl.buffers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/picogl/error/index.html">picogl.error</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/picogl/frame/index.html">picogl.frame</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/picogl/info/index.html">picogl.info</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/picogl/logger/index.html">picogl.logger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/picogl/normals/index.html">picogl.normals</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/picogl/project/index.html">picogl.project</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/picogl/renderer/index.html">picogl.renderer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/picogl/safe/index.html">picogl.safe</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/picogl/shaders/index.html">picogl.shaders</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/picogl/tests/index.html">picogl.tests</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/picogl/ui/index.html">picogl.ui</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/picogl/utils/index.html">picogl.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/picogl/index.html#attributes">Attributes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/picogl/index.html#package-contents">Package Contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/picogl/index.html#picogl.__version__"><code class="docutils literal notranslate"><span class="pre">__version__</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../autoapi/window/index.html">window</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/window/index.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/window/index.html#module-contents">Module Contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/window/index.html#window.LegacyQtObjectWindow"><code class="docutils literal notranslate"><span class="pre">LegacyQtObjectWindow</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../autoapi/renderer/index.html">renderer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/renderer/index.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/renderer/index.html#module-contents">Module Contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/renderer/index.html#renderer.LegacyQtObjectRenderer"><code class="docutils literal notranslate"><span class="pre">LegacyQtObjectRenderer</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">PicoGL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../picogl.html">picogl</a></li>
+      <li class="breadcrumb-item active">picogl.tests.test_vertex_array_object</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for picogl.tests.test_vertex_array_object</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Unit tests for the VertexArrayObject class in the PicoGL OpenGL backend.</span>
+
+<span class="sd">This module contains a comprehensive suite of unit tests for verifying the correctness,</span>
+<span class="sd">robustness, and interface of the :class:`picogl.backend.modern.core.vertex.array.object.VertexArrayObject`</span>
+<span class="sd">class, which manages OpenGL Vertex Array Objects (VAOs) in modern OpenGL rendering workflows.</span>
+
+<span class="sd">The tests cover:</span>
+
+<span class="sd">- Object initialization with and without handle parameter</span>
+<span class="sd">- VAO binding/unbinding operations</span>
+<span class="sd">- VBO management and attribute configuration</span>
+<span class="sd">- EBO (Element Buffer Object) management</span>
+<span class="sd">- Layout descriptor configuration</span>
+<span class="sd">- Drawing operations with various modes</span>
+<span class="sd">- Buffer cleanup and memory management</span>
+<span class="sd">- Error handling and edge cases</span>
+
+<span class="sd">Dependencies:</span>
+<span class="sd">    - unittest (standard library)</span>
+<span class="sd">    - unittest.mock.MagicMock for OpenGL function mocking</span>
+<span class="sd">    - numpy for test data</span>
+<span class="sd">    - picogl.backend.modern.core.vertex.array.object.VertexArrayObject</span>
+<span class="sd">    - picogl.buffers.attributes.LayoutDescriptor</span>
+
+<span class="sd">To run the tests::</span>
+
+<span class="sd">    python -m unittest picogl.tests.test_vertex_array_object</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">ctypes</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">unittest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unittest.mock</span><span class="w"> </span><span class="kn">import</span> <span class="n">MagicMock</span><span class="p">,</span> <span class="n">patch</span><span class="p">,</span> <span class="n">call</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">OpenGL.raw.GL._types</span><span class="w"> </span><span class="kn">import</span> <span class="n">GL_FLOAT</span><span class="p">,</span> <span class="n">GL_UNSIGNED_INT</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">OpenGL.raw.GL.VERSION.GL_1_0</span><span class="w"> </span><span class="kn">import</span> <span class="n">GL_POINTS</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">OpenGL.raw.GL.VERSION.GL_1_5</span><span class="w"> </span><span class="kn">import</span> <span class="n">GL_ELEMENT_ARRAY_BUFFER</span><span class="p">,</span> <span class="n">GL_STATIC_DRAW</span><span class="p">,</span> <span class="n">GL_ARRAY_BUFFER</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">picogl.backend.modern.core.vertex.array.object</span><span class="w"> </span><span class="kn">import</span> <span class="n">VertexArrayObject</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">picogl.buffers.attributes</span><span class="w"> </span><span class="kn">import</span> <span class="n">LayoutDescriptor</span><span class="p">,</span> <span class="n">AttributeSpec</span>
+
+
+<div class="viewcode-block" id="TestVertexArrayObject">
+<a class="viewcode-back" href="../../../autoapi/picogl/tests/test_vertex_array_object/index.html#picogl.tests.test_vertex_array_object.TestVertexArrayObject">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestVertexArrayObject</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test cases for VertexArrayObject class.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="TestVertexArrayObject.setUp">
+<a class="viewcode-back" href="../../../autoapi/picogl/tests/test_vertex_array_object/index.html#picogl.tests.test_vertex_array_object.TestVertexArrayObject.setUp">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set up test fixtures before each test method.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mock_handle</span> <span class="o">=</span> <span class="mi">123</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">)</span>
+        
+        <span class="c1"># Mock OpenGL functions to avoid context issues</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gl_patches</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;picogl.backend.modern.core.vertex.array.object.glBindVertexArray&#39;</span><span class="p">),</span>
+            <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;picogl.backend.modern.core.vertex.array.object.glGenVertexArrays&#39;</span><span class="p">),</span>
+            <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;picogl.backend.modern.core.vertex.array.object.glDeleteVertexArrays&#39;</span><span class="p">),</span>
+            <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;picogl.backend.modern.core.vertex.array.object.glBindBuffer&#39;</span><span class="p">),</span>
+            <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;picogl.backend.modern.core.vertex.array.object.glEnableVertexAttribArray&#39;</span><span class="p">),</span>
+            <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;picogl.backend.modern.core.vertex.array.object.glVertexAttribPointer&#39;</span><span class="p">),</span>
+            <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;picogl.backend.modern.core.vertex.array.object.glDrawArrays&#39;</span><span class="p">),</span>
+            <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;picogl.backend.modern.core.vertex.array.object.glDrawElements&#39;</span><span class="p">),</span>
+            <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;picogl.backend.modern.core.vertex.array.object.enable_points_rendering_state&#39;</span><span class="p">),</span>
+            <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;picogl.backend.modern.core.vertex.array.object.gl_gen_safe&#39;</span><span class="p">),</span>
+        <span class="p">]</span>
+        
+        <span class="c1"># Start all patches</span>
+        <span class="k">for</span> <span class="n">patch_obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">gl_patches</span><span class="p">:</span>
+            <span class="n">patch_obj</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TestVertexArrayObject.tearDown">
+<a class="viewcode-back" href="../../../autoapi/picogl/tests/test_vertex_array_object/index.html#picogl.tests.test_vertex_array_object.TestVertexArrayObject.tearDown">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clean up after each test method.&quot;&quot;&quot;</span>
+        <span class="c1"># Stop all patches</span>
+        <span class="k">for</span> <span class="n">patch_obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">gl_patches</span><span class="p">:</span>
+            <span class="n">patch_obj</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TestVertexArrayObject.test_initialization_with_handle">
+<a class="viewcode-back" href="../../../autoapi/picogl/tests/test_vertex_array_object/index.html#picogl.tests.test_vertex_array_object.TestVertexArrayObject.test_initialization_with_handle">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_initialization_with_handle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test VertexArrayObject initialization with provided handle.&quot;&quot;&quot;</span>
+        <span class="n">vao</span> <span class="o">=</span> <span class="n">VertexArrayObject</span><span class="p">(</span><span class="n">handle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mock_handle</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">vao</span><span class="o">.</span><span class="n">handle</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mock_handle</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">vao</span><span class="o">.</span><span class="n">_configured</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">vao</span><span class="o">.</span><span class="n">attributes</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">vao</span><span class="o">.</span><span class="n">vbos</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">vao</span><span class="o">.</span><span class="n">named_vbos</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">vao</span><span class="o">.</span><span class="n">layout</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestVertexArrayObject.test_initialization_without_handle">
+<a class="viewcode-back" href="../../../autoapi/picogl/tests/test_vertex_array_object/index.html#picogl.tests.test_vertex_array_object.TestVertexArrayObject.test_initialization_without_handle">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_initialization_without_handle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test VertexArrayObject initialization without handle (auto-generate).&quot;&quot;&quot;</span>
+        <span class="c1"># Mock glGenVertexArrays to return a handle</span>
+        <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;picogl.backend.modern.core.vertex.array.object.glGenVertexArrays&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">mock_gen</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;picogl.backend.modern.core.vertex.array.object.gl_gen_safe&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">mock_gen_safe</span><span class="p">:</span>
+                <span class="n">mock_gen_safe</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mock_handle</span>
+                <span class="n">vao</span> <span class="o">=</span> <span class="n">VertexArrayObject</span><span class="p">()</span>
+                
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">vao</span><span class="o">.</span><span class="n">handle</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mock_handle</span><span class="p">)</span>
+                <span class="n">mock_gen_safe</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TestVertexArrayObject.test_initialization_raises_error_when_no_context">
+<a class="viewcode-back" href="../../../autoapi/picogl/tests/test_vertex_array_object/index.html#picogl.tests.test_vertex_array_object.TestVertexArrayObject.test_initialization_raises_error_when_no_context">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_initialization_raises_error_when_no_context</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test that initialization raises error when OpenGL context is not ready.&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;picogl.backend.modern.core.vertex.array.object.glGenVertexArrays&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">mock_gen</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;picogl.backend.modern.core.vertex.array.object.gl_gen_safe&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">mock_gen_safe</span><span class="p">:</span>
+                <span class="n">mock_gen</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="n">mock_gen_safe</span><span class="o">.</span><span class="n">side_effect</span> <span class="o">=</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;int() argument must be a string, a bytes-like object or a real number, not &#39;NoneType&#39;&quot;</span><span class="p">)</span>
+                
+                <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">context</span><span class="p">:</span>
+                    <span class="n">VertexArrayObject</span><span class="p">()</span>
+                
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;int() argument must be a string&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">exception</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="TestVertexArrayObject.test_bind">
+<a class="viewcode-back" href="../../../autoapi/picogl/tests/test_vertex_array_object/index.html#picogl.tests.test_vertex_array_object.TestVertexArrayObject.test_bind">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bind</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test bind method.&quot;&quot;&quot;</span>
+        <span class="n">vao</span> <span class="o">=</span> <span class="n">VertexArrayObject</span><span class="p">(</span><span class="n">handle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mock_handle</span><span class="p">)</span>
+        <span class="n">vao</span><span class="o">.</span><span class="n">bind</span><span class="p">()</span></div>
+
+        <span class="c1"># The bind call is already mocked in setUp</span>
+
+<div class="viewcode-block" id="TestVertexArrayObject.test_unbind">
+<a class="viewcode-back" href="../../../autoapi/picogl/tests/test_vertex_array_object/index.html#picogl.tests.test_vertex_array_object.TestVertexArrayObject.test_unbind">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_unbind</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test unbind method.&quot;&quot;&quot;</span>
+        <span class="n">vao</span> <span class="o">=</span> <span class="n">VertexArrayObject</span><span class="p">(</span><span class="n">handle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mock_handle</span><span class="p">)</span>
+        <span class="n">vao</span><span class="o">.</span><span class="n">unbind</span><span class="p">()</span></div>
+
+        <span class="c1"># The unbind call is already mocked in setUp</span>
+
+<div class="viewcode-block" id="TestVertexArrayObject.test_delete">
+<a class="viewcode-back" href="../../../autoapi/picogl/tests/test_vertex_array_object/index.html#picogl.tests.test_vertex_array_object.TestVertexArrayObject.test_delete">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test delete method.&quot;&quot;&quot;</span>
+        <span class="n">vao</span> <span class="o">=</span> <span class="n">VertexArrayObject</span><span class="p">(</span><span class="n">handle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mock_handle</span><span class="p">)</span>
+        <span class="n">vao</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span></div>
+
+        <span class="c1"># The delete call is already mocked in setUp</span>
+
+<div class="viewcode-block" id="TestVertexArrayObject.test_add_vbo">
+<a class="viewcode-back" href="../../../autoapi/picogl/tests/test_vertex_array_object/index.html#picogl.tests.test_vertex_array_object.TestVertexArrayObject.test_add_vbo">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_add_vbo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test add_vbo method.&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;picogl.backend.modern.core.vertex.array.object.ModernVBO&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">mock_vbo_class</span><span class="p">:</span>
+            <span class="n">mock_vbo</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+            <span class="n">mock_vbo</span><span class="o">.</span><span class="n">handle</span> <span class="o">=</span> <span class="mi">456</span>
+            <span class="n">mock_vbo_class</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">mock_vbo</span>
+            
+            <span class="n">vao</span> <span class="o">=</span> <span class="n">VertexArrayObject</span><span class="p">(</span><span class="n">handle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mock_handle</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">vao</span><span class="o">.</span><span class="n">add_vbo</span><span class="p">(</span>
+                <span class="n">index</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">test_data</span><span class="p">,</span>
+                <span class="n">size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="n">GL_FLOAT</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;position&quot;</span>
+            <span class="p">)</span>
+            
+            <span class="c1"># Verify VBO was created and configured</span>
+            <span class="n">mock_vbo_class</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span><span class="n">handle</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+            <span class="n">mock_vbo</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
+            <span class="n">mock_vbo</span><span class="o">.</span><span class="n">set_data</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_data</span><span class="p">)</span>
+            <span class="n">mock_vbo</span><span class="o">.</span><span class="n">set_vertex_attributes</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span>
+                <span class="n">index</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">test_data</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">GL_FLOAT</span>
+            <span class="p">)</span>
+            <span class="n">mock_vbo</span><span class="o">.</span><span class="n">configure</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
+            
+            <span class="c1"># Verify VBO was added to internal lists</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vao</span><span class="o">.</span><span class="n">attributes</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vao</span><span class="o">.</span><span class="n">vbos</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">vao</span><span class="o">.</span><span class="n">named_vbos</span><span class="p">[</span><span class="s2">&quot;position&quot;</span><span class="p">],</span> <span class="n">mock_vbo</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">mock_vbo</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestVertexArrayObject.test_add_attribute">
+<a class="viewcode-back" href="../../../autoapi/picogl/tests/test_vertex_array_object/index.html#picogl.tests.test_vertex_array_object.TestVertexArrayObject.test_add_attribute">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_add_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test add_attribute method.&quot;&quot;&quot;</span>
+        <span class="n">vao</span> <span class="o">=</span> <span class="n">VertexArrayObject</span><span class="p">(</span><span class="n">handle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mock_handle</span><span class="p">)</span>
+        <span class="n">vbo_handle</span> <span class="o">=</span> <span class="mi">789</span>
+        
+        <span class="n">vao</span><span class="o">.</span><span class="n">add_attribute</span><span class="p">(</span>
+            <span class="n">index</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">vbo</span><span class="o">=</span><span class="n">vbo_handle</span><span class="p">,</span>
+            <span class="n">size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="n">GL_FLOAT</span><span class="p">,</span>
+            <span class="n">normalized</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">stride</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">offset</span><span class="o">=</span><span class="mi">0</span>
+        <span class="p">)</span>
+        
+        <span class="c1"># Verify attribute was added to the list</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vao</span><span class="o">.</span><span class="n">attributes</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">expected_attr</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">vbo_handle</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">GL_FLOAT</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">vao</span><span class="o">.</span><span class="n">attributes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">expected_attr</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestVertexArrayObject.test_add_ebo">
+<a class="viewcode-back" href="../../../autoapi/picogl/tests/test_vertex_array_object/index.html#picogl.tests.test_vertex_array_object.TestVertexArrayObject.test_add_ebo">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_add_ebo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test add_ebo method.&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;picogl.backend.modern.core.vertex.array.object.ModernEBO&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">mock_ebo_class</span><span class="p">:</span>
+            <span class="n">mock_ebo</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+            <span class="n">mock_ebo_class</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">mock_ebo</span>
+            
+            <span class="n">vao</span> <span class="o">=</span> <span class="n">VertexArrayObject</span><span class="p">(</span><span class="n">handle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mock_handle</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">vao</span><span class="o">.</span><span class="n">add_ebo</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_indices</span><span class="p">)</span>
+            
+            <span class="c1"># Verify EBO was created and configured</span>
+            <span class="n">mock_ebo_class</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">test_indices</span><span class="p">)</span>
+            <span class="n">mock_ebo</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
+            <span class="n">mock_ebo</span><span class="o">.</span><span class="n">set_element_attributes</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span>
+                <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">test_indices</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">test_indices</span><span class="o">.</span><span class="n">nbytes</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">GL_STATIC_DRAW</span>
+            <span class="p">)</span>
+            <span class="n">mock_ebo</span><span class="o">.</span><span class="n">configure</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
+            
+            <span class="c1"># Verify EBO was stored</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">vao</span><span class="o">.</span><span class="n">ebo</span><span class="p">,</span> <span class="n">mock_ebo</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">mock_ebo</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestVertexArrayObject.test_set_ebo">
+<a class="viewcode-back" href="../../../autoapi/picogl/tests/test_vertex_array_object/index.html#picogl.tests.test_vertex_array_object.TestVertexArrayObject.test_set_ebo">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_set_ebo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test set_ebo method.&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;picogl.backend.modern.core.vertex.array.object.ModernEBO&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">mock_ebo_class</span><span class="p">:</span>
+            <span class="n">mock_ebo</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+            <span class="n">mock_ebo_class</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">mock_ebo</span>
+            <span class="n">ebo_handle</span> <span class="o">=</span> <span class="mi">999</span>
+            
+            <span class="n">vao</span> <span class="o">=</span> <span class="n">VertexArrayObject</span><span class="p">(</span><span class="n">handle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mock_handle</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">vao</span><span class="o">.</span><span class="n">set_ebo</span><span class="p">(</span><span class="n">ebo_handle</span><span class="p">)</span>
+            
+            <span class="c1"># Verify EBO was created with the handle</span>
+            <span class="n">mock_ebo_class</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span><span class="n">handle</span><span class="o">=</span><span class="n">ebo_handle</span><span class="p">)</span>
+            <span class="n">mock_ebo</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
+            
+            <span class="c1"># Verify EBO was stored</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">vao</span><span class="o">.</span><span class="n">ebo</span><span class="p">,</span> <span class="n">mock_ebo</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">ebo_handle</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestVertexArrayObject.test_set_layout">
+<a class="viewcode-back" href="../../../autoapi/picogl/tests/test_vertex_array_object/index.html#picogl.tests.test_vertex_array_object.TestVertexArrayObject.test_set_layout">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_set_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test set_layout method with LayoutDescriptor.&quot;&quot;&quot;</span>
+        <span class="c1"># Create a mock layout descriptor</span>
+        <span class="n">attr_spec</span> <span class="o">=</span> <span class="n">AttributeSpec</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;position&quot;</span><span class="p">,</span>
+            <span class="n">index</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">GL_FLOAT</span><span class="p">,</span>
+            <span class="n">normalized</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">stride</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">offset</span><span class="o">=</span><span class="mi">0</span>
+        <span class="p">)</span>
+        <span class="n">layout</span> <span class="o">=</span> <span class="n">LayoutDescriptor</span><span class="p">(</span><span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="n">attr_spec</span><span class="p">])</span>
+        
+        <span class="c1"># Create mock VBO and EBO</span>
+        <span class="n">mock_vbo</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+        <span class="n">mock_vbo</span><span class="o">.</span><span class="n">_id</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="n">mock_ebo</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+        <span class="n">mock_ebo</span><span class="o">.</span><span class="n">_id</span> <span class="o">=</span> <span class="mi">200</span>
+        
+        <span class="n">vao</span> <span class="o">=</span> <span class="n">VertexArrayObject</span><span class="p">(</span><span class="n">handle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mock_handle</span><span class="p">)</span>
+        <span class="n">vao</span><span class="o">.</span><span class="n">vao</span> <span class="o">=</span> <span class="n">mock_vbo</span>  <span class="c1"># Set vao to enable layout processing</span>
+        <span class="n">vao</span><span class="o">.</span><span class="n">vbo</span> <span class="o">=</span> <span class="n">mock_vbo</span>
+        <span class="n">vao</span><span class="o">.</span><span class="n">ebo</span> <span class="o">=</span> <span class="n">mock_ebo</span>
+        
+        <span class="n">vao</span><span class="o">.</span><span class="n">set_layout</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+        
+        <span class="c1"># Verify layout was stored</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">vao</span><span class="o">.</span><span class="n">layout</span><span class="p">,</span> <span class="n">layout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">vao</span><span class="o">.</span><span class="n">_configured</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestVertexArrayObject.test_set_layout_with_none_vao">
+<a class="viewcode-back" href="../../../autoapi/picogl/tests/test_vertex_array_object/index.html#picogl.tests.test_vertex_array_object.TestVertexArrayObject.test_set_layout_with_none_vao">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_set_layout_with_none_vao</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test set_layout method when vao is None.&quot;&quot;&quot;</span>
+        <span class="n">layout</span> <span class="o">=</span> <span class="n">LayoutDescriptor</span><span class="p">(</span><span class="n">attributes</span><span class="o">=</span><span class="p">[])</span>
+        <span class="n">vao</span> <span class="o">=</span> <span class="n">VertexArrayObject</span><span class="p">(</span><span class="n">handle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mock_handle</span><span class="p">)</span>
+        <span class="n">vao</span><span class="o">.</span><span class="n">vao</span> <span class="o">=</span> <span class="kc">None</span>
+        
+        <span class="n">vao</span><span class="o">.</span><span class="n">set_layout</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+        
+        <span class="c1"># Should return early without processing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">vao</span><span class="o">.</span><span class="n">layout</span><span class="p">,</span> <span class="n">layout</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestVertexArrayObject.test_add_vbo_object">
+<a class="viewcode-back" href="../../../autoapi/picogl/tests/test_vertex_array_object/index.html#picogl.tests.test_vertex_array_object.TestVertexArrayObject.test_add_vbo_object">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_add_vbo_object</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test add_vbo_object method for VBO management.&quot;&quot;&quot;</span>
+        <span class="n">vao</span> <span class="o">=</span> <span class="n">VertexArrayObject</span><span class="p">(</span><span class="n">handle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mock_handle</span><span class="p">)</span>
+        <span class="n">mock_vbo</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+        
+        <span class="c1"># Test adding VBO with canonical name</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">vao</span><span class="o">.</span><span class="n">add_vbo_object</span><span class="p">(</span><span class="s2">&quot;position&quot;</span><span class="p">,</span> <span class="n">mock_vbo</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">mock_vbo</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">vao</span><span class="o">.</span><span class="n">named_vbos</span><span class="p">[</span><span class="s2">&quot;position&quot;</span><span class="p">],</span> <span class="n">mock_vbo</span><span class="p">)</span>
+        
+        <span class="c1"># Test adding VBO with alias</span>
+        <span class="n">mock_vbo2</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+        <span class="n">result2</span> <span class="o">=</span> <span class="n">vao</span><span class="o">.</span><span class="n">add_vbo_object</span><span class="p">(</span><span class="s2">&quot;pos&quot;</span><span class="p">,</span> <span class="n">mock_vbo2</span><span class="p">)</span>  <span class="c1"># &quot;pos&quot; should be an alias for &quot;position&quot;</span></div>
+
+        
+        <span class="c1"># Note: This test assumes NAME_ALIASES contains &quot;pos&quot; -&gt; &quot;position&quot; mapping</span>
+        <span class="c1"># The actual behavior depends on the NAME_ALIASES dictionary</span>
+
+<div class="viewcode-block" id="TestVertexArrayObject.test_get_vbo_object">
+<a class="viewcode-back" href="../../../autoapi/picogl/tests/test_vertex_array_object/index.html#picogl.tests.test_vertex_array_object.TestVertexArrayObject.test_get_vbo_object">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_get_vbo_object</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test get_vbo_object method for VBO retrieval.&quot;&quot;&quot;</span>
+        <span class="n">vao</span> <span class="o">=</span> <span class="n">VertexArrayObject</span><span class="p">(</span><span class="n">handle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mock_handle</span><span class="p">)</span>
+        <span class="n">mock_vbo</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+        
+        <span class="n">vao</span><span class="o">.</span><span class="n">named_vbos</span><span class="p">[</span><span class="s2">&quot;position&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mock_vbo</span>
+        
+        <span class="n">result</span> <span class="o">=</span> <span class="n">vao</span><span class="o">.</span><span class="n">get_vbo_object</span><span class="p">(</span><span class="s2">&quot;position&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">mock_vbo</span><span class="p">)</span>
+        
+        <span class="c1"># Test with non-existent name</span>
+        <span class="n">result_none</span> <span class="o">=</span> <span class="n">vao</span><span class="o">.</span><span class="n">get_vbo_object</span><span class="p">(</span><span class="s2">&quot;nonexistent&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">result_none</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestVertexArrayObject.test_index_count_property">
+<a class="viewcode-back" href="../../../autoapi/picogl/tests/test_vertex_array_object/index.html#picogl.tests.test_vertex_array_object.TestVertexArrayObject.test_index_count_property">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_index_count_property</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test index_count property.&quot;&quot;&quot;</span>
+        <span class="n">vao</span> <span class="o">=</span> <span class="n">VertexArrayObject</span><span class="p">(</span><span class="n">handle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mock_handle</span><span class="p">)</span>
+        
+        <span class="c1"># Test with no EBO</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">vao</span><span class="o">.</span><span class="n">index_count</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        
+        <span class="c1"># Test with EBO containing data</span>
+        <span class="n">mock_ebo</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+        <span class="n">mock_ebo</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_indices</span>
+        <span class="n">vao</span><span class="o">.</span><span class="n">ebo</span> <span class="o">=</span> <span class="n">mock_ebo</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">vao</span><span class="o">.</span><span class="n">index_count</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_indices</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="TestVertexArrayObject.test_draw_with_arrays">
+<a class="viewcode-back" href="../../../autoapi/picogl/tests/test_vertex_array_object/index.html#picogl.tests.test_vertex_array_object.TestVertexArrayObject.test_draw_with_arrays">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_draw_with_arrays</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test draw method with vertex arrays (no EBO).&quot;&quot;&quot;</span>
+        <span class="n">vao</span> <span class="o">=</span> <span class="n">VertexArrayObject</span><span class="p">(</span><span class="n">handle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mock_handle</span><span class="p">)</span>
+        <span class="n">vao</span><span class="o">.</span><span class="n">ebo</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># No EBO, should use glDrawArrays</span>
+        
+        <span class="n">vao</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">index_count</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">GL_POINTS</span><span class="p">)</span></div>
+
+        <span class="c1"># The draw calls are already mocked in setUp</span>
+
+<div class="viewcode-block" id="TestVertexArrayObject.test_draw_with_elements">
+<a class="viewcode-back" href="../../../autoapi/picogl/tests/test_vertex_array_object/index.html#picogl.tests.test_vertex_array_object.TestVertexArrayObject.test_draw_with_elements">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_draw_with_elements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test draw method with element arrays (EBO present).&quot;&quot;&quot;</span>
+        <span class="n">vao</span> <span class="o">=</span> <span class="n">VertexArrayObject</span><span class="p">(</span><span class="n">handle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mock_handle</span><span class="p">)</span>
+        <span class="n">mock_ebo</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+        <span class="n">mock_ebo</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_indices</span>
+        <span class="n">vao</span><span class="o">.</span><span class="n">ebo</span> <span class="o">=</span> <span class="n">mock_ebo</span>
+        
+        <span class="n">vao</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">index_count</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">GL_POINTS</span><span class="p">)</span></div>
+
+        <span class="c1"># The draw calls are already mocked in setUp</span>
+
+<div class="viewcode-block" id="TestVertexArrayObject.test_draw_with_auto_index_count">
+<a class="viewcode-back" href="../../../autoapi/picogl/tests/test_vertex_array_object/index.html#picogl.tests.test_vertex_array_object.TestVertexArrayObject.test_draw_with_auto_index_count">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_draw_with_auto_index_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test draw method with automatic index count from EBO.&quot;&quot;&quot;</span>
+        <span class="n">vao</span> <span class="o">=</span> <span class="n">VertexArrayObject</span><span class="p">(</span><span class="n">handle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mock_handle</span><span class="p">)</span>
+        <span class="n">mock_ebo</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+        <span class="n">mock_ebo</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_indices</span>
+        <span class="n">vao</span><span class="o">.</span><span class="n">ebo</span> <span class="o">=</span> <span class="n">mock_ebo</span>
+        
+        <span class="n">vao</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>  <span class="c1"># No index_count provided, should use EBO data length</span></div>
+
+        <span class="c1"># The draw calls are already mocked in setUp</span>
+
+<div class="viewcode-block" id="TestVertexArrayObject.test_delete_buffers">
+<a class="viewcode-back" href="../../../autoapi/picogl/tests/test_vertex_array_object/index.html#picogl.tests.test_vertex_array_object.TestVertexArrayObject.test_delete_buffers">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_delete_buffers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test delete_buffers method.&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;picogl.backend.modern.core.vertex.array.object.delete_buffer&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">mock_delete</span><span class="p">:</span>
+            <span class="n">vao</span> <span class="o">=</span> <span class="n">VertexArrayObject</span><span class="p">(</span><span class="n">handle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mock_handle</span><span class="p">)</span>
+            
+            <span class="c1"># Add some mock VBOs</span>
+            <span class="n">mock_vbo1</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+            <span class="n">mock_vbo2</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+            <span class="n">vao</span><span class="o">.</span><span class="n">vbos</span> <span class="o">=</span> <span class="p">[</span><span class="n">mock_vbo1</span><span class="p">,</span> <span class="n">mock_vbo2</span><span class="p">]</span>
+            
+            <span class="c1"># Add mock EBO</span>
+            <span class="n">mock_ebo</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+            <span class="n">vao</span><span class="o">.</span><span class="n">ebo</span> <span class="o">=</span> <span class="n">mock_ebo</span>
+            
+            <span class="n">vao</span><span class="o">.</span><span class="n">delete_buffers</span><span class="p">()</span>
+            
+            <span class="c1"># Verify VBOs were deleted</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">mock_delete</span><span class="o">.</span><span class="n">call_count</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># 2 VBOs + 1 EBO</span>
+            <span class="n">mock_delete</span><span class="o">.</span><span class="n">assert_any_call</span><span class="p">(</span><span class="n">mock_vbo1</span><span class="p">)</span>
+            <span class="n">mock_delete</span><span class="o">.</span><span class="n">assert_any_call</span><span class="p">(</span><span class="n">mock_vbo2</span><span class="p">)</span>
+            <span class="n">mock_delete</span><span class="o">.</span><span class="n">assert_any_call</span><span class="p">(</span><span class="n">mock_ebo</span><span class="p">)</span>
+            
+            <span class="c1"># Verify internal state was cleared</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vao</span><span class="o">.</span><span class="n">vbos</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">vao</span><span class="o">.</span><span class="n">ebo</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vao</span><span class="o">.</span><span class="n">named_vbos</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestVertexArrayObject.test_context_manager">
+<a class="viewcode-back" href="../../../autoapi/picogl/tests/test_vertex_array_object/index.html#picogl.tests.test_vertex_array_object.TestVertexArrayObject.test_context_manager">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_context_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test that VertexArrayObject can be used as a context manager.&quot;&quot;&quot;</span>
+        <span class="n">vao</span> <span class="o">=</span> <span class="n">VertexArrayObject</span><span class="p">(</span><span class="n">handle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mock_handle</span><span class="p">)</span>
+        
+        <span class="c1"># Test that __enter__ and __exit__ methods exist</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="n">vao</span><span class="p">,</span> <span class="s2">&quot;__enter__&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="n">vao</span><span class="p">,</span> <span class="s2">&quot;__exit__&quot;</span><span class="p">))</span>
+        
+        <span class="c1"># Test context manager usage</span>
+        <span class="k">with</span> <span class="n">patch</span><span class="o">.</span><span class="n">object</span><span class="p">(</span><span class="n">vao</span><span class="p">,</span> <span class="s1">&#39;bind&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">mock_bind</span><span class="p">,</span> <span class="n">patch</span><span class="o">.</span><span class="n">object</span><span class="p">(</span><span class="n">vao</span><span class="p">,</span> <span class="s1">&#39;unbind&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">mock_unbind</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">vao</span> <span class="k">as</span> <span class="n">context_vao</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">context_vao</span><span class="p">,</span> <span class="n">vao</span><span class="p">)</span>
+                <span class="n">mock_bind</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
+            
+            <span class="n">mock_unbind</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TestVertexArrayObject.test_repr_string">
+<a class="viewcode-back" href="../../../autoapi/picogl/tests/test_vertex_array_object/index.html#picogl.tests.test_vertex_array_object.TestVertexArrayObject.test_repr_string">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_repr_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test string representation of VertexArrayObject.&quot;&quot;&quot;</span>
+        <span class="n">vao</span> <span class="o">=</span> <span class="n">VertexArrayObject</span><span class="p">(</span><span class="n">handle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mock_handle</span><span class="p">)</span>
+        <span class="n">repr_str</span> <span class="o">=</span> <span class="nb">repr</span><span class="p">(</span><span class="n">vao</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;VertexArrayObject&quot;</span><span class="p">,</span> <span class="n">repr_str</span><span class="p">)</span>
+        <span class="c1"># The default repr doesn&#39;t include the handle, just test that it&#39;s a valid repr</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">repr_str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;&lt;&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">repr_str</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;&gt;&#39;</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="TestVertexArrayObject.test_error_handling_in_set_layout">
+<a class="viewcode-back" href="../../../autoapi/picogl/tests/test_vertex_array_object/index.html#picogl.tests.test_vertex_array_object.TestVertexArrayObject.test_error_handling_in_set_layout">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_error_handling_in_set_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test error handling in set_layout method.&quot;&quot;&quot;</span>
+        <span class="n">layout</span> <span class="o">=</span> <span class="n">LayoutDescriptor</span><span class="p">(</span><span class="n">attributes</span><span class="o">=</span><span class="p">[])</span>
+        <span class="n">vao</span> <span class="o">=</span> <span class="n">VertexArrayObject</span><span class="p">(</span><span class="n">handle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mock_handle</span><span class="p">)</span>
+        <span class="n">vao</span><span class="o">.</span><span class="n">vao</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>  <span class="c1"># Set vao to enable processing</span>
+        
+        <span class="c1"># Mock an exception during OpenGL calls</span>
+        <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;picogl.backend.modern.core.vertex.array.object.glBindVertexArray&#39;</span><span class="p">,</span> <span class="n">side_effect</span><span class="o">=</span><span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;OpenGL error&quot;</span><span class="p">)):</span>
+            <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;picogl.logger.Logger.error&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">mock_log_error</span><span class="p">:</span>
+                <span class="n">vao</span><span class="o">.</span><span class="n">set_layout</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+                <span class="n">mock_log_error</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="n">mock_log_error</span><span class="o">.</span><span class="n">call_args</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="TestVertexArrayObject.test_error_handling_in_index_count">
+<a class="viewcode-back" href="../../../autoapi/picogl/tests/test_vertex_array_object/index.html#picogl.tests.test_vertex_array_object.TestVertexArrayObject.test_error_handling_in_index_count">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_error_handling_in_index_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test error handling in index_count property.&quot;&quot;&quot;</span>
+        <span class="n">vao</span> <span class="o">=</span> <span class="n">VertexArrayObject</span><span class="p">(</span><span class="n">handle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mock_handle</span><span class="p">)</span>
+        
+        <span class="c1"># Mock an exception</span>
+        <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;picogl.logger.Logger.error&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">mock_log_error</span><span class="p">:</span>
+            <span class="c1"># Create a property that raises an exception</span>
+            <span class="k">class</span><span class="w"> </span><span class="nc">MockEBO</span><span class="p">:</span>
+                <span class="nd">@property</span>
+                <span class="k">def</span><span class="w"> </span><span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Data access error&quot;</span><span class="p">)</span>
+            
+            <span class="n">vao</span><span class="o">.</span><span class="n">ebo</span> <span class="o">=</span> <span class="n">MockEBO</span><span class="p">()</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">vao</span><span class="o">.</span><span class="n">index_count</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>  <span class="c1"># Should return None on error (as per the actual implementation)</span>
+            <span class="n">mock_log_error</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span></div>
+</div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, PicoGL Contributors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

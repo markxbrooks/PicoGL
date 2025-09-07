@@ -46,16 +46,19 @@ Install Dependencies
 ~~~~~~~~~~~~~~~~~~~~
 
 **Install in development mode**:
+
 .. code-block:: bash
 
    pip install -e .[dev]
 
 **Install additional dependencies**:
+
 .. code-block:: bash
 
    pip install -e .[dev,qt]
 
 **Verify installation**:
+
 .. code-block:: bash
 
    python -c "import picogl; print('PicoGL installed successfully')"
@@ -64,16 +67,19 @@ Set Up Pre-commit Hooks
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 **Install pre-commit**:
+
 .. code-block:: bash
 
    pip install pre-commit
 
 **Install hooks**:
+
 .. code-block:: bash
 
    pre-commit install
 
 **Run hooks manually**:
+
 .. code-block:: bash
 
    pre-commit run --all-files
@@ -129,6 +135,7 @@ Formatting
 PicoGL uses Black for code formatting:
 
 **Configuration**:
+
 .. code-block:: toml
 
    [tool.black]
@@ -137,6 +144,7 @@ PicoGL uses Black for code formatting:
    include = '\.pyi?$'
 
 **Usage**:
+
 .. code-block:: bash
 
    # Format all Python files
@@ -151,6 +159,7 @@ Linting
 PicoGL uses flake8 for linting:
 
 **Configuration**:
+
 .. code-block:: ini
 
    [flake8]
@@ -164,6 +173,7 @@ PicoGL uses flake8 for linting:
        dist
 
 **Usage**:
+
 .. code-block:: bash
 
    # Lint all Python files
@@ -175,6 +185,7 @@ Type Checking
 PicoGL uses mypy for type checking:
 
 **Configuration**:
+
 .. code-block:: ini
 
    [mypy]
@@ -193,6 +204,7 @@ PicoGL uses mypy for type checking:
    strict_equality = True
 
 **Usage**:
+
 .. code-block:: bash
 
    # Type check all Python files
@@ -204,6 +216,7 @@ Documentation
 PicoGL uses Sphynx/RST-style docstrings:
 
 **Example**:
+
 .. code-block:: python
 
    def create_mesh_data(vertices, colors, normals=None):
@@ -225,6 +238,7 @@ Writing Tests
 ~~~~~~~~~~~~~
 
 **Test Structure**:
+
 .. code-block:: python
 
    class TestNewFeature(unittest.TestCase):
@@ -272,21 +286,25 @@ Running Tests
 ~~~~~~~~~~~~~
 
 **Run all tests**:
+
 .. code-block:: bash
 
    python -m unittest discover tests
 
 **Run specific test**:
+
 .. code-block:: bash
 
    python -m unittest tests.test_new_feature
 
 **Run with coverage**:
+
 .. code-block:: bash
 
    pytest tests/ --cov=picogl
 
 **Run with verbose output**:
+
 .. code-block:: bash
 
    python -m unittest discover tests -v
@@ -335,17 +353,20 @@ Building Documentation
 ~~~~~~~~~~~~~~~~~~~~~~
 
 **Build HTML documentation**:
+
 .. code-block:: bash
 
    sphinx-build -b html doc/ doc/_build/html
 
 **Build PDF documentation**:
+
 .. code-block:: bash
 
    sphinx-build -b latex doc/ doc/_build/latex
    cd doc/_build/latex && make
 
 **View documentation**:
+
 .. code-block:: bash
 
    open doc/_build/html/index.html
@@ -437,6 +458,7 @@ Bug Fixes
 * Verify fix with tests
 
 **Bug Fix Template**:
+
 .. code-block:: text
 
    **Bug Description**: Brief description of the bug
@@ -465,6 +487,7 @@ Feature Requests
 * Consider backward compatibility
 
 **Feature Request Template**:
+
 .. code-block:: text
 
    **Feature Description**: Brief description of the feature
@@ -490,6 +513,7 @@ Documentation Improvements
 * Add examples
 
 **Documentation Template**:
+
 .. code-block:: text
 
    **Documentation Type**: API/User/Example/etc.
@@ -514,6 +538,7 @@ Performance Improvements
 * Measure improvements
 
 **Performance Template**:
+
 .. code-block:: text
 
    **Performance Issue**: What is slow
@@ -538,6 +563,7 @@ Code Quality Improvements
 * Add tests
 
 **Code Quality Template**:
+
 .. code-block:: text
 
    **Code Quality Issue**: What needs improvement

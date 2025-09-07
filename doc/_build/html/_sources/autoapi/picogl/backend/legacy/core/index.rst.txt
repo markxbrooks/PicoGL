@@ -1,0 +1,16 @@
+picogl.backend.legacy.core
+==========================
+
+.. py:module:: picogl.backend.legacy.core
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/picogl/backend/legacy/core/camera/index
+   /autoapi/picogl/backend/legacy/core/vertex/index
+
+

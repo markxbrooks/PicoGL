@@ -1,0 +1,86 @@
+picogl.buffers.base
+===================
+
+.. py:module:: picogl.buffers.base
+
+.. autoapi-nested-parse::
+
+   VertexBase
+   ================
+
+   Specializes the abstract façade into a slightly more concrete base (manages a GL handle, context manager behavior, common boilerplate).
+
+   Leaves rendering-specific logic to subclasses like ModernVertexArrayGroup.
+
+   Follows the "abstract base + partial implementation" pattern.
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.buffers.base.VertexBase
+
+
+Module Contents
+---------------
+
+.. py:class:: VertexBase(handle: int = None)
+
+   Bases: :py:obj:`picogl.buffers.abstract.AbstractVertexGroup`
+
+
+   Generic OpenGL object interface with binding lifecycle.
+
+   Provides handle + context manager, leaves binding to subclasses.
+
+
+   .. py:attribute:: handle
+      :value: None
+
+
+
+   .. py:method:: bind()
+      :abstractmethod:
+
+
+      Bind the underlying VAO/state for rendering.
+
+
+
+   .. py:method:: unbind()
+      :abstractmethod:
+
+
+      Optionally unbind the VAO/state.
+
+
+
+   .. py:method:: delete()
+      :abstractmethod:
+
+
+      Release resources (VAO or equivalent).
+
+
+
+   .. py:method:: __enter__()
+
+
+   .. py:method:: __exit__(exc_type, exc_val, exc_tb)
+
+
+   .. py:method:: attach_buffers(nbo=None, cbo=None, vbo=None, ebo=None) -> None
+
+      Attach the buffers that the VAO/group should coordinate.
+
+
+
+   .. py:method:: set_layout(layout: picogl.buffers.attributes.LayoutDescriptor) -> None
+
+      Define the attribute layout for this VAO/group.
+
+
+

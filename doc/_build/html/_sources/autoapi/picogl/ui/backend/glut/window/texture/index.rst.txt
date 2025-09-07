@@ -1,0 +1,37 @@
+picogl.ui.backend.glut.window.texture
+=====================================
+
+.. py:module:: picogl.ui.backend.glut.window.texture
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.ui.backend.glut.window.texture.TextureWindow
+
+
+Module Contents
+---------------
+
+.. py:class:: TextureWindow(width: int, height: int, title: str, data: picogl.renderer.MeshData, base_dir: str | pathlib.Path, glsl_dir: str | pathlib.Path, use_texture: bool, *args, **kwargs)
+
+   Bases: :py:obj:`picogl.ui.backend.glut.window.glut.GlutRendererWindow`
+
+
+   file with stubs for actions
+
+
+   .. py:attribute:: context
+
+
+   .. py:attribute:: base_dir
+
+
+   .. py:attribute:: data
+
+
+   .. py:attribute:: renderer
+
+

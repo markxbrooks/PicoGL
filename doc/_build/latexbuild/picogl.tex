@@ -84,7 +84,7 @@
 
 \title{PicoGL}
 \date{Sep 07, 2025}
-\release{1.0.0}
+\release{0.2.0}
 \author{PicoGL Contributors}
 \newcommand{\sphinxlogo}{\vbox{}}
 \renewcommand{\releasename}{Release}
@@ -3817,29 +3817,19 @@ The \sphinxcode{\sphinxupquote{GLContext}} class manages OpenGL\sphinxhyphen{}re
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.renderer import GLContext
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{renderer}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{GLContext}
 
-\sphinxAtStartPar
-\# Create OpenGL context
-context = GLContext()
+\PYG{c+c1}{\PYGZsh{} Create OpenGL context}
+\PYG{n}{context} \PYG{o}{=} \PYG{n}{GLContext}\PYG{p}{(}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Create shader program
-context.create\_shader\_program(
-\begin{quote}
-
-\sphinxAtStartPar
-vertex\_source\_file=”vertex.glsl”,
-fragment\_source\_file=”fragment.glsl”
-\end{quote}
-
-\sphinxAtStartPar
-)
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Create shader program}
+\PYG{n}{context}\PYG{o}{.}\PYG{n}{create\PYGZus{}shader\PYGZus{}program}\PYG{p}{(}
+    \PYG{n}{vertex\PYGZus{}source\PYGZus{}file}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{vertex.glsl}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+    \PYG{n}{fragment\PYGZus{}source\PYGZus{}file}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{fragment.glsl}\PYG{l+s+s2}{\PYGZdq{}}
+\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsection{Renderer Classes}
@@ -3936,35 +3926,26 @@ The \sphinxcode{\sphinxupquote{ObjectRenderer}} class provides unified rendering
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.renderer import GLContext, MeshData
-from picogl.renderer.object import ObjectRenderer
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{renderer}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{GLContext}\PYG{p}{,} \PYG{n}{MeshData}
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{renderer}\PYG{n+nn}{.}\PYG{n+nn}{object}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{ObjectRenderer}
 
-\sphinxAtStartPar
-\# Create renderer
-context = GLContext()
-data = MeshData.from\_raw(vertices=vertices, colors=colors)
-\begin{description}
-\sphinxlineitem{renderer = ObjectRenderer(}
-\sphinxAtStartPar
-context=context,
-data=data,
-use\_texture=False
+\PYG{c+c1}{\PYGZsh{} Create renderer}
+\PYG{n}{context} \PYG{o}{=} \PYG{n}{GLContext}\PYG{p}{(}\PYG{p}{)}
+\PYG{n}{data} \PYG{o}{=} \PYG{n}{MeshData}\PYG{o}{.}\PYG{n}{from\PYGZus{}raw}\PYG{p}{(}\PYG{n}{vertices}\PYG{o}{=}\PYG{n}{vertices}\PYG{p}{,} \PYG{n}{colors}\PYG{o}{=}\PYG{n}{colors}\PYG{p}{)}
 
-\end{description}
+\PYG{n}{renderer} \PYG{o}{=} \PYG{n}{ObjectRenderer}\PYG{p}{(}
+    \PYG{n}{context}\PYG{o}{=}\PYG{n}{context}\PYG{p}{,}
+    \PYG{n}{data}\PYG{o}{=}\PYG{n}{data}\PYG{p}{,}
+    \PYG{n}{use\PYGZus{}texture}\PYG{o}{=}\PYG{k+kc}{False}
+\PYG{p}{)}
 
-\sphinxAtStartPar
-)
-
-\sphinxAtStartPar
-\# Initialize and render
-renderer.initialize\_shaders()
-renderer.initialize()
-renderer.render()
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Initialize and render}
+\PYG{n}{renderer}\PYG{o}{.}\PYG{n}{initialize\PYGZus{}shaders}\PYG{p}{(}\PYG{p}{)}
+\PYG{n}{renderer}\PYG{o}{.}\PYG{n}{initialize}\PYG{p}{(}\PYG{p}{)}
+\PYG{n}{renderer}\PYG{o}{.}\PYG{n}{render}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsubsection{TextureRenderer}
@@ -4093,32 +4074,22 @@ The \sphinxcode{\sphinxupquote{TextureRenderer}} class extends \sphinxcode{\sphi
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.renderer.texture import TextureRenderer
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{renderer}\PYG{n+nn}{.}\PYG{n+nn}{texture}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{TextureRenderer}
 
-\sphinxAtStartPar
-\# Create texture renderer
-renderer = TextureRenderer(
-\begin{quote}
+\PYG{c+c1}{\PYGZsh{} Create texture renderer}
+\PYG{n}{renderer} \PYG{o}{=} \PYG{n}{TextureRenderer}\PYG{p}{(}
+    \PYG{n}{context}\PYG{o}{=}\PYG{n}{context}\PYG{p}{,}
+    \PYG{n}{data}\PYG{o}{=}\PYG{n}{data}\PYG{p}{,}
+    \PYG{n}{base\PYGZus{}dir}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{path/to/resources}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+    \PYG{n}{use\PYGZus{}texture}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{,}
+    \PYG{n}{texture\PYGZus{}file}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{texture.png}\PYG{l+s+s2}{\PYGZdq{}}
+\PYG{p}{)}
 
-\sphinxAtStartPar
-context=context,
-data=data,
-base\_dir=”path/to/resources”,
-use\_texture=True,
-texture\_file=”texture.png”
-\end{quote}
-
-\sphinxAtStartPar
-)
-
-\sphinxAtStartPar
-\# Initialize textures
-renderer.initialize\_textures()
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Initialize textures}
+\PYG{n}{renderer}\PYG{o}{.}\PYG{n}{initialize\PYGZus{}textures}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsubsection{LegacyGLMesh}
@@ -4128,32 +4099,22 @@ The \sphinxcode{\sphinxupquote{LegacyGLMesh}} class provides OpenGL 1.x/2.x comp
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.renderer.legacy\_glmesh import LegacyGLMesh
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{renderer}\PYG{n+nn}{.}\PYG{n+nn}{legacy\PYGZus{}glmesh}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{LegacyGLMesh}
 
-\sphinxAtStartPar
-\# Create legacy mesh
-mesh = LegacyGLMesh(
-\begin{quote}
+\PYG{c+c1}{\PYGZsh{} Create legacy mesh}
+\PYG{n}{mesh} \PYG{o}{=} \PYG{n}{LegacyGLMesh}\PYG{p}{(}
+    \PYG{n}{vertices}\PYG{o}{=}\PYG{n}{vertices}\PYG{p}{,}
+    \PYG{n}{faces}\PYG{o}{=}\PYG{n}{faces}\PYG{p}{,}
+    \PYG{n}{colors}\PYG{o}{=}\PYG{n}{colors}\PYG{p}{,}
+    \PYG{n}{normals}\PYG{o}{=}\PYG{n}{normals}
+\PYG{p}{)}
 
-\sphinxAtStartPar
-vertices=vertices,
-faces=faces,
-colors=colors,
-normals=normals
-\end{quote}
-
-\sphinxAtStartPar
-)
-
-\sphinxAtStartPar
-\# Upload to GPU and draw
-mesh.upload()
-mesh.draw()
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Upload to GPU and draw}
+\PYG{n}{mesh}\PYG{o}{.}\PYG{n}{upload}\PYG{p}{(}\PYG{p}{)}
+\PYG{n}{mesh}\PYG{o}{.}\PYG{n}{draw}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsubsection{GLMesh}
@@ -4292,32 +4253,22 @@ The \sphinxcode{\sphinxupquote{GLMesh}} class provides modern OpenGL mesh render
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.renderer.glmesh import GLMesh
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{renderer}\PYG{n+nn}{.}\PYG{n+nn}{glmesh}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{GLMesh}
 
-\sphinxAtStartPar
-\# Create modern mesh
-mesh = GLMesh(
-\begin{quote}
+\PYG{c+c1}{\PYGZsh{} Create modern mesh}
+\PYG{n}{mesh} \PYG{o}{=} \PYG{n}{GLMesh}\PYG{p}{(}
+    \PYG{n}{vertices}\PYG{o}{=}\PYG{n}{vertices}\PYG{p}{,}
+    \PYG{n}{faces}\PYG{o}{=}\PYG{n}{faces}\PYG{p}{,}
+    \PYG{n}{colors}\PYG{o}{=}\PYG{n}{colors}\PYG{p}{,}
+    \PYG{n}{normals}\PYG{o}{=}\PYG{n}{normals}
+\PYG{p}{)}
 
-\sphinxAtStartPar
-vertices=vertices,
-faces=faces,
-colors=colors,
-normals=normals
-\end{quote}
-
-\sphinxAtStartPar
-)
-
-\sphinxAtStartPar
-\# Upload to GPU and draw
-mesh.upload()
-mesh.draw()
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Upload to GPU and draw}
+\PYG{n}{mesh}\PYG{o}{.}\PYG{n}{upload}\PYG{p}{(}\PYG{p}{)}
+\PYG{n}{mesh}\PYG{o}{.}\PYG{n}{draw}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsection{Base Classes}
@@ -4598,21 +4549,17 @@ The \sphinxcode{\sphinxupquote{UvRenderer}} class provides 2D UV coordinate rend
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.renderer.uvrenderer import UvRenderer
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{renderer}\PYG{n+nn}{.}\PYG{n+nn}{uvrenderer}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{UvRenderer}
 
-\sphinxAtStartPar
-\# Create UV renderer
-renderer = UvRenderer()
+\PYG{c+c1}{\PYGZsh{} Create UV renderer}
+\PYG{n}{renderer} \PYG{o}{=} \PYG{n}{UvRenderer}\PYG{p}{(}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Initialize with UV data
-renderer.initialize(uv\_buffer, indices\_buffer, index\_count)
-renderer.render()
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Initialize with UV data}
+\PYG{n}{renderer}\PYG{o}{.}\PYG{n}{initialize}\PYG{p}{(}\PYG{n}{uv\PYGZus{}buffer}\PYG{p}{,} \PYG{n}{indices\PYGZus{}buffer}\PYG{p}{,} \PYG{n}{index\PYGZus{}count}\PYG{p}{)}
+\PYG{n}{renderer}\PYG{o}{.}\PYG{n}{render}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsection{Data Structures}
@@ -4629,49 +4576,27 @@ The renderer module uses several data structures to represent 3D mesh informatio
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Vertex data (N, 3) array
-vertices = np.array({[}
-\begin{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Vertex data (N, 3) array}
+\PYG{n}{vertices} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}\PYG{p}{[}
+    \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,}  \PYG{c+c1}{\PYGZsh{} Vertex 0}
+    \PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,}  \PYG{c+c1}{\PYGZsh{} Vertex 1}
+    \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{]}   \PYG{c+c1}{\PYGZsh{} Vertex 2}
+\PYG{p}{]}\PYG{p}{,} \PYG{n}{dtype}\PYG{o}{=}\PYG{n}{np}\PYG{o}{.}\PYG{n}{float32}\PYG{p}{)}
 
-\sphinxAtStartPar
-{[}0, 0, 0{]},  \# Vertex 0
-{[}1, 0, 0{]},  \# Vertex 1
-{[}0, 1, 0{]}   \# Vertex 2
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Color data (N, 3) array}
+\PYG{n}{colors} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}\PYG{p}{[}
+    \PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,}  \PYG{c+c1}{\PYGZsh{} Red}
+    \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,}  \PYG{c+c1}{\PYGZsh{} Green}
+    \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{]}   \PYG{c+c1}{\PYGZsh{} Blue}
+\PYG{p}{]}\PYG{p}{,} \PYG{n}{dtype}\PYG{o}{=}\PYG{n}{np}\PYG{o}{.}\PYG{n}{float32}\PYG{p}{)}
 
-\sphinxAtStartPar
-{]}, dtype=np.float32)
-
-\sphinxAtStartPar
-\# Color data (N, 3) array
-colors = np.array({[}
-\begin{quote}
-
-\sphinxAtStartPar
-{[}1, 0, 0{]},  \# Red
-{[}0, 1, 0{]},  \# Green
-{[}0, 0, 1{]}   \# Blue
-\end{quote}
-
-\sphinxAtStartPar
-{]}, dtype=np.float32)
-
-\sphinxAtStartPar
-\# Face data (M, 3) array
-faces = np.array({[}
-\begin{quote}
-
-\sphinxAtStartPar
-{[}0, 1, 2{]}   \# Triangle connecting vertices 0, 1, 2
-\end{quote}
-
-\sphinxAtStartPar
-{]}, dtype=np.uint32)
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Face data (M, 3) array}
+\PYG{n}{faces} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}\PYG{p}{[}
+    \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{]}   \PYG{c+c1}{\PYGZsh{} Triangle connecting vertices 0, 1, 2}
+\PYG{p}{]}\PYG{p}{,} \PYG{n}{dtype}\PYG{o}{=}\PYG{n}{np}\PYG{o}{.}\PYG{n}{uint32}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsection{Rendering Pipeline}
@@ -4704,31 +4629,25 @@ The PicoGL rendering pipeline follows these steps:
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# 1. Prepare data
-data = MeshData.from\_raw(vertices=vertices, colors=colors)
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} 1. Prepare data}
+\PYG{n}{data} \PYG{o}{=} \PYG{n}{MeshData}\PYG{o}{.}\PYG{n}{from\PYGZus{}raw}\PYG{p}{(}\PYG{n}{vertices}\PYG{o}{=}\PYG{n}{vertices}\PYG{p}{,} \PYG{n}{colors}\PYG{o}{=}\PYG{n}{colors}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# 2. Setup context
-context = GLContext()
-context.create\_shader\_program(“vertex.glsl”, “fragment.glsl”)
+\PYG{c+c1}{\PYGZsh{} 2. Setup context}
+\PYG{n}{context} \PYG{o}{=} \PYG{n}{GLContext}\PYG{p}{(}\PYG{p}{)}
+\PYG{n}{context}\PYG{o}{.}\PYG{n}{create\PYGZus{}shader\PYGZus{}program}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{vertex.glsl}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{fragment.glsl}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# 3. Create renderer
-renderer = ObjectRenderer(context=context, data=data)
+\PYG{c+c1}{\PYGZsh{} 3. Create renderer}
+\PYG{n}{renderer} \PYG{o}{=} \PYG{n}{ObjectRenderer}\PYG{p}{(}\PYG{n}{context}\PYG{o}{=}\PYG{n}{context}\PYG{p}{,} \PYG{n}{data}\PYG{o}{=}\PYG{n}{data}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# 4. Initialize
-renderer.initialize\_shaders()
-renderer.initialize()
+\PYG{c+c1}{\PYGZsh{} 4. Initialize}
+\PYG{n}{renderer}\PYG{o}{.}\PYG{n}{initialize\PYGZus{}shaders}\PYG{p}{(}\PYG{p}{)}
+\PYG{n}{renderer}\PYG{o}{.}\PYG{n}{initialize}\PYG{p}{(}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# 5. Render (in main loop)
-renderer.render()
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} 5. Render (in main loop)}
+\PYG{n}{renderer}\PYG{o}{.}\PYG{n}{render}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsection{Error Handling}
@@ -4744,25 +4663,17 @@ PicoGL renderers include comprehensive error handling:
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
-\begin{description}
-\sphinxlineitem{try:}
-\sphinxAtStartPar
-renderer.initialize()
 
-\sphinxlineitem{except OpenGLError as e:}
-\sphinxAtStartPar
-print(f”OpenGL error: \{e\}”)
-\# Fallback to legacy rendering
-
-\sphinxlineitem{except Exception as e:}
-\sphinxAtStartPar
-print(f”Unexpected error: \{e\}”)
-\# Handle gracefully
-
-\end{description}
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k}{try}\PYG{p}{:}
+    \PYG{n}{renderer}\PYG{o}{.}\PYG{n}{initialize}\PYG{p}{(}\PYG{p}{)}
+\PYG{k}{except} \PYG{n}{OpenGLError} \PYG{k}{as} \PYG{n}{e}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{OpenGL error: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{e}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+    \PYG{c+c1}{\PYGZsh{} Fallback to legacy rendering}
+\PYG{k}{except} \PYG{n+ne}{Exception} \PYG{k}{as} \PYG{n}{e}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Unexpected error: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{e}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+    \PYG{c+c1}{\PYGZsh{} Handle gracefully}
+\end{sphinxVerbatim}
 
 
 \subsection{Performance Considerations}
@@ -4816,29 +4727,17 @@ print(f”Unexpected error: \{e\}”)
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Choose renderer based on OpenGL support
-if has\_modern\_opengl():
-\begin{quote}
-
-\sphinxAtStartPar
-renderer = ObjectRenderer(context, data)
-\end{quote}
-\begin{description}
-\sphinxlineitem{elif has\_legacy\_opengl():}
-\sphinxAtStartPar
-renderer = LegacyGLMesh(vertices, faces, colors)
-
-\sphinxlineitem{else:}
-\sphinxAtStartPar
-\# Use immediate mode fallback
-renderer = ImmediateModeRenderer(vertices, colors)
-
-\end{description}
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Choose renderer based on OpenGL support}
+\PYG{k}{if} \PYG{n}{has\PYGZus{}modern\PYGZus{}opengl}\PYG{p}{(}\PYG{p}{)}\PYG{p}{:}
+    \PYG{n}{renderer} \PYG{o}{=} \PYG{n}{ObjectRenderer}\PYG{p}{(}\PYG{n}{context}\PYG{p}{,} \PYG{n}{data}\PYG{p}{)}
+\PYG{k}{elif} \PYG{n}{has\PYGZus{}legacy\PYGZus{}opengl}\PYG{p}{(}\PYG{p}{)}\PYG{p}{:}
+    \PYG{n}{renderer} \PYG{o}{=} \PYG{n}{LegacyGLMesh}\PYG{p}{(}\PYG{n}{vertices}\PYG{p}{,} \PYG{n}{faces}\PYG{p}{,} \PYG{n}{colors}\PYG{p}{)}
+\PYG{k}{else}\PYG{p}{:}
+    \PYG{c+c1}{\PYGZsh{} Use immediate mode fallback}
+    \PYG{n}{renderer} \PYG{o}{=} \PYG{n}{ImmediateModeRenderer}\PYG{p}{(}\PYG{n}{vertices}\PYG{p}{,} \PYG{n}{colors}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \sphinxstepscope
 
@@ -5219,32 +5118,25 @@ The \sphinxcode{\sphinxupquote{VertexArrayObject}} class manages OpenGL Vertex A
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{backend}\PYG{n+nn}{.}\PYG{n+nn}{modern}\PYG{n+nn}{.}\PYG{n+nn}{core}\PYG{n+nn}{.}\PYG{n+nn}{vertex}\PYG{n+nn}{.}\PYG{n+nn}{array}\PYG{n+nn}{.}\PYG{n+nn}{object}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{VertexArrayObject}
 
-\sphinxAtStartPar
-\# Create VAO
-vao = VertexArrayObject()
+\PYG{c+c1}{\PYGZsh{} Create VAO}
+\PYG{n}{vao} \PYG{o}{=} \PYG{n}{VertexArrayObject}\PYG{p}{(}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Add vertex buffer
-vao.add\_vbo(index=0, data=vertices, size=3)
+\PYG{c+c1}{\PYGZsh{} Add vertex buffer}
+\PYG{n}{vao}\PYG{o}{.}\PYG{n}{add\PYGZus{}vbo}\PYG{p}{(}\PYG{n}{index}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{data}\PYG{o}{=}\PYG{n}{vertices}\PYG{p}{,} \PYG{n}{size}\PYG{o}{=}\PYG{l+m+mi}{3}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Add color buffer
-vao.add\_vbo(index=1, data=colors, size=3)
+\PYG{c+c1}{\PYGZsh{} Add color buffer}
+\PYG{n}{vao}\PYG{o}{.}\PYG{n}{add\PYGZus{}vbo}\PYG{p}{(}\PYG{n}{index}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{data}\PYG{o}{=}\PYG{n}{colors}\PYG{p}{,} \PYG{n}{size}\PYG{o}{=}\PYG{l+m+mi}{3}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Add element buffer
-vao.add\_ebo(data=indices)
+\PYG{c+c1}{\PYGZsh{} Add element buffer}
+\PYG{n}{vao}\PYG{o}{.}\PYG{n}{add\PYGZus{}ebo}\PYG{p}{(}\PYG{n}{data}\PYG{o}{=}\PYG{n}{indices}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Draw
-vao.draw(mode=GL\_TRIANGLES, index\_count=len(indices))
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Draw}
+\PYG{n}{vao}\PYG{o}{.}\PYG{n}{draw}\PYG{p}{(}\PYG{n}{mode}\PYG{o}{=}\PYG{n}{GL\PYGZus{}TRIANGLES}\PYG{p}{,} \PYG{n}{index\PYGZus{}count}\PYG{o}{=}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{indices}\PYG{p}{)}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsubsection{VertexBufferGroup}
@@ -5254,33 +5146,26 @@ The \sphinxcode{\sphinxupquote{VertexBufferGroup}} class provides legacy OpenGL 
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.buffers.vertex.legacy import VertexBufferGroup
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{buffers}\PYG{n+nn}{.}\PYG{n+nn}{vertex}\PYG{n+nn}{.}\PYG{n+nn}{legacy}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{VertexBufferGroup}
 
-\sphinxAtStartPar
-\# Create vertex buffer group
-vbg = VertexBufferGroup()
+\PYG{c+c1}{\PYGZsh{} Create vertex buffer group}
+\PYG{n}{vbg} \PYG{o}{=} \PYG{n}{VertexBufferGroup}\PYG{p}{(}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Add vertex buffer
-vbg.add\_vbo(“position”, vertices, 3)
+\PYG{c+c1}{\PYGZsh{} Add vertex buffer}
+\PYG{n}{vbg}\PYG{o}{.}\PYG{n}{add\PYGZus{}vbo}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{position}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{vertices}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Add color buffer
-vbg.add\_vbo(“color”, colors, 3)
+\PYG{c+c1}{\PYGZsh{} Add color buffer}
+\PYG{n}{vbg}\PYG{o}{.}\PYG{n}{add\PYGZus{}vbo}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{color}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{colors}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Add element buffer
-vbg.add\_ebo(indices)
+\PYG{c+c1}{\PYGZsh{} Add element buffer}
+\PYG{n}{vbg}\PYG{o}{.}\PYG{n}{add\PYGZus{}ebo}\PYG{p}{(}\PYG{n}{indices}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Bind and draw
-vbg.bind()
-vbg.draw(mode=GL\_TRIANGLES)
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Bind and draw}
+\PYG{n}{vbg}\PYG{o}{.}\PYG{n}{bind}\PYG{p}{(}\PYG{p}{)}
+\PYG{n}{vbg}\PYG{o}{.}\PYG{n}{draw}\PYG{p}{(}\PYG{n}{mode}\PYG{o}{=}\PYG{n}{GL\PYGZus{}TRIANGLES}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsection{Buffer Classes}
@@ -5564,26 +5449,17 @@ The \sphinxcode{\sphinxupquote{LayoutDescriptor}} class describes the layout of 
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.buffers.factory.layout import create\_layout
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{buffers}\PYG{n+nn}{.}\PYG{n+nn}{factory}\PYG{n+nn}{.}\PYG{n+nn}{layout}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{create\PYGZus{}layout}
 
-\sphinxAtStartPar
-\# Create layout descriptor
-layout = create\_layout({[}
-\begin{quote}
-
-\sphinxAtStartPar
-AttributeSpec(name=”position”, size=3, type=GL\_FLOAT),
-AttributeSpec(name=”color”, size=3, type=GL\_FLOAT),
-AttributeSpec(name=”normal”, size=3, type=GL\_FLOAT)
-\end{quote}
-
-\sphinxAtStartPar
-{]})
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Create layout descriptor}
+\PYG{n}{layout} \PYG{o}{=} \PYG{n}{create\PYGZus{}layout}\PYG{p}{(}\PYG{p}{[}
+    \PYG{n}{AttributeSpec}\PYG{p}{(}\PYG{n}{name}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{position}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{size}\PYG{o}{=}\PYG{l+m+mi}{3}\PYG{p}{,} \PYG{n+nb}{type}\PYG{o}{=}\PYG{n}{GL\PYGZus{}FLOAT}\PYG{p}{)}\PYG{p}{,}
+    \PYG{n}{AttributeSpec}\PYG{p}{(}\PYG{n}{name}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{color}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{size}\PYG{o}{=}\PYG{l+m+mi}{3}\PYG{p}{,} \PYG{n+nb}{type}\PYG{o}{=}\PYG{n}{GL\PYGZus{}FLOAT}\PYG{p}{)}\PYG{p}{,}
+    \PYG{n}{AttributeSpec}\PYG{p}{(}\PYG{n}{name}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{normal}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{size}\PYG{o}{=}\PYG{l+m+mi}{3}\PYG{p}{,} \PYG{n+nb}{type}\PYG{o}{=}\PYG{n}{GL\PYGZus{}FLOAT}\PYG{p}{)}
+\PYG{p}{]}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsubsection{AttributeSpec}
@@ -5690,29 +5566,20 @@ The \sphinxcode{\sphinxupquote{AttributeSpec}} class describes a single vertex a
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.buffers.attributes import AttributeSpec
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{buffers}\PYG{n+nn}{.}\PYG{n+nn}{attributes}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{AttributeSpec}
 
-\sphinxAtStartPar
-\# Create attribute specification
-position\_attr = AttributeSpec(
-\begin{quote}
-
-\sphinxAtStartPar
-name=”position”,
-size=3,
-type=GL\_FLOAT,
-normalized=False,
-stride=0,
-offset=0
-\end{quote}
-
-\sphinxAtStartPar
-)
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Create attribute specification}
+\PYG{n}{position\PYGZus{}attr} \PYG{o}{=} \PYG{n}{AttributeSpec}\PYG{p}{(}
+    \PYG{n}{name}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{position}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+    \PYG{n}{size}\PYG{o}{=}\PYG{l+m+mi}{3}\PYG{p}{,}
+    \PYG{n+nb}{type}\PYG{o}{=}\PYG{n}{GL\PYGZus{}FLOAT}\PYG{p}{,}
+    \PYG{n}{normalized}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{,}
+    \PYG{n}{stride}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{,}
+    \PYG{n}{offset}\PYG{o}{=}\PYG{l+m+mi}{0}
+\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsection{Buffer Management}
@@ -5722,90 +5589,68 @@ offset=0
 \label{\detokenize{api/buffers:creating-buffers}}
 \sphinxAtStartPar
 \sphinxstylestrong{Modern OpenGL (VAO/VBO)}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{backend}\PYG{n+nn}{.}\PYG{n+nn}{modern}\PYG{n+nn}{.}\PYG{n+nn}{core}\PYG{n+nn}{.}\PYG{n+nn}{vertex}\PYG{n+nn}{.}\PYG{n+nn}{array}\PYG{n+nn}{.}\PYG{n+nn}{object}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{VertexArrayObject}
 
-\sphinxAtStartPar
-\# Create VAO
-vao = VertexArrayObject()
+\PYG{c+c1}{\PYGZsh{} Create VAO}
+\PYG{n}{vao} \PYG{o}{=} \PYG{n}{VertexArrayObject}\PYG{p}{(}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Add vertex buffer
-vao.add\_vbo(index=0, data=vertices, size=3)
+\PYG{c+c1}{\PYGZsh{} Add vertex buffer}
+\PYG{n}{vao}\PYG{o}{.}\PYG{n}{add\PYGZus{}vbo}\PYG{p}{(}\PYG{n}{index}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{data}\PYG{o}{=}\PYG{n}{vertices}\PYG{p}{,} \PYG{n}{size}\PYG{o}{=}\PYG{l+m+mi}{3}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Add color buffer
-vao.add\_vbo(index=1, data=colors, size=3)
+\PYG{c+c1}{\PYGZsh{} Add color buffer}
+\PYG{n}{vao}\PYG{o}{.}\PYG{n}{add\PYGZus{}vbo}\PYG{p}{(}\PYG{n}{index}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{data}\PYG{o}{=}\PYG{n}{colors}\PYG{p}{,} \PYG{n}{size}\PYG{o}{=}\PYG{l+m+mi}{3}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Add element buffer
-vao.add\_ebo(data=indices)
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Add element buffer}
+\PYG{n}{vao}\PYG{o}{.}\PYG{n}{add\PYGZus{}ebo}\PYG{p}{(}\PYG{n}{data}\PYG{o}{=}\PYG{n}{indices}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Legacy OpenGL (VBO only)}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.buffers.vertex.legacy import VertexBufferGroup
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{buffers}\PYG{n+nn}{.}\PYG{n+nn}{vertex}\PYG{n+nn}{.}\PYG{n+nn}{legacy}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{VertexBufferGroup}
 
-\sphinxAtStartPar
-\# Create vertex buffer group
-vbg = VertexBufferGroup()
+\PYG{c+c1}{\PYGZsh{} Create vertex buffer group}
+\PYG{n}{vbg} \PYG{o}{=} \PYG{n}{VertexBufferGroup}\PYG{p}{(}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Add vertex buffer
-vbg.add\_vbo(“position”, vertices, 3)
+\PYG{c+c1}{\PYGZsh{} Add vertex buffer}
+\PYG{n}{vbg}\PYG{o}{.}\PYG{n}{add\PYGZus{}vbo}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{position}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{vertices}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Add color buffer
-vbg.add\_vbo(“color”, colors, 3)
+\PYG{c+c1}{\PYGZsh{} Add color buffer}
+\PYG{n}{vbg}\PYG{o}{.}\PYG{n}{add\PYGZus{}vbo}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{color}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{colors}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Add element buffer
-vbg.add\_ebo(indices)
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Add element buffer}
+\PYG{n}{vbg}\PYG{o}{.}\PYG{n}{add\PYGZus{}ebo}\PYG{p}{(}\PYG{n}{indices}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsubsection{Binding Buffers}
 \label{\detokenize{api/buffers:binding-buffers}}
 \sphinxAtStartPar
 \sphinxstylestrong{Modern OpenGL}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Bind VAO (automatically binds all VBOs)
-with vao:
-\begin{quote}
-
-\sphinxAtStartPar
-\# Draw calls here
-vao.draw(mode=GL\_TRIANGLES, index\_count=len(indices))
-\end{quote}
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Bind VAO (automatically binds all VBOs)}
+\PYG{k}{with} \PYG{n}{vao}\PYG{p}{:}
+    \PYG{c+c1}{\PYGZsh{} Draw calls here}
+    \PYG{n}{vao}\PYG{o}{.}\PYG{n}{draw}\PYG{p}{(}\PYG{n}{mode}\PYG{o}{=}\PYG{n}{GL\PYGZus{}TRIANGLES}\PYG{p}{,} \PYG{n}{index\PYGZus{}count}\PYG{o}{=}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{indices}\PYG{p}{)}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Legacy OpenGL}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Bind vertex buffer group
-vbg.bind()
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Bind vertex buffer group}
+\PYG{n}{vbg}\PYG{o}{.}\PYG{n}{bind}\PYG{p}{(}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Draw calls here
-vbg.draw(mode=GL\_TRIANGLES)
+\PYG{c+c1}{\PYGZsh{} Draw calls here}
+\PYG{n}{vbg}\PYG{o}{.}\PYG{n}{draw}\PYG{p}{(}\PYG{n}{mode}\PYG{o}{=}\PYG{n}{GL\PYGZus{}TRIANGLES}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Unbind
-vbg.unbind()
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Unbind}
+\PYG{n}{vbg}\PYG{o}{.}\PYG{n}{unbind}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsection{Buffer Types}
@@ -5818,83 +5663,51 @@ Vertex buffers store vertex data such as positions, colors, normals, and texture
 
 \sphinxAtStartPar
 \sphinxstylestrong{Position Buffer}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# 3D positions (N, 3) array
-vertices = np.array({[}
-\begin{quote}
-
-\sphinxAtStartPar
-{[}0, 0, 0{]},  \# Vertex 0
-{[}1, 0, 0{]},  \# Vertex 1
-{[}0, 1, 0{]}   \# Vertex 2
-\end{quote}
-
-\sphinxAtStartPar
-{]}, dtype=np.float32)
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} 3D positions (N, 3) array}
+\PYG{n}{vertices} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}\PYG{p}{[}
+    \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,}  \PYG{c+c1}{\PYGZsh{} Vertex 0}
+    \PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,}  \PYG{c+c1}{\PYGZsh{} Vertex 1}
+    \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{]}   \PYG{c+c1}{\PYGZsh{} Vertex 2}
+\PYG{p}{]}\PYG{p}{,} \PYG{n}{dtype}\PYG{o}{=}\PYG{n}{np}\PYG{o}{.}\PYG{n}{float32}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Color Buffer}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# RGB colors (N, 3) array
-colors = np.array({[}
-\begin{quote}
-
-\sphinxAtStartPar
-{[}1, 0, 0{]},  \# Red
-{[}0, 1, 0{]},  \# Green
-{[}0, 0, 1{]}   \# Blue
-\end{quote}
-
-\sphinxAtStartPar
-{]}, dtype=np.float32)
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} RGB colors (N, 3) array}
+\PYG{n}{colors} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}\PYG{p}{[}
+    \PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,}  \PYG{c+c1}{\PYGZsh{} Red}
+    \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,}  \PYG{c+c1}{\PYGZsh{} Green}
+    \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{]}   \PYG{c+c1}{\PYGZsh{} Blue}
+\PYG{p}{]}\PYG{p}{,} \PYG{n}{dtype}\PYG{o}{=}\PYG{n}{np}\PYG{o}{.}\PYG{n}{float32}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Normal Buffer}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Surface normals (N, 3) array
-normals = np.array({[}
-\begin{quote}
-
-\sphinxAtStartPar
-{[}0, 0, 1{]},  \# Normal 0
-{[}0, 0, 1{]},  \# Normal 1
-{[}0, 0, 1{]}   \# Normal 2
-\end{quote}
-
-\sphinxAtStartPar
-{]}, dtype=np.float32)
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Surface normals (N, 3) array}
+\PYG{n}{normals} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}\PYG{p}{[}
+    \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{,}  \PYG{c+c1}{\PYGZsh{} Normal 0}
+    \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{,}  \PYG{c+c1}{\PYGZsh{} Normal 1}
+    \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{]}   \PYG{c+c1}{\PYGZsh{} Normal 2}
+\PYG{p}{]}\PYG{p}{,} \PYG{n}{dtype}\PYG{o}{=}\PYG{n}{np}\PYG{o}{.}\PYG{n}{float32}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{UV Buffer}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Texture coordinates (N, 2) array
-uvs = np.array({[}
-\begin{quote}
-
-\sphinxAtStartPar
-{[}0, 0{]},  \# UV 0
-{[}1, 0{]},  \# UV 1
-{[}0, 1{]}   \# UV 2
-\end{quote}
-
-\sphinxAtStartPar
-{]}, dtype=np.float32)
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Texture coordinates (N, 2) array}
+\PYG{n}{uvs} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}\PYG{p}{[}
+    \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,}  \PYG{c+c1}{\PYGZsh{} UV 0}
+    \PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,}  \PYG{c+c1}{\PYGZsh{} UV 1}
+    \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{]}   \PYG{c+c1}{\PYGZsh{} UV 2}
+\PYG{p}{]}\PYG{p}{,} \PYG{n}{dtype}\PYG{o}{=}\PYG{n}{np}\PYG{o}{.}\PYG{n}{float32}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsubsection{Element Buffers}
@@ -5904,21 +5717,13 @@ Element buffers store indices that define the topology of the mesh.
 
 \sphinxAtStartPar
 \sphinxstylestrong{Element Buffer}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Triangle indices (M, 3) array
-indices = np.array({[}
-\begin{quote}
-
-\sphinxAtStartPar
-{[}0, 1, 2{]}  \# Triangle connecting vertices 0, 1, 2
-\end{quote}
-
-\sphinxAtStartPar
-{]}, dtype=np.uint32)
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Triangle indices (M, 3) array}
+\PYG{n}{indices} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}\PYG{p}{[}
+    \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{]}  \PYG{c+c1}{\PYGZsh{} Triangle connecting vertices 0, 1, 2}
+\PYG{p}{]}\PYG{p}{,} \PYG{n}{dtype}\PYG{o}{=}\PYG{n}{np}\PYG{o}{.}\PYG{n}{uint32}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsection{Buffer Operations}
@@ -5928,92 +5733,72 @@ indices = np.array({[}
 \label{\detokenize{api/buffers:uploading-data}}
 \sphinxAtStartPar
 \sphinxstylestrong{Modern OpenGL}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Upload vertex data
-vao.add\_vbo(index=0, data=vertices, size=3)
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Upload vertex data}
+\PYG{n}{vao}\PYG{o}{.}\PYG{n}{add\PYGZus{}vbo}\PYG{p}{(}\PYG{n}{index}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{data}\PYG{o}{=}\PYG{n}{vertices}\PYG{p}{,} \PYG{n}{size}\PYG{o}{=}\PYG{l+m+mi}{3}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Upload color data
-vao.add\_vbo(index=1, data=colors, size=3)
+\PYG{c+c1}{\PYGZsh{} Upload color data}
+\PYG{n}{vao}\PYG{o}{.}\PYG{n}{add\PYGZus{}vbo}\PYG{p}{(}\PYG{n}{index}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{data}\PYG{o}{=}\PYG{n}{colors}\PYG{p}{,} \PYG{n}{size}\PYG{o}{=}\PYG{l+m+mi}{3}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Upload element data
-vao.add\_ebo(data=indices)
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Upload element data}
+\PYG{n}{vao}\PYG{o}{.}\PYG{n}{add\PYGZus{}ebo}\PYG{p}{(}\PYG{n}{data}\PYG{o}{=}\PYG{n}{indices}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Legacy OpenGL}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Upload vertex data
-vbg.add\_vbo(“position”, vertices, 3)
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Upload vertex data}
+\PYG{n}{vbg}\PYG{o}{.}\PYG{n}{add\PYGZus{}vbo}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{position}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{vertices}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Upload color data
-vbg.add\_vbo(“color”, colors, 3)
+\PYG{c+c1}{\PYGZsh{} Upload color data}
+\PYG{n}{vbg}\PYG{o}{.}\PYG{n}{add\PYGZus{}vbo}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{color}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{colors}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Upload element data
-vbg.add\_ebo(indices)
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Upload element data}
+\PYG{n}{vbg}\PYG{o}{.}\PYG{n}{add\PYGZus{}ebo}\PYG{p}{(}\PYG{n}{indices}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsubsection{Drawing}
 \label{\detokenize{api/buffers:drawing}}
 \sphinxAtStartPar
 \sphinxstylestrong{Modern OpenGL}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Draw with VAO
-with vao:
-\begin{quote}
-
-\sphinxAtStartPar
-vao.draw(mode=GL\_TRIANGLES, index\_count=len(indices))
-\end{quote}
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Draw with VAO}
+\PYG{k}{with} \PYG{n}{vao}\PYG{p}{:}
+    \PYG{n}{vao}\PYG{o}{.}\PYG{n}{draw}\PYG{p}{(}\PYG{n}{mode}\PYG{o}{=}\PYG{n}{GL\PYGZus{}TRIANGLES}\PYG{p}{,} \PYG{n}{index\PYGZus{}count}\PYG{o}{=}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{indices}\PYG{p}{)}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Legacy OpenGL}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Draw with vertex buffer group
-vbg.bind()
-vbg.draw(mode=GL\_TRIANGLES)
-vbg.unbind()
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Draw with vertex buffer group}
+\PYG{n}{vbg}\PYG{o}{.}\PYG{n}{bind}\PYG{p}{(}\PYG{p}{)}
+\PYG{n}{vbg}\PYG{o}{.}\PYG{n}{draw}\PYG{p}{(}\PYG{n}{mode}\PYG{o}{=}\PYG{n}{GL\PYGZus{}TRIANGLES}\PYG{p}{)}
+\PYG{n}{vbg}\PYG{o}{.}\PYG{n}{unbind}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsubsection{Cleanup}
 \label{\detokenize{api/buffers:cleanup}}
 \sphinxAtStartPar
 \sphinxstylestrong{Modern OpenGL}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Cleanup VAO
-vao.delete()
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Cleanup VAO}
+\PYG{n}{vao}\PYG{o}{.}\PYG{n}{delete}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Legacy OpenGL}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Cleanup vertex buffer group
-vbg.delete()
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Cleanup vertex buffer group}
+\PYG{n}{vbg}\PYG{o}{.}\PYG{n}{delete}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsection{Error Handling}
@@ -6029,30 +5814,20 @@ Buffer operations include comprehensive error handling:
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
-\begin{description}
-\sphinxlineitem{try:}
-\sphinxAtStartPar
-vao.add\_vbo(index=0, data=vertices, size=3)
 
-\sphinxlineitem{except OpenGLError as e:}
-\sphinxAtStartPar
-print(f”OpenGL error: \{e\}”)
-\# Handle gracefully
-
-\sphinxlineitem{except ValueError as e:}
-\sphinxAtStartPar
-print(f”Data error: \{e\}”)
-\# Validate data
-
-\sphinxlineitem{except Exception as e:}
-\sphinxAtStartPar
-print(f”Unexpected error: \{e\}”)
-\# Handle gracefully
-
-\end{description}
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k}{try}\PYG{p}{:}
+    \PYG{n}{vao}\PYG{o}{.}\PYG{n}{add\PYGZus{}vbo}\PYG{p}{(}\PYG{n}{index}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{data}\PYG{o}{=}\PYG{n}{vertices}\PYG{p}{,} \PYG{n}{size}\PYG{o}{=}\PYG{l+m+mi}{3}\PYG{p}{)}
+\PYG{k}{except} \PYG{n}{OpenGLError} \PYG{k}{as} \PYG{n}{e}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{OpenGL error: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{e}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+    \PYG{c+c1}{\PYGZsh{} Handle gracefully}
+\PYG{k}{except} \PYG{n+ne}{ValueError} \PYG{k}{as} \PYG{n}{e}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Data error: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{e}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+    \PYG{c+c1}{\PYGZsh{} Validate data}
+\PYG{k}{except} \PYG{n+ne}{Exception} \PYG{k}{as} \PYG{n}{e}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Unexpected error: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{e}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+    \PYG{c+c1}{\PYGZsh{} Handle gracefully}
+\end{sphinxVerbatim}
 
 
 \subsection{Performance Considerations}
@@ -6106,31 +5881,19 @@ print(f”Unexpected error: \{e\}”)
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Choose buffer type based on OpenGL support
-if has\_modern\_opengl():
-\begin{quote}
-
-\sphinxAtStartPar
-vao = VertexArrayObject()
-vao.add\_vbo(index=0, data=vertices, size=3)
-\end{quote}
-\begin{description}
-\sphinxlineitem{elif has\_legacy\_opengl():}
-\sphinxAtStartPar
-vbg = VertexBufferGroup()
-vbg.add\_vbo(“position”, vertices, 3)
-
-\sphinxlineitem{else:}
-\sphinxAtStartPar
-\# Use immediate mode fallback
-pass
-
-\end{description}
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Choose buffer type based on OpenGL support}
+\PYG{k}{if} \PYG{n}{has\PYGZus{}modern\PYGZus{}opengl}\PYG{p}{(}\PYG{p}{)}\PYG{p}{:}
+    \PYG{n}{vao} \PYG{o}{=} \PYG{n}{VertexArrayObject}\PYG{p}{(}\PYG{p}{)}
+    \PYG{n}{vao}\PYG{o}{.}\PYG{n}{add\PYGZus{}vbo}\PYG{p}{(}\PYG{n}{index}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{data}\PYG{o}{=}\PYG{n}{vertices}\PYG{p}{,} \PYG{n}{size}\PYG{o}{=}\PYG{l+m+mi}{3}\PYG{p}{)}
+\PYG{k}{elif} \PYG{n}{has\PYGZus{}legacy\PYGZus{}opengl}\PYG{p}{(}\PYG{p}{)}\PYG{p}{:}
+    \PYG{n}{vbg} \PYG{o}{=} \PYG{n}{VertexBufferGroup}\PYG{p}{(}\PYG{p}{)}
+    \PYG{n}{vbg}\PYG{o}{.}\PYG{n}{add\PYGZus{}vbo}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{position}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{vertices}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{)}
+\PYG{k}{else}\PYG{p}{:}
+    \PYG{c+c1}{\PYGZsh{} Use immediate mode fallback}
+    \PYG{k}{pass}
+\end{sphinxVerbatim}
 
 \sphinxstepscope
 
@@ -6433,36 +6196,22 @@ The \sphinxcode{\sphinxupquote{ShaderProgram}} class manages OpenGL shader progr
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.backend.modern.core.shader.program import ShaderProgram
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{backend}\PYG{n+nn}{.}\PYG{n+nn}{modern}\PYG{n+nn}{.}\PYG{n+nn}{core}\PYG{n+nn}{.}\PYG{n+nn}{shader}\PYG{n+nn}{.}\PYG{n+nn}{program}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{ShaderProgram}
 
-\sphinxAtStartPar
-\# Create shader program
-shader = ShaderProgram(
-\begin{quote}
+\PYG{c+c1}{\PYGZsh{} Create shader program}
+\PYG{n}{shader} \PYG{o}{=} \PYG{n}{ShaderProgram}\PYG{p}{(}
+    \PYG{n}{vertex\PYGZus{}source\PYGZus{}file}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{vertex.glsl}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+    \PYG{n}{fragment\PYGZus{}source\PYGZus{}file}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{fragment.glsl}\PYG{l+s+s2}{\PYGZdq{}}
+\PYG{p}{)}
 
-\sphinxAtStartPar
-vertex\_source\_file=”vertex.glsl”,
-fragment\_source\_file=”fragment.glsl”
-\end{quote}
-
-\sphinxAtStartPar
-)
-
-\sphinxAtStartPar
-\# Use shader
-with shader:
-\begin{quote}
-
-\sphinxAtStartPar
-shader.uniform(“mvp\_matrix”, mvp\_matrix)
-shader.uniform(“color”, {[}1.0, 0.0, 0.0{]})
-\# Draw calls here
-\end{quote}
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Use shader}
+\PYG{k}{with} \PYG{n}{shader}\PYG{p}{:}
+    \PYG{n}{shader}\PYG{o}{.}\PYG{n}{uniform}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{mvp\PYGZus{}matrix}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{mvp\PYGZus{}matrix}\PYG{p}{)}
+    \PYG{n}{shader}\PYG{o}{.}\PYG{n}{uniform}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{color}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mf}{1.0}\PYG{p}{,} \PYG{l+m+mf}{0.0}\PYG{p}{,} \PYG{l+m+mf}{0.0}\PYG{p}{]}\PYG{p}{)}
+    \PYG{c+c1}{\PYGZsh{} Draw calls here}
+\end{sphinxVerbatim}
 
 
 \subsubsection{ShaderManager}
@@ -6472,31 +6221,22 @@ The \sphinxcode{\sphinxupquote{ShaderManager}} class provides centralized shader
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.shaders.manager import ShaderManager
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{shaders}\PYG{n+nn}{.}\PYG{n+nn}{manager}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{ShaderManager}
 
-\sphinxAtStartPar
-\# Create shader manager
-manager = ShaderManager(shader\_directory=”glsl/”)
+\PYG{c+c1}{\PYGZsh{} Create shader manager}
+\PYG{n}{manager} \PYG{o}{=} \PYG{n}{ShaderManager}\PYG{p}{(}\PYG{n}{shader\PYGZus{}directory}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{glsl/}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Load shaders
-manager.load\_shader(ShaderType.BASIC, 1)
-manager.load\_shader(ShaderType.TEXTURE, 2)
+\PYG{c+c1}{\PYGZsh{} Load shaders}
+\PYG{n}{manager}\PYG{o}{.}\PYG{n}{load\PYGZus{}shader}\PYG{p}{(}\PYG{n}{ShaderType}\PYG{o}{.}\PYG{n}{BASIC}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}
+\PYG{n}{manager}\PYG{o}{.}\PYG{n}{load\PYGZus{}shader}\PYG{p}{(}\PYG{n}{ShaderType}\PYG{o}{.}\PYG{n}{TEXTURE}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Use shader
-shader = manager.get(ShaderType.BASIC)
-with shader:
-\begin{quote}
-
-\sphinxAtStartPar
-\# Draw calls here
-\end{quote}
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Use shader}
+\PYG{n}{shader} \PYG{o}{=} \PYG{n}{manager}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{n}{ShaderType}\PYG{o}{.}\PYG{n}{BASIC}\PYG{p}{)}
+\PYG{k}{with} \PYG{n}{shader}\PYG{p}{:}
+    \PYG{c+c1}{\PYGZsh{} Draw calls here}
+\end{sphinxVerbatim}
 
 
 \subsection{Shader Types}
@@ -6669,17 +6409,14 @@ The \sphinxcode{\sphinxupquote{ShaderType}} enum defines the available shader ty
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.shaders.type import ShaderType
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{shaders}\PYG{n+nn}{.}\PYG{n+nn}{type}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{ShaderType}
 
-\sphinxAtStartPar
-\# Use shader type
-shader\_type = ShaderType.BASIC
-shader = manager.get(shader\_type)
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Use shader type}
+\PYG{n}{shader\PYGZus{}type} \PYG{o}{=} \PYG{n}{ShaderType}\PYG{o}{.}\PYG{n}{BASIC}
+\PYG{n}{shader} \PYG{o}{=} \PYG{n}{manager}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{n}{shader\PYGZus{}type}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsection{Shader Compilation}
@@ -6728,40 +6465,31 @@ Compiles vertex and fragment shader source code into OpenGL shaders.
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.shaders.compile import compile\_shaders
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{shaders}\PYG{n+nn}{.}\PYG{n+nn}{compile}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{compile\PYGZus{}shaders}
 
-\sphinxAtStartPar
-\# Compile shaders
-vertex\_source = “””
-\#version 330 core
-layout(location = 0) in vec3 position;
-uniform mat4 mvp\_matrix;
-void main() \{
-\begin{quote}
+\PYG{c+c1}{\PYGZsh{} Compile shaders}
+\PYG{n}{vertex\PYGZus{}source} \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+\PYG{l+s+s2}{\PYGZsh{}version 330 core}
+\PYG{l+s+s2}{layout(location = 0) in vec3 position;}
+\PYG{l+s+s2}{uniform mat4 mvp\PYGZus{}matrix;}
+\PYG{l+s+s2}{void main() }\PYG{l+s+s2}{\PYGZob{}}
+\PYG{l+s+s2}{    gl\PYGZus{}Position = mvp\PYGZus{}matrix * vec4(position, 1.0);}
+\PYG{l+s+s2}{\PYGZcb{}}
+\PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}\PYGZdq{}}
 
-\sphinxAtStartPar
-gl\_Position = mvp\_matrix * vec4(position, 1.0);
-\end{quote}
+\PYG{n}{fragment\PYGZus{}source} \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+\PYG{l+s+s2}{\PYGZsh{}version 330 core}
+\PYG{l+s+s2}{out vec4 color;}
+\PYG{l+s+s2}{uniform vec3 color\PYGZus{}uniform;}
+\PYG{l+s+s2}{void main() }\PYG{l+s+s2}{\PYGZob{}}
+\PYG{l+s+s2}{    color = vec4(color\PYGZus{}uniform, 1.0);}
+\PYG{l+s+s2}{\PYGZcb{}}
+\PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}\PYGZdq{}}
 
-\sphinxAtStartPar
-fragment\_source = “””
-\#version 330 core
-out vec4 color;
-uniform vec3 color\_uniform;
-void main() \{
-\begin{quote}
-
-\sphinxAtStartPar
-color = vec4(color\_uniform, 1.0);
-\end{quote}
-
-\sphinxAtStartPar
-shader = compile\_shaders(vertex\_source, fragment\_source, “basic”)
-\end{quote}
+\PYG{n}{shader} \PYG{o}{=} \PYG{n}{compile\PYGZus{}shaders}\PYG{p}{(}\PYG{n}{vertex\PYGZus{}source}\PYG{p}{,} \PYG{n}{fragment\PYGZus{}source}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{basic}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsubsection{Load Shaders}
@@ -6800,28 +6528,18 @@ Loads vertex and fragment shader source code from files.
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.shaders.load import load\_fragment\_and\_vertex\_for\_shader\_type
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{shaders}\PYG{n+nn}{.}\PYG{n+nn}{load}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{load\PYGZus{}fragment\PYGZus{}and\PYGZus{}vertex\PYGZus{}for\PYGZus{}shader\PYGZus{}type}
 
-\sphinxAtStartPar
-\# Load shader files
-vertex\_src, fragment\_src = load\_fragment\_and\_vertex\_for\_shader\_type(
-\begin{quote}
+\PYG{c+c1}{\PYGZsh{} Load shader files}
+\PYG{n}{vertex\PYGZus{}src}\PYG{p}{,} \PYG{n}{fragment\PYGZus{}src} \PYG{o}{=} \PYG{n}{load\PYGZus{}fragment\PYGZus{}and\PYGZus{}vertex\PYGZus{}for\PYGZus{}shader\PYGZus{}type}\PYG{p}{(}
+    \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{basic}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{glsl/}\PYG{l+s+s2}{\PYGZdq{}}
+\PYG{p}{)}
 
-\sphinxAtStartPar
-“basic”, “glsl/”
-\end{quote}
-
-\sphinxAtStartPar
-)
-
-\sphinxAtStartPar
-\# Compile shaders
-shader = compile\_shaders(vertex\_src, fragment\_src, “basic”)
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Compile shaders}
+\PYG{n}{shader} \PYG{o}{=} \PYG{n}{compile\PYGZus{}shaders}\PYG{p}{(}\PYG{n}{vertex\PYGZus{}src}\PYG{p}{,} \PYG{n}{fragment\PYGZus{}src}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{basic}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsection{Uniform Management}
@@ -6936,20 +6654,16 @@ The \sphinxcode{\sphinxupquote{ShaderUniform}} class manages OpenGL shader unifo
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.shaders.shader\_uniform import ShaderUniform
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{shaders}\PYG{n+nn}{.}\PYG{n+nn}{shader\PYGZus{}uniform}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{ShaderUniform}
 
-\sphinxAtStartPar
-\# Create uniform
-uniform = ShaderUniform(shader, “mvp\_matrix”)
+\PYG{c+c1}{\PYGZsh{} Create uniform}
+\PYG{n}{uniform} \PYG{o}{=} \PYG{n}{ShaderUniform}\PYG{p}{(}\PYG{n}{shader}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{mvp\PYGZus{}matrix}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Set uniform value
-uniform.set(mvp\_matrix)
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Set uniform value}
+\PYG{n}{uniform}\PYG{o}{.}\PYG{n}{set}\PYG{p}{(}\PYG{n}{mvp\PYGZus{}matrix}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsubsection{Uniform Types}
@@ -6959,55 +6673,44 @@ PicoGL supports various uniform types:
 
 \sphinxAtStartPar
 \sphinxstylestrong{Matrix Uniforms}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# 4x4 matrix
-shader.uniform(“mvp\_matrix”, mvp\_matrix)
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} 4x4 matrix}
+\PYG{n}{shader}\PYG{o}{.}\PYG{n}{uniform}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{mvp\PYGZus{}matrix}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{mvp\PYGZus{}matrix}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# 3x3 matrix
-shader.uniform(“normal\_matrix”, normal\_matrix)
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} 3x3 matrix}
+\PYG{n}{shader}\PYG{o}{.}\PYG{n}{uniform}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{normal\PYGZus{}matrix}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{normal\PYGZus{}matrix}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Vector Uniforms}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# 3D vector
-shader.uniform(“color”, {[}1.0, 0.0, 0.0{]})
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} 3D vector}
+\PYG{n}{shader}\PYG{o}{.}\PYG{n}{uniform}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{color}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mf}{1.0}\PYG{p}{,} \PYG{l+m+mf}{0.0}\PYG{p}{,} \PYG{l+m+mf}{0.0}\PYG{p}{]}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# 4D vector
-shader.uniform(“position”, {[}0.0, 0.0, 0.0, 1.0{]})
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} 4D vector}
+\PYG{n}{shader}\PYG{o}{.}\PYG{n}{uniform}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{position}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mf}{0.0}\PYG{p}{,} \PYG{l+m+mf}{0.0}\PYG{p}{,} \PYG{l+m+mf}{0.0}\PYG{p}{,} \PYG{l+m+mf}{1.0}\PYG{p}{]}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Scalar Uniforms}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Float
-shader.uniform(“time”, 0.5)
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Float}
+\PYG{n}{shader}\PYG{o}{.}\PYG{n}{uniform}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{time}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{l+m+mf}{0.5}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Integer
-shader.uniform(“texture\_sampler”, 0)
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Integer}
+\PYG{n}{shader}\PYG{o}{.}\PYG{n}{uniform}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{texture\PYGZus{}sampler}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Boolean Uniforms}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Boolean
-shader.uniform(“use\_texture”, True)
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Boolean}
+\PYG{n}{shader}\PYG{o}{.}\PYG{n}{uniform}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{use\PYGZus{}texture}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{k+kc}{True}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsection{Built\sphinxhyphen{}in Shaders}
@@ -7020,178 +6723,123 @@ PicoGL includes several built\sphinxhyphen{}in shader programs:
 \label{\detokenize{api/shaders:basic-color-shader}}
 \sphinxAtStartPar
 \sphinxstylestrong{Vertex Shader}:
-.. code\sphinxhyphen{}block:: glsl
-\begin{quote}
 
-\sphinxAtStartPar
-\#version 330 core
-layout(location = 0) in vec3 position;
-layout(location = 1) in vec3 color;
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZsh{}version 330 core}
+\PYG{k}{layout}\PYG{p}{(}\PYG{n}{location}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mo}{0}\PYG{p}{)}\PYG{+w}{ }\PYG{k}{in}\PYG{+w}{ }\PYG{k+kt}{vec3}\PYG{+w}{ }\PYG{n}{position}\PYG{p}{;}
+\PYG{k}{layout}\PYG{p}{(}\PYG{n}{location}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{+w}{ }\PYG{k}{in}\PYG{+w}{ }\PYG{k+kt}{vec3}\PYG{+w}{ }\PYG{n}{color}\PYG{p}{;}
 
-\sphinxAtStartPar
-uniform mat4 mvp\_matrix;
+\PYG{k}{uniform}\PYG{+w}{ }\PYG{k+kt}{mat4}\PYG{+w}{ }\PYG{n}{mvp\PYGZus{}matrix}\PYG{p}{;}
 
-\sphinxAtStartPar
-out vec3 fragment\_color;
-\begin{description}
-\sphinxlineitem{void main() \{}
-\sphinxAtStartPar
-gl\_Position = mvp\_matrix * vec4(position, 1.0);
-fragment\_color = color;
+\PYG{k}{out}\PYG{+w}{ }\PYG{k+kt}{vec3}\PYG{+w}{ }\PYG{n}{fragment\PYGZus{}color}\PYG{p}{;}
 
-\end{description}
-
-\sphinxAtStartPar
-\}
-\end{quote}
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n}{main}\PYG{p}{(}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{n+nb}{gl\PYGZus{}Position}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{mvp\PYGZus{}matrix}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{k+kt}{vec4}\PYG{p}{(}\PYG{n}{position}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mf}{1.0}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{fragment\PYGZus{}color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{color}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Fragment Shader}:
-.. code\sphinxhyphen{}block:: glsl
-\begin{quote}
 
-\sphinxAtStartPar
-\#version 330 core
-in vec3 fragment\_color;
-out vec4 color;
-\begin{description}
-\sphinxlineitem{void main() \{}
-\sphinxAtStartPar
-color = vec4(fragment\_color, 1.0);
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZsh{}version 330 core}
+\PYG{k}{in}\PYG{+w}{ }\PYG{k+kt}{vec3}\PYG{+w}{ }\PYG{n}{fragment\PYGZus{}color}\PYG{p}{;}
+\PYG{k}{out}\PYG{+w}{ }\PYG{k+kt}{vec4}\PYG{+w}{ }\PYG{n}{color}\PYG{p}{;}
 
-\end{description}
-
-\sphinxAtStartPar
-\}
-\end{quote}
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n}{main}\PYG{p}{(}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k+kt}{vec4}\PYG{p}{(}\PYG{n}{fragment\PYGZus{}color}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mf}{1.0}\PYG{p}{)}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{sphinxVerbatim}
 
 
 \subsubsection{Texture Shader}
 \label{\detokenize{api/shaders:texture-shader}}
 \sphinxAtStartPar
 \sphinxstylestrong{Vertex Shader}:
-.. code\sphinxhyphen{}block:: glsl
-\begin{quote}
 
-\sphinxAtStartPar
-\#version 330 core
-layout(location = 0) in vec3 position;
-layout(location = 1) in vec2 uv;
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZsh{}version 330 core}
+\PYG{k}{layout}\PYG{p}{(}\PYG{n}{location}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mo}{0}\PYG{p}{)}\PYG{+w}{ }\PYG{k}{in}\PYG{+w}{ }\PYG{k+kt}{vec3}\PYG{+w}{ }\PYG{n}{position}\PYG{p}{;}
+\PYG{k}{layout}\PYG{p}{(}\PYG{n}{location}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{+w}{ }\PYG{k}{in}\PYG{+w}{ }\PYG{k+kt}{vec2}\PYG{+w}{ }\PYG{n}{uv}\PYG{p}{;}
 
-\sphinxAtStartPar
-uniform mat4 mvp\_matrix;
+\PYG{k}{uniform}\PYG{+w}{ }\PYG{k+kt}{mat4}\PYG{+w}{ }\PYG{n}{mvp\PYGZus{}matrix}\PYG{p}{;}
 
-\sphinxAtStartPar
-out vec2 fragment\_uv;
-\begin{description}
-\sphinxlineitem{void main() \{}
-\sphinxAtStartPar
-gl\_Position = mvp\_matrix * vec4(position, 1.0);
-fragment\_uv = uv;
+\PYG{k}{out}\PYG{+w}{ }\PYG{k+kt}{vec2}\PYG{+w}{ }\PYG{n}{fragment\PYGZus{}uv}\PYG{p}{;}
 
-\end{description}
-
-\sphinxAtStartPar
-\}
-\end{quote}
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n}{main}\PYG{p}{(}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{n+nb}{gl\PYGZus{}Position}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{mvp\PYGZus{}matrix}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{k+kt}{vec4}\PYG{p}{(}\PYG{n}{position}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mf}{1.0}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{fragment\PYGZus{}uv}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{uv}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Fragment Shader}:
-.. code\sphinxhyphen{}block:: glsl
-\begin{quote}
 
-\sphinxAtStartPar
-\#version 330 core
-in vec2 fragment\_uv;
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZsh{}version 330 core}
+\PYG{k}{in}\PYG{+w}{ }\PYG{k+kt}{vec2}\PYG{+w}{ }\PYG{n}{fragment\PYGZus{}uv}\PYG{p}{;}
 
-\sphinxAtStartPar
-uniform sampler2D texture0;
+\PYG{k}{uniform}\PYG{+w}{ }\PYG{k+kt}{sampler2D}\PYG{+w}{ }\PYG{n}{texture0}\PYG{p}{;}
 
-\sphinxAtStartPar
-out vec4 color;
-\begin{description}
-\sphinxlineitem{void main() \{}
-\sphinxAtStartPar
-color = texture(texture0, fragment\_uv);
+\PYG{k}{out}\PYG{+w}{ }\PYG{k+kt}{vec4}\PYG{+w}{ }\PYG{n}{color}\PYG{p}{;}
 
-\end{description}
-
-\sphinxAtStartPar
-\}
-\end{quote}
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n}{main}\PYG{p}{(}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{texture}\PYG{p}{(}\PYG{n}{texture0}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{fragment\PYGZus{}uv}\PYG{p}{)}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{sphinxVerbatim}
 
 
 \subsubsection{Lighting Shader}
 \label{\detokenize{api/shaders:lighting-shader}}
 \sphinxAtStartPar
 \sphinxstylestrong{Vertex Shader}:
-.. code\sphinxhyphen{}block:: glsl
-\begin{quote}
 
-\sphinxAtStartPar
-\#version 330 core
-layout(location = 0) in vec3 position;
-layout(location = 1) in vec3 normal;
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZsh{}version 330 core}
+\PYG{k}{layout}\PYG{p}{(}\PYG{n}{location}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mo}{0}\PYG{p}{)}\PYG{+w}{ }\PYG{k}{in}\PYG{+w}{ }\PYG{k+kt}{vec3}\PYG{+w}{ }\PYG{n}{position}\PYG{p}{;}
+\PYG{k}{layout}\PYG{p}{(}\PYG{n}{location}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{+w}{ }\PYG{k}{in}\PYG{+w}{ }\PYG{k+kt}{vec3}\PYG{+w}{ }\PYG{n}{normal}\PYG{p}{;}
 
-\sphinxAtStartPar
-uniform mat4 mvp\_matrix;
-uniform mat4 model\_matrix;
+\PYG{k}{uniform}\PYG{+w}{ }\PYG{k+kt}{mat4}\PYG{+w}{ }\PYG{n}{mvp\PYGZus{}matrix}\PYG{p}{;}
+\PYG{k}{uniform}\PYG{+w}{ }\PYG{k+kt}{mat4}\PYG{+w}{ }\PYG{n}{model\PYGZus{}matrix}\PYG{p}{;}
 
-\sphinxAtStartPar
-out vec3 frag\_position;
-out vec3 frag\_normal;
-\begin{description}
-\sphinxlineitem{void main() \{}
-\sphinxAtStartPar
-gl\_Position = mvp\_matrix * vec4(position, 1.0);
-frag\_position = vec3(model\_matrix * vec4(position, 1.0));
-frag\_normal = mat3(transpose(inverse(model\_matrix))) * normal;
+\PYG{k}{out}\PYG{+w}{ }\PYG{k+kt}{vec3}\PYG{+w}{ }\PYG{n}{frag\PYGZus{}position}\PYG{p}{;}
+\PYG{k}{out}\PYG{+w}{ }\PYG{k+kt}{vec3}\PYG{+w}{ }\PYG{n}{frag\PYGZus{}normal}\PYG{p}{;}
 
-\end{description}
-
-\sphinxAtStartPar
-\}
-\end{quote}
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n}{main}\PYG{p}{(}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{n+nb}{gl\PYGZus{}Position}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{mvp\PYGZus{}matrix}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{k+kt}{vec4}\PYG{p}{(}\PYG{n}{position}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mf}{1.0}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{frag\PYGZus{}position}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k+kt}{vec3}\PYG{p}{(}\PYG{n}{model\PYGZus{}matrix}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{k+kt}{vec4}\PYG{p}{(}\PYG{n}{position}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mf}{1.0}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{frag\PYGZus{}normal}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k+kt}{mat3}\PYG{p}{(}\PYG{n}{transpose}\PYG{p}{(}\PYG{n}{inverse}\PYG{p}{(}\PYG{n}{model\PYGZus{}matrix}\PYG{p}{)}\PYG{p}{)}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{n}{normal}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Fragment Shader}:
-.. code\sphinxhyphen{}block:: glsl
-\begin{quote}
 
-\sphinxAtStartPar
-\#version 330 core
-in vec3 frag\_position;
-in vec3 frag\_normal;
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZsh{}version 330 core}
+\PYG{k}{in}\PYG{+w}{ }\PYG{k+kt}{vec3}\PYG{+w}{ }\PYG{n}{frag\PYGZus{}position}\PYG{p}{;}
+\PYG{k}{in}\PYG{+w}{ }\PYG{k+kt}{vec3}\PYG{+w}{ }\PYG{n}{frag\PYGZus{}normal}\PYG{p}{;}
 
-\sphinxAtStartPar
-uniform vec3 light\_pos;
-uniform vec3 view\_pos;
-uniform vec3 object\_color;
+\PYG{k}{uniform}\PYG{+w}{ }\PYG{k+kt}{vec3}\PYG{+w}{ }\PYG{n}{light\PYGZus{}pos}\PYG{p}{;}
+\PYG{k}{uniform}\PYG{+w}{ }\PYG{k+kt}{vec3}\PYG{+w}{ }\PYG{n}{view\PYGZus{}pos}\PYG{p}{;}
+\PYG{k}{uniform}\PYG{+w}{ }\PYG{k+kt}{vec3}\PYG{+w}{ }\PYG{n}{object\PYGZus{}color}\PYG{p}{;}
 
-\sphinxAtStartPar
-out vec4 color;
-\begin{description}
-\sphinxlineitem{void main() \{}
-\sphinxAtStartPar
-vec3 norm = normalize(frag\_normal);
-vec3 light\_dir = normalize(light\_pos \sphinxhyphen{} frag\_position);
+\PYG{k}{out}\PYG{+w}{ }\PYG{k+kt}{vec4}\PYG{+w}{ }\PYG{n}{color}\PYG{p}{;}
 
-\sphinxAtStartPar
-float diff = max(dot(norm, light\_dir), 0.0);
-vec3 diffuse = diff * object\_color;
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n}{main}\PYG{p}{(}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{k+kt}{vec3}\PYG{+w}{ }\PYG{n}{norm}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{normalize}\PYG{p}{(}\PYG{n}{frag\PYGZus{}normal}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k+kt}{vec3}\PYG{+w}{ }\PYG{n}{light\PYGZus{}dir}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{normalize}\PYG{p}{(}\PYG{n}{light\PYGZus{}pos}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{+w}{ }\PYG{n}{frag\PYGZus{}position}\PYG{p}{)}\PYG{p}{;}
 
-\sphinxAtStartPar
-vec3 ambient = 0.1 * object\_color;
-vec3 result = ambient + diffuse;
+\PYG{+w}{    }\PYG{k+kt}{float}\PYG{+w}{ }\PYG{n}{diff}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{max}\PYG{p}{(}\PYG{n}{dot}\PYG{p}{(}\PYG{n}{norm}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{light\PYGZus{}dir}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mf}{0.0}\PYG{p}{)}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k+kt}{vec3}\PYG{+w}{ }\PYG{n}{diffuse}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{diff}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{n}{object\PYGZus{}color}\PYG{p}{;}
 
-\sphinxAtStartPar
-color = vec4(result, 1.0);
+\PYG{+w}{    }\PYG{k+kt}{vec3}\PYG{+w}{ }\PYG{n}{ambient}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mf}{0.1}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{n}{object\PYGZus{}color}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k+kt}{vec3}\PYG{+w}{ }\PYG{n}{result}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{ambient}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{diffuse}\PYG{p}{;}
 
-\end{description}
-
-\sphinxAtStartPar
-\}
-\end{quote}
+\PYG{+w}{    }\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k+kt}{vec4}\PYG{p}{(}\PYG{n}{result}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mf}{1.0}\PYG{p}{)}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{sphinxVerbatim}
 
 
 \subsubsection{Fallback Shaders}
@@ -7201,41 +6849,26 @@ PicoGL includes fallback shaders for systems with limited OpenGL support:
 
 \sphinxAtStartPar
 \sphinxstylestrong{Fallback Vertex Shader}:
-.. code\sphinxhyphen{}block:: glsl
-\begin{quote}
 
-\sphinxAtStartPar
-\#version 120
-attribute vec3 in\_position;
-uniform mat4 mvp;
-\begin{description}
-\sphinxlineitem{void main() \{}
-\sphinxAtStartPar
-gl\_Position = mvp * vec4(in\_position, 1.0);
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZsh{}version 120}
+\PYG{k}{attribute}\PYG{+w}{ }\PYG{k+kt}{vec3}\PYG{+w}{ }\PYG{n}{in\PYGZus{}position}\PYG{p}{;}
+\PYG{k}{uniform}\PYG{+w}{ }\PYG{k+kt}{mat4}\PYG{+w}{ }\PYG{n}{mvp}\PYG{p}{;}
 
-\end{description}
-
-\sphinxAtStartPar
-\}
-\end{quote}
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n}{main}\PYG{p}{(}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{n+nb}{gl\PYGZus{}Position}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{mvp}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{k+kt}{vec4}\PYG{p}{(}\PYG{n}{in\PYGZus{}position}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mf}{1.0}\PYG{p}{)}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Fallback Fragment Shader}:
-.. code\sphinxhyphen{}block:: glsl
-\begin{quote}
 
-\sphinxAtStartPar
-\#version 120
-void main() \{
-\begin{quote}
-
-\sphinxAtStartPar
-gl\_FragColor = vec4(1.0, 0.0, 1.0, 1.0);  // Hot pink
-\end{quote}
-
-\sphinxAtStartPar
-\}
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZsh{}version 120}
+\PYG{k+kt}{void}\PYG{+w}{ }\PYG{n}{main}\PYG{p}{(}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{n+nb}{gl\PYGZus{}FragColor}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k+kt}{vec4}\PYG{p}{(}\PYG{l+m+mf}{1.0}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mf}{0.0}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mf}{1.0}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mf}{1.0}\PYG{p}{)}\PYG{p}{;}\PYG{+w}{  }\PYG{c+c1}{// Hot pink}
+\PYG{p}{\PYGZcb{}}
+\end{sphinxVerbatim}
 
 
 \subsection{Shader Usage}
@@ -7245,89 +6878,61 @@ gl\_FragColor = vec4(1.0, 0.0, 1.0, 1.0);  // Hot pink
 \label{\detokenize{api/shaders:creating-shader-programs}}
 \sphinxAtStartPar
 \sphinxstylestrong{From Files}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.backend.modern.core.shader.program import ShaderProgram
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{backend}\PYG{n+nn}{.}\PYG{n+nn}{modern}\PYG{n+nn}{.}\PYG{n+nn}{core}\PYG{n+nn}{.}\PYG{n+nn}{shader}\PYG{n+nn}{.}\PYG{n+nn}{program}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{ShaderProgram}
 
-\sphinxAtStartPar
-\# Create shader from files
-shader = ShaderProgram(
-\begin{quote}
-
-\sphinxAtStartPar
-vertex\_source\_file=”vertex.glsl”,
-fragment\_source\_file=”fragment.glsl”,
-glsl\_dir=”glsl/”
-\end{quote}
-
-\sphinxAtStartPar
-)
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Create shader from files}
+\PYG{n}{shader} \PYG{o}{=} \PYG{n}{ShaderProgram}\PYG{p}{(}
+    \PYG{n}{vertex\PYGZus{}source\PYGZus{}file}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{vertex.glsl}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+    \PYG{n}{fragment\PYGZus{}source\PYGZus{}file}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{fragment.glsl}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+    \PYG{n}{glsl\PYGZus{}dir}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{glsl/}\PYG{l+s+s2}{\PYGZdq{}}
+\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{From Source}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Create shader from source code
-shader = ShaderProgram(
-\begin{quote}
-
-\sphinxAtStartPar
-vertex\_source=vertex\_source,
-fragment\_source=fragment\_source
-\end{quote}
-
-\sphinxAtStartPar
-)
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Create shader from source code}
+\PYG{n}{shader} \PYG{o}{=} \PYG{n}{ShaderProgram}\PYG{p}{(}
+    \PYG{n}{vertex\PYGZus{}source}\PYG{o}{=}\PYG{n}{vertex\PYGZus{}source}\PYG{p}{,}
+    \PYG{n}{fragment\PYGZus{}source}\PYG{o}{=}\PYG{n}{fragment\PYGZus{}source}
+\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsubsection{Using Shaders}
 \label{\detokenize{api/shaders:using-shaders}}
 \sphinxAtStartPar
 \sphinxstylestrong{Basic Usage}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Use shader
-with shader:
-\begin{quote}
-
-\sphinxAtStartPar
-shader.uniform(“mvp\_matrix”, mvp\_matrix)
-shader.uniform(“color”, {[}1.0, 0.0, 0.0{]})
-\# Draw calls here
-\end{quote}
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Use shader}
+\PYG{k}{with} \PYG{n}{shader}\PYG{p}{:}
+    \PYG{n}{shader}\PYG{o}{.}\PYG{n}{uniform}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{mvp\PYGZus{}matrix}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{mvp\PYGZus{}matrix}\PYG{p}{)}
+    \PYG{n}{shader}\PYG{o}{.}\PYG{n}{uniform}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{color}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mf}{1.0}\PYG{p}{,} \PYG{l+m+mf}{0.0}\PYG{p}{,} \PYG{l+m+mf}{0.0}\PYG{p}{]}\PYG{p}{)}
+    \PYG{c+c1}{\PYGZsh{} Draw calls here}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Advanced Usage}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Bind shader
-shader.bind()
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Bind shader}
+\PYG{n}{shader}\PYG{o}{.}\PYG{n}{bind}\PYG{p}{(}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Set uniforms
-shader.uniform(“mvp\_matrix”, mvp\_matrix)
-shader.uniform(“model\_matrix”, model\_matrix)
-shader.uniform(“view\_pos”, camera\_position)
+\PYG{c+c1}{\PYGZsh{} Set uniforms}
+\PYG{n}{shader}\PYG{o}{.}\PYG{n}{uniform}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{mvp\PYGZus{}matrix}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{mvp\PYGZus{}matrix}\PYG{p}{)}
+\PYG{n}{shader}\PYG{o}{.}\PYG{n}{uniform}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{model\PYGZus{}matrix}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{model\PYGZus{}matrix}\PYG{p}{)}
+\PYG{n}{shader}\PYG{o}{.}\PYG{n}{uniform}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{view\PYGZus{}pos}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{camera\PYGZus{}position}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Draw
-mesh.draw()
+\PYG{c+c1}{\PYGZsh{} Draw}
+\PYG{n}{mesh}\PYG{o}{.}\PYG{n}{draw}\PYG{p}{(}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Unbind shader
-shader.unbind()
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Unbind shader}
+\PYG{n}{shader}\PYG{o}{.}\PYG{n}{unbind}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsection{Error Handling}
@@ -7343,37 +6948,23 @@ Shader operations include comprehensive error handling:
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
-\begin{description}
-\sphinxlineitem{try:}\begin{description}
-\sphinxlineitem{shader = ShaderProgram(}
-\sphinxAtStartPar
-vertex\_source\_file=”vertex.glsl”,
-fragment\_source\_file=”fragment.glsl”
 
-\end{description}
-
-\sphinxAtStartPar
-)
-
-\sphinxlineitem{except ShaderCompilationError as e:}
-\sphinxAtStartPar
-print(f”Shader compilation error: \{e\}”)
-\# Check shader source code
-
-\sphinxlineitem{except ShaderLinkError as e:}
-\sphinxAtStartPar
-print(f”Shader link error: \{e\}”)
-\# Check shader compatibility
-
-\sphinxlineitem{except Exception as e:}
-\sphinxAtStartPar
-print(f”Unexpected error: \{e\}”)
-\# Handle gracefully
-
-\end{description}
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k}{try}\PYG{p}{:}
+    \PYG{n}{shader} \PYG{o}{=} \PYG{n}{ShaderProgram}\PYG{p}{(}
+        \PYG{n}{vertex\PYGZus{}source\PYGZus{}file}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{vertex.glsl}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+        \PYG{n}{fragment\PYGZus{}source\PYGZus{}file}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{fragment.glsl}\PYG{l+s+s2}{\PYGZdq{}}
+    \PYG{p}{)}
+\PYG{k}{except} \PYG{n}{ShaderCompilationError} \PYG{k}{as} \PYG{n}{e}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Shader compilation error: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{e}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+    \PYG{c+c1}{\PYGZsh{} Check shader source code}
+\PYG{k}{except} \PYG{n}{ShaderLinkError} \PYG{k}{as} \PYG{n}{e}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Shader link error: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{e}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+    \PYG{c+c1}{\PYGZsh{} Check shader compatibility}
+\PYG{k}{except} \PYG{n+ne}{Exception} \PYG{k}{as} \PYG{n}{e}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Unexpected error: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{e}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+    \PYG{c+c1}{\PYGZsh{} Handle gracefully}
+\end{sphinxVerbatim}
 
 
 \subsection{Performance Considerations}
@@ -7427,52 +7018,26 @@ print(f”Unexpected error: \{e\}”)
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Choose shader based on OpenGL support
-if has\_modern\_opengl():
-\begin{quote}
-\begin{description}
-\sphinxlineitem{shader = ShaderProgram(}
-\sphinxAtStartPar
-vertex\_source\_file=”vertex.glsl”,
-fragment\_source\_file=”fragment.glsl”
-
-\end{description}
-
-\sphinxAtStartPar
-)
-\end{quote}
-\begin{description}
-\sphinxlineitem{elif has\_legacy\_opengl():}\begin{description}
-\sphinxlineitem{shader = ShaderProgram(}
-\sphinxAtStartPar
-vertex\_source\_file=”legacy\_vertex.glsl”,
-fragment\_source\_file=”legacy\_fragment.glsl”
-
-\end{description}
-
-\sphinxAtStartPar
-)
-
-\sphinxlineitem{else:}
-\sphinxAtStartPar
-\# Use fallback shader
-shader = ShaderProgram(
-\begin{quote}
-
-\sphinxAtStartPar
-vertex\_source=fallback\_vertex\_source,
-fragment\_source=fallback\_fragment\_source
-\end{quote}
-
-\sphinxAtStartPar
-)
-
-\end{description}
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Choose shader based on OpenGL support}
+\PYG{k}{if} \PYG{n}{has\PYGZus{}modern\PYGZus{}opengl}\PYG{p}{(}\PYG{p}{)}\PYG{p}{:}
+    \PYG{n}{shader} \PYG{o}{=} \PYG{n}{ShaderProgram}\PYG{p}{(}
+        \PYG{n}{vertex\PYGZus{}source\PYGZus{}file}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{vertex.glsl}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+        \PYG{n}{fragment\PYGZus{}source\PYGZus{}file}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{fragment.glsl}\PYG{l+s+s2}{\PYGZdq{}}
+    \PYG{p}{)}
+\PYG{k}{elif} \PYG{n}{has\PYGZus{}legacy\PYGZus{}opengl}\PYG{p}{(}\PYG{p}{)}\PYG{p}{:}
+    \PYG{n}{shader} \PYG{o}{=} \PYG{n}{ShaderProgram}\PYG{p}{(}
+        \PYG{n}{vertex\PYGZus{}source\PYGZus{}file}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{legacy\PYGZus{}vertex.glsl}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+        \PYG{n}{fragment\PYGZus{}source\PYGZus{}file}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{legacy\PYGZus{}fragment.glsl}\PYG{l+s+s2}{\PYGZdq{}}
+    \PYG{p}{)}
+\PYG{k}{else}\PYG{p}{:}
+    \PYG{c+c1}{\PYGZsh{} Use fallback shader}
+    \PYG{n}{shader} \PYG{o}{=} \PYG{n}{ShaderProgram}\PYG{p}{(}
+        \PYG{n}{vertex\PYGZus{}source}\PYG{o}{=}\PYG{n}{fallback\PYGZus{}vertex\PYGZus{}source}\PYG{p}{,}
+        \PYG{n}{fragment\PYGZus{}source}\PYG{o}{=}\PYG{n}{fallback\PYGZus{}fragment\PYGZus{}source}
+    \PYG{p}{)}
+\end{sphinxVerbatim}
 
 \sphinxstepscope
 
@@ -7703,38 +7268,28 @@ The \sphinxcode{\sphinxupquote{AbstractGLWindow}} class defines the interface fo
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.ui.abc\_window import AbstractGLWindow
-\begin{description}
-\sphinxlineitem{class MyWindow(AbstractGLWindow):}\begin{description}
-\sphinxlineitem{def \_\_init\_\_(self):}
-\sphinxAtStartPar
-super().\_\_init\_\_()
-self.width = 800
-self.height = 600
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{ui}\PYG{n+nn}{.}\PYG{n+nn}{abc\PYGZus{}window}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{AbstractGLWindow}
 
-\sphinxlineitem{def initializeGL(self):}
-\sphinxAtStartPar
-\# Initialize OpenGL
-pass
+\PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{MyWindow}\PYG{p}{(}\PYG{n}{AbstractGLWindow}\PYG{p}{)}\PYG{p}{:}
+    \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+        \PYG{n+nb}{super}\PYG{p}{(}\PYG{p}{)}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{width} \PYG{o}{=} \PYG{l+m+mi}{800}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{height} \PYG{o}{=} \PYG{l+m+mi}{600}
 
-\sphinxlineitem{def paintGL(self):}
-\sphinxAtStartPar
-\# Render scene
-pass
+    \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{initializeGL}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+        \PYG{c+c1}{\PYGZsh{} Initialize OpenGL}
+        \PYG{k}{pass}
 
-\sphinxlineitem{def resizeGL(self, width, height):}
-\sphinxAtStartPar
-\# Handle resize
-pass
+    \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{paintGL}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+        \PYG{c+c1}{\PYGZsh{} Render scene}
+        \PYG{k}{pass}
 
-\end{description}
-
-\end{description}
-\end{quote}
+    \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{resizeGL}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{width}\PYG{p}{,} \PYG{n}{height}\PYG{p}{)}\PYG{p}{:}
+        \PYG{c+c1}{\PYGZsh{} Handle resize}
+        \PYG{k}{pass}
+\end{sphinxVerbatim}
 
 
 \subsection{Window Backends}
@@ -7936,18 +7491,15 @@ The \sphinxcode{\sphinxupquote{GLWindow}} class provides a basic GLUT\sphinxhyph
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.ui.backend.glut.window.gl import GLWindow
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{ui}\PYG{n+nn}{.}\PYG{n+nn}{backend}\PYG{n+nn}{.}\PYG{n+nn}{glut}\PYG{n+nn}{.}\PYG{n+nn}{window}\PYG{n+nn}{.}\PYG{n+nn}{gl}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{GLWindow}
 
-\sphinxAtStartPar
-\# Create GLUT window
-window = GLWindow(title=”My Window”)
-window.initializeGL()
-window.run()
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Create GLUT window}
+\PYG{n}{window} \PYG{o}{=} \PYG{n}{GLWindow}\PYG{p}{(}\PYG{n}{title}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{My Window}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{window}\PYG{o}{.}\PYG{n}{initializeGL}\PYG{p}{(}\PYG{p}{)}
+\PYG{n}{window}\PYG{o}{.}\PYG{n}{run}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \paragraph{GlutRendererWindow}
@@ -8105,35 +7657,26 @@ The \sphinxcode{\sphinxupquote{GlutRendererWindow}} class provides a GLUT window
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.ui.backend.glut.window.glut import GlutRendererWindow
-from picogl.renderer import GLContext, MeshData
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{ui}\PYG{n+nn}{.}\PYG{n+nn}{backend}\PYG{n+nn}{.}\PYG{n+nn}{glut}\PYG{n+nn}{.}\PYG{n+nn}{window}\PYG{n+nn}{.}\PYG{n+nn}{glut}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{GlutRendererWindow}
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{renderer}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{GLContext}\PYG{p}{,} \PYG{n}{MeshData}
 
-\sphinxAtStartPar
-\# Create renderer window
-context = GLContext()
-data = MeshData.from\_raw(vertices=vertices, colors=colors)
-\begin{description}
-\sphinxlineitem{window = GlutRendererWindow(}
-\sphinxAtStartPar
-width=800,
-height=600,
-title=”Renderer Window”,
-context=context,
-data=data
+\PYG{c+c1}{\PYGZsh{} Create renderer window}
+\PYG{n}{context} \PYG{o}{=} \PYG{n}{GLContext}\PYG{p}{(}\PYG{p}{)}
+\PYG{n}{data} \PYG{o}{=} \PYG{n}{MeshData}\PYG{o}{.}\PYG{n}{from\PYGZus{}raw}\PYG{p}{(}\PYG{n}{vertices}\PYG{o}{=}\PYG{n}{vertices}\PYG{p}{,} \PYG{n}{colors}\PYG{o}{=}\PYG{n}{colors}\PYG{p}{)}
 
-\end{description}
+\PYG{n}{window} \PYG{o}{=} \PYG{n}{GlutRendererWindow}\PYG{p}{(}
+    \PYG{n}{width}\PYG{o}{=}\PYG{l+m+mi}{800}\PYG{p}{,}
+    \PYG{n}{height}\PYG{o}{=}\PYG{l+m+mi}{600}\PYG{p}{,}
+    \PYG{n}{title}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Renderer Window}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+    \PYG{n}{context}\PYG{o}{=}\PYG{n}{context}\PYG{p}{,}
+    \PYG{n}{data}\PYG{o}{=}\PYG{n}{data}
+\PYG{p}{)}
 
-\sphinxAtStartPar
-)
-
-\sphinxAtStartPar
-window.initializeGL()
-window.run()
-\end{quote}
+\PYG{n}{window}\PYG{o}{.}\PYG{n}{initializeGL}\PYG{p}{(}\PYG{p}{)}
+\PYG{n}{window}\PYG{o}{.}\PYG{n}{run}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \paragraph{RenderWindow}
@@ -8185,34 +7728,25 @@ The \sphinxcode{\sphinxupquote{RenderWindow}} class provides a unified render wi
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.ui.backend.glut.window.object import RenderWindow
-from picogl.renderer import MeshData
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{ui}\PYG{n+nn}{.}\PYG{n+nn}{backend}\PYG{n+nn}{.}\PYG{n+nn}{glut}\PYG{n+nn}{.}\PYG{n+nn}{window}\PYG{n+nn}{.}\PYG{n+nn}{object}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{RenderWindow}
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{renderer}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{MeshData}
 
-\sphinxAtStartPar
-\# Create render window
-data = MeshData.from\_raw(vertices=vertices, colors=colors)
-\begin{description}
-\sphinxlineitem{window = RenderWindow(}
-\sphinxAtStartPar
-width=800,
-height=600,
-title=”Render Window”,
-data=data,
-use\_texture=False
+\PYG{c+c1}{\PYGZsh{} Create render window}
+\PYG{n}{data} \PYG{o}{=} \PYG{n}{MeshData}\PYG{o}{.}\PYG{n}{from\PYGZus{}raw}\PYG{p}{(}\PYG{n}{vertices}\PYG{o}{=}\PYG{n}{vertices}\PYG{p}{,} \PYG{n}{colors}\PYG{o}{=}\PYG{n}{colors}\PYG{p}{)}
 
-\end{description}
+\PYG{n}{window} \PYG{o}{=} \PYG{n}{RenderWindow}\PYG{p}{(}
+    \PYG{n}{width}\PYG{o}{=}\PYG{l+m+mi}{800}\PYG{p}{,}
+    \PYG{n}{height}\PYG{o}{=}\PYG{l+m+mi}{600}\PYG{p}{,}
+    \PYG{n}{title}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Render Window}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+    \PYG{n}{data}\PYG{o}{=}\PYG{n}{data}\PYG{p}{,}
+    \PYG{n}{use\PYGZus{}texture}\PYG{o}{=}\PYG{k+kc}{False}
+\PYG{p}{)}
 
-\sphinxAtStartPar
-)
-
-\sphinxAtStartPar
-window.initialize()
-window.run()
-\end{quote}
+\PYG{n}{window}\PYG{o}{.}\PYG{n}{initialize}\PYG{p}{(}\PYG{p}{)}
+\PYG{n}{window}\PYG{o}{.}\PYG{n}{run}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \paragraph{TextureWindow}
@@ -8252,35 +7786,26 @@ The \sphinxcode{\sphinxupquote{TextureWindow}} class provides a window specializ
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.ui.backend.glut.window.texture import TextureWindow
-from picogl.renderer import MeshData
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{ui}\PYG{n+nn}{.}\PYG{n+nn}{backend}\PYG{n+nn}{.}\PYG{n+nn}{glut}\PYG{n+nn}{.}\PYG{n+nn}{window}\PYG{n+nn}{.}\PYG{n+nn}{texture}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{TextureWindow}
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{renderer}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{MeshData}
 
-\sphinxAtStartPar
-\# Create texture window
-data = MeshData.from\_raw(vertices=vertices, uvs=uvs)
-\begin{description}
-\sphinxlineitem{window = TextureWindow(}
-\sphinxAtStartPar
-width=800,
-height=600,
-title=”Texture Window”,
-data=data,
-base\_dir=”resources/”,
-use\_texture=True
+\PYG{c+c1}{\PYGZsh{} Create texture window}
+\PYG{n}{data} \PYG{o}{=} \PYG{n}{MeshData}\PYG{o}{.}\PYG{n}{from\PYGZus{}raw}\PYG{p}{(}\PYG{n}{vertices}\PYG{o}{=}\PYG{n}{vertices}\PYG{p}{,} \PYG{n}{uvs}\PYG{o}{=}\PYG{n}{uvs}\PYG{p}{)}
 
-\end{description}
+\PYG{n}{window} \PYG{o}{=} \PYG{n}{TextureWindow}\PYG{p}{(}
+    \PYG{n}{width}\PYG{o}{=}\PYG{l+m+mi}{800}\PYG{p}{,}
+    \PYG{n}{height}\PYG{o}{=}\PYG{l+m+mi}{600}\PYG{p}{,}
+    \PYG{n}{title}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Texture Window}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+    \PYG{n}{data}\PYG{o}{=}\PYG{n}{data}\PYG{p}{,}
+    \PYG{n}{base\PYGZus{}dir}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{resources/}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+    \PYG{n}{use\PYGZus{}texture}\PYG{o}{=}\PYG{k+kc}{True}
+\PYG{p}{)}
 
-\sphinxAtStartPar
-)
-
-\sphinxAtStartPar
-window.initialize()
-window.run()
-\end{quote}
+\PYG{n}{window}\PYG{o}{.}\PYG{n}{initialize}\PYG{p}{(}\PYG{p}{)}
+\PYG{n}{window}\PYG{o}{.}\PYG{n}{run}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsubsection{Qt Backend}
@@ -8522,41 +8047,31 @@ The \sphinxcode{\sphinxupquote{GLBase}} class provides a Qt\sphinxhyphen{}based 
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.ui.backend.qt.base import GLBase
-from PyQt5.QtWidgets import QApplication, QMainWindow
-\begin{description}
-\sphinxlineitem{class MyGLWidget(GLBase):}\begin{description}
-\sphinxlineitem{def \_\_init\_\_(self):}
-\sphinxAtStartPar
-super().\_\_init\_\_()
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{ui}\PYG{n+nn}{.}\PYG{n+nn}{backend}\PYG{n+nn}{.}\PYG{n+nn}{qt}\PYG{n+nn}{.}\PYG{n+nn}{base}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{GLBase}
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{PyQt5}\PYG{n+nn}{.}\PYG{n+nn}{QtWidgets}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{QApplication}\PYG{p}{,} \PYG{n}{QMainWindow}
 
-\sphinxlineitem{def initializeGL(self):}
-\sphinxAtStartPar
-\# Initialize OpenGL
-pass
+\PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{MyGLWidget}\PYG{p}{(}\PYG{n}{GLBase}\PYG{p}{)}\PYG{p}{:}
+    \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+        \PYG{n+nb}{super}\PYG{p}{(}\PYG{p}{)}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{p}{)}
 
-\sphinxlineitem{def paintGL(self):}
-\sphinxAtStartPar
-\# Render scene
-pass
+    \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{initializeGL}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+        \PYG{c+c1}{\PYGZsh{} Initialize OpenGL}
+        \PYG{k}{pass}
 
-\end{description}
+    \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{paintGL}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+        \PYG{c+c1}{\PYGZsh{} Render scene}
+        \PYG{k}{pass}
 
-\end{description}
-
-\sphinxAtStartPar
-\# Create Qt application
-app = QApplication({[}{]})
-window = QMainWindow()
-widget = MyGLWidget()
-window.setCentralWidget(widget)
-window.show()
-app.exec\_()
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Create Qt application}
+\PYG{n}{app} \PYG{o}{=} \PYG{n}{QApplication}\PYG{p}{(}\PYG{p}{[}\PYG{p}{]}\PYG{p}{)}
+\PYG{n}{window} \PYG{o}{=} \PYG{n}{QMainWindow}\PYG{p}{(}\PYG{p}{)}
+\PYG{n}{widget} \PYG{o}{=} \PYG{n}{MyGLWidget}\PYG{p}{(}\PYG{p}{)}
+\PYG{n}{window}\PYG{o}{.}\PYG{n}{setCentralWidget}\PYG{p}{(}\PYG{n}{widget}\PYG{p}{)}
+\PYG{n}{window}\PYG{o}{.}\PYG{n}{show}\PYG{p}{(}\PYG{p}{)}
+\PYG{n}{app}\PYG{o}{.}\PYG{n}{exec\PYGZus{}}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsection{Input Handling}
@@ -8566,134 +8081,80 @@ app.exec\_()
 \label{\detokenize{api/ui:mouse-input}}
 \sphinxAtStartPar
 \sphinxstylestrong{Mouse Press Events}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
-\begin{description}
-\sphinxlineitem{def mousePressEvent(self, button, state, x, y):}\begin{description}
-\sphinxlineitem{if button == GLUT\_LEFT\_BUTTON:}\begin{description}
-\sphinxlineitem{if state == GLUT\_DOWN:}
-\sphinxAtStartPar
-self.last\_mouse\_x = x
-self.last\_mouse\_y = y
 
-\sphinxlineitem{else:}
-\sphinxAtStartPar
-self.last\_mouse\_x = None
-self.last\_mouse\_y = None
-
-\end{description}
-
-\end{description}
-
-\end{description}
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{mousePressEvent}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{button}\PYG{p}{,} \PYG{n}{state}\PYG{p}{,} \PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)}\PYG{p}{:}
+    \PYG{k}{if} \PYG{n}{button} \PYG{o}{==} \PYG{n}{GLUT\PYGZus{}LEFT\PYGZus{}BUTTON}\PYG{p}{:}
+        \PYG{k}{if} \PYG{n}{state} \PYG{o}{==} \PYG{n}{GLUT\PYGZus{}DOWN}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{last\PYGZus{}mouse\PYGZus{}x} \PYG{o}{=} \PYG{n}{x}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{last\PYGZus{}mouse\PYGZus{}y} \PYG{o}{=} \PYG{n}{y}
+        \PYG{k}{else}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{last\PYGZus{}mouse\PYGZus{}x} \PYG{o}{=} \PYG{k+kc}{None}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{last\PYGZus{}mouse\PYGZus{}y} \PYG{o}{=} \PYG{k+kc}{None}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Mouse Motion Events}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
-\begin{description}
-\sphinxlineitem{def motion(self, x, y):}\begin{description}
-\sphinxlineitem{if self.last\_mouse\_x is not None and self.last\_mouse\_y is not None:}
-\sphinxAtStartPar
-dx = x \sphinxhyphen{} self.last\_mouse\_x
-dy = y \sphinxhyphen{} self.last\_mouse\_y
 
-\sphinxAtStartPar
-self.rotation\_y += dx * 0.5
-self.rotation\_x += dy * 0.5
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{motion}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)}\PYG{p}{:}
+    \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{last\PYGZus{}mouse\PYGZus{}x} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{k+kc}{None} \PYG{o+ow}{and} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{last\PYGZus{}mouse\PYGZus{}y} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{k+kc}{None}\PYG{p}{:}
+        \PYG{n}{dx} \PYG{o}{=} \PYG{n}{x} \PYG{o}{\PYGZhy{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{last\PYGZus{}mouse\PYGZus{}x}
+        \PYG{n}{dy} \PYG{o}{=} \PYG{n}{y} \PYG{o}{\PYGZhy{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{last\PYGZus{}mouse\PYGZus{}y}
 
-\sphinxAtStartPar
-self.last\_mouse\_x = x
-self.last\_mouse\_y = y
-glutPostRedisplay()
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{rotation\PYGZus{}y} \PYG{o}{+}\PYG{o}{=} \PYG{n}{dx} \PYG{o}{*} \PYG{l+m+mf}{0.5}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{rotation\PYGZus{}x} \PYG{o}{+}\PYG{o}{=} \PYG{n}{dy} \PYG{o}{*} \PYG{l+m+mf}{0.5}
 
-\end{description}
-
-\end{description}
-\end{quote}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{last\PYGZus{}mouse\PYGZus{}x} \PYG{o}{=} \PYG{n}{x}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{last\PYGZus{}mouse\PYGZus{}y} \PYG{o}{=} \PYG{n}{y}
+        \PYG{n}{glutPostRedisplay}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Mouse Wheel Events}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
-\begin{description}
-\sphinxlineitem{def mouse(self, button, state, x, y):}\begin{description}
-\sphinxlineitem{if button == 3:  \# Mouse wheel up}
-\sphinxAtStartPar
-self.zoom\_distance = max(1.0, self.zoom\_distance \sphinxhyphen{} 0.5)
 
-\sphinxlineitem{elif button == 4:  \# Mouse wheel down}
-\sphinxAtStartPar
-self.zoom\_distance = min(20.0, self.zoom\_distance + 0.5)
-
-\end{description}
-
-\sphinxAtStartPar
-glutPostRedisplay()
-
-\end{description}
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{mouse}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{button}\PYG{p}{,} \PYG{n}{state}\PYG{p}{,} \PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)}\PYG{p}{:}
+    \PYG{k}{if} \PYG{n}{button} \PYG{o}{==} \PYG{l+m+mi}{3}\PYG{p}{:}  \PYG{c+c1}{\PYGZsh{} Mouse wheel up}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{zoom\PYGZus{}distance} \PYG{o}{=} \PYG{n+nb}{max}\PYG{p}{(}\PYG{l+m+mf}{1.0}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{zoom\PYGZus{}distance} \PYG{o}{\PYGZhy{}} \PYG{l+m+mf}{0.5}\PYG{p}{)}
+    \PYG{k}{elif} \PYG{n}{button} \PYG{o}{==} \PYG{l+m+mi}{4}\PYG{p}{:}  \PYG{c+c1}{\PYGZsh{} Mouse wheel down}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{zoom\PYGZus{}distance} \PYG{o}{=} \PYG{n+nb}{min}\PYG{p}{(}\PYG{l+m+mf}{20.0}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{zoom\PYGZus{}distance} \PYG{o}{+} \PYG{l+m+mf}{0.5}\PYG{p}{)}
+    \PYG{n}{glutPostRedisplay}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsubsection{Keyboard Input}
 \label{\detokenize{api/ui:keyboard-input}}
 \sphinxAtStartPar
 \sphinxstylestrong{Keyboard Events}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
-\begin{description}
-\sphinxlineitem{def keyboard(self, key, x, y):}\begin{description}
-\sphinxlineitem{if key == b’x1b’:  \# ESC key}
-\sphinxAtStartPar
-sys.exit(0)
 
-\sphinxlineitem{elif key == b’r’:  \# Reset rotation}
-\sphinxAtStartPar
-self.rotation\_x = 0.0
-self.rotation\_y = 0.0
-
-\sphinxlineitem{elif key == b’w’:  \# Toggle wireframe}
-\sphinxAtStartPar
-self.wireframe\_mode = not self.wireframe\_mode
-
-\end{description}
-
-\sphinxAtStartPar
-glutPostRedisplay()
-
-\end{description}
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{keyboard}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{key}\PYG{p}{,} \PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)}\PYG{p}{:}
+    \PYG{k}{if} \PYG{n}{key} \PYG{o}{==} \PYG{l+s+sa}{b}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+se}{\PYGZbs{}x1b}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{:}  \PYG{c+c1}{\PYGZsh{} ESC key}
+        \PYG{n}{sys}\PYG{o}{.}\PYG{n}{exit}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{)}
+    \PYG{k}{elif} \PYG{n}{key} \PYG{o}{==} \PYG{l+s+sa}{b}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{r}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{:}  \PYG{c+c1}{\PYGZsh{} Reset rotation}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{rotation\PYGZus{}x} \PYG{o}{=} \PYG{l+m+mf}{0.0}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{rotation\PYGZus{}y} \PYG{o}{=} \PYG{l+m+mf}{0.0}
+    \PYG{k}{elif} \PYG{n}{key} \PYG{o}{==} \PYG{l+s+sa}{b}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{w}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{:}  \PYG{c+c1}{\PYGZsh{} Toggle wireframe}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{wireframe\PYGZus{}mode} \PYG{o}{=} \PYG{o+ow}{not} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{wireframe\PYGZus{}mode}
+    \PYG{n}{glutPostRedisplay}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Special Keys}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
-\begin{description}
-\sphinxlineitem{def on\_special\_key(self, key, x, y):}\begin{description}
-\sphinxlineitem{if key == GLUT\_KEY\_UP:}
-\sphinxAtStartPar
-self.rotation\_x += 5.0
 
-\sphinxlineitem{elif key == GLUT\_KEY\_DOWN:}
-\sphinxAtStartPar
-self.rotation\_x \sphinxhyphen{}= 5.0
-
-\sphinxlineitem{elif key == GLUT\_KEY\_LEFT:}
-\sphinxAtStartPar
-self.rotation\_y += 5.0
-
-\sphinxlineitem{elif key == GLUT\_KEY\_RIGHT:}
-\sphinxAtStartPar
-self.rotation\_y \sphinxhyphen{}= 5.0
-
-\end{description}
-
-\sphinxAtStartPar
-glutPostRedisplay()
-
-\end{description}
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{on\PYGZus{}special\PYGZus{}key}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{key}\PYG{p}{,} \PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)}\PYG{p}{:}
+    \PYG{k}{if} \PYG{n}{key} \PYG{o}{==} \PYG{n}{GLUT\PYGZus{}KEY\PYGZus{}UP}\PYG{p}{:}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{rotation\PYGZus{}x} \PYG{o}{+}\PYG{o}{=} \PYG{l+m+mf}{5.0}
+    \PYG{k}{elif} \PYG{n}{key} \PYG{o}{==} \PYG{n}{GLUT\PYGZus{}KEY\PYGZus{}DOWN}\PYG{p}{:}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{rotation\PYGZus{}x} \PYG{o}{\PYGZhy{}}\PYG{o}{=} \PYG{l+m+mf}{5.0}
+    \PYG{k}{elif} \PYG{n}{key} \PYG{o}{==} \PYG{n}{GLUT\PYGZus{}KEY\PYGZus{}LEFT}\PYG{p}{:}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{rotation\PYGZus{}y} \PYG{o}{+}\PYG{o}{=} \PYG{l+m+mf}{5.0}
+    \PYG{k}{elif} \PYG{n}{key} \PYG{o}{==} \PYG{n}{GLUT\PYGZus{}KEY\PYGZus{}RIGHT}\PYG{p}{:}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{rotation\PYGZus{}y} \PYG{o}{\PYGZhy{}}\PYG{o}{=} \PYG{l+m+mf}{5.0}
+    \PYG{n}{glutPostRedisplay}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsection{Window Management}
@@ -8703,100 +8164,75 @@ glutPostRedisplay()
 \label{\detokenize{api/ui:creating-windows}}
 \sphinxAtStartPar
 \sphinxstylestrong{Basic Window}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.ui.backend.glut.window.gl import GLWindow
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{ui}\PYG{n+nn}{.}\PYG{n+nn}{backend}\PYG{n+nn}{.}\PYG{n+nn}{glut}\PYG{n+nn}{.}\PYG{n+nn}{window}\PYG{n+nn}{.}\PYG{n+nn}{gl}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{GLWindow}
 
-\sphinxAtStartPar
-\# Create basic window
-window = GLWindow(title=”My Window”)
-window.initializeGL()
-window.run()
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Create basic window}
+\PYG{n}{window} \PYG{o}{=} \PYG{n}{GLWindow}\PYG{p}{(}\PYG{n}{title}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{My Window}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{window}\PYG{o}{.}\PYG{n}{initializeGL}\PYG{p}{(}\PYG{p}{)}
+\PYG{n}{window}\PYG{o}{.}\PYG{n}{run}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Renderer Window}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.ui.backend.glut.window.object import RenderWindow
-from picogl.renderer import MeshData
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{ui}\PYG{n+nn}{.}\PYG{n+nn}{backend}\PYG{n+nn}{.}\PYG{n+nn}{glut}\PYG{n+nn}{.}\PYG{n+nn}{window}\PYG{n+nn}{.}\PYG{n+nn}{object}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{RenderWindow}
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{renderer}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{MeshData}
 
-\sphinxAtStartPar
-\# Create renderer window
-data = MeshData.from\_raw(vertices=vertices, colors=colors)
-\begin{description}
-\sphinxlineitem{window = RenderWindow(}
-\sphinxAtStartPar
-width=800,
-height=600,
-title=”Renderer Window”,
-data=data
+\PYG{c+c1}{\PYGZsh{} Create renderer window}
+\PYG{n}{data} \PYG{o}{=} \PYG{n}{MeshData}\PYG{o}{.}\PYG{n}{from\PYGZus{}raw}\PYG{p}{(}\PYG{n}{vertices}\PYG{o}{=}\PYG{n}{vertices}\PYG{p}{,} \PYG{n}{colors}\PYG{o}{=}\PYG{n}{colors}\PYG{p}{)}
 
-\end{description}
+\PYG{n}{window} \PYG{o}{=} \PYG{n}{RenderWindow}\PYG{p}{(}
+    \PYG{n}{width}\PYG{o}{=}\PYG{l+m+mi}{800}\PYG{p}{,}
+    \PYG{n}{height}\PYG{o}{=}\PYG{l+m+mi}{600}\PYG{p}{,}
+    \PYG{n}{title}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Renderer Window}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+    \PYG{n}{data}\PYG{o}{=}\PYG{n}{data}
+\PYG{p}{)}
 
-\sphinxAtStartPar
-)
-
-\sphinxAtStartPar
-window.initialize()
-window.run()
-\end{quote}
+\PYG{n}{window}\PYG{o}{.}\PYG{n}{initialize}\PYG{p}{(}\PYG{p}{)}
+\PYG{n}{window}\PYG{o}{.}\PYG{n}{run}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsubsection{Window Properties}
 \label{\detokenize{api/ui:window-properties}}
 \sphinxAtStartPar
 \sphinxstylestrong{Size and Position}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Set window size
-window.width = 800
-window.height = 600
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Set window size}
+\PYG{n}{window}\PYG{o}{.}\PYG{n}{width} \PYG{o}{=} \PYG{l+m+mi}{800}
+\PYG{n}{window}\PYG{o}{.}\PYG{n}{height} \PYG{o}{=} \PYG{l+m+mi}{600}
 
-\sphinxAtStartPar
-\# Set window position
-window.x = 100
-window.y = 100
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Set window position}
+\PYG{n}{window}\PYG{o}{.}\PYG{n}{x} \PYG{o}{=} \PYG{l+m+mi}{100}
+\PYG{n}{window}\PYG{o}{.}\PYG{n}{y} \PYG{o}{=} \PYG{l+m+mi}{100}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Title and Icon}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Set window title
-window.title = “My PicoGL Application”
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Set window title}
+\PYG{n}{window}\PYG{o}{.}\PYG{n}{title} \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{My PicoGL Application}\PYG{l+s+s2}{\PYGZdq{}}
 
-\sphinxAtStartPar
-\# Set window icon (if supported)
-window.icon = “icon.png”
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Set window icon (if supported)}
+\PYG{n}{window}\PYG{o}{.}\PYG{n}{icon} \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{icon.png}\PYG{l+s+s2}{\PYGZdq{}}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Fullscreen Mode}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Toggle fullscreen
-window.toggle\_fullscreen()
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Toggle fullscreen}
+\PYG{n}{window}\PYG{o}{.}\PYG{n}{toggle\PYGZus{}fullscreen}\PYG{p}{(}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Check fullscreen state
-if window.is\_fullscreen():
-\begin{quote}
-
-\sphinxAtStartPar
-print(“Window is in fullscreen mode”)
-\end{quote}
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Check fullscreen state}
+\PYG{k}{if} \PYG{n}{window}\PYG{o}{.}\PYG{n}{is\PYGZus{}fullscreen}\PYG{p}{(}\PYG{p}{)}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Window is in fullscreen mode}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsection{Rendering Loop}
@@ -8806,121 +8242,88 @@ print(“Window is in fullscreen mode”)
 \label{\detokenize{api/ui:display-function}}
 \sphinxAtStartPar
 \sphinxstylestrong{Basic Display}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
-\begin{description}
-\sphinxlineitem{def display(self):}
-\sphinxAtStartPar
-glClear(GL\_COLOR\_BUFFER\_BIT | GL\_DEPTH\_BUFFER\_BIT)
-glLoadIdentity()
 
-\sphinxAtStartPar
-\# Set up camera
-gluLookAt(0, 0, 5, 0, 0, 0, 0, 1, 0)
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{display}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+    \PYG{n}{glClear}\PYG{p}{(}\PYG{n}{GL\PYGZus{}COLOR\PYGZus{}BUFFER\PYGZus{}BIT} \PYG{o}{|} \PYG{n}{GL\PYGZus{}DEPTH\PYGZus{}BUFFER\PYGZus{}BIT}\PYG{p}{)}
+    \PYG{n}{glLoadIdentity}\PYG{p}{(}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Apply transformations
-glRotatef(self.rotation\_x, 1, 0, 0)
-glRotatef(self.rotation\_y, 0, 1, 0)
+    \PYG{c+c1}{\PYGZsh{} Set up camera}
+    \PYG{n}{gluLookAt}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{5}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Draw scene
-self.draw\_scene()
+    \PYG{c+c1}{\PYGZsh{} Apply transformations}
+    \PYG{n}{glRotatef}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{rotation\PYGZus{}x}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{)}
+    \PYG{n}{glRotatef}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{rotation\PYGZus{}y}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{)}
 
-\sphinxAtStartPar
-glutSwapBuffers()
+    \PYG{c+c1}{\PYGZsh{} Draw scene}
+    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{draw\PYGZus{}scene}\PYG{p}{(}\PYG{p}{)}
 
-\end{description}
-\end{quote}
+    \PYG{n}{glutSwapBuffers}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Advanced Display}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
-\begin{description}
-\sphinxlineitem{def display(self):}
-\sphinxAtStartPar
-\# Clear buffers
-glClear(GL\_COLOR\_BUFFER\_BIT | GL\_DEPTH\_BUFFER\_BIT)
-glLoadIdentity()
 
-\sphinxAtStartPar
-\# Set up camera
-self.setup\_camera()
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{display}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+    \PYG{c+c1}{\PYGZsh{} Clear buffers}
+    \PYG{n}{glClear}\PYG{p}{(}\PYG{n}{GL\PYGZus{}COLOR\PYGZus{}BUFFER\PYGZus{}BIT} \PYG{o}{|} \PYG{n}{GL\PYGZus{}DEPTH\PYGZus{}BUFFER\PYGZus{}BIT}\PYG{p}{)}
+    \PYG{n}{glLoadIdentity}\PYG{p}{(}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Apply transformations
-self.apply\_transformations()
+    \PYG{c+c1}{\PYGZsh{} Set up camera}
+    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{setup\PYGZus{}camera}\PYG{p}{(}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Draw scene
-self.draw\_scene()
+    \PYG{c+c1}{\PYGZsh{} Apply transformations}
+    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{apply\PYGZus{}transformations}\PYG{p}{(}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Draw UI elements
-self.draw\_ui()
+    \PYG{c+c1}{\PYGZsh{} Draw scene}
+    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{draw\PYGZus{}scene}\PYG{p}{(}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Swap buffers
-glutSwapBuffers()
+    \PYG{c+c1}{\PYGZsh{} Draw UI elements}
+    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{draw\PYGZus{}ui}\PYG{p}{(}\PYG{p}{)}
 
-\end{description}
-\end{quote}
+    \PYG{c+c1}{\PYGZsh{} Swap buffers}
+    \PYG{n}{glutSwapBuffers}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsubsection{Resize Handling}
 \label{\detokenize{api/ui:resize-handling}}
 \sphinxAtStartPar
 \sphinxstylestrong{Basic Resize}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
-\begin{description}
-\sphinxlineitem{def resizeGL(self, width, height):}
-\sphinxAtStartPar
-self.width = width
-self.height = height
-glViewport(0, 0, width, height)
-glMatrixMode(GL\_PROJECTION)
-glLoadIdentity()
-gluPerspective(45.0, float(width) / float(height), 0.1, 100.0)
-glMatrixMode(GL\_MODELVIEW)
 
-\end{description}
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{resizeGL}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{width}\PYG{p}{,} \PYG{n}{height}\PYG{p}{)}\PYG{p}{:}
+    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{width} \PYG{o}{=} \PYG{n}{width}
+    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{height} \PYG{o}{=} \PYG{n}{height}
+    \PYG{n}{glViewport}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{width}\PYG{p}{,} \PYG{n}{height}\PYG{p}{)}
+    \PYG{n}{glMatrixMode}\PYG{p}{(}\PYG{n}{GL\PYGZus{}PROJECTION}\PYG{p}{)}
+    \PYG{n}{glLoadIdentity}\PYG{p}{(}\PYG{p}{)}
+    \PYG{n}{gluPerspective}\PYG{p}{(}\PYG{l+m+mf}{45.0}\PYG{p}{,} \PYG{n+nb}{float}\PYG{p}{(}\PYG{n}{width}\PYG{p}{)} \PYG{o}{/} \PYG{n+nb}{float}\PYG{p}{(}\PYG{n}{height}\PYG{p}{)}\PYG{p}{,} \PYG{l+m+mf}{0.1}\PYG{p}{,} \PYG{l+m+mf}{100.0}\PYG{p}{)}
+    \PYG{n}{glMatrixMode}\PYG{p}{(}\PYG{n}{GL\PYGZus{}MODELVIEW}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Advanced Resize}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
-\begin{description}
-\sphinxlineitem{def resizeGL(self, width, height):}
-\sphinxAtStartPar
-self.width = width
-self.height = height
 
-\sphinxAtStartPar
-\# Update viewport
-glViewport(0, 0, width, height)
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{resizeGL}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{width}\PYG{p}{,} \PYG{n}{height}\PYG{p}{)}\PYG{p}{:}
+    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{width} \PYG{o}{=} \PYG{n}{width}
+    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{height} \PYG{o}{=} \PYG{n}{height}
 
-\sphinxAtStartPar
-\# Update projection matrix
-self.update\_projection\_matrix(width, height)
+    \PYG{c+c1}{\PYGZsh{} Update viewport}
+    \PYG{n}{glViewport}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{width}\PYG{p}{,} \PYG{n}{height}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Update UI layout
-self.update\_ui\_layout(width, height)
+    \PYG{c+c1}{\PYGZsh{} Update projection matrix}
+    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{update\PYGZus{}projection\PYGZus{}matrix}\PYG{p}{(}\PYG{n}{width}\PYG{p}{,} \PYG{n}{height}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Notify renderers
-for renderer in self.renderers:
-\begin{quote}
+    \PYG{c+c1}{\PYGZsh{} Update UI layout}
+    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{update\PYGZus{}ui\PYGZus{}layout}\PYG{p}{(}\PYG{n}{width}\PYG{p}{,} \PYG{n}{height}\PYG{p}{)}
 
-\sphinxAtStartPar
-renderer.resize(width, height)
-\end{quote}
-
-\end{description}
-\end{quote}
+    \PYG{c+c1}{\PYGZsh{} Notify renderers}
+    \PYG{k}{for} \PYG{n}{renderer} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{renderers}\PYG{p}{:}
+        \PYG{n}{renderer}\PYG{o}{.}\PYG{n}{resize}\PYG{p}{(}\PYG{n}{width}\PYG{p}{,} \PYG{n}{height}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsection{Event Handling}
@@ -8930,102 +8333,72 @@ renderer.resize(width, height)
 \label{\detokenize{api/ui:event-loop}}
 \sphinxAtStartPar
 \sphinxstylestrong{Basic Event Loop}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
-\begin{description}
-\sphinxlineitem{def run(self):}
-\sphinxAtStartPar
-glutMainLoop()
 
-\end{description}
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{run}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+    \PYG{n}{glutMainLoop}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Custom Event Loop}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
-\begin{description}
-\sphinxlineitem{def run(self):}\begin{description}
-\sphinxlineitem{while not self.should\_exit:}
-\sphinxAtStartPar
-self.handle\_events()
-self.update()
-self.render()
-self.sleep(16)  \# 60 FPS
 
-\end{description}
-
-\end{description}
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{run}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+    \PYG{k}{while} \PYG{o+ow}{not} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{should\PYGZus{}exit}\PYG{p}{:}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{handle\PYGZus{}events}\PYG{p}{(}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{render}\PYG{p}{(}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{sleep}\PYG{p}{(}\PYG{l+m+mi}{16}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} 60 FPS}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Idle Function}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
-\begin{description}
-\sphinxlineitem{def idle(self):}\begin{description}
-\sphinxlineitem{if self.auto\_rotate:}
-\sphinxAtStartPar
-self.rotation\_y += 0.5
-glutPostRedisplay()
 
-\end{description}
-
-\end{description}
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{idle}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+    \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{auto\PYGZus{}rotate}\PYG{p}{:}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{rotation\PYGZus{}y} \PYG{o}{+}\PYG{o}{=} \PYG{l+m+mf}{0.5}
+        \PYG{n}{glutPostRedisplay}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsubsection{Timer Events}
 \label{\detokenize{api/ui:timer-events}}
 \sphinxAtStartPar
 \sphinxstylestrong{Basic Timer}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
-\begin{description}
-\sphinxlineitem{def timer(self, value):}
-\sphinxAtStartPar
-\# Update animation
-self.update\_animation()
 
-\sphinxAtStartPar
-\# Redraw
-glutPostRedisplay()
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{timer}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{value}\PYG{p}{)}\PYG{p}{:}
+    \PYG{c+c1}{\PYGZsh{} Update animation}
+    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{update\PYGZus{}animation}\PYG{p}{(}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Set next timer
-glutTimerFunc(16, self.timer, 0)  \# 60 FPS
+    \PYG{c+c1}{\PYGZsh{} Redraw}
+    \PYG{n}{glutPostRedisplay}\PYG{p}{(}\PYG{p}{)}
 
-\end{description}
-\end{quote}
+    \PYG{c+c1}{\PYGZsh{} Set next timer}
+    \PYG{n}{glutTimerFunc}\PYG{p}{(}\PYG{l+m+mi}{16}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{timer}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} 60 FPS}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Advanced Timer}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
-\begin{description}
-\sphinxlineitem{def timer(self, value):}
-\sphinxAtStartPar
-\# Update physics
-self.update\_physics()
 
-\sphinxAtStartPar
-\# Update animation
-self.update\_animation()
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{timer}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{value}\PYG{p}{)}\PYG{p}{:}
+    \PYG{c+c1}{\PYGZsh{} Update physics}
+    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{update\PYGZus{}physics}\PYG{p}{(}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Update UI
-self.update\_ui()
+    \PYG{c+c1}{\PYGZsh{} Update animation}
+    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{update\PYGZus{}animation}\PYG{p}{(}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Redraw
-glutPostRedisplay()
+    \PYG{c+c1}{\PYGZsh{} Update UI}
+    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{update\PYGZus{}ui}\PYG{p}{(}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Set next timer
-glutTimerFunc(16, self.timer, 0)
+    \PYG{c+c1}{\PYGZsh{} Redraw}
+    \PYG{n}{glutPostRedisplay}\PYG{p}{(}\PYG{p}{)}
 
-\end{description}
-\end{quote}
+    \PYG{c+c1}{\PYGZsh{} Set next timer}
+    \PYG{n}{glutTimerFunc}\PYG{p}{(}\PYG{l+m+mi}{16}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{timer}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsection{Platform\sphinxhyphen{}Specific Features}
@@ -9035,125 +8408,82 @@ glutTimerFunc(16, self.timer, 0)
 \label{\detokenize{api/ui:macos}}
 \sphinxAtStartPar
 \sphinxstylestrong{Display Environment}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-import os
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{os}
 
-\sphinxAtStartPar
-\# Check for display
-if os.environ.get(‘DISPLAY’) is None:
-\begin{quote}
+\PYG{c+c1}{\PYGZsh{} Check for display}
+\PYG{k}{if} \PYG{n}{os}\PYG{o}{.}\PYG{n}{environ}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{DISPLAY}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)} \PYG{o+ow}{is} \PYG{k+kc}{None}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{No display available}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+    \PYG{k}{return}
 
-\sphinxAtStartPar
-print(“No display available”)
-return
-\end{quote}
-
-\sphinxAtStartPar
-\# Run from Terminal.app or iTerm2
-window.run()
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Run from Terminal.app or iTerm2}
+\PYG{n}{window}\PYG{o}{.}\PYG{n}{run}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{OpenGL Context}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Check OpenGL version
-import OpenGL.GL as GL
-version = GL.glGetString(GL.GL\_VERSION)
-print(f”OpenGL version: \{version\}”)
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Check OpenGL version}
+\PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{OpenGL}\PYG{n+nn}{.}\PYG{n+nn}{GL}\PYG{+w}{ }\PYG{k}{as}\PYG{+w}{ }\PYG{n+nn}{GL}
+\PYG{n}{version} \PYG{o}{=} \PYG{n}{GL}\PYG{o}{.}\PYG{n}{glGetString}\PYG{p}{(}\PYG{n}{GL}\PYG{o}{.}\PYG{n}{GL\PYGZus{}VERSION}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{OpenGL version: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{version}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsubsection{Windows}
 \label{\detokenize{api/ui:windows}}
 \sphinxAtStartPar
 \sphinxstylestrong{Graphics Drivers}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Check graphics vendor
-import OpenGL.GL as GL
-vendor = GL.glGetString(GL.GL\_VENDOR)
-print(f”Graphics vendor: \{vendor\}”)
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Check graphics vendor}
+\PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{OpenGL}\PYG{n+nn}{.}\PYG{n+nn}{GL}\PYG{+w}{ }\PYG{k}{as}\PYG{+w}{ }\PYG{n+nn}{GL}
+\PYG{n}{vendor} \PYG{o}{=} \PYG{n}{GL}\PYG{o}{.}\PYG{n}{glGetString}\PYG{p}{(}\PYG{n}{GL}\PYG{o}{.}\PYG{n}{GL\PYGZus{}VENDOR}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Graphics vendor: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{vendor}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{DLL Loading}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Check for required DLLs
-try:
-\begin{quote}
-
-\sphinxAtStartPar
-import OpenGL.GL as GL
-\end{quote}
-\begin{description}
-\sphinxlineitem{except ImportError as e:}
-\sphinxAtStartPar
-print(f”DLL loading failed: \{e\}”)
-print(“Install Visual C++ Redistributable”)
-
-\end{description}
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Check for required DLLs}
+\PYG{k}{try}\PYG{p}{:}
+    \PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{OpenGL}\PYG{n+nn}{.}\PYG{n+nn}{GL}\PYG{+w}{ }\PYG{k}{as}\PYG{+w}{ }\PYG{n+nn}{GL}
+\PYG{k}{except} \PYG{n+ne}{ImportError} \PYG{k}{as} \PYG{n}{e}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{DLL loading failed: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{e}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Install Visual C++ Redistributable}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsubsection{Linux}
 \label{\detokenize{api/ui:linux}}
 \sphinxAtStartPar
 \sphinxstylestrong{Display Server}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-import os
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{os}
 
-\sphinxAtStartPar
-\# Check display
-display = os.environ.get(‘DISPLAY’)
-if display:
-\begin{quote}
-
-\sphinxAtStartPar
-print(f”Using display: \{display\}”)
-\end{quote}
-\begin{description}
-\sphinxlineitem{else:}
-\sphinxAtStartPar
-print(“No display available”)
-
-\end{description}
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Check display}
+\PYG{n}{display} \PYG{o}{=} \PYG{n}{os}\PYG{o}{.}\PYG{n}{environ}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{DISPLAY}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
+\PYG{k}{if} \PYG{n}{display}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Using display: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{display}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{k}{else}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{No display available}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{OpenGL Libraries}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Check OpenGL libraries
-try:
-\begin{quote}
-
-\sphinxAtStartPar
-import OpenGL.GL as GL
-\end{quote}
-\begin{description}
-\sphinxlineitem{except ImportError as e:}
-\sphinxAtStartPar
-print(f”OpenGL libraries not found: \{e\}”)
-print(“Install mesa libraries”)
-
-\end{description}
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Check OpenGL libraries}
+\PYG{k}{try}\PYG{p}{:}
+    \PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{OpenGL}\PYG{n+nn}{.}\PYG{n+nn}{GL}\PYG{+w}{ }\PYG{k}{as}\PYG{+w}{ }\PYG{n+nn}{GL}
+\PYG{k}{except} \PYG{n+ne}{ImportError} \PYG{k}{as} \PYG{n}{e}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{OpenGL libraries not found: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{e}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Install mesa libraries}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsection{Error Handling}
@@ -9163,134 +8493,94 @@ print(“Install mesa libraries”)
 \label{\detokenize{api/ui:window-creation-errors}}
 \sphinxAtStartPar
 \sphinxstylestrong{Display Errors}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
-\begin{description}
-\sphinxlineitem{try:}
-\sphinxAtStartPar
-window = GLWindow(title=”My Window”)
 
-\sphinxlineitem{except DisplayError as e:}
-\sphinxAtStartPar
-print(f”Display error: \{e\}”)
-\# Handle gracefully
-
-\sphinxlineitem{except Exception as e:}
-\sphinxAtStartPar
-print(f”Unexpected error: \{e\}”)
-\# Handle gracefully
-
-\end{description}
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k}{try}\PYG{p}{:}
+    \PYG{n}{window} \PYG{o}{=} \PYG{n}{GLWindow}\PYG{p}{(}\PYG{n}{title}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{My Window}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{k}{except} \PYG{n}{DisplayError} \PYG{k}{as} \PYG{n}{e}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Display error: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{e}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+    \PYG{c+c1}{\PYGZsh{} Handle gracefully}
+\PYG{k}{except} \PYG{n+ne}{Exception} \PYG{k}{as} \PYG{n}{e}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Unexpected error: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{e}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+    \PYG{c+c1}{\PYGZsh{} Handle gracefully}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{OpenGL Context Errors}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
-\begin{description}
-\sphinxlineitem{try:}
-\sphinxAtStartPar
-window.initializeGL()
 
-\sphinxlineitem{except OpenGLError as e:}
-\sphinxAtStartPar
-print(f”OpenGL error: \{e\}”)
-\# Use fallback rendering
-
-\sphinxlineitem{except Exception as e:}
-\sphinxAtStartPar
-print(f”Unexpected error: \{e\}”)
-\# Handle gracefully
-
-\end{description}
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k}{try}\PYG{p}{:}
+    \PYG{n}{window}\PYG{o}{.}\PYG{n}{initializeGL}\PYG{p}{(}\PYG{p}{)}
+\PYG{k}{except} \PYG{n}{OpenGLError} \PYG{k}{as} \PYG{n}{e}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{OpenGL error: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{e}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+    \PYG{c+c1}{\PYGZsh{} Use fallback rendering}
+\PYG{k}{except} \PYG{n+ne}{Exception} \PYG{k}{as} \PYG{n}{e}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Unexpected error: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{e}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+    \PYG{c+c1}{\PYGZsh{} Handle gracefully}
+\end{sphinxVerbatim}
 
 
 \subsubsection{Input Errors}
 \label{\detokenize{api/ui:input-errors}}
 \sphinxAtStartPar
 \sphinxstylestrong{Mouse Input Errors}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
-\begin{description}
-\sphinxlineitem{def mousePressEvent(self, button, state, x, y):}\begin{description}
-\sphinxlineitem{try:}
-\sphinxAtStartPar
-\# Handle mouse input
-pass
 
-\sphinxlineitem{except Exception as e:}
-\sphinxAtStartPar
-print(f”Mouse input error: \{e\}”)
-\# Handle gracefully
-
-\end{description}
-
-\end{description}
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{mousePressEvent}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{button}\PYG{p}{,} \PYG{n}{state}\PYG{p}{,} \PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)}\PYG{p}{:}
+    \PYG{k}{try}\PYG{p}{:}
+        \PYG{c+c1}{\PYGZsh{} Handle mouse input}
+        \PYG{k}{pass}
+    \PYG{k}{except} \PYG{n+ne}{Exception} \PYG{k}{as} \PYG{n}{e}\PYG{p}{:}
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Mouse input error: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{e}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+        \PYG{c+c1}{\PYGZsh{} Handle gracefully}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Keyboard Input Errors}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
-\begin{description}
-\sphinxlineitem{def keyboard(self, key, x, y):}\begin{description}
-\sphinxlineitem{try:}
-\sphinxAtStartPar
-\# Handle keyboard input
-pass
 
-\sphinxlineitem{except Exception as e:}
-\sphinxAtStartPar
-print(f”Keyboard input error: \{e\}”)
-\# Handle gracefully
-
-\end{description}
-
-\end{description}
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{keyboard}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{key}\PYG{p}{,} \PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)}\PYG{p}{:}
+    \PYG{k}{try}\PYG{p}{:}
+        \PYG{c+c1}{\PYGZsh{} Handle keyboard input}
+        \PYG{k}{pass}
+    \PYG{k}{except} \PYG{n+ne}{Exception} \PYG{k}{as} \PYG{n}{e}\PYG{p}{:}
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Keyboard input error: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{e}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+        \PYG{c+c1}{\PYGZsh{} Handle gracefully}
+\end{sphinxVerbatim}
 
 
 \subsection{Performance Considerations}
 \label{\detokenize{api/ui:performance-considerations}}
 \sphinxAtStartPar
 \sphinxstylestrong{Frame Rate}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Target 60 FPS
-glutTimerFunc(16, self.timer, 0)  \# 16ms = 60 FPS
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Target 60 FPS}
+\PYG{n}{glutTimerFunc}\PYG{p}{(}\PYG{l+m+mi}{16}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{timer}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} 16ms = 60 FPS}
 
-\sphinxAtStartPar
-\# Target 30 FPS
-glutTimerFunc(33, self.timer, 0)  \# 33ms = 30 FPS
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Target 30 FPS}
+\PYG{n}{glutTimerFunc}\PYG{p}{(}\PYG{l+m+mi}{33}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{timer}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} 33ms = 30 FPS}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Double Buffering}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Enable double buffering
-glutInitDisplayMode(GLUT\_RGBA | GLUT\_DOUBLE | GLUT\_DEPTH)
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Enable double buffering}
+\PYG{n}{glutInitDisplayMode}\PYG{p}{(}\PYG{n}{GLUT\PYGZus{}RGBA} \PYG{o}{|} \PYG{n}{GLUT\PYGZus{}DOUBLE} \PYG{o}{|} \PYG{n}{GLUT\PYGZus{}DEPTH}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Swap buffers
-glutSwapBuffers()
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Swap buffers}
+\PYG{n}{glutSwapBuffers}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{VSync}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Enable VSync (if supported)
-import OpenGL.GL as GL
-GL.glEnable(GL.GL\_VSYNC)
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Enable VSync (if supported)}
+\PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{OpenGL}\PYG{n+nn}{.}\PYG{n+nn}{GL}\PYG{+w}{ }\PYG{k}{as}\PYG{+w}{ }\PYG{n+nn}{GL}
+\PYG{n}{GL}\PYG{o}{.}\PYG{n}{glEnable}\PYG{p}{(}\PYG{n}{GL}\PYG{o}{.}\PYG{n}{GL\PYGZus{}VSYNC}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsection{Best Practices}
@@ -9320,45 +8610,24 @@ GL.glEnable(GL.GL\_VSYNC)
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Choose window type based on needs
-if needs\_texture\_rendering:
-\begin{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Choose window type based on needs}
+\PYG{k}{if} \PYG{n}{needs\PYGZus{}texture\PYGZus{}rendering}\PYG{p}{:}
+    \PYG{n}{window} \PYG{o}{=} \PYG{n}{TextureWindow}\PYG{p}{(}\PYG{n}{data}\PYG{o}{=}\PYG{n}{data}\PYG{p}{,} \PYG{n}{use\PYGZus{}texture}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+\PYG{k}{elif} \PYG{n}{needs\PYGZus{}basic\PYGZus{}rendering}\PYG{p}{:}
+    \PYG{n}{window} \PYG{o}{=} \PYG{n}{RenderWindow}\PYG{p}{(}\PYG{n}{data}\PYG{o}{=}\PYG{n}{data}\PYG{p}{)}
+\PYG{k}{else}\PYG{p}{:}
+    \PYG{n}{window} \PYG{o}{=} \PYG{n}{GLWindow}\PYG{p}{(}\PYG{n}{title}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Basic Window}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
 
-\sphinxAtStartPar
-window = TextureWindow(data=data, use\_texture=True)
-\end{quote}
-\begin{description}
-\sphinxlineitem{elif needs\_basic\_rendering:}
-\sphinxAtStartPar
-window = RenderWindow(data=data)
-
-\sphinxlineitem{else:}
-\sphinxAtStartPar
-window = GLWindow(title=”Basic Window”)
-
-\end{description}
-
-\sphinxAtStartPar
-\# Handle errors gracefully
-try:
-\begin{quote}
-
-\sphinxAtStartPar
-window.initialize()
-window.run()
-\end{quote}
-\begin{description}
-\sphinxlineitem{except Exception as e:}
-\sphinxAtStartPar
-print(f”Window error: \{e\}”)
-\# Handle gracefully
-
-\end{description}
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Handle errors gracefully}
+\PYG{k}{try}\PYG{p}{:}
+    \PYG{n}{window}\PYG{o}{.}\PYG{n}{initialize}\PYG{p}{(}\PYG{p}{)}
+    \PYG{n}{window}\PYG{o}{.}\PYG{n}{run}\PYG{p}{(}\PYG{p}{)}
+\PYG{k}{except} \PYG{n+ne}{Exception} \PYG{k}{as} \PYG{n}{e}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Window error: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{e}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+    \PYG{c+c1}{\PYGZsh{} Handle gracefully}
+\end{sphinxVerbatim}
 
 \sphinxstepscope
 
@@ -9454,32 +8723,22 @@ The \sphinxcode{\sphinxupquote{ObjectLoader}} class provides functionality for l
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.utils.loader.object import ObjectLoader
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{utils}\PYG{n+nn}{.}\PYG{n+nn}{loader}\PYG{n+nn}{.}\PYG{n+nn}{object}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{ObjectLoader}
 
-\sphinxAtStartPar
-\# Load OBJ file
-loader = ObjectLoader(“model.obj”)
-data = loader.to\_array\_style()
+\PYG{c+c1}{\PYGZsh{} Load OBJ file}
+\PYG{n}{loader} \PYG{o}{=} \PYG{n}{ObjectLoader}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{model.obj}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{data} \PYG{o}{=} \PYG{n}{loader}\PYG{o}{.}\PYG{n}{to\PYGZus{}array\PYGZus{}style}\PYG{p}{(}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Create mesh data
-from picogl.renderer import MeshData
-mesh\_data = MeshData.from\_raw(
-\begin{quote}
-
-\sphinxAtStartPar
-vertices=data.vertices,
-normals=data.normals,
-colors=data.colors
-\end{quote}
-
-\sphinxAtStartPar
-)
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Create mesh data}
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{renderer}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{MeshData}
+\PYG{n}{mesh\PYGZus{}data} \PYG{o}{=} \PYG{n}{MeshData}\PYG{o}{.}\PYG{n}{from\PYGZus{}raw}\PYG{p}{(}
+    \PYG{n}{vertices}\PYG{o}{=}\PYG{n}{data}\PYG{o}{.}\PYG{n}{vertices}\PYG{p}{,}
+    \PYG{n}{normals}\PYG{o}{=}\PYG{n}{data}\PYG{o}{.}\PYG{n}{normals}\PYG{p}{,}
+    \PYG{n}{colors}\PYG{o}{=}\PYG{n}{data}\PYG{o}{.}\PYG{n}{colors}
+\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsubsection{TextureLoader}
@@ -9567,22 +8826,18 @@ The \sphinxcode{\sphinxupquote{TextureLoader}} class provides functionality for 
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.utils.loader.texture import TextureLoader
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{utils}\PYG{n+nn}{.}\PYG{n+nn}{loader}\PYG{n+nn}{.}\PYG{n+nn}{texture}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{TextureLoader}
 
-\sphinxAtStartPar
-\# Load texture
-loader = TextureLoader(“texture.png”)
-texture = loader.load()
+\PYG{c+c1}{\PYGZsh{} Load texture}
+\PYG{n}{loader} \PYG{o}{=} \PYG{n}{TextureLoader}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{texture.png}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{texture} \PYG{o}{=} \PYG{n}{loader}\PYG{o}{.}\PYG{n}{load}\PYG{p}{(}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Use texture
-texture.bind()
-\# Draw textured geometry
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Use texture}
+\PYG{n}{texture}\PYG{o}{.}\PYG{n}{bind}\PYG{p}{(}\PYG{p}{)}
+\PYG{c+c1}{\PYGZsh{} Draw textured geometry}
+\end{sphinxVerbatim}
 
 
 \subsection{Helper Functions}
@@ -9642,16 +8897,13 @@ Executes a list of OpenGL initialization tasks.
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.utils.gl\_init import execute\_gl\_tasks, init\_gl\_list
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{utils}\PYG{n+nn}{.}\PYG{n+nn}{gl\PYGZus{}init}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{execute\PYGZus{}gl\PYGZus{}tasks}\PYG{p}{,} \PYG{n}{init\PYGZus{}gl\PYGZus{}list}
 
-\sphinxAtStartPar
-\# Execute initialization tasks
-execute\_gl\_tasks(init\_gl\_list)
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Execute initialization tasks}
+\PYG{n}{execute\PYGZus{}gl\PYGZus{}tasks}\PYG{p}{(}\PYG{n}{init\PYGZus{}gl\PYGZus{}list}\PYG{p}{)}
+\end{sphinxVerbatim}
 \index{init\_gl\_list() (in module picogl.utils.gl\_init)@\spxentry{init\_gl\_list()}\spxextra{in module picogl.utils.gl\_init}}
 
 \begin{fulllineitems}
@@ -9677,17 +8929,14 @@ Returns a list of OpenGL initialization tasks.
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.utils.gl\_init import init\_gl\_list
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{utils}\PYG{n+nn}{.}\PYG{n+nn}{gl\PYGZus{}init}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{init\PYGZus{}gl\PYGZus{}list}
 
-\sphinxAtStartPar
-\# Get initialization tasks
-tasks = init\_gl\_list
-execute\_gl\_tasks(tasks)
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Get initialization tasks}
+\PYG{n}{tasks} \PYG{o}{=} \PYG{n}{init\PYGZus{}gl\PYGZus{}list}
+\PYG{n}{execute\PYGZus{}gl\PYGZus{}tasks}\PYG{p}{(}\PYG{n}{tasks}\PYG{p}{)}
+\end{sphinxVerbatim}
 \index{paint\_gl\_list() (in module picogl.utils.gl\_init)@\spxentry{paint\_gl\_list()}\spxextra{in module picogl.utils.gl\_init}}
 
 \begin{fulllineitems}
@@ -9713,17 +8962,14 @@ Returns a list of OpenGL painting tasks.
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.utils.gl\_init import paint\_gl\_list
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{utils}\PYG{n+nn}{.}\PYG{n+nn}{gl\PYGZus{}init}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{paint\PYGZus{}gl\PYGZus{}list}
 
-\sphinxAtStartPar
-\# Get painting tasks
-tasks = paint\_gl\_list
-execute\_gl\_tasks(tasks)
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Get painting tasks}
+\PYG{n}{tasks} \PYG{o}{=} \PYG{n}{paint\PYGZus{}gl\PYGZus{}list}
+\PYG{n}{execute\PYGZus{}gl\PYGZus{}tasks}\PYG{p}{(}\PYG{n}{tasks}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsubsection{Texture Utilities}
@@ -9755,54 +9001,82 @@ Binds a texture array to the specified texture unit.
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.utils.texture import bind\_texture\_array
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{utils}\PYG{n+nn}{.}\PYG{n+nn}{texture}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{bind\PYGZus{}texture\PYGZus{}array}
 
-\sphinxAtStartPar
-\# Bind texture to unit 0
-bind\_texture\_array(texture\_id, 0)
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Bind texture to unit 0}
+\PYG{n}{bind\PYGZus{}texture\PYGZus{}array}\PYG{p}{(}\PYG{n}{texture\PYGZus{}id}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsubsection{Normal Generation}
-\label{\detokenize{api/utils:normal-generation}}
+\label{\detokenize{api/utils:normal-generation}}\index{compute\_vertex\_normals() (in module picogl.utils.normal)@\spxentry{compute\_vertex\_normals()}\spxextra{in module picogl.utils.normal}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{api/utils:picogl.utils.normal.compute_vertex_normals}}
+\pysigstartsignatures
+\pysiglinewithargsret
+{\sphinxcode{\sphinxupquote{picogl.utils.normal.}}\sphinxbfcode{\sphinxupquote{compute\_vertex\_normals}}}
+{\sphinxparam{\DUrole{n}{vertices}}\sphinxparamcomma \sphinxparam{\DUrole{n}{indices}}}
+{}
+\pysigstopsignatures
+\end{fulllineitems}
+
+
 \sphinxAtStartPar
 Generates surface normals for a mesh.
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.utils.normal import generate\_normals
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{utils}\PYG{n+nn}{.}\PYG{n+nn}{normal}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{compute\PYGZus{}vertex\PYGZus{}normals}
 
-\sphinxAtStartPar
-\# Generate normals
-normals = generate\_normals(vertices, faces)
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Generate normals}
+\PYG{n}{normals} \PYG{o}{=} \PYG{n}{compute\PYGZus{}vertex\PYGZus{}normals}\PYG{p}{(}\PYG{n}{vertices}\PYG{p}{,} \PYG{n}{faces}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsubsection{Reshape Utilities}
-\label{\detokenize{api/utils:reshape-utilities}}
+\label{\detokenize{api/utils:reshape-utilities}}\index{float32\_row() (in module picogl.utils.reshape)@\spxentry{float32\_row()}\spxextra{in module picogl.utils.reshape}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{api/utils:picogl.utils.reshape.float32_row}}
+\pysigstartsignatures
+\pysiglinewithargsret
+{\sphinxcode{\sphinxupquote{picogl.utils.reshape.}}\sphinxbfcode{\sphinxupquote{float32\_row}}}
+{\sphinxparam{\DUrole{n}{array\_like}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{\sphinxhref{https://docs.python.org/3/library/typing.html\#typing.Any}{Any}}}}
+{{ $\rightarrow$ \sphinxhref{https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html\#numpy.ndarray}{ndarray}}}
+\pysigstopsignatures
 \sphinxAtStartPar
-Handles window resize events.
+Reshape input to a single row and convert to np.float32.
+\begin{quote}\begin{description}
+\sphinxlineitem{Parameters}
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{array\_like}} \textendash{} Any array\sphinxhyphen{}like object (list, tuple, np.ndarray).
+
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
+A NumPy array of shape (1, N) with dtype np.float32.
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+
+\sphinxAtStartPar
+Reshapes input to a single row and converts to np.float32.
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.utils.reshape import handle\_resize
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{utils}\PYG{n+nn}{.}\PYG{n+nn}{reshape}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{float32\PYGZus{}row}
 
-\sphinxAtStartPar
-\# Handle resize
-handle\_resize(width, height)
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Reshape data}
+\PYG{n}{data} \PYG{o}{=} \PYG{n}{float32\PYGZus{}row}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{,} \PYG{l+m+mi}{4}\PYG{p}{,} \PYG{l+m+mi}{5}\PYG{p}{]}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsection{Data Loading}
@@ -9812,143 +9086,97 @@ handle\_resize(width, height)
 \label{\detokenize{api/utils:obj-file-loading}}
 \sphinxAtStartPar
 \sphinxstylestrong{Basic Loading}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.utils.loader.object import ObjectLoader
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{utils}\PYG{n+nn}{.}\PYG{n+nn}{loader}\PYG{n+nn}{.}\PYG{n+nn}{object}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{ObjectLoader}
 
-\sphinxAtStartPar
-\# Load OBJ file
-loader = ObjectLoader(“model.obj”)
-data = loader.to\_array\_style()
+\PYG{c+c1}{\PYGZsh{} Load OBJ file}
+\PYG{n}{loader} \PYG{o}{=} \PYG{n}{ObjectLoader}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{model.obj}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{data} \PYG{o}{=} \PYG{n}{loader}\PYG{o}{.}\PYG{n}{to\PYGZus{}array\PYGZus{}style}\PYG{p}{(}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Access data
-vertices = data.vertices
-normals = data.normals
-colors = data.colors
-uvs = data.uvs
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Access data}
+\PYG{n}{vertices} \PYG{o}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{vertices}
+\PYG{n}{normals} \PYG{o}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{normals}
+\PYG{n}{colors} \PYG{o}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{colors}
+\PYG{n}{uvs} \PYG{o}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{uvs}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Advanced Loading}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Load with options
-loader = ObjectLoader(“model.obj”)
-loader.set\_options(
-\begin{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Load with options}
+\PYG{n}{loader} \PYG{o}{=} \PYG{n}{ObjectLoader}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{model.obj}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{loader}\PYG{o}{.}\PYG{n}{set\PYGZus{}options}\PYG{p}{(}
+    \PYG{n}{normalize}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{,}
+    \PYG{n}{compute\PYGZus{}normals}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{,}
+    \PYG{n}{generate\PYGZus{}colors}\PYG{o}{=}\PYG{k+kc}{True}
+\PYG{p}{)}
 
-\sphinxAtStartPar
-normalize=True,
-generate\_normals=True,
-generate\_colors=True
-\end{quote}
-
-\sphinxAtStartPar
-)
-
-\sphinxAtStartPar
-data = loader.to\_array\_style()
-\end{quote}
+\PYG{n}{data} \PYG{o}{=} \PYG{n}{loader}\PYG{o}{.}\PYG{n}{to\PYGZus{}array\PYGZus{}style}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Error Handling}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
-\begin{description}
-\sphinxlineitem{try:}
-\sphinxAtStartPar
-loader = ObjectLoader(“model.obj”)
-data = loader.to\_array\_style()
 
-\sphinxlineitem{except FileNotFoundError:}
-\sphinxAtStartPar
-print(“OBJ file not found”)
-
-\sphinxlineitem{except ValueError as e:}
-\sphinxAtStartPar
-print(f”Invalid OBJ file: \{e\}”)
-
-\sphinxlineitem{except Exception as e:}
-\sphinxAtStartPar
-print(f”Unexpected error: \{e\}”)
-
-\end{description}
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k}{try}\PYG{p}{:}
+    \PYG{n}{loader} \PYG{o}{=} \PYG{n}{ObjectLoader}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{model.obj}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+    \PYG{n}{data} \PYG{o}{=} \PYG{n}{loader}\PYG{o}{.}\PYG{n}{to\PYGZus{}array\PYGZus{}style}\PYG{p}{(}\PYG{p}{)}
+\PYG{k}{except} \PYG{n+ne}{FileNotFoundError}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{OBJ file not found}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{k}{except} \PYG{n+ne}{ValueError} \PYG{k}{as} \PYG{n}{e}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Invalid OBJ file: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{e}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{k}{except} \PYG{n+ne}{Exception} \PYG{k}{as} \PYG{n}{e}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Unexpected error: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{e}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsubsection{Texture Loading}
 \label{\detokenize{api/utils:texture-loading}}
 \sphinxAtStartPar
 \sphinxstylestrong{Basic Loading}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.utils.loader.texture import TextureLoader
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{utils}\PYG{n+nn}{.}\PYG{n+nn}{loader}\PYG{n+nn}{.}\PYG{n+nn}{texture}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{TextureLoader}
 
-\sphinxAtStartPar
-\# Load texture
-loader = TextureLoader(“texture.png”)
-texture = loader.load()
+\PYG{c+c1}{\PYGZsh{} Load texture}
+\PYG{n}{loader} \PYG{o}{=} \PYG{n}{TextureLoader}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{texture.png}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{texture} \PYG{o}{=} \PYG{n}{loader}\PYG{o}{.}\PYG{n}{load}\PYG{p}{(}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Use texture
-texture.bind()
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Use texture}
+\PYG{n}{texture}\PYG{o}{.}\PYG{n}{bind}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Advanced Loading}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Load with options
-loader = TextureLoader(“texture.png”)
-loader.set\_options(
-\begin{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Load with options}
+\PYG{n}{loader} \PYG{o}{=} \PYG{n}{TextureLoader}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{texture.png}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{loader}\PYG{o}{.}\PYG{n}{set\PYGZus{}options}\PYG{p}{(}
+    \PYG{n}{flip\PYGZus{}vertical}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{,}
+    \PYG{n}{generate\PYGZus{}mipmaps}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{,}
+    \PYG{n}{wrap\PYGZus{}mode}\PYG{o}{=}\PYG{n}{GL\PYGZus{}REPEAT}
+\PYG{p}{)}
 
-\sphinxAtStartPar
-flip\_vertical=True,
-generate\_mipmaps=True,
-wrap\_mode=GL\_REPEAT
-\end{quote}
-
-\sphinxAtStartPar
-)
-
-\sphinxAtStartPar
-texture = loader.load()
-\end{quote}
+\PYG{n}{texture} \PYG{o}{=} \PYG{n}{loader}\PYG{o}{.}\PYG{n}{load}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Error Handling}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
-\begin{description}
-\sphinxlineitem{try:}
-\sphinxAtStartPar
-loader = TextureLoader(“texture.png”)
-texture = loader.load()
 
-\sphinxlineitem{except FileNotFoundError:}
-\sphinxAtStartPar
-print(“Texture file not found”)
-
-\sphinxlineitem{except ValueError as e:}
-\sphinxAtStartPar
-print(f”Invalid texture file: \{e\}”)
-
-\sphinxlineitem{except Exception as e:}
-\sphinxAtStartPar
-print(f”Unexpected error: \{e\}”)
-
-\end{description}
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k}{try}\PYG{p}{:}
+    \PYG{n}{loader} \PYG{o}{=} \PYG{n}{TextureLoader}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{texture.png}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+    \PYG{n}{texture} \PYG{o}{=} \PYG{n}{loader}\PYG{o}{.}\PYG{n}{load}\PYG{p}{(}\PYG{p}{)}
+\PYG{k}{except} \PYG{n+ne}{FileNotFoundError}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Texture file not found}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{k}{except} \PYG{n+ne}{ValueError} \PYG{k}{as} \PYG{n}{e}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Invalid texture file: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{e}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{k}{except} \PYG{n+ne}{Exception} \PYG{k}{as} \PYG{n}{e}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Unexpected error: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{e}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsection{Data Processing}
@@ -9958,103 +9186,81 @@ print(f”Unexpected error: \{e\}”)
 \label{\detokenize{api/utils:mesh-data-processing}}
 \sphinxAtStartPar
 \sphinxstylestrong{Vertex Processing}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-import numpy as np
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{numpy}\PYG{+w}{ }\PYG{k}{as}\PYG{+w}{ }\PYG{n+nn}{np}
 
-\sphinxAtStartPar
-\# Normalize vertices
-vertices = vertices / np.linalg.norm(vertices, axis=1, keepdims=True)
+\PYG{c+c1}{\PYGZsh{} Normalize vertices}
+\PYG{n}{vertices} \PYG{o}{=} \PYG{n}{vertices} \PYG{o}{/} \PYG{n}{np}\PYG{o}{.}\PYG{n}{linalg}\PYG{o}{.}\PYG{n}{norm}\PYG{p}{(}\PYG{n}{vertices}\PYG{p}{,} \PYG{n}{axis}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{keepdims}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Center vertices
-center = np.mean(vertices, axis=0)
-vertices = vertices \sphinxhyphen{} center
+\PYG{c+c1}{\PYGZsh{} Center vertices}
+\PYG{n}{center} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{vertices}\PYG{p}{,} \PYG{n}{axis}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+\PYG{n}{vertices} \PYG{o}{=} \PYG{n}{vertices} \PYG{o}{\PYGZhy{}} \PYG{n}{center}
 
-\sphinxAtStartPar
-\# Scale vertices
-scale = 1.0 / np.max(np.abs(vertices))
-vertices = vertices * scale
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Scale vertices}
+\PYG{n}{scale} \PYG{o}{=} \PYG{l+m+mf}{1.0} \PYG{o}{/} \PYG{n}{np}\PYG{o}{.}\PYG{n}{max}\PYG{p}{(}\PYG{n}{np}\PYG{o}{.}\PYG{n}{abs}\PYG{p}{(}\PYG{n}{vertices}\PYG{p}{)}\PYG{p}{)}
+\PYG{n}{vertices} \PYG{o}{=} \PYG{n}{vertices} \PYG{o}{*} \PYG{n}{scale}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Normal Processing}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.utils.normal import generate\_normals
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{utils}\PYG{n+nn}{.}\PYG{n+nn}{normal}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{compute\PYGZus{}vertex\PYGZus{}normals}
 
-\sphinxAtStartPar
-\# Generate normals
-normals = generate\_normals(vertices, faces)
+\PYG{c+c1}{\PYGZsh{} Generate normals}
+\PYG{n}{normals} \PYG{o}{=} \PYG{n}{compute\PYGZus{}vertex\PYGZus{}normals}\PYG{p}{(}\PYG{n}{vertices}\PYG{p}{,} \PYG{n}{faces}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Normalize normals
-normals = normals / np.linalg.norm(normals, axis=1, keepdims=True)
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Normalize normals}
+\PYG{n}{normals} \PYG{o}{=} \PYG{n}{normals} \PYG{o}{/} \PYG{n}{np}\PYG{o}{.}\PYG{n}{linalg}\PYG{o}{.}\PYG{n}{norm}\PYG{p}{(}\PYG{n}{normals}\PYG{p}{,} \PYG{n}{axis}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{keepdims}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Color Processing}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Generate colors based on normals
-colors = (normals + 1.0) / 2.0
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Generate colors based on normals}
+\PYG{n}{colors} \PYG{o}{=} \PYG{p}{(}\PYG{n}{normals} \PYG{o}{+} \PYG{l+m+mf}{1.0}\PYG{p}{)} \PYG{o}{/} \PYG{l+m+mf}{2.0}
 
-\sphinxAtStartPar
-\# Generate colors based on vertices
-colors = (vertices \sphinxhyphen{} vertices.min()) / (vertices.max() \sphinxhyphen{} vertices.min())
+\PYG{c+c1}{\PYGZsh{} Generate colors based on vertices}
+\PYG{n}{colors} \PYG{o}{=} \PYG{p}{(}\PYG{n}{vertices} \PYG{o}{\PYGZhy{}} \PYG{n}{vertices}\PYG{o}{.}\PYG{n}{min}\PYG{p}{(}\PYG{p}{)}\PYG{p}{)} \PYG{o}{/} \PYG{p}{(}\PYG{n}{vertices}\PYG{o}{.}\PYG{n}{max}\PYG{p}{(}\PYG{p}{)} \PYG{o}{\PYGZhy{}} \PYG{n}{vertices}\PYG{o}{.}\PYG{n}{min}\PYG{p}{(}\PYG{p}{)}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Generate random colors
-colors = np.random.rand(len(vertices), 3)
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Generate random colors}
+\PYG{n}{colors} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{random}\PYG{o}{.}\PYG{n}{rand}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{vertices}\PYG{p}{)}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsubsection{Texture Processing}
 \label{\detokenize{api/utils:texture-processing}}
 \sphinxAtStartPar
 \sphinxstylestrong{UV Coordinate Processing}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Flip V coordinates
-uvs{[}:, 1{]} = 1.0 \sphinxhyphen{} uvs{[}:, 1{]}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Flip V coordinates}
+\PYG{n}{uvs}\PYG{p}{[}\PYG{p}{:}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mf}{1.0} \PYG{o}{\PYGZhy{}} \PYG{n}{uvs}\PYG{p}{[}\PYG{p}{:}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{]}
 
-\sphinxAtStartPar
-\# Scale UV coordinates
-uvs = uvs * 2.0 \sphinxhyphen{} 1.0
+\PYG{c+c1}{\PYGZsh{} Scale UV coordinates}
+\PYG{n}{uvs} \PYG{o}{=} \PYG{n}{uvs} \PYG{o}{*} \PYG{l+m+mf}{2.0} \PYG{o}{\PYGZhy{}} \PYG{l+m+mf}{1.0}
 
-\sphinxAtStartPar
-\# Wrap UV coordinates
-uvs = uvs \% 1.0
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Wrap UV coordinates}
+\PYG{n}{uvs} \PYG{o}{=} \PYG{n}{uvs} \PYG{o}{\PYGZpc{}} \PYG{l+m+mf}{1.0}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Texture Format Conversion}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from PIL import Image
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{PIL}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{Image}
 
-\sphinxAtStartPar
-\# Convert to RGBA
-image = Image.open(“texture.png”).convert(“RGBA”)
+\PYG{c+c1}{\PYGZsh{} Convert to RGBA}
+\PYG{n}{image} \PYG{o}{=} \PYG{n}{Image}\PYG{o}{.}\PYG{n}{open}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{texture.png}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}\PYG{o}{.}\PYG{n}{convert}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{RGBA}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Convert to RGB
-image = Image.open(“texture.png”).convert(“RGB”)
+\PYG{c+c1}{\PYGZsh{} Convert to RGB}
+\PYG{n}{image} \PYG{o}{=} \PYG{n}{Image}\PYG{o}{.}\PYG{n}{open}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{texture.png}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}\PYG{o}{.}\PYG{n}{convert}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{RGB}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Resize texture
-image = image.resize((512, 512))
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Resize texture}
+\PYG{n}{image} \PYG{o}{=} \PYG{n}{image}\PYG{o}{.}\PYG{n}{resize}\PYG{p}{(}\PYG{p}{(}\PYG{l+m+mi}{512}\PYG{p}{,} \PYG{l+m+mi}{512}\PYG{p}{)}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsection{File Management}
@@ -10064,56 +9270,36 @@ image = image.resize((512, 512))
 \label{\detokenize{api/utils:path-handling}}
 \sphinxAtStartPar
 \sphinxstylestrong{Path Operations}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from pathlib import Path
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{pathlib}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{Path}
 
-\sphinxAtStartPar
-\# Create path
-base\_dir = Path(“resources”)
-texture\_path = base\_dir / “textures” / “texture.png”
+\PYG{c+c1}{\PYGZsh{} Create path}
+\PYG{n}{base\PYGZus{}dir} \PYG{o}{=} \PYG{n}{Path}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{resources}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{texture\PYGZus{}path} \PYG{o}{=} \PYG{n}{base\PYGZus{}dir} \PYG{o}{/} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{textures}\PYG{l+s+s2}{\PYGZdq{}} \PYG{o}{/} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{texture.png}\PYG{l+s+s2}{\PYGZdq{}}
 
-\sphinxAtStartPar
-\# Check if path exists
-if texture\_path.exists():
-\begin{quote}
+\PYG{c+c1}{\PYGZsh{} Check if path exists}
+\PYG{k}{if} \PYG{n}{texture\PYGZus{}path}\PYG{o}{.}\PYG{n}{exists}\PYG{p}{(}\PYG{p}{)}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Texture file exists}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
 
-\sphinxAtStartPar
-print(“Texture file exists”)
-\end{quote}
-
-\sphinxAtStartPar
-\# Get absolute path
-abs\_path = texture\_path.absolute()
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Get absolute path}
+\PYG{n}{abs\PYGZus{}path} \PYG{o}{=} \PYG{n}{texture\PYGZus{}path}\PYG{o}{.}\PYG{n}{absolute}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Resource Management}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Find resource files
-def find\_resources(directory, pattern=”{\color{red}\bfseries{}*}.obj”):
-\begin{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Find resource files}
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{find\PYGZus{}resources}\PYG{p}{(}\PYG{n}{directory}\PYG{p}{,} \PYG{n}{pattern}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{*.obj}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}\PYG{p}{:}
+    \PYG{k}{return} \PYG{n+nb}{list}\PYG{p}{(}\PYG{n}{Path}\PYG{p}{(}\PYG{n}{directory}\PYG{p}{)}\PYG{o}{.}\PYG{n}{glob}\PYG{p}{(}\PYG{n}{pattern}\PYG{p}{)}\PYG{p}{)}
 
-\sphinxAtStartPar
-return list(Path(directory).glob(pattern))
-\end{quote}
-
-\sphinxAtStartPar
-\# Load all OBJ files
-obj\_files = find\_resources(“models”, “{\color{red}\bfseries{}*}.obj”)
-for obj\_file in obj\_files:
-\begin{quote}
-
-\sphinxAtStartPar
-loader = ObjectLoader(str(obj\_file))
-data = loader.to\_array\_style()
-\end{quote}
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Load all OBJ files}
+\PYG{n}{obj\PYGZus{}files} \PYG{o}{=} \PYG{n}{find\PYGZus{}resources}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{models}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{*.obj}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{k}{for} \PYG{n}{obj\PYGZus{}file} \PYG{o+ow}{in} \PYG{n}{obj\PYGZus{}files}\PYG{p}{:}
+    \PYG{n}{loader} \PYG{o}{=} \PYG{n}{ObjectLoader}\PYG{p}{(}\PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{obj\PYGZus{}file}\PYG{p}{)}\PYG{p}{)}
+    \PYG{n}{data} \PYG{o}{=} \PYG{n}{loader}\PYG{o}{.}\PYG{n}{to\PYGZus{}array\PYGZus{}style}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsection{Error Handling}
@@ -10123,160 +9309,97 @@ data = loader.to\_array\_style()
 \label{\detokenize{api/utils:loading-errors}}
 \sphinxAtStartPar
 \sphinxstylestrong{File Not Found}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
-\begin{description}
-\sphinxlineitem{try:}
-\sphinxAtStartPar
-loader = ObjectLoader(“nonexistent.obj”)
-data = loader.to\_array\_style()
 
-\sphinxlineitem{except FileNotFoundError:}
-\sphinxAtStartPar
-print(“File not found, using fallback”)
-\# Use fallback data
-
-\sphinxlineitem{except Exception as e:}
-\sphinxAtStartPar
-print(f”Unexpected error: \{e\}”)
-
-\end{description}
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k}{try}\PYG{p}{:}
+    \PYG{n}{loader} \PYG{o}{=} \PYG{n}{ObjectLoader}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{nonexistent.obj}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+    \PYG{n}{data} \PYG{o}{=} \PYG{n}{loader}\PYG{o}{.}\PYG{n}{to\PYGZus{}array\PYGZus{}style}\PYG{p}{(}\PYG{p}{)}
+\PYG{k}{except} \PYG{n+ne}{FileNotFoundError}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{File not found, using fallback}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+    \PYG{c+c1}{\PYGZsh{} Use fallback data}
+\PYG{k}{except} \PYG{n+ne}{Exception} \PYG{k}{as} \PYG{n}{e}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Unexpected error: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{e}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Invalid File Format}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
-\begin{description}
-\sphinxlineitem{try:}
-\sphinxAtStartPar
-loader = ObjectLoader(“invalid.obj”)
-data = loader.to\_array\_style()
 
-\sphinxlineitem{except ValueError as e:}
-\sphinxAtStartPar
-print(f”Invalid file format: \{e\}”)
-\# Handle gracefully
-
-\sphinxlineitem{except Exception as e:}
-\sphinxAtStartPar
-print(f”Unexpected error: \{e\}”)
-
-\end{description}
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k}{try}\PYG{p}{:}
+    \PYG{n}{loader} \PYG{o}{=} \PYG{n}{ObjectLoader}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{invalid.obj}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+    \PYG{n}{data} \PYG{o}{=} \PYG{n}{loader}\PYG{o}{.}\PYG{n}{to\PYGZus{}array\PYGZus{}style}\PYG{p}{(}\PYG{p}{)}
+\PYG{k}{except} \PYG{n+ne}{ValueError} \PYG{k}{as} \PYG{n}{e}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Invalid file format: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{e}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+    \PYG{c+c1}{\PYGZsh{} Handle gracefully}
+\PYG{k}{except} \PYG{n+ne}{Exception} \PYG{k}{as} \PYG{n}{e}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Unexpected error: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{e}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Memory Errors}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
-\begin{description}
-\sphinxlineitem{try:}
-\sphinxAtStartPar
-loader = ObjectLoader(“large\_model.obj”)
-data = loader.to\_array\_style()
 
-\sphinxlineitem{except MemoryError:}
-\sphinxAtStartPar
-print(“File too large, using simplified version”)
-\# Use simplified data
-
-\sphinxlineitem{except Exception as e:}
-\sphinxAtStartPar
-print(f”Unexpected error: \{e\}”)
-
-\end{description}
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k}{try}\PYG{p}{:}
+    \PYG{n}{loader} \PYG{o}{=} \PYG{n}{ObjectLoader}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{large\PYGZus{}model.obj}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+    \PYG{n}{data} \PYG{o}{=} \PYG{n}{loader}\PYG{o}{.}\PYG{n}{to\PYGZus{}array\PYGZus{}style}\PYG{p}{(}\PYG{p}{)}
+\PYG{k}{except} \PYG{n+ne}{MemoryError}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{File too large, using simplified version}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+    \PYG{c+c1}{\PYGZsh{} Use simplified data}
+\PYG{k}{except} \PYG{n+ne}{Exception} \PYG{k}{as} \PYG{n}{e}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Unexpected error: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{e}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsection{Performance Considerations}
 \label{\detokenize{api/utils:performance-considerations}}
 \sphinxAtStartPar
 \sphinxstylestrong{Lazy Loading}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
-\begin{description}
-\sphinxlineitem{class LazyLoader:}\begin{description}
-\sphinxlineitem{def \_\_init\_\_(self, filename):}
-\sphinxAtStartPar
-self.filename = filename
-self.\_data = None
 
-\end{description}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{LazyLoader}\PYG{p}{:}
+    \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{filename}\PYG{p}{)}\PYG{p}{:}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{filename} \PYG{o}{=} \PYG{n}{filename}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}data} \PYG{o}{=} \PYG{k+kc}{None}
 
-\sphinxAtStartPar
-@property
-def data(self):
-\begin{quote}
-\begin{description}
-\sphinxlineitem{if self.\_data is None:}
-\sphinxAtStartPar
-self.\_data = self.\_load\_data()
+    \PYG{n+nd}{@property}
+    \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{data}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+        \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}data} \PYG{o+ow}{is} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}data} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}load\PYGZus{}data}\PYG{p}{(}\PYG{p}{)}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}data}
 
-\end{description}
-
-\sphinxAtStartPar
-return self.\_data
-\end{quote}
-\begin{description}
-\sphinxlineitem{def \_load\_data(self):}
-\sphinxAtStartPar
-loader = ObjectLoader(self.filename)
-return loader.to\_array\_style()
-
-\end{description}
-
-\end{description}
-\end{quote}
+    \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{\PYGZus{}load\PYGZus{}data}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+        \PYG{n}{loader} \PYG{o}{=} \PYG{n}{ObjectLoader}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{filename}\PYG{p}{)}
+        \PYG{k}{return} \PYG{n}{loader}\PYG{o}{.}\PYG{n}{to\PYGZus{}array\PYGZus{}style}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Caching}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-import functools
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{functools}
 
-\sphinxAtStartPar
-@functools.lru\_cache(maxsize=128)
-def load\_texture(filename):
-\begin{quote}
-
-\sphinxAtStartPar
-loader = TextureLoader(filename)
-return loader.load()
-\end{quote}
-\end{quote}
+\PYG{n+nd}{@functools}\PYG{o}{.}\PYG{n}{lru\PYGZus{}cache}\PYG{p}{(}\PYG{n}{maxsize}\PYG{o}{=}\PYG{l+m+mi}{128}\PYG{p}{)}
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{load\PYGZus{}texture}\PYG{p}{(}\PYG{n}{filename}\PYG{p}{)}\PYG{p}{:}
+    \PYG{n}{loader} \PYG{o}{=} \PYG{n}{TextureLoader}\PYG{p}{(}\PYG{n}{filename}\PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{loader}\PYG{o}{.}\PYG{n}{load}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Batch Loading}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
-\begin{description}
-\sphinxlineitem{def load\_multiple\_objects(filenames):}
-\sphinxAtStartPar
-results = {[}{]}
-for filename in filenames:
-\begin{quote}
-\begin{description}
-\sphinxlineitem{try:}
-\sphinxAtStartPar
-loader = ObjectLoader(filename)
-data = loader.to\_array\_style()
-results.append(data)
 
-\sphinxlineitem{except Exception as e:}
-\sphinxAtStartPar
-print(f”Failed to load \{filename\}: \{e\}”)
-results.append(None)
-
-\end{description}
-\end{quote}
-
-\sphinxAtStartPar
-return results
-
-\end{description}
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{load\PYGZus{}multiple\PYGZus{}objects}\PYG{p}{(}\PYG{n}{filenames}\PYG{p}{)}\PYG{p}{:}
+    \PYG{n}{results} \PYG{o}{=} \PYG{p}{[}\PYG{p}{]}
+    \PYG{k}{for} \PYG{n}{filename} \PYG{o+ow}{in} \PYG{n}{filenames}\PYG{p}{:}
+        \PYG{k}{try}\PYG{p}{:}
+            \PYG{n}{loader} \PYG{o}{=} \PYG{n}{ObjectLoader}\PYG{p}{(}\PYG{n}{filename}\PYG{p}{)}
+            \PYG{n}{data} \PYG{o}{=} \PYG{n}{loader}\PYG{o}{.}\PYG{n}{to\PYGZus{}array\PYGZus{}style}\PYG{p}{(}\PYG{p}{)}
+            \PYG{n}{results}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{data}\PYG{p}{)}
+        \PYG{k}{except} \PYG{n+ne}{Exception} \PYG{k}{as} \PYG{n}{e}\PYG{p}{:}
+            \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Failed to load }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{filename}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{e}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+            \PYG{n}{results}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{k+kc}{None}\PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{results}
+\end{sphinxVerbatim}
 
 
 \subsection{Best Practices}
@@ -10306,48 +9429,26 @@ return results
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-\# Choose loader based on file type
-if filename.endswith(‘.obj’):
-\begin{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Choose loader based on file type}
+\PYG{k}{if} \PYG{n}{filename}\PYG{o}{.}\PYG{n}{endswith}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{.obj}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}\PYG{p}{:}
+    \PYG{n}{loader} \PYG{o}{=} \PYG{n}{ObjectLoader}\PYG{p}{(}\PYG{n}{filename}\PYG{p}{)}
+\PYG{k}{elif} \PYG{n}{filename}\PYG{o}{.}\PYG{n}{endswith}\PYG{p}{(}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{.png}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{.jpg}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{.jpeg}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}\PYG{p}{)}\PYG{p}{:}
+    \PYG{n}{loader} \PYG{o}{=} \PYG{n}{TextureLoader}\PYG{p}{(}\PYG{n}{filename}\PYG{p}{)}
+\PYG{k}{else}\PYG{p}{:}
+    \PYG{k}{raise} \PYG{n+ne}{ValueError}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Unsupported file type: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{filename}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
 
-\sphinxAtStartPar
-loader = ObjectLoader(filename)
-\end{quote}
-\begin{description}
-\sphinxlineitem{elif filename.endswith((‘.png’, ‘.jpg’, ‘.jpeg’)):}
-\sphinxAtStartPar
-loader = TextureLoader(filename)
+\PYG{c+c1}{\PYGZsh{} Load with error handling}
+\PYG{k}{try}\PYG{p}{:}
+    \PYG{n}{data} \PYG{o}{=} \PYG{n}{loader}\PYG{o}{.}\PYG{n}{load}\PYG{p}{(}\PYG{p}{)}
+\PYG{k}{except} \PYG{n+ne}{Exception} \PYG{k}{as} \PYG{n}{e}\PYG{p}{:}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Failed to load }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{filename}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{e}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+    \PYG{c+c1}{\PYGZsh{} Use fallback data}
+    \PYG{n}{data} \PYG{o}{=} \PYG{n}{create\PYGZus{}fallback\PYGZus{}data}\PYG{p}{(}\PYG{p}{)}
 
-\sphinxlineitem{else:}
-\sphinxAtStartPar
-raise ValueError(f”Unsupported file type: \{filename\}”)
-
-\end{description}
-
-\sphinxAtStartPar
-\# Load with error handling
-try:
-\begin{quote}
-
-\sphinxAtStartPar
-data = loader.load()
-\end{quote}
-\begin{description}
-\sphinxlineitem{except Exception as e:}
-\sphinxAtStartPar
-print(f”Failed to load \{filename\}: \{e\}”)
-\# Use fallback data
-data = create\_fallback\_data()
-
-\end{description}
-
-\sphinxAtStartPar
-return data
-\end{quote}
+\PYG{k}{return} \PYG{n}{data}
+\end{sphinxVerbatim}
 
 \sphinxstepscope
 
@@ -10556,28 +9657,20 @@ The modern backend provides OpenGL 3.3+ functionality:
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{backend}\PYG{n+nn}{.}\PYG{n+nn}{modern}\PYG{n+nn}{.}\PYG{n+nn}{core}\PYG{n+nn}{.}\PYG{n+nn}{vertex}\PYG{n+nn}{.}\PYG{n+nn}{array}\PYG{n+nn}{.}\PYG{n+nn}{object}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{VertexArrayObject}
 
-\sphinxAtStartPar
-\# Create VAO
-vao = VertexArrayObject()
-vao.add\_vbo(index=0, data=vertices, size=3)
-vao.add\_vbo(index=1, data=colors, size=3)
-vao.add\_ebo(data=indices)
+\PYG{c+c1}{\PYGZsh{} Create VAO}
+\PYG{n}{vao} \PYG{o}{=} \PYG{n}{VertexArrayObject}\PYG{p}{(}\PYG{p}{)}
+\PYG{n}{vao}\PYG{o}{.}\PYG{n}{add\PYGZus{}vbo}\PYG{p}{(}\PYG{n}{index}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{data}\PYG{o}{=}\PYG{n}{vertices}\PYG{p}{,} \PYG{n}{size}\PYG{o}{=}\PYG{l+m+mi}{3}\PYG{p}{)}
+\PYG{n}{vao}\PYG{o}{.}\PYG{n}{add\PYGZus{}vbo}\PYG{p}{(}\PYG{n}{index}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{data}\PYG{o}{=}\PYG{n}{colors}\PYG{p}{,} \PYG{n}{size}\PYG{o}{=}\PYG{l+m+mi}{3}\PYG{p}{)}
+\PYG{n}{vao}\PYG{o}{.}\PYG{n}{add\PYGZus{}ebo}\PYG{p}{(}\PYG{n}{data}\PYG{o}{=}\PYG{n}{indices}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Draw
-with vao:
-\begin{quote}
-
-\sphinxAtStartPar
-vao.draw(mode=GL\_TRIANGLES, index\_count=len(indices))
-\end{quote}
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Draw}
+\PYG{k}{with} \PYG{n}{vao}\PYG{p}{:}
+    \PYG{n}{vao}\PYG{o}{.}\PYG{n}{draw}\PYG{p}{(}\PYG{n}{mode}\PYG{o}{=}\PYG{n}{GL\PYGZus{}TRIANGLES}\PYG{p}{,} \PYG{n}{index\PYGZus{}count}\PYG{o}{=}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{indices}\PYG{p}{)}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsubsection{Legacy Backend}
@@ -10601,25 +9694,21 @@ The legacy backend provides OpenGL 1.x/2.x compatibility:
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from picogl.buffers.vertex.legacy import VertexBufferGroup
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{buffers}\PYG{n+nn}{.}\PYG{n+nn}{vertex}\PYG{n+nn}{.}\PYG{n+nn}{legacy}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{VertexBufferGroup}
 
-\sphinxAtStartPar
-\# Create vertex buffer group
-vbg = VertexBufferGroup()
-vbg.add\_vbo(“position”, vertices, 3)
-vbg.add\_vbo(“color”, colors, 3)
-vbg.add\_ebo(indices)
+\PYG{c+c1}{\PYGZsh{} Create vertex buffer group}
+\PYG{n}{vbg} \PYG{o}{=} \PYG{n}{VertexBufferGroup}\PYG{p}{(}\PYG{p}{)}
+\PYG{n}{vbg}\PYG{o}{.}\PYG{n}{add\PYGZus{}vbo}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{position}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{vertices}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{)}
+\PYG{n}{vbg}\PYG{o}{.}\PYG{n}{add\PYGZus{}vbo}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{color}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{colors}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{)}
+\PYG{n}{vbg}\PYG{o}{.}\PYG{n}{add\PYGZus{}ebo}\PYG{p}{(}\PYG{n}{indices}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Draw
-vbg.bind()
-vbg.draw(mode=GL\_TRIANGLES)
-vbg.unbind()
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Draw}
+\PYG{n}{vbg}\PYG{o}{.}\PYG{n}{bind}\PYG{p}{(}\PYG{p}{)}
+\PYG{n}{vbg}\PYG{o}{.}\PYG{n}{draw}\PYG{p}{(}\PYG{n}{mode}\PYG{o}{=}\PYG{n}{GL\PYGZus{}TRIANGLES}\PYG{p}{)}
+\PYG{n}{vbg}\PYG{o}{.}\PYG{n}{unbind}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsubsection{Backend Selection}
@@ -10647,38 +9736,32 @@ PicoGL automatically selects the appropriate backend:
 PicoGL includes comprehensive unit tests:
 
 \sphinxAtStartPar
-\sphinxstylestrong{Test Structure}:
-.. code\sphinxhyphen{}block:: text
-\begin{quote}
+\sphinxstylestrong{Test Structure}
 
-\sphinxAtStartPar
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
 tests/
-├── test\_vertex\_array\_object.py
-├── test\_vertex\_buffer\_group.py
-├── test\_meshdata.py
-├── test\_glmesh.py
-├── test\_legacy\_glmesh.py
-├── test\_object\_renderer.py
-└── test\_texture\_renderer.py
-\end{quote}
+├── test\PYGZus{}vertex\PYGZus{}array\PYGZus{}object.py
+├── test\PYGZus{}vertex\PYGZus{}buffer\PYGZus{}group.py
+├── test\PYGZus{}meshdata.py
+├── test\PYGZus{}glmesh.py
+├── test\PYGZus{}legacy\PYGZus{}glmesh.py
+├── test\PYGZus{}object\PYGZus{}renderer.py
+└── test\PYGZus{}texture\PYGZus{}renderer.py
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Running Tests}:
-.. code\sphinxhyphen{}block:: bash
-\begin{quote}
 
-\sphinxAtStartPar
-\# Run all tests
-python \sphinxhyphen{}m unittest discover tests
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Run all tests}
+python\PYG{+w}{ }\PYGZhy{}m\PYG{+w}{ }unittest\PYG{+w}{ }discover\PYG{+w}{ }tests
 
-\sphinxAtStartPar
-\# Run specific test
-python \sphinxhyphen{}m unittest tests.test\_vertex\_array\_object
+\PYG{c+c1}{\PYGZsh{} Run specific test}
+python\PYG{+w}{ }\PYGZhy{}m\PYG{+w}{ }unittest\PYG{+w}{ }tests.test\PYGZus{}vertex\PYGZus{}array\PYGZus{}object
 
-\sphinxAtStartPar
-\# Run with coverage
-python \sphinxhyphen{}m pytest tests/ \textendash{}cov=picogl
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Run with coverage}
+python\PYG{+w}{ }\PYGZhy{}m\PYG{+w}{ }pytest\PYG{+w}{ }tests/\PYG{+w}{ }\PYGZhy{}\PYGZhy{}cov\PYG{o}{=}picogl
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Test Features}:
@@ -10689,52 +9772,31 @@ python \sphinxhyphen{}m pytest tests/ \textendash{}cov=picogl
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example Test}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-import unittest
-from unittest.mock import MagicMock, patch
-from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
-\begin{description}
-\sphinxlineitem{class TestVertexArrayObject(unittest.TestCase):}\begin{description}
-\sphinxlineitem{def setUp(self):}
-\sphinxAtStartPar
-\# Mock OpenGL functions
-self.gl\_patches = {[}
-\begin{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{unittest}
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{unittest}\PYG{n+nn}{.}\PYG{n+nn}{mock}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{MagicMock}\PYG{p}{,} \PYG{n}{patch}
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{picogl}\PYG{n+nn}{.}\PYG{n+nn}{backend}\PYG{n+nn}{.}\PYG{n+nn}{modern}\PYG{n+nn}{.}\PYG{n+nn}{core}\PYG{n+nn}{.}\PYG{n+nn}{vertex}\PYG{n+nn}{.}\PYG{n+nn}{array}\PYG{n+nn}{.}\PYG{n+nn}{object}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{VertexArrayObject}
 
-\sphinxAtStartPar
-patch(‘picogl.backend.modern.core.vertex.array.object.glGenVertexArrays’),
-patch(‘picogl.backend.modern.core.vertex.array.object.glBindVertexArray’),
-\# … more patches
-\end{quote}
+\PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{TestVertexArrayObject}\PYG{p}{(}\PYG{n}{unittest}\PYG{o}{.}\PYG{n}{TestCase}\PYG{p}{)}\PYG{p}{:}
+    \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{setUp}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+        \PYG{c+c1}{\PYGZsh{} Mock OpenGL functions}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{gl\PYGZus{}patches} \PYG{o}{=} \PYG{p}{[}
+            \PYG{n}{patch}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{picogl.backend.modern.core.vertex.array.object.glGenVertexArrays}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}\PYG{p}{,}
+            \PYG{n}{patch}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{picogl.backend.modern.core.vertex.array.object.glBindVertexArray}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}\PYG{p}{,}
+            \PYG{c+c1}{\PYGZsh{} ... more patches}
+        \PYG{p}{]}
+        \PYG{k}{for} \PYG{n}{patch\PYGZus{}obj} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{gl\PYGZus{}patches}\PYG{p}{:}
+            \PYG{n}{patch\PYGZus{}obj}\PYG{o}{.}\PYG{n}{start}\PYG{p}{(}\PYG{p}{)}
 
-\sphinxAtStartPar
-{]}
-for patch\_obj in self.gl\_patches:
-\begin{quote}
+    \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{tearDown}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+        \PYG{k}{for} \PYG{n}{patch\PYGZus{}obj} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{gl\PYGZus{}patches}\PYG{p}{:}
+            \PYG{n}{patch\PYGZus{}obj}\PYG{o}{.}\PYG{n}{stop}\PYG{p}{(}\PYG{p}{)}
 
-\sphinxAtStartPar
-patch\_obj.start()
-\end{quote}
-
-\sphinxlineitem{def tearDown(self):}\begin{description}
-\sphinxlineitem{for patch\_obj in self.gl\_patches:}
-\sphinxAtStartPar
-patch\_obj.stop()
-
-\end{description}
-
-\sphinxlineitem{def test\_initialization(self):}
-\sphinxAtStartPar
-vao = VertexArrayObject()
-self.assertIsNotNone(vao)
-
-\end{description}
-
-\end{description}
-\end{quote}
+    \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{test\PYGZus{}initialization}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+        \PYG{n}{vao} \PYG{o}{=} \PYG{n}{VertexArrayObject}\PYG{p}{(}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{assertIsNotNone}\PYG{p}{(}\PYG{n}{vao}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsubsection{Integration Tests}
@@ -10751,33 +9813,25 @@ Integration tests verify end\sphinxhyphen{}to\sphinxhyphen{}end functionality:
 
 \sphinxAtStartPar
 \sphinxstylestrong{Example}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
-\begin{description}
-\sphinxlineitem{def test\_rendering\_pipeline():}
-\sphinxAtStartPar
-\# Create mesh data
-data = MeshData.from\_raw(vertices=vertices, colors=colors)
 
-\sphinxAtStartPar
-\# Create renderer
-renderer = ObjectRenderer(context=context, data=data)
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{test\PYGZus{}rendering\PYGZus{}pipeline}\PYG{p}{(}\PYG{p}{)}\PYG{p}{:}
+    \PYG{c+c1}{\PYGZsh{} Create mesh data}
+    \PYG{n}{data} \PYG{o}{=} \PYG{n}{MeshData}\PYG{o}{.}\PYG{n}{from\PYGZus{}raw}\PYG{p}{(}\PYG{n}{vertices}\PYG{o}{=}\PYG{n}{vertices}\PYG{p}{,} \PYG{n}{colors}\PYG{o}{=}\PYG{n}{colors}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Test initialization
-renderer.initialize\_shaders()
-renderer.initialize()
+    \PYG{c+c1}{\PYGZsh{} Create renderer}
+    \PYG{n}{renderer} \PYG{o}{=} \PYG{n}{ObjectRenderer}\PYG{p}{(}\PYG{n}{context}\PYG{o}{=}\PYG{n}{context}\PYG{p}{,} \PYG{n}{data}\PYG{o}{=}\PYG{n}{data}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Test rendering
-renderer.render()
+    \PYG{c+c1}{\PYGZsh{} Test initialization}
+    \PYG{n}{renderer}\PYG{o}{.}\PYG{n}{initialize\PYGZus{}shaders}\PYG{p}{(}\PYG{p}{)}
+    \PYG{n}{renderer}\PYG{o}{.}\PYG{n}{initialize}\PYG{p}{(}\PYG{p}{)}
 
-\sphinxAtStartPar
-\# Verify no errors
-self.assertFalse(has\_gl\_errors())
+    \PYG{c+c1}{\PYGZsh{} Test rendering}
+    \PYG{n}{renderer}\PYG{o}{.}\PYG{n}{render}\PYG{p}{(}\PYG{p}{)}
 
-\end{description}
-\end{quote}
+    \PYG{c+c1}{\PYGZsh{} Verify no errors}
+    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{assertFalse}\PYG{p}{(}\PYG{n}{has\PYGZus{}gl\PYGZus{}errors}\PYG{p}{(}\PYG{p}{)}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsection{Build System}
@@ -10790,123 +9844,72 @@ PicoGL uses setuptools for packaging:
 
 \sphinxAtStartPar
 \sphinxstylestrong{pyproject.toml}:
-.. code\sphinxhyphen{}block:: toml
-\begin{quote}
 
-\sphinxAtStartPar
-{[}build\sphinxhyphen{}system{]}
-requires = {[}“setuptools\textgreater{}=45”, “wheel”{]}
-build\sphinxhyphen{}backend = “setuptools.build\_meta”
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k}{[}\PYG{k}{build\PYGZhy{}system}\PYG{k}{]}
+\PYG{n}{requires}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{setuptools\PYGZgt{}=45}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{wheel}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{]}
+\PYG{n}{build\PYGZhy{}backend}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{setuptools.build\PYGZus{}meta}\PYG{l+s+s2}{\PYGZdq{}}
 
-\sphinxAtStartPar
-{[}project{]}
-name = “picogl”
-version = “1.0.0”
-description = “Lightweight Python OpenGL wrapper”
-requires\sphinxhyphen{}python = “\textgreater{}=3.7”
-dependencies = {[}
-\begin{quote}
+\PYG{k}{[}\PYG{k}{project}\PYG{k}{]}
+\PYG{n}{name}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{picogl}\PYG{l+s+s2}{\PYGZdq{}}
+\PYG{n}{version}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{1.0.0}\PYG{l+s+s2}{\PYGZdq{}}
+\PYG{n}{description}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Lightweight Python OpenGL wrapper}\PYG{l+s+s2}{\PYGZdq{}}
+\PYG{n}{requires\PYGZhy{}python}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{\PYGZgt{}=3.7}\PYG{l+s+s2}{\PYGZdq{}}
+\PYG{n}{dependencies}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{p}{[}
+\PYG{+w}{    }\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{numpy\PYGZgt{}=1.19.0}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{    }\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{PyOpenGL\PYGZgt{}=3.1.0}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{    }\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{PyOpenGL\PYGZhy{}accelerate\PYGZgt{}=3.1.0}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{    }\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{pyglm\PYGZgt{}=2.0.0}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{    }\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Pillow\PYGZgt{}=8.0.0}\PYG{l+s+s2}{\PYGZdq{}}
+\PYG{p}{]}
 
-\sphinxAtStartPar
-“numpy\textgreater{}=1.19.0”,
-“PyOpenGL\textgreater{}=3.1.0”,
-“PyOpenGL\sphinxhyphen{}accelerate\textgreater{}=3.1.0”,
-“pyglm\textgreater{}=2.0.0”,
-“Pillow\textgreater{}=8.0.0”
-\end{quote}
-
-\sphinxAtStartPar
-{]}
-
-\sphinxAtStartPar
-{[}project.optional\sphinxhyphen{}dependencies{]}
-dev = {[}
-\begin{quote}
-
-\sphinxAtStartPar
-“pytest\textgreater{}=6.0.0”,
-“pytest\sphinxhyphen{}cov\textgreater{}=2.0.0”,
-“black\textgreater{}=21.0.0”,
-“flake8\textgreater{}=3.8.0”,
-“mypy\textgreater{}=0.800”
-\end{quote}
-
-\sphinxAtStartPar
-{]}
-qt = {[}
-\begin{quote}
-
-\sphinxAtStartPar
-“PyQt5\textgreater{}=5.15.0”,
-“PyQt6\textgreater{}=6.0.0”
-\end{quote}
-
-\sphinxAtStartPar
-{]}
-\end{quote}
+\PYG{k}{[}\PYG{k}{project}\PYG{k}{.}\PYG{k}{optional\PYGZhy{}dependencies}\PYG{k}{]}
+\PYG{n}{dev}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{p}{[}
+\PYG{+w}{    }\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{pytest\PYGZgt{}=6.0.0}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{    }\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{pytest\PYGZhy{}cov\PYGZgt{}=2.0.0}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{    }\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{black\PYGZgt{}=21.0.0}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{    }\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{flake8\PYGZgt{}=3.8.0}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{    }\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{mypy\PYGZgt{}=0.800}\PYG{l+s+s2}{\PYGZdq{}}
+\PYG{p}{]}
+\PYG{n}{qt}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{p}{[}
+\PYG{+w}{    }\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{PyQt5\PYGZgt{}=5.15.0}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{    }\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{PyQt6\PYGZgt{}=6.0.0}\PYG{l+s+s2}{\PYGZdq{}}
+\PYG{p}{]}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{setup.py}:
-.. code\sphinxhyphen{}block:: python
-\begin{quote}
 
-\sphinxAtStartPar
-from setuptools import setup, find\_packages
-\begin{description}
-\sphinxlineitem{setup(}
-\sphinxAtStartPar
-name=”picogl”,
-version=”1.0.0”,
-packages=find\_packages(),
-python\_requires=”\textgreater{}=3.7”,
-install\_requires={[}
-\begin{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{setuptools}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{setup}\PYG{p}{,} \PYG{n}{find\PYGZus{}packages}
 
-\sphinxAtStartPar
-“numpy\textgreater{}=1.19.0”,
-“PyOpenGL\textgreater{}=3.1.0”,
-“PyOpenGL\sphinxhyphen{}accelerate\textgreater{}=3.1.0”,
-“pyglm\textgreater{}=2.0.0”,
-“Pillow\textgreater{}=8.0.0”
-\end{quote}
-
-\sphinxAtStartPar
-{]},
-extras\_require=\{
-\begin{quote}
-\begin{description}
-\sphinxlineitem{“dev”: {[}}
-\sphinxAtStartPar
-“pytest\textgreater{}=6.0.0”,
-“pytest\sphinxhyphen{}cov\textgreater{}=2.0.0”,
-“black\textgreater{}=21.0.0”,
-“flake8\textgreater{}=3.8.0”,
-“mypy\textgreater{}=0.800”
-
-\end{description}
-
-\sphinxAtStartPar
-{]},
-“qt”: {[}
-\begin{quote}
-
-\sphinxAtStartPar
-“PyQt5\textgreater{}=5.15.0”,
-“PyQt6\textgreater{}=6.0.0”
-\end{quote}
-
-\sphinxAtStartPar
-{]}
-\end{quote}
-
-\sphinxAtStartPar
-\}
-
-\end{description}
-
-\sphinxAtStartPar
-)
-\end{quote}
+\PYG{n}{setup}\PYG{p}{(}
+    \PYG{n}{name}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{picogl}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+    \PYG{n}{version}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{1.0.0}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+    \PYG{n}{packages}\PYG{o}{=}\PYG{n}{find\PYGZus{}packages}\PYG{p}{(}\PYG{p}{)}\PYG{p}{,}
+    \PYG{n}{python\PYGZus{}requires}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{\PYGZgt{}=3.7}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+    \PYG{n}{install\PYGZus{}requires}\PYG{o}{=}\PYG{p}{[}
+        \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{numpy\PYGZgt{}=1.19.0}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+        \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{PyOpenGL\PYGZgt{}=3.1.0}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+        \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{PyOpenGL\PYGZhy{}accelerate\PYGZgt{}=3.1.0}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+        \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{pyglm\PYGZgt{}=2.0.0}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+        \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Pillow\PYGZgt{}=8.0.0}\PYG{l+s+s2}{\PYGZdq{}}
+    \PYG{p}{]}\PYG{p}{,}
+    \PYG{n}{extras\PYGZus{}require}\PYG{o}{=}\PYG{p}{\PYGZob{}}
+        \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{dev}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{:} \PYG{p}{[}
+            \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{pytest\PYGZgt{}=6.0.0}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{pytest\PYGZhy{}cov\PYGZgt{}=2.0.0}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{black\PYGZgt{}=21.0.0}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{flake8\PYGZgt{}=3.8.0}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{mypy\PYGZgt{}=0.800}\PYG{l+s+s2}{\PYGZdq{}}
+        \PYG{p}{]}\PYG{p}{,}
+        \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{qt}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{:} \PYG{p}{[}
+            \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{PyQt5\PYGZgt{}=5.15.0}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{PyQt6\PYGZgt{}=6.0.0}\PYG{l+s+s2}{\PYGZdq{}}
+        \PYG{p}{]}
+    \PYG{p}{\PYGZcb{}}
+\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \subsubsection{Development Dependencies}
@@ -10929,21 +9932,17 @@ extras\_require=\{
 
 \sphinxAtStartPar
 \sphinxstylestrong{Installation}:
-.. code\sphinxhyphen{}block:: bash
-\begin{quote}
 
-\sphinxAtStartPar
-\# Install in development mode
-pip install \sphinxhyphen{}e .
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Install in development mode}
+pip\PYG{+w}{ }install\PYG{+w}{ }\PYGZhy{}e\PYG{+w}{ }.
 
-\sphinxAtStartPar
-\# Install with development dependencies
-pip install \sphinxhyphen{}e .{[}dev{]}
+\PYG{c+c1}{\PYGZsh{} Install with development dependencies}
+pip\PYG{+w}{ }install\PYG{+w}{ }\PYGZhy{}e\PYG{+w}{ }.\PYG{o}{[}dev\PYG{o}{]}
 
-\sphinxAtStartPar
-\# Install with all optional dependencies
-pip install \sphinxhyphen{}e .{[}dev,qt{]}
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Install with all optional dependencies}
+pip\PYG{+w}{ }install\PYG{+w}{ }\PYGZhy{}e\PYG{+w}{ }.\PYG{o}{[}dev,qt\PYG{o}{]}
+\end{sphinxVerbatim}
 
 
 \subsection{Code Style}
@@ -10956,48 +9955,36 @@ PicoGL uses Black for code formatting:
 
 \sphinxAtStartPar
 \sphinxstylestrong{Configuration}:
-.. code\sphinxhyphen{}block:: toml
-\begin{quote}
 
-\sphinxAtStartPar
-{[}tool.black{]}
-line\sphinxhyphen{}length = 88
-target\sphinxhyphen{}version = {[}‘py37’{]}
-include = ‘.pyi?\$’
-extend\sphinxhyphen{}exclude = ‘’’
-/(
-\begin{quote}
-\begin{quote}
-
-\sphinxAtStartPar
-.git
-\end{quote}
-
-\begin{DUlineblock}{0em}
-\item[] .mypy\_cache
-\item[] .tox
-\item[] .venv
-\item[] \_build
-\item[] buck\sphinxhyphen{}out
-\item[] build
-\item[] dist
-\end{DUlineblock}
-\end{quote}
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k}{[}\PYG{k}{tool}\PYG{k}{.}\PYG{k}{black}\PYG{k}{]}
+\PYG{n}{line\PYGZhy{}length}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mi}{88}
+\PYG{n}{target\PYGZhy{}version}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{py37\PYGZsq{}}\PYG{p}{]}
+\PYG{n}{include}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{\PYGZbs{}.pyi?\PYGZdl{}\PYGZsq{}}
+\PYG{n}{extend\PYGZhy{}exclude}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s+s1}{\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+\PYG{l+s+s1}{/(}
+\PYG{l+s+s1}{    \PYGZbs{}.git}
+\PYG{l+s+s1}{  | \PYGZbs{}.mypy\PYGZus{}cache}
+\PYG{l+s+s1}{  | \PYGZbs{}.tox}
+\PYG{l+s+s1}{  | \PYGZbs{}.venv}
+\PYG{l+s+s1}{  | \PYGZus{}build}
+\PYG{l+s+s1}{  | buck\PYGZhy{}out}
+\PYG{l+s+s1}{  | build}
+\PYG{l+s+s1}{  | dist}
+\PYG{l+s+s1}{)/}
+\PYG{l+s+s1}{\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Usage}:
-.. code\sphinxhyphen{}block:: bash
-\begin{quote}
 
-\sphinxAtStartPar
-\# Format all Python files
-black picogl/
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Format all Python files}
+black\PYG{+w}{ }picogl/
 
-\sphinxAtStartPar
-\# Check formatting
-black \textendash{}check picogl/
-\end{quote}
+\PYG{c+c1}{\PYGZsh{} Check formatting}
+black\PYG{+w}{ }\PYGZhy{}\PYGZhy{}check\PYG{+w}{ }picogl/
+\end{sphinxVerbatim}
 
 
 \subsubsection{Linting}
@@ -11007,24 +9994,18 @@ PicoGL uses flake8 for linting:
 
 \sphinxAtStartPar
 \sphinxstylestrong{Configuration}:
-.. code\sphinxhyphen{}block:: ini
-\begin{quote}
 
-\sphinxAtStartPar
-{[}flake8{]}
-max\sphinxhyphen{}line\sphinxhyphen{}length = 88
-extend\sphinxhyphen{}ignore = E203, W503
-exclude =
-\begin{quote}
-
-\sphinxAtStartPar
-.git,
-\_\_pycache\_\_,
-.venv,
-\_build,
-dist
-\end{quote}
-\end{quote}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k}{[flake8]}
+\PYG{n+na}{max\PYGZhy{}line\PYGZhy{}length}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{88}
+\PYG{n+na}{extend\PYGZhy{}ignore}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{E203, W503}
+\PYG{n+na}{exclude}\PYG{+w}{ }\PYG{o}{=}
+\PYG{+w}{    }\PYG{n+na}{.git,}
+\PYG{+w}{    }\PYG{n+na}{\PYGZus{}\PYGZus{}pycache\PYGZus{}\PYGZus{},}
+\PYG{+w}{    }\PYG{n+na}{.venv,}
+\PYG{+w}{    }\PYG{n+na}{\PYGZus{}build,}
+\PYG{+w}{    }\PYG{n+na}{dist}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstylestrong{Usage}:

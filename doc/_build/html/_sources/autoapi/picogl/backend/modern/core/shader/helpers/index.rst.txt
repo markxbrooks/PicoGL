@@ -1,0 +1,47 @@
+picogl.backend.modern.core.shader.helpers
+=========================================
+
+.. py:module:: picogl.backend.modern.core.shader.helpers
+
+.. autoapi-nested-parse::
+
+   Shader Compilation
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.backend.modern.core.shader.helpers.log_gl_error
+   picogl.backend.modern.core.shader.helpers.compile_shader
+   picogl.backend.modern.core.shader.helpers.read_shader_source
+
+
+Module Contents
+---------------
+
+.. py:function:: log_gl_error()
+
+   log_gl_error
+
+
+.. py:function:: compile_shader(program: int, shader: int, shader_source_list: str)
+
+   compile_shader
+
+   :param program: int
+   :param shader: int
+   :param shader_source_list: list
+
+
+.. py:function:: read_shader_source(shader_file_name: str, glsl_dir: str | pathlib.Path | None = None) -> str
+
+   Read shader source from a file.
+
+   :param shader_file_name: Name of the shader file
+   :param glsl_dir: Base directory (str or Path). Defaults to project root.
+   :return: Shader source as a string
+
+

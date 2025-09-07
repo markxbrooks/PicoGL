@@ -17,6 +17,7 @@ AbstractGLWindow
 The ``AbstractGLWindow`` class defines the interface for all PicoGL window implementations.
 
 **Example**:
+
 .. code-block:: python
 
    from picogl.ui.abc_window import AbstractGLWindow
@@ -56,6 +57,7 @@ GLWindow
 The ``GLWindow`` class provides a basic GLUT-based window implementation.
 
 **Example**:
+
 .. code-block:: python
 
    from picogl.ui.backend.glut.window.gl import GLWindow
@@ -76,6 +78,7 @@ GlutRendererWindow
 The ``GlutRendererWindow`` class provides a GLUT window with integrated rendering capabilities.
 
 **Example**:
+
 .. code-block:: python
 
    from picogl.ui.backend.glut.window.glut import GlutRendererWindow
@@ -107,6 +110,7 @@ RenderWindow
 The ``RenderWindow`` class provides a unified render window supporting both textured and untextured rendering.
 
 **Example**:
+
 .. code-block:: python
 
    from picogl.ui.backend.glut.window.object import RenderWindow
@@ -137,6 +141,7 @@ TextureWindow
 The ``TextureWindow`` class provides a window specialized for texture rendering.
 
 **Example**:
+
 .. code-block:: python
 
    from picogl.ui.backend.glut.window.texture import TextureWindow
@@ -171,6 +176,7 @@ GLBase
 The ``GLBase`` class provides a Qt-based OpenGL widget implementation.
 
 **Example**:
+
 .. code-block:: python
 
    from picogl.ui.backend.qt.base import GLBase
@@ -203,6 +209,7 @@ Mouse Input
 ~~~~~~~~~~~
 
 **Mouse Press Events**:
+
 .. code-block:: python
 
    def mousePressEvent(self, button, state, x, y):
@@ -215,6 +222,7 @@ Mouse Input
                self.last_mouse_y = None
 
 **Mouse Motion Events**:
+
 .. code-block:: python
 
    def motion(self, x, y):
@@ -230,6 +238,7 @@ Mouse Input
            glutPostRedisplay()
 
 **Mouse Wheel Events**:
+
 .. code-block:: python
 
    def mouse(self, button, state, x, y):
@@ -243,6 +252,7 @@ Keyboard Input
 ~~~~~~~~~~~~~~
 
 **Keyboard Events**:
+
 .. code-block:: python
 
    def keyboard(self, key, x, y):
@@ -256,6 +266,7 @@ Keyboard Input
        glutPostRedisplay()
 
 **Special Keys**:
+
 .. code-block:: python
 
    def on_special_key(self, key, x, y):
@@ -276,6 +287,7 @@ Creating Windows
 ~~~~~~~~~~~~~~~~
 
 **Basic Window**:
+
 .. code-block:: python
 
    from picogl.ui.backend.glut.window.gl import GLWindow
@@ -286,6 +298,7 @@ Creating Windows
    window.run()
 
 **Renderer Window**:
+
 .. code-block:: python
 
    from picogl.ui.backend.glut.window.object import RenderWindow
@@ -308,6 +321,7 @@ Window Properties
 ~~~~~~~~~~~~~~~~~
 
 **Size and Position**:
+
 .. code-block:: python
 
    # Set window size
@@ -319,6 +333,7 @@ Window Properties
    window.y = 100
 
 **Title and Icon**:
+
 .. code-block:: python
 
    # Set window title
@@ -328,6 +343,7 @@ Window Properties
    window.icon = "icon.png"
 
 **Fullscreen Mode**:
+
 .. code-block:: python
 
    # Toggle fullscreen
@@ -344,6 +360,7 @@ Display Function
 ~~~~~~~~~~~~~~~~
 
 **Basic Display**:
+
 .. code-block:: python
 
    def display(self):
@@ -363,6 +380,7 @@ Display Function
        glutSwapBuffers()
 
 **Advanced Display**:
+
 .. code-block:: python
 
    def display(self):
@@ -389,6 +407,7 @@ Resize Handling
 ~~~~~~~~~~~~~~~
 
 **Basic Resize**:
+
 .. code-block:: python
 
    def resizeGL(self, width, height):
@@ -401,6 +420,7 @@ Resize Handling
        glMatrixMode(GL_MODELVIEW)
 
 **Advanced Resize**:
+
 .. code-block:: python
 
    def resizeGL(self, width, height):
@@ -427,12 +447,14 @@ Event Loop
 ~~~~~~~~~~
 
 **Basic Event Loop**:
+
 .. code-block:: python
 
    def run(self):
        glutMainLoop()
 
 **Custom Event Loop**:
+
 .. code-block:: python
 
    def run(self):
@@ -443,6 +465,7 @@ Event Loop
            self.sleep(16)  # 60 FPS
 
 **Idle Function**:
+
 .. code-block:: python
 
    def idle(self):
@@ -454,6 +477,7 @@ Timer Events
 ~~~~~~~~~~~~
 
 **Basic Timer**:
+
 .. code-block:: python
 
    def timer(self, value):
@@ -467,6 +491,7 @@ Timer Events
        glutTimerFunc(16, self.timer, 0)  # 60 FPS
 
 **Advanced Timer**:
+
 .. code-block:: python
 
    def timer(self, value):
@@ -492,6 +517,7 @@ macOS
 ~~~~~
 
 **Display Environment**:
+
 .. code-block:: python
 
    import os
@@ -505,6 +531,7 @@ macOS
    window.run()
 
 **OpenGL Context**:
+
 .. code-block:: python
 
    # Check OpenGL version
@@ -516,6 +543,7 @@ Windows
 ~~~~~~~
 
 **Graphics Drivers**:
+
 .. code-block:: python
 
    # Check graphics vendor
@@ -524,6 +552,7 @@ Windows
    print(f"Graphics vendor: {vendor}")
 
 **DLL Loading**:
+
 .. code-block:: python
 
    # Check for required DLLs
@@ -537,6 +566,7 @@ Linux
 ~~~~~
 
 **Display Server**:
+
 .. code-block:: python
 
    import os
@@ -549,6 +579,7 @@ Linux
        print("No display available")
 
 **OpenGL Libraries**:
+
 .. code-block:: python
 
    # Check OpenGL libraries
@@ -565,6 +596,7 @@ Window Creation Errors
 ~~~~~~~~~~~~~~~~~~~~~~
 
 **Display Errors**:
+
 .. code-block:: python
 
    try:
@@ -577,6 +609,7 @@ Window Creation Errors
        # Handle gracefully
 
 **OpenGL Context Errors**:
+
 .. code-block:: python
 
    try:
@@ -592,6 +625,7 @@ Input Errors
 ~~~~~~~~~~~~
 
 **Mouse Input Errors**:
+
 .. code-block:: python
 
    def mousePressEvent(self, button, state, x, y):
@@ -603,6 +637,7 @@ Input Errors
            # Handle gracefully
 
 **Keyboard Input Errors**:
+
 .. code-block:: python
 
    def keyboard(self, key, x, y):
@@ -617,6 +652,7 @@ Performance Considerations
 -------------------------
 
 **Frame Rate**:
+
 .. code-block:: python
 
    # Target 60 FPS
@@ -626,6 +662,7 @@ Performance Considerations
    glutTimerFunc(33, self.timer, 0)  # 33ms = 30 FPS
 
 **Double Buffering**:
+
 .. code-block:: python
 
    # Enable double buffering
@@ -635,6 +672,7 @@ Performance Considerations
    glutSwapBuffers()
 
 **VSync**:
+
 .. code-block:: python
 
    # Enable VSync (if supported)
@@ -651,6 +689,7 @@ Best Practices
 5. **Test on multiple platforms** for compatibility
 
 **Example**:
+
 .. code-block:: python
 
    # Choose window type based on needs

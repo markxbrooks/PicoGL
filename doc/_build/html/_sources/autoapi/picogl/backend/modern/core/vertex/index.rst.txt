@@ -1,0 +1,17 @@
+picogl.backend.modern.core.vertex
+=================================
+
+.. py:module:: picogl.backend.modern.core.vertex
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/picogl/backend/modern/core/vertex/array/index
+   /autoapi/picogl/backend/modern/core/vertex/base/index
+   /autoapi/picogl/backend/modern/core/vertex/buffer/index
+
+

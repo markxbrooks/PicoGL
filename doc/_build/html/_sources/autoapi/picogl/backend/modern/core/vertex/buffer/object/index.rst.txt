@@ -1,0 +1,30 @@
+picogl.backend.modern.core.vertex.buffer.object
+===============================================
+
+.. py:module:: picogl.backend.modern.core.vertex.buffer.object
+
+.. autoapi-nested-parse::
+
+   Modern VBO
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.backend.modern.core.vertex.buffer.object.ModernVBO
+
+
+Module Contents
+---------------
+
+.. py:class:: ModernVBO(handle: int = None, data: numpy.ndarray = None, size: int = 3, target: int = GL_ARRAY_BUFFER, index: int = None)
+
+   Bases: :py:obj:`picogl.backend.modern.core.vertex.base.VertexBuffer`
+
+
+   Vertex Buffer Object
+
+

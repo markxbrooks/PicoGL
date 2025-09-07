@@ -1,0 +1,186 @@
+picogl.tests.test_texture_renderer
+==================================
+
+.. py:module:: picogl.tests.test_texture_renderer
+
+.. autoapi-nested-parse::
+
+   Unit tests for the TextureRenderer class in the PicoGL OpenGL backend.
+
+   This module contains a comprehensive suite of unit tests for verifying the correctness,
+   robustness, and interface of the :class:`picogl.renderer.texture.TextureRenderer`
+   class, which provides specialized texture rendering functionality.
+
+   The tests cover:
+
+   - Object initialization and inheritance from ObjectRenderer
+   - Texture initialization and loading
+   - Path management and resolution
+   - UV coordinate handling and inversion
+   - Error handling and edge cases
+   - Data validation and type conversion
+
+   Dependencies:
+       - unittest (standard library)
+       - unittest.mock.MagicMock for OpenGL function mocking
+       - numpy for test data
+       - picogl.renderer.texture.TextureRenderer
+       - picogl.renderer.meshdata.MeshData
+
+   To run the tests::
+
+       python -m unittest picogl.tests.test_texture_renderer
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.tests.test_texture_renderer.TestTextureRenderer
+
+
+Module Contents
+---------------
+
+.. py:class:: TestTextureRenderer(methodName='runTest')
+
+   Bases: :py:obj:`unittest.TestCase`
+
+
+   Test cases for TextureRenderer class.
+
+
+   .. py:method:: setUp()
+
+      Set up test fixtures before each test method.
+
+
+
+   .. py:method:: tearDown()
+
+      Clean up after each test method.
+
+
+
+   .. py:method:: test_initialization_with_default_parameters()
+
+      Test TextureRenderer initialization with default parameters.
+
+
+
+   .. py:method:: test_initialization_with_custom_parameters()
+
+      Test TextureRenderer initialization with custom parameters.
+
+
+
+   .. py:method:: test_initialization_with_path_objects()
+
+      Test TextureRenderer initialization with Path objects.
+
+
+
+   .. py:method:: test_initialization_with_none_base_dir()
+
+      Test TextureRenderer initialization with None base_dir.
+
+
+
+   .. py:method:: test_initialize_textures_with_normal_v_coords()
+
+      Test initialize_textures with normal V coordinates.
+
+
+
+   .. py:method:: test_initialize_textures_with_inversed_v_coords()
+
+      Test initialize_textures with inversed V coordinates.
+
+
+
+   .. py:method:: test_get_texture_filename()
+
+      Test get_texture_filename method.
+
+
+
+   .. py:method:: test_set_texture_filename()
+
+      Test set_texture_filename method.
+
+
+
+   .. py:method:: test_set_texture_filename_with_none()
+
+      Test set_texture_filename method with None filename.
+
+
+
+   .. py:method:: test_set_resource_path()
+
+      Test set_resource_path method.
+
+
+
+   .. py:method:: test_set_resource_path_with_path_object()
+
+      Test set_resource_path method with Path object.
+
+
+
+   .. py:method:: test_object_renderer_inheritance()
+
+      Test that TextureRenderer inherits from ObjectRenderer.
+
+
+
+   .. py:method:: test_vertex_count_calculation()
+
+      Test vertex count calculation in initialization.
+
+
+
+   .. py:method:: test_texture_loading_integration()
+
+      Test texture loading integration with TextureLoader.
+
+
+
+   .. py:method:: test_uv_coordinate_inversion_edge_cases()
+
+      Test UV coordinate inversion with edge cases.
+
+
+
+   .. py:method:: test_draw_selection_method()
+
+      Test _draw_selection method exists and is callable.
+
+
+
+   .. py:method:: test_initialization_with_minimal_mesh_data()
+
+      Test initialization with minimal mesh data.
+
+
+
+   .. py:method:: test_path_absolute_conversion()
+
+      Test that paths are converted to absolute paths.
+
+
+
+   .. py:method:: test_texture_gl_id_assignment()
+
+      Test that texture_gl_id is properly assigned to context.
+
+
+
+   .. py:method:: test_initialization_calls_initialize_textures()
+
+      Test that initialization calls initialize_textures.
+
+
+

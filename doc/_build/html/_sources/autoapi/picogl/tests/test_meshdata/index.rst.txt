@@ -1,0 +1,301 @@
+picogl.tests.test_meshdata
+==========================
+
+.. py:module:: picogl.tests.test_meshdata
+
+.. autoapi-nested-parse::
+
+   Unit tests for the MeshData class in the PicoGL OpenGL backend.
+
+   This module contains a comprehensive suite of unit tests for verifying the correctness,
+   robustness, and interface of the :class:`picogl.renderer.meshdata.MeshData`
+   class, which manages OpenGL mesh data and rendering state.
+
+   The tests cover:
+
+   - Object initialization with various buffer types
+   - from_raw class method with different input scenarios
+   - OpenGL binding/unbinding operations
+   - Drawing operations with various modes and parameters
+   - Context manager functionality
+   - Utility methods and data conversion
+   - Error handling and edge cases
+   - Data validation and type conversion
+
+   Dependencies:
+       - unittest (standard library)
+       - unittest.mock.MagicMock for OpenGL function mocking
+       - numpy for test data
+       - picogl.renderer.meshdata.MeshData
+
+   To run the tests::
+
+       python -m unittest picogl.tests.test_meshdata
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.tests.test_meshdata.TestMeshData
+
+
+Module Contents
+---------------
+
+.. py:class:: TestMeshData(methodName='runTest')
+
+   Bases: :py:obj:`unittest.TestCase`
+
+
+   Test cases for MeshData class.
+
+
+   .. py:method:: setUp()
+
+      Set up test fixtures before each test method.
+
+
+
+   .. py:method:: tearDown()
+
+      Clean up after each test method.
+
+
+
+   .. py:method:: test_initialization_with_all_buffers()
+
+      Test MeshData initialization with all buffer types.
+
+
+
+   .. py:method:: test_initialization_with_minimal_data()
+
+      Test MeshData initialization with only vertices.
+
+
+
+   .. py:method:: test_initialization_with_none_vertices()
+
+      Test MeshData initialization with None vertices.
+
+
+
+   .. py:method:: test_as_ribbon_args()
+
+      Test as_ribbon_args method.
+
+
+
+   .. py:method:: test_str_representation()
+
+      Test string representation of MeshData.
+
+
+
+   .. py:method:: test_to_float32_flat_with_valid_array()
+
+      Test _to_float32_flat with valid array.
+
+
+
+   .. py:method:: test_to_float32_flat_with_none_required()
+
+      Test _to_float32_flat with None when required.
+
+
+
+   .. py:method:: test_to_float32_flat_with_none_not_required()
+
+      Test _to_float32_flat with None when not required.
+
+
+
+   .. py:method:: test_to_float32_flat_or_none()
+
+      Test _to_float32_flat_or_none method.
+
+
+
+   .. py:method:: test_to_int32_flat_with_valid_array()
+
+      Test _to_int32_flat with valid array.
+
+
+
+   .. py:method:: test_to_int32_flat_with_none_required()
+
+      Test _to_int32_flat with None when required.
+
+
+
+   .. py:method:: test_default_colors_for_vertices()
+
+      Test _default_colors_for_vertices method.
+
+
+
+   .. py:method:: test_default_normals_for_vertices()
+
+      Test _default_normals_for_vertices method.
+
+
+
+   .. py:method:: test_from_raw_with_all_parameters()
+
+      Test from_raw with all parameters provided.
+
+
+
+   .. py:method:: test_from_raw_with_minimal_parameters()
+
+      Test from_raw with only vertices.
+
+
+
+   .. py:method:: test_from_raw_with_color_per_vertex_array()
+
+      Test from_raw with color_per_vertex array.
+
+
+
+   .. py:method:: test_from_raw_with_color_per_vertex_full_array()
+
+      Test from_raw with color_per_vertex as full array.
+
+
+
+   .. py:method:: test_from_raw_with_invalid_color_per_vertex()
+
+      Test from_raw with invalid color_per_vertex.
+
+
+
+   .. py:method:: test_from_raw_with_invalid_uvs_length()
+
+      Test from_raw with invalid UVs length.
+
+
+
+   .. py:method:: test_bind_with_all_buffers()
+
+      Test bind method with all buffers present.
+
+
+
+   .. py:method:: test_bind_with_minimal_buffers()
+
+      Test bind method with only vertices.
+
+
+
+   .. py:method:: test_bind_with_none_buffers()
+
+      Test bind method with None buffers.
+
+
+
+   .. py:method:: test_unbind_with_all_buffers()
+
+      Test unbind method with all buffers present.
+
+
+
+   .. py:method:: test_unbind_with_none_buffers()
+
+      Test unbind method with None buffers.
+
+
+
+   .. py:method:: test_context_manager()
+
+      Test that MeshData can be used as a context manager.
+
+
+
+   .. py:method:: test_draw_with_vertex_colors()
+
+      Test draw method with vertex colors.
+
+
+
+   .. py:method:: test_draw_with_override_color()
+
+      Test draw method with override color.
+
+
+
+   .. py:method:: test_draw_with_fill_mode()
+
+      Test draw method with fill mode.
+
+
+
+   .. py:method:: test_draw_with_alpha_blending()
+
+      Test draw method with alpha blending.
+
+
+
+   .. py:method:: test_draw_with_line_width()
+
+      Test draw method with custom line width.
+
+
+
+   .. py:method:: test_draw_with_custom_mode()
+
+      Test draw method with custom drawing mode.
+
+
+
+   .. py:method:: test_draw_without_ebo()
+
+      Test draw method without EBO.
+
+
+
+   .. py:method:: test_vertex_count_calculation()
+
+      Test vertex count calculation.
+
+
+
+   .. py:method:: test_data_type_conversion()
+
+      Test that data is properly converted to correct types.
+
+
+
+   .. py:method:: test_array_flattening()
+
+      Test that multi-dimensional arrays are properly flattened.
+
+
+
+   .. py:method:: test_error_handling_in_from_raw()
+
+      Test error handling in from_raw method.
+
+
+
+   .. py:method:: test_color_generation_edge_cases()
+
+      Test color generation with edge cases.
+
+
+
+   .. py:method:: test_normal_generation()
+
+      Test normal generation when not provided.
+
+
+
+   .. py:method:: test_repr_string()
+
+      Test string representation of MeshData.
+
+
+

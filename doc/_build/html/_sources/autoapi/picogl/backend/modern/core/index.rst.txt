@@ -1,0 +1,23 @@
+picogl.backend.modern.core
+==========================
+
+.. py:module:: picogl.backend.modern.core
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/picogl/backend/modern/core/camera/index
+   /autoapi/picogl/backend/modern/core/elements/index
+   /autoapi/picogl/backend/modern/core/mvp/index
+   /autoapi/picogl/backend/modern/core/preserve/index
+   /autoapi/picogl/backend/modern/core/setup/index
+   /autoapi/picogl/backend/modern/core/shader/index
+   /autoapi/picogl/backend/modern/core/uniform/index
+   /autoapi/picogl/backend/modern/core/unproject/index
+   /autoapi/picogl/backend/modern/core/vertex/index
+
+

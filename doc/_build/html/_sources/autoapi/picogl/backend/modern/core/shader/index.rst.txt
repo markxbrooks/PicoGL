@@ -1,0 +1,21 @@
+picogl.backend.modern.core.shader
+=================================
+
+.. py:module:: picogl.backend.modern.core.shader
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/picogl/backend/modern/core/shader/bind/index
+   /autoapi/picogl/backend/modern/core/shader/compile/index
+   /autoapi/picogl/backend/modern/core/shader/helpers/index
+   /autoapi/picogl/backend/modern/core/shader/load/index
+   /autoapi/picogl/backend/modern/core/shader/mvp/index
+   /autoapi/picogl/backend/modern/core/shader/program/index
+   /autoapi/picogl/backend/modern/core/shader/rotation_matrix/index
+
+

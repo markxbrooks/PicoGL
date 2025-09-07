@@ -1,0 +1,42 @@
+picogl.ui.profiling_decorator
+=============================
+
+.. py:module:: picogl.ui.profiling_decorator
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.ui.profiling_decorator.function_profiler
+   picogl.ui.profiling_decorator.function_profiler_old
+
+
+Module Contents
+---------------
+
+.. py:function:: function_profiler(_func: Optional[Callable] = None, *, sortby: str = 'cumtime', top_n: int = 50)
+
+   A decorator to profile function performance. Can be used with or without arguments.
+
+   Usage:
+       @function_profiler
+       def my_func(): ...
+
+       @function_profiler(sortby='tottime', top_n=25)
+       def another_func(): ...
+
+   :param _func: Internal placeholder for decorator usage without parameters.
+   :param sortby: str - Sorting key for profiling ('cumtime', 'tottime', etc).
+   :param top_n: int - Number of top functions to show in profile output.
+
+
+.. py:function:: function_profiler_old(sortby='cumtime', top_n=50)
+
+   Decorator to profile a function and log its performance.
+
+   :param sortby: str - Sorting criteria for profiling results ('cumtime' or 'tottime').
+   :param top_n: int - Number of top entries to display in the profiling results.
+
+

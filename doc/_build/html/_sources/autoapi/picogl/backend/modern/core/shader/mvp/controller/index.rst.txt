@@ -1,0 +1,65 @@
+picogl.backend.modern.core.shader.mvp.controller
+================================================
+
+.. py:module:: picogl.backend.modern.core.shader.mvp.controller
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.backend.modern.core.shader.mvp.controller.MVPController
+
+
+Module Contents
+---------------
+
+.. py:class:: MVPController(update_callback=dummy_update_handler, *args, **kwargs)
+
+   Bases: :py:obj:`elmo.gl.backend.modern.shaders.mvp.control.MVPControl`
+
+
+   Handles user input to manipulate MVPControl.
+
+
+   .. py:attribute:: update_callback
+
+
+   .. py:attribute:: mouse_mode
+
+
+   .. py:attribute:: lastX
+      :value: 0
+
+
+
+   .. py:attribute:: lastY
+      :value: 0
+
+
+
+   .. py:method:: on_special_key(key: int, x: int, y: int) -> None
+
+      Handle special keys (arrows, page up/down, etc.).
+
+
+
+   .. py:method:: on_keyboard(key: str, x: int, y: int) -> None
+
+      Handle keyboard keys (WASD).
+
+
+
+   .. py:method:: on_mouse(key: int, up: int, x: int, y: int) -> None
+
+      Handle mouse button presses.
+
+
+
+   .. py:method:: on_mousemove(x: int, y: int) -> None
+
+      Handle mouse movement.
+
+
+

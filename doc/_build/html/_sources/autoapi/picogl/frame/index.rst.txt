@@ -1,0 +1,33 @@
+picogl.frame
+============
+
+.. py:module:: picogl.frame
+
+.. autoapi-nested-parse::
+
+   Prepare viewport
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.frame.prepare_viewport
+
+
+Module Contents
+---------------
+
+.. py:function:: prepare_viewport(width: int, height: int) -> None
+
+   prepare
+
+   :param width: int
+   :param height: int
+   :return: None
+
+   Prepares an OpenGL Frame Viewport
+
+

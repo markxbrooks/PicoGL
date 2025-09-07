@@ -1,0 +1,31 @@
+picogl.backend.legacy.core.camera.setup.aspect
+==============================================
+
+.. py:module:: picogl.backend.legacy.core.camera.setup.aspect
+
+.. autoapi-nested-parse::
+
+   Calculate aspect
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.backend.legacy.core.camera.setup.aspect.calculate_aspect
+
+
+Module Contents
+---------------
+
+.. py:function:: calculate_aspect(h: int, w: int) -> float
+
+   calculate_aspect
+
+   :param h: int
+   :param w: int
+   :return: float
+
+

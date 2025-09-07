@@ -1,0 +1,29 @@
+picogl.backend.modern.core.camera.matrix.update
+===============================================
+
+.. py:module:: picogl.backend.modern.core.camera.matrix.update
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.backend.modern.core.camera.matrix.update.update_camera_matrix
+
+
+Module Contents
+---------------
+
+.. py:function:: update_camera_matrix(view_translation: numpy.ndarray, view_rotation: numpy.ndarray, view_zoom_parameter_value: float) -> numpy.ndarray
+
+   update_camera_matrix_numpy
+
+   :param view_translation: np.ndarray
+   :param view_rotation: np.ndarray
+   :param view_zoom_parameter_value: float
+   :return: np.ndarray
+
+   Returns a 4x4 model_matrix matrix combining zoom, pan, and rotation.
+
+

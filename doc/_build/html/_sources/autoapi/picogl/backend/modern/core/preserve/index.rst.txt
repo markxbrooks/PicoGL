@@ -1,0 +1,19 @@
+picogl.backend.modern.core.preserve
+===================================
+
+.. py:module:: picogl.backend.modern.core.preserve
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.backend.modern.core.preserve.preserve_gl_state
+
+
+Module Contents
+---------------
+
+.. py:function:: preserve_gl_state(func)
+

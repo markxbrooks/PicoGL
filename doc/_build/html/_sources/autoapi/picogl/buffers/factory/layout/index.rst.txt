@@ -1,0 +1,30 @@
+picogl.buffers.factory.layout
+=============================
+
+.. py:module:: picogl.buffers.factory.layout
+
+.. autoapi-nested-parse::
+
+   Create layouts for VOAs and VBGs
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.buffers.factory.layout.create_layout
+   picogl.buffers.factory.layout.create_element_attributes
+   picogl.buffers.factory.layout.create_common_attributes
+
+
+Module Contents
+---------------
+
+.. py:function:: create_layout(attributes)
+
+.. py:function:: create_element_attributes()
+
+.. py:function:: create_common_attributes()
+

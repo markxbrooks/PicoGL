@@ -1,0 +1,21 @@
+picogl.backend.legacy.core.camera
+=================================
+
+.. py:module:: picogl.backend.legacy.core.camera
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/picogl/backend/legacy/core/camera/lighting/index
+   /autoapi/picogl/backend/legacy/core/camera/look_at/index
+   /autoapi/picogl/backend/legacy/core/camera/matrices/index
+   /autoapi/picogl/backend/legacy/core/camera/matrix/index
+   /autoapi/picogl/backend/legacy/core/camera/perspective/index
+   /autoapi/picogl/backend/legacy/core/camera/setup/index
+   /autoapi/picogl/backend/legacy/core/camera/unproject/index
+
+

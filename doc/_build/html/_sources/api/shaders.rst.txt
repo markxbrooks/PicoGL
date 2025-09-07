@@ -17,6 +17,7 @@ ShaderProgram
 The ``ShaderProgram`` class manages OpenGL shader programs, including vertex and fragment shaders.
 
 **Example**:
+
 .. code-block:: python
 
    from picogl.backend.modern.core.shader.program import ShaderProgram
@@ -44,6 +45,7 @@ ShaderManager
 The ``ShaderManager`` class provides centralized shader management for multiple shader programs.
 
 **Example**:
+
 .. code-block:: python
 
    from picogl.shaders.manager import ShaderManager
@@ -82,6 +84,7 @@ The ``ShaderType`` enum defines the available shader types in PicoGL.
 * ``TEXT``: Text rendering shader
 
 **Example**:
+
 .. code-block:: python
 
    from picogl.shaders.type import ShaderType
@@ -101,6 +104,7 @@ Compile Shaders
 Compiles vertex and fragment shader source code into OpenGL shaders.
 
 **Example**:
+
 .. code-block:: python
 
    from picogl.shaders.compile import compile_shaders
@@ -134,6 +138,7 @@ Load Shaders
 Loads vertex and fragment shader source code from files.
 
 **Example**:
+
 .. code-block:: python
 
    from picogl.shaders.load import load_fragment_and_vertex_for_shader_type
@@ -160,6 +165,7 @@ ShaderUniform
 The ``ShaderUniform`` class manages OpenGL shader uniforms.
 
 **Example**:
+
 .. code-block:: python
 
    from picogl.shaders.shader_uniform import ShaderUniform
@@ -176,6 +182,7 @@ Uniform Types
 PicoGL supports various uniform types:
 
 **Matrix Uniforms**:
+
 .. code-block:: python
 
    # 4x4 matrix
@@ -185,6 +192,7 @@ PicoGL supports various uniform types:
    shader.uniform("normal_matrix", normal_matrix)
 
 **Vector Uniforms**:
+
 .. code-block:: python
 
    # 3D vector
@@ -194,6 +202,7 @@ PicoGL supports various uniform types:
    shader.uniform("position", [0.0, 0.0, 0.0, 1.0])
 
 **Scalar Uniforms**:
+
 .. code-block:: python
 
    # Float
@@ -203,6 +212,7 @@ PicoGL supports various uniform types:
    shader.uniform("texture_sampler", 0)
 
 **Boolean Uniforms**:
+
 .. code-block:: python
 
    # Boolean
@@ -217,6 +227,7 @@ Basic Color Shader
 ~~~~~~~~~~~~~~~~~~
 
 **Vertex Shader**:
+
 .. code-block:: glsl
 
    #version 330 core
@@ -233,6 +244,7 @@ Basic Color Shader
    }
 
 **Fragment Shader**:
+
 .. code-block:: glsl
 
    #version 330 core
@@ -247,6 +259,7 @@ Texture Shader
 ~~~~~~~~~~~~~~
 
 **Vertex Shader**:
+
 .. code-block:: glsl
 
    #version 330 core
@@ -263,6 +276,7 @@ Texture Shader
    }
 
 **Fragment Shader**:
+
 .. code-block:: glsl
 
    #version 330 core
@@ -280,6 +294,7 @@ Lighting Shader
 ~~~~~~~~~~~~~~~
 
 **Vertex Shader**:
+
 .. code-block:: glsl
 
    #version 330 core
@@ -299,6 +314,7 @@ Lighting Shader
    }
 
 **Fragment Shader**:
+
 .. code-block:: glsl
 
    #version 330 core
@@ -330,6 +346,7 @@ Fallback Shaders
 PicoGL includes fallback shaders for systems with limited OpenGL support:
 
 **Fallback Vertex Shader**:
+
 .. code-block:: glsl
 
    #version 120
@@ -341,6 +358,7 @@ PicoGL includes fallback shaders for systems with limited OpenGL support:
    }
 
 **Fallback Fragment Shader**:
+
 .. code-block:: glsl
 
    #version 120
@@ -355,6 +373,7 @@ Creating Shader Programs
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 **From Files**:
+
 .. code-block:: python
 
    from picogl.backend.modern.core.shader.program import ShaderProgram
@@ -367,6 +386,7 @@ Creating Shader Programs
    )
 
 **From Source**:
+
 .. code-block:: python
 
    # Create shader from source code
@@ -379,6 +399,7 @@ Using Shaders
 ~~~~~~~~~~~~~
 
 **Basic Usage**:
+
 .. code-block:: python
 
    # Use shader
@@ -388,6 +409,7 @@ Using Shaders
        # Draw calls here
 
 **Advanced Usage**:
+
 .. code-block:: python
 
    # Bind shader
@@ -415,6 +437,7 @@ Shader operations include comprehensive error handling:
 **Context Errors**: Check OpenGL context
 
 **Example**:
+
 .. code-block:: python
 
    try:
@@ -463,6 +486,7 @@ Best Practices
 5. **Test on multiple platforms** for compatibility
 
 **Example**:
+
 .. code-block:: python
 
    # Choose shader based on OpenGL support

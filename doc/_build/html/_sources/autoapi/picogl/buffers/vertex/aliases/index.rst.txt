@@ -1,0 +1,19 @@
+picogl.buffers.vertex.aliases
+=============================
+
+.. py:module:: picogl.buffers.vertex.aliases
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   picogl.buffers.vertex.aliases.NAME_ALIASES
+
+
+Module Contents
+---------------
+
+.. py:data:: NAME_ALIASES
+

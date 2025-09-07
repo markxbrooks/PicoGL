@@ -1,0 +1,193 @@
+picogl.shaders.manager
+======================
+
+.. py:module:: picogl.shaders.manager
+
+.. autoapi-nested-parse::
+
+   ShaderManager
+   =============
+
+   Example Usage:
+   ==============
+   >>>shader_manager = ShaderManager()
+   ...
+   ...# Load all src
+   ...for shader_type_value in ShaderType:
+   ...    shader_manager.load_shader_source_string(shader_type_value)
+   ...
+   ...# Use a shader_manager.current_shader_program
+   ...if shader_manager.use_shader_type(ShaderType.ATOMS):
+   ...    shader_manager.current_shader_program = shader_manager.get(ShaderType.ATOMS)
+   ...    set_common_uniforms(
+   ...        shader_manager.current_shader_program,
+   ...        mvp_matrix=my_mvp_matrix,
+   ...        point_size=15.0,
+   ...        highlight=True,
+   ...        highlight_color=(1.0, 1.0, 0.0)
+   ...    )
+
+
+   File naming convention:
+   =======================
+   Ensure GLSL files follow the naming pattern:
+
+   atoms_vert.glsl
+   atoms_frag.glsl
+   bonds_vert.glsl
+   bonds_frag.glsl
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.shaders.manager.ShaderManager
+
+
+Module Contents
+---------------
+
+.. py:class:: ShaderManager
+
+   .. py:attribute:: shaders
+      :type:  Dict[picogl.shaders.type.ShaderType, picogl.backend.modern.core.shader.program.ShaderProgram]
+
+
+   .. py:attribute:: fallback_shader
+      :type:  Optional[picogl.backend.modern.core.shader.program.ShaderProgram]
+      :value: None
+
+
+
+   .. py:attribute:: default_shader_type
+      :type:  picogl.shaders.type.ShaderType
+
+
+   .. py:attribute:: current_shader_type
+      :type:  picogl.shaders.type.ShaderType
+
+
+   .. py:attribute:: current_shader
+      :type:  Optional[picogl.backend.modern.core.shader.program.ShaderProgram]
+      :value: None
+
+
+
+   .. py:attribute:: current_shader_program
+      :type:  Optional[int]
+      :value: None
+
+
+
+   .. py:attribute:: _initialized
+      :type:  bool
+      :value: False
+
+
+
+   .. py:attribute:: shader_directory
+      :type:  str
+      :value: ''
+
+
+
+   .. py:attribute:: fallback_shader_directory
+      :type:  str
+      :value: ''
+
+
+
+   .. py:method:: use_shader_program(shader_program: picogl.backend.modern.core.shader.program.ShaderProgram) -> None
+
+      use_shader_program
+
+      :param shader_program: PicoGLShader
+      :return: None
+      Bind the given shader shader_program and update current_shader/shader_program ID
+
+
+
+   .. py:method:: get_shader_type(shader_type: picogl.shaders.type.ShaderType) -> Optional[picogl.backend.modern.core.shader.program.ShaderProgram | picogl.backend.modern.core.shader.program.ShaderProgram]
+
+      Return the shader shader_program for the given ShaderType, loading if necessary.
+
+
+
+   .. py:method:: use_shader_type(shader_type: picogl.shaders.type.ShaderType, mvp_matrix: numpy.ndarray | pyglm.glm.mat4 = None, zoom_scale: int = None) -> None
+
+      use_shader_type
+
+      :param zoom_scale: int
+      :param shader_type: ShaderType
+      :param mvp_matrix: np.ndarray | glm.mat4 = None
+      :return: None
+      Load (if needed) and bind the shader of the given type
+
+
+
+   .. py:method:: update_mvp_uniform(mvp_matrix: numpy.ndarray | pyglm.glm.mat4) -> None
+
+      update_mvp_uniform
+
+      :param mvp_matrix: np.ndarray | glm.mat4:
+      :return: None
+
+
+
+   .. py:method:: set_uniform_value(uniform_name: str, uniform_value: Union[float, int, pyglm.glm.vec2, pyglm.glm.vec3, pyglm.glm.vec4, pyglm.glm.mat4, numpy.ndarray]) -> None
+
+      set_uniform_value
+
+      :param uniform_name: str
+      :param uniform_value: Union[float, int, glm.vec2, glm.vec3, glm.vec4, glm.mat4, np.ndarray]
+      :return: None
+
+
+
+   .. py:method:: use_default_shader(mvp_matrix: numpy.ndarray | pyglm.glm.mat4 = None) -> None
+
+      use_default_shader
+
+      :param mvp_matrix: np.ndarray | glm.mat4
+      :return:
+      Bind the default shader type.
+
+
+
+   .. py:method:: initialize_shaders(shader_dir: str = None)
+
+      Initialize src and mark GL state as ready.
+
+
+
+   .. py:method:: load_shader(shader_type: str, shader_number: int) -> None
+
+      load_shader
+
+      :param shader_type: ShaderType
+      :return: None
+
+
+
+   .. py:method:: _ensure_fallback()
+
+      _ensure_fallback
+
+      :return: None
+
+
+
+   .. py:method:: get(shader_type: picogl.shaders.type.ShaderType) -> Optional[picogl.backend.modern.core.shader.program.ShaderProgram | picogl.backend.modern.core.shader.program.ShaderProgram]
+
+
+   .. py:method:: release_shaders()
+
+      release_shaders
+
+      :return: None
+
+
+

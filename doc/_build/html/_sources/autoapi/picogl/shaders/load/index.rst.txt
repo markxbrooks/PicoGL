@@ -1,0 +1,58 @@
+picogl.shaders.load
+===================
+
+.. py:module:: picogl.shaders.load
+
+.. autoapi-nested-parse::
+
+   Shader utilities
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   picogl.shaders.load.SHADER_SRC_DIRECTORY
+   picogl.shaders.load.DEFAULT_VERTEX_SHADER_SRC
+   picogl.shaders.load.DEFAULT_FRAGMENT_SHADER_SRC
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.shaders.load.load_shader_source_string
+   picogl.shaders.load.load_fragment_and_vertex_for_shader_type
+
+
+Module Contents
+---------------
+
+.. py:function:: load_shader_source_string(file_name: str, directory: Optional[str] = None) -> str
+
+   Loads a shader_manager.current_shader_program source file as a string.
+
+   :param file_name: Shader file name (e.g., "atoms_vertex.glsl").
+   :param directory: Optional base shader_directory; defaults to script's shader_directory.
+   :return: Shader source code.
+   :raises RuntimeError: If file not found or unreadable.
+
+
+.. py:data:: SHADER_SRC_DIRECTORY
+
+.. py:data:: DEFAULT_VERTEX_SHADER_SRC
+
+.. py:data:: DEFAULT_FRAGMENT_SHADER_SRC
+
+.. py:function:: load_fragment_and_vertex_for_shader_type(shader_type_value: str, shader_directory: str) -> tuple[str, str]
+
+   load_fragment_and_vertex_for_shader_type
+
+   :param shader_directory: str
+   :param shader_type_value: ShaderType
+   :return: None
+
+

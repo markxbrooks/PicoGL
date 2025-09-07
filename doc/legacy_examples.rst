@@ -125,6 +125,7 @@ The most compatible cube renderer, using immediate mode OpenGL.
 * ESC: Exit
 
 **Run**:
+
 .. code-block:: bash
 
    python examples/legacy_cube_minimal.py
@@ -156,6 +157,7 @@ PicoGL-integrated legacy cube using LegacyGLMesh.
 * ESC: Exit
 
 **Run**:
+
 .. code-block:: bash
 
    python examples/legacy_cube_fixed.py
@@ -180,6 +182,7 @@ Comprehensive diagnostic tool for OpenGL setup issues.
 * Provides troubleshooting guidance
 
 **Run**:
+
 .. code-block:: bash
 
    python examples/test_opengl_setup.py
@@ -421,6 +424,7 @@ Development Notes
 5. **Document compatibility requirements**
 
 **Example Structure**:
+
 .. code-block:: python
 
    class LegacyExampleRenderer:
@@ -440,6 +444,7 @@ Development Notes
            # Main loop
 
 **Error Handling**:
+
 .. code-block:: python
 
    try:

@@ -1,0 +1,16 @@
+picogl.buffers.factory
+======================
+
+.. py:module:: picogl.buffers.factory
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/picogl/buffers/factory/layout/index
+   /autoapi/picogl/buffers/factory/validation/index
+
+

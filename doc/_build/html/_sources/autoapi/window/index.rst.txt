@@ -1,0 +1,101 @@
+window
+======
+
+.. py:module:: window
+
+.. autoapi-nested-parse::
+
+   Qt-based Cube Renderer using PicoGL's GLBase
+
+   This example demonstrates how to create a simple cube renderer using Qt's QOpenGLWidget
+   through PicoGL's GLBase class. It's designed for legacy displays and systems that
+   prefer Qt over GLUT.
+
+   Features:
+   - Legacy OpenGL rendering (compatible with older systems)
+   - Mouse controls for rotation and zoom
+   - Colorful cube with vertex colors
+   - Qt-based window management
+   - Cross-platform compatibility
+
+   Requirements:
+   - PySide6 (Qt6)
+   - PyOpenGL
+   - NumPy
+   - PicoGL
+
+   Usage:
+       python examples/qt_cube.py
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   window.LegacyQtObjectWindow
+
+
+Module Contents
+---------------
+
+.. py:class:: LegacyQtObjectWindow(parent, gl_use_legacy=True)
+
+   Bases: :py:obj:`PySide6.QtWidgets.QMainWindow`
+
+
+   Main window for the Qt Object renderer
+
+
+   .. py:attribute:: parent
+
+
+   .. py:attribute:: gl_use_legacy
+      :value: True
+
+
+
+   .. py:attribute:: layout
+      :type:  Optional[PySide6.QtWidgets.QVBoxLayout]
+      :value: None
+
+
+
+   .. py:attribute:: gl_widget
+      :type:  Optional[QtObjectRenderer]
+      :value: None
+
+
+
+   .. py:attribute:: object_file_path
+      :value: None
+
+
+
+   .. py:method:: ui_init()
+
+
+   .. py:method:: set_layout(layout)
+      :abstractmethod:
+
+
+
+   .. py:method:: toggle_auto_rotate()
+
+      Toggle auto-rotation
+
+
+
+   .. py:method:: reset_view()
+
+      Reset the view
+
+
+
+   .. py:method:: keyPressEvent(event)
+
+      Handle keyboard input at window level
+
+
+

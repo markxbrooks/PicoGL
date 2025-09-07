@@ -1,0 +1,149 @@
+picogl.ui.backend.glut.window.gl
+================================
+
+.. py:module:: picogl.ui.backend.glut.window.gl
+
+.. autoapi-nested-parse::
+
+   Glut Window
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   picogl.ui.backend.glut.window.gl.win
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.ui.backend.glut.window.gl.GLWindow
+
+
+Module Contents
+---------------
+
+.. py:class:: GLWindow(title: str = 'window', *args, **kwargs)
+
+   Bases: :py:obj:`picogl.ui.abc_window.AbstractGLWindow`
+
+
+   A strict ABC base class for a GLUT/OpenGL window.
+
+   Subclasses must implement:
+     - initializeGL
+     - paintGL
+     - resizeGL
+     - on_keyboard
+     - on_special_key
+     - on_mouse
+     - on_mousemove
+
+
+   .. py:attribute:: window
+      :value: None
+
+
+
+   .. py:attribute:: width
+      :value: None
+
+
+
+   .. py:attribute:: height
+      :value: None
+
+
+
+   .. py:attribute:: title
+      :value: 'window'
+
+
+
+   .. py:attribute:: controller
+      :value: None
+
+
+
+   .. py:attribute:: update_if
+
+
+   .. py:method:: init_glut()
+
+      init_glut
+
+
+
+   .. py:method:: initializeGL()
+
+      initialize_gl
+
+
+
+   .. py:method:: paintGL()
+
+      paintGL
+
+
+
+   .. py:method:: update()
+
+      draw
+
+
+
+   .. py:method:: display()
+
+      display
+
+
+
+   .. py:method:: idle()
+
+      idle
+
+
+
+   .. py:method:: resizeGL(width: int, height: int)
+
+      resize
+
+
+
+   .. py:method:: on_keyboard(key, x, y)
+
+      on_keyboard
+
+
+
+   .. py:method:: on_special_key(key, x, y)
+
+      on_special_key
+
+
+
+   .. py:method:: mousePressEvent(*args, **kwargs)
+
+      on_mouse
+
+
+
+   .. py:method:: mouseMoveEvent(*args, **kwargs)
+
+      on_mousemove
+
+
+
+   .. py:method:: run()
+
+      run
+
+
+
+.. py:data:: win
+

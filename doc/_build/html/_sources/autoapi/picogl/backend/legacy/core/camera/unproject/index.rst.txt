@@ -1,0 +1,35 @@
+picogl.backend.legacy.core.camera.unproject
+===========================================
+
+.. py:module:: picogl.backend.legacy.core.camera.unproject
+
+.. autoapi-nested-parse::
+
+   Unproject
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.backend.legacy.core.camera.unproject.unproject
+
+
+Module Contents
+---------------
+
+.. py:function:: unproject(x: int, y: int) -> Optional[Tuple[float, float, float]]
+
+   unproject
+
+   :param x: x coordinate
+   :param y: y coordinate
+   :return: Tuple[int, int, int] coordinate_data_main
+
+   Un-projects screen coordinate_data_main (x, y) into 3D world coordinate_data_main.
+   Assumes OpenGL context is current -Ensure OpenGL context is current if needed
+   i.e. self.makeCurrent() ← must be called before this if in Qt widget
+
+

@@ -1,0 +1,68 @@
+picogl.backend.modern.core.vertex.buffer.element
+================================================
+
+.. py:module:: picogl.backend.modern.core.vertex.buffer.element
+
+.. autoapi-nested-parse::
+
+   Element Buffer Object (EBO) Management for Modern OpenGL Rendering.
+
+   This module defines the `ElementBufferObject` class, which encapsulates the
+   OpenGL element data buffer (also known as an index buffer). It is used to
+   store indices that OpenGL uses to decide which vertices to draw, allowing
+   for efficient reuse of vertex data in complex models.
+
+   The class handles:
+   - Creation and deletion of the EBO on the GPU.
+   - Binding and unbinding of the buffer.
+   - Storage of element/index data along with configuration parameters.
+   - Uploading the data to the GPU with `glBufferData`.
+
+   Example usage:
+   ==============
+   >>>ebo = ModernEBO(data=data)
+   ...ebo.bind()
+   ...ebo.set_element_attributes(indices, indices.nbytes)
+   ...ebo.configure()
+   ...ebo.unbind()
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.backend.modern.core.vertex.buffer.element.ModernEBO
+
+
+Module Contents
+---------------
+
+.. py:class:: ModernEBO(handle: Optional[int] = None, data: Optional[numpy.ndarray] = None, size: int = 3, target: int = GL_ELEMENT_ARRAY_BUFFER)
+
+   Bases: :py:obj:`picogl.backend.modern.core.vertex.base.VertexBuffer`
+
+
+   OpenGL element data buffer (also known as an index buffer)
+
+
+   .. py:method:: set_element_attributes(data: numpy.ndarray, size: int, dtype: int = GL_STATIC_DRAW)
+
+      set_element_attributes
+
+      :param data: np.ndarray
+      :param size: int
+      :param dtype: int
+      :return: None
+
+
+
+   .. py:method:: configure()
+
+      configure
+
+      :return: None
+
+
+

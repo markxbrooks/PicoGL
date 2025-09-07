@@ -1,0 +1,46 @@
+picogl.backend.legacy.core.vertex.buffer.element
+================================================
+
+.. py:module:: picogl.backend.legacy.core.vertex.buffer.element
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.backend.legacy.core.vertex.buffer.element.LegacyEBO
+
+
+Module Contents
+---------------
+
+.. py:class:: LegacyEBO(handle: int = None, data: numpy.ndarray = None, target: int = GL_ELEMENT_ARRAY_BUFFER, size: int = 3)
+
+   Bases: :py:obj:`picogl.backend.legacy.core.vertex.buffer.vertex.LegacyVBO`
+
+
+   Legacy Element Buffer Object (EBO)
+
+
+   .. py:method:: draw(index_count: int, index_type: int = GL_UNSIGNED_INT, mode: int = GL_LINES, pointer: int = ctypes.c_void_p(0))
+
+      draw
+
+      :param index_count: int
+      :param index_type: int e.g. GL_UNSIGNED_INT
+      :param mode: int e.g. GL_LINES
+      :param pointer: int
+      :return: None
+
+
+
+   .. py:method:: configure()
+
+      configure
+
+      :return: None
+      Element Buffers don't use vertex attributes—nothing to configure.
+
+
+

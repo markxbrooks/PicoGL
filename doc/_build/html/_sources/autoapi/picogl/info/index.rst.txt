@@ -1,0 +1,27 @@
+picogl.info
+===========
+
+.. py:module:: picogl.info
+
+.. autoapi-nested-parse::
+
+   get gl information for printing
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.info.get_gl_info
+
+
+Module Contents
+---------------
+
+.. py:function:: get_gl_info()
+
+   Get picogl info
+
+

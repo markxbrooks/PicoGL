@@ -44,6 +44,7 @@ class LegacyEBO(LegacyVBO):
     def configure(self):
         """
         configure
+
         :return: None
         Element Buffers don't use vertex attributes—nothing to configure."""
         pass

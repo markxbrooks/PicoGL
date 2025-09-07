@@ -1,0 +1,66 @@
+picogl.utils.loader.object_data
+===============================
+
+.. py:module:: picogl.utils.loader.object_data
+
+.. autoapi-nested-parse::
+
+   Object Data
+
+   Representation of object data from an .loader file.
+
+   Example Usage:
+
+   # If raw_data.indices exists, keep it; otherwise ObjectData will generate it
+   self.data = ObjectData(
+       vertices=raw_data.vertices,
+       texcoords=raw_data.texcoords or [],
+       normals=raw_data.normals,
+       indices=getattr(raw_data, "indices", None)
+   )
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.utils.loader.object_data.ObjectData
+
+
+Module Contents
+---------------
+
+.. py:class:: ObjectData
+
+   Object Data Class
+
+   The data returned by the object loader
+
+
+   .. py:attribute:: vertices
+      :type:  List[float]
+
+
+   .. py:attribute:: texcoords
+      :type:  List[float]
+      :value: []
+
+
+
+   .. py:attribute:: normals
+      :type:  List[float]
+      :value: []
+
+
+
+   .. py:attribute:: indices
+      :type:  Optional[List[int]]
+      :value: None
+
+
+
+   .. py:method:: __post_init__()
+
+

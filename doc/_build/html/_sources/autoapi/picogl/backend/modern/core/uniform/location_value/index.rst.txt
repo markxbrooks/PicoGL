@@ -1,0 +1,27 @@
+picogl.backend.modern.core.uniform.location_value
+=================================================
+
+.. py:module:: picogl.backend.modern.core.uniform.location_value
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.backend.modern.core.uniform.location_value.set_uniform_location_value
+
+
+Module Contents
+---------------
+
+.. py:function:: set_uniform_location_value(location: int, uniform_value: Union[float, int, pyglm.glm.vec2, pyglm.glm.vec3, pyglm.glm.vec4, pyglm.glm.mat4, numpy.ndarray])
+
+   set_uniform_value
+
+   :param uniform location:  int
+   :param uniform_value: Value to set (supports float, int, vec2, vec3, vec4, mat4, or np.ndarray)
+
+   Set a uniform variable in a shader program
+
+

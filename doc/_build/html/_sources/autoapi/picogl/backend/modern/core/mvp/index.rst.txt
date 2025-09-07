@@ -1,0 +1,93 @@
+picogl.backend.modern.core.mvp
+==============================
+
+.. py:module:: picogl.backend.modern.core.mvp
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   picogl.backend.modern.core.mvp.MVP_ZOOM_SCALE
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.backend.modern.core.mvp.compute_mvp_zoom_from_zoom
+   picogl.backend.modern.core.mvp.compute_zoom_from_mvp_zoom
+   picogl.backend.modern.core.mvp.invert_mvp_matrix
+   picogl.backend.modern.core.mvp.create_normalized_device_vector
+   picogl.backend.modern.core.mvp.normalize_device_coordinates
+   picogl.backend.modern.core.mvp.convert_to_world_coordinates
+
+
+Module Contents
+---------------
+
+.. py:data:: MVP_ZOOM_SCALE
+   :value: -0.0015
+
+
+.. py:function:: compute_mvp_zoom_from_zoom(zoom_value: float) -> float
+
+   compute_mvp_zoom_from_zoom
+
+   :param zoom_value: float
+   :return: float
+   Compute the MVP zoom factor from a zoom value.
+
+
+.. py:function:: compute_zoom_from_mvp_zoom(mvp_zoom: float) -> float
+
+   compute_zoom_from_mvp_zoom
+
+   :param mvp_zoom: float
+   :return: float
+
+
+.. py:function:: invert_mvp_matrix(projection: numpy.ndarray, model_view: numpy.ndarray) -> numpy.ndarray | None
+
+   invert_mvp_matrix
+
+   :param projection: 4x4 projection matrix
+   :param model_view: np.ndarray
+   :return: np.ndarray
+   Compute inverse of MVP matrix
+
+
+.. py:function:: create_normalized_device_vector(ndc_x: float, ndc_y: float, ndc_z: float) -> numpy.ndarray
+
+   create_normalized_device_vector
+
+   :param ndc_x: float normalized device x coordinate 0.0-1.0
+   :param ndc_y: float normalized device y coordinate 0.0-1.0
+   :param ndc_z: float normalized device z coordinate 0.0-1.0
+   :return: np.ndarray normalized_device_vector
+
+   Create normalized device coordinate vector
+
+
+.. py:function:: normalize_device_coordinates(depth, viewport, x, y)
+
+   normalize_device_coordinates
+
+   :param depth: float
+   :param viewport: np.ndarray
+   :param x: int
+   :param y: int
+   :return: float, float, float
+
+
+.. py:function:: convert_to_world_coordinates(inverse_mvp_matrix, normalized_device_vector)
+
+   convert_to_world_coordinates
+
+   :param inverse_mvp_matrix: np.ndarray inverse_mvp_matrix
+   :param normalized_device_vector: np.ndarray normalized_device_vector
+   :return: np.ndarray world_coordinates
+
+

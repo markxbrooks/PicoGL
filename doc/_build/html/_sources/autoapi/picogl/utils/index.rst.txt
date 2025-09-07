@@ -1,0 +1,19 @@
+picogl.utils
+============
+
+.. py:module:: picogl.utils
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/picogl/utils/gl_init/index
+   /autoapi/picogl/utils/loader/index
+   /autoapi/picogl/utils/normal/index
+   /autoapi/picogl/utils/reshape/index
+   /autoapi/picogl/utils/texture/index
+
+

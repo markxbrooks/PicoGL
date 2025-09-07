@@ -1,0 +1,25 @@
+picogl.backend.legacy.core.camera.matrices.get
+==============================================
+
+.. py:module:: picogl.backend.legacy.core.camera.matrices.get
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.backend.legacy.core.camera.matrices.get.get_matrix
+
+
+Module Contents
+---------------
+
+.. py:function:: get_matrix(mode: int) -> numpy.ndarray
+
+   get_matrix
+
+   :param mode: int
+   :return: np.ndarray
+
+

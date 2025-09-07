@@ -1,0 +1,166 @@
+picogl.buffers.vertex.legacy
+============================
+
+.. py:module:: picogl.buffers.vertex.legacy
+
+.. autoapi-nested-parse::
+
+   VertexArrayGroup
+
+   Legacy backend (no real GL VAO support)
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.buffers.vertex.legacy.VertexBufferGroup
+
+
+Module Contents
+---------------
+
+.. py:class:: VertexBufferGroup
+
+   Bases: :py:obj:`picogl.buffers.base.VertexBase`
+
+
+   Container for legacy VBOs, mimicking VAO interface.
+
+
+   .. py:attribute:: handle
+      :value: 0
+
+
+
+   .. py:attribute:: vao
+      :value: None
+
+
+
+   .. py:attribute:: vbo
+      :value: None
+
+
+
+   .. py:attribute:: cbo
+      :value: None
+
+
+
+   .. py:attribute:: nbo
+      :value: None
+
+
+
+   .. py:attribute:: ebo
+      :value: None
+
+
+
+   .. py:attribute:: layout
+      :type:  Optional[picogl.buffers.attributes.LayoutDescriptor]
+      :value: None
+
+
+
+   .. py:attribute:: named_vbos
+      :type:  dict[str, picogl.backend.legacy.core.vertex.buffer.vertex.LegacyVBO]
+
+
+   .. py:attribute:: vbo_classes
+
+
+   .. py:method:: add_vbo_object(name: str, vbo: picogl.backend.legacy.core.vertex.buffer.vertex.LegacyVBO) -> picogl.backend.legacy.core.vertex.buffer.vertex.LegacyVBO
+
+      Register a VBO by semantic name or shorthand alias.
+
+
+
+   .. py:method:: get_vbo_object(name: str) -> picogl.backend.legacy.core.vertex.buffer.vertex.LegacyVBO
+
+      Retrieve a VBO by its semantic or shorthand name.
+
+
+
+   .. py:method:: delete() -> None
+
+      Release resources (VAO or equivalent).
+
+
+
+   .. py:property:: index_count
+      :type: int
+
+
+      Return the number of indices in the EBO.
+
+      :return: int
+
+
+   .. py:method:: draw(index_count: int = 0, mode: int = GL_POINTS)
+
+      draw
+
+      :param index_count:
+      :param count: int
+      :param mode: int
+      Enable legacy client states, bind VBOs, draw, and clean up.
+
+
+
+   .. py:method:: add_vbo(name: str, **kwargs)
+
+      High-level shortcut: pick the right VBO subclass and delegate.
+
+
+
+   .. py:method:: get_buffer_class(name: str = 'vbo') -> type[picogl.backend.legacy.core.vertex.buffer.vertex.LegacyVBO]
+
+      get_buffer_class
+
+      :param name: str
+      :return: LegacyVBO
+
+
+
+   .. py:method:: add_ebo(name: str = 'ebo', data: numpy.ndarray = None)
+
+      add_ebo
+
+      :param name: str
+      :param data: np.ndarray
+
+
+
+   .. py:method:: draw_elements(count: int = 0, mode: int = GL_TRIANGLES, dtype: int = GL_UNSIGNED_INT, offset: int = 0)
+
+      Draw using an element buffer (EBO) with legacy client states.
+
+      :param count: Number of indices to draw. Defaults to `self.index_count`.
+      :param mode: OpenGL primitive type (GL_TRIANGLES, GL_LINES, etc.).
+      :param dtype: Data type of indices (GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT, GL_UNSIGNED_INT).
+      :param offset: Byte offset into the EBO.
+
+
+
+   .. py:method:: set_layout(layout: picogl.buffers.attributes.LayoutDescriptor) -> None
+
+      Define the attribute layout for this VAO/group.
+
+
+
+   .. py:method:: bind() -> None
+
+      Bind buffers and upload attribute pointers per stored layout.
+
+
+
+   .. py:method:: unbind() -> None
+
+      Disable attribute arrays and unbind the array buffer.
+
+
+

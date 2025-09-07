@@ -1,0 +1,144 @@
+picogl.ui.backend.glut.window.glut_legacy
+=========================================
+
+.. py:module:: picogl.ui.backend.glut.window.glut_legacy
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   picogl.ui.backend.glut.window.glut_legacy.win
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.ui.backend.glut.window.glut_legacy.GlutRendererWindow
+
+
+Module Contents
+---------------
+
+.. py:class:: GlutRendererWindow(width, height, title: str = None, context: picogl.renderer.GLContext = None, *args, **kwargs)
+
+   Bases: :py:obj:`picogl.ui.backend.glut.window.gl.GLWindow`
+
+
+   Glut Rendered Window
+
+
+   .. py:attribute:: context
+
+
+   .. py:attribute:: title
+      :value: None
+
+
+
+   .. py:attribute:: renderer
+      :value: None
+
+
+
+   .. py:attribute:: width
+
+
+   .. py:attribute:: height
+
+
+   .. py:attribute:: last_mouse_x
+      :value: None
+
+
+
+   .. py:attribute:: last_mouse_y
+      :value: None
+
+
+
+   .. py:attribute:: rotation_x
+      :value: 0.0
+
+
+
+   .. py:attribute:: rotation_y
+      :value: 0.0
+
+
+
+   .. py:attribute:: zoom_fov
+      :type:  int
+      :value: 45
+
+
+
+   .. py:attribute:: zoom_distance
+      :type:  int
+      :value: 10
+
+
+
+   .. py:attribute:: distance_threshold
+      :type:  float
+      :value: 5.0
+
+
+
+   .. py:method:: initializeGL()
+
+      Initial OpenGL configuration.
+
+
+
+   .. py:method:: calculate_mvp_matrix(width: int = 1920, height: int = 1080)
+
+      calculate_mvp_matrix
+
+
+
+   .. py:method:: resizeGL(width, height)
+
+      resizeGL
+
+
+
+   .. py:method:: paintGL()
+
+      paintGL
+
+
+
+   .. py:method:: update_mvp()
+
+      Base perspective matrix from your existing method
+
+
+
+   .. py:method:: mousePressEvent(button, state, x, y)
+
+      mousePressEvent
+
+
+
+   .. py:method:: mouseMoveEvent(x, y)
+
+      mouseMoveEvent
+
+
+
+   .. py:method:: wheelEvent(wheel=0, direction=0, x=0, y=0)
+
+      Mouse wheel zoom: adjusts distance if far, FOV if close.
+      Positive direction -> zoom in, Negative -> zoom out.
+
+
+
+   .. py:method:: get_size()
+
+
+.. py:data:: win
+

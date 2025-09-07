@@ -1,0 +1,57 @@
+picogl.utils.gl_init
+====================
+
+.. py:module:: picogl.utils.gl_init
+
+.. autoapi-nested-parse::
+
+   execute gl task lists
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   picogl.utils.gl_init.init_gl_list
+   picogl.utils.gl_init.paint_gl_list
+   picogl.utils.gl_init.initialize_gl_list
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.utils.gl_init.execute_gl_tasks
+
+
+Module Contents
+---------------
+
+.. py:function:: execute_gl_tasks(task_list: list[tuple[str, Callable]])
+
+   Execute a sequence of OpenGL-related tasks.
+
+   Each task is a tuple ``(message, func)``:
+   - ``message`` (*str* or ``None``): If a string, it is logged before running the task.
+     If ``None``, no log message is emitted for that step.
+   - ``func`` (*callable*): The function to execute.
+
+   :param task_list:
+       A list of ``(message, callable)`` tuples describing the tasks to run.
+   :type task_list: list[tuple[str | None, callable]]
+
+   :raises TypeError:
+       If ``task_list`` is not a list or any element is not a 2-tuple.
+   :raises Exception:
+       Logs and re-raises any exception thrown by a task.
+
+
+.. py:data:: init_gl_list
+
+.. py:data:: paint_gl_list
+
+.. py:data:: initialize_gl_list
+

@@ -1,0 +1,104 @@
+picogl.renderer.texture
+=======================
+
+.. py:module:: picogl.renderer.texture
+
+.. autoapi-nested-parse::
+
+   Texture Renderer class
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.renderer.texture.TextureRenderer
+
+
+Module Contents
+---------------
+
+.. py:class:: TextureRenderer(context: picogl.renderer.GLContext, data: picogl.renderer.MeshData, base_dir: str | pathlib.Path = None, glsl_dir: str | pathlib.Path = None, use_texture: bool = False, texture_file: str = None, resource_subdir: str = None)
+
+   Bases: :py:obj:`picogl.renderer.object.ObjectRenderer`
+
+
+   Basic renderer class
+
+
+   .. py:attribute:: texture_full_path
+      :value: None
+
+
+
+   .. py:attribute:: resource_full_path
+      :value: None
+
+
+
+   .. py:attribute:: texture
+      :value: None
+
+
+
+   .. py:attribute:: context
+
+
+   .. py:attribute:: data
+
+
+   .. py:attribute:: show_model
+      :value: True
+
+
+
+   .. py:attribute:: base_dir
+      :value: None
+
+
+
+   .. py:attribute:: base_path
+
+
+   .. py:attribute:: glsl_dir
+      :value: None
+
+
+
+   .. py:method:: initialize_textures()
+
+
+   .. py:method:: get_texture_filename()
+
+      get texture filename
+
+      :return: texture filename: str
+
+
+
+   .. py:method:: set_texture_filename(file_name: str = None)
+
+      set_texture_filename
+
+      :param file_name: str = None
+      :return: None
+
+
+
+   .. py:method:: set_resource_path(base_path: str | pathlib.Path, subdir: str)
+
+      set_resource_path
+
+      :param base_path: str | Path
+      :param subdir: str
+
+
+
+   .. py:method:: _draw_selection()
+
+      Draw selection
+
+
+

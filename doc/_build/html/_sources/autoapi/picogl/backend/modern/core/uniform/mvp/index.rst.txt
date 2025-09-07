@@ -1,0 +1,37 @@
+picogl.backend.modern.core.uniform.mvp
+======================================
+
+.. py:module:: picogl.backend.modern.core.uniform.mvp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.backend.modern.core.uniform.mvp.set_mvp_uniform
+   picogl.backend.modern.core.uniform.mvp.shader_uniform_set_mvp
+
+
+Module Contents
+---------------
+
+.. py:function:: set_mvp_uniform(shader: picogl.backend.modern.core.shader.program.ShaderProgram = None, mvp: pyglm.glm.mat4 = None) -> None
+
+   set_mvp_uniform
+
+   :param shader:
+   :param mvp:
+   :return: None
+   Set the model_matrix-view-projection matrix uniform in the shader program.
+
+
+.. py:function:: shader_uniform_set_mvp(shader_program: int, mvp_matrix: numpy.ndarray | pyglm.glm.mat4)
+
+   shader_uniform_set_mvp
+
+   :param mvp_matrix: np.ndarray or glm.mat4 - model_matrix-view-projection matrix
+   :param shader_program: int
+   :return: None
+
+

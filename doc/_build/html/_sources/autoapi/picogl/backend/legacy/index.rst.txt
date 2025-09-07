@@ -1,0 +1,16 @@
+picogl.backend.legacy
+=====================
+
+.. py:module:: picogl.backend.legacy
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/picogl/backend/legacy/core/index
+   /autoapi/picogl/backend/legacy/gizmos/index
+
+

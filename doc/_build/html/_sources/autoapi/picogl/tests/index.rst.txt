@@ -1,0 +1,22 @@
+picogl.tests
+============
+
+.. py:module:: picogl.tests
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/picogl/tests/test_glmesh/index
+   /autoapi/picogl/tests/test_legacy_glmesh/index
+   /autoapi/picogl/tests/test_meshdata/index
+   /autoapi/picogl/tests/test_object_renderer/index
+   /autoapi/picogl/tests/test_texture_renderer/index
+   /autoapi/picogl/tests/test_vertex_array_object/index
+   /autoapi/picogl/tests/test_vertex_base/index
+   /autoapi/picogl/tests/test_vertex_buffer_group/index
+
+

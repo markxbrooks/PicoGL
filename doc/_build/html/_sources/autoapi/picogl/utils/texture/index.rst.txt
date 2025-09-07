@@ -1,0 +1,30 @@
+picogl.utils.texture
+====================
+
+.. py:module:: picogl.utils.texture
+
+.. autoapi-nested-parse::
+
+   bind texture array
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.utils.texture.bind_texture_array
+
+
+Module Contents
+---------------
+
+.. py:function:: bind_texture_array(texture_id: int)
+
+   bind_texture_array
+
+   :param texture_id:
+   :return: None
+
+

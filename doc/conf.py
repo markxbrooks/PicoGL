@@ -31,8 +31,14 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.ifconfig',
     'sphinx.ext.githubpages',
+    'autoapi.extension',
+    'sphinx.ext.autosummary',
     # 'sphinxcontrib.rsvgconverter'
 ]
+# Document Python Code
+autoapi_type = 'python'
+autoapi_dirs = '../picogl'
+autosummary_generate = True  # Turn on sphinx.ext.autosummary
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Storqe']
@@ -42,7 +48,8 @@ language = 'en'
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'alabaster'
+html_theme = 'sphinx_rtd_theme'
+#html_theme = 'alabaster'
 html_static_path = ['_static']
 html_theme_options = {
     'navigation_depth': 4,
@@ -96,7 +103,7 @@ pdf_documents = [
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3', None),
     'numpy': ('https://numpy.org/doc/stable/', None),
-    'opengl': ('https://pyopengl.readthedocs.io/en/latest/', None),
+    'opengl': ('https://pyopengl.readthedocs.io/en/stable/', None),
 }
 
 # -- Options for autodoc extension -------------------------------------------
@@ -107,17 +114,28 @@ autodoc_default_options = {
     'member-order': 'bysource',
     'special-members': '__init__',
     'undoc-members': True,
-    'exclude-members': '__weakref__'
+    'exclude-members': '__weakref__',
+    'show-inheritance': True
 }
+
+# Suppress warnings for missing imports
+suppress_warnings = ['autodoc.import_object']
 
 autodoc_mock_imports = [
     'OpenGL',
     'OpenGL.GL',
     'OpenGL.GLU',
     'OpenGL.GLUT',
+    'OpenGL.raw',
+    'OpenGL.raw.GL',
+    'OpenGL.raw.GL.VERSION',
     'pyglm',
+    'glm',
     'PIL',
-    'PIL.Image'
+    'PIL.Image',
+    'PyQt5',
+    'PyQt6',
+    'shibokensupport'
 ]
 
 # -- Options for todo extension ----------------------------------------------

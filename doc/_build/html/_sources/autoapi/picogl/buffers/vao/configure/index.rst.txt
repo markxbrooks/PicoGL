@@ -1,0 +1,37 @@
+picogl.buffers.vao.configure
+============================
+
+.. py:module:: picogl.buffers.vao.configure
+
+.. autoapi-nested-parse::
+
+   VAO attribute configuration
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.buffers.vao.configure.vao_configure_attributes
+
+
+Module Contents
+---------------
+
+.. py:function:: vao_configure_attributes(attributes: list[tuple[int, int, int, int, bool, int, int]])
+
+   Enable all vertex attributes associated with this VAO.
+
+   :param attributes: A list of tuples where each tuple contains:
+       - index (int): The attribute index.
+       - vbo_handle (int): The ID of the vertex buffer object.
+       - size (int): The number of components per vertex attribute.
+       - dtype (str): The data type of each component (e.g., 'float').
+       - normalized (bool): Whether fixed-point data values should be normalized.
+       - stride (int): The byte offset between consecutive attributes.
+       - offset (int): The byte offset of the first component.
+   :raises ValueError: If the structure of any attribute tuple is invalid.
+
+
