@@ -199,6 +199,7 @@ Tests cube data structure and PicoGL imports without requiring a display.
 * Provides troubleshooting guidance
 
 **Run**:
+
 .. code-block:: bash
 
    python examples/test_cube_data.py

@@ -3,15 +3,15 @@ PicoGL Documentation
 
 PicoGL is a lightweight Python OpenGL wrapper designed for educational purposes and simple 3D graphics applications. It provides a clean, easy-to-use interface for OpenGL operations while maintaining compatibility with both modern and legacy OpenGL systems.
 
-.. image:: https://img.shields.io/badge/Python-3.7+-blue.svg
+.. image:: images/python-badge.png
    :target: https://www.python.org/downloads/
    :alt: Python Version
 
-.. image:: https://img.shields.io/badge/OpenGL-1.x%20%7C%202.x%20%7C%203.3+-green.svg
+.. image:: images/opengl-badge.png
    :target: https://www.opengl.org/
    :alt: OpenGL Support
 
-.. image:: https://img.shields.io/badge/License-MIT-yellow.svg
+.. image:: images/license-badge.png
    :target: https://opensource.org/licenses/MIT
    :alt: License
 

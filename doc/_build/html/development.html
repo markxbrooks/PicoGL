@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Development &#8212; PicoGL 1.0.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b3523f8e" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=039e1c02" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=af2ce170"></script>
-    <script src="_static/doctools.js?v=888ff710"></script>
-    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=8d563738"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Testing" href="testing.html" />
@@ -18,8 +19,9 @@
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
+
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  
 
   </head><body>
   
@@ -32,10 +34,10 @@
           <div class="body" role="main">
             
   <section id="development">
-<h1>Development<a class="headerlink" href="#development" title="Permalink to this heading">¶</a></h1>
+<h1>Development<a class="headerlink" href="#development" title="Link to this heading">¶</a></h1>
 <p>This section provides information for developers who want to contribute to PicoGL or understand its internal architecture.</p>
 <section id="project-structure">
-<h2>Project Structure<a class="headerlink" href="#project-structure" title="Permalink to this heading">¶</a></h2>
+<h2>Project Structure<a class="headerlink" href="#project-structure" title="Link to this heading">¶</a></h2>
 <p>PicoGL follows a modular architecture with clear separation of concerns:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>picogl/
 ├── backend/           # OpenGL backend implementations
@@ -62,7 +64,7 @@
 </div>
 </section>
 <section id="architecture-overview">
-<h2>Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permalink to this heading">¶</a></h2>
+<h2>Architecture Overview<a class="headerlink" href="#architecture-overview" title="Link to this heading">¶</a></h2>
 <p>PicoGL uses a layered architecture:</p>
 <dl class="simple">
 <dt><strong>Application Layer</strong></dt><dd><ul class="simple">
@@ -97,7 +99,7 @@
 </dl>
 </section>
 <section id="design-principles">
-<h2>Design Principles<a class="headerlink" href="#design-principles" title="Permalink to this heading">¶</a></h2>
+<h2>Design Principles<a class="headerlink" href="#design-principles" title="Link to this heading">¶</a></h2>
 <dl class="simple">
 <dt><strong>Compatibility First</strong></dt><dd><ul class="simple">
 <li><p>Support for both modern and legacy OpenGL</p></li>
@@ -126,9 +128,9 @@
 </dl>
 </section>
 <section id="backend-system">
-<h2>Backend System<a class="headerlink" href="#backend-system" title="Permalink to this heading">¶</a></h2>
+<h2>Backend System<a class="headerlink" href="#backend-system" title="Link to this heading">¶</a></h2>
 <section id="modern-backend">
-<h3>Modern Backend<a class="headerlink" href="#modern-backend" title="Permalink to this heading">¶</a></h3>
+<h3>Modern Backend<a class="headerlink" href="#modern-backend" title="Link to this heading">¶</a></h3>
 <p>The modern backend provides OpenGL 3.3+ functionality:</p>
 <p><strong>Features</strong>:
 * Vertex Array Objects (VAOs)
@@ -157,7 +159,7 @@ with vao:</p>
 </div></blockquote>
 </section>
 <section id="legacy-backend">
-<h3>Legacy Backend<a class="headerlink" href="#legacy-backend" title="Permalink to this heading">¶</a></h3>
+<h3>Legacy Backend<a class="headerlink" href="#legacy-backend" title="Link to this heading">¶</a></h3>
 <p>The legacy backend provides OpenGL 1.x/2.x compatibility:</p>
 <p><strong>Features</strong>:
 * Immediate mode rendering
@@ -185,9 +187,9 @@ vbg.unbind()</p>
 </div></blockquote>
 </section>
 <section id="backend-selection">
-<h3>Backend Selection<a class="headerlink" href="#backend-selection" title="Permalink to this heading">¶</a></h3>
+<h3>Backend Selection<a class="headerlink" href="#backend-selection" title="Link to this heading">¶</a></h3>
 <p>PicoGL automatically selects the appropriate backend:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">select_backend</span><span class="p">():</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">select_backend</span><span class="p">():</span>
     <span class="k">if</span> <span class="n">has_modern_opengl</span><span class="p">():</span>
         <span class="k">return</span> <span class="n">ModernBackend</span><span class="p">()</span>
     <span class="k">elif</span> <span class="n">has_legacy_opengl</span><span class="p">():</span>
@@ -199,9 +201,9 @@ vbg.unbind()</p>
 </section>
 </section>
 <section id="testing-framework">
-<h2>Testing Framework<a class="headerlink" href="#testing-framework" title="Permalink to this heading">¶</a></h2>
+<h2>Testing Framework<a class="headerlink" href="#testing-framework" title="Link to this heading">¶</a></h2>
 <section id="unit-tests">
-<h3>Unit Tests<a class="headerlink" href="#unit-tests" title="Permalink to this heading">¶</a></h3>
+<h3>Unit Tests<a class="headerlink" href="#unit-tests" title="Link to this heading">¶</a></h3>
 <p>PicoGL includes comprehensive unit tests:</p>
 <p><strong>Test Structure</strong>:
 .. code-block:: text</p>
@@ -265,7 +267,7 @@ self.assertIsNotNone(vao)</p>
 </div></blockquote>
 </section>
 <section id="integration-tests">
-<h3>Integration Tests<a class="headerlink" href="#integration-tests" title="Permalink to this heading">¶</a></h3>
+<h3>Integration Tests<a class="headerlink" href="#integration-tests" title="Link to this heading">¶</a></h3>
 <p>Integration tests verify end-to-end functionality:</p>
 <p><strong>Test Categories</strong>:
 * Rendering pipeline tests
@@ -293,9 +295,9 @@ self.assertFalse(has_gl_errors())</p>
 </section>
 </section>
 <section id="build-system">
-<h2>Build System<a class="headerlink" href="#build-system" title="Permalink to this heading">¶</a></h2>
+<h2>Build System<a class="headerlink" href="#build-system" title="Link to this heading">¶</a></h2>
 <section id="setup-configuration">
-<h3>Setup Configuration<a class="headerlink" href="#setup-configuration" title="Permalink to this heading">¶</a></h3>
+<h3>Setup Configuration<a class="headerlink" href="#setup-configuration" title="Link to this heading">¶</a></h3>
 <p>PicoGL uses setuptools for packaging:</p>
 <p><strong>pyproject.toml</strong>:
 .. code-block:: toml</p>
@@ -377,7 +379,7 @@ extras_require={</p>
 </div></blockquote>
 </section>
 <section id="development-dependencies">
-<h3>Development Dependencies<a class="headerlink" href="#development-dependencies" title="Permalink to this heading">¶</a></h3>
+<h3>Development Dependencies<a class="headerlink" href="#development-dependencies" title="Link to this heading">¶</a></h3>
 <p><strong>Core Dependencies</strong>:
 * Python 3.7+
 * NumPy
@@ -403,9 +405,9 @@ pip install -e .[dev,qt]</p>
 </section>
 </section>
 <section id="code-style">
-<h2>Code Style<a class="headerlink" href="#code-style" title="Permalink to this heading">¶</a></h2>
+<h2>Code Style<a class="headerlink" href="#code-style" title="Link to this heading">¶</a></h2>
 <section id="formatting">
-<h3>Formatting<a class="headerlink" href="#formatting" title="Permalink to this heading">¶</a></h3>
+<h3>Formatting<a class="headerlink" href="#formatting" title="Link to this heading">¶</a></h3>
 <p>PicoGL uses Black for code formatting:</p>
 <p><strong>Configuration</strong>:
 .. code-block:: toml</p>
@@ -441,7 +443,7 @@ black –check picogl/</p>
 </div></blockquote>
 </section>
 <section id="linting">
-<h3>Linting<a class="headerlink" href="#linting" title="Permalink to this heading">¶</a></h3>
+<h3>Linting<a class="headerlink" href="#linting" title="Link to this heading">¶</a></h3>
 <p>PicoGL uses flake8 for linting:</p>
 <p><strong>Configuration</strong>:
 .. code-block:: ini</p>
@@ -468,7 +470,7 @@ flake8 picogl/renderer/meshdata.py</p>
 </div></blockquote>
 </section>
 <section id="type-checking">
-<h3>Type Checking<a class="headerlink" href="#type-checking" title="Permalink to this heading">¶</a></h3>
+<h3>Type Checking<a class="headerlink" href="#type-checking" title="Link to this heading">¶</a></h3>
 <p>PicoGL uses mypy for type checking:</p>
 <p><strong>Configuration</strong>:
 .. code-block:: ini</p>
@@ -499,9 +501,9 @@ mypy picogl/renderer/meshdata.py</p>
 </section>
 </section>
 <section id="documentation">
-<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this heading">¶</a></h2>
+<h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading">¶</a></h2>
 <section id="sphinx-configuration">
-<h3>Sphinx Configuration<a class="headerlink" href="#sphinx-configuration" title="Permalink to this heading">¶</a></h3>
+<h3>Sphinx Configuration<a class="headerlink" href="#sphinx-configuration" title="Link to this heading">¶</a></h3>
 <p>PicoGL uses Sphinx for documentation:</p>
 <p><strong>conf.py</strong>:
 .. code-block:: python</p>
@@ -540,7 +542,7 @@ cd doc/_build/latex &amp;&amp; make</p>
 </div></blockquote>
 </section>
 <section id="docstring-style">
-<h3>Docstring Style<a class="headerlink" href="#docstring-style" title="Permalink to this heading">¶</a></h3>
+<h3>Docstring Style<a class="headerlink" href="#docstring-style" title="Link to this heading">¶</a></h3>
 <p>PicoGL uses Google-style docstrings:</p>
 <p><strong>Example</strong>:
 .. code-block:: python</p>
@@ -566,9 +568,9 @@ pass</p>
 </section>
 </section>
 <section id="contributing">
-<h2>Contributing<a class="headerlink" href="#contributing" title="Permalink to this heading">¶</a></h2>
+<h2>Contributing<a class="headerlink" href="#contributing" title="Link to this heading">¶</a></h2>
 <section id="getting-started">
-<h3>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">¶</a></h3>
+<h3>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading">¶</a></h3>
 <ol class="arabic simple">
 <li><p><strong>Fork the repository</strong> on GitHub</p></li>
 <li><p><strong>Clone your fork</strong> locally</p></li>
@@ -599,7 +601,7 @@ git push origin feature/new-feature</p>
 </div></blockquote>
 </section>
 <section id="code-review-process">
-<h3>Code Review Process<a class="headerlink" href="#code-review-process" title="Permalink to this heading">¶</a></h3>
+<h3>Code Review Process<a class="headerlink" href="#code-review-process" title="Link to this heading">¶</a></h3>
 <p><strong>Pull Request Requirements</strong>:
 * All tests must pass
 * Code must be formatted with Black
@@ -617,9 +619,9 @@ git push origin feature/new-feature</p>
 </section>
 </section>
 <section id="release-process">
-<h2>Release Process<a class="headerlink" href="#release-process" title="Permalink to this heading">¶</a></h2>
+<h2>Release Process<a class="headerlink" href="#release-process" title="Link to this heading">¶</a></h2>
 <section id="version-numbering">
-<h3>Version Numbering<a class="headerlink" href="#version-numbering" title="Permalink to this heading">¶</a></h3>
+<h3>Version Numbering<a class="headerlink" href="#version-numbering" title="Link to this heading">¶</a></h3>
 <p>PicoGL uses semantic versioning (MAJOR.MINOR.PATCH):</p>
 <ul class="simple">
 <li><p><strong>MAJOR</strong>: Breaking changes</p></li>
@@ -633,7 +635,7 @@ git push origin feature/new-feature</p>
 * 2.0.0: Breaking changes</p>
 </section>
 <section id="release-steps">
-<h3>Release Steps<a class="headerlink" href="#release-steps" title="Permalink to this heading">¶</a></h3>
+<h3>Release Steps<a class="headerlink" href="#release-steps" title="Link to this heading">¶</a></h3>
 <ol class="arabic simple">
 <li><p><strong>Update version numbers</strong> in all relevant files</p></li>
 <li><p><strong>Update CHANGELOG.md</strong> with new features and fixes</p></li>
@@ -664,9 +666,9 @@ python -m twine upload dist/*</p>
 </section>
 </section>
 <section id="performance-considerations">
-<h2>Performance Considerations<a class="headerlink" href="#performance-considerations" title="Permalink to this heading">¶</a></h2>
+<h2>Performance Considerations<a class="headerlink" href="#performance-considerations" title="Link to this heading">¶</a></h2>
 <section id="rendering-performance">
-<h3>Rendering Performance<a class="headerlink" href="#rendering-performance" title="Permalink to this heading">¶</a></h3>
+<h3>Rendering Performance<a class="headerlink" href="#rendering-performance" title="Link to this heading">¶</a></h3>
 <p><strong>Modern OpenGL</strong>:
 * Use VAOs for efficient rendering
 * Minimize state changes
@@ -701,7 +703,7 @@ glDisable(GL_DEPTH_TEST)</p>
 </div></blockquote>
 </section>
 <section id="memory-management">
-<h3>Memory Management<a class="headerlink" href="#memory-management" title="Permalink to this heading">¶</a></h3>
+<h3>Memory Management<a class="headerlink" href="#memory-management" title="Link to this heading">¶</a></h3>
 <p><strong>Buffer Management</strong>:
 * Upload data once and reuse
 * Delete unused buffers
@@ -741,9 +743,9 @@ self.meshes.clear()</p>
 </section>
 </section>
 <section id="debugging">
-<h2>Debugging<a class="headerlink" href="#debugging" title="Permalink to this heading">¶</a></h2>
+<h2>Debugging<a class="headerlink" href="#debugging" title="Link to this heading">¶</a></h2>
 <section id="opengl-debugging">
-<h3>OpenGL Debugging<a class="headerlink" href="#opengl-debugging" title="Permalink to this heading">¶</a></h3>
+<h3>OpenGL Debugging<a class="headerlink" href="#opengl-debugging" title="Link to this heading">¶</a></h3>
 <p><strong>Error Checking</strong>:
 .. code-block:: python</p>
 <blockquote>
@@ -790,7 +792,7 @@ fps = 1.0 / frame_time</p>
 </section>
 </section>
 <section id="common-issues">
-<h2>Common Issues<a class="headerlink" href="#common-issues" title="Permalink to this heading">¶</a></h2>
+<h2>Common Issues<a class="headerlink" href="#common-issues" title="Link to this heading">¶</a></h2>
 <p><strong>OpenGL Context Issues</strong>:
 * Ensure OpenGL context is created before use
 * Check for context loss
@@ -816,7 +818,7 @@ fps = 1.0 / frame_time</p>
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="index.html">PicoGL</a></h1>
 
@@ -827,7 +829,16 @@ fps = 1.0 / frame_time</p>
 
 
 
-<h3>Navigation</h3>
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
@@ -876,16 +887,6 @@ fps = 1.0 / frame_time</p>
   </ul></li>
 </ul>
 </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -899,11 +900,11 @@ fps = 1.0 / frame_time</p>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2025, PicoGL Contributors.
+      &#169;2025, PicoGL Contributors.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |
       <a href="_sources/development.rst.txt"

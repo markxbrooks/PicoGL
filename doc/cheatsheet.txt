@@ -1,0 +1,2 @@
+ git subtree push --prefix=doc/_build/html origin gh-page
+sphinx-build -b html . _build/html

@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Testing &#8212; PicoGL 1.0.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b3523f8e" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=039e1c02" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=af2ce170"></script>
-    <script src="_static/doctools.js?v=888ff710"></script>
-    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=8d563738"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Contributing" href="contributing.html" />
@@ -18,8 +19,9 @@
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
+
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  
 
   </head><body>
   
@@ -32,10 +34,10 @@
           <div class="body" role="main">
             
   <section id="testing">
-<h1>Testing<a class="headerlink" href="#testing" title="Permalink to this heading">¶</a></h1>
+<h1>Testing<a class="headerlink" href="#testing" title="Link to this heading">¶</a></h1>
 <p>PicoGL includes a comprehensive testing framework to ensure reliability and compatibility across different platforms and OpenGL versions.</p>
 <section id="test-structure">
-<h2>Test Structure<a class="headerlink" href="#test-structure" title="Permalink to this heading">¶</a></h2>
+<h2>Test Structure<a class="headerlink" href="#test-structure" title="Link to this heading">¶</a></h2>
 <p>The test suite is organized as follows:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>tests/
 ├── test_vertex_array_object.py      # VAO tests
@@ -49,9 +51,9 @@
 </div>
 </section>
 <section id="running-tests">
-<h2>Running Tests<a class="headerlink" href="#running-tests" title="Permalink to this heading">¶</a></h2>
+<h2>Running Tests<a class="headerlink" href="#running-tests" title="Link to this heading">¶</a></h2>
 <section id="basic-test-execution">
-<h3>Basic Test Execution<a class="headerlink" href="#basic-test-execution" title="Permalink to this heading">¶</a></h3>
+<h3>Basic Test Execution<a class="headerlink" href="#basic-test-execution" title="Link to this heading">¶</a></h3>
 <p><strong>Run all tests</strong>:
 .. code-block:: bash</p>
 <blockquote>
@@ -74,7 +76,7 @@
 </div></blockquote>
 </section>
 <section id="using-pytest">
-<h3>Using pytest<a class="headerlink" href="#using-pytest" title="Permalink to this heading">¶</a></h3>
+<h3>Using pytest<a class="headerlink" href="#using-pytest" title="Link to this heading">¶</a></h3>
 <p><strong>Install pytest</strong>:
 .. code-block:: bash</p>
 <blockquote>
@@ -98,9 +100,9 @@
 </section>
 </section>
 <section id="test-categories">
-<h2>Test Categories<a class="headerlink" href="#test-categories" title="Permalink to this heading">¶</a></h2>
+<h2>Test Categories<a class="headerlink" href="#test-categories" title="Link to this heading">¶</a></h2>
 <section id="unit-tests">
-<h3>Unit Tests<a class="headerlink" href="#unit-tests" title="Permalink to this heading">¶</a></h3>
+<h3>Unit Tests<a class="headerlink" href="#unit-tests" title="Link to this heading">¶</a></h3>
 <p>Unit tests verify individual components in isolation:</p>
 <p><strong>VertexArrayObject Tests</strong>:
 .. code-block:: python</p>
@@ -140,7 +142,7 @@ data.draw()  # Should not raise exception</p>
 </div></blockquote>
 </section>
 <section id="integration-tests">
-<h3>Integration Tests<a class="headerlink" href="#integration-tests" title="Permalink to this heading">¶</a></h3>
+<h3>Integration Tests<a class="headerlink" href="#integration-tests" title="Link to this heading">¶</a></h3>
 <p>Integration tests verify component interactions:</p>
 <p><strong>Renderer Integration</strong>:
 .. code-block:: python</p>
@@ -165,7 +167,7 @@ self.assertIsNotNone(renderer.texture)</p>
 </div></blockquote>
 </section>
 <section id="performance-tests">
-<h3>Performance Tests<a class="headerlink" href="#performance-tests" title="Permalink to this heading">¶</a></h3>
+<h3>Performance Tests<a class="headerlink" href="#performance-tests" title="Link to this heading">¶</a></h3>
 <p>Performance tests verify rendering performance:</p>
 <p><strong>Rendering Performance</strong>:
 .. code-block:: python</p>
@@ -195,7 +197,7 @@ self.assertLess(memory_increase, 100 * 1024 * 1024)  # 100MB</p>
 </div></blockquote>
 </section>
 <section id="compatibility-tests">
-<h3>Compatibility Tests<a class="headerlink" href="#compatibility-tests" title="Permalink to this heading">¶</a></h3>
+<h3>Compatibility Tests<a class="headerlink" href="#compatibility-tests" title="Link to this heading">¶</a></h3>
 <p>Compatibility tests verify cross-platform functionality:</p>
 <p><strong>OpenGL Version Compatibility</strong>:
 .. code-block:: python</p>
@@ -224,9 +226,9 @@ pass</p>
 </section>
 </section>
 <section id="test-mocking">
-<h2>Test Mocking<a class="headerlink" href="#test-mocking" title="Permalink to this heading">¶</a></h2>
+<h2>Test Mocking<a class="headerlink" href="#test-mocking" title="Link to this heading">¶</a></h2>
 <section id="opengl-mocking">
-<h3>OpenGL Mocking<a class="headerlink" href="#opengl-mocking" title="Permalink to this heading">¶</a></h3>
+<h3>OpenGL Mocking<a class="headerlink" href="#opengl-mocking" title="Link to this heading">¶</a></h3>
 <p>Since OpenGL requires a graphics context, tests use mocking:</p>
 <p><strong>Global OpenGL Mocking</strong>:
 .. code-block:: python</p>
@@ -273,7 +275,7 @@ with self.assertRaises(OpenGLError):</p>
 </div></blockquote>
 </section>
 <section id="dependency-mocking">
-<h3>Dependency Mocking<a class="headerlink" href="#dependency-mocking" title="Permalink to this heading">¶</a></h3>
+<h3>Dependency Mocking<a class="headerlink" href="#dependency-mocking" title="Link to this heading">¶</a></h3>
 <p>Mock external dependencies:</p>
 <p><strong>NumPy Mocking</strong>:
 .. code-block:: python</p>
@@ -301,9 +303,9 @@ mock_open.assert_called_once_with(“test.png”)</p>
 </section>
 </section>
 <section id="test-data">
-<h2>Test Data<a class="headerlink" href="#test-data" title="Permalink to this heading">¶</a></h2>
+<h2>Test Data<a class="headerlink" href="#test-data" title="Link to this heading">¶</a></h2>
 <section id="test-fixtures">
-<h3>Test Fixtures<a class="headerlink" href="#test-fixtures" title="Permalink to this heading">¶</a></h3>
+<h3>Test Fixtures<a class="headerlink" href="#test-fixtures" title="Link to this heading">¶</a></h3>
 <p>Create reusable test data:</p>
 <p><strong>Vertex Data</strong>:
 .. code-block:: python</p>
@@ -361,7 +363,7 @@ return self.shader</p>
 </div></blockquote>
 </section>
 <section id="test-utilities">
-<h3>Test Utilities<a class="headerlink" href="#test-utilities" title="Permalink to this heading">¶</a></h3>
+<h3>Test Utilities<a class="headerlink" href="#test-utilities" title="Link to this heading">¶</a></h3>
 <p>Create helper functions for testing:</p>
 <p><strong>OpenGL Context Testing</strong>:
 .. code-block:: python</p>
@@ -395,9 +397,9 @@ with pytest.raises(expected_exception):</p>
 </section>
 </section>
 <section id="continuous-integration">
-<h2>Continuous Integration<a class="headerlink" href="#continuous-integration" title="Permalink to this heading">¶</a></h2>
+<h2>Continuous Integration<a class="headerlink" href="#continuous-integration" title="Link to this heading">¶</a></h2>
 <section id="github-actions">
-<h3>GitHub Actions<a class="headerlink" href="#github-actions" title="Permalink to this heading">¶</a></h3>
+<h3>GitHub Actions<a class="headerlink" href="#github-actions" title="Link to this heading">¶</a></h3>
 <p><strong>Test Workflow</strong>:
 .. code-block:: yaml</p>
 <blockquote>
@@ -506,9 +508,9 @@ path: dist/</p>
 </section>
 </section>
 <section id="test-coverage">
-<h2>Test Coverage<a class="headerlink" href="#test-coverage" title="Permalink to this heading">¶</a></h2>
+<h2>Test Coverage<a class="headerlink" href="#test-coverage" title="Link to this heading">¶</a></h2>
 <section id="coverage-requirements">
-<h3>Coverage Requirements<a class="headerlink" href="#coverage-requirements" title="Permalink to this heading">¶</a></h3>
+<h3>Coverage Requirements<a class="headerlink" href="#coverage-requirements" title="Link to this heading">¶</a></h3>
 <p><strong>Minimum Coverage</strong>:
 * Overall: 80%
 * Critical modules: 90%
@@ -547,9 +549,9 @@ raise NotImplementedError</p>
 </section>
 </section>
 <section id="code-quality">
-<h2>Code Quality<a class="headerlink" href="#code-quality" title="Permalink to this heading">¶</a></h2>
+<h2>Code Quality<a class="headerlink" href="#code-quality" title="Link to this heading">¶</a></h2>
 <section id="linting">
-<h3>Linting<a class="headerlink" href="#linting" title="Permalink to this heading">¶</a></h3>
+<h3>Linting<a class="headerlink" href="#linting" title="Link to this heading">¶</a></h3>
 <p><strong>flake8 Configuration</strong>:
 .. code-block:: ini</p>
 <blockquote>
@@ -573,7 +575,7 @@ flake8 tests/</p>
 </div></blockquote>
 </section>
 <section id="type-checking">
-<h3>Type Checking<a class="headerlink" href="#type-checking" title="Permalink to this heading">¶</a></h3>
+<h3>Type Checking<a class="headerlink" href="#type-checking" title="Link to this heading">¶</a></h3>
 <p><strong>mypy Configuration</strong>:
 .. code-block:: ini</p>
 <blockquote>
@@ -600,7 +602,7 @@ mypy tests/</p>
 </div></blockquote>
 </section>
 <section id="formatting">
-<h3>Formatting<a class="headerlink" href="#formatting" title="Permalink to this heading">¶</a></h3>
+<h3>Formatting<a class="headerlink" href="#formatting" title="Link to this heading">¶</a></h3>
 <p><strong>black Configuration</strong>:
 .. code-block:: toml</p>
 <blockquote>
@@ -634,9 +636,9 @@ black tests/</p>
 </section>
 </section>
 <section id="test-best-practices">
-<h2>Test Best Practices<a class="headerlink" href="#test-best-practices" title="Permalink to this heading">¶</a></h2>
+<h2>Test Best Practices<a class="headerlink" href="#test-best-practices" title="Link to this heading">¶</a></h2>
 <section id="writing-tests">
-<h3>Writing Tests<a class="headerlink" href="#writing-tests" title="Permalink to this heading">¶</a></h3>
+<h3>Writing Tests<a class="headerlink" href="#writing-tests" title="Link to this heading">¶</a></h3>
 <p><strong>Test Naming</strong>:
 .. code-block:: python</p>
 <blockquote>
@@ -683,7 +685,7 @@ pass</p>
 </div></blockquote>
 </section>
 <section id="test-maintenance">
-<h3>Test Maintenance<a class="headerlink" href="#test-maintenance" title="Permalink to this heading">¶</a></h3>
+<h3>Test Maintenance<a class="headerlink" href="#test-maintenance" title="Link to this heading">¶</a></h3>
 <p><strong>Keep Tests Simple</strong>:
 * One assertion per test
 * Clear test names
@@ -702,7 +704,7 @@ pass</p>
 * Parallel test execution when possible</p>
 </section>
 <section id="debugging-tests">
-<h3>Debugging Tests<a class="headerlink" href="#debugging-tests" title="Permalink to this heading">¶</a></h3>
+<h3>Debugging Tests<a class="headerlink" href="#debugging-tests" title="Link to this heading">¶</a></h3>
 <p><strong>Verbose Output</strong>:
 .. code-block:: bash</p>
 <blockquote>
@@ -739,7 +741,7 @@ data = MeshData.from_raw(vertices=vertices, colors=colors)
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="index.html">PicoGL</a></h1>
 
@@ -750,7 +752,16 @@ data = MeshData.from_raw(vertices=vertices, colors=colors)
 
 
 
-<h3>Navigation</h3>
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
@@ -795,16 +806,6 @@ data = MeshData.from_raw(vertices=vertices, colors=colors)
   </ul></li>
 </ul>
 </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -818,11 +819,11 @@ data = MeshData.from_raw(vertices=vertices, colors=colors)
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2025, PicoGL Contributors.
+      &#169;2025, PicoGL Contributors.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |
       <a href="_sources/testing.rst.txt"

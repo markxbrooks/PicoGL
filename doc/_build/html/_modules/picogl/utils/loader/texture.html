@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>picogl.utils.loader.texture &#8212; PicoGL 1.0.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b3523f8e" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/alabaster.css?v=039e1c02" />
-    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=af2ce170"></script>
-    <script src="../../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/alabaster.css?v=27fed22d" />
+    <script src="../../../../_static/documentation_options.js?v=8d563738"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
    
   <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
   
+
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  
 
   </head><body>
   
@@ -32,24 +34,24 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Texture Loader</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">struct</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">struct</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">OpenGL.GL</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">OpenGL.GL</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">glCompressedTexImage2D</span><span class="p">,</span>
     <span class="n">glDeleteTextures</span><span class="p">,</span>
     <span class="n">glGenTextures</span><span class="p">,</span>
     <span class="n">glTexImage2D</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">OpenGL.GL.framebufferobjects</span> <span class="kn">import</span> <span class="n">glGenerateMipmap</span>
-<span class="kn">from</span> <span class="nn">OpenGL.raw.GL.EXT.texture_compression_s3tc</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">OpenGL.GL.framebufferobjects</span><span class="w"> </span><span class="kn">import</span> <span class="n">glGenerateMipmap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">OpenGL.raw.GL.EXT.texture_compression_s3tc</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">GL_COMPRESSED_RGBA_S3TC_DXT1_EXT</span><span class="p">,</span>
     <span class="n">GL_COMPRESSED_RGBA_S3TC_DXT3_EXT</span><span class="p">,</span>
     <span class="n">GL_COMPRESSED_RGBA_S3TC_DXT5_EXT</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">OpenGL.raw.GL.VERSION.GL_1_0</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">OpenGL.raw.GL.VERSION.GL_1_0</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">GL_LINEAR</span><span class="p">,</span>
     <span class="n">GL_LINEAR_MIPMAP_LINEAR</span><span class="p">,</span>
     <span class="n">GL_REPEAT</span><span class="p">,</span>
@@ -63,17 +65,21 @@
     <span class="n">GL_UNSIGNED_BYTE</span><span class="p">,</span>
     <span class="n">glTexParameteri</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">OpenGL.raw.GL.VERSION.GL_1_1</span> <span class="kn">import</span> <span class="n">glBindTexture</span>
-<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">OpenGL.raw.GL.VERSION.GL_1_1</span><span class="w"> </span><span class="kn">import</span> <span class="n">glBindTexture</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PIL</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span>
 
 
-<div class="viewcode-block" id="TextureLoader"><a class="viewcode-back" href="../../../../api/utils.html#picogl.utils.loader.texture.TextureLoader">[docs]</a><span class="k">class</span> <span class="nc">TextureLoader</span><span class="p">:</span>
+<div class="viewcode-block" id="TextureLoader">
+<a class="viewcode-back" href="../../../../api/utils.html#picogl.utils.loader.texture.TextureLoader">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TextureLoader</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Loads a 2D texture from a DDS file or a standard image file using PIL.</span>
 <span class="sd">    Automatically creates an OpenGL texture ID.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="TextureLoader.__init__"><a class="viewcode-back" href="../../../../api/utils.html#picogl.utils.loader.texture.TextureLoader.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;RGB&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="TextureLoader.__init__">
+<a class="viewcode-back" href="../../../../api/utils.html#picogl.utils.loader.texture.TextureLoader.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;RGB&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">texture_gl_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
@@ -89,68 +95,110 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">load_by_pil</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="TextureLoader.load_dds"><a class="viewcode-back" href="../../../../api/utils.html#picogl.utils.loader.texture.TextureLoader.load_dds">[docs]</a>    <span class="k">def</span> <span class="nf">load_dds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+<div class="viewcode-block" id="TextureLoader.load_dds">
+<a class="viewcode-back" href="../../../../api/utils.html#picogl.utils.loader.texture.TextureLoader.load_dds">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_dds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load a DDS texture from file.</span>
 <span class="sd">        Supports DXT1, DXT3, DXT5 compressed textures.</span>
+<span class="sd">        Falls back to PIL loading if compressed texture loading fails.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">dds_file</span><span class="p">:</span>
-            <span class="n">dfs_tag</span> <span class="o">=</span> <span class="n">dds_file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">dfs_tag</span> <span class="o">!=</span> <span class="sa">b</span><span class="s2">&quot;DDS &quot;</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid DDS file: </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">dds_file</span><span class="p">:</span>
+                <span class="n">dfs_tag</span> <span class="o">=</span> <span class="n">dds_file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">dfs_tag</span> <span class="o">!=</span> <span class="sa">b</span><span class="s2">&quot;DDS &quot;</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid DDS file: </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-            <span class="n">head</span> <span class="o">=</span> <span class="n">dds_file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">124</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;I&quot;</span><span class="p">,</span> <span class="n">head</span><span class="p">[</span><span class="mi">8</span><span class="p">:</span><span class="mi">12</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;I&quot;</span><span class="p">,</span> <span class="n">head</span><span class="p">[</span><span class="mi">12</span><span class="p">:</span><span class="mi">16</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">linear_size</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;I&quot;</span><span class="p">,</span> <span class="n">head</span><span class="p">[</span><span class="mi">16</span><span class="p">:</span><span class="mi">20</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">mip_map_count</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;I&quot;</span><span class="p">,</span> <span class="n">head</span><span class="p">[</span><span class="mi">24</span><span class="p">:</span><span class="mi">28</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">four_cc</span> <span class="o">=</span> <span class="n">head</span><span class="p">[</span><span class="mi">80</span><span class="p">:</span><span class="mi">84</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+                <span class="n">head</span> <span class="o">=</span> <span class="n">dds_file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">124</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;I&quot;</span><span class="p">,</span> <span class="n">head</span><span class="p">[</span><span class="mi">8</span><span class="p">:</span><span class="mi">12</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;I&quot;</span><span class="p">,</span> <span class="n">head</span><span class="p">[</span><span class="mi">12</span><span class="p">:</span><span class="mi">16</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">linear_size</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;I&quot;</span><span class="p">,</span> <span class="n">head</span><span class="p">[</span><span class="mi">16</span><span class="p">:</span><span class="mi">20</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">mip_map_count</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;I&quot;</span><span class="p">,</span> <span class="n">head</span><span class="p">[</span><span class="mi">24</span><span class="p">:</span><span class="mi">28</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">four_cc</span> <span class="o">=</span> <span class="n">head</span><span class="p">[</span><span class="mi">80</span><span class="p">:</span><span class="mi">84</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
 
-        <span class="n">supported_dds</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;DXT1&quot;</span><span class="p">,</span> <span class="s2">&quot;DXT3&quot;</span><span class="p">,</span> <span class="s2">&quot;DXT5&quot;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">four_cc</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">supported_dds</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Not supported DDS file: </span><span class="si">{</span><span class="n">four_cc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">supported_dds</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;DXT1&quot;</span><span class="p">,</span> <span class="s2">&quot;DXT3&quot;</span><span class="p">,</span> <span class="s2">&quot;DXT5&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">four_cc</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">supported_dds</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Not supported DDS file: </span><span class="si">{</span><span class="n">four_cc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">four_cc</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">four_cc</span>
 
-        <span class="n">block_size</span> <span class="o">=</span> <span class="mi">8</span> <span class="k">if</span> <span class="n">four_cc</span> <span class="o">==</span> <span class="s2">&quot;DXT1&quot;</span> <span class="k">else</span> <span class="mi">16</span>
-        <span class="n">gl_format</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;DXT1&quot;</span><span class="p">:</span> <span class="n">GL_COMPRESSED_RGBA_S3TC_DXT1_EXT</span><span class="p">,</span>
-            <span class="s2">&quot;DXT3&quot;</span><span class="p">:</span> <span class="n">GL_COMPRESSED_RGBA_S3TC_DXT3_EXT</span><span class="p">,</span>
-            <span class="s2">&quot;DXT5&quot;</span><span class="p">:</span> <span class="n">GL_COMPRESSED_RGBA_S3TC_DXT5_EXT</span><span class="p">,</span>
-        <span class="p">}[</span><span class="n">four_cc</span><span class="p">]</span>
+            <span class="n">block_size</span> <span class="o">=</span> <span class="mi">8</span> <span class="k">if</span> <span class="n">four_cc</span> <span class="o">==</span> <span class="s2">&quot;DXT1&quot;</span> <span class="k">else</span> <span class="mi">16</span>
+            <span class="n">gl_format</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;DXT1&quot;</span><span class="p">:</span> <span class="n">GL_COMPRESSED_RGBA_S3TC_DXT1_EXT</span><span class="p">,</span>
+                <span class="s2">&quot;DXT3&quot;</span><span class="p">:</span> <span class="n">GL_COMPRESSED_RGBA_S3TC_DXT3_EXT</span><span class="p">,</span>
+                <span class="s2">&quot;DXT5&quot;</span><span class="p">:</span> <span class="n">GL_COMPRESSED_RGBA_S3TC_DXT5_EXT</span><span class="p">,</span>
+            <span class="p">}[</span><span class="n">four_cc</span><span class="p">]</span>
 
-        <span class="n">buffer_size</span> <span class="o">=</span> <span class="n">linear_size</span> <span class="o">*</span> <span class="mi">2</span> <span class="k">if</span> <span class="n">mip_map_count</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">linear_size</span>
+            <span class="n">buffer_size</span> <span class="o">=</span> <span class="n">linear_size</span> <span class="o">*</span> <span class="mi">2</span> <span class="k">if</span> <span class="n">mip_map_count</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">linear_size</span>
 
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">dds_file</span><span class="p">:</span>
-            <span class="n">dds_file</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span>  <span class="c1"># skip DDS header</span>
-            <span class="n">dds_buffer</span> <span class="o">=</span> <span class="n">dds_file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">buffer_size</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">dds_file</span><span class="p">:</span>
+                <span class="n">dds_file</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span>  <span class="c1"># skip DDS header</span>
+                <span class="n">dds_buffer</span> <span class="o">=</span> <span class="n">dds_file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">buffer_size</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">texture_gl_id</span> <span class="o">=</span> <span class="n">glGenTextures</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">glBindTexture</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">texture_gl_id</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">texture_gl_id</span> <span class="o">=</span> <span class="n">glGenTextures</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">glBindTexture</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">texture_gl_id</span><span class="p">)</span>
 
-        <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span>
-        <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mip_map_count</span><span class="p">):</span>
-            <span class="n">size</span> <span class="o">=</span> <span class="p">((</span><span class="n">w</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span> <span class="o">//</span> <span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="p">((</span><span class="n">h</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span> <span class="o">//</span> <span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="n">block_size</span>
-            <span class="n">glCompressedTexImage2D</span><span class="p">(</span>
-                <span class="n">GL_TEXTURE_2D</span><span class="p">,</span>
-                <span class="n">level</span><span class="p">,</span>
-                <span class="n">gl_format</span><span class="p">,</span>
-                <span class="n">w</span><span class="p">,</span>
-                <span class="n">h</span><span class="p">,</span>
-                <span class="mi">0</span><span class="p">,</span>
-                <span class="n">size</span><span class="p">,</span>
-                <span class="n">dds_buffer</span><span class="p">[</span><span class="n">offset</span><span class="p">:</span> <span class="n">offset</span> <span class="o">+</span> <span class="n">size</span><span class="p">],</span>
-            <span class="p">)</span>
-            <span class="n">offset</span> <span class="o">+=</span> <span class="n">size</span>
-            <span class="n">w</span> <span class="o">//=</span> <span class="mi">2</span>
-            <span class="n">h</span> <span class="o">//=</span> <span class="mi">2</span>
-            <span class="k">if</span> <span class="n">w</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">h</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">break</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span>
+            <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mip_map_count</span><span class="p">):</span>
+                <span class="n">size</span> <span class="o">=</span> <span class="p">((</span><span class="n">w</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span> <span class="o">//</span> <span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="p">((</span><span class="n">h</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span> <span class="o">//</span> <span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="n">block_size</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">glCompressedTexImage2D</span><span class="p">(</span>
+                        <span class="n">GL_TEXTURE_2D</span><span class="p">,</span>
+                        <span class="n">level</span><span class="p">,</span>
+                        <span class="n">gl_format</span><span class="p">,</span>
+                        <span class="n">w</span><span class="p">,</span>
+                        <span class="n">h</span><span class="p">,</span>
+                        <span class="mi">0</span><span class="p">,</span>
+                        <span class="n">size</span><span class="p">,</span>
+                        <span class="n">dds_buffer</span><span class="p">[</span><span class="n">offset</span><span class="p">:</span> <span class="n">offset</span> <span class="o">+</span> <span class="n">size</span><span class="p">],</span>
+                    <span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="c1"># Fallback: try with explicit byte array conversion</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="kn">import</span><span class="w"> </span><span class="nn">array</span>
+                        <span class="n">byte_array</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="n">dds_buffer</span><span class="p">[</span><span class="n">offset</span><span class="p">:</span> <span class="n">offset</span> <span class="o">+</span> <span class="n">size</span><span class="p">])</span>
+                        <span class="n">glCompressedTexImage2D</span><span class="p">(</span>
+                            <span class="n">GL_TEXTURE_2D</span><span class="p">,</span>
+                            <span class="n">level</span><span class="p">,</span>
+                            <span class="n">gl_format</span><span class="p">,</span>
+                            <span class="n">w</span><span class="p">,</span>
+                            <span class="n">h</span><span class="p">,</span>
+                            <span class="mi">0</span><span class="p">,</span>
+                            <span class="n">size</span><span class="p">,</span>
+                            <span class="n">byte_array</span><span class="p">,</span>
+                        <span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e2</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to load DDS compressed texture: </span><span class="si">{</span><span class="n">e2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                
+                <span class="n">offset</span> <span class="o">+=</span> <span class="n">size</span>
+                <span class="n">w</span> <span class="o">//=</span> <span class="mi">2</span>
+                <span class="n">h</span> <span class="o">//=</span> <span class="mi">2</span>
+                <span class="k">if</span> <span class="n">w</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">h</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">break</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">inversed_v_coords</span> <span class="o">=</span> <span class="kc">True</span></div>
+            <span class="c1"># Set texture parameters for DDS</span>
+            <span class="n">glTexParameteri</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span> <span class="n">GL_TEXTURE_WRAP_S</span><span class="p">,</span> <span class="n">GL_REPEAT</span><span class="p">)</span>
+            <span class="n">glTexParameteri</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span> <span class="n">GL_TEXTURE_WRAP_T</span><span class="p">,</span> <span class="n">GL_REPEAT</span><span class="p">)</span>
+            <span class="n">glTexParameteri</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span> <span class="n">GL_TEXTURE_MAG_FILTER</span><span class="p">,</span> <span class="n">GL_LINEAR</span><span class="p">)</span>
+            <span class="n">glTexParameteri</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span> <span class="n">GL_TEXTURE_MIN_FILTER</span><span class="p">,</span> <span class="n">GL_LINEAR_MIPMAP_LINEAR</span><span class="p">)</span>
 
-<div class="viewcode-block" id="TextureLoader.load_by_pil"><a class="viewcode-back" href="../../../../api/utils.html#picogl.utils.loader.texture.TextureLoader.load_by_pil">[docs]</a>    <span class="k">def</span> <span class="nf">load_by_pil</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">inversed_v_coords</span> <span class="o">=</span> <span class="kc">True</span>
+            
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># Fallback: try to load as regular image with PIL</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;⚠️  DDS compressed loading failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🔄 Falling back to PIL loading for: </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">load_by_pil</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s2">&quot;RGBA&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e2</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to load DDS file with both compressed and PIL methods: </span><span class="si">{</span><span class="n">e2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TextureLoader.load_by_pil">
+<a class="viewcode-back" href="../../../../api/utils.html#picogl.utils.loader.texture.TextureLoader.load_by_pil">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_by_pil</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load a standard image using PIL and upload as OpenGL texture.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -185,7 +233,10 @@
         <span class="n">glTexParameteri</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span> <span class="n">GL_TEXTURE_MIN_FILTER</span><span class="p">,</span> <span class="n">GL_LINEAR_MIPMAP_LINEAR</span><span class="p">)</span>
         <span class="n">glGenerateMipmap</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="TextureLoader.delete"><a class="viewcode-back" href="../../../../api/utils.html#picogl.utils.loader.texture.TextureLoader.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+<div class="viewcode-block" id="TextureLoader.delete">
+<a class="viewcode-back" href="../../../../api/utils.html#picogl.utils.loader.texture.TextureLoader.delete">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Deletes the OpenGL texture to free GPU memory.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -193,8 +244,10 @@
             <span class="n">glDeleteTextures</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_gl_id</span><span class="p">])</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">texture_gl_id</span> <span class="o">=</span> <span class="kc">None</span></div>
 
-    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="k">else</span> <span class="mi">0</span></div>
+
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
@@ -216,7 +269,7 @@
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="../../../../index.html">PicoGL</a></h1>
 
@@ -227,7 +280,16 @@
 
 
 
-<h3>Navigation</h3>
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
@@ -261,16 +323,6 @@
   </ul></li>
 </ul>
 </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../../../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -284,11 +336,11 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2025, PicoGL Contributors.
+      &#169;2025, PicoGL Contributors.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
     </div>
 

@@ -1,0 +1,184 @@
+\indexentry{MeshData (class in picogl.renderer.meshdata)@\spxentry{MeshData}\spxextra{class in picogl.renderer.meshdata}|hyperpage}{33}
+\indexentry{\_\_init\_\_() (picogl.renderer.meshdata.MeshData method)@\spxentry{\_\_init\_\_()}\spxextra{picogl.renderer.meshdata.MeshData method}|hyperpage}{33}
+\indexentry{as\_ribbon\_args() (picogl.renderer.meshdata.MeshData method)@\spxentry{as\_ribbon\_args()}\spxextra{picogl.renderer.meshdata.MeshData method}|hyperpage}{33}
+\indexentry{bind() (picogl.renderer.meshdata.MeshData method)@\spxentry{bind()}\spxextra{picogl.renderer.meshdata.MeshData method}|hyperpage}{33}
+\indexentry{unbind() (picogl.renderer.meshdata.MeshData method)@\spxentry{unbind()}\spxextra{picogl.renderer.meshdata.MeshData method}|hyperpage}{33}
+\indexentry{from\_raw() (picogl.renderer.meshdata.MeshData class method)@\spxentry{from\_raw()}\spxextra{picogl.renderer.meshdata.MeshData class method}|hyperpage}{34}
+\indexentry{draw() (picogl.renderer.meshdata.MeshData method)@\spxentry{draw()}\spxextra{picogl.renderer.meshdata.MeshData method}|hyperpage}{34}
+\indexentry{GLContext (class in picogl.renderer.glcontext)@\spxentry{GLContext}\spxextra{class in picogl.renderer.glcontext}|hyperpage}{34}
+\indexentry{vaos (picogl.renderer.glcontext.GLContext attribute)@\spxentry{vaos}\spxextra{picogl.renderer.glcontext.GLContext attribute}|hyperpage}{34}
+\indexentry{vertex\_array (picogl.renderer.glcontext.GLContext attribute)@\spxentry{vertex\_array}\spxextra{picogl.renderer.glcontext.GLContext attribute}|hyperpage}{35}
+\indexentry{shader (picogl.renderer.glcontext.GLContext attribute)@\spxentry{shader}\spxextra{picogl.renderer.glcontext.GLContext attribute}|hyperpage}{35}
+\indexentry{texture\_id (picogl.renderer.glcontext.GLContext attribute)@\spxentry{texture\_id}\spxextra{picogl.renderer.glcontext.GLContext attribute}|hyperpage}{35}
+\indexentry{mvp\_matrix (picogl.renderer.glcontext.GLContext attribute)@\spxentry{mvp\_matrix}\spxextra{picogl.renderer.glcontext.GLContext attribute}|hyperpage}{35}
+\indexentry{model\_matrix (picogl.renderer.glcontext.GLContext attribute)@\spxentry{model\_matrix}\spxextra{picogl.renderer.glcontext.GLContext attribute}|hyperpage}{35}
+\indexentry{view (picogl.renderer.glcontext.GLContext attribute)@\spxentry{view}\spxextra{picogl.renderer.glcontext.GLContext attribute}|hyperpage}{35}
+\indexentry{eye\_np (picogl.renderer.glcontext.GLContext attribute)@\spxentry{eye\_np}\spxextra{picogl.renderer.glcontext.GLContext attribute}|hyperpage}{35}
+\indexentry{create\_shader\_program() (picogl.renderer.glcontext.GLContext method)@\spxentry{create\_shader\_program()}\spxextra{picogl.renderer.glcontext.GLContext method}|hyperpage}{35}
+\indexentry{\_\_init\_\_() (picogl.renderer.glcontext.GLContext method)@\spxentry{\_\_init\_\_()}\spxextra{picogl.renderer.glcontext.GLContext method}|hyperpage}{35}
+\indexentry{ObjectRenderer (class in picogl.renderer.object)@\spxentry{ObjectRenderer}\spxextra{class in picogl.renderer.object}|hyperpage}{35}
+\indexentry{\_\_init\_\_() (picogl.renderer.object.ObjectRenderer method)@\spxentry{\_\_init\_\_()}\spxextra{picogl.renderer.object.ObjectRenderer method}|hyperpage}{35}
+\indexentry{initialize\_shaders() (picogl.renderer.object.ObjectRenderer method)@\spxentry{initialize\_shaders()}\spxextra{picogl.renderer.object.ObjectRenderer method}|hyperpage}{36}
+\indexentry{initialize() (picogl.renderer.object.ObjectRenderer method)@\spxentry{initialize()}\spxextra{picogl.renderer.object.ObjectRenderer method}|hyperpage}{36}
+\indexentry{render() (picogl.renderer.object.ObjectRenderer method)@\spxentry{render()}\spxextra{picogl.renderer.object.ObjectRenderer method}|hyperpage}{36}
+\indexentry{TextureRenderer (class in picogl.renderer.texture)@\spxentry{TextureRenderer}\spxextra{class in picogl.renderer.texture}|hyperpage}{36}
+\indexentry{\_\_init\_\_() (picogl.renderer.texture.TextureRenderer method)@\spxentry{\_\_init\_\_()}\spxextra{picogl.renderer.texture.TextureRenderer method}|hyperpage}{36}
+\indexentry{initialize\_textures() (picogl.renderer.texture.TextureRenderer method)@\spxentry{initialize\_textures()}\spxextra{picogl.renderer.texture.TextureRenderer method}|hyperpage}{36}
+\indexentry{get\_texture\_filename() (picogl.renderer.texture.TextureRenderer method)@\spxentry{get\_texture\_filename()}\spxextra{picogl.renderer.texture.TextureRenderer method}|hyperpage}{36}
+\indexentry{set\_texture\_filename() (picogl.renderer.texture.TextureRenderer method)@\spxentry{set\_texture\_filename()}\spxextra{picogl.renderer.texture.TextureRenderer method}|hyperpage}{36}
+\indexentry{set\_resource\_path() (picogl.renderer.texture.TextureRenderer method)@\spxentry{set\_resource\_path()}\spxextra{picogl.renderer.texture.TextureRenderer method}|hyperpage}{36}
+\indexentry{GLMesh (class in picogl.renderer.glmesh)@\spxentry{GLMesh}\spxextra{class in picogl.renderer.glmesh}|hyperpage}{37}
+\indexentry{\_\_init\_\_() (picogl.renderer.glmesh.GLMesh method)@\spxentry{\_\_init\_\_()}\spxextra{picogl.renderer.glmesh.GLMesh method}|hyperpage}{37}
+\indexentry{from\_mesh\_data() (picogl.renderer.glmesh.GLMesh class method)@\spxentry{from\_mesh\_data()}\spxextra{picogl.renderer.glmesh.GLMesh class method}|hyperpage}{37}
+\indexentry{upload() (picogl.renderer.glmesh.GLMesh method)@\spxentry{upload()}\spxextra{picogl.renderer.glmesh.GLMesh method}|hyperpage}{37}
+\indexentry{bind() (picogl.renderer.glmesh.GLMesh method)@\spxentry{bind()}\spxextra{picogl.renderer.glmesh.GLMesh method}|hyperpage}{37}
+\indexentry{unbind() (picogl.renderer.glmesh.GLMesh method)@\spxentry{unbind()}\spxextra{picogl.renderer.glmesh.GLMesh method}|hyperpage}{38}
+\indexentry{delete() (picogl.renderer.glmesh.GLMesh method)@\spxentry{delete()}\spxextra{picogl.renderer.glmesh.GLMesh method}|hyperpage}{38}
+\indexentry{draw() (picogl.renderer.glmesh.GLMesh method)@\spxentry{draw()}\spxextra{picogl.renderer.glmesh.GLMesh method}|hyperpage}{38}
+\indexentry{RendererBase (class in picogl.renderer.base)@\spxentry{RendererBase}\spxextra{class in picogl.renderer.base}|hyperpage}{38}
+\indexentry{\_\_init\_\_() (picogl.renderer.base.RendererBase method)@\spxentry{\_\_init\_\_()}\spxextra{picogl.renderer.base.RendererBase method}|hyperpage}{38}
+\indexentry{dispatch\_list (picogl.renderer.base.RendererBase property)@\spxentry{dispatch\_list}\spxextra{picogl.renderer.base.RendererBase property}|hyperpage}{38}
+\indexentry{initialized (picogl.renderer.base.RendererBase property)@\spxentry{initialized}\spxextra{picogl.renderer.base.RendererBase property}|hyperpage}{38}
+\indexentry{render() (picogl.renderer.base.RendererBase method)@\spxentry{render()}\spxextra{picogl.renderer.base.RendererBase method}|hyperpage}{38}
+\indexentry{initialize() (picogl.renderer.base.RendererBase method)@\spxentry{initialize()}\spxextra{picogl.renderer.base.RendererBase method}|hyperpage}{38}
+\indexentry{initialize\_rendering\_buffers() (picogl.renderer.base.RendererBase method)@\spxentry{initialize\_rendering\_buffers()}\spxextra{picogl.renderer.base.RendererBase method}|hyperpage}{38}
+\indexentry{set\_visibility() (picogl.renderer.base.RendererBase method)@\spxentry{set\_visibility()}\spxextra{picogl.renderer.base.RendererBase method}|hyperpage}{38}
+\indexentry{AbstractRenderer (class in picogl.renderer.abstract)@\spxentry{AbstractRenderer}\spxextra{class in picogl.renderer.abstract}|hyperpage}{38}
+\indexentry{initialize() (picogl.renderer.abstract.AbstractRenderer method)@\spxentry{initialize()}\spxextra{picogl.renderer.abstract.AbstractRenderer method}|hyperpage}{38}
+\indexentry{set\_visibility() (picogl.renderer.abstract.AbstractRenderer method)@\spxentry{set\_visibility()}\spxextra{picogl.renderer.abstract.AbstractRenderer method}|hyperpage}{38}
+\indexentry{render() (picogl.renderer.abstract.AbstractRenderer method)@\spxentry{render()}\spxextra{picogl.renderer.abstract.AbstractRenderer method}|hyperpage}{39}
+\indexentry{UvRenderer (class in picogl.renderer.uvrenderer)@\spxentry{UvRenderer}\spxextra{class in picogl.renderer.uvrenderer}|hyperpage}{39}
+\indexentry{\_\_init\_\_() (picogl.renderer.uvrenderer.UvRenderer method)@\spxentry{\_\_init\_\_()}\spxextra{picogl.renderer.uvrenderer.UvRenderer method}|hyperpage}{39}
+\indexentry{initialize() (picogl.renderer.uvrenderer.UvRenderer method)@\spxentry{initialize()}\spxextra{picogl.renderer.uvrenderer.UvRenderer method}|hyperpage}{39}
+\indexentry{VertexArrayObject (class in picogl.backend.modern.core.vertex.array.object)@\spxentry{VertexArrayObject}\spxextra{class in picogl.backend.modern.core.vertex.array.object}|hyperpage}{41}
+\indexentry{\_\_init\_\_() (picogl.backend.modern.core.vertex.array.object.VertexArrayObject method)@\spxentry{\_\_init\_\_()}\spxextra{picogl.backend.modern.core.vertex.array.object.VertexArrayObject method}|hyperpage}{41}
+\indexentry{bind() (picogl.backend.modern.core.vertex.array.object.VertexArrayObject method)@\spxentry{bind()}\spxextra{picogl.backend.modern.core.vertex.array.object.VertexArrayObject method}|hyperpage}{41}
+\indexentry{unbind() (picogl.backend.modern.core.vertex.array.object.VertexArrayObject method)@\spxentry{unbind()}\spxextra{picogl.backend.modern.core.vertex.array.object.VertexArrayObject method}|hyperpage}{41}
+\indexentry{delete() (picogl.backend.modern.core.vertex.array.object.VertexArrayObject method)@\spxentry{delete()}\spxextra{picogl.backend.modern.core.vertex.array.object.VertexArrayObject method}|hyperpage}{41}
+\indexentry{set\_layout() (picogl.backend.modern.core.vertex.array.object.VertexArrayObject method)@\spxentry{set\_layout()}\spxextra{picogl.backend.modern.core.vertex.array.object.VertexArrayObject method}|hyperpage}{41}
+\indexentry{add\_vbo\_object() (picogl.backend.modern.core.vertex.array.object.VertexArrayObject method)@\spxentry{add\_vbo\_object()}\spxextra{picogl.backend.modern.core.vertex.array.object.VertexArrayObject method}|hyperpage}{41}
+\indexentry{get\_vbo\_object() (picogl.backend.modern.core.vertex.array.object.VertexArrayObject method)@\spxentry{get\_vbo\_object()}\spxextra{picogl.backend.modern.core.vertex.array.object.VertexArrayObject method}|hyperpage}{41}
+\indexentry{add\_vbo() (picogl.backend.modern.core.vertex.array.object.VertexArrayObject method)@\spxentry{add\_vbo()}\spxextra{picogl.backend.modern.core.vertex.array.object.VertexArrayObject method}|hyperpage}{41}
+\indexentry{delete\_buffers() (picogl.backend.modern.core.vertex.array.object.VertexArrayObject method)@\spxentry{delete\_buffers()}\spxextra{picogl.backend.modern.core.vertex.array.object.VertexArrayObject method}|hyperpage}{42}
+\indexentry{add\_attribute() (picogl.backend.modern.core.vertex.array.object.VertexArrayObject method)@\spxentry{add\_attribute()}\spxextra{picogl.backend.modern.core.vertex.array.object.VertexArrayObject method}|hyperpage}{42}
+\indexentry{add\_ebo() (picogl.backend.modern.core.vertex.array.object.VertexArrayObject method)@\spxentry{add\_ebo()}\spxextra{picogl.backend.modern.core.vertex.array.object.VertexArrayObject method}|hyperpage}{42}
+\indexentry{set\_ebo() (picogl.backend.modern.core.vertex.array.object.VertexArrayObject method)@\spxentry{set\_ebo()}\spxextra{picogl.backend.modern.core.vertex.array.object.VertexArrayObject method}|hyperpage}{42}
+\indexentry{index\_count (picogl.backend.modern.core.vertex.array.object.VertexArrayObject property)@\spxentry{index\_count}\spxextra{picogl.backend.modern.core.vertex.array.object.VertexArrayObject property}|hyperpage}{42}
+\indexentry{draw() (picogl.backend.modern.core.vertex.array.object.VertexArrayObject method)@\spxentry{draw()}\spxextra{picogl.backend.modern.core.vertex.array.object.VertexArrayObject method}|hyperpage}{42}
+\indexentry{ModernEBO (class in picogl.backend.modern.core.vertex.buffer.element)@\spxentry{ModernEBO}\spxextra{class in picogl.backend.modern.core.vertex.buffer.element}|hyperpage}{43}
+\indexentry{\_\_init\_\_() (picogl.backend.modern.core.vertex.buffer.element.ModernEBO method)@\spxentry{\_\_init\_\_()}\spxextra{picogl.backend.modern.core.vertex.buffer.element.ModernEBO method}|hyperpage}{43}
+\indexentry{set\_element\_attributes() (picogl.backend.modern.core.vertex.buffer.element.ModernEBO method)@\spxentry{set\_element\_attributes()}\spxextra{picogl.backend.modern.core.vertex.buffer.element.ModernEBO method}|hyperpage}{43}
+\indexentry{configure() (picogl.backend.modern.core.vertex.buffer.element.ModernEBO method)@\spxentry{configure()}\spxextra{picogl.backend.modern.core.vertex.buffer.element.ModernEBO method}|hyperpage}{44}
+\indexentry{VertexBase (class in picogl.buffers.base)@\spxentry{VertexBase}\spxextra{class in picogl.buffers.base}|hyperpage}{44}
+\indexentry{\_\_init\_\_() (picogl.buffers.base.VertexBase method)@\spxentry{\_\_init\_\_()}\spxextra{picogl.buffers.base.VertexBase method}|hyperpage}{44}
+\indexentry{bind() (picogl.buffers.base.VertexBase method)@\spxentry{bind()}\spxextra{picogl.buffers.base.VertexBase method}|hyperpage}{44}
+\indexentry{unbind() (picogl.buffers.base.VertexBase method)@\spxentry{unbind()}\spxextra{picogl.buffers.base.VertexBase method}|hyperpage}{44}
+\indexentry{delete() (picogl.buffers.base.VertexBase method)@\spxentry{delete()}\spxextra{picogl.buffers.base.VertexBase method}|hyperpage}{44}
+\indexentry{attach\_buffers() (picogl.buffers.base.VertexBase method)@\spxentry{attach\_buffers()}\spxextra{picogl.buffers.base.VertexBase method}|hyperpage}{44}
+\indexentry{set\_layout() (picogl.buffers.base.VertexBase method)@\spxentry{set\_layout()}\spxextra{picogl.buffers.base.VertexBase method}|hyperpage}{44}
+\indexentry{LayoutDescriptor (class in picogl.buffers.factory.layout)@\spxentry{LayoutDescriptor}\spxextra{class in picogl.buffers.factory.layout}|hyperpage}{45}
+\indexentry{attributes (picogl.buffers.factory.layout.LayoutDescriptor attribute)@\spxentry{attributes}\spxextra{picogl.buffers.factory.layout.LayoutDescriptor attribute}|hyperpage}{45}
+\indexentry{\_\_init\_\_() (picogl.buffers.factory.layout.LayoutDescriptor method)@\spxentry{\_\_init\_\_()}\spxextra{picogl.buffers.factory.layout.LayoutDescriptor method}|hyperpage}{45}
+\indexentry{AttributeSpec (class in picogl.buffers.attributes)@\spxentry{AttributeSpec}\spxextra{class in picogl.buffers.attributes}|hyperpage}{45}
+\indexentry{name (picogl.buffers.attributes.AttributeSpec attribute)@\spxentry{name}\spxextra{picogl.buffers.attributes.AttributeSpec attribute}|hyperpage}{45}
+\indexentry{index (picogl.buffers.attributes.AttributeSpec attribute)@\spxentry{index}\spxextra{picogl.buffers.attributes.AttributeSpec attribute}|hyperpage}{45}
+\indexentry{size (picogl.buffers.attributes.AttributeSpec attribute)@\spxentry{size}\spxextra{picogl.buffers.attributes.AttributeSpec attribute}|hyperpage}{45}
+\indexentry{type (picogl.buffers.attributes.AttributeSpec attribute)@\spxentry{type}\spxextra{picogl.buffers.attributes.AttributeSpec attribute}|hyperpage}{45}
+\indexentry{normalized (picogl.buffers.attributes.AttributeSpec attribute)@\spxentry{normalized}\spxextra{picogl.buffers.attributes.AttributeSpec attribute}|hyperpage}{45}
+\indexentry{stride (picogl.buffers.attributes.AttributeSpec attribute)@\spxentry{stride}\spxextra{picogl.buffers.attributes.AttributeSpec attribute}|hyperpage}{45}
+\indexentry{offset (picogl.buffers.attributes.AttributeSpec attribute)@\spxentry{offset}\spxextra{picogl.buffers.attributes.AttributeSpec attribute}|hyperpage}{45}
+\indexentry{\_\_init\_\_() (picogl.buffers.attributes.AttributeSpec method)@\spxentry{\_\_init\_\_()}\spxextra{picogl.buffers.attributes.AttributeSpec method}|hyperpage}{45}
+\indexentry{ShaderProgram (class in picogl.backend.modern.core.shader.program)@\spxentry{ShaderProgram}\spxextra{class in picogl.backend.modern.core.shader.program}|hyperpage}{48}
+\indexentry{\_\_init\_\_() (picogl.backend.modern.core.shader.program.ShaderProgram method)@\spxentry{\_\_init\_\_()}\spxextra{picogl.backend.modern.core.shader.program.ShaderProgram method}|hyperpage}{48}
+\indexentry{program\_id() (picogl.backend.modern.core.shader.program.ShaderProgram method)@\spxentry{program\_id()}\spxextra{picogl.backend.modern.core.shader.program.ShaderProgram method}|hyperpage}{48}
+\indexentry{init\_shader\_from\_glsl\_files() (picogl.backend.modern.core.shader.program.ShaderProgram method)@\spxentry{init\_shader\_from\_glsl\_files()}\spxextra{picogl.backend.modern.core.shader.program.ShaderProgram method}|hyperpage}{48}
+\indexentry{init\_shader\_from\_glsl() (picogl.backend.modern.core.shader.program.ShaderProgram method)@\spxentry{init\_shader\_from\_glsl()}\spxextra{picogl.backend.modern.core.shader.program.ShaderProgram method}|hyperpage}{49}
+\indexentry{init\_shader() (picogl.backend.modern.core.shader.program.ShaderProgram method)@\spxentry{init\_shader()}\spxextra{picogl.backend.modern.core.shader.program.ShaderProgram method}|hyperpage}{49}
+\indexentry{uniform() (picogl.backend.modern.core.shader.program.ShaderProgram method)@\spxentry{uniform()}\spxextra{picogl.backend.modern.core.shader.program.ShaderProgram method}|hyperpage}{49}
+\indexentry{create\_shader\_program() (picogl.backend.modern.core.shader.program.ShaderProgram method)@\spxentry{create\_shader\_program()}\spxextra{picogl.backend.modern.core.shader.program.ShaderProgram method}|hyperpage}{49}
+\indexentry{link\_shader\_program() (picogl.backend.modern.core.shader.program.ShaderProgram method)@\spxentry{link\_shader\_program()}\spxextra{picogl.backend.modern.core.shader.program.ShaderProgram method}|hyperpage}{49}
+\indexentry{get\_uniform\_location() (picogl.backend.modern.core.shader.program.ShaderProgram method)@\spxentry{get\_uniform\_location()}\spxextra{picogl.backend.modern.core.shader.program.ShaderProgram method}|hyperpage}{49}
+\indexentry{begin() (picogl.backend.modern.core.shader.program.ShaderProgram method)@\spxentry{begin()}\spxextra{picogl.backend.modern.core.shader.program.ShaderProgram method}|hyperpage}{49}
+\indexentry{end() (picogl.backend.modern.core.shader.program.ShaderProgram method)@\spxentry{end()}\spxextra{picogl.backend.modern.core.shader.program.ShaderProgram method}|hyperpage}{49}
+\indexentry{bind() (picogl.backend.modern.core.shader.program.ShaderProgram method)@\spxentry{bind()}\spxextra{picogl.backend.modern.core.shader.program.ShaderProgram method}|hyperpage}{49}
+\indexentry{unbind() (picogl.backend.modern.core.shader.program.ShaderProgram method)@\spxentry{unbind()}\spxextra{picogl.backend.modern.core.shader.program.ShaderProgram method}|hyperpage}{49}
+\indexentry{release() (picogl.backend.modern.core.shader.program.ShaderProgram method)@\spxentry{release()}\spxextra{picogl.backend.modern.core.shader.program.ShaderProgram method}|hyperpage}{49}
+\indexentry{delete() (picogl.backend.modern.core.shader.program.ShaderProgram method)@\spxentry{delete()}\spxextra{picogl.backend.modern.core.shader.program.ShaderProgram method}|hyperpage}{49}
+\indexentry{ShaderType (class in picogl.shaders.type)@\spxentry{ShaderType}\spxextra{class in picogl.shaders.type}|hyperpage}{50}
+\indexentry{AXIS (picogl.shaders.type.ShaderType attribute)@\spxentry{AXIS}\spxextra{picogl.shaders.type.ShaderType attribute}|hyperpage}{50}
+\indexentry{ATOMS (picogl.shaders.type.ShaderType attribute)@\spxentry{ATOMS}\spxextra{picogl.shaders.type.ShaderType attribute}|hyperpage}{50}
+\indexentry{BONDS (picogl.shaders.type.ShaderType attribute)@\spxentry{BONDS}\spxextra{picogl.shaders.type.ShaderType attribute}|hyperpage}{50}
+\indexentry{DEFAULT (picogl.shaders.type.ShaderType attribute)@\spxentry{DEFAULT}\spxextra{picogl.shaders.type.ShaderType attribute}|hyperpage}{50}
+\indexentry{CALPHAS (picogl.shaders.type.ShaderType attribute)@\spxentry{CALPHAS}\spxextra{picogl.shaders.type.ShaderType attribute}|hyperpage}{50}
+\indexentry{RIBBONS (picogl.shaders.type.ShaderType attribute)@\spxentry{RIBBONS}\spxextra{picogl.shaders.type.ShaderType attribute}|hyperpage}{50}
+\indexentry{ISOSURFACE (picogl.shaders.type.ShaderType attribute)@\spxentry{ISOSURFACE}\spxextra{picogl.shaders.type.ShaderType attribute}|hyperpage}{50}
+\indexentry{get\_name() (picogl.shaders.type.ShaderType method)@\spxentry{get\_name()}\spxextra{picogl.shaders.type.ShaderType method}|hyperpage}{50}
+\indexentry{get\_display\_name() (picogl.shaders.type.ShaderType method)@\spxentry{get\_display\_name()}\spxextra{picogl.shaders.type.ShaderType method}|hyperpage}{50}
+\indexentry{vertex\_path() (picogl.shaders.type.ShaderType method)@\spxentry{vertex\_path()}\spxextra{picogl.shaders.type.ShaderType method}|hyperpage}{50}
+\indexentry{fragment\_path() (picogl.shaders.type.ShaderType method)@\spxentry{fragment\_path()}\spxextra{picogl.shaders.type.ShaderType method}|hyperpage}{50}
+\indexentry{compile\_shaders() (in module picogl.shaders.compile)@\spxentry{compile\_shaders()}\spxextra{in module picogl.shaders.compile}|hyperpage}{51}
+\indexentry{load\_fragment\_and\_vertex\_for\_shader\_type() (in module picogl.shaders.load)@\spxentry{load\_fragment\_and\_vertex\_for\_shader\_type()}\spxextra{in module picogl.shaders.load}|hyperpage}{51}
+\indexentry{ShaderUniform (class in picogl.shaders.shader\_uniform)@\spxentry{ShaderUniform}\spxextra{class in picogl.shaders.shader\_uniform}|hyperpage}{52}
+\indexentry{name (picogl.shaders.shader\_uniform.ShaderUniform attribute)@\spxentry{name}\spxextra{picogl.shaders.shader\_uniform.ShaderUniform attribute}|hyperpage}{52}
+\indexentry{location (picogl.shaders.shader\_uniform.ShaderUniform attribute)@\spxentry{location}\spxextra{picogl.shaders.shader\_uniform.ShaderUniform attribute}|hyperpage}{52}
+\indexentry{value (picogl.shaders.shader\_uniform.ShaderUniform attribute)@\spxentry{value}\spxextra{picogl.shaders.shader\_uniform.ShaderUniform attribute}|hyperpage}{52}
+\indexentry{uniform\_type (picogl.shaders.shader\_uniform.ShaderUniform attribute)@\spxentry{uniform\_type}\spxextra{picogl.shaders.shader\_uniform.ShaderUniform attribute}|hyperpage}{52}
+\indexentry{infer\_type() (picogl.shaders.shader\_uniform.ShaderUniform static method)@\spxentry{infer\_type()}\spxextra{picogl.shaders.shader\_uniform.ShaderUniform static method}|hyperpage}{52}
+\indexentry{upload() (picogl.shaders.shader\_uniform.ShaderUniform method)@\spxentry{upload()}\spxextra{picogl.shaders.shader\_uniform.ShaderUniform method}|hyperpage}{52}
+\indexentry{\_\_init\_\_() (picogl.shaders.shader\_uniform.ShaderUniform method)@\spxentry{\_\_init\_\_()}\spxextra{picogl.shaders.shader\_uniform.ShaderUniform method}|hyperpage}{52}
+\indexentry{AbstractGLWindow (class in picogl.ui.abc\_window)@\spxentry{AbstractGLWindow}\spxextra{class in picogl.ui.abc\_window}|hyperpage}{56}
+\indexentry{\_\_init\_\_() (picogl.ui.abc\_window.AbstractGLWindow method)@\spxentry{\_\_init\_\_()}\spxextra{picogl.ui.abc\_window.AbstractGLWindow method}|hyperpage}{56}
+\indexentry{initializeGL() (picogl.ui.abc\_window.AbstractGLWindow method)@\spxentry{initializeGL()}\spxextra{picogl.ui.abc\_window.AbstractGLWindow method}|hyperpage}{56}
+\indexentry{paintGL() (picogl.ui.abc\_window.AbstractGLWindow method)@\spxentry{paintGL()}\spxextra{picogl.ui.abc\_window.AbstractGLWindow method}|hyperpage}{56}
+\indexentry{resizeGL() (picogl.ui.abc\_window.AbstractGLWindow method)@\spxentry{resizeGL()}\spxextra{picogl.ui.abc\_window.AbstractGLWindow method}|hyperpage}{56}
+\indexentry{display() (picogl.ui.abc\_window.AbstractGLWindow method)@\spxentry{display()}\spxextra{picogl.ui.abc\_window.AbstractGLWindow method}|hyperpage}{56}
+\indexentry{idle() (picogl.ui.abc\_window.AbstractGLWindow method)@\spxentry{idle()}\spxextra{picogl.ui.abc\_window.AbstractGLWindow method}|hyperpage}{56}
+\indexentry{on\_keyboard() (picogl.ui.abc\_window.AbstractGLWindow method)@\spxentry{on\_keyboard()}\spxextra{picogl.ui.abc\_window.AbstractGLWindow method}|hyperpage}{57}
+\indexentry{on\_special\_key() (picogl.ui.abc\_window.AbstractGLWindow method)@\spxentry{on\_special\_key()}\spxextra{picogl.ui.abc\_window.AbstractGLWindow method}|hyperpage}{57}
+\indexentry{mousePressEvent() (picogl.ui.abc\_window.AbstractGLWindow method)@\spxentry{mousePressEvent()}\spxextra{picogl.ui.abc\_window.AbstractGLWindow method}|hyperpage}{57}
+\indexentry{mouseMoveEvent() (picogl.ui.abc\_window.AbstractGLWindow method)@\spxentry{mouseMoveEvent()}\spxextra{picogl.ui.abc\_window.AbstractGLWindow method}|hyperpage}{57}
+\indexentry{run() (picogl.ui.abc\_window.AbstractGLWindow method)@\spxentry{run()}\spxextra{picogl.ui.abc\_window.AbstractGLWindow method}|hyperpage}{57}
+\indexentry{GLWindow (class in picogl.ui.backend.glut.window.gl)@\spxentry{GLWindow}\spxextra{class in picogl.ui.backend.glut.window.gl}|hyperpage}{57}
+\indexentry{\_\_init\_\_() (picogl.ui.backend.glut.window.gl.GLWindow method)@\spxentry{\_\_init\_\_()}\spxextra{picogl.ui.backend.glut.window.gl.GLWindow method}|hyperpage}{57}
+\indexentry{init\_glut() (picogl.ui.backend.glut.window.gl.GLWindow method)@\spxentry{init\_glut()}\spxextra{picogl.ui.backend.glut.window.gl.GLWindow method}|hyperpage}{57}
+\indexentry{initializeGL() (picogl.ui.backend.glut.window.gl.GLWindow method)@\spxentry{initializeGL()}\spxextra{picogl.ui.backend.glut.window.gl.GLWindow method}|hyperpage}{57}
+\indexentry{paintGL() (picogl.ui.backend.glut.window.gl.GLWindow method)@\spxentry{paintGL()}\spxextra{picogl.ui.backend.glut.window.gl.GLWindow method}|hyperpage}{57}
+\indexentry{update() (picogl.ui.backend.glut.window.gl.GLWindow method)@\spxentry{update()}\spxextra{picogl.ui.backend.glut.window.gl.GLWindow method}|hyperpage}{57}
+\indexentry{display() (picogl.ui.backend.glut.window.gl.GLWindow method)@\spxentry{display()}\spxextra{picogl.ui.backend.glut.window.gl.GLWindow method}|hyperpage}{57}
+\indexentry{idle() (picogl.ui.backend.glut.window.gl.GLWindow method)@\spxentry{idle()}\spxextra{picogl.ui.backend.glut.window.gl.GLWindow method}|hyperpage}{57}
+\indexentry{resizeGL() (picogl.ui.backend.glut.window.gl.GLWindow method)@\spxentry{resizeGL()}\spxextra{picogl.ui.backend.glut.window.gl.GLWindow method}|hyperpage}{57}
+\indexentry{on\_keyboard() (picogl.ui.backend.glut.window.gl.GLWindow method)@\spxentry{on\_keyboard()}\spxextra{picogl.ui.backend.glut.window.gl.GLWindow method}|hyperpage}{57}
+\indexentry{on\_special\_key() (picogl.ui.backend.glut.window.gl.GLWindow method)@\spxentry{on\_special\_key()}\spxextra{picogl.ui.backend.glut.window.gl.GLWindow method}|hyperpage}{58}
+\indexentry{mousePressEvent() (picogl.ui.backend.glut.window.gl.GLWindow method)@\spxentry{mousePressEvent()}\spxextra{picogl.ui.backend.glut.window.gl.GLWindow method}|hyperpage}{58}
+\indexentry{mouseMoveEvent() (picogl.ui.backend.glut.window.gl.GLWindow method)@\spxentry{mouseMoveEvent()}\spxextra{picogl.ui.backend.glut.window.gl.GLWindow method}|hyperpage}{58}
+\indexentry{run() (picogl.ui.backend.glut.window.gl.GLWindow method)@\spxentry{run()}\spxextra{picogl.ui.backend.glut.window.gl.GLWindow method}|hyperpage}{58}
+\indexentry{GlutRendererWindow (class in picogl.ui.backend.glut.window.glut)@\spxentry{GlutRendererWindow}\spxextra{class in picogl.ui.backend.glut.window.glut}|hyperpage}{58}
+\indexentry{\_\_init\_\_() (picogl.ui.backend.glut.window.glut.GlutRendererWindow method)@\spxentry{\_\_init\_\_()}\spxextra{picogl.ui.backend.glut.window.glut.GlutRendererWindow method}|hyperpage}{58}
+\indexentry{initializeGL() (picogl.ui.backend.glut.window.glut.GlutRendererWindow method)@\spxentry{initializeGL()}\spxextra{picogl.ui.backend.glut.window.glut.GlutRendererWindow method}|hyperpage}{58}
+\indexentry{calculate\_mvp\_matrix() (picogl.ui.backend.glut.window.glut.GlutRendererWindow method)@\spxentry{calculate\_mvp\_matrix()}\spxextra{picogl.ui.backend.glut.window.glut.GlutRendererWindow method}|hyperpage}{58}
+\indexentry{resizeGL() (picogl.ui.backend.glut.window.glut.GlutRendererWindow method)@\spxentry{resizeGL()}\spxextra{picogl.ui.backend.glut.window.glut.GlutRendererWindow method}|hyperpage}{58}
+\indexentry{paintGL() (picogl.ui.backend.glut.window.glut.GlutRendererWindow method)@\spxentry{paintGL()}\spxextra{picogl.ui.backend.glut.window.glut.GlutRendererWindow method}|hyperpage}{58}
+\indexentry{update\_mvp() (picogl.ui.backend.glut.window.glut.GlutRendererWindow method)@\spxentry{update\_mvp()}\spxextra{picogl.ui.backend.glut.window.glut.GlutRendererWindow method}|hyperpage}{58}
+\indexentry{mousePressEvent() (picogl.ui.backend.glut.window.glut.GlutRendererWindow method)@\spxentry{mousePressEvent()}\spxextra{picogl.ui.backend.glut.window.glut.GlutRendererWindow method}|hyperpage}{58}
+\indexentry{mouseMoveEvent() (picogl.ui.backend.glut.window.glut.GlutRendererWindow method)@\spxentry{mouseMoveEvent()}\spxextra{picogl.ui.backend.glut.window.glut.GlutRendererWindow method}|hyperpage}{58}
+\indexentry{wheelEvent() (picogl.ui.backend.glut.window.glut.GlutRendererWindow method)@\spxentry{wheelEvent()}\spxextra{picogl.ui.backend.glut.window.glut.GlutRendererWindow method}|hyperpage}{58}
+\indexentry{get\_size() (picogl.ui.backend.glut.window.glut.GlutRendererWindow method)@\spxentry{get\_size()}\spxextra{picogl.ui.backend.glut.window.glut.GlutRendererWindow method}|hyperpage}{58}
+\indexentry{RenderWindow (class in picogl.ui.backend.glut.window.object)@\spxentry{RenderWindow}\spxextra{class in picogl.ui.backend.glut.window.object}|hyperpage}{59}
+\indexentry{\_\_init\_\_() (picogl.ui.backend.glut.window.object.RenderWindow method)@\spxentry{\_\_init\_\_()}\spxextra{picogl.ui.backend.glut.window.object.RenderWindow method}|hyperpage}{59}
+\indexentry{initialize() (picogl.ui.backend.glut.window.object.RenderWindow method)@\spxentry{initialize()}\spxextra{picogl.ui.backend.glut.window.object.RenderWindow method}|hyperpage}{59}
+\indexentry{TextureWindow (class in picogl.ui.backend.glut.window.texture)@\spxentry{TextureWindow}\spxextra{class in picogl.ui.backend.glut.window.texture}|hyperpage}{59}
+\indexentry{\_\_init\_\_() (picogl.ui.backend.glut.window.texture.TextureWindow method)@\spxentry{\_\_init\_\_()}\spxextra{picogl.ui.backend.glut.window.texture.TextureWindow method}|hyperpage}{59}
+\indexentry{ObjectLoader (class in picogl.utils.loader.object)@\spxentry{ObjectLoader}\spxextra{class in picogl.utils.loader.object}|hyperpage}{66}
+\indexentry{\_\_init\_\_() (picogl.utils.loader.object.ObjectLoader method)@\spxentry{\_\_init\_\_()}\spxextra{picogl.utils.loader.object.ObjectLoader method}|hyperpage}{66}
+\indexentry{log\_properties() (picogl.utils.loader.object.ObjectLoader method)@\spxentry{log\_properties()}\spxextra{picogl.utils.loader.object.ObjectLoader method}|hyperpage}{66}
+\indexentry{to\_array\_style() (picogl.utils.loader.object.ObjectLoader method)@\spxentry{to\_array\_style()}\spxextra{picogl.utils.loader.object.ObjectLoader method}|hyperpage}{66}
+\indexentry{to\_single\_index\_style() (picogl.utils.loader.object.ObjectLoader method)@\spxentry{to\_single\_index\_style()}\spxextra{picogl.utils.loader.object.ObjectLoader method}|hyperpage}{66}
+\indexentry{TextureLoader (class in picogl.utils.loader.texture)@\spxentry{TextureLoader}\spxextra{class in picogl.utils.loader.texture}|hyperpage}{66}
+\indexentry{\_\_init\_\_() (picogl.utils.loader.texture.TextureLoader method)@\spxentry{\_\_init\_\_()}\spxextra{picogl.utils.loader.texture.TextureLoader method}|hyperpage}{66}
+\indexentry{load\_dds() (picogl.utils.loader.texture.TextureLoader method)@\spxentry{load\_dds()}\spxextra{picogl.utils.loader.texture.TextureLoader method}|hyperpage}{66}
+\indexentry{load\_by\_pil() (picogl.utils.loader.texture.TextureLoader method)@\spxentry{load\_by\_pil()}\spxextra{picogl.utils.loader.texture.TextureLoader method}|hyperpage}{66}
+\indexentry{delete() (picogl.utils.loader.texture.TextureLoader method)@\spxentry{delete()}\spxextra{picogl.utils.loader.texture.TextureLoader method}|hyperpage}{66}
+\indexentry{execute\_gl\_tasks() (in module picogl.utils.gl\_init)@\spxentry{execute\_gl\_tasks()}\spxextra{in module picogl.utils.gl\_init}|hyperpage}{67}
+\indexentry{init\_gl\_list() (in module picogl.utils.gl\_init)@\spxentry{init\_gl\_list()}\spxextra{in module picogl.utils.gl\_init}|hyperpage}{67}
+\indexentry{paint\_gl\_list() (in module picogl.utils.gl\_init)@\spxentry{paint\_gl\_list()}\spxextra{in module picogl.utils.gl\_init}|hyperpage}{67}
+\indexentry{bind\_texture\_array() (in module picogl.utils.texture)@\spxentry{bind\_texture\_array()}\spxextra{in module picogl.utils.texture}|hyperpage}{67}

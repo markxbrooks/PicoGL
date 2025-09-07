@@ -308,16 +308,19 @@ Use Diagnostic Tools
 ~~~~~~~~~~~~~~~~~~~~
 
 **OpenGL Setup Test**:
+
 .. code-block:: bash
 
    python examples/test_opengl_setup.py
 
 **Cube Data Test**:
+
 .. code-block:: bash
 
    python examples/test_cube_data.py
 
 **Legacy Examples**:
+
 .. code-block:: bash
 
    # Try minimal examples for compatibility
@@ -328,6 +331,7 @@ Check System Information
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 **Python Information**:
+
 .. code-block:: python
 
    import sys
@@ -337,6 +341,7 @@ Check System Information
    print(f"Architecture: {platform.architecture()}")
 
 **OpenGL Information**:
+
 .. code-block:: python
 
    import OpenGL.GL as GL
@@ -345,6 +350,7 @@ Check System Information
    print(f"Renderer: {GL.glGetString(GL.GL_RENDERER)}")
 
 **Package Information**:
+
 .. code-block:: python
 
    import pkg_resources

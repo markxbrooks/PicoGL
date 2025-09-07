@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Examples &#8212; PicoGL 1.0.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b3523f8e" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=039e1c02" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=af2ce170"></script>
-    <script src="_static/doctools.js?v=888ff710"></script>
-    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=8d563738"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Legacy Examples" href="legacy_examples.html" />
@@ -18,8 +19,9 @@
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
+
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  
 
   </head><body>
   
@@ -32,17 +34,17 @@
           <div class="body" role="main">
             
   <section id="examples">
-<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">¶</a></h1>
+<h1>Examples<a class="headerlink" href="#examples" title="Link to this heading">¶</a></h1>
 <p>PicoGL comes with a comprehensive set of examples demonstrating various features and use cases. This section provides an overview of all available examples and how to run them.</p>
 <section id="basic-examples">
-<h2>Basic Examples<a class="headerlink" href="#basic-examples" title="Permalink to this heading">¶</a></h2>
+<h2>Basic Examples<a class="headerlink" href="#basic-examples" title="Link to this heading">¶</a></h2>
 <section id="cube-example">
-<h3>Cube Example<a class="headerlink" href="#cube-example" title="Permalink to this heading">¶</a></h3>
+<h3>Cube Example<a class="headerlink" href="#cube-example" title="Link to this heading">¶</a></h3>
 <p><strong>File</strong>: <code class="docutils literal notranslate"><span class="pre">examples/cube.py</span></code></p>
 <p>A simple colored cube demonstrating basic mesh rendering.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">picogl.renderer</span> <span class="kn">import</span> <span class="n">MeshData</span>
-<span class="kn">from</span> <span class="nn">picogl.ui.backend.glut.window.object</span> <span class="kn">import</span> <span class="n">RenderWindow</span>
-<span class="kn">from</span> <span class="nn">examples.data.cube_data</span> <span class="kn">import</span> <span class="n">g_vertex_buffer_data</span><span class="p">,</span> <span class="n">g_color_buffer_data</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">picogl.renderer</span><span class="w"> </span><span class="kn">import</span> <span class="n">MeshData</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">picogl.ui.backend.glut.window.object</span><span class="w"> </span><span class="kn">import</span> <span class="n">RenderWindow</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">examples.data.cube_data</span><span class="w"> </span><span class="kn">import</span> <span class="n">g_vertex_buffer_data</span><span class="p">,</span> <span class="n">g_color_buffer_data</span>
 
 <span class="n">data</span> <span class="o">=</span> <span class="n">MeshData</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">vertices</span><span class="o">=</span><span class="n">g_vertex_buffer_data</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="n">g_color_buffer_data</span><span class="p">)</span>
 <span class="n">window</span> <span class="o">=</span> <span class="n">RenderWindow</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Cube&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
@@ -55,19 +57,18 @@
 * Per-vertex coloring
 * Interactive rotation and zoom
 * Modern OpenGL 3.3+ shaders</p>
-<p><strong>Run</strong>:
-.. code-block:: bash</p>
-<blockquote>
-<div><p>python examples/cube.py</p>
-</div></blockquote>
+<p><strong>Run</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/cube.py
+</pre></div>
+</div>
 </section>
 <section id="teapot-example">
-<h3>Teapot Example<a class="headerlink" href="#teapot-example" title="Permalink to this heading">¶</a></h3>
+<h3>Teapot Example<a class="headerlink" href="#teapot-example" title="Link to this heading">¶</a></h3>
 <p><strong>File</strong>: <code class="docutils literal notranslate"><span class="pre">examples/teapot.py</span></code></p>
 <p>A 3D teapot model with lighting and shading.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">picogl.renderer</span> <span class="kn">import</span> <span class="n">MeshData</span>
-<span class="kn">from</span> <span class="nn">picogl.ui.backend.glut.window.object</span> <span class="kn">import</span> <span class="n">RenderWindow</span>
-<span class="kn">from</span> <span class="nn">picogl.utils.loader.object</span> <span class="kn">import</span> <span class="n">ObjectLoader</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">picogl.renderer</span><span class="w"> </span><span class="kn">import</span> <span class="n">MeshData</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">picogl.ui.backend.glut.window.object</span><span class="w"> </span><span class="kn">import</span> <span class="n">RenderWindow</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">picogl.utils.loader.object</span><span class="w"> </span><span class="kn">import</span> <span class="n">ObjectLoader</span>
 
 <span class="c1"># Load teapot data</span>
 <span class="n">obj_loader</span> <span class="o">=</span> <span class="n">ObjectLoader</span><span class="p">(</span><span class="s2">&quot;data/teapot.obj&quot;</span><span class="p">)</span>
@@ -89,18 +90,17 @@
 * Surface normals for lighting
 * Phong shading
 * Interactive controls</p>
-<p><strong>Run</strong>:
-.. code-block:: bash</p>
-<blockquote>
-<div><p>python examples/teapot.py</p>
-</div></blockquote>
+<p><strong>Run</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/teapot.py
+</pre></div>
+</div>
 </section>
 </section>
 <section id="legacy-examples">
-<h2>Legacy Examples<a class="headerlink" href="#legacy-examples" title="Permalink to this heading">¶</a></h2>
+<h2>Legacy Examples<a class="headerlink" href="#legacy-examples" title="Link to this heading">¶</a></h2>
 <p>For systems with limited OpenGL support (older macOS, etc.), use the legacy examples:</p>
 <section id="legacy-cube-minimal">
-<h3>Legacy Cube (Minimal)<a class="headerlink" href="#legacy-cube-minimal" title="Permalink to this heading">¶</a></h3>
+<h3>Legacy Cube (Minimal)<a class="headerlink" href="#legacy-cube-minimal" title="Link to this heading">¶</a></h3>
 <p><strong>File</strong>: <code class="docutils literal notranslate"><span class="pre">examples/legacy_cube_minimal.py</span></code></p>
 <p>Maximum compatibility cube renderer using only PyOpenGL.</p>
 <p><strong>Features</strong>:
@@ -108,14 +108,13 @@
 * No external dependencies beyond PyOpenGL
 * Works on any system with basic OpenGL support
 * Same visual appearance as modern version</p>
-<p><strong>Run</strong>:
-.. code-block:: bash</p>
-<blockquote>
-<div><p>python examples/legacy_cube_minimal.py</p>
-</div></blockquote>
+<p><strong>Run</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/legacy_cube_minimal.py
+</pre></div>
+</div>
 </section>
 <section id="legacy-cube-fixed">
-<h3>Legacy Cube (Fixed)<a class="headerlink" href="#legacy-cube-fixed" title="Permalink to this heading">¶</a></h3>
+<h3>Legacy Cube (Fixed)<a class="headerlink" href="#legacy-cube-fixed" title="Link to this heading">¶</a></h3>
 <p><strong>File</strong>: <code class="docutils literal notranslate"><span class="pre">examples/legacy_cube_fixed.py</span></code></p>
 <p>PicoGL-integrated legacy cube using LegacyGLMesh.</p>
 <p><strong>Features</strong>:
@@ -123,14 +122,13 @@
 * Uses PicoGL LegacyGLMesh
 * Falls back to wireframe if mesh loading fails
 * Better integration with PicoGL ecosystem</p>
-<p><strong>Run</strong>:
-.. code-block:: bash</p>
-<blockquote>
-<div><p>python examples/legacy_cube_fixed.py</p>
-</div></blockquote>
+<p><strong>Run</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/legacy_cube_fixed.py
+</pre></div>
+</div>
 </section>
 <section id="legacy-teapot-minimal">
-<h3>Legacy Teapot (Minimal)<a class="headerlink" href="#legacy-teapot-minimal" title="Permalink to this heading">¶</a></h3>
+<h3>Legacy Teapot (Minimal)<a class="headerlink" href="#legacy-teapot-minimal" title="Link to this heading">¶</a></h3>
 <p><strong>File</strong>: <code class="docutils literal notranslate"><span class="pre">examples/legacy_teapot_minimal.py</span></code></p>
 <p>Maximum compatibility teapot using built-in OpenGL primitives.</p>
 <p><strong>Features</strong>:
@@ -138,14 +136,13 @@
 * No external files required
 * Maximum compatibility
 * Interactive controls</p>
-<p><strong>Run</strong>:
-.. code-block:: bash</p>
-<blockquote>
-<div><p>python examples/legacy_teapot_minimal.py</p>
-</div></blockquote>
+<p><strong>Run</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/legacy_teapot_minimal.py
+</pre></div>
+</div>
 </section>
 <section id="legacy-teapot-fixed">
-<h3>Legacy Teapot (Fixed)<a class="headerlink" href="#legacy-teapot-fixed" title="Permalink to this heading">¶</a></h3>
+<h3>Legacy Teapot (Fixed)<a class="headerlink" href="#legacy-teapot-fixed" title="Link to this heading">¶</a></h3>
 <p><strong>File</strong>: <code class="docutils literal notranslate"><span class="pre">examples/legacy_teapot_fixed.py</span></code></p>
 <p>PicoGL-integrated legacy teapot with OBJ file support.</p>
 <p><strong>Features</strong>:
@@ -153,17 +150,16 @@
 * Uses LegacyGLMesh for rendering
 * Falls back to wireframe teapot if OBJ loading fails
 * Full PicoGL integration</p>
-<p><strong>Run</strong>:
-.. code-block:: bash</p>
-<blockquote>
-<div><p>python examples/legacy_teapot_fixed.py</p>
-</div></blockquote>
+<p><strong>Run</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/legacy_teapot_fixed.py
+</pre></div>
+</div>
 </section>
 </section>
 <section id="advanced-examples">
-<h2>Advanced Examples<a class="headerlink" href="#advanced-examples" title="Permalink to this heading">¶</a></h2>
+<h2>Advanced Examples<a class="headerlink" href="#advanced-examples" title="Link to this heading">¶</a></h2>
 <section id="molecular-visualization">
-<h3>Molecular Visualization<a class="headerlink" href="#molecular-visualization" title="Permalink to this heading">¶</a></h3>
+<h3>Molecular Visualization<a class="headerlink" href="#molecular-visualization" title="Link to this heading">¶</a></h3>
 <p><strong>File</strong>: <code class="docutils literal notranslate"><span class="pre">examples/molecular_viewer.py</span></code></p>
 <p>Complex molecular visualization with atom and bond rendering.</p>
 <p><strong>Features</strong>:
@@ -172,14 +168,13 @@
 * Multiple rendering modes
 * Interactive controls
 * Scientific visualization</p>
-<p><strong>Run</strong>:
-.. code-block:: bash</p>
-<blockquote>
-<div><p>python examples/molecular_viewer.py</p>
-</div></blockquote>
+<p><strong>Run</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/molecular_viewer.py
+</pre></div>
+</div>
 </section>
 <section id="texture-examples">
-<h3>Texture Examples<a class="headerlink" href="#texture-examples" title="Permalink to this heading">¶</a></h3>
+<h3>Texture Examples<a class="headerlink" href="#texture-examples" title="Link to this heading">¶</a></h3>
 <p><strong>File</strong>: <code class="docutils literal notranslate"><span class="pre">examples/texture.py</span></code></p>
 <p>Demonstrates texture mapping and UV coordinates.</p>
 <p><strong>Features</strong>:
@@ -187,14 +182,13 @@
 * UV coordinate mapping
 * Multiple texture formats
 * Texture filtering and wrapping</p>
-<p><strong>Run</strong>:
-.. code-block:: bash</p>
-<blockquote>
-<div><p>python examples/texture.py</p>
-</div></blockquote>
+<p><strong>Run</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/texture.py
+</pre></div>
+</div>
 </section>
 <section id="shader-examples">
-<h3>Shader Examples<a class="headerlink" href="#shader-examples" title="Permalink to this heading">¶</a></h3>
+<h3>Shader Examples<a class="headerlink" href="#shader-examples" title="Link to this heading">¶</a></h3>
 <p><strong>Directory</strong>: <code class="docutils literal notranslate"><span class="pre">examples/glsl/</span></code></p>
 <p>Various shader examples demonstrating different rendering techniques:</p>
 <ul class="simple">
@@ -206,20 +200,19 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">tu09/</span></code> - Text rendering</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">tu10/</span></code> - Normal mapping</p></li>
 </ul>
-<p><strong>Run</strong>:
-.. code-block:: bash</p>
-<blockquote>
-<div><p># Run specific shader example
-python examples/tu_01_color_cube.py
-python examples/tu_02_texture_without_normal.py
-python examples/tu_04_lighting.py</p>
-</div></blockquote>
+<p><strong>Run</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run specific shader example</span>
+python<span class="w"> </span>examples/tu_01_color_cube.py
+python<span class="w"> </span>examples/tu_02_texture_without_normal.py
+python<span class="w"> </span>examples/tu_04_lighting.py
+</pre></div>
+</div>
 </section>
 </section>
 <section id="utility-examples">
-<h2>Utility Examples<a class="headerlink" href="#utility-examples" title="Permalink to this heading">¶</a></h2>
+<h2>Utility Examples<a class="headerlink" href="#utility-examples" title="Link to this heading">¶</a></h2>
 <section id="mesh-viewer">
-<h3>Mesh Viewer<a class="headerlink" href="#mesh-viewer" title="Permalink to this heading">¶</a></h3>
+<h3>Mesh Viewer<a class="headerlink" href="#mesh-viewer" title="Link to this heading">¶</a></h3>
 <p><strong>File</strong>: <code class="docutils literal notranslate"><span class="pre">examples/utils/meshViewer.py</span></code></p>
 <p>Generic mesh viewer for OBJ files.</p>
 <p><strong>Features</strong>:
@@ -227,14 +220,13 @@ python examples/tu_04_lighting.py</p>
 * Interactive viewing
 * Multiple rendering modes
 * Export capabilities</p>
-<p><strong>Run</strong>:
-.. code-block:: bash</p>
-<blockquote>
-<div><p>python examples/utils/meshViewer.py path/to/model.obj</p>
-</div></blockquote>
+<p><strong>Run</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/utils/meshViewer.py<span class="w"> </span>path/to/model.obj
+</pre></div>
+</div>
 </section>
 <section id="test-window">
-<h3>Test Window<a class="headerlink" href="#test-window" title="Permalink to this heading">¶</a></h3>
+<h3>Test Window<a class="headerlink" href="#test-window" title="Link to this heading">¶</a></h3>
 <p><strong>File</strong>: <code class="docutils literal notranslate"><span class="pre">examples/utils/test_window.py</span></code></p>
 <p>Simple test window for debugging.</p>
 <p><strong>Features</strong>:
@@ -242,17 +234,16 @@ python examples/tu_04_lighting.py</p>
 * Simple rendering
 * Debug information
 * Error reporting</p>
-<p><strong>Run</strong>:
-.. code-block:: bash</p>
-<blockquote>
-<div><p>python examples/utils/test_window.py</p>
-</div></blockquote>
+<p><strong>Run</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/utils/test_window.py
+</pre></div>
+</div>
 </section>
 </section>
 <section id="running-examples">
-<h2>Running Examples<a class="headerlink" href="#running-examples" title="Permalink to this heading">¶</a></h2>
+<h2>Running Examples<a class="headerlink" href="#running-examples" title="Link to this heading">¶</a></h2>
 <section id="prerequisites">
-<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">¶</a></h3>
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">¶</a></h3>
 <p>Before running examples, ensure you have:</p>
 <ol class="arabic simple">
 <li><p><strong>PicoGL installed</strong> (see <a class="reference internal" href="installation.html"><span class="doc">Installation</span></a>)</p></li>
@@ -265,7 +256,7 @@ python examples/tu_04_lighting.py</p>
 </ol>
 </section>
 <section id="basic-usage">
-<h3>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this heading">¶</a></h3>
+<h3>Basic Usage<a class="headerlink" href="#basic-usage" title="Link to this heading">¶</a></h3>
 <p>Most examples can be run directly:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Navigate to the examples directory</span>
 <span class="nb">cd</span><span class="w"> </span>examples
@@ -279,7 +270,7 @@ python<span class="w"> </span>legacy_cube_minimal.py
 </div>
 </section>
 <section id="interactive-controls">
-<h3>Interactive Controls<a class="headerlink" href="#interactive-controls" title="Permalink to this heading">¶</a></h3>
+<h3>Interactive Controls<a class="headerlink" href="#interactive-controls" title="Link to this heading">¶</a></h3>
 <p>Most examples support these controls:</p>
 <ul class="simple">
 <li><p><strong>Mouse drag</strong>: Rotate the view</p></li>
@@ -298,9 +289,9 @@ python<span class="w"> </span>legacy_cube_minimal.py
 </section>
 </section>
 <section id="troubleshooting-examples">
-<h2>Troubleshooting Examples<a class="headerlink" href="#troubleshooting-examples" title="Permalink to this heading">¶</a></h2>
+<h2>Troubleshooting Examples<a class="headerlink" href="#troubleshooting-examples" title="Link to this heading">¶</a></h2>
 <section id="common-issues">
-<h3>Common Issues<a class="headerlink" href="#common-issues" title="Permalink to this heading">¶</a></h3>
+<h3>Common Issues<a class="headerlink" href="#common-issues" title="Link to this heading">¶</a></h3>
 <dl class="simple">
 <dt><strong>“No OpenGL context” error</strong></dt><dd><ul class="simple">
 <li><p>Try legacy examples instead</p></li>
@@ -333,9 +324,9 @@ python<span class="w"> </span>legacy_cube_minimal.py
 </dl>
 </section>
 <section id="platform-specific-issues">
-<h3>Platform-Specific Issues<a class="headerlink" href="#platform-specific-issues" title="Permalink to this heading">¶</a></h3>
+<h3>Platform-Specific Issues<a class="headerlink" href="#platform-specific-issues" title="Link to this heading">¶</a></h3>
 <section id="macos">
-<h4>macOS<a class="headerlink" href="#macos" title="Permalink to this heading">¶</a></h4>
+<h4>macOS<a class="headerlink" href="#macos" title="Link to this heading">¶</a></h4>
 <dl class="simple">
 <dt><strong>Segmentation fault</strong></dt><dd><ul class="simple">
 <li><p>Run from Terminal.app or iTerm2</p></li>
@@ -351,7 +342,7 @@ python<span class="w"> </span>legacy_cube_minimal.py
 </dl>
 </section>
 <section id="windows">
-<h4>Windows<a class="headerlink" href="#windows" title="Permalink to this heading">¶</a></h4>
+<h4>Windows<a class="headerlink" href="#windows" title="Link to this heading">¶</a></h4>
 <dl class="simple">
 <dt><strong>“DLL load failed” error</strong></dt><dd><ul class="simple">
 <li><p>Install Visual C++ Redistributable</p></li>
@@ -366,7 +357,7 @@ python<span class="w"> </span>legacy_cube_minimal.py
 </dl>
 </section>
 <section id="linux">
-<h4>Linux<a class="headerlink" href="#linux" title="Permalink to this heading">¶</a></h4>
+<h4>Linux<a class="headerlink" href="#linux" title="Link to this heading">¶</a></h4>
 <dl class="simple">
 <dt><strong>“No display available” error</strong></dt><dd><ul class="simple">
 <li><p>Ensure X11 or Wayland is running</p></li>
@@ -383,7 +374,7 @@ python<span class="w"> </span>legacy_cube_minimal.py
 </section>
 </section>
 <section id="example-selection-guide">
-<h2>Example Selection Guide<a class="headerlink" href="#example-selection-guide" title="Permalink to this heading">¶</a></h2>
+<h2>Example Selection Guide<a class="headerlink" href="#example-selection-guide" title="Link to this heading">¶</a></h2>
 <p>Choose the right example for your needs:</p>
 <dl class="simple">
 <dt><strong>Learning OpenGL basics</strong></dt><dd><ul class="simple">
@@ -414,7 +405,7 @@ python<span class="w"> </span>legacy_cube_minimal.py
 </dl>
 </section>
 <section id="customizing-examples">
-<h2>Customizing Examples<a class="headerlink" href="#customizing-examples" title="Permalink to this heading">¶</a></h2>
+<h2>Customizing Examples<a class="headerlink" href="#customizing-examples" title="Link to this heading">¶</a></h2>
 <p>You can modify examples to suit your needs:</p>
 <ol class="arabic simple">
 <li><p><strong>Change colors</strong>: Modify the color arrays</p></li>
@@ -426,7 +417,7 @@ python<span class="w"> </span>legacy_cube_minimal.py
 <p>For more information, see the <a class="reference internal" href="api/renderer.html"><span class="doc">Renderer API</span></a> documentation.</p>
 </section>
 <section id="contributing-examples">
-<h2>Contributing Examples<a class="headerlink" href="#contributing-examples" title="Permalink to this heading">¶</a></h2>
+<h2>Contributing Examples<a class="headerlink" href="#contributing-examples" title="Link to this heading">¶</a></h2>
 <p>We welcome contributions of new examples! When contributing:</p>
 <ol class="arabic simple">
 <li><p><strong>Follow the existing style</strong> and structure</p></li>
@@ -444,7 +435,7 @@ python<span class="w"> </span>legacy_cube_minimal.py
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="index.html">PicoGL</a></h1>
 
@@ -455,7 +446,16 @@ python<span class="w"> </span>legacy_cube_minimal.py
 
 
 
-<h3>Navigation</h3>
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
@@ -500,16 +500,6 @@ python<span class="w"> </span>legacy_cube_minimal.py
   </ul></li>
 </ul>
 </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -523,11 +513,11 @@ python<span class="w"> </span>legacy_cube_minimal.py
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2025, PicoGL Contributors.
+      &#169;2025, PicoGL Contributors.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |
       <a href="_sources/examples.rst.txt"

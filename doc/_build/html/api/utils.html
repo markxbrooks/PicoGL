@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Utils API &#8212; PicoGL 1.0.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b3523f8e" />
-    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=039e1c02" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=af2ce170"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <script src="../_static/documentation_options.js?v=8d563738"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Development" href="../development.html" />
@@ -18,8 +19,9 @@
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
+
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  
 
   </head><body>
   
@@ -32,37 +34,37 @@
           <div class="body" role="main">
             
   <section id="utils-api">
-<h1>Utils API<a class="headerlink" href="#utils-api" title="Permalink to this heading">¶</a></h1>
+<h1>Utils API<a class="headerlink" href="#utils-api" title="Link to this heading">¶</a></h1>
 <p>The utils module provides utility functionality for PicoGL, including data loading, texture management, and helper functions.</p>
 <section id="core-classes">
-<h2>Core Classes<a class="headerlink" href="#core-classes" title="Permalink to this heading">¶</a></h2>
+<h2>Core Classes<a class="headerlink" href="#core-classes" title="Link to this heading">¶</a></h2>
 <section id="objectloader">
-<h3>ObjectLoader<a class="headerlink" href="#objectloader" title="Permalink to this heading">¶</a></h3>
+<h3>ObjectLoader<a class="headerlink" href="#objectloader" title="Link to this heading">¶</a></h3>
 <dl class="py class">
 <dt class="sig sig-object py" id="picogl.utils.loader.object.ObjectLoader">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">picogl.utils.loader.object.</span></span><span class="sig-name descname"><span class="pre">ObjectLoader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/utils/loader/object.html#ObjectLoader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.utils.loader.object.ObjectLoader" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">picogl.utils.loader.object.</span></span><span class="sig-name descname"><span class="pre">ObjectLoader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/utils/loader/object.html#ObjectLoader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.utils.loader.object.ObjectLoader" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Object Loader Class</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="picogl.utils.loader.object.ObjectLoader.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/utils/loader/object.html#ObjectLoader.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.utils.loader.object.ObjectLoader.__init__" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/utils/loader/object.html#ObjectLoader.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.utils.loader.object.ObjectLoader.__init__" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="picogl.utils.loader.object.ObjectLoader.log_properties">
-<span class="sig-name descname"><span class="pre">log_properties</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/utils/loader/object.html#ObjectLoader.log_properties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.utils.loader.object.ObjectLoader.log_properties" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">log_properties</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/utils/loader/object.html#ObjectLoader.log_properties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.utils.loader.object.ObjectLoader.log_properties" title="Link to this definition">¶</a></dt>
 <dd><p>log object properties</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="picogl.utils.loader.object.ObjectLoader.to_array_style">
-<span class="sig-name descname"><span class="pre">to_array_style</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ObjectData</span></span></span><a class="reference internal" href="../_modules/picogl/utils/loader/object.html#ObjectLoader.to_array_style"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.utils.loader.object.ObjectLoader.to_array_style" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">to_array_style</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ObjectData</span></span></span><a class="reference internal" href="../_modules/picogl/utils/loader/object.html#ObjectLoader.to_array_style"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.utils.loader.object.ObjectLoader.to_array_style" title="Link to this definition">¶</a></dt>
 <dd><p>Convert to array-style where each vertex attribute is stored separately</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="picogl.utils.loader.object.ObjectLoader.to_single_index_style">
-<span class="sig-name descname"><span class="pre">to_single_index_style</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ObjectData</span></span></span><a class="reference internal" href="../_modules/picogl/utils/loader/object.html#ObjectLoader.to_single_index_style"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.utils.loader.object.ObjectLoader.to_single_index_style" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">to_single_index_style</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ObjectData</span></span></span><a class="reference internal" href="../_modules/picogl/utils/loader/object.html#ObjectLoader.to_single_index_style"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.utils.loader.object.ObjectLoader.to_single_index_style" title="Link to this definition">¶</a></dt>
 <dd><p>Convert to single-index style where each unique vertex attribute combination is stored once</p>
 </dd></dl>
 
@@ -88,34 +90,35 @@ colors=data.colors</p>
 </div></blockquote>
 </section>
 <section id="textureloader">
-<h3>TextureLoader<a class="headerlink" href="#textureloader" title="Permalink to this heading">¶</a></h3>
+<h3>TextureLoader<a class="headerlink" href="#textureloader" title="Link to this heading">¶</a></h3>
 <dl class="py class">
 <dt class="sig sig-object py" id="picogl.utils.loader.texture.TextureLoader">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">picogl.utils.loader.texture.</span></span><span class="sig-name descname"><span class="pre">TextureLoader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'RGB'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/utils/loader/texture.html#TextureLoader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.utils.loader.texture.TextureLoader" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">picogl.utils.loader.texture.</span></span><span class="sig-name descname"><span class="pre">TextureLoader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'RGB'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/utils/loader/texture.html#TextureLoader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.utils.loader.texture.TextureLoader" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Loads a 2D texture from a DDS file or a standard image file using PIL.
 Automatically creates an OpenGL texture ID.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="picogl.utils.loader.texture.TextureLoader.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'RGB'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/picogl/utils/loader/texture.html#TextureLoader.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.utils.loader.texture.TextureLoader.__init__" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'RGB'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/picogl/utils/loader/texture.html#TextureLoader.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.utils.loader.texture.TextureLoader.__init__" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="picogl.utils.loader.texture.TextureLoader.load_dds">
-<span class="sig-name descname"><span class="pre">load_dds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/picogl/utils/loader/texture.html#TextureLoader.load_dds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.utils.loader.texture.TextureLoader.load_dds" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">load_dds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/picogl/utils/loader/texture.html#TextureLoader.load_dds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.utils.loader.texture.TextureLoader.load_dds" title="Link to this definition">¶</a></dt>
 <dd><p>Load a DDS texture from file.
-Supports DXT1, DXT3, DXT5 compressed textures.</p>
+Supports DXT1, DXT3, DXT5 compressed textures.
+Falls back to PIL loading if compressed texture loading fails.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="picogl.utils.loader.texture.TextureLoader.load_by_pil">
-<span class="sig-name descname"><span class="pre">load_by_pil</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/picogl/utils/loader/texture.html#TextureLoader.load_by_pil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.utils.loader.texture.TextureLoader.load_by_pil" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">load_by_pil</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/picogl/utils/loader/texture.html#TextureLoader.load_by_pil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.utils.loader.texture.TextureLoader.load_by_pil" title="Link to this definition">¶</a></dt>
 <dd><p>Load a standard image using PIL and upload as OpenGL texture.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="picogl.utils.loader.texture.TextureLoader.delete">
-<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/picogl/utils/loader/texture.html#TextureLoader.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.utils.loader.texture.TextureLoader.delete" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/picogl/utils/loader/texture.html#TextureLoader.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.utils.loader.texture.TextureLoader.delete" title="Link to this definition">¶</a></dt>
 <dd><p>Deletes the OpenGL texture to free GPU memory.</p>
 </dd></dl>
 
@@ -136,12 +139,12 @@ texture.bind()
 </section>
 </section>
 <section id="helper-functions">
-<h2>Helper Functions<a class="headerlink" href="#helper-functions" title="Permalink to this heading">¶</a></h2>
+<h2>Helper Functions<a class="headerlink" href="#helper-functions" title="Link to this heading">¶</a></h2>
 <section id="gl-initialization">
-<h3>GL Initialization<a class="headerlink" href="#gl-initialization" title="Permalink to this heading">¶</a></h3>
+<h3>GL Initialization<a class="headerlink" href="#gl-initialization" title="Link to this heading">¶</a></h3>
 <dl class="py function">
 <dt class="sig sig-object py" id="picogl.utils.gl_init.execute_gl_tasks">
-<span class="sig-prename descclassname"><span class="pre">picogl.utils.gl_init.</span></span><span class="sig-name descname"><span class="pre">execute_gl_tasks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><span class="pre">Callable</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/utils/gl_init.html#execute_gl_tasks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.utils.gl_init.execute_gl_tasks" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">picogl.utils.gl_init.</span></span><span class="sig-name descname"><span class="pre">execute_gl_tasks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><span class="pre">Callable</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/utils/gl_init.html#execute_gl_tasks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.utils.gl_init.execute_gl_tasks" title="Link to this definition">¶</a></dt>
 <dd><p>Execute a sequence of OpenGL-related tasks.</p>
 <p>Each task is a tuple <code class="docutils literal notranslate"><span class="pre">(message,</span> <span class="pre">func)</span></code>:
 - <code class="docutils literal notranslate"><span class="pre">message</span></code> (<em>str</em> or <code class="docutils literal notranslate"><span class="pre">None</span></code>): If a string, it is logged before running the task.</p>
@@ -174,7 +177,7 @@ execute_gl_tasks(init_gl_list)</p>
 </div></blockquote>
 <dl class="py function">
 <dt class="sig sig-object py" id="picogl.utils.gl_init.init_gl_list">
-<span class="sig-prename descclassname"><span class="pre">picogl.utils.gl_init.</span></span><span class="sig-name descname"><span class="pre">init_gl_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#picogl.utils.gl_init.init_gl_list" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">picogl.utils.gl_init.</span></span><span class="sig-name descname"><span class="pre">init_gl_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#picogl.utils.gl_init.init_gl_list" title="Link to this definition">¶</a></dt>
 <dd><p>Built-in mutable sequence.</p>
 <p>If no argument is given, the constructor creates a new empty list.
 The argument must be an iterable if specified.</p>
@@ -191,7 +194,7 @@ execute_gl_tasks(tasks)</p>
 </div></blockquote>
 <dl class="py function">
 <dt class="sig sig-object py" id="picogl.utils.gl_init.paint_gl_list">
-<span class="sig-prename descclassname"><span class="pre">picogl.utils.gl_init.</span></span><span class="sig-name descname"><span class="pre">paint_gl_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#picogl.utils.gl_init.paint_gl_list" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">picogl.utils.gl_init.</span></span><span class="sig-name descname"><span class="pre">paint_gl_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#picogl.utils.gl_init.paint_gl_list" title="Link to this definition">¶</a></dt>
 <dd><p>Built-in mutable sequence.</p>
 <p>If no argument is given, the constructor creates a new empty list.
 The argument must be an iterable if specified.</p>
@@ -208,13 +211,13 @@ execute_gl_tasks(tasks)</p>
 </div></blockquote>
 </section>
 <section id="texture-utilities">
-<h3>Texture Utilities<a class="headerlink" href="#texture-utilities" title="Permalink to this heading">¶</a></h3>
+<h3>Texture Utilities<a class="headerlink" href="#texture-utilities" title="Link to this heading">¶</a></h3>
 <dl class="py function">
 <dt class="sig sig-object py" id="picogl.utils.texture.bind_texture_array">
-<span class="sig-prename descclassname"><span class="pre">picogl.utils.texture.</span></span><span class="sig-name descname"><span class="pre">bind_texture_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">texture_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/utils/texture.html#bind_texture_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.utils.texture.bind_texture_array" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">picogl.utils.texture.</span></span><span class="sig-name descname"><span class="pre">bind_texture_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">texture_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/picogl/utils/texture.html#bind_texture_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.utils.texture.bind_texture_array" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>texture_id</strong> – </p>
+<dd class="field-odd"><p><strong>texture_id</strong></p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -232,7 +235,7 @@ bind_texture_array(texture_id, 0)</p>
 </div></blockquote>
 </section>
 <section id="normal-generation">
-<h3>Normal Generation<a class="headerlink" href="#normal-generation" title="Permalink to this heading">¶</a></h3>
+<h3>Normal Generation<a class="headerlink" href="#normal-generation" title="Link to this heading">¶</a></h3>
 <p>Generates surface normals for a mesh.</p>
 <p><strong>Example</strong>:
 .. code-block:: python</p>
@@ -243,7 +246,7 @@ normals = generate_normals(vertices, faces)</p>
 </div></blockquote>
 </section>
 <section id="reshape-utilities">
-<h3>Reshape Utilities<a class="headerlink" href="#reshape-utilities" title="Permalink to this heading">¶</a></h3>
+<h3>Reshape Utilities<a class="headerlink" href="#reshape-utilities" title="Link to this heading">¶</a></h3>
 <p>Handles window resize events.</p>
 <p><strong>Example</strong>:
 .. code-block:: python</p>
@@ -255,9 +258,9 @@ handle_resize(width, height)</p>
 </section>
 </section>
 <section id="data-loading">
-<h2>Data Loading<a class="headerlink" href="#data-loading" title="Permalink to this heading">¶</a></h2>
+<h2>Data Loading<a class="headerlink" href="#data-loading" title="Link to this heading">¶</a></h2>
 <section id="obj-file-loading">
-<h3>OBJ File Loading<a class="headerlink" href="#obj-file-loading" title="Permalink to this heading">¶</a></h3>
+<h3>OBJ File Loading<a class="headerlink" href="#obj-file-loading" title="Link to this heading">¶</a></h3>
 <p><strong>Basic Loading</strong>:
 .. code-block:: python</p>
 <blockquote>
@@ -302,7 +305,7 @@ data = loader.to_array_style()</p>
 </div></blockquote>
 </section>
 <section id="texture-loading">
-<h3>Texture Loading<a class="headerlink" href="#texture-loading" title="Permalink to this heading">¶</a></h3>
+<h3>Texture Loading<a class="headerlink" href="#texture-loading" title="Link to this heading">¶</a></h3>
 <p><strong>Basic Loading</strong>:
 .. code-block:: python</p>
 <blockquote>
@@ -345,9 +348,9 @@ texture = loader.load()</p>
 </section>
 </section>
 <section id="data-processing">
-<h2>Data Processing<a class="headerlink" href="#data-processing" title="Permalink to this heading">¶</a></h2>
+<h2>Data Processing<a class="headerlink" href="#data-processing" title="Link to this heading">¶</a></h2>
 <section id="mesh-data-processing">
-<h3>Mesh Data Processing<a class="headerlink" href="#mesh-data-processing" title="Permalink to this heading">¶</a></h3>
+<h3>Mesh Data Processing<a class="headerlink" href="#mesh-data-processing" title="Link to this heading">¶</a></h3>
 <p><strong>Vertex Processing</strong>:
 .. code-block:: python</p>
 <blockquote>
@@ -382,7 +385,7 @@ colors = np.random.rand(len(vertices), 3)</p>
 </div></blockquote>
 </section>
 <section id="texture-processing">
-<h3>Texture Processing<a class="headerlink" href="#texture-processing" title="Permalink to this heading">¶</a></h3>
+<h3>Texture Processing<a class="headerlink" href="#texture-processing" title="Link to this heading">¶</a></h3>
 <p><strong>UV Coordinate Processing</strong>:
 .. code-block:: python</p>
 <blockquote>
@@ -407,9 +410,9 @@ image = image.resize((512, 512))</p>
 </section>
 </section>
 <section id="file-management">
-<h2>File Management<a class="headerlink" href="#file-management" title="Permalink to this heading">¶</a></h2>
+<h2>File Management<a class="headerlink" href="#file-management" title="Link to this heading">¶</a></h2>
 <section id="path-handling">
-<h3>Path Handling<a class="headerlink" href="#path-handling" title="Permalink to this heading">¶</a></h3>
+<h3>Path Handling<a class="headerlink" href="#path-handling" title="Link to this heading">¶</a></h3>
 <p><strong>Path Operations</strong>:
 .. code-block:: python</p>
 <blockquote>
@@ -444,9 +447,9 @@ data = loader.to_array_style()</p>
 </section>
 </section>
 <section id="error-handling">
-<h2>Error Handling<a class="headerlink" href="#error-handling" title="Permalink to this heading">¶</a></h2>
+<h2>Error Handling<a class="headerlink" href="#error-handling" title="Link to this heading">¶</a></h2>
 <section id="loading-errors">
-<h3>Loading Errors<a class="headerlink" href="#loading-errors" title="Permalink to this heading">¶</a></h3>
+<h3>Loading Errors<a class="headerlink" href="#loading-errors" title="Link to this heading">¶</a></h3>
 <p><strong>File Not Found</strong>:
 .. code-block:: python</p>
 <blockquote>
@@ -492,7 +495,7 @@ data = loader.to_array_style()</p>
 </section>
 </section>
 <section id="performance-considerations">
-<h2>Performance Considerations<a class="headerlink" href="#performance-considerations" title="Permalink to this heading">¶</a></h2>
+<h2>Performance Considerations<a class="headerlink" href="#performance-considerations" title="Link to this heading">¶</a></h2>
 <p><strong>Lazy Loading</strong>:
 .. code-block:: python</p>
 <blockquote>
@@ -553,7 +556,7 @@ results.append(None)</p>
 </div></blockquote>
 </section>
 <section id="best-practices">
-<h2>Best Practices<a class="headerlink" href="#best-practices" title="Permalink to this heading">¶</a></h2>
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Link to this heading">¶</a></h2>
 <ol class="arabic simple">
 <li><p><strong>Use appropriate loader</strong> for your file type</p></li>
 <li><p><strong>Handle errors gracefully</strong> with fallbacks</p></li>
@@ -596,7 +599,7 @@ data = create_fallback_data()</p>
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="../index.html">PicoGL</a></h1>
 
@@ -607,7 +610,16 @@ data = create_fallback_data()</p>
 
 
 
-<h3>Navigation</h3>
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
@@ -651,16 +663,6 @@ data = create_fallback_data()</p>
   </ul></li>
 </ul>
 </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -674,11 +676,11 @@ data = create_fallback_data()</p>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2025, PicoGL Contributors.
+      &#169;2025, PicoGL Contributors.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |
       <a href="../_sources/api/utils.rst.txt"

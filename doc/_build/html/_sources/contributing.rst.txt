@@ -201,25 +201,20 @@ PicoGL uses mypy for type checking:
 Documentation
 ~~~~~~~~~~~~~
 
-PicoGL uses Google-style docstrings:
+PicoGL uses Sphynx/RST-style docstrings:
 
 **Example**:
 .. code-block:: python
 
    def create_mesh_data(vertices, colors, normals=None):
        """Create mesh data from vertex information.
-       
-       Args:
-           vertices: Array of vertex positions (N, 3)
-           colors: Array of vertex colors (N, 3)
-           normals: Optional array of vertex normals (N, 3)
-       
-       Returns:
-           MeshData: Mesh data object
-       
-       Raises:
-           ValueError: If vertices or colors are invalid
-           TypeError: If input types are incorrect
+
+       :param vertices: Array of vertex positions (N, 3)
+       :param colors: Array of vertex colors (N, 3)
+       :param normals: Optional array of vertex normals (N, 3)
+       :returns: MeshData: Mesh data object
+       :raises: ValueError: If vertices or colors are invalid
+               TypeError: If input types are incorrect
        """
        pass
 

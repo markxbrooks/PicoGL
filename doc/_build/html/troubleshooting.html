@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Troubleshooting &#8212; PicoGL 1.0.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b3523f8e" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=039e1c02" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=af2ce170"></script>
-    <script src="_static/doctools.js?v=888ff710"></script>
-    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=8d563738"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Renderer API" href="api/renderer.html" />
@@ -18,8 +19,9 @@
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
+
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  
 
   </head><body>
   
@@ -32,12 +34,12 @@
           <div class="body" role="main">
             
   <section id="troubleshooting">
-<h1>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this heading">¶</a></h1>
+<h1>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading">¶</a></h1>
 <p>This guide helps you diagnose and fix common issues with PicoGL.</p>
 <section id="common-issues">
-<h2>Common Issues<a class="headerlink" href="#common-issues" title="Permalink to this heading">¶</a></h2>
+<h2>Common Issues<a class="headerlink" href="#common-issues" title="Link to this heading">¶</a></h2>
 <section id="installation-problems">
-<h3>Installation Problems<a class="headerlink" href="#installation-problems" title="Permalink to this heading">¶</a></h3>
+<h3>Installation Problems<a class="headerlink" href="#installation-problems" title="Link to this heading">¶</a></h3>
 <dl class="simple">
 <dt><strong>“No module named ‘picogl’” error</strong></dt><dd><ul class="simple">
 <li><p>Ensure PicoGL is installed: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">picogl</span></code></p></li>
@@ -68,7 +70,7 @@
 </dl>
 </section>
 <section id="opengl-context-issues">
-<h3>OpenGL Context Issues<a class="headerlink" href="#opengl-context-issues" title="Permalink to this heading">¶</a></h3>
+<h3>OpenGL Context Issues<a class="headerlink" href="#opengl-context-issues" title="Link to this heading">¶</a></h3>
 <dl class="simple">
 <dt><strong>“No OpenGL context” error</strong></dt><dd><ul class="simple">
 <li><p>Run from Terminal.app (macOS) or command prompt (Windows)</p></li>
@@ -97,7 +99,7 @@
 </dl>
 </section>
 <section id="shader-compilation-issues">
-<h3>Shader Compilation Issues<a class="headerlink" href="#shader-compilation-issues" title="Permalink to this heading">¶</a></h3>
+<h3>Shader Compilation Issues<a class="headerlink" href="#shader-compilation-issues" title="Link to this heading">¶</a></h3>
 <dl class="simple">
 <dt><strong>“Shader compilation failed” error</strong></dt><dd><ul class="simple">
 <li><p>Use legacy examples (no shaders required)</p></li>
@@ -127,9 +129,9 @@
 </section>
 </section>
 <section id="platform-specific-issues">
-<h2>Platform-Specific Issues<a class="headerlink" href="#platform-specific-issues" title="Permalink to this heading">¶</a></h2>
+<h2>Platform-Specific Issues<a class="headerlink" href="#platform-specific-issues" title="Link to this heading">¶</a></h2>
 <section id="macos-issues">
-<h3>macOS Issues<a class="headerlink" href="#macos-issues" title="Permalink to this heading">¶</a></h3>
+<h3>macOS Issues<a class="headerlink" href="#macos-issues" title="Link to this heading">¶</a></h3>
 <dl class="simple">
 <dt><strong>“No display available” error</strong></dt><dd><ul class="simple">
 <li><p>Install XQuartz: <code class="docutils literal notranslate"><span class="pre">brew</span> <span class="pre">install</span> <span class="pre">--cask</span> <span class="pre">xquartz</span></code></p></li>
@@ -164,7 +166,7 @@
 5. Update graphics drivers</p>
 </section>
 <section id="windows-issues">
-<h3>Windows Issues<a class="headerlink" href="#windows-issues" title="Permalink to this heading">¶</a></h3>
+<h3>Windows Issues<a class="headerlink" href="#windows-issues" title="Link to this heading">¶</a></h3>
 <dl class="simple">
 <dt><strong>“DLL load failed” error</strong></dt><dd><ul class="simple">
 <li><p>Install Visual C++ Redistributable</p></li>
@@ -198,7 +200,7 @@
 5. Check antivirus software</p>
 </section>
 <section id="linux-issues">
-<h3>Linux Issues<a class="headerlink" href="#linux-issues" title="Permalink to this heading">¶</a></h3>
+<h3>Linux Issues<a class="headerlink" href="#linux-issues" title="Link to this heading">¶</a></h3>
 <dl class="simple">
 <dt><strong>“No display available” error</strong></dt><dd><ul class="simple">
 <li><p>Ensure X11 or Wayland is running</p></li>
@@ -234,9 +236,9 @@
 </section>
 </section>
 <section id="performance-issues">
-<h2>Performance Issues<a class="headerlink" href="#performance-issues" title="Permalink to this heading">¶</a></h2>
+<h2>Performance Issues<a class="headerlink" href="#performance-issues" title="Link to this heading">¶</a></h2>
 <section id="slow-rendering">
-<h3>Slow Rendering<a class="headerlink" href="#slow-rendering" title="Permalink to this heading">¶</a></h3>
+<h3>Slow Rendering<a class="headerlink" href="#slow-rendering" title="Link to this heading">¶</a></h3>
 <p><strong>Causes</strong>:
 * Too many draw calls
 * Inefficient shaders
@@ -261,7 +263,7 @@ render_batch()  # Single draw call</p>
 </div></blockquote>
 </section>
 <section id="memory-issues">
-<h3>Memory Issues<a class="headerlink" href="#memory-issues" title="Permalink to this heading">¶</a></h3>
+<h3>Memory Issues<a class="headerlink" href="#memory-issues" title="Link to this heading">¶</a></h3>
 <p><strong>Causes</strong>:
 * Large textures
 * Too many buffers
@@ -298,7 +300,7 @@ try:</p>
 </div></blockquote>
 </section>
 <section id="frame-rate-issues">
-<h3>Frame Rate Issues<a class="headerlink" href="#frame-rate-issues" title="Permalink to this heading">¶</a></h3>
+<h3>Frame Rate Issues<a class="headerlink" href="#frame-rate-issues" title="Link to this heading">¶</a></h3>
 <p><strong>Causes</strong>:
 * VSync enabled
 * Too many operations per frame
@@ -333,9 +335,9 @@ glDisable(GL_DEPTH_TEST)</p>
 </section>
 </section>
 <section id="debugging-techniques">
-<h2>Debugging Techniques<a class="headerlink" href="#debugging-techniques" title="Permalink to this heading">¶</a></h2>
+<h2>Debugging Techniques<a class="headerlink" href="#debugging-techniques" title="Link to this heading">¶</a></h2>
 <section id="enable-debug-output">
-<h3>Enable Debug Output<a class="headerlink" href="#enable-debug-output" title="Permalink to this heading">¶</a></h3>
+<h3>Enable Debug Output<a class="headerlink" href="#enable-debug-output" title="Link to this heading">¶</a></h3>
 <p><strong>OpenGL Error Checking</strong>:
 .. code-block:: python</p>
 <blockquote>
@@ -380,66 +382,56 @@ print(f”Frame time: {frame_time:.3f}s, FPS: {fps:.1f}”)</p>
 </div></blockquote>
 </section>
 <section id="use-diagnostic-tools">
-<h3>Use Diagnostic Tools<a class="headerlink" href="#use-diagnostic-tools" title="Permalink to this heading">¶</a></h3>
-<p><strong>OpenGL Setup Test</strong>:
-.. code-block:: bash</p>
-<blockquote>
-<div><p>python examples/test_opengl_setup.py</p>
-</div></blockquote>
-<p><strong>Cube Data Test</strong>:
-.. code-block:: bash</p>
-<blockquote>
-<div><p>python examples/test_cube_data.py</p>
-</div></blockquote>
-<p><strong>Legacy Examples</strong>:
-.. code-block:: bash</p>
-<blockquote>
-<div><p># Try minimal examples for compatibility
-python examples/legacy_cube_minimal.py
-python examples/legacy_teapot_minimal.py</p>
-</div></blockquote>
+<h3>Use Diagnostic Tools<a class="headerlink" href="#use-diagnostic-tools" title="Link to this heading">¶</a></h3>
+<p><strong>OpenGL Setup Test</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/test_opengl_setup.py
+</pre></div>
+</div>
+<p><strong>Cube Data Test</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/test_cube_data.py
+</pre></div>
+</div>
+<p><strong>Legacy Examples</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Try minimal examples for compatibility</span>
+python<span class="w"> </span>examples/legacy_cube_minimal.py
+python<span class="w"> </span>examples/legacy_teapot_minimal.py
+</pre></div>
+</div>
 </section>
 <section id="check-system-information">
-<h3>Check System Information<a class="headerlink" href="#check-system-information" title="Permalink to this heading">¶</a></h3>
-<p><strong>Python Information</strong>:
-.. code-block:: python</p>
-<blockquote>
-<div><p>import sys
-import platform
-print(f”Python: {sys.version}”)
-print(f”Platform: {platform.platform()}”)
-print(f”Architecture: {platform.architecture()}”)</p>
-</div></blockquote>
-<p><strong>OpenGL Information</strong>:
-.. code-block:: python</p>
-<blockquote>
-<div><p>import OpenGL.GL as GL
-print(f”OpenGL version: {GL.glGetString(GL.GL_VERSION)}”)
-print(f”Vendor: {GL.glGetString(GL.GL_VENDOR)}”)
-print(f”Renderer: {GL.glGetString(GL.GL_RENDERER)}”)</p>
-</div></blockquote>
-<p><strong>Package Information</strong>:
-.. code-block:: python</p>
-<blockquote>
-<div><p>import pkg_resources
-packages = [‘picogl’, ‘numpy’, ‘PyOpenGL’, ‘pyglm’, ‘Pillow’]
-for package in packages:</p>
-<blockquote>
-<div><dl class="simple">
-<dt>try:</dt><dd><p>version = pkg_resources.get_distribution(package).version
-print(f”{package}: {version}”)</p>
-</dd>
-<dt>except pkg_resources.DistributionNotFound:</dt><dd><p>print(f”{package}: Not installed”)</p>
-</dd>
-</dl>
-</div></blockquote>
-</div></blockquote>
+<h3>Check System Information<a class="headerlink" href="#check-system-information" title="Link to this heading">¶</a></h3>
+<p><strong>Python Information</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">platform</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Python: </span><span class="si">{</span><span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Platform: </span><span class="si">{</span><span class="n">platform</span><span class="o">.</span><span class="n">platform</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Architecture: </span><span class="si">{</span><span class="n">platform</span><span class="o">.</span><span class="n">architecture</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>OpenGL Information</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">OpenGL.GL</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">GL</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;OpenGL version: </span><span class="si">{</span><span class="n">GL</span><span class="o">.</span><span class="n">glGetString</span><span class="p">(</span><span class="n">GL</span><span class="o">.</span><span class="n">GL_VERSION</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Vendor: </span><span class="si">{</span><span class="n">GL</span><span class="o">.</span><span class="n">glGetString</span><span class="p">(</span><span class="n">GL</span><span class="o">.</span><span class="n">GL_VENDOR</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Renderer: </span><span class="si">{</span><span class="n">GL</span><span class="o">.</span><span class="n">glGetString</span><span class="p">(</span><span class="n">GL</span><span class="o">.</span><span class="n">GL_RENDERER</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Package Information</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pkg_resources</span>
+<span class="n">packages</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;picogl&#39;</span><span class="p">,</span> <span class="s1">&#39;numpy&#39;</span><span class="p">,</span> <span class="s1">&#39;PyOpenGL&#39;</span><span class="p">,</span> <span class="s1">&#39;pyglm&#39;</span><span class="p">,</span> <span class="s1">&#39;Pillow&#39;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">package</span> <span class="ow">in</span> <span class="n">packages</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">get_distribution</span><span class="p">(</span><span class="n">package</span><span class="p">)</span><span class="o">.</span><span class="n">version</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">package</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">DistributionNotFound</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">package</span><span class="si">}</span><span class="s2">: Not installed&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
 </section>
 <section id="common-solutions">
-<h2>Common Solutions<a class="headerlink" href="#common-solutions" title="Permalink to this heading">¶</a></h2>
+<h2>Common Solutions<a class="headerlink" href="#common-solutions" title="Link to this heading">¶</a></h2>
 <section id="try-legacy-examples">
-<h3>Try Legacy Examples<a class="headerlink" href="#try-legacy-examples" title="Permalink to this heading">¶</a></h3>
+<h3>Try Legacy Examples<a class="headerlink" href="#try-legacy-examples" title="Link to this heading">¶</a></h3>
 <p>If modern examples don’t work, try legacy examples:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Minimal examples (maximum compatibility)</span>
 python<span class="w"> </span>examples/legacy_cube_minimal.py
@@ -452,16 +444,16 @@ python<span class="w"> </span>examples/legacy_teapot_fixed.py
 </div>
 </section>
 <section id="update-dependencies">
-<h3>Update Dependencies<a class="headerlink" href="#update-dependencies" title="Permalink to this heading">¶</a></h3>
+<h3>Update Dependencies<a class="headerlink" href="#update-dependencies" title="Link to this heading">¶</a></h3>
 <p>Update all dependencies to latest versions:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>picogl<span class="w"> </span>numpy<span class="w"> </span>PyOpenGL<span class="w"> </span>PyOpenGL-accelerate<span class="w"> </span>pyglm<span class="w"> </span>Pillow
 </pre></div>
 </div>
 </section>
 <section id="check-opengl-support">
-<h3>Check OpenGL Support<a class="headerlink" href="#check-opengl-support" title="Permalink to this heading">¶</a></h3>
+<h3>Check OpenGL Support<a class="headerlink" href="#check-opengl-support" title="Link to this heading">¶</a></h3>
 <p>Verify OpenGL support on your system:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">OpenGL.GL</span> <span class="k">as</span> <span class="nn">GL</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">OpenGL.GL</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">GL</span>
 
 <span class="c1"># Check OpenGL version</span>
 <span class="n">version</span> <span class="o">=</span> <span class="n">GL</span><span class="o">.</span><span class="n">glGetString</span><span class="p">(</span><span class="n">GL</span><span class="o">.</span><span class="n">GL_VERSION</span><span class="p">)</span>
@@ -474,7 +466,7 @@ python<span class="w"> </span>examples/legacy_teapot_fixed.py
 </div>
 </section>
 <section id="use-software-rendering">
-<h3>Use Software Rendering<a class="headerlink" href="#use-software-rendering" title="Permalink to this heading">¶</a></h3>
+<h3>Use Software Rendering<a class="headerlink" href="#use-software-rendering" title="Link to this heading">¶</a></h3>
 <p>If hardware rendering fails, try software rendering:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set environment variable</span>
 <span class="nb">export</span><span class="w"> </span><span class="nv">MESA_GL_VERSION_OVERRIDE</span><span class="o">=</span><span class="m">3</span>.3
@@ -483,7 +475,7 @@ python<span class="w"> </span>examples/cube.py
 </div>
 </section>
 <section id="check-display-environment">
-<h3>Check Display Environment<a class="headerlink" href="#check-display-environment" title="Permalink to this heading">¶</a></h3>
+<h3>Check Display Environment<a class="headerlink" href="#check-display-environment" title="Link to this heading">¶</a></h3>
 <p>Verify display environment:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check display</span>
 <span class="nb">echo</span><span class="w"> </span><span class="nv">$DISPLAY</span>
@@ -498,7 +490,7 @@ xdpyinfo
 </section>
 </section>
 <section id="report-issues">
-<h2>Report Issues<a class="headerlink" href="#report-issues" title="Permalink to this heading">¶</a></h2>
+<h2>Report Issues<a class="headerlink" href="#report-issues" title="Link to this heading">¶</a></h2>
 <p>When reporting issues, include:</p>
 <ol class="arabic simple">
 <li><p><strong>System Information</strong>:
@@ -535,7 +527,7 @@ xdpyinfo
 </div></blockquote>
 </section>
 <section id="getting-help">
-<h2>Getting Help<a class="headerlink" href="#getting-help" title="Permalink to this heading">¶</a></h2>
+<h2>Getting Help<a class="headerlink" href="#getting-help" title="Link to this heading">¶</a></h2>
 <p><strong>Documentation</strong>:
 * Check this troubleshooting guide
 * Read the API documentation
@@ -562,7 +554,7 @@ xdpyinfo
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="index.html">PicoGL</a></h1>
 
@@ -573,7 +565,16 @@ xdpyinfo
 
 
 
-<h3>Navigation</h3>
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
@@ -616,16 +617,6 @@ xdpyinfo
   </ul></li>
 </ul>
 </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -639,11 +630,11 @@ xdpyinfo
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2025, PicoGL Contributors.
+      &#169;2025, PicoGL Contributors.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |
       <a href="_sources/troubleshooting.rst.txt"
