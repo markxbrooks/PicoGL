@@ -10,6 +10,13 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     
     steps:
     - uses: actions/checkout@v3
@@ -28,10 +35,11 @@ jobs:
         cd doc
         sphinx-build -b html . _build/html
     
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
-      if: github.ref == 'refs/heads/main'
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
       with:
-        personal_token: ${{ secrets.PERSONAL_TOKEN }}
-        publish_dir: ./doc/_build/html
-        cname: markxbrooks.github.io
+        path: ./doc/_build/html
+
+    - name: Deploy to GitHub Pages
+      uses: actions/deploy-pages@v4
+      if: github.ref == 'refs/heads/main'
