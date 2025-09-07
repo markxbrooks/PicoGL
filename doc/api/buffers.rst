@@ -372,7 +372,7 @@ Uploading Data
    vbg.add_vbo(index=1, vbo_name="color", data=colors, size=3)
    
    # Upload element data
-   vbg.add_ebo(indices)
+   vbg.add_ebo(data=indices)
 
 Drawing
 ~~~~~~~
