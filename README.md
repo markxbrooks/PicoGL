@@ -1,5 +1,5 @@
 ![OpenGL Logo](Opengl-logo.png)
-# PicoGL
+# 🦚 PicoGL
 ![PicoGL_Mascot](PicoGL_Mascot_320.png)
 Peacock with goggles, geddit? 😊
 
