@@ -7,6 +7,23 @@ Peacock with goggles, geddit? 😊
 
 Whether you’re building interactive visualizations, scientific simulations, or games for fun, PicoGL gives you a clean, high-level API to work with shaders, buffers, and pipelines — while still letting you drop down to raw OpenGL when you need it.
 
+# 🔔 What this is not!
+After writing the code and naming it PicoGL, we realize there is a Javascript Library called PicoGL.js
+### It looks similar in ethos to this Python version
+### It looks vaguely similar to this Python syntactically
+### The existence of both could help porting python to WebGL and vice-versa
+```javascript
+  var vertexArray = app.createVertexArray()
+  .vertexAttributeBuffer(0, positionBuffer)
+  .vertexAttributeBuffer(1, normalBuffer);
+```
+Taken from: https://tsherif.github.io/khronos-meetup-picogl/#/7
+```python
+    vertex_array = VertexArrayObject()
+    vertex_array.add_vbo(index=0, data=positions, size=3)
+    vertex_array.add_vbo(index=1, data=normals, size=3)
+```
+
 ---
 ![teapot](newell_teapot.PNG)
 
@@ -67,11 +84,11 @@ def draw(self):
 # 📖 Documentation
 Access PicoGL documentation in the format that works best for you:
 
-## Available Formats:
-### HTML Documentation:
+## ℹ Available Formats:
+### 📃 HTML Documentation:
 Explore the full API reference, guides, and examples online:
 https://markxbrooks.github.io/PicoGL/
-### PDF Documentation:
+### 📃 PDF Documentation:
 Download a convenient PDF version for offline reading or printing:
 https://github.com/markxbrooks/PicoGL/blob/main/doc/_build/latex/picogl.pdf
 ### Local Documentation:
