@@ -95,7 +95,7 @@ https://markxbrooks.github.io/PicoGL/
 ### 📃 PDF Documentation:
 Download a convenient PDF version for offline reading or printing:
 ⬇ https://github.com/markxbrooks/PicoGL/blob/main/doc/_build/latex/picogl.pdf
-### 📃Local Documentation:
+### 📃 Local Documentation:
 The Docs directory within this repository contains the source files and additional reference materials for offline access or custom builds.
 Whether you prefer browsing online, reading offline, or exploring the raw documentation files, PicoGL’s documentation provides comprehensive guidance for using the library effectively.
 
