@@ -6,3 +6,4 @@ numpy
 pillow
 pyglm
 PyOpenGL
+sphinx_rtd_theme
