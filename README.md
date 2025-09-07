@@ -248,7 +248,7 @@ if __name__ == "__main__":
 
 ## ⚛Protein Molecule 
 
-Training wheels off now...
+🎓Training wheels off now...
 ![pdb molecule viewer](pdb_viewer_320.gif)
 
 qt_legacy_glmesh_molecular_viewer.py
