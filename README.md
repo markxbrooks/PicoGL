@@ -225,7 +225,7 @@ if __name__ == "__main__":
     main()
 ```
 
-## 🫖Teapot object
+## 🫖 Teapot object
 ![teapot](newell_teapot.PNG)
 
 ```python
@@ -267,7 +267,7 @@ if __name__ == "__main__":
 ```
 
 
-## ⚛Protein Molecule 
+## ⚛ Protein Molecule 
 
 🎓Training wheels off now...
 ![pdb molecule viewer](pdb_viewer_320.gif)
