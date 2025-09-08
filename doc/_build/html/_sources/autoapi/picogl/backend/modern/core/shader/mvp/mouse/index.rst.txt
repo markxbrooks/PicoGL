@@ -1,0 +1,42 @@
+picogl.backend.modern.core.shader.mvp.mouse
+===========================================
+
+.. py:module:: picogl.backend.modern.core.shader.mvp.mouse
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.backend.modern.core.shader.mvp.mouse.MouseMode
+
+
+Module Contents
+---------------
+
+.. py:class:: MouseMode
+
+   Bases: :py:obj:`enum.Enum`
+
+
+   Generic enumeration.
+
+   Derive from this class to define new enumerations.
+
+
+   .. py:attribute:: NONE
+      :value: -1
+
+
+
+   .. py:attribute:: ROTATE
+      :value: 1
+
+
+
+   .. py:attribute:: PAN
+      :value: 2
+
+
+

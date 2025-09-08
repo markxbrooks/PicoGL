@@ -1,0 +1,22 @@
+picogl.buffers
+==============
+
+.. py:module:: picogl.buffers
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/picogl/buffers/abstract/index
+   /autoapi/picogl/buffers/attributes/index
+   /autoapi/picogl/buffers/base/index
+   /autoapi/picogl/buffers/factory/index
+   /autoapi/picogl/buffers/glcleanup/index
+   /autoapi/picogl/buffers/upload/index
+   /autoapi/picogl/buffers/vao/index
+   /autoapi/picogl/buffers/vertex/index
+
+

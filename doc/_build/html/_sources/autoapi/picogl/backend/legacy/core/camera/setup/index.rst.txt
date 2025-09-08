@@ -1,0 +1,72 @@
+picogl.backend.legacy.core.camera.setup
+=======================================
+
+.. py:module:: picogl.backend.legacy.core.camera.setup
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/picogl/backend/legacy/core/camera/setup/aspect/index
+   /autoapi/picogl/backend/legacy/core/camera/setup/blend/index
+   /autoapi/picogl/backend/legacy/core/camera/setup/depth/index
+   /autoapi/picogl/backend/legacy/core/camera/setup/materials/index
+   /autoapi/picogl/backend/legacy/core/camera/setup/smooth/index
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.backend.legacy.core.camera.setup.calculate_aspect
+   picogl.backend.legacy.core.camera.setup.enable_blending
+   picogl.backend.legacy.core.camera.setup.enable_depth_test
+   picogl.backend.legacy.core.camera.setup.setup_materials
+   picogl.backend.legacy.core.camera.setup.enable_smoothing
+
+
+Package Contents
+----------------
+
+.. py:function:: calculate_aspect(h: int, w: int) -> float
+
+   calculate_aspect
+
+   :param h: int
+   :param w: int
+   :return: float
+
+
+.. py:function:: enable_blending() -> None
+
+   enable_blending
+
+   :return: None
+
+
+.. py:function:: enable_depth_test() -> None
+
+   enable_depth_test
+
+   :return: None
+
+
+.. py:function:: setup_materials() -> None
+
+   setup_materials
+
+   :return: None
+
+
+.. py:function:: enable_smoothing() -> None
+
+   enable_smoothing
+
+   :return: None
+   setup smoothing in legacy picogl
+
+

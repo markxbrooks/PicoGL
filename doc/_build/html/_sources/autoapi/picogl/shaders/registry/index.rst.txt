@@ -1,0 +1,70 @@
+picogl.shaders.registry
+=======================
+
+.. py:module:: picogl.shaders.registry
+
+.. autoapi-nested-parse::
+
+   ShaderRegistry
+   ==============
+
+   Example Usage:
+   ==============
+   >>>shader_registry = ShaderRegistry()
+   ...# Load src at app start
+   ...for shader_type_value in ShaderType:
+   ...   shader_registry.load_and_add(shader_type_value)
+   ...
+   ...# Later...
+   ...shader_manager.current_shader_program = shader_registry.get(ShaderType.ATOMS)
+   ...if shader_manager.current_shader_program:
+   ...    shader_manager.current_shader_program.bind()
+   ...
+
+
+   File naming convention:
+   =======================
+   Ensure GLSL files follow the naming pattern:
+
+   atoms_vert.glsl
+   atoms_frag.glsl
+   bonds_vert.glsl
+   bonds_frag.glsl
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.shaders.registry.ShaderRegistry
+
+
+Module Contents
+---------------
+
+.. py:class:: ShaderRegistry
+
+   ShaderRegistry
+
+
+   .. py:attribute:: shaders
+      :type:  Dict[picogl.shaders.type.ShaderType, picogl.backend.modern.core.shader.program.ShaderProgram]
+
+
+   .. py:method:: load_and_add(shader_type: picogl.shaders.type.ShaderType) -> Optional[picogl.backend.modern.core.shader.program.ShaderProgram]
+
+      Load, compile, and register a shader_manager.current_shader_program for the given ShaderType.
+
+
+
+   .. py:method:: get(shader_type: picogl.shaders.type.ShaderType) -> Optional[picogl.backend.modern.core.shader.program.ShaderProgram]
+
+
+   .. py:method:: has(shader_type: picogl.shaders.type.ShaderType) -> bool
+
+
+   .. py:method:: release_all()
+
+

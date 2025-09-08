@@ -1,0 +1,29 @@
+picogl.backend.legacy.core.camera.setup.materials
+=================================================
+
+.. py:module:: picogl.backend.legacy.core.camera.setup.materials
+
+.. autoapi-nested-parse::
+
+   Setup Materials
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.backend.legacy.core.camera.setup.materials.setup_materials
+
+
+Module Contents
+---------------
+
+.. py:function:: setup_materials() -> None
+
+   setup_materials
+
+   :return: None
+
+

@@ -1,0 +1,97 @@
+picogl.utils.loader.texture
+===========================
+
+.. py:module:: picogl.utils.loader.texture
+
+.. autoapi-nested-parse::
+
+   Texture Loader
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   picogl.utils.loader.texture.texture
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.utils.loader.texture.TextureLoader
+
+
+Module Contents
+---------------
+
+.. py:class:: TextureLoader(file_name: str, mode: str = 'RGB')
+
+   Loads a 2D texture from a DDS file or a standard image file using PIL.
+   Automatically creates an OpenGL texture ID.
+
+
+   .. py:attribute:: texture_gl_id
+      :type:  Optional[int]
+      :value: None
+
+
+
+   .. py:attribute:: width
+      :type:  int
+      :value: 0
+
+
+
+   .. py:attribute:: height
+      :type:  int
+      :value: 0
+
+
+
+   .. py:attribute:: format
+      :type:  str
+      :value: 'RGB'
+
+
+
+   .. py:attribute:: buffer
+      :type:  Optional[bytes]
+      :value: None
+
+
+
+   .. py:attribute:: inversed_v_coords
+      :type:  bool
+      :value: False
+
+
+
+   .. py:method:: load_dds(file_name: str) -> None
+
+      Load a DDS texture from file.
+      Supports DXT1, DXT3, DXT5 compressed textures.
+      Falls back to PIL loading if compressed texture loading fails.
+
+
+
+   .. py:method:: load_by_pil(file_name: str, mode: str) -> None
+
+      Load a standard image using PIL and upload as OpenGL texture.
+
+
+
+   .. py:method:: delete() -> None
+
+      Deletes the OpenGL texture to free GPU memory.
+
+
+
+   .. py:method:: __len__() -> int
+
+
+.. py:data:: texture
+

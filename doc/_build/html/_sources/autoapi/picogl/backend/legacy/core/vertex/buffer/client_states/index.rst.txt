@@ -1,0 +1,33 @@
+picogl.backend.legacy.core.vertex.buffer.client_states
+======================================================
+
+.. py:module:: picogl.backend.legacy.core.vertex.buffer.client_states
+
+.. autoapi-nested-parse::
+
+   Legacy Client States context manager
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.backend.legacy.core.vertex.buffer.client_states.legacy_client_states
+   picogl.backend.legacy.core.vertex.buffer.client_states.legacy_client_states_old
+
+
+Module Contents
+---------------
+
+.. py:function:: legacy_client_states(*states)
+
+   Enable/disable fixed-function client states safely.
+
+
+.. py:function:: legacy_client_states_old(*states)
+
+   legacy client states context manager
+
+

@@ -1,0 +1,15 @@
+picogl.backend.modern.core.elements
+===================================
+
+.. py:module:: picogl.backend.modern.core.elements
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/picogl/backend/modern/core/elements/draw/index
+
+

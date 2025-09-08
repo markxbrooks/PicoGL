@@ -1,0 +1,255 @@
+picogl.tests.test_glmesh
+========================
+
+.. py:module:: picogl.tests.test_glmesh
+
+.. autoapi-nested-parse::
+
+   Unit tests for the GLMesh class in the PicoGL OpenGL backend.
+
+   This module contains a comprehensive suite of unit tests for verifying the correctness,
+   robustness, and interface of the :class:`picogl.renderer.glmesh.GLMesh`
+   class, which manages GPU-resident mesh data and rendering.
+
+   The tests cover:
+
+   - Object initialization with various mesh data
+   - from_mesh_data class method
+   - GPU buffer upload and allocation
+   - OpenGL binding/unbinding operations
+   - Drawing operations
+   - Context manager functionality
+   - Resource cleanup and memory management
+   - Error handling and edge cases
+   - Data validation and type conversion
+
+   Dependencies:
+       - unittest (standard library)
+       - unittest.mock.MagicMock for OpenGL function mocking
+       - numpy for test data
+       - picogl.renderer.glmesh.GLMesh
+       - picogl.renderer.meshdata.MeshData
+
+   To run the tests::
+
+       python -m unittest picogl.tests.test_glmesh
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.tests.test_glmesh.TestGLMesh
+
+
+Module Contents
+---------------
+
+.. py:class:: TestGLMesh(methodName='runTest')
+
+   Bases: :py:obj:`unittest.TestCase`
+
+
+   Test cases for GLMesh class.
+
+
+   .. py:method:: setUp()
+
+      Set up test fixtures before each test method.
+
+
+
+   .. py:method:: tearDown()
+
+      Clean up after each test method.
+
+
+
+   .. py:method:: test_initialization_with_all_parameters()
+
+      Test GLMesh initialization with all parameters.
+
+
+
+   .. py:method:: test_initialization_with_minimal_parameters()
+
+      Test GLMesh initialization with only vertices and faces.
+
+
+
+   .. py:method:: test_initialization_with_empty_faces()
+
+      Test GLMesh initialization with empty faces raises error.
+
+
+
+   .. py:method:: test_initialization_with_none_faces()
+
+      Test GLMesh initialization with None faces raises error.
+
+
+
+   .. py:method:: test_initialization_data_type_conversion()
+
+      Test that data is properly converted to correct types.
+
+
+
+   .. py:method:: test_initialization_array_reshaping()
+
+      Test that arrays are properly reshaped.
+
+
+
+   .. py:method:: test_from_mesh_data_with_all_attributes()
+
+      Test from_mesh_data with all MeshData attributes.
+
+
+
+   .. py:method:: test_from_mesh_data_with_minimal_attributes()
+
+      Test from_mesh_data with minimal MeshData attributes.
+
+
+
+   .. py:method:: test_from_mesh_data_without_uvs()
+
+      Test from_mesh_data without UVs attribute.
+
+
+
+   .. py:method:: test_upload_first_time()
+
+      Test upload method for the first time.
+
+
+
+   .. py:method:: test_upload_already_uploaded()
+
+      Test upload method when already uploaded.
+
+
+
+   .. py:method:: test_upload_with_uvs()
+
+      Test upload method with UVs.
+
+
+
+   .. py:method:: test_upload_without_uvs()
+
+      Test upload method without UVs.
+
+
+
+   .. py:method:: test_bind_with_uploaded_mesh()
+
+      Test bind method with uploaded mesh.
+
+
+
+   .. py:method:: test_bind_without_upload()
+
+      Test bind method without upload raises error.
+
+
+
+   .. py:method:: test_unbind_with_vao()
+
+      Test unbind method with VAO.
+
+
+
+   .. py:method:: test_unbind_without_vao()
+
+      Test unbind method without VAO.
+
+
+
+   .. py:method:: test_delete_with_vao()
+
+      Test delete method with VAO.
+
+
+
+   .. py:method:: test_delete_without_vao()
+
+      Test delete method without VAO.
+
+
+
+   .. py:method:: test_context_manager()
+
+      Test that GLMesh can be used as a context manager.
+
+
+
+   .. py:method:: test_draw_with_uploaded_mesh()
+
+      Test draw method with uploaded mesh.
+
+
+
+   .. py:method:: test_draw_without_upload()
+
+      Test draw method without upload handles error.
+
+
+
+   .. py:method:: test_draw_with_exception_handling()
+
+      Test draw method with exception handling.
+
+
+
+   .. py:method:: test_vertex_count_calculation()
+
+      Test vertex count calculation.
+
+
+
+   .. py:method:: test_data_validation()
+
+      Test data validation and type checking.
+
+
+
+   .. py:method:: test_default_color_generation()
+
+      Test default color generation.
+
+
+
+   .. py:method:: test_default_normal_generation()
+
+      Test default normal generation.
+
+
+
+   .. py:method:: test_default_uv_generation()
+
+      Test default UV generation.
+
+
+
+   .. py:method:: test_mesh_data_integration()
+
+      Test integration with MeshData class.
+
+
+
+   .. py:method:: test_upload_vbo_parameters()
+
+      Test that VBOs are added with correct parameters.
+
+
+
+   .. py:method:: test_ebo_parameters()
+
+      Test that EBO is added with correct parameters.
+
+
+

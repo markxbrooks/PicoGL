@@ -5,11 +5,11 @@ Legacy backend (no real GL VAO support)
 """
 
 import ctypes
-from typing import Optional
+from typing import Optional, Any
 
 import numpy as np
 from OpenGL.GL import glVertexAttribPointer
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POINTS, GL_TRIANGLES, GL_UNSIGNED_INT
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POINTS, GL_TRIANGLES, GL_UNSIGNED_INT, GL_FLOAT
 from OpenGL.raw.GL.VERSION.GL_1_1 import (
     GL_COLOR_ARRAY,
     GL_NORMAL_ARRAY,
@@ -117,14 +117,20 @@ class VertexBufferGroup(VertexBase):
                 # Issue draw call
                 glDrawArrays(mode, 0, index_count)
 
-    def add_vbo(self, name: str, **kwargs):
-        """High-level shortcut: pick the right VBO subclass and delegate."""
-        try:
-            vbo_class = self.get_buffer_class(name)
-            vbo = vbo_class(**kwargs)
-            return self.add_vbo_object(name, vbo)
-        except Exception as ex:
-            log.error(f"error {ex} occurred adding vbo")
+    def add_vbo(
+            self,
+            name: str,
+            data: np.ndarray,
+            size: int = 3,
+            dtype: int = GL_FLOAT,
+            handle: int | None = None,
+    ) -> Any:
+        """Create and register a VBO with explicit parameters."""
+        vbo_class = self.get_buffer_class(name)
+        if data is None or size <= 0:
+            raise ValueError("data must be a numpy array, size > 0")
+        vbo = vbo_class(data=data, size=size, handle=handle, dtype=dtype)
+        return self.add_vbo_object(name, vbo)
 
     def get_buffer_class(self, name: str = "vbo") -> type[LegacyVBO]:
         """
@@ -147,11 +153,11 @@ class VertexBufferGroup(VertexBase):
         self.add_vbo_object(name, ebo_class(data=data))
 
     def draw_elements(
-        self,
-        count: int = 0,
-        mode: int = GL_TRIANGLES,
-        dtype: int = GL_UNSIGNED_INT,
-        offset: int = 0,
+            self,
+            count: int = 0,
+            mode: int = GL_TRIANGLES,
+            dtype: int = GL_UNSIGNED_INT,
+            offset: int = 0,
     ):
         """
         Draw using an element buffer (EBO) with legacy client states.

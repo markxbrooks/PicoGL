@@ -1,0 +1,30 @@
+picogl.utils.reshape
+====================
+
+.. py:module:: picogl.utils.reshape
+
+.. autoapi-nested-parse::
+
+   reshape data to a float 32 row
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.utils.reshape.float32_row
+
+
+Module Contents
+---------------
+
+.. py:function:: float32_row(array_like: Any) -> numpy.ndarray
+
+   Reshape input to a single row and convert to np.float32.
+
+   :param array_like: Any array-like object (list, tuple, np.ndarray).
+   :return: A NumPy array of shape (1, N) with dtype np.float32.
+
+

@@ -1,0 +1,24 @@
+picogl.backend.modern.core.setup.lighting
+=========================================
+
+.. py:module:: picogl.backend.modern.core.setup.lighting
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.backend.modern.core.setup.lighting.initialize_background
+
+
+Module Contents
+---------------
+
+.. py:function:: initialize_background() -> None
+
+   initialize_background
+
+   :return: None
+
+

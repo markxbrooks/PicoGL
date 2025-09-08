@@ -1,0 +1,44 @@
+picogl.buffers.factory.validation
+=================================
+
+.. py:module:: picogl.buffers.factory.validation
+
+.. autoapi-nested-parse::
+
+   Validation of input data
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.buffers.factory.validation.validate_mesh_data
+   picogl.buffers.factory.validation.validate_input_data
+
+
+Module Contents
+---------------
+
+.. py:function:: validate_mesh_data(data: picogl.renderer.MeshData)
+
+   validate mesh data
+
+
+.. py:function:: validate_input_data(vertices: numpy.ndarray, indices: numpy.ndarray = None, normals: numpy.ndarray = None, colors: numpy.ndarray = None)
+
+   Validate mesh input data for consistency.
+
+   :param vertices: Required array of shape (N, 3) for vertex positions.
+   :type vertices: np.ndarray
+   :param indices: Optional array of shape (M, 3) for triangular faces.
+   :type indices: np.ndarray, optional
+   :param normals: Optional array of shape (N, 3) for vertex normals.
+   :type normals: np.ndarray, optional
+   :param colors: Optional array of shape (N, 3) or (N, 4) for per-vertex colors.
+   :type colors: np.ndarray, optional
+
+   :raises ValueError: If any provided array has an invalid shape or is inconsistent.
+
+

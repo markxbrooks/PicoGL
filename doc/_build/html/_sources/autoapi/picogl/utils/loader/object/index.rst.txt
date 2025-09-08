@@ -1,0 +1,76 @@
+picogl.utils.loader.object
+==========================
+
+.. py:module:: picogl.utils.loader.object
+
+.. autoapi-nested-parse::
+
+   Object Loader
+   Loader of object data from an .loader file.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   picogl.utils.loader.object.obj
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.utils.loader.object.ObjectLoader
+
+
+Module Contents
+---------------
+
+.. py:class:: ObjectLoader(path: str)
+
+   Object Loader Class
+
+
+   .. py:attribute:: vertices
+      :value: []
+
+
+
+   .. py:attribute:: normals
+      :value: []
+
+
+
+   .. py:attribute:: texcoords
+      :value: []
+
+
+
+   .. py:attribute:: indices
+      :value: []
+
+
+
+   .. py:method:: log_properties()
+
+      log object properties
+
+
+
+   .. py:method:: to_array_style() -> picogl.utils.loader.object_data.ObjectData
+
+      Convert to array-style where each vertex attribute is stored separately
+
+
+
+   .. py:method:: to_single_index_style() -> picogl.utils.loader.object_data.ObjectData
+
+      Convert to single-index style where each unique vertex attribute combination is stored once
+
+
+
+.. py:data:: obj
+

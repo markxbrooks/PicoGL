@@ -1,0 +1,19 @@
+picogl.backend.modern.core.camera.matrix.view
+=============================================
+
+.. py:module:: picogl.backend.modern.core.camera.matrix.view
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.backend.modern.core.camera.matrix.view.calculate_view_matrix
+
+
+Module Contents
+---------------
+
+.. py:function:: calculate_view_matrix(cam_pos, cam_target)
+

@@ -1,0 +1,161 @@
+picogl.backend.modern.core.shader.program
+=========================================
+
+.. py:module:: picogl.backend.modern.core.shader.program
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.backend.modern.core.shader.program.ShaderProgram
+
+
+Module Contents
+---------------
+
+.. py:class:: ShaderProgram(shader_name: str = None, vertex_source_file: str = None, fragment_source_file: str = None, glsl_dir: str | pathlib.Path | None = None)
+
+   OpenGL Shader program manager for vertex and fragment shaders.
+
+
+   .. py:attribute:: shader_name
+      :value: None
+
+
+
+   .. py:attribute:: vertex_source_file
+      :value: None
+
+
+
+   .. py:attribute:: fragment_source_file
+      :value: None
+
+
+
+   .. py:attribute:: base_dir
+      :value: None
+
+
+
+   .. py:attribute:: vertex_shader
+      :value: None
+
+
+
+   .. py:attribute:: fragment_shader
+      :value: None
+
+
+
+   .. py:attribute:: program
+      :value: None
+
+
+
+   .. py:attribute:: uniforms
+
+
+   .. py:method:: __str__()
+
+
+   .. py:method:: __enter__()
+
+
+   .. py:method:: __exit__(exc_type, exc_val, exc_tb)
+
+
+   .. py:method:: program_id()
+
+
+   .. py:method:: init_shader_from_glsl_files(vertex_source_file: str, fragment_source_file: str, glsl_dir: str | pathlib.Path | None = None) -> None
+
+      init_shader_from_glsl_files
+
+      :param glsl_dir: directory containing vertex shaders
+      :param vertex_source_file: list of paths to vertex shaders
+      :param fragment_source_file: list of paths to fragment shaders
+      :return: None
+
+
+
+   .. py:method:: init_shader_from_glsl(vertex_source: str, fragment_source: str) -> None
+
+      init_shader_from_glsl
+
+      :param vertex_source: list of paths to vertex shaders
+      :param fragment_source: list of paths to fragment shaders
+      :return: None
+
+
+
+   .. py:method:: init_shader(vertex_source: str, fragment_source: str)
+
+      init_shader
+
+      :param vertex_source: list of paths to vertex shaders
+      :param fragment_source: list of paths to fragment shaders
+      :return: None
+
+      Create, compile, and link shaders into a program.
+
+
+
+   .. py:method:: uniform(name: str, value)
+
+      uniform
+
+      :param name: str - uniform name
+      :param value: value to set (float, int, vec2, vec3, vec4, mat4, or np.ndarray)
+      :return: self - for chaining
+      Set uniform value (auto-detect type)
+
+
+
+   .. py:method:: create_shader_program()
+
+      create_shader_program
+
+
+
+   .. py:method:: link_shader_program()
+
+      link_shader_program
+
+
+
+   .. py:method:: get_uniform_location(uniform_name)
+
+      get_uniform_location
+
+
+
+   .. py:method:: begin()
+
+      begin
+
+
+
+   .. py:method:: end()
+
+      end
+
+
+
+   .. py:method:: bind()
+
+      begin
+
+
+
+   .. py:method:: unbind()
+
+
+   .. py:method:: release()
+
+
+   .. py:method:: delete()
+
+

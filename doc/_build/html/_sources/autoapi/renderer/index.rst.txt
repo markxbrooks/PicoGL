@@ -1,0 +1,145 @@
+renderer
+========
+
+.. py:module:: renderer
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   renderer.LegacyQtObjectRenderer
+
+
+Module Contents
+---------------
+
+.. py:class:: LegacyQtObjectRenderer(parent: Optional[PySide6.QtWidgets.QWidget] = None)
+
+   Bases: :py:obj:`picogl.ui.backend.qt.base.GLBase`
+
+
+   Qt-based cube renderer using legacy OpenGL
+
+   This class extends GLBase to provide a simple cube renderer with
+   mouse controls for rotation and zoom.
+
+
+   .. py:attribute:: _initialized
+      :type:  bool
+      :value: False
+
+
+
+   .. py:attribute:: gl_mesh_data
+      :value: None
+
+
+
+   .. py:attribute:: mesh_data
+      :type:  Optional[picogl.renderer.MeshData]
+      :value: None
+
+
+
+   .. py:attribute:: vertices
+
+
+   .. py:attribute:: colors
+
+
+   .. py:attribute:: indices
+
+
+   .. py:attribute:: rotation_x
+      :value: 0.0
+
+
+
+   .. py:attribute:: rotation_y
+      :value: 0.0
+
+
+
+   .. py:attribute:: zoom
+      :value: 5.0
+
+
+
+   .. py:attribute:: auto_rotate
+      :value: True
+
+
+
+   .. py:attribute:: rotation_speed
+      :value: 1.0
+
+
+
+   .. py:attribute:: timer
+
+
+   .. py:method:: initializeGL()
+
+      Initialize OpenGL state for cube rendering
+
+
+
+   .. py:method:: initialize()
+
+
+   .. py:method:: initialize_materials()
+
+
+   .. py:method:: initialize_state()
+
+
+   .. py:method:: initialize_lighting()
+
+
+   .. py:method:: resizeGL(w: int, h: int)
+
+      Handle window resize
+
+
+
+   .. py:method:: _emit_rotation_feedback()
+
+
+   .. py:method:: paintGL()
+
+      Render the cube scene
+
+
+
+   .. py:method:: draw()
+
+      Draw the cube using LegacyGLMesh
+
+
+
+   .. py:method:: animate()
+
+      Animation loop - called by timer
+
+
+
+   .. py:method:: mouseMoveEvent(event)
+
+      Handle mouse movement for manual rotation
+
+
+
+   .. py:method:: wheelEvent(event)
+
+      Handle mouse wheel for zoom
+
+
+
+   .. py:method:: keyPressEvent(event)
+
+      Handle keyboard input
+
+
+

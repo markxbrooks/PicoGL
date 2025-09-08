@@ -1,0 +1,15 @@
+picogl.backend.legacy.gizmos
+============================
+
+.. py:module:: picogl.backend.legacy.gizmos
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/picogl/backend/legacy/gizmos/axes/index
+
+

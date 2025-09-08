@@ -1,0 +1,47 @@
+picogl.backend.legacy.core.camera.perspective
+=============================================
+
+.. py:module:: picogl.backend.legacy.core.camera.perspective
+
+.. autoapi-nested-parse::
+
+   projection_utils
+   ================
+
+   This module provides functions for constructing projection matrices used in
+   3D graphics, such as perspective projection matrices compatible with OpenGL
+   and other rendering pipelines.
+
+   Functions:
+       - perspective: Constructs a 4x4 perspective projection matrix.
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.backend.legacy.core.camera.perspective.perspective
+
+
+Module Contents
+---------------
+
+.. py:function:: perspective(fovy: float, aspect: float, znear: float, zfar: float) -> numpy.ndarray
+
+   Create a perspective projection matrix.
+
+   :param fovy: Field of view angle in the y-direction, in degrees.
+   :type fovy: float
+   :param aspect: Aspect ratio of the viewport (width / height).
+   :type aspect: float
+   :param znear: Distance to the near clipping plane (must be > 0).
+   :type znear: float
+   :param zfar: Distance to the far clipping plane (must be > znear).
+   :type zfar: float
+
+   :return: A 4x4 perspective projection matrix.
+   :rtype: numpy.ndarray
+
+

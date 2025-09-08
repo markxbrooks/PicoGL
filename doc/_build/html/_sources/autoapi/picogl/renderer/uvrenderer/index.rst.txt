@@ -1,0 +1,60 @@
+picogl.renderer.uvrenderer
+==========================
+
+.. py:module:: picogl.renderer.uvrenderer
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.renderer.uvrenderer.UvRenderer
+
+
+Module Contents
+---------------
+
+.. py:class:: UvRenderer(parent: object = None, vertex_shader_file: str = 'glsl/utils/uv2d/vertex.glsl', fragment_shader_file: str = 'glsl/utils/uv2d/fragment.glsl')
+
+   Bases: :py:obj:`picogl.renderer.RendererBase`
+
+
+   2D UV Renderer that draws a mesh using UV coordinates and indices.
+   Follows the RendererBase interface.
+
+
+   .. py:attribute:: uv_buffer
+      :type:  Optional[int]
+      :value: None
+
+
+
+   .. py:attribute:: indices_buffer
+      :type:  Optional[int]
+      :value: None
+
+
+
+   .. py:attribute:: index_count
+      :type:  int
+      :value: 0
+
+
+
+   .. py:attribute:: shader
+      :type:  Optional[picogl.backend.modern.core.shader.program.ShaderProgram]
+
+
+   .. py:method:: initialize()
+
+      Initialize OpenGL resources. Overrides RendererBase.initialize().
+
+
+
+   .. py:method:: _draw_model() -> None
+
+      Draw the UV mesh. Called by RendererBase.render().
+
+
+

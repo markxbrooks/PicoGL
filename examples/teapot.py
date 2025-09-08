@@ -18,7 +18,7 @@ def main() -> None:
     data = MeshData.from_raw(
         vertices=teapot_data.vertices,
         normals=teapot_data.normals,
-        colors=([[1.0, 0.0, 0.0]] * (len(teapot_data.vertices) // 3))
+        colors=([[1.0, 0.0, 0.0]] * (len(teapot_data.vertices) // 3)),
     )
     render_window = RenderWindow(
         width=800,

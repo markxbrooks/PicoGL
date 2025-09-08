@@ -1,0 +1,17 @@
+picogl.buffers.vertex
+=====================
+
+.. py:module:: picogl.buffers.vertex
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/picogl/buffers/vertex/aliases/index
+   /autoapi/picogl/buffers/vertex/legacy/index
+   /autoapi/picogl/buffers/vertex/modern/index
+
+

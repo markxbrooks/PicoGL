@@ -1,0 +1,26 @@
+picogl.backend.modern.core.uniform.location
+===========================================
+
+.. py:module:: picogl.backend.modern.core.uniform.location
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.backend.modern.core.uniform.location.get_uniform_location
+
+
+Module Contents
+---------------
+
+.. py:function:: get_uniform_location(shader_program: int, uniform_name: str) -> int
+
+   get_uniform_location
+
+   :param shader_program: int
+   :param uniform_name: str
+   :return: int
+
+

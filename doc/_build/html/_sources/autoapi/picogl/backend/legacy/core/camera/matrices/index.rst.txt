@@ -1,0 +1,16 @@
+picogl.backend.legacy.core.camera.matrices
+==========================================
+
+.. py:module:: picogl.backend.legacy.core.camera.matrices
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/picogl/backend/legacy/core/camera/matrices/get/index
+   /autoapi/picogl/backend/legacy/core/camera/matrices/setup/index
+
+

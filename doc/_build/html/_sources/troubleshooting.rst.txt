@@ -187,6 +187,7 @@ Slow Rendering
 * Batch similar operations
 
 **Example**:
+
 .. code-block:: python
 
    # Inefficient rendering
@@ -213,6 +214,7 @@ Memory Issues
 * Use efficient data types
 
 **Example**:
+
 .. code-block:: python
 
    # Memory leak
@@ -245,6 +247,7 @@ Frame Rate Issues
 * Minimize state changes
 
 **Example**:
+
 .. code-block:: python
 
    # Inefficient rendering
@@ -269,6 +272,7 @@ Enable Debug Output
 ~~~~~~~~~~~~~~~~~~~
 
 **OpenGL Error Checking**:
+
 .. code-block:: python
 
    def check_gl_error():
@@ -283,6 +287,7 @@ Enable Debug Output
    check_gl_error()
 
 **Debug Information**:
+
 .. code-block:: python
 
    def print_gl_info():
@@ -292,6 +297,7 @@ Enable Debug Output
        print(f"Extensions: {glGetString(GL_EXTENSIONS)}")
 
 **Performance Profiling**:
+
 .. code-block:: python
 
    import time
@@ -308,16 +314,19 @@ Use Diagnostic Tools
 ~~~~~~~~~~~~~~~~~~~~
 
 **OpenGL Setup Test**:
+
 .. code-block:: bash
 
    python examples/test_opengl_setup.py
 
 **Cube Data Test**:
+
 .. code-block:: bash
 
    python examples/test_cube_data.py
 
 **Legacy Examples**:
+
 .. code-block:: bash
 
    # Try minimal examples for compatibility
@@ -328,6 +337,7 @@ Check System Information
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 **Python Information**:
+
 .. code-block:: python
 
    import sys
@@ -337,6 +347,7 @@ Check System Information
    print(f"Architecture: {platform.architecture()}")
 
 **OpenGL Information**:
+
 .. code-block:: python
 
    import OpenGL.GL as GL
@@ -345,6 +356,7 @@ Check System Information
    print(f"Renderer: {GL.glGetString(GL.GL_RENDERER)}")
 
 **Package Information**:
+
 .. code-block:: python
 
    import pkg_resources
@@ -454,6 +466,7 @@ When reporting issues, include:
    - Relevant configuration
 
 **Example Issue Report**:
+
 .. code-block:: text
 
    **System**: macOS 12.0, Python 3.9, Intel HD Graphics 6000

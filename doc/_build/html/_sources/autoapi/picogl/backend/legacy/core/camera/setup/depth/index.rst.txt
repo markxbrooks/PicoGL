@@ -1,0 +1,29 @@
+picogl.backend.legacy.core.camera.setup.depth
+=============================================
+
+.. py:module:: picogl.backend.legacy.core.camera.setup.depth
+
+.. autoapi-nested-parse::
+
+   Enable depth test
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.backend.legacy.core.camera.setup.depth.enable_depth_test
+
+
+Module Contents
+---------------
+
+.. py:function:: enable_depth_test() -> None
+
+   enable_depth_test
+
+   :return: None
+
+

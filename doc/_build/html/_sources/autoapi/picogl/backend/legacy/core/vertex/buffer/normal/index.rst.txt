@@ -1,0 +1,36 @@
+picogl.backend.legacy.core.vertex.buffer.normal
+===============================================
+
+.. py:module:: picogl.backend.legacy.core.vertex.buffer.normal
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.backend.legacy.core.vertex.buffer.normal.LegacyNormalVBO
+
+
+Module Contents
+---------------
+
+.. py:class:: LegacyNormalVBO(handle: int = None, data: numpy.ndarray = None, size: int = 3)
+
+   Bases: :py:obj:`picogl.backend.legacy.core.vertex.buffer.vertex.LegacyVBO`
+
+
+   Specialized Class for Position Buffers
+
+
+   .. py:attribute:: data
+      :value: None
+
+
+
+   .. py:method:: configure()
+
+      Configure attributes specific to position atoms_buffers
+
+
+

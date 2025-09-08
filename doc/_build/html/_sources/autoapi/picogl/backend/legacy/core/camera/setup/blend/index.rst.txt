@@ -1,0 +1,29 @@
+picogl.backend.legacy.core.camera.setup.blend
+=============================================
+
+.. py:module:: picogl.backend.legacy.core.camera.setup.blend
+
+.. autoapi-nested-parse::
+
+   Enable blending
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.backend.legacy.core.camera.setup.blend.enable_blending
+
+
+Module Contents
+---------------
+
+.. py:function:: enable_blending() -> None
+
+   enable_blending
+
+   :return: None
+
+

@@ -1,0 +1,58 @@
+picogl.backend.modern.core.shader.mvp.helpers
+=============================================
+
+.. py:module:: picogl.backend.modern.core.shader.mvp.helpers
+
+.. autoapi-nested-parse::
+
+   Set up model_matrix view projection (MVP) matrix for 3D rendering.
+
+       This function constructs a combined projection and view matrix based on camera orbit angles,
+       zoom level, and viewport aspect ratio. It simulates a camera orbiting around the origin
+       and returns a 4x4 transformation matrix suitable for use in OpenGL shaders.
+
+
+       :Example:
+
+       .. code-block:: python
+
+           mvp_parameters = setup_mvp(angle_x=0.5, angle_y=1.0, zoom=1.2, aspect=16/9)
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.backend.modern.core.shader.mvp.helpers.setup_mvp
+   picogl.backend.modern.core.shader.mvp.helpers.np_setup_mvp
+
+
+Module Contents
+---------------
+
+.. py:function:: setup_mvp(angle_x: float, angle_y: float, zoom: float, aspect: float) -> pyglm.glm.mat4
+
+   setup_mvp
+
+   :param angle_x: Rotation angle around the X-axis (in radians).
+   :type angle_x: float
+   :param angle_y: Rotation angle around the Y-axis (in radians).
+   :type angle_y: float
+   :param zoom: Zoom factor controlling camera distance.
+   :type zoom: float
+   :param aspect: Aspect ratio of the viewport (width / height).
+   :type aspect: float
+   :return: Combined projection * view matrix.
+   :rtype: glm.mat4
+
+
+
+.. py:function:: np_setup_mvp(shader, width, height, angle_x, angle_y, zoom) -> numpy.ndarray
+
+   setup_mvp
+
+   :return: ndarray[Any, dtype[bool_]]
+
+

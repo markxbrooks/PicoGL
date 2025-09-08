@@ -1,0 +1,143 @@
+picogl.renderer.meshdata
+========================
+
+.. py:module:: picogl.renderer.meshdata
+
+.. autoapi-nested-parse::
+
+   GLContext class
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.renderer.meshdata.MeshData
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.renderer.meshdata.compute_vertex_normals
+
+
+Module Contents
+---------------
+
+.. py:function:: compute_vertex_normals(vertices: numpy.ndarray, faces: numpy.ndarray) -> numpy.ndarray
+
+   vertices: (N, 3)
+   faces:    (M, 3)  0-based indices
+   returns:  (N, 3) normalized vertex normals
+
+
+.. py:class:: MeshData(vbo: numpy.ndarray = None, nbo: numpy.ndarray = None, uvs: numpy.ndarray = None, cbo: numpy.ndarray = None, ebo: numpy.ndarray = None)
+
+   Holds OpenGL-related state objects for rendering.
+
+
+   .. py:attribute:: vbo
+      :value: None
+
+
+
+   .. py:attribute:: nbo
+      :value: None
+
+
+
+   .. py:attribute:: uvs
+      :value: None
+
+
+
+   .. py:attribute:: cbo
+      :value: None
+
+
+
+   .. py:attribute:: ebo
+      :value: None
+
+
+
+   .. py:attribute:: vertex_count
+
+
+   .. py:method:: as_ribbon_args() -> dict
+
+      Convert into arguments for setup_ribbon_buffers.
+
+
+
+   .. py:method:: __str__()
+
+
+   .. py:method:: _to_float32_flat(arr, name: str, required: bool = False) -> numpy.ndarray
+      :classmethod:
+
+
+
+   .. py:method:: _to_float32_flat_or_none(arr, name: str) -> numpy.ndarray
+      :classmethod:
+
+
+
+   .. py:method:: _to_int32_flat(arr, name: str, required: bool = False) -> numpy.ndarray
+      :classmethod:
+
+
+
+   .. py:method:: _default_colors_for_vertices(vertex_count: int) -> numpy.ndarray
+      :classmethod:
+
+
+
+   .. py:method:: _default_normals_for_vertices(vertex_count: int) -> numpy.ndarray
+      :classmethod:
+
+
+
+   .. py:method:: __enter__()
+
+
+   .. py:method:: __exit__(exc_type, exc_val, exc_tb)
+
+
+   .. py:method:: bind()
+
+
+   .. py:method:: unbind()
+
+
+   .. py:method:: from_raw(vertices: Union[numpy.ndarray, list[float]], normals: Optional[Union[numpy.ndarray, list[float]]] = None, uvs: Optional[Union[numpy.ndarray, list[float]]] = None, colors: Optional[Union[numpy.ndarray, list[float]]] = None, indices: Optional[Union[numpy.ndarray, list[float]]] = None, color_per_vertex: Optional[Union[numpy.ndarray, list[float]]] = None)
+      :classmethod:
+
+
+      Build a MeshData from raw/python inputs.
+
+      :param vertices: np.ndarray required, list/array of x,y,z triplets
+      :param normals: np.ndarray optional, list/array of x,y,z triplets
+      :param uvs: np.ndarray optional, list/array of u,v pairs
+      :param indices: np.ndarray optional int indices
+      :param colors: np.ndarray optional per-vertex colors (flat float32 array)
+      :param color_per_vertex: np.ndarray if provided and colors is None, generate per-vertex colors
+
+
+
+   .. py:method:: draw(color: tuple = None, line_width: float = 1.0, mode: int = GL.GL_TRIANGLES, fill: bool = False, alpha: float = 1.0)
+
+      Draw the mesh with optional color override and transparency.
+
+      :param color: Optional color override. If None and vertex colors exist, uses vertex colors.
+      :param line_width: Line width for wireframe mode
+      :param mode: OpenGL drawing mode
+      :param fill: Whether to fill or use wireframe
+      :param alpha: Transparency value from 0.0 (opaque) to 1.0 (fully transparent)
+
+
+

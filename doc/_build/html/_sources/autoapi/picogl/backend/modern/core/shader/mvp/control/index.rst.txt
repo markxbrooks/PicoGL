@@ -1,0 +1,127 @@
+picogl.backend.modern.core.shader.mvp.control
+=============================================
+
+.. py:module:: picogl.backend.modern.core.shader.mvp.control
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.backend.modern.core.shader.mvp.control.MVPControl
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.backend.modern.core.shader.mvp.control.dummy_update_handler
+
+
+Module Contents
+---------------
+
+.. py:class:: MVPControl(width: int = 800, height: int = 480)
+
+   Encapsulates camera position, orientation, and MVP matrix handling.
+
+
+   .. py:attribute:: fov
+      :value: None
+
+
+
+   .. py:attribute:: z_angle
+      :value: None
+
+
+
+   .. py:attribute:: position
+      :value: None
+
+
+
+   .. py:attribute:: x_angle
+      :value: None
+
+
+
+   .. py:attribute:: y_angle
+      :value: None
+
+
+
+   .. py:attribute:: screen_width
+      :value: 800
+
+
+
+   .. py:attribute:: screen_height
+      :value: 480
+
+
+
+   .. py:method:: reset() -> None
+
+      Reset to default camera position and orientation.
+
+
+
+   .. py:method:: move_forward(distance: float) -> None
+
+
+   .. py:method:: move_up(distance: float) -> None
+
+
+   .. py:method:: move_right(distance: float) -> None
+
+
+   .. py:method:: pitch(delta: float) -> None
+
+      Rotate camera up/down (pitch).
+
+
+
+   .. py:method:: look_upward(yaw)
+
+      look_upward
+
+
+
+   .. py:method:: yaw(delta: float) -> None
+
+      Rotate camera left/right (yaw).
+
+
+
+   .. py:method:: turn(delta: float)
+
+
+   .. py:method:: set_fov(fov_degrees: float) -> None
+
+      Change field of view.
+
+
+
+   .. py:method:: compute_matrices() -> None
+
+      Recompute direction, right, up, and view/projection matrices.
+
+
+
+   .. py:method:: resize(width: int, height: int) -> None
+
+      Resize the viewport and update projection matrix.
+
+
+
+   .. py:method:: calc_mvp(model_matrix: pyglm.glm.mat4) -> pyglm.glm.mat4
+
+      Return full MVP matrix for a given model transform.
+
+
+
+.. py:function:: dummy_update_handler(self)
+

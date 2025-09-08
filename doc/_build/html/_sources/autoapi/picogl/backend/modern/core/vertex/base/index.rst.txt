@@ -1,0 +1,172 @@
+picogl.backend.modern.core.vertex.base
+======================================
+
+.. py:module:: picogl.backend.modern.core.vertex.base
+
+.. autoapi-nested-parse::
+
+   vertex_base.py
+
+   This module defines the `VertexBuffer` class, a foundational abstraction for
+   OpenGL objects that require explicit binding and unbinding during rendering.
+
+   `VertexBuffer` provides a common interface and context management protocol for derived classes such as
+   `VertexArrayObject`, `ModernVBO`, and `ModernEBO`.
+   It ensures consistent handling of OpenGL object lifetimes and usage patterns by enforcing the
+   implementation of `bind()` and `unbind()` methods.
+
+   Features:
+   - Stores a raw OpenGL object handle (ID)
+   - Provides `bind()` / `unbind()` interface to be implemented by subclasses
+   - Supports Python context manager protocol (`with` statement)
+   - Useful for any OpenGL object that must be bound/unbound during draw calls
+
+   Example Usage:
+   ==============
+   class MyBuffer(VertexBuffer):
+   ...def bind(self): glBindBuffer(GL_ARRAY_BUFFER, self.handle)
+   ...def unbind(self): glBindBuffer(GL_ARRAY_BUFFER, 0)
+   ...
+   ...with MyBuffer(handle) as buf:
+   ...   # buffer is bound
+           ...
+   ...# buffer is unbound
+
+   Note:
+   This base class is abstract and cannot be used directly;
+   `bind` and `unbind` must be implemented in subclasses.
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.backend.modern.core.vertex.base.VertexBuffer
+
+
+Module Contents
+---------------
+
+.. py:class:: VertexBuffer(handle: int = None, data: numpy.ndarray = None, target: int = GL_ARRAY_BUFFER, size: int = 3, stride: int = 0, dtype: int = GL_FLOAT, index: int = None, pointer: ctypes.c_void_p = ctypes.c_void_p(0))
+
+   Bases: :py:obj:`picogl.buffers.base.VertexBase`
+
+
+   VertexBuffer
+   ============
+   Base class for OpenGL vertex-related buffers (VBO, VAO, EBO).
+
+   This handles:
+       - Buffer binding/unbinding
+       - Data upload (glBufferData)
+       - Vertex attribute configuration
+       - Type mapping from NumPy dtype to GL constants
+
+
+   .. py:attribute:: _GL_TYPE_MAP
+
+
+   .. py:attribute:: index
+      :value: None
+
+
+
+   .. py:attribute:: normalized
+      :value: False
+
+
+
+   .. py:attribute:: target
+
+
+   .. py:attribute:: size
+      :value: 3
+
+
+
+   .. py:attribute:: stride
+      :value: 0
+
+
+
+   .. py:attribute:: dtype
+
+
+   .. py:attribute:: pointer
+
+
+   .. py:attribute:: data
+      :value: None
+
+
+
+   .. py:attribute:: offset
+      :value: 0
+
+
+
+   .. py:method:: bind() -> None
+
+      Bind this buffer.
+
+
+
+   .. py:method:: unbind() -> None
+
+      Unbind this buffer, ensuring the handle is valid.
+
+
+
+   .. py:method:: update(data: numpy.ndarray)
+
+
+   .. py:method:: set_data(data: numpy.ndarray, usage: int = GL_STATIC_DRAW) -> None
+
+      Upload data to the GPU.
+
+      :param data: NumPy array containing buffer data.
+      :param usage: GL usage hint (e.g., GL_STATIC_DRAW, GL_DYNAMIC_DRAW).
+
+
+
+   .. py:method:: set_vertex_attributes(index: int, data: numpy.ndarray = None, size: int = None, normalized: bool = False, stride: int = 0, offset: int = 0, dtype: int = None, pointer: ctypes.c_void_p = None) -> None
+
+      Set the vertex attribute pointer configuration.
+
+      :param index: Attribute index in the VAO.
+      :param data: Optional data array to store alongside attribute info.
+      :param size: Number of components per vertex (1-4).
+      :param normalized: Whether values should be normalized.
+      :param stride: Byte offset between consecutive attributes.
+      :param offset: Byte offset of the first attribute.
+      :param dtype: GL data type (e.g., GL_FLOAT).
+      :param pointer: Offset pointer for glVertexAttribPointer.
+
+
+
+   .. py:method:: configure() -> None
+
+      Enable and configure the vertex attribute array.
+
+
+
+   .. py:property:: index_count
+      :type: int
+
+
+      Number of vertices/indices in this buffer.
+
+
+   .. py:method:: _map_dtype_to_gl(dtype) -> int
+      :classmethod:
+
+
+      Map a NumPy dtype to the corresponding GL constant.
+
+
+
+   .. py:method:: __repr__() -> str
+
+

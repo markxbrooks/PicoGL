@@ -6,6 +6,7 @@ MVP_ZOOM_SCALE = -0.0015
 def compute_mvp_zoom_from_zoom(zoom_value: float) -> float:
     """
     compute_mvp_zoom_from_zoom
+
     :param zoom_value: float
     :return: float
     Compute the MVP zoom factor from a zoom value.
@@ -29,6 +30,7 @@ def invert_mvp_matrix(
 ) -> np.ndarray | None:
     """
     invert_mvp_matrix
+
     :param projection: 4x4 projection matrix
     :param model_view: np.ndarray
     :return: np.ndarray
@@ -81,6 +83,7 @@ def normalize_device_coordinates(depth, viewport, x, y):
 def convert_to_world_coordinates(inverse_mvp_matrix, normalized_device_vector):
     """
     convert_to_world_coordinates
+
     :param inverse_mvp_matrix: np.ndarray inverse_mvp_matrix
     :param normalized_device_vector: np.ndarray normalized_device_vector
     :return: np.ndarray world_coordinates

@@ -1,0 +1,31 @@
+picogl.normals
+==============
+
+.. py:module:: picogl.normals
+
+.. autoapi-nested-parse::
+
+   Generate Normal Data
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.normals.generate_normals
+
+
+Module Contents
+---------------
+
+.. py:function:: generate_normals(coords: numpy.ndarray) -> numpy.ndarray
+
+   generate_normals
+
+   :param coords: np.ndarray of shape (N, 3)
+   :return: np.ndarray of shape (N, 3)
+   Simple fake normals pointing up (for testing)
+
+

@@ -17,6 +17,7 @@ MeshData
 The ``MeshData`` class is the central data structure for storing 3D mesh information including vertices, colors, normals, and texture coordinates.
 
 **Example**:
+
 .. code-block:: python
 
    from picogl.renderer import MeshData
@@ -39,6 +40,7 @@ GLContext
 The ``GLContext`` class manages OpenGL-related state including VAOs, shaders, textures, and transformation matrices.
 
 **Example**:
+
 .. code-block:: python
 
    from picogl.renderer import GLContext
@@ -66,6 +68,7 @@ ObjectRenderer
 The ``ObjectRenderer`` class provides unified rendering for both textured and untextured objects using modern OpenGL.
 
 **Example**:
+
 .. code-block:: python
 
    from picogl.renderer import GLContext, MeshData
@@ -97,6 +100,7 @@ TextureRenderer
 The ``TextureRenderer`` class extends ``ObjectRenderer`` to provide specialized texture rendering capabilities.
 
 **Example**:
+
 .. code-block:: python
 
    from picogl.renderer.texture import TextureRenderer
@@ -124,6 +128,7 @@ LegacyGLMesh
 The ``LegacyGLMesh`` class provides OpenGL 1.x/2.x compatible mesh rendering for systems without modern OpenGL support.
 
 **Example**:
+
 .. code-block:: python
 
    from picogl.renderer.legacy_glmesh import LegacyGLMesh
@@ -151,6 +156,7 @@ GLMesh
 The ``GLMesh`` class provides modern OpenGL mesh rendering with VAO/VBO support.
 
 **Example**:
+
 .. code-block:: python
 
    from picogl.renderer.glmesh import GLMesh
@@ -204,6 +210,7 @@ UvRenderer
 The ``UvRenderer`` class provides 2D UV coordinate rendering for texture visualization.
 
 **Example**:
+
 .. code-block:: python
 
    from picogl.renderer.uvrenderer import UvRenderer
@@ -227,6 +234,7 @@ The renderer module uses several data structures to represent 3D mesh informatio
 **Faces**: Triangle indices defining mesh topology
 
 **Example**:
+
 .. code-block:: python
 
    # Vertex data (N, 3) array
@@ -260,6 +268,7 @@ The PicoGL rendering pipeline follows these steps:
 5. **Rendering**: Call renderer.render() to draw the mesh
 
 **Example**:
+
 .. code-block:: python
 
    # 1. Prepare data
@@ -290,6 +299,7 @@ PicoGL renderers include comprehensive error handling:
 **Mesh Upload Errors**: Use immediate mode rendering
 
 **Example**:
+
 .. code-block:: python
 
    try:
@@ -332,6 +342,7 @@ Best Practices
 5. **Test on multiple platforms** for compatibility
 
 **Example**:
+
 .. code-block:: python
 
    # Choose renderer based on OpenGL support

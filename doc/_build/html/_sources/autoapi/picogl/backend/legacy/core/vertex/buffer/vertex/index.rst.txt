@@ -1,0 +1,55 @@
+picogl.backend.legacy.core.vertex.buffer.vertex
+===============================================
+
+.. py:module:: picogl.backend.legacy.core.vertex.buffer.vertex
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.backend.legacy.core.vertex.buffer.vertex.LegacyVBO
+
+
+Module Contents
+---------------
+
+.. py:class:: LegacyVBO(handle: int = None, data: numpy.ndarray = None, target: int = GL_ARRAY_BUFFER, configure: bool = True, size: int = 3, stride: int = 0, dtype: int = GL_FLOAT, pointer: OpenGL.GL.ctypes.c_void_p = ctypes.c_void_p(0))
+
+   Bases: :py:obj:`picogl.backend.modern.core.vertex.base.VertexBuffer`
+
+
+   Legacy OpenGL Vertex Buffer Object (VBO) or Element Buffer Object (EBO).
+
+
+   .. py:method:: __enter__()
+
+
+   .. py:method:: __exit__(exc_type, exc_value, traceback)
+
+
+   .. py:method:: set_data(data: numpy.ndarray, usage: int = GL_STATIC_DRAW) -> None
+
+      Upload data to the GPU.
+
+      :param data: NumPy array containing the data to upload.
+      :param usage: OpenGL usage hint (e.g., GL_STATIC_DRAW).
+      :raises ValueError: If the data is not a NumPy array.
+
+
+
+   .. py:method:: configure()
+
+      Configure the buffer (default implementation does nothing).
+
+
+
+   .. py:method:: draw(index_count: int, index_type: int = GL_UNSIGNED_INT, mode: int = GL_LINES)
+      :abstractmethod:
+
+
+      Draw call (must be implemented in subclasses).
+
+
+

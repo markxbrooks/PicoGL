@@ -1,0 +1,18 @@
+picogl.backend.modern.core.uniform
+==================================
+
+.. py:module:: picogl.backend.modern.core.uniform
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/picogl/backend/modern/core/uniform/location/index
+   /autoapi/picogl/backend/modern/core/uniform/location_value/index
+   /autoapi/picogl/backend/modern/core/uniform/mvp/index
+   /autoapi/picogl/backend/modern/core/uniform/set_location/index
+
+

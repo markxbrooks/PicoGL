@@ -1,0 +1,136 @@
+picogl.ui.abc_window
+====================
+
+.. py:module:: picogl.ui.abc_window
+
+.. autoapi-nested-parse::
+
+   ABC Window
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.ui.abc_window.AbstractGLWindow
+
+
+Module Contents
+---------------
+
+.. py:class:: AbstractGLWindow(width: int = 800, height: int = 480, title: bytes = b'GL Window')
+
+   Bases: :py:obj:`abc.ABC`
+
+
+   A strict ABC base class for a GLUT/OpenGL window.
+
+   Subclasses must implement:
+     - initializeGL
+     - paintGL
+     - resizeGL
+     - on_keyboard
+     - on_special_key
+     - on_mouse
+     - on_mousemove
+
+
+   .. py:attribute:: controller
+      :type:  Optional[object]
+      :value: None
+
+
+
+   .. py:attribute:: width
+      :value: 800
+
+
+
+   .. py:attribute:: height
+      :value: 480
+
+
+
+   .. py:attribute:: window
+      :value: None
+
+
+
+   .. py:attribute:: title
+      :value: b'GL Window'
+
+
+
+   .. py:method:: initializeGL() -> None
+      :abstractmethod:
+
+
+      Set up OpenGL state. Must be implemented by subclass.
+
+
+
+   .. py:method:: paintGL() -> None
+      :abstractmethod:
+
+
+      Render the scene. Must be implemented by subclass.
+
+
+
+   .. py:method:: resizeGL(width: int, height: int) -> None
+      :abstractmethod:
+
+
+      Handle window resize. Must be implemented by subclass.
+
+
+
+   .. py:method:: display() -> None
+
+      Default display path calls paintGL, then swaps buffers
+
+
+
+   .. py:method:: idle() -> None
+
+      Optional idle hook (override if needed).
+
+
+
+   .. py:method:: on_keyboard(key, x, y) -> None
+      :abstractmethod:
+
+
+      Handle ASCII keyboard input. Must be implemented by subclass.
+
+
+
+   .. py:method:: on_special_key(key, x, y) -> None
+      :abstractmethod:
+
+
+      Handle special keys (arrows, function keys). Must be implemented by subclass.
+
+
+
+   .. py:method:: mousePressEvent(*args, **kwargs) -> None
+      :abstractmethod:
+
+
+      Handle mouse button events. Must be implemented by subclass.
+
+
+
+   .. py:method:: mouseMoveEvent(*args, **kwargs) -> None
+      :abstractmethod:
+
+
+      Handle mouse movement events. Must be implemented by subclass.
+
+
+
+   .. py:method:: run() -> None
+
+

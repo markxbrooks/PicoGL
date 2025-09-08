@@ -1,0 +1,45 @@
+picogl.renderer.abstract
+========================
+
+.. py:module:: picogl.renderer.abstract
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.renderer.abstract.AbstractRenderer
+
+
+Module Contents
+---------------
+
+.. py:class:: AbstractRenderer
+
+   Bases: :py:obj:`abc.ABC`
+
+
+   Helper class that provides a standard way to create an ABC using
+   inheritance.
+
+
+   .. py:method:: initialize() -> None
+      :abstractmethod:
+
+
+      Subclasses must implement buffer setup.
+
+
+
+   .. py:method:: set_visibility(visible: bool) -> None
+
+      Set the visibility of the object.
+
+
+
+   .. py:method:: render()
+      :abstractmethod:
+
+
+

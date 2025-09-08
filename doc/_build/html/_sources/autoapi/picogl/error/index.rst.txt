@@ -1,0 +1,44 @@
+picogl.error
+============
+
+.. py:module:: picogl.error
+
+.. autoapi-nested-parse::
+
+   Error checking
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.error.check_errors
+   picogl.error.check_error_after
+   picogl.error.gl_check_error
+
+
+Module Contents
+---------------
+
+.. py:function:: check_errors()
+
+   check_errors
+
+   :return:
+
+
+.. py:function:: check_error_after(label: str = '') -> None
+
+   check_error_after
+
+   :param label: str
+   :return: None
+
+
+.. py:function:: gl_check_error(chain_id: str = '')
+
+   gl_check_error
+
+

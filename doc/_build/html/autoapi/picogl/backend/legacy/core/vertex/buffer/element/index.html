@@ -1,0 +1,846 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>picogl.backend.legacy.core.vertex.buffer.element &mdash; PicoGL 0.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../../../_static/documentation_options.js?v=938c9ccc"></script>
+      <script src="../../../../../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../../../search.html" />
+    <link rel="next" title="picogl.backend.legacy.core.vertex.buffer.normal" href="../normal/index.html" />
+    <link rel="prev" title="picogl.backend.legacy.core.vertex.buffer.color" href="../color/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../../../index.html" class="icon icon-home">
+            PicoGL
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../installation.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../installation.html#platform-specific-requirements">Platform-Specific Requirements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../installation.html#windows">Windows</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../installation.html#macos">macOS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../installation.html#linux-ubuntu-debian">Linux (Ubuntu/Debian)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../installation.html#linux-centos-rhel-fedora">Linux (CentOS/RHEL/Fedora)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../installation.html#installation-methods">Installation Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../installation.html#from-pypi-recommended-coming-soon">From PyPI (Recommended) *Coming Soon!</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../installation.html#from-source">From Source</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../installation.html#from-conda-coming-soon">From Conda *Coming Soon!</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../installation.html#dependencies">Dependencies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../installation.html#core-dependencies">Core Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../installation.html#optional-dependencies">Optional Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../installation.html#development-dependencies">Development Dependencies</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../installation.html#installation-verification">Installation Verification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../installation.html#troubleshooting">Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../installation.html#common-issues">Common Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../installation.html#macos-specific-issues">macOS Specific Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../installation.html#windows-specific-issues">Windows Specific Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../installation.html#linux-specific-issues">Linux Specific Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../installation.html#getting-help">Getting Help</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../installation.html#system-information">System Information</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../quickstart.html">Quick Start Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../quickstart.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../quickstart.html#your-first-picogl-program">Your First PicoGL Program</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../quickstart.html#understanding-the-code">Understanding the Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../quickstart.html#key-concepts">Key Concepts</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../quickstart.html#meshdata">MeshData</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../quickstart.html#renderwindow">RenderWindow</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../quickstart.html#interactive-controls">Interactive Controls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../quickstart.html#adding-more-features">Adding More Features</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../quickstart.html#textures">Textures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../quickstart.html#lighting">Lighting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../quickstart.html#multiple-objects">Multiple Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../quickstart.html#legacy-compatibility">Legacy Compatibility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../quickstart.html#common-issues">Common Issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../quickstart.html#next-steps">Next Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../quickstart.html#examples-to-try">Examples to Try</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../quickstart.html#troubleshooting">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../examples.html#basic-examples">Basic Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../examples.html#cube-example">Cube Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../examples.html#teapot-example">Teapot Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../examples.html#legacy-examples">Legacy Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../examples.html#legacy-cube-minimal">Legacy Cube (Minimal)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../examples.html#legacy-cube-fixed">Legacy Cube (Fixed)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../examples.html#legacy-teapot-minimal">Legacy Teapot (Minimal)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../examples.html#legacy-teapot-fixed">Legacy Teapot (Fixed)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../examples.html#advanced-examples">Advanced Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../examples.html#molecular-visualization">Molecular Visualization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../examples.html#texture-examples">Texture Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../examples.html#shader-examples">Shader Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../examples.html#utility-examples">Utility Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../examples.html#mesh-viewer">Mesh Viewer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../examples.html#test-window">Test Window</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../examples.html#running-examples">Running Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../examples.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../examples.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../examples.html#interactive-controls">Interactive Controls</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../examples.html#troubleshooting-examples">Troubleshooting Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../examples.html#common-issues">Common Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../examples.html#platform-specific-issues">Platform-Specific Issues</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../examples.html#macos">macOS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../examples.html#windows">Windows</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../examples.html#linux">Linux</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../examples.html#example-selection-guide">Example Selection Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../examples.html#customizing-examples">Customizing Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../examples.html#contributing-examples">Contributing Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../legacy_examples.html">Legacy Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../legacy_examples.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../legacy_examples.html#why-legacy-examples">Why Legacy Examples?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../legacy_examples.html#legacy-teapot-examples">Legacy Teapot Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../legacy_examples.html#legacy-teapot-minimal">Legacy Teapot (Minimal)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../legacy_examples.html#legacy-teapot-fixed">Legacy Teapot (Fixed)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../legacy_examples.html#legacy-cube-examples">Legacy Cube Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../legacy_examples.html#legacy-cube-minimal">Legacy Cube (Minimal)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../legacy_examples.html#legacy-cube-fixed">Legacy Cube (Fixed)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../legacy_examples.html#diagnostic-tools">Diagnostic Tools</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../legacy_examples.html#opengl-setup-test">OpenGL Setup Test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../legacy_examples.html#cube-data-test">Cube Data Test</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../legacy_examples.html#installation-and-setup">Installation and Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../legacy_examples.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../legacy_examples.html#installation">Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../legacy_examples.html#platform-specific-setup">Platform-Specific Setup</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../legacy_examples.html#macos">macOS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../legacy_examples.html#windows">Windows</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../legacy_examples.html#linux">Linux</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../legacy_examples.html#troubleshooting">Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../legacy_examples.html#common-issues">Common Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../legacy_examples.html#macos-specific-issues">macOS Specific Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../legacy_examples.html#windows-specific-issues">Windows Specific Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../legacy_examples.html#linux-specific-issues">Linux Specific Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../legacy_examples.html#performance-notes">Performance Notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../legacy_examples.html#choosing-the-right-version">Choosing the Right Version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../legacy_examples.html#development-notes">Development Notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../legacy_examples.html#license">License</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../troubleshooting.html">Troubleshooting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../troubleshooting.html#common-issues">Common Issues</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../troubleshooting.html#installation-problems">Installation Problems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../troubleshooting.html#opengl-context-issues">OpenGL Context Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../troubleshooting.html#shader-compilation-issues">Shader Compilation Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../troubleshooting.html#platform-specific-issues">Platform-Specific Issues</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../troubleshooting.html#macos-issues">macOS Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../troubleshooting.html#windows-issues">Windows Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../troubleshooting.html#linux-issues">Linux Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../troubleshooting.html#performance-issues">Performance Issues</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../troubleshooting.html#slow-rendering">Slow Rendering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../troubleshooting.html#memory-issues">Memory Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../troubleshooting.html#frame-rate-issues">Frame Rate Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../troubleshooting.html#debugging-techniques">Debugging Techniques</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../troubleshooting.html#enable-debug-output">Enable Debug Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../troubleshooting.html#use-diagnostic-tools">Use Diagnostic Tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../troubleshooting.html#check-system-information">Check System Information</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../troubleshooting.html#common-solutions">Common Solutions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../troubleshooting.html#try-legacy-examples">Try Legacy Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../troubleshooting.html#update-dependencies">Update Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../troubleshooting.html#check-opengl-support">Check OpenGL Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../troubleshooting.html#use-software-rendering">Use Software Rendering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../troubleshooting.html#check-display-environment">Check Display Environment</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../troubleshooting.html#report-issues">Report Issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../troubleshooting.html#getting-help">Getting Help</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../api/renderer.html">Renderer API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/renderer.html#core-classes">Core Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/renderer.html#meshdata">MeshData</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/renderer.html#picogl.renderer.meshdata.MeshData"><code class="docutils literal notranslate"><span class="pre">MeshData</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/renderer.html#glcontext">GLContext</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/renderer.html#picogl.renderer.glcontext.GLContext"><code class="docutils literal notranslate"><span class="pre">GLContext</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/renderer.html#renderer-classes">Renderer Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/renderer.html#objectrenderer">ObjectRenderer</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/renderer.html#picogl.renderer.object.ObjectRenderer"><code class="docutils literal notranslate"><span class="pre">ObjectRenderer</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/renderer.html#texturerenderer">TextureRenderer</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/renderer.html#picogl.renderer.texture.TextureRenderer"><code class="docutils literal notranslate"><span class="pre">TextureRenderer</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/renderer.html#legacyglmesh">LegacyGLMesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/renderer.html#glmesh">GLMesh</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/renderer.html#picogl.renderer.glmesh.GLMesh"><code class="docutils literal notranslate"><span class="pre">GLMesh</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/renderer.html#base-classes">Base Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/renderer.html#rendererbase">RendererBase</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/renderer.html#picogl.renderer.base.RendererBase"><code class="docutils literal notranslate"><span class="pre">RendererBase</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/renderer.html#abstractrenderer">AbstractRenderer</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/renderer.html#picogl.renderer.abstract.AbstractRenderer"><code class="docutils literal notranslate"><span class="pre">AbstractRenderer</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/renderer.html#utility-classes">Utility Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/renderer.html#uvrenderer">UvRenderer</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/renderer.html#picogl.renderer.uvrenderer.UvRenderer"><code class="docutils literal notranslate"><span class="pre">UvRenderer</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/renderer.html#data-structures">Data Structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/renderer.html#rendering-pipeline">Rendering Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/renderer.html#error-handling">Error Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/renderer.html#performance-considerations">Performance Considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/renderer.html#best-practices">Best Practices</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../api/buffers.html">Buffers API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/buffers.html#core-classes">Core Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/buffers.html#vertexarrayobject">VertexArrayObject</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/buffers.html#picogl.backend.modern.core.vertex.array.object.VertexArrayObject"><code class="docutils literal notranslate"><span class="pre">VertexArrayObject</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/buffers.html#vertexbuffergroup">VertexBufferGroup</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/buffers.html#buffer-classes">Buffer Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/buffers.html#modern-buffers">Modern Buffers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/buffers.html#modernvbo">ModernVBO</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/buffers.html#modernebo">ModernEBO</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/buffers.html#legacy-buffers">Legacy Buffers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/buffers.html#legacyvbo">LegacyVBO</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/buffers.html#legacypositionvbo">LegacyPositionVBO</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/buffers.html#legacycolorvbo">LegacyColorVBO</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/buffers.html#legacynormalvbo">LegacyNormalVBO</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/buffers.html#legacyebo">LegacyEBO</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/buffers.html#base-classes">Base Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/buffers.html#vertexbase">VertexBase</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/buffers.html#picogl.buffers.base.VertexBase"><code class="docutils literal notranslate"><span class="pre">VertexBase</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/buffers.html#vertexbuffer">VertexBuffer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/buffers.html#data-structures">Data Structures</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/buffers.html#layoutdescriptor">LayoutDescriptor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/buffers.html#picogl.buffers.factory.layout.LayoutDescriptor"><code class="docutils literal notranslate"><span class="pre">LayoutDescriptor</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/buffers.html#attributespec">AttributeSpec</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/buffers.html#picogl.buffers.attributes.AttributeSpec"><code class="docutils literal notranslate"><span class="pre">AttributeSpec</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/buffers.html#buffer-management">Buffer Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/buffers.html#creating-buffers">Creating Buffers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/buffers.html#binding-buffers">Binding Buffers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/buffers.html#buffer-types">Buffer Types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/buffers.html#vertex-buffers">Vertex Buffers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/buffers.html#element-buffers">Element Buffers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/buffers.html#buffer-operations">Buffer Operations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/buffers.html#uploading-data">Uploading Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/buffers.html#drawing">Drawing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/buffers.html#cleanup">Cleanup</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/buffers.html#error-handling">Error Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/buffers.html#performance-considerations">Performance Considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/buffers.html#best-practices">Best Practices</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../api/shaders.html">Shaders API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/shaders.html#core-classes">Core Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/shaders.html#shaderprogram">ShaderProgram</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/shaders.html#picogl.backend.modern.core.shader.program.ShaderProgram"><code class="docutils literal notranslate"><span class="pre">ShaderProgram</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/shaders.html#shadermanager">ShaderManager</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/shaders.html#shader-types">Shader Types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/shaders.html#shadertype">ShaderType</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/shaders.html#picogl.shaders.type.ShaderType"><code class="docutils literal notranslate"><span class="pre">ShaderType</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/shaders.html#shader-compilation">Shader Compilation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/shaders.html#compile-shaders">Compile Shaders</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/shaders.html#picogl.shaders.compile.compile_shaders"><code class="docutils literal notranslate"><span class="pre">compile_shaders()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/shaders.html#load-shaders">Load Shaders</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/shaders.html#picogl.shaders.load.load_fragment_and_vertex_for_shader_type"><code class="docutils literal notranslate"><span class="pre">load_fragment_and_vertex_for_shader_type()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/shaders.html#uniform-management">Uniform Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/shaders.html#shaderuniform">ShaderUniform</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/shaders.html#picogl.shaders.shader_uniform.ShaderUniform"><code class="docutils literal notranslate"><span class="pre">ShaderUniform</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/shaders.html#uniform-types">Uniform Types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/shaders.html#built-in-shaders">Built-in Shaders</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/shaders.html#basic-color-shader">Basic Color Shader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/shaders.html#texture-shader">Texture Shader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/shaders.html#lighting-shader">Lighting Shader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/shaders.html#fallback-shaders">Fallback Shaders</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/shaders.html#shader-usage">Shader Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/shaders.html#creating-shader-programs">Creating Shader Programs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/shaders.html#using-shaders">Using Shaders</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/shaders.html#error-handling">Error Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/shaders.html#performance-considerations">Performance Considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/shaders.html#best-practices">Best Practices</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../api/ui.html">UI API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/ui.html#core-classes">Core Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/ui.html#abstractglwindow">AbstractGLWindow</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/ui.html#picogl.ui.abc_window.AbstractGLWindow"><code class="docutils literal notranslate"><span class="pre">AbstractGLWindow</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/ui.html#window-backends">Window Backends</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/ui.html#glut-backend">GLUT Backend</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/ui.html#glwindow">GLWindow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/ui.html#glutrendererwindow">GlutRendererWindow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/ui.html#renderwindow">RenderWindow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/ui.html#texturewindow">TextureWindow</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/ui.html#qt-backend">Qt Backend</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/ui.html#glbase">GLBase</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/ui.html#input-handling">Input Handling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/ui.html#mouse-input">Mouse Input</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/ui.html#keyboard-input">Keyboard Input</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/ui.html#window-management">Window Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/ui.html#creating-windows">Creating Windows</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/ui.html#window-properties">Window Properties</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/ui.html#rendering-loop">Rendering Loop</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/ui.html#display-function">Display Function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/ui.html#resize-handling">Resize Handling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/ui.html#event-handling">Event Handling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/ui.html#event-loop">Event Loop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/ui.html#timer-events">Timer Events</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/ui.html#platform-specific-features">Platform-Specific Features</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/ui.html#macos">macOS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/ui.html#windows">Windows</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/ui.html#linux">Linux</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/ui.html#error-handling">Error Handling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/ui.html#window-creation-errors">Window Creation Errors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/ui.html#input-errors">Input Errors</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/ui.html#performance-considerations">Performance Considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/ui.html#best-practices">Best Practices</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../api/utils.html">Utils API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/utils.html#core-classes">Core Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/utils.html#objectloader">ObjectLoader</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/utils.html#picogl.utils.loader.object.ObjectLoader"><code class="docutils literal notranslate"><span class="pre">ObjectLoader</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/utils.html#textureloader">TextureLoader</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/utils.html#picogl.utils.loader.texture.TextureLoader"><code class="docutils literal notranslate"><span class="pre">TextureLoader</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/utils.html#helper-functions">Helper Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/utils.html#gl-initialization">GL Initialization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/utils.html#picogl.utils.gl_init.execute_gl_tasks"><code class="docutils literal notranslate"><span class="pre">execute_gl_tasks()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/utils.html#picogl.utils.gl_init.init_gl_list"><code class="docutils literal notranslate"><span class="pre">init_gl_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/utils.html#picogl.utils.gl_init.paint_gl_list"><code class="docutils literal notranslate"><span class="pre">paint_gl_list()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/utils.html#texture-utilities">Texture Utilities</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/utils.html#picogl.utils.texture.bind_texture_array"><code class="docutils literal notranslate"><span class="pre">bind_texture_array()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/utils.html#normal-generation">Normal Generation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/utils.html#picogl.utils.normal.compute_vertex_normals"><code class="docutils literal notranslate"><span class="pre">compute_vertex_normals()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/utils.html#reshape-utilities">Reshape Utilities</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../api/utils.html#picogl.utils.reshape.float32_row"><code class="docutils literal notranslate"><span class="pre">float32_row()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/utils.html#data-loading">Data Loading</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/utils.html#obj-file-loading">OBJ File Loading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/utils.html#texture-loading">Texture Loading</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/utils.html#data-processing">Data Processing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/utils.html#mesh-data-processing">Mesh Data Processing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/utils.html#texture-processing">Texture Processing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/utils.html#file-management">File Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/utils.html#path-handling">Path Handling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/utils.html#error-handling">Error Handling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../api/utils.html#loading-errors">Loading Errors</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/utils.html#performance-considerations">Performance Considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../api/utils.html#best-practices">Best Practices</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../development.html">Development</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../development.html#project-structure">Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../development.html#architecture-overview">Architecture Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../development.html#design-principles">Design Principles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../development.html#backend-system">Backend System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../development.html#modern-backend">Modern Backend</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../development.html#legacy-backend">Legacy Backend</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../development.html#backend-selection">Backend Selection</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../development.html#testing-framework">Testing Framework</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../development.html#unit-tests">Unit Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../development.html#integration-tests">Integration Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../development.html#build-system">Build System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../development.html#setup-configuration">Setup Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../development.html#development-dependencies">Development Dependencies</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../development.html#code-style">Code Style</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../development.html#formatting">Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../development.html#linting">Linting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../development.html#type-checking">Type Checking</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../development.html#documentation">Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../development.html#sphinx-configuration">Sphinx Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../development.html#docstring-style">Docstring Style</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../development.html#contributing">Contributing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../development.html#getting-started">Getting Started</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../development.html#code-review-process">Code Review Process</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../development.html#release-process">Release Process</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../development.html#version-numbering">Version Numbering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../development.html#release-steps">Release Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../development.html#performance-considerations">Performance Considerations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../development.html#rendering-performance">Rendering Performance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../development.html#memory-management">Memory Management</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../development.html#debugging">Debugging</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../development.html#opengl-debugging">OpenGL Debugging</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../development.html#common-issues">Common Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../testing.html">Testing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../testing.html#test-structure">Test Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../testing.html#running-tests">Running Tests</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../testing.html#basic-test-execution">Basic Test Execution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../testing.html#using-pytest">Using pytest</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../testing.html#test-categories">Test Categories</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../testing.html#unit-tests">Unit Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../testing.html#integration-tests">Integration Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../testing.html#performance-tests">Performance Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../testing.html#compatibility-tests">Compatibility Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../testing.html#test-mocking">Test Mocking</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../testing.html#opengl-mocking">OpenGL Mocking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../testing.html#dependency-mocking">Dependency Mocking</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../testing.html#test-data">Test Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../testing.html#test-fixtures">Test Fixtures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../testing.html#test-utilities">Test Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../testing.html#continuous-integration">Continuous Integration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../testing.html#github-actions">GitHub Actions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../testing.html#test-coverage">Test Coverage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../testing.html#coverage-requirements">Coverage Requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../testing.html#code-quality">Code Quality</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../testing.html#linting">Linting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../testing.html#type-checking">Type Checking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../testing.html#formatting">Formatting</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../testing.html#test-best-practices">Test Best Practices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../testing.html#writing-tests">Writing Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../testing.html#test-maintenance">Test Maintenance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../testing.html#debugging-tests">Debugging Tests</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../contributing.html#getting-started">Getting Started</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../contributing.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../contributing.html#fork-and-clone">Fork and Clone</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../contributing.html#development-setup">Development Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../contributing.html#install-dependencies">Install Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../contributing.html#set-up-pre-commit-hooks">Set Up Pre-commit Hooks</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../contributing.html#development-workflow">Development Workflow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../contributing.html#making-changes">Making Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../contributing.html#code-style">Code Style</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../contributing.html#formatting">Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../contributing.html#linting">Linting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../contributing.html#type-checking">Type Checking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../contributing.html#documentation">Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../contributing.html#testing">Testing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../contributing.html#writing-tests">Writing Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../contributing.html#running-tests">Running Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../contributing.html#test-requirements">Test Requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../contributing.html#id1">Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../contributing.html#updating-documentation">Updating Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../contributing.html#building-documentation">Building Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../contributing.html#pull-request-process">Pull Request Process</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../contributing.html#creating-pull-requests">Creating Pull Requests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../contributing.html#pull-request-template">Pull Request Template</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../contributing.html#review-process">Review Process</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../contributing.html#types-of-contributions">Types of Contributions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../contributing.html#bug-fixes">Bug Fixes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../contributing.html#feature-requests">Feature Requests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../contributing.html#documentation-improvements">Documentation Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../contributing.html#performance-improvements">Performance Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../contributing.html#code-quality-improvements">Code Quality Improvements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../contributing.html#community-guidelines">Community Guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../contributing.html#code-of-conduct">Code of Conduct</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../contributing.html#communication">Communication</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../contributing.html#getting-help">Getting Help</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../contributing.html#recognition">Recognition</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../changelog.html#version-1-0-0-2025-01-06">Version 1.0.0 (2025-01-06)</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../mesh/index.html">mesh</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../mesh/index.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../mesh/index.html#module-contents">Module Contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../mesh/index.html#mesh.ShaderMeshRenderer"><code class="docutils literal notranslate"><span class="pre">ShaderMeshRenderer</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../../index.html">picogl</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../../../index.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../../index.html">picogl.backend</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../buffers/index.html">picogl.buffers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../error/index.html">picogl.error</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../frame/index.html">picogl.frame</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../info/index.html">picogl.info</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../logger/index.html">picogl.logger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../normals/index.html">picogl.normals</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../project/index.html">picogl.project</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../renderer/index.html">picogl.renderer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../safe/index.html">picogl.safe</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../shaders/index.html">picogl.shaders</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../tests/index.html">picogl.tests</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../ui/index.html">picogl.ui</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../utils/index.html">picogl.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../index.html#attributes">Attributes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../index.html#package-contents">Package Contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../index.html#picogl.__version__"><code class="docutils literal notranslate"><span class="pre">__version__</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../window/index.html">window</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../window/index.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../window/index.html#module-contents">Module Contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../window/index.html#window.LegacyQtObjectWindow"><code class="docutils literal notranslate"><span class="pre">LegacyQtObjectWindow</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../renderer/index.html">renderer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../renderer/index.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../renderer/index.html#module-contents">Module Contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../renderer/index.html#renderer.LegacyQtObjectRenderer"><code class="docutils literal notranslate"><span class="pre">LegacyQtObjectRenderer</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../../index.html">PicoGL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../index.html">picogl</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">picogl.backend</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">picogl.backend.legacy</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">picogl.backend.legacy.core</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">picogl.backend.legacy.core.vertex</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">picogl.backend.legacy.core.vertex.buffer</a></li>
+      <li class="breadcrumb-item active">picogl.backend.legacy.core.vertex.buffer.element</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../../../_sources/autoapi/picogl/backend/legacy/core/vertex/buffer/element/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-picogl.backend.legacy.core.vertex.buffer.element">
+<span id="picogl-backend-legacy-core-vertex-buffer-element"></span><h1>picogl.backend.legacy.core.vertex.buffer.element<a class="headerlink" href="#module-picogl.backend.legacy.core.vertex.buffer.element" title="Link to this heading"></a></h1>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#picogl.backend.legacy.core.vertex.buffer.element.LegacyEBO" title="picogl.backend.legacy.core.vertex.buffer.element.LegacyEBO"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LegacyEBO</span></code></a></p></td>
+<td><p>Legacy Element Buffer Object (EBO)</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="picogl.backend.legacy.core.vertex.buffer.element.LegacyEBO">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">picogl.backend.legacy.core.vertex.buffer.element.</span></span><span class="sig-name descname"><span class="pre">LegacyEBO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">numpy.ndarray</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">GL_ELEMENT_ARRAY_BUFFER</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../../../_modules/picogl/backend/legacy/core/vertex/buffer/element.html#LegacyEBO"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.legacy.core.vertex.buffer.element.LegacyEBO" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../vertex/index.html#picogl.backend.legacy.core.vertex.buffer.vertex.LegacyVBO" title="picogl.backend.legacy.core.vertex.buffer.vertex.LegacyVBO"><code class="xref py py-obj docutils literal notranslate"><span class="pre">picogl.backend.legacy.core.vertex.buffer.vertex.LegacyVBO</span></code></a></p>
+<p>Legacy Element Buffer Object (EBO)</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.backend.legacy.core.vertex.buffer.element.LegacyEBO.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">GL_UNSIGNED_INT</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">GL_LINES</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pointer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">ctypes.c_void_p(0)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../../../_modules/picogl/backend/legacy/core/vertex/buffer/element.html#LegacyEBO.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.legacy.core.vertex.buffer.element.LegacyEBO.draw" title="Link to this definition"></a></dt>
+<dd><p>draw</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index_count</strong> – int</p></li>
+<li><p><strong>index_type</strong> – int e.g. GL_UNSIGNED_INT</p></li>
+<li><p><strong>mode</strong> – int e.g. GL_LINES</p></li>
+<li><p><strong>pointer</strong> – int</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="picogl.backend.legacy.core.vertex.buffer.element.LegacyEBO.configure">
+<span class="sig-name descname"><span class="pre">configure</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../../../_modules/picogl/backend/legacy/core/vertex/buffer/element.html#LegacyEBO.configure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#picogl.backend.legacy.core.vertex.buffer.element.LegacyEBO.configure" title="Link to this definition"></a></dt>
+<dd><p>configure</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+<p>Element Buffers don’t use vertex attributes—nothing to configure.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../color/index.html" class="btn btn-neutral float-left" title="picogl.backend.legacy.core.vertex.buffer.color" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../normal/index.html" class="btn btn-neutral float-right" title="picogl.backend.legacy.core.vertex.buffer.normal" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, PicoGL Contributors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

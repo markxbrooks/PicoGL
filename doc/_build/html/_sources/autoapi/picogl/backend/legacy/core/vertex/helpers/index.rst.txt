@@ -1,0 +1,24 @@
+picogl.backend.legacy.core.vertex.helpers
+=========================================
+
+.. py:module:: picogl.backend.legacy.core.vertex.helpers
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.backend.legacy.core.vertex.helpers.gl_clear_buffers
+
+
+Module Contents
+---------------
+
+.. py:function:: gl_clear_buffers() -> None
+
+   gl_clear_buffers
+
+   Clears the color_array and depth atoms_buffers and resets modelview matrix.
+
+

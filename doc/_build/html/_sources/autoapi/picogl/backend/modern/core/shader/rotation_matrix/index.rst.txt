@@ -1,0 +1,31 @@
+picogl.backend.modern.core.shader.rotation_matrix
+=================================================
+
+.. py:module:: picogl.backend.modern.core.shader.rotation_matrix
+
+.. autoapi-nested-parse::
+
+   Module for creating rotation matrices.
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.backend.modern.core.shader.rotation_matrix.create_rotation_matrix
+
+
+Module Contents
+---------------
+
+.. py:function:: create_rotation_matrix(angle_x: float, angle_y: float) -> numpy.ndarray
+
+   create_rotation_matrix
+
+   :param angle_x: float
+   :param angle_y: float
+   :return: np.ndarray
+
+

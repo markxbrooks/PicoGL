@@ -1,0 +1,244 @@
+picogl.ui.backend.qt.base
+=========================
+
+.. py:module:: picogl.ui.backend.qt.base
+
+.. autoapi-nested-parse::
+
+   GLBase Qt Widget
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.ui.backend.qt.base.MvpParameters
+   picogl.ui.backend.qt.base.CameraParameters
+   picogl.ui.backend.qt.base.GLBase
+
+
+Module Contents
+---------------
+
+.. py:class:: MvpParameters
+
+   MVP Parameters
+
+
+   .. py:attribute:: rotation_x
+      :value: None
+
+
+
+   .. py:attribute:: rotation_y
+      :value: None
+
+
+
+   .. py:attribute:: pan_x
+      :value: None
+
+
+
+   .. py:attribute:: pan_y
+      :value: None
+
+
+
+.. py:class:: CameraParameters
+
+   camera parameters
+
+
+   .. py:attribute:: rotation_x_axis
+      :value: None
+
+
+
+   .. py:attribute:: rotation_y_axis
+      :value: None
+
+
+
+   .. py:attribute:: rotation_z_axis
+      :value: None
+
+
+
+   .. py:attribute:: translation_x_axis
+      :value: None
+
+
+
+   .. py:attribute:: translation_y_axis
+      :value: None
+
+
+
+   .. py:attribute:: translation_zoom
+      :value: None
+
+
+
+   .. py:attribute:: rotation
+      :type:  numpy.ndarray
+
+
+   .. py:attribute:: translation
+      :type:  numpy.ndarray
+
+
+.. py:class:: GLBase(parent: PySide6.QtWidgets.QWidget = None, gl_use_legacy: bool = True)
+
+   Bases: :py:obj:`PySide6.QtOpenGLWidgets.QOpenGLWidget`, :py:obj:`PySide6.QtGui.QOpenGLFunctions`
+
+
+   OpenGL Qt Widget
+
+
+   .. py:attribute:: aspect_ratio
+      :value: None
+
+
+
+   .. py:attribute:: gl_use_legacy
+      :value: True
+
+
+
+   .. py:attribute:: last_mouse_pos
+      :value: None
+
+
+
+   .. py:attribute:: zoom_value
+      :value: None
+
+
+
+   .. py:attribute:: mvp_parameters
+
+
+   .. py:attribute:: camera_parameters
+
+
+   .. py:method:: initializeGL()
+
+      initializeGL
+
+      Initializes the OpenGL rendering context for this widget.
+
+      This includes:
+      - Enabling depth testing and multisampling
+      - Configuring blending for transparency
+      - Initializing lighting and material properties
+      - Setting the viewport to match widget size
+      - Clearing any legacy buffer state
+
+      Called automatically by Qt when the GL context is first created.
+
+
+
+   .. py:method:: resizeGL(w: int, h: int) -> None
+
+      resizeGL(w, h)
+
+      Handles resizing the OpenGL viewport and updates the projection matrix.
+
+      :param w: int - New width of the OpenGL widget
+      :param h: int - New height of the OpenGL widget
+
+
+
+   .. py:method:: update_mvp() -> None
+
+      Update model-view-projection matrix.
+
+
+
+   .. py:method:: paintGL()
+
+      paintGL
+
+      :return: None
+      OpenGL rendering entry point. Calls the appropriate rendering method based g.
+      Modern OpenGL rendering entry point.
+
+
+
+   .. py:method:: mousePressEvent(event: PySide6.QtGui.QMouseEvent) -> None
+
+      mousePressEvent
+
+      :param event: QMouseEvent
+      Handle mouse press events, including atom picking and coordinate un-projection.
+
+
+
+   .. py:method:: mouseMoveEvent(event: PySide6.QtGui.QMouseEvent) -> None
+
+      mouseMoveEvent
+
+      :param event: QMouseEvent
+      Handle mouse movement for X/Y axis rotation.
+
+
+
+   .. py:method:: wheelEvent(event: PySide6.QtGui.QWheelEvent) -> None
+
+      wheelEvent
+
+      :param event: QWheelEvent
+      :return: None
+      Sets zoom level
+
+
+
+   .. py:method:: mouseReleaseEvent(event: PySide6.QtGui.QMouseEvent) -> None
+
+      mouseReleaseEvent
+
+      :param event: QMouseEvent
+      :return: None
+
+
+
+   .. py:method:: _compute_clicked_position(x: int, y: int, z: int, viewport: numpy.ndarray) -> Optional[numpy.ndarray]
+      :abstractmethod:
+
+
+      _compute_clicked_position
+
+      :param x: int
+      :param y: int
+      :param z: int
+      :param viewport: np.ndarray
+      :return: np.ndarray or None
+
+
+
+   .. py:method:: _get_viewport() -> numpy.ndarray
+
+      _get_viewport
+
+      :return: np.ndarray: Array containing viewport dimensions.
+      Retrieve the current OpenGL viewport dimensions.
+
+
+
+   .. py:method:: _apply_camera_rotation(dx: float, dy: float) -> None
+
+      _apply_camera_rotation
+
+      :param dx: float
+      :param dy: float
+      :return: None
+      Apply delta rotation based on mouse movement
+
+
+
+   .. py:method:: _emit_rotation_feedback()
+
+

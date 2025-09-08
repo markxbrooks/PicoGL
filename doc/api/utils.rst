@@ -17,6 +17,7 @@ ObjectLoader
 The ``ObjectLoader`` class provides functionality for loading 3D object files (OBJ format).
 
 **Example**:
+
 .. code-block:: python
 
    from picogl.utils.loader.object import ObjectLoader
@@ -44,6 +45,7 @@ TextureLoader
 The ``TextureLoader`` class provides functionality for loading and managing textures.
 
 **Example**:
+
 .. code-block:: python
 
    from picogl.utils.loader.texture import TextureLoader
@@ -67,6 +69,7 @@ GL Initialization
 Executes a list of OpenGL initialization tasks.
 
 **Example**:
+
 .. code-block:: python
 
    from picogl.utils.gl_init import execute_gl_tasks, init_gl_list
@@ -79,6 +82,7 @@ Executes a list of OpenGL initialization tasks.
 Returns a list of OpenGL initialization tasks.
 
 **Example**:
+
 .. code-block:: python
 
    from picogl.utils.gl_init import init_gl_list
@@ -92,6 +96,7 @@ Returns a list of OpenGL initialization tasks.
 Returns a list of OpenGL painting tasks.
 
 **Example**:
+
 .. code-block:: python
 
    from picogl.utils.gl_init import paint_gl_list
@@ -108,6 +113,7 @@ Texture Utilities
 Binds a texture array to the specified texture unit.
 
 **Example**:
+
 .. code-block:: python
 
    from picogl.utils.texture import bind_texture_array
@@ -118,32 +124,34 @@ Binds a texture array to the specified texture unit.
 Normal Generation
 ~~~~~~~~~~~~~~~~~
 
-.. autofunction:: picogl.utils.normal.generate_normals
+.. autofunction:: picogl.utils.normal.compute_vertex_normals
 
 Generates surface normals for a mesh.
 
 **Example**:
+
 .. code-block:: python
 
-   from picogl.utils.normal import generate_normals
+   from picogl.utils.normal import compute_vertex_normals
    
    # Generate normals
-   normals = generate_normals(vertices, faces)
+   normals = compute_vertex_normals(vertices, faces)
 
 Reshape Utilities
 ~~~~~~~~~~~~~~~~~
 
-.. autofunction:: picogl.utils.reshape.handle_resize
+.. autofunction:: picogl.utils.reshape.float32_row
 
-Handles window resize events.
+Reshapes input to a single row and converts to np.float32.
 
 **Example**:
+
 .. code-block:: python
 
-   from picogl.utils.reshape import handle_resize
+   from picogl.utils.reshape import float32_row
    
-   # Handle resize
-   handle_resize(width, height)
+   # Reshape data
+   data = float32_row([1, 2, 3, 4, 5])
 
 Data Loading
 ------------
@@ -152,6 +160,7 @@ OBJ File Loading
 ~~~~~~~~~~~~~~~
 
 **Basic Loading**:
+
 .. code-block:: python
 
    from picogl.utils.loader.object import ObjectLoader
@@ -167,19 +176,21 @@ OBJ File Loading
    uvs = data.uvs
 
 **Advanced Loading**:
+
 .. code-block:: python
 
    # Load with options
    loader = ObjectLoader("model.obj")
    loader.set_options(
        normalize=True,
-       generate_normals=True,
+       compute_normals=True,
        generate_colors=True
    )
    
    data = loader.to_array_style()
 
 **Error Handling**:
+
 .. code-block:: python
 
    try:
@@ -196,6 +207,7 @@ Texture Loading
 ~~~~~~~~~~~~~~~
 
 **Basic Loading**:
+
 .. code-block:: python
 
    from picogl.utils.loader.texture import TextureLoader
@@ -208,6 +220,7 @@ Texture Loading
    texture.bind()
 
 **Advanced Loading**:
+
 .. code-block:: python
 
    # Load with options
@@ -221,6 +234,7 @@ Texture Loading
    texture = loader.load()
 
 **Error Handling**:
+
 .. code-block:: python
 
    try:
@@ -240,6 +254,7 @@ Mesh Data Processing
 ~~~~~~~~~~~~~~~~~~~~
 
 **Vertex Processing**:
+
 .. code-block:: python
 
    import numpy as np
@@ -256,17 +271,19 @@ Mesh Data Processing
    vertices = vertices * scale
 
 **Normal Processing**:
+
 .. code-block:: python
 
-   from picogl.utils.normal import generate_normals
+   from picogl.utils.normal import compute_vertex_normals
    
    # Generate normals
-   normals = generate_normals(vertices, faces)
+   normals = compute_vertex_normals(vertices, faces)
    
    # Normalize normals
    normals = normals / np.linalg.norm(normals, axis=1, keepdims=True)
 
 **Color Processing**:
+
 .. code-block:: python
 
    # Generate colors based on normals
@@ -282,6 +299,7 @@ Texture Processing
 ~~~~~~~~~~~~~~~~~~
 
 **UV Coordinate Processing**:
+
 .. code-block:: python
 
    # Flip V coordinates
@@ -294,6 +312,7 @@ Texture Processing
    uvs = uvs % 1.0
 
 **Texture Format Conversion**:
+
 .. code-block:: python
 
    from PIL import Image
@@ -314,6 +333,7 @@ Path Handling
 ~~~~~~~~~~~~~
 
 **Path Operations**:
+
 .. code-block:: python
 
    from pathlib import Path
@@ -330,6 +350,7 @@ Path Handling
    abs_path = texture_path.absolute()
 
 **Resource Management**:
+
 .. code-block:: python
 
    # Find resource files
@@ -349,6 +370,7 @@ Loading Errors
 ~~~~~~~~~~~~~~
 
 **File Not Found**:
+
 .. code-block:: python
 
    try:
@@ -361,6 +383,7 @@ Loading Errors
        print(f"Unexpected error: {e}")
 
 **Invalid File Format**:
+
 .. code-block:: python
 
    try:
@@ -373,6 +396,7 @@ Loading Errors
        print(f"Unexpected error: {e}")
 
 **Memory Errors**:
+
 .. code-block:: python
 
    try:
@@ -388,6 +412,7 @@ Performance Considerations
 -------------------------
 
 **Lazy Loading**:
+
 .. code-block:: python
 
    class LazyLoader:
@@ -406,6 +431,7 @@ Performance Considerations
            return loader.to_array_style()
 
 **Caching**:
+
 .. code-block:: python
 
    import functools
@@ -416,6 +442,7 @@ Performance Considerations
        return loader.load()
 
 **Batch Loading**:
+
 .. code-block:: python
 
    def load_multiple_objects(filenames):
@@ -440,6 +467,7 @@ Best Practices
 5. **Use lazy loading** for large files
 
 **Example**:
+
 .. code-block:: python
 
    # Choose loader based on file type

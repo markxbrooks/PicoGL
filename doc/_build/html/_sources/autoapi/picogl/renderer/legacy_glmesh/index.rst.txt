@@ -1,0 +1,101 @@
+picogl.renderer.legacy_glmesh
+=============================
+
+.. py:module:: picogl.renderer.legacy_glmesh
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.renderer.legacy_glmesh.LegacyGLMesh
+
+
+Module Contents
+---------------
+
+.. py:class:: LegacyGLMesh(vertices: numpy.ndarray, faces: numpy.ndarray, colors: Optional[numpy.ndarray] = None, normals: Optional[numpy.ndarray] = None, uvs: Optional[numpy.ndarray] = None)
+
+   GL Mesh fir Compatibility Profile
+
+   GPU‐resident mesh: owns VAO/VBO/EBO/CBO/NBO for an indexed triangle mesh.
+   It does not know anything about shaders or matrices.
+
+
+   .. py:attribute:: vertices
+
+
+   .. py:attribute:: colors
+
+
+   .. py:attribute:: normals
+
+
+   .. py:attribute:: uvs
+
+
+   .. py:attribute:: vao
+      :type:  Optional[picogl.buffers.vertex.legacy.VertexBufferGroup]
+      :value: None
+
+
+
+   .. py:attribute:: index_count
+      :type:  int
+      :value: 0
+
+
+
+   .. py:method:: from_mesh_data(mesh: MeshData) -> LegacyGLMesh
+      :classmethod:
+
+
+      Construct a GLMesh from a MeshData container.
+
+      :param mesh: Must have .vbo (Nx3), .ebo (Mx1), optional .cbo (Nx3), .nbo (Nx3), uvs (Nx2)
+      :type mesh: MeshData
+
+      :returns: Ready-to-upload mesh (GPU buffers are allocated only when `upload()` is called).
+      :rtype: LegacyGLMesh
+
+
+
+   .. py:method:: upload() -> None
+
+      Allocate & fill GPU buffers.
+
+
+
+   .. py:method:: generate_dynamic_attributes()
+
+      generate_dynamic_attributes
+
+      Create layout that matches the VBOs being added
+
+
+
+   .. py:method:: bind()
+
+
+   .. py:method:: unbind()
+
+
+   .. py:method:: delete()
+
+      Free GPU resources.
+
+
+
+   .. py:method:: __enter__()
+
+
+   .. py:method:: __exit__(exc_type, exc, tb)
+
+
+   .. py:method:: draw(mode=GL_TRIANGLES) -> None
+
+      Draw the mesh.
+
+
+

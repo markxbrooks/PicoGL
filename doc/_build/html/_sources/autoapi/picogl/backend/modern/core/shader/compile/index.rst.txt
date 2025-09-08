@@ -1,0 +1,26 @@
+picogl.backend.modern.core.shader.compile
+=========================================
+
+.. py:module:: picogl.backend.modern.core.shader.compile
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.backend.modern.core.shader.compile.compile_shader
+
+
+Module Contents
+---------------
+
+.. py:function:: compile_shader(shader_program: int, shader_type: int, source: str)
+
+   compile_vertex_shader
+
+   :param shader_program: int shader program
+   :param shader_type: int shader type e.g. GL_VERTEX_SHADER GL_FRAGMENT_SHADER
+   :param source: shader source string
+
+

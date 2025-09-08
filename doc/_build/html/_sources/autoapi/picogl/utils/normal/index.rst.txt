@@ -1,0 +1,22 @@
+picogl.utils.normal
+===================
+
+.. py:module:: picogl.utils.normal
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.utils.normal.compute_vertex_normals
+   picogl.utils.normal.compute_normals_from_vbo
+
+
+Module Contents
+---------------
+
+.. py:function:: compute_vertex_normals(vertices, indices)
+
+.. py:function:: compute_normals_from_vbo(vbo)
+

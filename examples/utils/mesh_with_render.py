@@ -5,7 +5,6 @@ from picogl.logger import Logger as log
 
 
 class MeshWithRender(object):
-
     def __init__(self):
         """constructor"""
         self.texture = None
@@ -32,9 +31,11 @@ class MeshWithRender(object):
         self.texture = None
         log.message("No texture for this object")
 
-    def render(self,
-               mvp_matrix: np.ndarray = None,
-               view_matrix: np.ndarray = None,
-               projection_matrix: np.ndarray = None):
+    def render(
+        self,
+        mvp_matrix: np.ndarray = None,
+        view_matrix: np.ndarray = None,
+        projection_matrix: np.ndarray = None,
+    ):
         log.message("override rendering process")
         pass

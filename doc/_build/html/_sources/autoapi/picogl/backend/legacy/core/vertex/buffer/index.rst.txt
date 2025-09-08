@@ -1,0 +1,20 @@
+picogl.backend.legacy.core.vertex.buffer
+========================================
+
+.. py:module:: picogl.backend.legacy.core.vertex.buffer
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/picogl/backend/legacy/core/vertex/buffer/client_states/index
+   /autoapi/picogl/backend/legacy/core/vertex/buffer/color/index
+   /autoapi/picogl/backend/legacy/core/vertex/buffer/element/index
+   /autoapi/picogl/backend/legacy/core/vertex/buffer/normal/index
+   /autoapi/picogl/backend/legacy/core/vertex/buffer/position/index
+   /autoapi/picogl/backend/legacy/core/vertex/buffer/vertex/index
+
+

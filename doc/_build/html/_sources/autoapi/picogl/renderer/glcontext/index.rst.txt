@@ -1,0 +1,77 @@
+picogl.renderer.glcontext
+=========================
+
+.. py:module:: picogl.renderer.glcontext
+
+.. autoapi-nested-parse::
+
+   GL Context Class
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.renderer.glcontext.GLContext
+
+
+Module Contents
+---------------
+
+.. py:class:: GLContext
+
+   Stores dynamic OpenGL-related state (VAO, shader, texture handles, etc.).
+   Does NOT store raw vertex data.
+
+
+   .. py:attribute:: vaos
+      :type:  dict[str, picogl.backend.modern.core.vertex.array.object.VertexArrayObject]
+
+
+   .. py:attribute:: vertex_array
+      :type:  Optional[picogl.backend.modern.core.vertex.array.object.VertexArrayObject]
+      :value: None
+
+
+
+   .. py:attribute:: shader
+      :type:  Optional[picogl.backend.modern.core.shader.program.ShaderProgram]
+      :value: None
+
+
+
+   .. py:attribute:: texture_id
+      :type:  Optional[int]
+      :value: None
+
+
+
+   .. py:attribute:: mvp_matrix
+      :type:  numpy.ndarray
+
+
+   .. py:attribute:: model_matrix
+      :type:  numpy.ndarray
+
+
+   .. py:attribute:: view
+      :type:  numpy.ndarray
+
+
+   .. py:attribute:: eye_np
+      :type:  numpy.ndarray
+
+
+   .. py:method:: create_shader_program(vertex_source_file: str, fragment_source_file: str, glsl_dir: str | pathlib.Path | None = None) -> None
+
+      create_shader_program
+
+      :param vertex_source_file: str
+      :param fragment_source_file: str
+      :param glsl_dir: str
+      :return: None
+
+
+

@@ -1,0 +1,33 @@
+picogl.buffers.vao.draw
+=======================
+
+.. py:module:: picogl.buffers.vao.draw
+
+.. autoapi-nested-parse::
+
+   Draw a VAO with attributes
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.buffers.vao.draw.vao_draw_with_attributes
+
+
+Module Contents
+---------------
+
+.. py:function:: vao_draw_with_attributes(attributes: list, atom_count: int, mode: int = GL_POINTS)
+
+   vao_draw_with_attributes
+
+   :param attributes: list Attributes for drawing.
+   :param atom_count: int Number of vertices to draw.
+   :param mode: int Enum specifying the gl_mode of drawing (default is GL_POINTS).
+
+   Draw the VAO with the specified gl_mode and atom count.
+
+

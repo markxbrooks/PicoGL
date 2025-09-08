@@ -14,7 +14,12 @@ def main() -> None:
     """Set up the colored object dat and show it"""
     data = MeshData.from_raw(vertices=g_vertex_buffer_data, colors=g_color_buffer_data)
     render_window = RenderWindow(
-        width=800, height=600, title="Cube window", data=data, glsl_dir=GLSL_DIR, base_dir=BASE_DIR
+        width=800,
+        height=600,
+        title="Cube window",
+        data=data,
+        glsl_dir=GLSL_DIR,
+        base_dir=BASE_DIR,
     )
     render_window.initialize()
     render_window.run()

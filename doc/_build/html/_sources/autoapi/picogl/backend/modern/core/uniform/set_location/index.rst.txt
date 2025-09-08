@@ -1,0 +1,28 @@
+picogl.backend.modern.core.uniform.set_location
+===============================================
+
+.. py:module:: picogl.backend.modern.core.uniform.set_location
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.backend.modern.core.uniform.set_location.set_uniform_name_value
+
+
+Module Contents
+---------------
+
+.. py:function:: set_uniform_name_value(shader_program: int, uniform_name: str, uniform_value: Union[float, int, pyglm.glm.vec2, pyglm.glm.vec3, pyglm.glm.vec4, pyglm.glm.mat4, numpy.ndarray])
+
+   set_uniform_value
+
+   :param shader_program: int
+   :param uniform_name: Name of the uniform variable
+   :param uniform_value: Value to set (supports float, int, vec2, vec3, vec4, mat4, or np.ndarray)
+
+   Set a uniform variable in a shader program
+
+

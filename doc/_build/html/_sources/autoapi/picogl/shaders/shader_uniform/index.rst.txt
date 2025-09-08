@@ -1,0 +1,111 @@
+picogl.shaders.shader_uniform
+=============================
+
+.. py:module:: picogl.shaders.shader_uniform
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.shaders.shader_uniform.UniformKind
+   picogl.shaders.shader_uniform.ShaderUniform
+
+
+Module Contents
+---------------
+
+.. py:class:: UniformKind
+
+   Bases: :py:obj:`enum.Enum`
+
+
+   Generic enumeration.
+
+   Derive from this class to define new enumerations.
+
+
+   .. py:attribute:: INT
+      :value: 'int'
+
+
+
+   .. py:attribute:: FLOAT
+      :value: 'float'
+
+
+
+   .. py:attribute:: BOOL
+      :value: 'bool'
+
+
+
+   .. py:attribute:: VEC2
+      :value: 'vec2'
+
+
+
+   .. py:attribute:: VEC3
+      :value: 'vec3'
+
+
+
+   .. py:attribute:: VEC4
+      :value: 'vec4'
+
+
+
+   .. py:attribute:: MAT3
+      :value: 'mat3'
+
+
+
+   .. py:attribute:: MAT4
+      :value: 'mat4'
+
+
+
+.. py:class:: ShaderUniform
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: location
+      :type:  int
+
+
+   .. py:attribute:: value
+      :type:  Union[int, float, Sequence[float], numpy.ndarray, bool, None]
+      :value: None
+
+
+
+   .. py:attribute:: uniform_type
+      :type:  Optional[UniformKind]
+      :value: None
+
+
+
+   .. py:method:: __post_init__()
+
+
+   .. py:method:: infer_type(v: Any) -> UniformKind
+      :staticmethod:
+
+
+
+   .. py:method:: upload(gl_module=None) -> None
+
+      Upload the current value to the bound GL program using PyOpenGL-like calls.
+      If location < 0 (GL returns -1 when not found/used), this is a no-op.
+
+      - gl_module: optional OpenGL.GL-like module. If None, will try to import PyOpenGL
+        (from OpenGL import GL as GL) at call time.
+
+
+
+   .. py:method:: __str__() -> str
+
+

@@ -1,0 +1,206 @@
+picogl.tests.test_vertex_array_object
+=====================================
+
+.. py:module:: picogl.tests.test_vertex_array_object
+
+.. autoapi-nested-parse::
+
+   Unit tests for the VertexArrayObject class in the PicoGL OpenGL backend.
+
+   This module contains a comprehensive suite of unit tests for verifying the correctness,
+   robustness, and interface of the :class:`picogl.backend.modern.core.vertex.array.object.VertexArrayObject`
+   class, which manages OpenGL Vertex Array Objects (VAOs) in modern OpenGL rendering workflows.
+
+   The tests cover:
+
+   - Object initialization with and without handle parameter
+   - VAO binding/unbinding operations
+   - VBO management and attribute configuration
+   - EBO (Element Buffer Object) management
+   - Layout descriptor configuration
+   - Drawing operations with various modes
+   - Buffer cleanup and memory management
+   - Error handling and edge cases
+
+   Dependencies:
+       - unittest (standard library)
+       - unittest.mock.MagicMock for OpenGL function mocking
+       - numpy for test data
+       - picogl.backend.modern.core.vertex.array.object.VertexArrayObject
+       - picogl.buffers.attributes.LayoutDescriptor
+
+   To run the tests::
+
+       python -m unittest picogl.tests.test_vertex_array_object
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.tests.test_vertex_array_object.TestVertexArrayObject
+
+
+Module Contents
+---------------
+
+.. py:class:: TestVertexArrayObject(methodName='runTest')
+
+   Bases: :py:obj:`unittest.TestCase`
+
+
+   Test cases for VertexArrayObject class.
+
+
+   .. py:method:: setUp()
+
+      Set up test fixtures before each test method.
+
+
+
+   .. py:method:: tearDown()
+
+      Clean up after each test method.
+
+
+
+   .. py:method:: test_initialization_with_handle()
+
+      Test VertexArrayObject initialization with provided handle.
+
+
+
+   .. py:method:: test_initialization_without_handle()
+
+      Test VertexArrayObject initialization without handle (auto-generate).
+
+
+
+   .. py:method:: test_initialization_raises_error_when_no_context()
+
+      Test that initialization raises error when OpenGL context is not ready.
+
+
+
+   .. py:method:: test_bind()
+
+      Test bind method.
+
+
+
+   .. py:method:: test_unbind()
+
+      Test unbind method.
+
+
+
+   .. py:method:: test_delete()
+
+      Test delete method.
+
+
+
+   .. py:method:: test_add_vbo()
+
+      Test add_vbo method.
+
+
+
+   .. py:method:: test_add_attribute()
+
+      Test add_attribute method.
+
+
+
+   .. py:method:: test_add_ebo()
+
+      Test add_ebo method.
+
+
+
+   .. py:method:: test_set_ebo()
+
+      Test set_ebo method.
+
+
+
+   .. py:method:: test_set_layout()
+
+      Test set_layout method with LayoutDescriptor.
+
+
+
+   .. py:method:: test_set_layout_with_none_vao()
+
+      Test set_layout method when vao is None.
+
+
+
+   .. py:method:: test_add_vbo_object()
+
+      Test add_vbo_object method for VBO management.
+
+
+
+   .. py:method:: test_get_vbo_object()
+
+      Test get_vbo_object method for VBO retrieval.
+
+
+
+   .. py:method:: test_index_count_property()
+
+      Test index_count property.
+
+
+
+   .. py:method:: test_draw_with_arrays()
+
+      Test draw method with vertex arrays (no EBO).
+
+
+
+   .. py:method:: test_draw_with_elements()
+
+      Test draw method with element arrays (EBO present).
+
+
+
+   .. py:method:: test_draw_with_auto_index_count()
+
+      Test draw method with automatic index count from EBO.
+
+
+
+   .. py:method:: test_delete_buffers()
+
+      Test delete_buffers method.
+
+
+
+   .. py:method:: test_context_manager()
+
+      Test that VertexArrayObject can be used as a context manager.
+
+
+
+   .. py:method:: test_repr_string()
+
+      Test string representation of VertexArrayObject.
+
+
+
+   .. py:method:: test_error_handling_in_set_layout()
+
+      Test error handling in set_layout method.
+
+
+
+   .. py:method:: test_error_handling_in_index_count()
+
+      Test error handling in index_count property.
+
+
+

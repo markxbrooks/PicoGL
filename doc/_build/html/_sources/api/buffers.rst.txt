@@ -17,6 +17,7 @@ VertexArrayObject
 The ``VertexArrayObject`` class manages OpenGL Vertex Array Objects (VAOs) for modern OpenGL rendering.
 
 **Example**:
+
 .. code-block:: python
 
    from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
@@ -47,6 +48,7 @@ VertexBufferGroup
 The ``VertexBufferGroup`` class provides legacy OpenGL buffer management for systems without VAO support.
 
 **Example**:
+
 .. code-block:: python
 
    from picogl.buffers.vertex.legacy import VertexBufferGroup
@@ -148,7 +150,7 @@ The ``VertexBase`` class provides the base functionality for all vertex buffer c
 VertexBuffer
 ~~~~~~~~~~~~
 
-.. autoclass:: picogl.buffers.vertex.base.VertexBuffer
+.. autoclass:: picogl.buffers.vertex.modern.ModernVertexArrayGroup
    :members:
    :undoc-members:
    :show-inheritance:
@@ -169,6 +171,7 @@ LayoutDescriptor
 The ``LayoutDescriptor`` class describes the layout of vertex attributes in a buffer.
 
 **Example**:
+
 .. code-block:: python
 
    from picogl.buffers.factory.layout import create_layout
@@ -191,6 +194,7 @@ AttributeSpec
 The ``AttributeSpec`` class describes a single vertex attribute.
 
 **Example**:
+
 .. code-block:: python
 
    from picogl.buffers.attributes import AttributeSpec
@@ -212,6 +216,7 @@ Creating Buffers
 ~~~~~~~~~~~~~~~~
 
 **Modern OpenGL (VAO/VBO)**:
+
 .. code-block:: python
 
    from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
@@ -229,6 +234,7 @@ Creating Buffers
    vao.add_ebo(data=indices)
 
 **Legacy OpenGL (VBO only)**:
+
 .. code-block:: python
 
    from picogl.buffers.vertex.legacy import VertexBufferGroup
@@ -249,6 +255,7 @@ Binding Buffers
 ~~~~~~~~~~~~~~~
 
 **Modern OpenGL**:
+
 .. code-block:: python
 
    # Bind VAO (automatically binds all VBOs)
@@ -257,6 +264,7 @@ Binding Buffers
        vao.draw(mode=GL_TRIANGLES, index_count=len(indices))
 
 **Legacy OpenGL**:
+
 .. code-block:: python
 
    # Bind vertex buffer group
@@ -277,6 +285,7 @@ Vertex Buffers
 Vertex buffers store vertex data such as positions, colors, normals, and texture coordinates.
 
 **Position Buffer**:
+
 .. code-block:: python
 
    # 3D positions (N, 3) array
@@ -287,6 +296,7 @@ Vertex buffers store vertex data such as positions, colors, normals, and texture
    ], dtype=np.float32)
 
 **Color Buffer**:
+
 .. code-block:: python
 
    # RGB colors (N, 3) array
@@ -297,6 +307,7 @@ Vertex buffers store vertex data such as positions, colors, normals, and texture
    ], dtype=np.float32)
 
 **Normal Buffer**:
+
 .. code-block:: python
 
    # Surface normals (N, 3) array
@@ -307,6 +318,7 @@ Vertex buffers store vertex data such as positions, colors, normals, and texture
    ], dtype=np.float32)
 
 **UV Buffer**:
+
 .. code-block:: python
 
    # Texture coordinates (N, 2) array
@@ -322,6 +334,7 @@ Element Buffers
 Element buffers store indices that define the topology of the mesh.
 
 **Element Buffer**:
+
 .. code-block:: python
 
    # Triangle indices (M, 3) array
@@ -336,6 +349,7 @@ Uploading Data
 ~~~~~~~~~~~~~~
 
 **Modern OpenGL**:
+
 .. code-block:: python
 
    # Upload vertex data
@@ -348,6 +362,7 @@ Uploading Data
    vao.add_ebo(data=indices)
 
 **Legacy OpenGL**:
+
 .. code-block:: python
 
    # Upload vertex data
@@ -363,6 +378,7 @@ Drawing
 ~~~~~~~
 
 **Modern OpenGL**:
+
 .. code-block:: python
 
    # Draw with VAO
@@ -370,6 +386,7 @@ Drawing
        vao.draw(mode=GL_TRIANGLES, index_count=len(indices))
 
 **Legacy OpenGL**:
+
 .. code-block:: python
 
    # Draw with vertex buffer group
@@ -381,12 +398,14 @@ Cleanup
 ~~~~~~~
 
 **Modern OpenGL**:
+
 .. code-block:: python
 
    # Cleanup VAO
    vao.delete()
 
 **Legacy OpenGL**:
+
 .. code-block:: python
 
    # Cleanup vertex buffer group
@@ -403,6 +422,7 @@ Buffer operations include comprehensive error handling:
 **Drawing Errors**: Handle OpenGL drawing failures
 
 **Example**:
+
 .. code-block:: python
 
    try:
@@ -448,6 +468,7 @@ Best Practices
 5. **Clean up resources** when done
 
 **Example**:
+
 .. code-block:: python
 
    # Choose buffer type based on OpenGL support

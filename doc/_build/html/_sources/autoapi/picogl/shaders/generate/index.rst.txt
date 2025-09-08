@@ -1,0 +1,27 @@
+picogl.shaders.generate
+=======================
+
+.. py:module:: picogl.shaders.generate
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.shaders.generate.generate_shader_programs
+
+
+Module Contents
+---------------
+
+.. py:function:: generate_shader_programs(vertex_shader_src: str, fragment_shader_src: str, shader_name: str = 'default') -> Optional[picogl.backend.modern.core.shader.program.ShaderProgram]
+
+   generate_shader_programs
+
+   :param vertex_shader_src: str
+   :param fragment_shader_src: str
+   :param shader_name: str
+   :return: tuple[PicoGLShader, GluInt]
+
+

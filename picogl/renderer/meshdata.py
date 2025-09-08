@@ -1,6 +1,7 @@
 """
 GLContext class
 """
+from typing import Union, Optional
 
 import numpy as np
 from OpenGL import GL
@@ -131,13 +132,13 @@ class MeshData:
 
     @classmethod
     def from_raw(
-        cls,
-        vertices: np.ndarray,
-        normals: np.ndarray = None,
-        uvs: np.ndarray = None,
-        colors: np.ndarray = None,
-        indices: np.ndarray = None,
-        color_per_vertex: np.ndarray = None,  # optional override for generated colors
+            cls,
+            vertices: Union[np.ndarray, list[float]],
+            normals: Optional[Union[np.ndarray, list[float]]] = None,
+            uvs: Optional[Union[np.ndarray, list[float]]] = None,
+            colors: Optional[Union[np.ndarray, list[float]]] = None,
+            indices: Optional[Union[np.ndarray, list[float]]] = None,
+            color_per_vertex: Optional[Union[np.ndarray, list[float]]] = None,
     ):
         """
         Build a MeshData from raw/python inputs.

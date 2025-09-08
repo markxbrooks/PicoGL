@@ -1,0 +1,19 @@
+picogl.backend.modern.core.shader.mvp.glut_keymap
+=================================================
+
+.. py:module:: picogl.backend.modern.core.shader.mvp.glut_keymap
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   picogl.backend.modern.core.shader.mvp.glut_keymap.GLUT_TO_KEY
+
+
+Module Contents
+---------------
+
+.. py:data:: GLUT_TO_KEY
+

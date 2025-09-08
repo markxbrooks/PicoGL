@@ -1,0 +1,371 @@
+picogl.renderer
+===============
+
+.. py:module:: picogl.renderer
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/picogl/renderer/abstract/index
+   /autoapi/picogl/renderer/base/index
+   /autoapi/picogl/renderer/glcontext/index
+   /autoapi/picogl/renderer/glmesh/index
+   /autoapi/picogl/renderer/legacy_glmesh/index
+   /autoapi/picogl/renderer/meshdata/index
+   /autoapi/picogl/renderer/object/index
+   /autoapi/picogl/renderer/texture/index
+   /autoapi/picogl/renderer/uvrenderer/index
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.renderer.RendererBase
+   picogl.renderer.GLContext
+   picogl.renderer.GLMesh
+   picogl.renderer.MeshData
+
+
+Package Contents
+----------------
+
+.. py:class:: RendererBase(parent: object = None)
+
+   Bases: :py:obj:`picogl.renderer.abstract.AbstractRenderer`
+
+
+   Base Renderer Class
+
+
+   .. py:attribute:: line_width
+      :value: 2.0
+
+
+
+   .. py:attribute:: show_model
+      :value: False
+
+
+
+   .. py:attribute:: parent
+      :value: None
+
+
+
+   .. py:attribute:: _initialized
+      :value: False
+
+
+
+   .. py:method:: _set_gl_state()
+
+      Set the line width and disable depth test.
+
+
+
+   .. py:method:: _restore_gl_state()
+
+      Restore the original line width and depth test state.
+
+
+
+   .. py:property:: dispatch_list
+
+
+   .. py:method:: initialize() -> None
+
+      Initialize OpenGL resources (shaders, atoms_buffers, etc.).
+
+
+
+   .. py:property:: initialized
+      :type: bool
+
+
+
+   .. py:method:: render(mvp_matrix: Optional[numpy.ndarray] = None) -> None
+
+      render dispatcher
+
+      :return: None
+
+
+
+   .. py:method:: initialize_rendering_buffers()
+
+      For back compatibility
+
+
+
+   .. py:method:: _finalize_render()
+
+      Finalize the rendering (e.g., flush or swap atoms_buffers).
+
+
+
+   .. py:method:: _draw_model()
+      :abstractmethod:
+
+
+      draw_model
+
+
+
+   .. py:method:: _draw_selection()
+      :abstractmethod:
+
+
+      draw_selection
+
+
+
+   .. py:method:: set_visibility(visible: bool) -> None
+
+      Set the visibility of the object.
+
+
+
+.. py:class:: GLContext
+
+   Stores dynamic OpenGL-related state (VAO, shader, texture handles, etc.).
+   Does NOT store raw vertex data.
+
+
+   .. py:attribute:: vaos
+      :type:  dict[str, picogl.backend.modern.core.vertex.array.object.VertexArrayObject]
+
+
+   .. py:attribute:: vertex_array
+      :type:  Optional[picogl.backend.modern.core.vertex.array.object.VertexArrayObject]
+      :value: None
+
+
+
+   .. py:attribute:: shader
+      :type:  Optional[picogl.backend.modern.core.shader.program.ShaderProgram]
+      :value: None
+
+
+
+   .. py:attribute:: texture_id
+      :type:  Optional[int]
+      :value: None
+
+
+
+   .. py:attribute:: mvp_matrix
+      :type:  numpy.ndarray
+
+
+   .. py:attribute:: model_matrix
+      :type:  numpy.ndarray
+
+
+   .. py:attribute:: view
+      :type:  numpy.ndarray
+
+
+   .. py:attribute:: eye_np
+      :type:  numpy.ndarray
+
+
+   .. py:method:: create_shader_program(vertex_source_file: str, fragment_source_file: str, glsl_dir: str | pathlib.Path | None = None) -> None
+
+      create_shader_program
+
+      :param vertex_source_file: str
+      :param fragment_source_file: str
+      :param glsl_dir: str
+      :return: None
+
+
+
+.. py:class:: GLMesh(vertices: numpy.ndarray, faces: numpy.ndarray, colors: Optional[numpy.ndarray] = None, normals: Optional[numpy.ndarray] = None, uvs: Optional[numpy.ndarray] = None)
+
+   GPU‐resident mesh: owns VAO/VBO/EBO/CBO/NBO for an indexed triangle mesh.
+   It does not know anything about shaders or matrices.
+
+
+   .. py:attribute:: vertices
+
+
+   .. py:attribute:: indices
+
+
+   .. py:attribute:: colors
+
+
+   .. py:attribute:: normals
+
+
+   .. py:attribute:: uvs
+
+
+   .. py:attribute:: vao
+      :type:  Optional[picogl.backend.modern.core.vertex.array.object.VertexArrayObject]
+      :value: None
+
+
+
+   .. py:attribute:: index_count
+      :type:  int
+      :value: 0
+
+
+
+   .. py:method:: from_mesh_data(mesh: MeshData) -> GLMesh
+      :classmethod:
+
+
+      Construct a GLMesh from a MeshData container.
+
+      :param mesh: Must have .vbo (Nx3), .ebo (Mx1), optional .cbo (Nx3), .nbo (Nx3), uvs (Nx2)
+      :type mesh: MeshData
+
+      :returns: Ready-to-upload mesh (GPU buffers are allocated only when `upload()` is called).
+      :rtype: GLMesh
+
+
+
+   .. py:method:: upload() -> None
+
+      Allocate & fill GPU buffers.
+
+
+
+   .. py:method:: bind()
+
+
+   .. py:method:: unbind()
+
+
+   .. py:method:: delete()
+
+      Free GPU resources.
+
+
+
+   .. py:method:: __enter__()
+
+
+   .. py:method:: __exit__(exc_type, exc, tb)
+
+
+   .. py:method:: draw() -> None
+
+      Draw the mesh.
+
+
+
+.. py:class:: MeshData(vbo: numpy.ndarray = None, nbo: numpy.ndarray = None, uvs: numpy.ndarray = None, cbo: numpy.ndarray = None, ebo: numpy.ndarray = None)
+
+   Holds OpenGL-related state objects for rendering.
+
+
+   .. py:attribute:: vbo
+      :value: None
+
+
+
+   .. py:attribute:: nbo
+      :value: None
+
+
+
+   .. py:attribute:: uvs
+      :value: None
+
+
+
+   .. py:attribute:: cbo
+      :value: None
+
+
+
+   .. py:attribute:: ebo
+      :value: None
+
+
+
+   .. py:attribute:: vertex_count
+
+
+   .. py:method:: as_ribbon_args() -> dict
+
+      Convert into arguments for setup_ribbon_buffers.
+
+
+
+   .. py:method:: __str__()
+
+
+   .. py:method:: _to_float32_flat(arr, name: str, required: bool = False) -> numpy.ndarray
+      :classmethod:
+
+
+
+   .. py:method:: _to_float32_flat_or_none(arr, name: str) -> numpy.ndarray
+      :classmethod:
+
+
+
+   .. py:method:: _to_int32_flat(arr, name: str, required: bool = False) -> numpy.ndarray
+      :classmethod:
+
+
+
+   .. py:method:: _default_colors_for_vertices(vertex_count: int) -> numpy.ndarray
+      :classmethod:
+
+
+
+   .. py:method:: _default_normals_for_vertices(vertex_count: int) -> numpy.ndarray
+      :classmethod:
+
+
+
+   .. py:method:: __enter__()
+
+
+   .. py:method:: __exit__(exc_type, exc_val, exc_tb)
+
+
+   .. py:method:: bind()
+
+
+   .. py:method:: unbind()
+
+
+   .. py:method:: from_raw(vertices: Union[numpy.ndarray, list[float]], normals: Optional[Union[numpy.ndarray, list[float]]] = None, uvs: Optional[Union[numpy.ndarray, list[float]]] = None, colors: Optional[Union[numpy.ndarray, list[float]]] = None, indices: Optional[Union[numpy.ndarray, list[float]]] = None, color_per_vertex: Optional[Union[numpy.ndarray, list[float]]] = None)
+      :classmethod:
+
+
+      Build a MeshData from raw/python inputs.
+
+      :param vertices: np.ndarray required, list/array of x,y,z triplets
+      :param normals: np.ndarray optional, list/array of x,y,z triplets
+      :param uvs: np.ndarray optional, list/array of u,v pairs
+      :param indices: np.ndarray optional int indices
+      :param colors: np.ndarray optional per-vertex colors (flat float32 array)
+      :param color_per_vertex: np.ndarray if provided and colors is None, generate per-vertex colors
+
+
+
+   .. py:method:: draw(color: tuple = None, line_width: float = 1.0, mode: int = GL.GL_TRIANGLES, fill: bool = False, alpha: float = 1.0)
+
+      Draw the mesh with optional color override and transparency.
+
+      :param color: Optional color override. If None and vertex colors exist, uses vertex colors.
+      :param line_width: Line width for wireframe mode
+      :param mode: OpenGL drawing mode
+      :param fill: Whether to fill or use wireframe
+      :param alpha: Transparency value from 0.0 (opaque) to 1.0 (fully transparent)
+
+
+

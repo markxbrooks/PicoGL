@@ -4,6 +4,7 @@ from OpenGL.GL import glGetUniformLocation
 def get_pgl_shader_uniform_location(shader, uniform_name: str) -> int:
     """
     get uniform location
+
     :param shader: PicoGL shader object
     :param uniform_name: string uniform name\
     :return: uniform location int

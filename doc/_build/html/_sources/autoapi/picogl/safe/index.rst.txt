@@ -1,0 +1,47 @@
+picogl.safe
+===========
+
+.. py:module:: picogl.safe
+
+.. autoapi-nested-parse::
+
+   glGenSafe
+
+   Example Usage:
+   ==============
+   >>>self.hetatm_buffers_vao = gl_gen_safe(glGenVertexArrays)
+   ...self.hetatm_buffers_vbo_pos = gl_gen_safe(glGenBuffers)
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.safe.gl_gen_safe
+   picogl.safe.gl_delete_safe
+
+
+Module Contents
+---------------
+
+.. py:function:: gl_gen_safe(gen_func: Callable[[int], Union[int, list[int], tuple[int], numpy.ndarray]], count: int = 1) -> int
+
+   glGenSafe
+
+   :param gen_func: Callable An OpenGL generator function like glGenVertexArrays or glGenBuffers
+   :param count: Number of items to generate (default is 1)
+   :return: The first generated OpenGL handle (GLuint)
+   Calls an OpenGL glGen* function safely and returns a single GLuint handle.
+
+
+.. py:function:: gl_delete_safe(delete_func: Callable[[int, Union[int, Sequence[int]]], None], handle: Union[int, Sequence[int]]) -> None
+
+   glDeleteSafe
+
+   :param delete_func: An OpenGL delete function like glDeleteBuffers or glDeleteVertexArrays
+   :param handle: A single handle (int) or a sequence of handles (list/tuple/data)
+   Safely deletes OpenGL resources using glDelete* functions.
+
+

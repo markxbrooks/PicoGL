@@ -1,0 +1,16 @@
+picogl.buffers.vao
+==================
+
+.. py:module:: picogl.buffers.vao
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/picogl/buffers/vao/configure/index
+   /autoapi/picogl/buffers/vao/draw/index
+
+

@@ -1,0 +1,54 @@
+picogl.buffers.attributes
+=========================
+
+.. py:module:: picogl.buffers.attributes
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.buffers.attributes.AttributeSpec
+   picogl.buffers.attributes.LayoutDescriptor
+
+
+Module Contents
+---------------
+
+.. py:class:: AttributeSpec
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: index
+      :type:  int
+
+
+   .. py:attribute:: size
+      :type:  int
+
+
+   .. py:attribute:: type
+      :type:  int
+
+
+   .. py:attribute:: normalized
+      :type:  bool
+
+
+   .. py:attribute:: stride
+      :type:  int
+
+
+   .. py:attribute:: offset
+      :type:  int
+
+
+.. py:class:: LayoutDescriptor
+
+   .. py:attribute:: attributes
+      :type:  List[AttributeSpec]
+
+

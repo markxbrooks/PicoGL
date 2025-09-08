@@ -105,6 +105,7 @@ The modern backend provides OpenGL 3.3+ functionality:
 * ``ShaderProgram``: Shader management
 
 **Example**:
+
 .. code-block:: python
 
    from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
@@ -137,6 +138,7 @@ The legacy backend provides OpenGL 1.x/2.x compatibility:
 * ``LegacyGLMesh``: Legacy mesh rendering
 
 **Example**:
+
 .. code-block:: python
 
    from picogl.buffers.vertex.legacy import VertexBufferGroup
@@ -175,7 +177,8 @@ Unit Tests
 
 PicoGL includes comprehensive unit tests:
 
-**Test Structure**:
+**Test Structure**
+
 .. code-block:: text
 
    tests/
@@ -188,6 +191,7 @@ PicoGL includes comprehensive unit tests:
    └── test_texture_renderer.py
 
 **Running Tests**:
+
 .. code-block:: bash
 
    # Run all tests
@@ -206,6 +210,7 @@ PicoGL includes comprehensive unit tests:
 * Performance benchmarks
 
 **Example Test**:
+
 .. code-block:: python
 
    import unittest
@@ -243,6 +248,7 @@ Integration tests verify end-to-end functionality:
 * Memory leak tests
 
 **Example**:
+
 .. code-block:: python
 
    def test_rendering_pipeline():
@@ -271,6 +277,7 @@ Setup Configuration
 PicoGL uses setuptools for packaging:
 
 **pyproject.toml**:
+
 .. code-block:: toml
 
    [build-system]
@@ -304,6 +311,7 @@ PicoGL uses setuptools for packaging:
    ]
 
 **setup.py**:
+
 .. code-block:: python
 
    from setuptools import setup, find_packages
@@ -353,6 +361,7 @@ Development Dependencies
 * mypy: Type checking
 
 **Installation**:
+
 .. code-block:: bash
 
    # Install in development mode
@@ -373,6 +382,7 @@ Formatting
 PicoGL uses Black for code formatting:
 
 **Configuration**:
+
 .. code-block:: toml
 
    [tool.black]
@@ -393,6 +403,7 @@ PicoGL uses Black for code formatting:
    '''
 
 **Usage**:
+
 .. code-block:: bash
 
    # Format all Python files
@@ -407,6 +418,7 @@ Linting
 PicoGL uses flake8 for linting:
 
 **Configuration**:
+
 .. code-block:: ini
 
    [flake8]
@@ -420,6 +432,7 @@ PicoGL uses flake8 for linting:
        dist
 
 **Usage**:
+
 .. code-block:: bash
 
    # Lint all Python files
@@ -434,6 +447,7 @@ Type Checking
 PicoGL uses mypy for type checking:
 
 **Configuration**:
+
 .. code-block:: ini
 
    [mypy]
@@ -452,6 +466,7 @@ PicoGL uses mypy for type checking:
    strict_equality = True
 
 **Usage**:
+
 .. code-block:: bash
 
    # Type check all Python files
@@ -469,6 +484,7 @@ Sphinx Configuration
 PicoGL uses Sphinx for documentation:
 
 **conf.py**:
+
 .. code-block:: python
 
    import os
@@ -497,6 +513,7 @@ PicoGL uses Sphinx for documentation:
    latex_engine = 'xelatex'
 
 **Building Documentation**:
+
 .. code-block:: bash
 
    # Build HTML documentation
@@ -509,25 +526,21 @@ PicoGL uses Sphinx for documentation:
 Docstring Style
 ~~~~~~~~~~~~~~~
 
-PicoGL uses Google-style docstrings:
+PicoGL uses Sphinx/RST-style docstrings:
 
 **Example**:
+
 .. code-block:: python
 
    def create_mesh_data(vertices, colors, normals=None):
        """Create mesh data from vertex information.
        
-       Args:
-           vertices: Array of vertex positions (N, 3)
-           colors: Array of vertex colors (N, 3)
-           normals: Optional array of vertex normals (N, 3)
-       
-       Returns:
-           MeshData: Mesh data object
-       
-       Raises:
-           ValueError: If vertices or colors are invalid
-           TypeError: If input types are incorrect
+       :param vertices: Array of vertex positions (N, 3)
+       :param colors: Array of vertex colors (N, 3)
+       :param normals: Optional array of vertex normals (N, 3)
+       :returns: MeshData: Mesh data object
+       :raises: ValueError: If vertices or colors are invalid
+               TypeError: If input types are incorrect
        """
        pass
 
@@ -546,6 +559,7 @@ Getting Started
 7. **Submit a pull request**
 
 **Example**:
+
 .. code-block:: bash
 
    # Fork and clone
@@ -619,6 +633,7 @@ Release Steps
 7. **Announce release** to community
 
 **Example**:
+
 .. code-block:: bash
 
    # Update version
@@ -660,6 +675,7 @@ Rendering Performance
 * Use display lists for static geometry
 
 **Example**:
+
 .. code-block:: python
 
    # Efficient rendering
@@ -687,6 +703,7 @@ Memory Management
 * Monitor memory usage
 
 **Example**:
+
 .. code-block:: python
 
    class MeshManager:
@@ -716,6 +733,7 @@ OpenGL Debugging
 ~~~~~~~~~~~~~~~~
 
 **Error Checking**:
+
 .. code-block:: python
 
    def check_gl_error():
@@ -730,6 +748,7 @@ OpenGL Debugging
    check_gl_error()
 
 **Debug Output**:
+
 .. code-block:: python
 
    def debug_print_gl_info():
@@ -739,6 +758,7 @@ OpenGL Debugging
        print(f"Extensions: {glGetString(GL_EXTENSIONS)}")
 
 **Performance Profiling**:
+
 .. code-block:: python
 
    import time

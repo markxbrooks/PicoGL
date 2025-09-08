@@ -1,0 +1,24 @@
+picogl.shaders
+==============
+
+.. py:module:: picogl.shaders
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/picogl/shaders/compile/index
+   /autoapi/picogl/shaders/generate/index
+   /autoapi/picogl/shaders/load/index
+   /autoapi/picogl/shaders/manager/index
+   /autoapi/picogl/shaders/mvp/index
+   /autoapi/picogl/shaders/registry/index
+   /autoapi/picogl/shaders/shader_uniform/index
+   /autoapi/picogl/shaders/src/index
+   /autoapi/picogl/shaders/type/index
+   /autoapi/picogl/shaders/uniform/index
+
+

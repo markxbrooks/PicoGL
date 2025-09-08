@@ -1,0 +1,61 @@
+picogl.backend.legacy.core.vertex.buffer.position
+=================================================
+
+.. py:module:: picogl.backend.legacy.core.vertex.buffer.position
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   picogl.backend.legacy.core.vertex.buffer.position.LegacyPositionVBO
+
+
+Module Contents
+---------------
+
+.. py:class:: LegacyPositionVBO(handle: int = None, data: numpy.ndarray = None, size: int = 3, target: int = GL_ARRAY_BUFFER)
+
+   Bases: :py:obj:`picogl.backend.legacy.core.vertex.buffer.vertex.LegacyVBO`
+
+
+   OpenGL buffer class specialized for storing and managing position data,
+   commonly used for rendering ribbons_legacy-like geometry.
+
+   Inherits from LegacyVBO and adds behavior specific to position data,
+   such as setting up the vertex pointer and handling data uploads.
+
+
+   .. py:attribute:: SUPPORTED_GL_TYPES
+
+
+   .. py:attribute:: size
+      :value: 3
+
+
+
+   .. py:attribute:: data
+      :value: None
+
+
+
+   .. py:method:: draw_arrays(count: int = None, mode: int = GL_TRIANGLES)
+
+
+   .. py:method:: draw(index_count: int = None, index_type: int = GL_UNSIGNED_INT, mode: int = GL_TRIANGLES)
+
+      Draw the buffer.
+
+      :param index_count: Number of indices to draw (default: self.index_count).
+      :param index_type: Data type of indices (e.g., GL_UNSIGNED_INT).
+      :param mode: OpenGL drawing mode (e.g., GL_TRIANGLES).
+
+
+
+   .. py:method:: configure()
+
+      Configure the vertex pointer for the position buffer.
+
+
+

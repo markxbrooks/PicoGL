@@ -1,0 +1,48 @@
+picogl
+======
+
+.. py:module:: picogl
+
+.. autoapi-nested-parse::
+
+   Picogl imports
+
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/picogl/backend/index
+   /autoapi/picogl/buffers/index
+   /autoapi/picogl/error/index
+   /autoapi/picogl/frame/index
+   /autoapi/picogl/info/index
+   /autoapi/picogl/logger/index
+   /autoapi/picogl/normals/index
+   /autoapi/picogl/project/index
+   /autoapi/picogl/renderer/index
+   /autoapi/picogl/safe/index
+   /autoapi/picogl/shaders/index
+   /autoapi/picogl/tests/index
+   /autoapi/picogl/ui/index
+   /autoapi/picogl/utils/index
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   picogl.__version__
+
+
+Package Contents
+----------------
+
+.. py:data:: __version__
+   :value: '0.1.0'
+
+

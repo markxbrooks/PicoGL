@@ -64,6 +64,7 @@ class RendererBase(AbstractRenderer):
     def render(self, mvp_matrix: Optional[np.ndarray] = None) -> None:
         """
         render dispatcher
+
         :return: None
         """
 

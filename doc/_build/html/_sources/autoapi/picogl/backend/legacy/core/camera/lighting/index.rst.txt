@@ -1,0 +1,63 @@
+picogl.backend.legacy.core.camera.lighting
+==========================================
+
+.. py:module:: picogl.backend.legacy.core.camera.lighting
+
+.. autoapi-nested-parse::
+
+   Setup lighting
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   picogl.backend.legacy.core.camera.lighting.set_fog_state
+   picogl.backend.legacy.core.camera.lighting.set_second_light_state
+   picogl.backend.legacy.core.camera.lighting.set_background_color
+   picogl.backend.legacy.core.camera.lighting.setup_lighting
+
+
+Module Contents
+---------------
+
+.. py:function:: set_fog_state(fog_state: bool, fog_density_value: float, fog_start_value: float, fog_end_value: float) -> None
+
+   set_fog_state
+
+   :param fog_density_value: float
+   :param fog_end_value: float
+   :param fog_start_value: float
+   :param fog_state: bool
+   :return: None
+
+
+.. py:function:: set_second_light_state(second_light_state: bool) -> None
+
+   set_second_light_state
+
+   :param second_light_state: bool Whether the second light is on or off
+   :return: None
+
+   Second light
+
+
+.. py:function:: set_background_color(show_white_background: bool) -> None
+
+   set_background_color
+
+   :param show_white_background: bool
+   :return: None
+   Choose bg color_array
+
+
+.. py:function:: setup_lighting(mode: int = 0) -> None
+
+   setup_lighting
+
+   :param mode: int lighting gl_mode
+   :return: None
+
+

@@ -31,6 +31,7 @@ A simple colored cube demonstrating basic mesh rendering.
 * Modern OpenGL 3.3+ shaders
 
 **Run**:
+
 .. code-block:: bash
 
    python examples/cube.py
@@ -69,6 +70,7 @@ A 3D teapot model with lighting and shading.
 * Interactive controls
 
 **Run**:
+
 .. code-block:: bash
 
    python examples/teapot.py
@@ -92,6 +94,7 @@ Maximum compatibility cube renderer using only PyOpenGL.
 * Same visual appearance as modern version
 
 **Run**:
+
 .. code-block:: bash
 
    python examples/legacy_cube_minimal.py
@@ -110,6 +113,7 @@ PicoGL-integrated legacy cube using LegacyGLMesh.
 * Better integration with PicoGL ecosystem
 
 **Run**:
+
 .. code-block:: bash
 
    python examples/legacy_cube_fixed.py
@@ -128,6 +132,7 @@ Maximum compatibility teapot using built-in OpenGL primitives.
 * Interactive controls
 
 **Run**:
+
 .. code-block:: bash
 
    python examples/legacy_teapot_minimal.py
@@ -146,6 +151,7 @@ PicoGL-integrated legacy teapot with OBJ file support.
 * Full PicoGL integration
 
 **Run**:
+
 .. code-block:: bash
 
    python examples/legacy_teapot_fixed.py
@@ -168,6 +174,7 @@ Complex molecular visualization with atom and bond rendering.
 * Scientific visualization
 
 **Run**:
+
 .. code-block:: bash
 
    python examples/molecular_viewer.py
@@ -186,6 +193,7 @@ Demonstrates texture mapping and UV coordinates.
 * Texture filtering and wrapping
 
 **Run**:
+
 .. code-block:: bash
 
    python examples/texture.py
@@ -206,6 +214,7 @@ Various shader examples demonstrating different rendering techniques:
 * ``tu10/`` - Normal mapping
 
 **Run**:
+
 .. code-block:: bash
 
    # Run specific shader example
@@ -230,6 +239,7 @@ Generic mesh viewer for OBJ files.
 * Export capabilities
 
 **Run**:
+
 .. code-block:: bash
 
    python examples/utils/meshViewer.py path/to/model.obj
@@ -248,6 +258,7 @@ Simple test window for debugging.
 * Error reporting
 
 **Run**:
+
 .. code-block:: bash
 
    python examples/utils/test_window.py
