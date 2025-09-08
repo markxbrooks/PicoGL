@@ -145,9 +145,9 @@ The legacy backend provides OpenGL 1.x/2.x compatibility:
    
    # Create vertex buffer group
    vbg = VertexBufferGroup()
-   vbg.add_vbo("position", vertices, 3)
-   vbg.add_vbo("color", colors, 3)
-   vbg.add_ebo(indices)
+   vbg.add_vbo(name="position", data=vertices, size=3)
+   vbg.add_vbo(name="color", data=colors, size=3)
+   vbg.add_ebo(data=indices)
    
    # Draw
    vbg.bind()

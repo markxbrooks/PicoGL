@@ -243,13 +243,13 @@ Creating Buffers
    vbg = VertexBufferGroup()
    
    # Add vertex buffer
-   vbg.add_vbo("position", vertices, 3)
+   vbg.add_vbo(name="position", data=vertices, size=3)
    
    # Add color buffer
-   vbg.add_vbo("color", colors, 3)
+   vbg.add_vbo(name="color", data=colors, size=3)
    
    # Add element buffer
-   vbg.add_ebo(indices)
+   vbg.add_ebo(data=indices)
 
 Binding Buffers
 ~~~~~~~~~~~~~~~
