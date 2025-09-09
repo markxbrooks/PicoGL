@@ -81,7 +81,7 @@ class LegacyQtObjectRenderer(GLBase):
             vertices=self.vertices, colors=self.colors, indices=self.indices
         )
         self.gl_mesh_data = LegacyGLMesh.from_mesh_data(mesh=self.mesh_data)
-        self.gl_mesh_data.upload()
+        # self.gl_mesh_data.upload()
         self._initialized = True
         log.message("✅ Qt Cube Renderer initialized")
 

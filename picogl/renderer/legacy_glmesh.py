@@ -6,7 +6,7 @@ from picogl.buffers.factory.layout import create_layout
 from OpenGL.GL import glDrawElements
 from OpenGL.raw.GL._types import GL_FLOAT
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT
-from OpenGL.raw.GL.VERSION.GL_1_1 import GL_COLOR_ARRAY, GL_VERTEX_ARRAY
+from OpenGL.raw.GL.VERSION.GL_1_1 import GL_COLOR_ARRAY, GL_VERTEX_ARRAY, glDrawArrays
 
 from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
 from picogl.buffers.attributes import AttributeSpec
@@ -14,7 +14,7 @@ from picogl.buffers.glcleanup import delete_buffer_object
 from picogl.buffers.vertex.legacy import VertexBufferGroup
 
 
-class LegacyGLMesh:
+class LegacyGLMeshNew:
     """
     GL Mesh for Compatibility Profile (Legacy OpenGL)
 
@@ -180,7 +180,7 @@ class LegacyGLMesh:
                 # If you are using client-side element arrays, you can call:
                 # glDrawElements(mode, index_count, GL_UNSIGNED_INT, self.indices.ctypes.data)
                 # But most modern Python OpenGL wrappers expect numpy buffers; adapt as needed.
-                glDrawElements(mode, int(self.index_count), GL_UNSIGNED_INT, numpy.ctypeslib.as_ctypes(self.indices))
+                glDrawElements(mode, int(self.index_count), GL_UNSIGNED_INT, ctypes.c_void_p(0))
             else:
                 # Non-indexed path: draw as arrays. We'll draw as triangles from vertex data.
                 glDrawArrays(mode, 0, int(self.index_count))
@@ -188,7 +188,7 @@ class LegacyGLMesh:
             raise
 
 
-class LegacyGLMeshOld:
+class LegacyGLMesh:
     """
     GL Mesh fir Compatibility Profile
 
@@ -328,7 +328,9 @@ class LegacyGLMeshOld:
 
     def bind(self):
         if not self.vao:
-            raise RuntimeError("GLMesh not uploaded")
+            self.upload()
+            if not self.vao:
+                raise RuntimeError("GLMesh not uploaded")
         self.vao.__enter__()  # context protocol
 
     def unbind(self):
