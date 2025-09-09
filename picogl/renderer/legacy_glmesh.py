@@ -14,10 +14,6 @@ from picogl.buffers.glcleanup import delete_buffer_object
 from picogl.buffers.vertex.legacy import VertexBufferGroup
 
 
-
-from typing import Optional
-
-
 class LegacyGLMesh:
     """
     GL Mesh for Compatibility Profile (Legacy OpenGL)
