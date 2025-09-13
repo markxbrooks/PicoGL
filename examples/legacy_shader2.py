@@ -1,11 +1,30 @@
 
+import os
+import sys
 import numpy as np
 from math import sin, cos
-from OpenGL.GL import *
-from OpenGL.GLUT import *
-from OpenGL.GLU import *
+
+# Check for display before importing OpenGL
+if os.environ.get("DISPLAY") is None and os.name != "nt":
+    print("❌ No display available. This requires a graphical environment.")
+    print("   Try running on a system with X11, Wayland, or macOS display.")
+    sys.exit(1)
+
+try:
+    from OpenGL.GL import *
+    from OpenGL.GLU import *
+    from OpenGL.GLUT import *
+except ImportError as e:
+    print(f"❌ Failed to import OpenGL modules: {e}")
+    print("   Install with: pip install PyOpenGL PyOpenGL_accelerate")
+    sys.exit(1)
+
 # Optional: if you want to demonstrate templating
-from jinja2 import Template
+try:
+    from jinja2 import Template
+except ImportError:
+    print("⚠️  Jinja2 not available, template functionality disabled")
+    Template = None
 
 # -------------------------------
 # Quad data (two triangles) with normals
@@ -30,6 +49,7 @@ model = np.identity(4, dtype=np.float32)
 view  = np.identity(4, dtype=np.float32)
 proj  = np.identity(4, dtype=np.float32)
 
+
 # Camera-ish projection
 def update_projection(width, height):
     glMatrixMode(GL_PROJECTION)
@@ -50,7 +70,7 @@ normal: {{ normal }}
 # Compute color from normal
 color = [ (n[0]*0.5)+0.5, (n[1]*0.5)+0.5, (n[2]*0.5)+0.5 ]
 """
-template = Template(template_src)
+template = Template(template_src) if Template else None
 
 def render_vertex_with_template(v, mvp):
     # This demonstrates where you could render a template per-vertex.
@@ -158,20 +178,31 @@ def reshape(width, height):
     glLoadIdentity()
 
 def main():
-    glutInit(sys.argv)
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH)
-    glutInitWindowSize(800, 600)
-    glutCreateWindow(b"Quad with mouse rotation - PyOpenGL + GLUT (legacy GL)")
+    try:
+        glutInit(sys.argv)
+        glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH)
+        glutInitWindowSize(800, 600)
+        glutCreateWindow(b"Quad with mouse rotation - PyOpenGL + GLUT (legacy GL)")
 
-    init_gl()
-    glutDisplayFunc(display)
-    glutReshapeFunc(reshape)
-    glutMouseFunc(mouse)
-    glutMotionFunc(motion)
-    glutKeyboardFunc(keyboard)
+        init_gl()
+        glutDisplayFunc(display)
+        glutReshapeFunc(reshape)
+        glutMouseFunc(mouse)
+        glutMotionFunc(motion)
+        glutKeyboardFunc(keyboard)
 
-    # Initial projection setup (in reshape)
-    glutMainLoop()
+        print("\n🎮 Controls:")
+        print("   Mouse: Rotate view")
+        print("   ESC: Exit")
+        print("\n🚀 Starting quad renderer...")
+
+        # Initial projection setup (in reshape)
+        glutMainLoop()
+    except Exception as e:
+        print(f"❌ Error running quad renderer: {e}")
+        print("   This might be due to OpenGL context issues.")
+        print("   Try running with different OpenGL settings or drivers.")
+        print("   On macOS, try running from Terminal.app or iTerm2.")
 
 if __name__ == "__main__":
     main()
