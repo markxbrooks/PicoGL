@@ -254,7 +254,7 @@ class MeshData:
         GL.glPolygonMode(GL.GL_FRONT_AND_BACK, fill_mode)
 
         # Draw the mesh
-        GL.glDrawElements(mode, len(self.ebo) * 3, GL.GL_UNSIGNED_INT, self.ebo)
+        GL.glDrawElements(mode, len(self.ebo.data) * 3, GL.GL_UNSIGNED_INT, self.ebo)
 
         # Restore fill mode
         GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL)
