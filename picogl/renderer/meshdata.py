@@ -221,6 +221,36 @@ class MeshData:
             fill: Whether to fill or use wireframe
             alpha: Transparency value from 0.0 (opaque) to 1.0 (fully transparent)
         """
+        # Safety checks to prevent segfaults
+        if self.vbo is None:
+            print("Warning: Cannot draw mesh - no vertex data (vbo)")
+            return
+        
+        if self.ebo is None:
+            print("Warning: Cannot draw mesh - no element data (ebo)")
+            return
+            
+        if len(self.ebo) == 0:
+            print("Warning: Cannot draw mesh - empty element buffer")
+            return
+            
+        # Validate ebo data to prevent segfaults
+        if self.ebo.dtype != np.uint32 and self.ebo.dtype != np.int32:
+            print(f"Warning: Invalid ebo dtype {self.ebo.dtype}, converting to uint32")
+            self.ebo = self.ebo.astype(np.uint32)
+            
+        # Check for invalid indices that could cause segfaults
+        max_vertex_index = len(self.vbo) // 3 - 1
+        if np.any(self.ebo > max_vertex_index):
+            print(f"Warning: Invalid vertex indices in ebo (max: {max_vertex_index})")
+            # Clamp indices to valid range
+            self.ebo = np.clip(self.ebo, 0, max_vertex_index)
+            
+        if np.any(self.ebo < 0):
+            print("Warning: Negative vertex indices in ebo")
+            # Set negative indices to 0
+            self.ebo = np.maximum(self.ebo, 0)
+
         if fill:
             fill_mode = GL.GL_FILL
         else:
@@ -253,8 +283,17 @@ class MeshData:
         # Draw as wireframe for better visibility
         GL.glPolygonMode(GL.GL_FRONT_AND_BACK, fill_mode)
 
-        # Draw the mesh
-        GL.glDrawElements(mode, len(self.ebo) * 3, GL.GL_UNSIGNED_INT, self.ebo)
+        try:
+            # Draw the mesh with additional safety checks
+            element_count = len(self.ebo)
+            if element_count > 0:
+                GL.glDrawElements(mode, element_count, GL.GL_UNSIGNED_INT, self.ebo)
+        except Exception as e:
+            print(f"Error in glDrawElements: {e}")
+            print(f"Element count: {element_count}")
+            print(f"EBO dtype: {self.ebo.dtype}")
+            print(f"EBO shape: {self.ebo.shape}")
+            print(f"VBO length: {len(self.vbo) if self.vbo is not None else 'None'}")
 
         # Restore fill mode
         GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL)

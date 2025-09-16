@@ -35,10 +35,14 @@ def unproject(x: int, y: int) -> Optional[Tuple[float, float, float]]:
     i.e. self.makeCurrent() ← must be called before this if in Qt widget
     """
     model_view = glGetDoublev(GL_MODELVIEW_MATRIX)
+    # log.parameter("model_view", model_view)
     projection = glGetDoublev(GL_PROJECTION_MATRIX)
+    # log.parameter("projection", projection)
     viewport = glGetIntegerv(GL_VIEWPORT)
+    # log.parameter("viewport", viewport)
 
     y_gl = viewport[3] - y
+    # log.parameter("y_gl", y_gl)
 
     if not (0 <= x < viewport[2] and 0 <= y_gl < viewport[3]):
         log.message(f"Coordinates out of bounds: ({x}, {y_gl})")
@@ -49,6 +53,7 @@ def unproject(x: int, y: int) -> Optional[Tuple[float, float, float]]:
 
     # Read depth safely
     depth = np.array([0.0], dtype=np.float32)
+    # log.parameter("depth", depth)
     try:
         glFlush()
         glReadPixels(x, y_gl, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, depth)
@@ -59,6 +64,9 @@ def unproject(x: int, y: int) -> Optional[Tuple[float, float, float]]:
     wz = float(depth[0])
     if wz == 1.0:
         return None
-
+    # log.parameter("depth", depth)
     wx, wy, wz = gluUnProject(x, y_gl, wz, model_view, projection, viewport)
+    # log.parameter("wx", wx)
+    # log.parameter("wy", wy)
+    # log.parameter("wz", wz)
     return wx, wy, wz
