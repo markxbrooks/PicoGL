@@ -70,7 +70,7 @@ class Tu01Win(GlutRendererWindow):
         glEnable(GL_DEPTH_TEST)
         glEnable(GL_CULL_FACE)
 
-    def on_keyboard(self, key, x, y):
+    def keyPressEvent(self, key, x, y):
         pass
 
     def mousePressEvent(self, *args, **kwargs):

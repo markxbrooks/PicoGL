@@ -52,7 +52,7 @@ class AbstractGLWindow(ABC):
         """Optional idle hook (override if needed)."""
 
     @abstractmethod
-    def on_keyboard(self, key, x, y) -> None:
+    def keyPressEvent(self, key, x, y) -> None:
         """Handle ASCII keyboard input. Must be implemented by subclass."""
 
     @abstractmethod

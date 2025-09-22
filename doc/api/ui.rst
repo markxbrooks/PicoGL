@@ -255,7 +255,7 @@ Keyboard Input
 
 .. code-block:: python
 
-   def keyboard(self, key, x, y):
+   def keyPressEvent(self, key, x, y):
        if key == b'\x1b':  # ESC key
            sys.exit(0)
        elif key == b'r':  # Reset rotation

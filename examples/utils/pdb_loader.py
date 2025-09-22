@@ -14,6 +14,8 @@ from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 
+from elmo.gl.backend.modern.entities.bonds.compute_indices import atoms_should_bond
+
 
 @dataclass
 class Atom:
@@ -86,9 +88,9 @@ class PDBStructure:
             return self.residues[residue_idx].atoms
         return []
 
-
+"""
 def atoms_should_bond(atom1: Atom, atom2: Atom, distance: float) -> bool:
-    """Determine if two atoms should be bonded based on distance and element types"""
+    ""Determine if two atoms should be bonded based on distance and element types""
     # Common covalent bond lengths (in Angstroms)
     bond_lengths = {
         ("C", "C"): 1.54,
@@ -112,7 +114,7 @@ def atoms_should_bond(atom1: Atom, atom2: Atom, distance: float) -> bool:
     if atom1.element in ["C", "N", "O", "S"] and atom2.element in ["C", "N", "O", "S"]:
         return distance <= 2.0
 
-    return False
+    return False"""
 
 
 class PDBLoader:
@@ -296,7 +298,7 @@ class PDBLoader:
 
                     # Simple bond detection based on distance and element types
                     if atoms_should_bond(atom1, atom2, dist):
-                        bonds.append(Bond(atom1_idx=i, atom2_idx=j, bond_type="single"))
+                        bonds.append(Bond(atom1_idx=i, atom2_idx=j, bond_type=BondType.SINGLE))
 
         return bonds
 

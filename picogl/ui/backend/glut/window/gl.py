@@ -12,6 +12,7 @@ from picogl.ui.abc_window import AbstractGLWindow
 
 
 class GLWindow(AbstractGLWindow):
+    """GLWindow"""
     def __init__(self, title: str = "window", *args, **kwargs):
         """__init__"""
         super().__init__()
@@ -35,7 +36,7 @@ class GLWindow(AbstractGLWindow):
         self.window = GLUT.glutCreateWindow(title_bytes)
         GLUT.glutDisplayFunc(self.display)
         GLUT.glutReshapeFunc(self.resizeGL)
-        GLUT.glutKeyboardFunc(self.on_keyboard)
+        GLUT.glutKeyboardFunc(self.keyPressEvent)
         GLUT.glutSpecialFunc(self.on_special_key)
         GLUT.glutMouseFunc(self.mousePressEvent)
         GLUT.glutMotionFunc(self.mouseMoveEvent)
@@ -77,7 +78,7 @@ class GLWindow(AbstractGLWindow):
         GL.glViewport(0, 0, width, height)
         GLU.gluPerspective(45.0, float(width) / float(height), 0.1, 1000.0)
 
-    def on_keyboard(self, key, x, y):
+    def keyPressEvent(self, key, x, y):
         """on_keyboard"""
         if self.controller is not None:
             self.controller.on_keyboard(key, x, y)

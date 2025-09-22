@@ -22,7 +22,7 @@ class GLWindow(AbstractGLWindow):
         # If you use a projection matrix, update it here
         # GLU.gluPerspective(...)
 
-    def on_keyboard(self, key, x, y) -> None:
+    def keyPressEvent(self, key, x, y) -> None:
         if key == b"\x1b":  # Escape
             sys.exit(0)
 
