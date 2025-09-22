@@ -9,7 +9,7 @@ from typing import Optional, Any
 
 import numpy as np
 from OpenGL.GL import glVertexAttribPointer
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POINTS, GL_TRIANGLES, GL_UNSIGNED_INT, GL_FLOAT
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POINTS, GL_TRIANGLES, GL_UNSIGNED_INT, GL_FLOAT, GL_LINE, GL_LINE_STRIP
 from OpenGL.raw.GL.VERSION.GL_1_1 import (
     GL_COLOR_ARRAY,
     GL_NORMAL_ARRAY,
@@ -43,7 +43,7 @@ from picogl.logger import Logger as log
 class VertexBufferGroup(VertexBase):
     """Container for legacy VBOs, mimicking VAO interface."""
 
-    def __init__(self):
+    def __init__(self, draw_mode: int = GL_LINE_STRIP):
         super().__init__()
         # self.index_count = 0
         self.handle = 0  # Does absolutely nothing
@@ -56,6 +56,7 @@ class VertexBufferGroup(VertexBase):
         self.ebo = None  # Bond Index Buffer Object
         self.layout: Optional[LayoutDescriptor] = None
         self.named_vbos: dict[str, LegacyVBO] = {}  # store by semantic name
+        self.draw_mode: int = draw_mode
         self.vbo_classes = {
             "vbo": LegacyPositionVBO,
             "cbo": LegacyColorVBO,
@@ -110,6 +111,8 @@ class VertexBufferGroup(VertexBase):
 
         if not index_count:
             index_count = self.index_count
+        if not mode:
+            mode = self.draw_mode
         with self:
             with legacy_client_states(GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_NORMAL_ARRAY):
                 for vbo in self.named_vbos.values():

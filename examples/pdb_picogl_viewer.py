@@ -212,7 +212,7 @@ class MolecularRenderWindow(RenderWindow):
             with self.bond_vao:
                 glDrawArrays(GL_LINES, 0, len(self.bond_mesh.vertices) // 3)
 
-    def on_keyboard(self, key, x, y):
+    def keyPressEvent(self, key, x, y):
         """Handle keyboard input"""
         if key == b"q" or key == b"Q":
             print("Quitting molecular viewer...")
