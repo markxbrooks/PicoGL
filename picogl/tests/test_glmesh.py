@@ -473,7 +473,7 @@ class TestGLMesh(unittest.TestCase):
         self.assertEqual(mesh_2.colors.shape[0], 2)  # Colors should match vertex count
 
     def test_default_color_generation(self):
-        """Test default color generation."""
+        """Test default colour generation."""
         mesh = GLMesh(vertices=self.test_vertices, faces=self.test_faces)
         
         # Should generate blue colors for all vertices
@@ -543,7 +543,7 @@ class TestGLMesh(unittest.TestCase):
         self.assertEqual(vertex_call[1]['size'], 3)
         np.testing.assert_array_equal(vertex_call[1]['data'], self.test_vertices)
         
-        # Test color VBO (index 1, size 3)
+        # Test colour VBO (index 1, size 3)
         color_call = next(call for call in calls if call[1].get('index') == 1)
         self.assertEqual(color_call[1]['size'], 3)
         np.testing.assert_array_equal(color_call[1]['data'], self.test_colors)

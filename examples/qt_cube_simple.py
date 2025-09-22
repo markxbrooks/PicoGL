@@ -174,7 +174,7 @@ class SimpleQtCubeWidget(QOpenGLWidget):
         glEnableClientState(GL_VERTEX_ARRAY)
         glEnableClientState(GL_COLOR_ARRAY)
 
-        # Set up vertex and color arrays
+        # Set up vertex and colour arrays
         glVertexPointer(3, GL_FLOAT, 0, self.vertices)
         glColorPointer(3, GL_FLOAT, 0, self.colors)
 

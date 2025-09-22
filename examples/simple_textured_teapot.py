@@ -50,7 +50,7 @@ def main() -> None:
         vertices=teapot_data.vertices,
         normals=teapot_data.normals,
         uvs=teapot_data.texcoords,
-        colors=([[0.8, 0.8, 0.8]] * (len(teapot_data.vertices) // 3)),  # Light gray base color
+        colors=([[0.8, 0.8, 0.8]] * (len(teapot_data.vertices) // 3)),  # Light gray base colour
     )
     
     # Create render window with texture support

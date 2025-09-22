@@ -223,7 +223,7 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
             atom = self.calpha_atoms[i]
             chain_id = atom.chain_id
             
-            # Set color based on chain
+            # Set colour based on chain
             if chain_id == 'A':
                 glColor3f(0.0, 1.0, 0.0)  # Green for chain A
             elif chain_id == 'B':
@@ -248,11 +248,11 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
         
         for atom1_idx, atom2_idx in self.calpha_bonds:
             if 0 <= atom1_idx < len(self.calpha_positions) and 0 <= atom2_idx < len(self.calpha_positions):
-                # Get the chain ID for the first atom to determine color
+                # Get the chain ID for the first atom to determine colour
                 atom1 = self.calpha_atoms[atom1_idx]
                 chain_id = atom1.chain_id
                 
-                # Set color based on chain
+                # Set colour based on chain
                 if chain_id == 'A':
                     glColor3f(0.0, 1.0, 0.0)  # Green for chain A
                 elif chain_id == 'B':
@@ -453,7 +453,7 @@ class LegacyMolecularViewerWindow(LegacyQtObjectWindow):
             "• ESC: Exit\n"
             "• Chain A: Green, Chain B: Blue"
         )
-        instructions.setStyleSheet("font-size: 12px; padding: 10px; background-color: #f0f0f0;")
+        instructions.setStyleSheet("font-size: 12px; padding: 10px; background-colour: #f0f0f0;")
         upper_layout.addWidget(instructions)
     
     def show_info(self):

@@ -271,14 +271,14 @@ class TestMeshData(unittest.TestCase):
 
     def test_from_raw_with_color_per_vertex_array(self):
         """Test from_raw with color_per_vertex array."""
-        color_per_vertex = [0.5, 0.5, 0.5]  # Single color
+        color_per_vertex = [0.5, 0.5, 0.5]  # Single colour
         mesh = MeshData.from_raw(
             vertices=self.test_vertices,
             color_per_vertex=color_per_vertex
         )
         
         self.assertIsNotNone(mesh.cbo)
-        # Should have replicated the color for all vertices
+        # Should have replicated the colour for all vertices
         expected_length = len(self.test_vertices) * 3
         self.assertEqual(len(mesh.cbo), expected_length)
 
@@ -405,7 +405,7 @@ class TestMeshData(unittest.TestCase):
         # The actual OpenGL calls are mocked in setUp
 
     def test_draw_with_override_color(self):
-        """Test draw method with override color."""
+        """Test draw method with override colour."""
         mesh = MeshData(
             vbo=self.test_vertices,
             ebo=self.test_indices
@@ -517,13 +517,13 @@ class TestMeshData(unittest.TestCase):
         self.assertIn("vertices is required", str(context.exception))
 
     def test_color_generation_edge_cases(self):
-        """Test color generation with edge cases."""
+        """Test colour generation with edge cases."""
         # Test with single vertex
         single_vertex = np.array([[1, 2, 3]], dtype=np.float32)
         mesh = MeshData.from_raw(vertices=single_vertex)
         
         self.assertIsNotNone(mesh.cbo)
-        self.assertEqual(len(mesh.cbo), 3)  # Single color (RGB)
+        self.assertEqual(len(mesh.cbo), 3)  # Single colour (RGB)
         
         # Test with empty vertex array
         empty_vertices = np.array([], dtype=np.float32).reshape(0, 3)

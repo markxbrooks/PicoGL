@@ -202,7 +202,7 @@ class VertexArrayObject(VertexBase):
         :param data: Vertex data
         :param size: Size per vertex (e.g., 3 for vec3)
         :param dtype: OpenGL data type (e.g., GL_FLOAT)
-        :param name: Optional semantic name (e.g., "position", "color")
+        :param name: Optional semantic name (e.g., "position", "colour")
         :return: OpenGL buffer handle (GLuint)
         """
         vbo = ModernVBO(handle=handle)

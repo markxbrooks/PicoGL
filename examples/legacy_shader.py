@@ -32,10 +32,10 @@ except ImportError:
 # Quad in the XY plane, at z = -5
 # We'll define four corners and two triangles (0-1-2 and 2-3-0)
 quad_verts = [
-    {'pos': [-1.0,  1.0, -5.0], 'normal': [0.0, 0.0, 1.0] , 'color': [1.0, 0.0, 1.0]},  # top-left
-    {'pos': [ 1.0,  1.0, -5.0], 'normal': [0.0, 0.0, 1.0] , 'color': [0.0, 1.0, 1.0]},  # top-right
-    {'pos': [ 1.0, -1.0, -5.0], 'normal': [0.0, 0.0, 1.0] , 'color': [0.0, 0.0, 1.0]},  # bottom-right
-    {'pos': [-1.0, -1.0, -5.0], 'normal': [0.0, 0.0, 1.0] , 'color': [0.0, 0.0, 1.0]},  # bottom-left
+    {'pos': [-1.0,  1.0, -5.0], 'normal': [0.0, 0.0, 1.0] , 'colour': [1.0, 0.0, 1.0]},  # top-left
+    {'pos': [ 1.0,  1.0, -5.0], 'normal': [0.0, 0.0, 1.0] , 'colour': [0.0, 1.0, 1.0]},  # top-right
+    {'pos': [ 1.0, -1.0, -5.0], 'normal': [0.0, 0.0, 1.0] , 'colour': [0.0, 0.0, 1.0]},  # bottom-right
+    {'pos': [-1.0, -1.0, -5.0], 'normal': [0.0, 0.0, 1.0] , 'colour': [0.0, 0.0, 1.0]},  # bottom-left
 ]
 
 # Indices for two triangles
@@ -68,16 +68,16 @@ template_src = """def process_vertex(v, mvp_matrix):
 
     # Color processing: {{ color_mode }}
 {% if color_mode == "vertex_color" %}
-    color = v['color']
+    colour = v['colour']
 {% elif color_mode == "normal_based" %}
     n = np.array(v['normal'], dtype=float)
     n_norm = n / np.linalg.norm(n) if np.linalg.norm(n) != 0 else n
-    color = [(n_norm[0]*0.5)+0.5, (n_norm[1]*0.5)+0.5, (n_norm[2]*0.5)+0.5]
+    colour = [(n_norm[0]*0.5)+0.5, (n_norm[1]*0.5)+0.5, (n_norm[2]*0.5)+0.5]
 {% elif color_mode == "custom" %}
-    color = {{ custom_color_expression }}
+    colour = {{ custom_color_expression }}
 {% endif %}
 
-    return {'gl_pos': gl_pos, 'color': color}"""
+    return {'gl_pos': gl_pos, 'colour': colour}"""
 template = Template(template_src) if Template else None
 
 def render_vertex_with_template(v, mvp):
@@ -95,8 +95,8 @@ def render_vertex_with_template(v, mvp):
         n_norm = (n / nm).tolist()
     else:
         n_norm = n.tolist()
-    color = v['color']
-    return {'gl_pos': gl_pos, 'color': color}
+    color = v['colour']
+    return {'gl_pos': gl_pos, 'colour': color}
 
 # -------------------------------
 # Interaction: mouse-driven rotation
@@ -142,17 +142,17 @@ def create_vertex_program(color_mode, custom_expr=None):
             
             # Color processing based on mode
             if color_mode == "vertex_color":
-                color = v['color']
+                colour = v['colour']
             elif color_mode == "normal_based":
                 n = np.array(v['normal'], dtype=float)
                 n_norm = n / np.linalg.norm(n) if np.linalg.norm(n) != 0 else n
-                color = [(n_norm[0]*0.5)+0.5, (n_norm[1]*0.5)+0.5, (n_norm[2]*0.5)+0.5]
+                colour = [(n_norm[0]*0.5)+0.5, (n_norm[1]*0.5)+0.5, (n_norm[2]*0.5)+0.5]
             elif color_mode == "custom" and custom_expr:
-                color = eval(custom_expr, {'v': v, 'np': np})
+                colour = eval(custom_expr, {'v': v, 'np': np})
             else:
-                color = v['color']  # Default to vertex color
+                colour = v['colour']  # Default to vertex colour
             
-            return {'gl_pos': gl_pos, 'color': color}
+            return {'gl_pos': gl_pos, 'colour': colour}
         return process_vertex"""
     
     # Jinja2 template-based implementation
@@ -205,7 +205,7 @@ def render(mvp_matrix, vertex_processor):
         for i in idx:
             v = quad_verts[i]
             result = vertex_processor(v, mvp_matrix)
-            glColor3f(*result['color'])
+            glColor3f(*result['colour'])
             glVertex3f(*v['pos'])
     glEnd()
 

@@ -258,7 +258,7 @@ def test_cube_data():
         return False
 
     if colors.shape != (36, 3):
-        print(f"  ❌ Invalid color shape: {colors.shape}")
+        print(f"  ❌ Invalid colour shape: {colors.shape}")
         return False
 
     # Check for valid vertex coordinates
@@ -266,12 +266,12 @@ def test_cube_data():
         print("  ❌ Invalid vertex coordinates (NaN or Inf)")
         return False
 
-    # Check for valid color values
+    # Check for valid colour values
     if not np.all(np.isfinite(colors)):
-        print("  ❌ Invalid color values (NaN or Inf)")
+        print("  ❌ Invalid colour values (NaN or Inf)")
         return False
 
-    # Check color range
+    # Check colour range
     if not np.all((colors >= 0.0) & (colors <= 1.0)):
         print("  ❌ Color values out of range [0, 1]")
         return False

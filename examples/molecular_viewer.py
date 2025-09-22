@@ -224,7 +224,7 @@ class MolecularRenderWindow(RenderWindow):
         # Add vertex buffer
         vao.add_vbo(index=0, data=np.array(mesh.vertices, dtype=np.float32), size=3)
 
-        # Add color buffer if available
+        # Add colour buffer if available
         if hasattr(mesh, "colors") and mesh.colors:
             vao.add_vbo(index=1, data=np.array(mesh.colors, dtype=np.float32), size=3)
 

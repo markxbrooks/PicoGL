@@ -90,13 +90,13 @@ class MeshData:
 
     @classmethod
     def _default_colors_for_vertices(cls, vertex_count: int) -> np.ndarray:
-        # Simple default: red color per vertex
+        # Simple default: red colour per vertex
         colors = np.tile(np.array([1.0, 0.0, 0.0], dtype=np.float32), (vertex_count, 1))
         return colors.reshape(-1)
 
     @classmethod
     def _default_normals_for_vertices(cls, vertex_count: int) -> np.ndarray:
-        # Simple default: red color per vertex
+        # Simple default: red colour per vertex
         normals = np.tile([0.0, 0.0, 1.0], (vertex_count, 1)).astype(np.float32)
         return normals.reshape(-1)
 
@@ -178,12 +178,12 @@ class MeshData:
 
         if cbo_arr is None:
             if color_per_vertex is not None:
-                # user supplied a color-per-vertex function or preset
-                # If color_per_vertex is a scalar (same color for all), broadcast accordingly
+                # user supplied a colour-per-vertex function or preset
+                # If color_per_vertex is a scalar (same colour for all), broadcast accordingly
                 if isinstance(color_per_vertex, (list, tuple, np.ndarray)):
                     colors = np.asarray(color_per_vertex, dtype=np.float32).reshape(-1)
                     if len(colors) == 3:
-                        # single color; replicate per vertex
+                        # single colour; replicate per vertex
                         cbo_arr = np.tile(colors, vertex_count)
                     elif len(colors) == vertex_count * 3:
                         cbo_arr = colors
@@ -192,7 +192,7 @@ class MeshData:
                 else:
                     raise ValueError("color_per_vertex must be array-like or None")
             else:
-                # default per-vertex color (red)
+                # default per-vertex colour (red)
                 cbo_arr = cls._default_colors_for_vertices(vertex_count)
         # If cbo_arr still None and we had color_per_vertex, ensure it's flat
         if cbo_arr is not None and cbo_arr.ndim != 1:
@@ -212,10 +212,10 @@ class MeshData:
         alpha: float = 1.0,
     ):
         """
-        Draw the mesh with optional color override and transparency.
+        Draw the mesh with optional colour override and transparency.
 
         Args:
-            color: Optional color override. If None and vertex colors exist, uses vertex colors.
+            color: Optional colour override. If None and vertex colors exist, uses vertex colors.
             line_width: Line width for wireframe mode
             mode: OpenGL drawing mode
             fill: Whether to fill or use wireframe
@@ -266,7 +266,7 @@ class MeshData:
         else:
             GL.glDisable(GL.GL_BLEND)
 
-        # Check if we should use vertex colors or override color
+        # Check if we should use vertex colors or override colour
         if color is None and self.cbo is not None:
             # Use vertex colors (for fo-fc maps)
             GL.glEnableClientState(GL.GL_COLOR_ARRAY)
@@ -274,7 +274,7 @@ class MeshData:
             # Note: Alpha blending for vertex colors would require 4-component colors
             # For now, we'll use the alpha value for the overall transparency
         else:
-            # Use override color
+            # Use override colour
             if color is None:
                 color = (0.0, 0.0, 1.0)  # Default blue
             # Use glColor4f to include alpha value
@@ -298,6 +298,15 @@ class MeshData:
         # Restore fill mode
         GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL)
 
-        # Clean up color array state if we used it
+        # Clean up colour array state if we used it
         if color is None and self.cbo is not None:
             GL.glDisableClientState(GL.GL_COLOR_ARRAY)
+
+    def delete(self):
+        """delete to remove atoms_buffers"""
+        if self.nbo:
+            self.nbo = None
+        if self.cbo:
+            self.cbo = None
+        if self.ebo:
+            self.ebo = None

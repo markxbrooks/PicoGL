@@ -295,7 +295,7 @@ class TestObjectRenderer(unittest.TestCase):
         # Test VAO assignment
         self.assertEqual(mock_context.vaos["model"], mock_vao)
         
-        # Test VBO calls for color/normal mode
+        # Test VBO calls for colour/normal mode
         calls = mock_vao.add_vbo.call_args_list
         self.assertEqual(len(calls), 3)  # vertices + colors + normals
         
@@ -304,7 +304,7 @@ class TestObjectRenderer(unittest.TestCase):
         self.assertEqual(vertex_call[1]['index'], 0)
         self.assertEqual(vertex_call[1]['size'], 3)
         
-        # Test color VBO (index 1, size 3)
+        # Test colour VBO (index 1, size 3)
         color_call = next(call for call in calls if call[1].get('index') == 1)
         self.assertEqual(color_call[1]['index'], 1)
         self.assertEqual(color_call[1]['size'], 3)
@@ -630,7 +630,7 @@ class TestObjectRenderer(unittest.TestCase):
             
             renderer.initialize()
         
-        # Should fall back to color/normal mode
+        # Should fall back to colour/normal mode
         calls = mock_vao.add_vbo.call_args_list
         self.assertEqual(len(calls), 3)  # vertices + colors + normals
         

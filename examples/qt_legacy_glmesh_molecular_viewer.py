@@ -258,7 +258,7 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         vertex_offset = 0
 
         for atom in self.calpha_atoms:
-            # Set color based on chain
+            # Set colour based on chain
             if atom.chain_id == 'A':
                 color = [0.0, 1.0, 0.0, 1.0]  # Green
             elif atom.chain_id == 'B':
@@ -298,7 +298,7 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         indices = []
 
         for i, (atom1, atom2) in enumerate(self.calpha_bonds):
-            # Set color based on chain
+            # Set colour based on chain
             if atom1.chain_id == 'A':
                 color = [0.0, 1.0, 0.0, 1.0]  # Green
             elif atom1.chain_id == 'B':
@@ -491,7 +491,7 @@ class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
             "• Chain A: Green, Chain B: Blue\n"
             "• Using LegacyGLMesh for rendering"
         )
-        instructions.setStyleSheet("color: black; font-size: 12px; padding: 10px; background-color: #f0f0f0;")
+        instructions.setStyleSheet("colour: black; font-size: 12px; padding: 10px; background-colour: #f0f0f0;")
         upper_layout.addWidget(instructions)
 
     def reset_view(self):
