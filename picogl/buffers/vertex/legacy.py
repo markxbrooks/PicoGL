@@ -43,7 +43,7 @@ from picogl.logger import Logger as log
 class VertexBufferGroup(VertexBase):
     """Container for legacy VBOs, mimicking VAO interface."""
 
-    def __init__(self, draw_mode: int = GL_LINE_STRIP):
+    def __init__(self, draw_mode: int = GL_POINTS):
         super().__init__()
         # self.index_count = 0
         self.handle = 0  # Does absolutely nothing
@@ -63,6 +63,8 @@ class VertexBufferGroup(VertexBase):
             "ebo": LegacyEBO,
             "nbo": LegacyNormalVBO,
         }
+        # Optional explicit override for counts; when set, used by draw/draw_elements
+        self._index_count_override: Optional[int] = None
 
     def add_vbo_object(self, name: str, vbo: "LegacyVBO") -> "LegacyVBO":
         """Register a VBO by semantic name or shorthand alias."""
@@ -97,9 +99,27 @@ class VertexBufferGroup(VertexBase):
 
         :return: int
         """
+        if self._index_count_override is not None:
+            return int(self._index_count_override)
         return len(self.ebo.data) if self.ebo and hasattr(self.ebo, "data") else 0
 
-    def draw(self, index_count: int = 0, mode: int = GL_POINTS):
+    @index_count.setter
+    def index_count(self, value: Optional[int]) -> None:
+        """Allow explicitly setting the index count used for drawing.
+
+        Pass None to clear and fall back to EBO length.
+        """
+        if value is None:
+            self._index_count_override = None
+            return
+        # Accept numpy integer types as well
+        if not isinstance(value, (int, np.integer)):
+            raise TypeError("index_count must be an int or None")
+        if int(value) < 0:
+            raise ValueError("index_count cannot be negative")
+        self._index_count_override = int(value)
+
+    def draw(self, index_count: int = 0, mode: int = None):
         """
         draw
 
@@ -111,7 +131,7 @@ class VertexBufferGroup(VertexBase):
 
         if not index_count:
             index_count = self.index_count
-        if not mode:
+        if not mode or mode is None:
             mode = self.draw_mode
         with self:
             with legacy_client_states(GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_NORMAL_ARRAY):
