@@ -46,6 +46,7 @@ class VertexBufferGroup(VertexBase):
     def __init__(self, draw_mode: int = GL_LINE_STRIP):
         super().__init__()
         # self.index_count = 0
+        self._index_count = None
         self.handle = 0  # Does absolutely nothing
         self.vao = (
             None  # Bonds Vertex Array Object. Does absolutely nothing, but is needed
@@ -63,6 +64,12 @@ class VertexBufferGroup(VertexBase):
             "ebo": LegacyEBO,
             "nbo": LegacyNormalVBO,
         }
+
+    def __del__(self):
+        # Don't auto-delete OpenGL resources here unless you are certain the GL context is current.
+        # Logging here can help detect premature GC.
+        # print("VertexBufferGroup.__del__", self)
+        pass
 
     def add_vbo_object(self, name: str, vbo: "LegacyVBO") -> "LegacyVBO":
         """Register a VBO by semantic name or shorthand alias."""
@@ -97,7 +104,18 @@ class VertexBufferGroup(VertexBase):
 
         :return: int
         """
+        if self._index_count is not None:
+            return self._index_count
         return len(self.ebo.data) if self.ebo and hasattr(self.ebo, "data") else 0
+
+    @index_count.setter
+    def index_count(self, value):
+        """Setter for index_count with basic validation."""
+        if not isinstance(value, int):
+            raise TypeError(f"index_count must be an int, got {type(value).__name__}")
+        if value < 0:
+            raise ValueError("index_count must be non-negative")
+        self._index_count = value
 
     def draw(self, index_count: int = 0, mode: int = GL_POINTS):
         """
