@@ -35,14 +35,14 @@ def unproject(x: int, y: int) -> Optional[Tuple[float, float, float]]:
     i.e. self.makeCurrent() ← must be called before this if in Qt widget
     """
     model_view = glGetDoublev(GL_MODELVIEW_MATRIX)
-    # log.parameter("model_view", model_view)
+    log.parameter("model_view", model_view, silent=True)
     projection = glGetDoublev(GL_PROJECTION_MATRIX)
-    # log.parameter("projection", projection)
+    log.parameter("projection", projection, silent=True)
     viewport = glGetIntegerv(GL_VIEWPORT)
-    # log.parameter("viewport", viewport)
+    log.parameter("viewport", viewport, silent=True)
 
     y_gl = viewport[3] - y
-    # log.parameter("y_gl", y_gl)
+    log.parameter("y_gl", y_gl, silent=True)
 
     if not (0 <= x < viewport[2] and 0 <= y_gl < viewport[3]):
         log.message(f"Coordinates out of bounds: ({x}, {y_gl})")
@@ -64,9 +64,9 @@ def unproject(x: int, y: int) -> Optional[Tuple[float, float, float]]:
     wz = float(depth[0])
     if wz == 1.0:
         return None
-    # log.parameter("depth", depth)
+    log.parameter("depth", depth, silent=True)
     wx, wy, wz = gluUnProject(x, y_gl, wz, model_view, projection, viewport)
-    # log.parameter("wx", wx)
-    # log.parameter("wy", wy)
-    # log.parameter("wz", wz)
+    log.parameter("wx", wx, silent=True)
+    log.parameter("wy", wy, silent=True)
+    log.parameter("wz", wz, silent=True)
     return wx, wy, wz
