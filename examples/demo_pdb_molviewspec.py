@@ -109,7 +109,7 @@ def export_formats(loader, base_name):
 
 def show_molviewspec_info(molviewspec):
     """Display information about the generated MolViewSpec"""
-    print(f"\n🔍 MolViewSpec Information:")
+    print(f"\nMolViewSpec Information:")
     print(f"  Version: {molviewspec.get('version', 'Unknown')}")
     print(f"  Name: {molviewspec.get('name', 'Unknown')}")
     print(f"  Description: {molviewspec.get('description', 'None')}")

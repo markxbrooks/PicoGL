@@ -97,7 +97,7 @@ def create_mesh_from_picogl_data(picogl_data):
         return None
     
     if not all_colors:
-        print("Warning: No color data found, using default colors")
+        print("Warning: No colour data found, using default colors")
         # Generate default colors (white)
         all_colors = [1.0, 1.0, 1.0] * (len(all_vertices) // 3)
     

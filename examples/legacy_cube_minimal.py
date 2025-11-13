@@ -202,7 +202,7 @@ class MinimalCubeRenderer:
             for j in range(3):
                 vertex_idx = i + j
                 if vertex_idx < len(self.vertices):
-                    # Set color for this vertex
+                    # Set colour for this vertex
                     if not self.wireframe_mode:
                         glColor3f(
                             self.colors[vertex_idx][0],

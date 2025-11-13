@@ -312,7 +312,7 @@ class PDBLoader:
             "kind": "ball-and-stick",
             "props": {
                 "alpha": 1.0,
-                "color": "element-symbol"
+                "colour": "element-symbol"
             },
             "data": {
                 "x": [atom.x for atom in self.structure.atoms],
@@ -333,7 +333,7 @@ class PDBLoader:
                 "kind": "line",
                 "props": {
                     "alpha": 1.0,
-                    "color": "element-symbol"
+                    "colour": "element-symbol"
                 },
                 "data": {
                     "positionA": [[self.structure.atoms[bond.atom1_idx].x,
@@ -381,7 +381,7 @@ class PDBLoader:
             atom1 = self.structure.atoms[bond.atom1_idx]
             atom2 = self.structure.atoms[bond.atom2_idx]
             
-            # Bond color (average of the two atom colors)
+            # Bond colour (average of the two atom colors)
             color1 = element_colors.get(atom1.element, [0.5, 0.5, 0.5])
             color2 = element_colors.get(atom2.element, [0.5, 0.5, 0.5])
             bond_color = [(c1 + c2) / 2 for c1, c2 in zip(color1, color2)]

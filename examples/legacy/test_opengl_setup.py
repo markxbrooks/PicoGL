@@ -10,7 +10,7 @@ import os
 
 def test_opengl_imports():
     """Test if OpenGL modules can be imported."""
-    print("🔍 Testing OpenGL imports...")
+    print("Testing OpenGL imports...")
     
     try:
         import OpenGL.GL as GL
@@ -38,7 +38,7 @@ def test_opengl_imports():
 
 def test_opengl_context():
     """Test if OpenGL context can be created."""
-    print("\n🔍 Testing OpenGL context creation...")
+    print("\nTesting OpenGL context creation...")
     
     try:
         import OpenGL.GL as GL
@@ -99,7 +99,7 @@ def test_opengl_context():
 
 def test_display_environment():
     """Test display environment."""
-    print("\n🔍 Testing display environment...")
+    print("\nTesting display environment...")
     
     # Check for display
     display = os.environ.get('DISPLAY')
@@ -124,7 +124,7 @@ def test_display_environment():
 
 def test_picogl_imports():
     """Test if PicoGL modules can be imported."""
-    print("\n🔍 Testing PicoGL imports...")
+    print("\nTesting PicoGL imports...")
     
     try:
         from picogl.renderer import MeshData
