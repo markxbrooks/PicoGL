@@ -81,6 +81,8 @@ Whether you prefer browsing online, reading offline, or exploring the raw docume
 ## 🎲  Example usage to show a cube:
 Found in the Examples directory, with mouse control
 
+
+
 ![cube](cube.png)
 
 ```python
