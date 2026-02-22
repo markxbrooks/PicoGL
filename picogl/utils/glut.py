@@ -62,7 +62,7 @@ class GlutWindow(object):
         oglut.glutInitWindowSize(800, 480)
         self.window = oglut.glutCreateWindow(b"window")
         oglut.glutDisplayFunc(self.display)
-        # oglut.glutIdleFunc(self.display)
+        # oglut.glutIdleFunc(self.digital)
         oglut.glutReshapeFunc(self.resizeGL)
         oglut.glutKeyboardFunc(self.on_keyboard)
         oglut.glutSpecialFunc(self.on_special_key)
