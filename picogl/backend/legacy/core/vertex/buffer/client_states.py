@@ -25,16 +25,3 @@ def legacy_client_states(*states):
             glDisableClientState(s)
         glBindBuffer(GL_ARRAY_BUFFER, 0)
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0)
-
-
-@contextmanager
-def legacy_client_states_old(*states):
-    """legacy client states context manager"""
-    for state in states:
-        glEnableClientState(state)
-    try:
-        yield
-    finally:
-        for state in reversed(states):
-            glDisableClientState(state)
-        glBindBuffer(GL_ARRAY_BUFFER, 0)

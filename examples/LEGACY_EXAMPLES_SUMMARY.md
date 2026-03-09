@@ -137,7 +137,7 @@ pip install picogl
 - **Same appearance** as original examples
 - **Same controls** as original examples
 
-## 🔍 Troubleshooting
+## Troubleshooting
 
 ### Common Issues and Solutions
 

@@ -13,7 +13,7 @@ import numpy as np
 
 def test_cube_data():
     """Test cube data structure and validity."""
-    print("🔍 Testing cube data...")
+    print("Testing cube data...")
 
     # Cube vertices (from cube_data.py)
     vertices = np.array(
@@ -287,7 +287,7 @@ def test_cube_data():
 
 def test_triangle_count():
     """Test triangle count and structure."""
-    print("\n🔍 Testing triangle structure...")
+    print("\nTesting triangle structure...")
 
     # The cube should have 12 triangles (36 vertices / 3 vertices per triangle)
     triangle_count = 36 // 3
@@ -303,7 +303,7 @@ def test_triangle_count():
 
 def test_picogl_imports():
     """Test if PicoGL modules can be imported."""
-    print("\n🔍 Testing PicoGL imports...")
+    print("\nTesting PicoGL imports...")
 
     try:
         from picogl.renderer import MeshData
@@ -326,7 +326,7 @@ def test_picogl_imports():
 
 def test_mesh_creation():
     """Test mesh creation without OpenGL context."""
-    print("\n🔍 Testing mesh creation...")
+    print("\nTesting mesh creation...")
 
     try:
         from picogl.renderer import MeshData
