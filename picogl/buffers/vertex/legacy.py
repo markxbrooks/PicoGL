@@ -8,8 +8,7 @@ import ctypes
 from typing import Optional, Any
 
 import numpy as np
-from OpenGL.GL import glVertexAttribPointer
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POINTS, GL_TRIANGLES, GL_UNSIGNED_INT, GL_FLOAT, GL_LINE, GL_LINE_STRIP
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POINTS, GL_TRIANGLES, GL_UNSIGNED_INT, GL_FLOAT, GL_LINE_STRIP
 from OpenGL.raw.GL.VERSION.GL_1_1 import (
     GL_COLOR_ARRAY,
     GL_NORMAL_ARRAY,
@@ -22,11 +21,7 @@ from OpenGL.raw.GL.VERSION.GL_1_5 import (
     GL_ELEMENT_ARRAY_BUFFER,
     glBindBuffer,
 )
-from OpenGL.raw.GL.VERSION.GL_2_0 import (
-    glDisableVertexAttribArray,
-    glEnableVertexAttribArray,
-)
-
+from elmo.gl.backend.legacy.primitives.ribbon.model import RibbonAttrs
 from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
 from picogl.backend.legacy.core.vertex.buffer.color import LegacyColorVBO
 from picogl.backend.legacy.core.vertex.buffer.element import LegacyEBO
@@ -51,18 +46,18 @@ class VertexBufferGroup(VertexBase):
         self.vao = (
             None  # Bonds Vertex Array Object. Does absolutely nothing, but is needed
         )
-        self.vbo = None  # Atom Vertex Buffer Object
-        self.cbo = None  # Color Vertex Buffer Object
-        self.nbo = None  # Normal Vertex Buffer Object
-        self.ebo = None  # Bond Index Buffer Object
+        self.vbo: Optional[LegacyPositionVBO | int] = None  # Atom Vertex Buffer Object
+        self.cbo: Optional[LegacyColorVBO | int] = None  # Color Vertex Buffer Object
+        self.nbo: Optional[LegacyNormalVBO | int] = None  # Normal Vertex Buffer Object
+        self.ebo: Optional[LegacyEBO | int] = None  # Bond Index Buffer Object
         self.layout: Optional[LayoutDescriptor] = None
         self.named_vbos: dict[str, LegacyVBO] = {}  # store by semantic name
         self.draw_mode: int = draw_mode
         self.vbo_classes = {
-            "vbo": LegacyPositionVBO,
-            "cbo": LegacyColorVBO,
-            "ebo": LegacyEBO,
-            "nbo": LegacyNormalVBO,
+            RibbonAttrs.VBO: LegacyPositionVBO,
+            RibbonAttrs.CBO: LegacyColorVBO,
+            RibbonAttrs.EBO: LegacyEBO,
+            RibbonAttrs.NBO: LegacyNormalVBO,
         }
 
     def __del__(self):
@@ -232,13 +227,13 @@ class VertexBufferGroup(VertexBase):
                 glBindBuffer(GL_ARRAY_BUFFER, buffer_handle)
                 
                 # Use legacy pointer functions based on attribute type
-                if canonical in ["vbo", "position"]:
+                if canonical in [RibbonAttrs.VBO, "position"]:
                     from OpenGL.raw.GL.VERSION.GL_1_1 import glVertexPointer
                     glVertexPointer(3, GL_FLOAT, 0, None)
-                elif canonical in ["nbo", "normal"]:
+                elif canonical in [RibbonAttrs.N, "normal"]:
                     from OpenGL.raw.GL.VERSION.GL_1_1 import glNormalPointer
                     glNormalPointer(GL_FLOAT, 0, None)
-                elif canonical in ["cbo", "color"]:
+                elif canonical in [RibbonAttrs.CBO, "color"]:
                     from OpenGL.raw.GL.VERSION.GL_1_1 import glColorPointer
                     glColorPointer(3, GL_FLOAT, 0, None)
                     
