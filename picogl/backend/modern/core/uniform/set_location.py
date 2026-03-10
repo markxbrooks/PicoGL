@@ -5,7 +5,7 @@ from pyglm import glm
 
 from picogl.backend.modern.core.uniform.location import get_uniform_location
 from picogl.backend.modern.core.uniform.location_value import set_uniform_location_value
-from picogl.logger import Logger as log
+from decologr.logger import Decologr as log
 
 
 def set_uniform_name_value(

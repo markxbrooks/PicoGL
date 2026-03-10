@@ -32,7 +32,7 @@ from picogl.buffers.attributes import LayoutDescriptor
 from picogl.buffers.base import VertexBase
 from picogl.buffers.glcleanup import delete_buffer_object
 from picogl.buffers.vertex.aliases import NAME_ALIASES
-from picogl.logger import Logger as log
+from decologr.logger import Decologr as log
 
 
 class VertexBufferGroup(VertexBase):
@@ -230,7 +230,7 @@ class VertexBufferGroup(VertexBase):
                 if canonical in [RibbonAttrs.VBO, "position"]:
                     from OpenGL.raw.GL.VERSION.GL_1_1 import glVertexPointer
                     glVertexPointer(3, GL_FLOAT, 0, None)
-                elif canonical in [RibbonAttrs.N, "normal"]:
+                elif canonical in [RibbonAttrs.NBO, "normal"]:
                     from OpenGL.raw.GL.VERSION.GL_1_1 import glNormalPointer
                     glNormalPointer(GL_FLOAT, 0, None)
                 elif canonical in [RibbonAttrs.CBO, "color"]:

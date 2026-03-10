@@ -63,7 +63,7 @@ from picogl.buffers.attributes import LayoutDescriptor
 from picogl.buffers.base import VertexBase
 from picogl.buffers.glcleanup import delete_buffer
 from picogl.buffers.vertex.aliases import NAME_ALIASES
-from picogl.logger import Logger as log
+from decologr.logger import Decologr as log
 from picogl.safe import gl_gen_safe
 
 

@@ -24,7 +24,7 @@ from picogl.backend.legacy.core.camera.matrices.setup import setup_matrices
 from picogl.backend.legacy.core.camera.setup import calculate_aspect
 from picogl.error import check_errors
 from picogl.frame import prepare_viewport
-from picogl.logger import Logger as log
+from decologr.logger import Decologr as log
 from picogl.utils.gl_init import execute_gl_tasks, initialize_gl_list
 
 

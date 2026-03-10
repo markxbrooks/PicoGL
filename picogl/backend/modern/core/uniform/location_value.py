@@ -5,7 +5,7 @@ from OpenGL.GL import *  # pylint: disable=W0614
 from OpenGL.GL import glUniformMatrix4fv
 from pyglm import glm
 
-from picogl.logger import Logger as log
+from decologr.logger import Decologr as log
 
 
 def set_uniform_location_value(

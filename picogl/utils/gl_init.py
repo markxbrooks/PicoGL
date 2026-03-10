@@ -23,7 +23,7 @@ from picogl.backend.legacy.core.camera.setup import (
     setup_materials,
 )
 from picogl.info import get_gl_info
-from picogl.logger import Logger as log
+from decologr.logger import Decologr as log
 
 
 def execute_gl_tasks(task_list: list[tuple[str, Callable]]):

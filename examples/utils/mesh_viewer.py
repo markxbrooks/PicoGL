@@ -4,7 +4,7 @@ from pyglm import glm
 
 from examples.utils.world_sheet import WorldSheet
 from picogl.backend.modern.core.shader.mvp.controller import MVPController
-from picogl.logger import Logger as log
+from decologr.logger import Decologr as log
 from picogl.ui.backend.glut.window.gl import GLWindow
 
 
