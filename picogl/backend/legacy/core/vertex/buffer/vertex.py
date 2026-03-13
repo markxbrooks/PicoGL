@@ -5,9 +5,9 @@ Legacy VBO
 import ctypes
 
 import numpy as np
-from OpenGL.GL import glBufferData
+from OpenGL.GL import glBufferData, glGenBuffers
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_FLOAT, GL_UNSIGNED_INT, GL_LINES
-from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ARRAY_BUFFER, glGenBuffers, GL_STATIC_DRAW
+from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ARRAY_BUFFER, GL_STATIC_DRAW
 
 from picogl.backend.modern.core.vertex.base import VertexBuffer
 
