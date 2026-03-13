@@ -10,6 +10,8 @@ attributes.
 from dataclasses import dataclass, field
 from typing import Dict, Optional
 import time
+
+from PySide6 import QtGui
 from decologr import Decologr as log
 
 

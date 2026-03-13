@@ -14,7 +14,7 @@ from OpenGL.raw.GL.VERSION.GL_1_1 import (
     GL_NORMAL_ARRAY,
     GL_VERTEX_ARRAY,
     glDrawArrays,
-    glDrawElements,
+    glDrawElements, glEnableClientState, glVertexPointer, glNormalPointer, glColorPointer,
 )
 from OpenGL.raw.GL.VERSION.GL_1_5 import (
     GL_ARRAY_BUFFER,
@@ -31,7 +31,7 @@ from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
 from picogl.buffers.attributes import LayoutDescriptor
 from picogl.buffers.base import VertexBase
 from picogl.buffers.glcleanup import delete_buffer_object
-from picogl.buffers.vertex.aliases import NAME_ALIASES, VertexBufferRole
+from picogl.buffers.vertex.aliases import NAME_ALIASES, VertexBufferRole, VertexArrayRole
 from decologr.logger import Decologr as log
 
 

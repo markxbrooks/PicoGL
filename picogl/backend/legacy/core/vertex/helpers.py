@@ -1,4 +1,9 @@
-from OpenGL.GL import *
+"""
+GL Clear Buffers
+"""
+from OpenGL.raw.GL.VERSION.GL_1_0 import glMatrixMode, GL_MODELVIEW, glLoadIdentity, glEnable, GL_DEPTH_TEST, glClear, \
+    GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT, glColor3f
+from OpenGL.raw.GL.VERSION.GL_1_3 import GL_MULTISAMPLE
 
 
 def gl_clear_buffers() -> None:

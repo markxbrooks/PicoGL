@@ -1,5 +1,7 @@
 import numpy as np
 
+from examples.utils.shader_loader import Shader
+
 
 class ShaderMeshRenderer:
     """Base class for a renderable mesh with shader and texture."""

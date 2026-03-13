@@ -32,15 +32,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-
-# OpenGL imports
-try:
-    from OpenGL.GL import *
-    from OpenGL.GLU import *
-except ImportError as e:
-    print("❌ Error: PyOpenGL not available")
-    print("Please install PyOpenGL: pip install PyOpenGL PyOpenGL_accelerate")
-    sys.exit(1)
+from elmo.ui.widgets.gl.mol.base import GLMolBase
 
 
 class LegacyQtObjectWindow(QMainWindow):
@@ -53,7 +45,7 @@ class LegacyQtObjectWindow(QMainWindow):
         self.parent = parent
         self.gl_use_legacy = gl_use_legacy
         self.layout: Optional[QVBoxLayout] = None
-        self.gl_widget: Optional[QtObjectRenderer] = None
+        self.gl_widget: Optional[GLMolBase] = None
         self.setWindowTitle("PicoGL Qt Object Renderer - Legacy OpenGL")
         self.setGeometry(100, 100, 800, 600)
         self.object_file_path = None
