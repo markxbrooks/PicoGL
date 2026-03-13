@@ -31,7 +31,7 @@ from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
 from picogl.buffers.attributes import LayoutDescriptor
 from picogl.buffers.base import VertexBase
 from picogl.buffers.glcleanup import delete_buffer_object
-from picogl.buffers.vertex.aliases import NAME_ALIASES
+from picogl.buffers.vertex.aliases import NAME_ALIASES, VertexBufferRole
 from decologr.logger import Decologr as log
 
 
@@ -210,33 +210,33 @@ class VertexBufferGroup(VertexBase):
         self.layout = layout
 
     def bind(self) -> None:
-        """Bind buffers and upload attribute pointers per stored layout."""
+        """Bind buffers and configure legacy OpenGL client arrays."""
         if not self.layout:
             return
+
         try:
-            # For legacy rendering, use the old glVertexPointer approach
-            # instead of modern glVertexAttribPointer
             for attr in self.layout.attributes:
-                canonical = NAME_ALIASES.get(attr.name, attr.name)
+                canonical = NAME_ALIASES.get(attr.name.lower(), attr.name.lower())
                 vbo = self.named_vbos.get(canonical)
+
                 if not vbo:
                     continue
-                
-                # Bind the VBO
-                buffer_handle = getattr(vbo, "handle", vbo)
+
+                buffer_handle = getattr(vbo, VertexArrayRole.VAO, vbo)
                 glBindBuffer(GL_ARRAY_BUFFER, buffer_handle)
-                
-                # Use legacy pointer functions based on attribute type
-                if canonical in [RibbonAttrs.VBO, "position"]:
-                    from OpenGL.raw.GL.VERSION.GL_1_1 import glVertexPointer
-                    glVertexPointer(3, GL_FLOAT, 0, None)
-                elif canonical in [RibbonAttrs.NBO, "normal"]:
-                    from OpenGL.raw.GL.VERSION.GL_1_1 import glNormalPointer
-                    glNormalPointer(GL_FLOAT, 0, None)
-                elif canonical in [RibbonAttrs.CBO, "color"]:
-                    from OpenGL.raw.GL.VERSION.GL_1_1 import glColorPointer
-                    glColorPointer(3, GL_FLOAT, 0, None)
-                    
+
+                if canonical == VertexBufferRole.VBO:
+                    glEnableClientState(GL_VERTEX_ARRAY)
+                    glVertexPointer(attr.size, attr.type, attr.stride, None)
+
+                elif canonical == VertexBufferRole.NBO:
+                    glEnableClientState(GL_NORMAL_ARRAY)
+                    glNormalPointer(attr.type, attr.stride, None)
+
+                elif canonical == VertexBufferRole.CBO:
+                    glEnableClientState(GL_COLOR_ARRAY)
+                    glColorPointer(attr.size, attr.type, attr.stride, None)
+
         except Exception as ex:
             log.error(f"error {ex} occurred in VertexBufferGroup")
             for attr in self.layout.attributes:
