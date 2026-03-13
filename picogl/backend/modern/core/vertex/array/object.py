@@ -63,8 +63,18 @@ from picogl.buffers.attributes import LayoutDescriptor
 from picogl.buffers.base import VertexBase
 from picogl.buffers.glcleanup import delete_buffer
 from picogl.buffers.vertex.aliases import NAME_ALIASES
-from decologr.logger import Decologr as log
+from decologr import Decologr as log
 from picogl.safe import gl_gen_safe
+
+
+def _current_gl_context_id():
+    """Return id of current Qt OpenGL context, or None if Qt not available."""
+    try:
+        from PySide6.QtGui import QOpenGLContext
+        ctx = QOpenGLContext.currentContext()
+        return id(ctx) if ctx is not None else None
+    except Exception:
+        return None
 
 
 class VertexArrayObject(VertexBase):
@@ -100,13 +110,29 @@ class VertexArrayObject(VertexBase):
         self.ebo = None
         self.layout: Optional[LayoutDescriptor] = None
         # self.named_vbos: dict[str, ModernVBO] = {}  # store by semantic name
+        self._creation_context_id: Optional[int] = _current_gl_context_id()
         self.bind()
 
-    def bind(self):
+    def is_valid_in_current_context(self) -> bool:
+        """True if this VAO was created in the current OpenGL context (safe to bind/draw)."""
+        if self._creation_context_id is None:
+            return True
+        current_id = _current_gl_context_id()
+        return current_id is not None and current_id == self._creation_context_id
+
+    def bind(self) -> bool:
         """
         Bind the VAO for use in rendering.
+        :return: True if bound, False if skipped (wrong context — avoids GL_INVALID_OPERATION/segfault).
         """
+        if not self.is_valid_in_current_context():
+            log.warning(
+                "VAO created in different GL context; skipping bind to avoid invalid operation",
+                scope=self.__class__.__name__,
+            )
+            return False
         glBindVertexArray(self.handle)
+        return True
 
     def unbind(self):
         """
