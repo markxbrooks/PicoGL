@@ -1,4 +1,6 @@
-"""Object renderer module."""
+"""
+Object renderer module.
+"""
 
 from pathlib import Path
 

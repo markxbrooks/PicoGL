@@ -194,7 +194,7 @@ class ShaderManager:
         """
         try:
             log.message(f"Loading shaders from {self.shader_directory}", silent=True)
-            fragment_src, vertex_src = load_fragment_and_vertex_for_shader_type(
+            vertex_src, fragment_src = load_fragment_and_vertex_for_shader_type(
                 shader_type.value, self.shader_directory
             )
             picogl_shader_program = generate_shader_programs(

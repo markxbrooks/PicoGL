@@ -3,10 +3,11 @@ Shader utilities
 """
 
 import os
+from pathlib import Path
 from typing import Optional
 
 
-def load_shader_source_string(file_name: str, directory: Optional[str] = None) -> str:
+def load_shader_source_string(file_name: str | Path, directory: Optional[str] = None) -> str:
     """
     Loads a shader_manager.current_shader_program source file as a string.
 
@@ -17,7 +18,7 @@ def load_shader_source_string(file_name: str, directory: Optional[str] = None) -
     """
     if directory is None:
         directory = os.path.dirname(os.path.abspath(__file__))
-
+    file_name = str(file_name)
     path = os.path.join(directory, file_name)
     # print(f"📄 Loading shader_manager.current_shader_program from: {path}")
 
@@ -40,6 +41,11 @@ DEFAULT_FRAGMENT_SHADER_SRC = load_shader_source_string(
     os.path.join(SHADER_SRC_DIRECTORY, "default_fragment.glsl")
 )
 
+class ShaderSourceType:
+    """Shader Source Types"""
+    vertex = "vertex"
+    fragment = "fragment"
+
 
 def load_fragment_and_vertex_for_shader_type(
     shader_type_value: str, shader_directory: str
@@ -51,8 +57,14 @@ def load_fragment_and_vertex_for_shader_type(
     :param shader_type_value: ShaderType
     :return: None
     """
-    vert_path = os.path.join("src", f"{shader_type_value}_vertex.glsl")
-    frag_path = os.path.join("src", f"{shader_type_value}_fragment.glsl")
+    vert_path = get_shader_path(shader_type_value, ShaderSourceType.vertex)
+    frag_path = get_shader_path(shader_type_value, ShaderSourceType.fragment)
     vertex_src = load_shader_source_string(vert_path, shader_directory)
     fragment_src = load_shader_source_string(frag_path, shader_directory)
-    return fragment_src, vertex_src
+    return vertex_src, fragment_src
+
+
+def get_shader_path(shader_type_value: str, shader_source_type = ShaderSourceType.vertex) -> Path:
+    """get shader path"""
+    vert_path = Path("src") / shader_type_value / f"{shader_source_type}.glsl"
+    return vert_path
