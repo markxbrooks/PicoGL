@@ -33,6 +33,7 @@ from PySide6.QtWidgets import (
 )
 
 from elmo.ui.widgets.gl.mol.base import GLMolBase
+from picogl.mode import GLMode
 
 
 class LegacyQtObjectWindow(QMainWindow):
@@ -40,10 +41,10 @@ class LegacyQtObjectWindow(QMainWindow):
     Main window for the Qt Object renderer
     """
 
-    def __init__(self, parent, gl_use_legacy=True):
+    def __init__(self, parent, gl_mode: GLMode = GLMode.LEGACY):
         super().__init__()
         self.parent = parent
-        self.gl_use_legacy = gl_use_legacy
+        self.gl_mode = gl_mode
         self.layout: Optional[QVBoxLayout] = None
         self.gl_widget: Optional[GLMolBase] = None
         self.setWindowTitle("PicoGL Qt Object Renderer - Legacy OpenGL")

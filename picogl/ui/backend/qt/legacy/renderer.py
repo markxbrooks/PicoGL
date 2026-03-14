@@ -27,7 +27,7 @@ class LegacyQtObjectRenderer(GLBase):
 
     def __init__(self, parent: Optional[QWidget] = None):
         """Initialize the cube renderer"""
-        super().__init__(parent, gl_use_legacy=True)
+        super().__init__(parent, gl_mode=True)
 
         # Cube data
         self._initialized: bool = False

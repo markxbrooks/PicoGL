@@ -25,6 +25,7 @@ from picogl.backend.legacy.core.camera.setup import calculate_aspect
 from picogl.error import check_errors
 from picogl.frame import prepare_viewport
 from decologr.logger import Decologr as log
+from picogl.mode import GLMode
 from picogl.utils.gl_init import execute_gl_tasks, initialize_gl_list
 
 
@@ -62,7 +63,7 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
     OpenGL Qt Widget
     """
 
-    def __init__(self, parent: QWidget = None, gl_use_legacy: bool = True):
+    def __init__(self, parent: QWidget = None, gl_mode: GLMode = GLMode.LEGACY):
         """
         constructor
 
@@ -70,7 +71,7 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
         """
         super().__init__(parent)
         self.aspect_ratio = None
-        self.gl_use_legacy = gl_use_legacy
+        self.gl_mode = gl_mode
         self.last_mouse_pos = None
         self.zoom_value = None
         self.mvp_parameters = MvpParameters()

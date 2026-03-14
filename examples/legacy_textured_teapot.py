@@ -25,6 +25,7 @@ from typing import Optional
 from PySide6.QtWidgets import QApplication, QVBoxLayout, QWidget, QLabel, QPushButton, QComboBox
 from PySide6.QtCore import Qt, QTimer
 
+from picogl.mode import GLMode
 from picogl.ui.backend.qt.legacy.renderer import LegacyQtObjectRenderer
 from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
 
@@ -208,7 +209,7 @@ class LegacyTexturedTeapotWindow(LegacyQtObjectWindow):
     """
     
     def __init__(self):
-        super().__init__(parent=self, gl_use_legacy=True)
+        super().__init__(parent=self, gl_mode=GLMode.LEGACY)
         self.setWindowTitle("PicoGL Legacy Textured Teapot - OpenGL 1.x/2.x")
         self.setGeometry(100, 100, 800, 600)
         
