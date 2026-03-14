@@ -2,13 +2,15 @@ from enum import Enum
 
 
 class ShaderType(str, Enum):
+    """Shader Type"""
     AXIS = "axis"
     ATOMS = "atoms"
     BONDS = "bonds"
-    DEFAULT = "default"
     CALPHAS = "calphas"
-    RIBBONS = "ribbons"
+    DEFAULT = "default"
     ISOSURFACE = "isosurface"
+    MESH = "mesh"
+    RIBBONS = "ribbons"
     SURFACE_WITH_LIGHTING = "surface_with_lighting"
     SURFACE_BASIC = "surface_basic"
 
