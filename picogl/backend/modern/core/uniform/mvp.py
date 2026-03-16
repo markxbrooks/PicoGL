@@ -3,6 +3,7 @@ from OpenGL.GL import glUniformMatrix4fv
 from OpenGL.raw.GL._types import GL_FALSE
 from pyglm import glm
 
+from elmo.gl.shader import ShaderUniformName
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.backend.modern.core.uniform.location import get_uniform_location
 from decologr.logger import Decologr as log
@@ -26,10 +27,10 @@ def shader_uniform_set_mvp(shader_program: int, mvp_matrix: np.ndarray | glm.mat
     shader_uniform_set_mvp
 
     :param mvp_matrix: np.ndarray or glm.mat4 - model_matrix-view-projection matrix
-    :param shader_program: int
+    :param shader_program
     :return: None
     """
-    mvp_loc = get_uniform_location(shader_program, "mvp")
+    mvp_loc = get_uniform_location(shader_program, ShaderUniformName.MVP)
     if mvp_loc == -1:
         log.warning("Uniform 'mvp' not found in shader.")
     else:

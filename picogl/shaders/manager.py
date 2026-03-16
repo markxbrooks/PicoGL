@@ -79,6 +79,28 @@ class ShaderManager:
         except Exception as ex:
             log.error(f"❌ Failed to bind shader shader_program: {ex}")
 
+    def bind(self, shader_program: ShaderProgram) -> None:
+        """
+        bind
+
+        :param shader_program: ShaderProgram
+        :return: None
+        """
+        shader_program.bind()
+        self.current_shader = shader_program
+        self.current_shader_program = shader_program.program_id()
+
+    def unbind(self) -> None:
+        """
+        unbind
+
+        :return: None
+        """
+        from OpenGL.GL import glUseProgram
+        glUseProgram(0)
+        self.current_shader = None
+        self.current_shader_program = None
+
     def get_shader_type(
         self, shader_type: ShaderType
     ) -> Optional[ShaderProgram | ShaderProgram]:
@@ -86,7 +108,8 @@ class ShaderManager:
         Return the shader shader_program for the given ShaderType, loading if necessary.
         """
         if shader_type not in self.shaders:
-            self.load_shader(shader_type)
+            shader_number = list(ShaderType).index(shader_type)
+            self.load_shader(shader_type, shader_number)
         return self.shaders.get(shader_type)
 
     def use_shader_type(

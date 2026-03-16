@@ -126,7 +126,7 @@ class VertexArrayObject(VertexBase):
         :return: True if bound, False if skipped (wrong context — avoids GL_INVALID_OPERATION/segfault).
         """
         if not self.is_valid_in_current_context():
-            log.warning(
+            log.debug(
                 "VAO created in different GL context; skipping bind to avoid invalid operation",
                 scope=self.__class__.__name__,
             )
