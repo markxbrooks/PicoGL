@@ -100,7 +100,7 @@ class VertexArrayObject(VertexBase):
         self.attributes = []
         self.vbos = []
         self.named_vbos: dict[str, VertexBuffer] = {}
-        self.vao: int = None  # Bonds Vertex Array Object. Does absolutely nothing
+        self.vao: Optional[int] = None  # Bonds Vertex Array Object. Does absolutely nothing
         self.vbo = None  # Atom Vertex Buffer Object
         self.cbo = None  # Color Vertex Buffer Object
         self.nbo = None  # Normal Vertex Buffer Object

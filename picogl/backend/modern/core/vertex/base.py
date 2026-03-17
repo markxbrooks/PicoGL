@@ -41,7 +41,7 @@ from OpenGL.raw.GL.VERSION.GL_1_5 import (
     GL_STATIC_DRAW,
     glBindBuffer,
     glBufferData,
-    glIsBuffer,
+    glIsBuffer, GL_DYNAMIC_DRAW, glBufferSubData,
 )
 from OpenGL.raw.GL.VERSION.GL_2_0 import (
     glEnableVertexAttribArray,
@@ -192,12 +192,29 @@ class VertexBuffer(VertexBase):
     # Debug
     # ----------------------------
     def __repr__(self) -> str:
-        classname = self.__class__.__name__
+        class_name = self.__class__.__name__
         data_preview = repr(self.data)
         if len(data_preview) > 100:
             data_preview = data_preview[:97] + "..."
         return (
-            f"{classname}(index={self.index}, handle={self.handle}, pointer={self.pointer}, "
+            f"{class_name}(index={self.index}, handle={self.handle}, pointer={self.pointer}, "
             f"target={self.target}, size={self.size}, stride={self.stride}, offset={self.offset}, "
             f"dtype={self.dtype}, normalized={self.normalized}, data={data_preview})"
         )
+
+    def allocate(self, data: np.ndarray, usage: int = GL_STATIC_DRAW):
+        """Initial allocation (glBufferData)"""
+        self.bind()
+        self.size = data.nbytes
+        glBufferData(self.target, data.nbytes, data, usage)
+
+    def update_data(self, data: np.ndarray, offset: int = 0):
+        """Fast path update (glBufferSubData)"""
+        self.bind()
+
+        if data.nbytes > self.size:
+            # Fallback: reallocate only if absolutely required
+            glBufferData(self.target, data.nbytes, data, GL_DYNAMIC_DRAW)
+            self.size = data.nbytes
+        else:
+            glBufferSubData(self.target, offset, data.nbytes, data)
