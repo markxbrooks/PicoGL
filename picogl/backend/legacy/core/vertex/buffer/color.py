@@ -23,4 +23,5 @@ class LegacyColorVBO(LegacyVBO):
 
     def configure(self):
         """Configure vertex attribute pointer for colors."""
-        glColorPointer(self.size, self.dtype, self.stride, self.pointer)
+        # assert self.components in (3, 4), f"Invalid color component count: {self.components}"
+        glColorPointer(self.components, self.dtype, self.stride, self.pointer)

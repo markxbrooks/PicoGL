@@ -7,7 +7,7 @@ import ctypes
 import numpy as np
 from OpenGL.GL import glBufferData, glGenBuffers
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_FLOAT, GL_UNSIGNED_INT, GL_LINES
-from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ARRAY_BUFFER, GL_STATIC_DRAW
+from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ARRAY_BUFFER, GL_STATIC_DRAW, GL_DYNAMIC_DRAW, glBufferSubData
 
 from picogl.backend.modern.core.vertex.base import VertexBuffer
 
@@ -26,6 +26,8 @@ class LegacyVBO(VertexBuffer):
         dtype: int = GL_FLOAT,
         pointer: ctypes.c_void_p = ctypes.c_void_p(0),
     ):
+        self.nbytes = None
+        self.components = size
         if handle is None:
             handle = glGenBuffers(1)
 
@@ -73,8 +75,30 @@ class LegacyVBO(VertexBuffer):
         self.bind()
         try:
             glBufferData(self.target, data.nbytes, data, usage)
+            self.nbytes = data.nbytes
         finally:
             self.unbind()
+
+    def allocate(self, data: np.ndarray, usage: int = GL_STATIC_DRAW):
+        """Initial allocation (glBufferData)"""
+        self.bind()
+        self.nbytes = data.nbytes
+        glBufferData(self.target, data.nbytes, data, usage)
+
+    def update_data(self, data: np.ndarray, offset: int = 0):
+        self.bind()
+
+        # First-time allocation case
+        if self.nbytes is None:
+            glBufferData(self.target, data.nbytes, data, GL_DYNAMIC_DRAW)
+            self.nbytes = data.nbytes
+            return
+
+        if data.nbytes > self.nbytes:
+            glBufferData(self.target, data.nbytes, data, GL_DYNAMIC_DRAW)
+            self.nbytes = data.nbytes
+        else:
+            glBufferSubData(self.target, offset, data.nbytes, data)
 
     def configure(self):
         """Configure the buffer (default implementation does nothing)."""

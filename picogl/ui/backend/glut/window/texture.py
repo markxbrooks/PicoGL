@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from picogl.renderer import GLContext, MeshData
+from picogl.renderer import GLContext, MeshDataLegacy
 from picogl.renderer.texture import TextureRenderer
 from picogl.ui.backend.glut.window.glut import GlutRendererWindow
 
@@ -13,7 +13,7 @@ class TextureWindow(GlutRendererWindow):
         width: int,
         height: int,
         title: str,
-        data: MeshData,
+        data: MeshDataLegacy,
         base_dir: str | Path,
         glsl_dir: str | Path,
         use_texture: bool,

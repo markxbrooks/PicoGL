@@ -127,13 +127,13 @@ class GLMesh:
         self.index_count = expanded_v.shape[0]  # equals tri_count * 3
 
     @classmethod
-    def from_mesh_data(cls, mesh: "MeshData") -> "GLMesh":
+    def from_mesh_data(cls, mesh: "MeshDataLegacy") -> "GLMesh":
         """
-        Construct a GLMesh from a MeshData container.
+        Construct a GLMesh from a MeshDataLegacy container.
 
         Parameters
         ----------
-        mesh : MeshData
+        mesh : MeshDataLegacy
             Must have .vbo (Nx3), .ebo (Mx1), optional .cbo (Nx3), .nbo (Nx3), uvs (Nx2)
 
         Returns
@@ -251,13 +251,13 @@ class GLMeshold:
         self.index_count: int = 0
 
     @classmethod
-    def from_mesh_data(cls, mesh: "MeshData") -> "GLMesh":
+    def from_mesh_data(cls, mesh: "MeshDataLegacy") -> "GLMesh":
         """
-        Construct a GLMesh from a MeshData container.
+        Construct a GLMesh from a MeshDataLegacy container.
 
         Parameters
         ----------
-        mesh : MeshData
+        mesh : MeshDataLegacy
             Must have .vbo (Nx3), .ebo (Mx1), optional .cbo (Nx3), .nbo (Nx3), uvs (Nx2)
 
         Returns

@@ -8,7 +8,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES
 
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from decologr.logger import Decologr as log
-from picogl.renderer import GLContext, MeshData, RendererBase
+from picogl.renderer import GLContext, MeshDataLegacy, RendererBase
 from picogl.utils.loader.texture import TextureLoader
 from picogl.utils.texture import bind_texture_array
 
@@ -19,7 +19,7 @@ class ObjectRenderer(RendererBase):
     def __init__(
         self,
         context: GLContext,
-        data: MeshData,
+        data: MeshDataLegacy,
         base_dir: str | Path | None = None,
         glsl_dir: str | Path | None = None,
         use_texture: bool = False,

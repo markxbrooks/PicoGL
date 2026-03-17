@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from picogl.renderer import MeshData
+from picogl.renderer import MeshDataLegacy
 from picogl.ui.backend.glut.window.object import RenderWindow
 from picogl.utils.loader.object import ObjectLoader
 
@@ -15,7 +15,7 @@ def main() -> None:
     object_file_name = "data/teapot.obj"
     obj_loader = ObjectLoader(object_file_name)
     teapot_data = obj_loader.to_array_style()
-    data = MeshData.from_raw(
+    data = MeshDataLegacy.from_raw(
         vertices=teapot_data.vertices,
         normals=teapot_data.normals,
         colors=([[1.0, 0.0, 0.0]] * (len(teapot_data.vertices) // 3)),

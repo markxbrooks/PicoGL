@@ -80,7 +80,7 @@ class LegacyGLMeshNew:
             self._expand_to_non_indexed()
 
     @classmethod
-    def from_mesh_data(cls, mesh: "MeshData") -> "LegacyGLMesh":
+    def from_mesh_data(cls, mesh: "MeshDataLegacy") -> "LegacyGLMesh":
         return cls(
             vertices=mesh.vbo,
             faces=mesh.ebo,
@@ -235,13 +235,13 @@ class LegacyGLMesh:
         self.index_count: int = 0
 
     @classmethod
-    def from_mesh_data(cls, mesh: "MeshData") -> "LegacyGLMesh":
+    def from_mesh_data(cls, mesh: "MeshDataLegacy") -> "LegacyGLMesh":
         """
-        Construct a GLMesh from a MeshData container.
+        Construct a GLMesh from a MeshDataLegacy container.
 
         Parameters
         ----------
-        mesh : MeshData
+        mesh : MeshDataLegacy
             Must have .vbo (Nx3), .ebo (Mx1), optional .cbo (Nx3), .nbo (Nx3), uvs (Nx2)
 
         Returns

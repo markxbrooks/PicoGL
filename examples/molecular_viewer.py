@@ -15,7 +15,7 @@ from OpenGL.GL import *
 from utils.pdb_loader import PDBLoader
 
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
-from picogl.renderer import MeshData
+from picogl.renderer import MeshDataLegacy
 from picogl.shaders.registry import ShaderRegistry
 from picogl.shaders.type import ShaderType
 from picogl.ui.backend.glut.window.object import RenderWindow
@@ -68,7 +68,7 @@ class MolecularViewer:
             except Exception as e:
                 print(f"Warning: Could not load shader {shader_type}: {e}")
 
-    def create_atom_mesh(self) -> MeshData:
+    def create_atom_mesh(self) -> MeshDataLegacy:
         """Create mesh data for atoms (spheres)"""
         if not self.atom_data:
             raise ValueError("No atom data loaded")
@@ -83,13 +83,13 @@ class MolecularViewer:
         # Create indices for point rendering
         indices = np.arange(len(vertices), dtype=np.uint32)
 
-        return MeshData.from_raw(
+        return MeshDataLegacy.from_raw(
             vertices=vertices.flatten().tolist(),
             colors=colors.flatten().tolist(),
             indices=indices.tolist(),
         )
 
-    def create_bond_mesh(self) -> MeshData:
+    def create_bond_mesh(self) -> MeshDataLegacy:
         """Create mesh data for bonds (lines)"""
         if not self.bond_data:
             raise ValueError("No bond data loaded")
@@ -103,7 +103,7 @@ class MolecularViewer:
         # Create indices for line rendering
         indices = np.arange(len(vertices), dtype=np.uint32)
 
-        return MeshData.from_raw(
+        return MeshDataLegacy.from_raw(
             vertices=vertices.flatten().tolist(),
             colors=colors.flatten().tolist(),
             indices=indices.tolist(),
@@ -216,7 +216,7 @@ class MolecularRenderWindow(RenderWindow):
             # Fallback to basic rendering
             self._render_mesh(self.bond_mesh, GL_LINES)
 
-    def _render_mesh(self, mesh: MeshData, mode: int):
+    def _render_mesh(self, mesh: MeshDataLegacy, mode: int):
         """Render a mesh with the given OpenGL mode"""
         # Create VAO for this mesh
         vao = VertexArrayObject()

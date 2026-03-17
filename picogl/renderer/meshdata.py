@@ -5,6 +5,26 @@ from typing import Union, Optional
 
 import numpy as np
 from OpenGL import GL
+from OpenGL.GL import glGetIntegerv, glDrawElements
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_UNSIGNED_INT, GL_TRIANGLES
+from OpenGL.raw.GL.VERSION.GL_1_1 import glDrawArrays
+from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ARRAY_BUFFER_BINDING
+from OpenGL.raw.GL.VERSION.GL_3_0 import glBindVertexArray
+
+# from OpenGL.raw.GLES3 import glBindVertexArray
+
+from decologr import Decologr as log
+from elmo.gl.protocols import DrawableBuffer
+from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
+from picogl.backend.modern.core.vertex.buffer.object import ModernVBO
+from picogl.buffers.base import VertexBase
+from picogl.mode import GLMode
+
+from typing import Protocol
+
+
+class MeshBackend(Protocol):
+    def draw(self, *args, **kwargs): ...
 
 
 def compute_vertex_normals(vertices: np.ndarray, faces: np.ndarray) -> np.ndarray:
@@ -30,7 +50,7 @@ def compute_vertex_normals(vertices: np.ndarray, faces: np.ndarray) -> np.ndarra
     return normals
 
 
-class MeshData:
+class MeshDataLegacy:
     """Holds OpenGL-related state objects for rendering."""
 
     def __init__(
@@ -141,7 +161,7 @@ class MeshData:
             color_per_vertex: Optional[Union[np.ndarray, list[float]]] = None,
     ):
         """
-        Build a MeshData from raw/python inputs.
+        Build a MeshDataLegacy from raw/python inputs.
 
         :param vertices: np.ndarray required, list/array of x,y,z triplets
         :param normals: np.ndarray optional, list/array of x,y,z triplets
@@ -270,6 +290,10 @@ class MeshData:
         if color is None and self.cbo is not None:
             # Use vertex colors (for fo-fc maps)
             GL.glEnableClientState(GL.GL_COLOR_ARRAY)
+            print("ARRAY_BUFFER_BINDING =", glGetIntegerv(GL_ARRAY_BUFFER_BINDING))
+            print("cbo")
+            print(type(self.cbo))
+            print(self.cbo)
             GL.glColorPointer(3, GL.GL_FLOAT, 0, self.cbo)
             # Note: Alpha blending for vertex colors would require 4-component colors
             # For now, we'll use the alpha value for the overall transparency
@@ -310,3 +334,127 @@ class MeshData:
             self.cbo = None
         if self.ebo:
             self.ebo = None
+
+
+class MeshDataModern(VertexBase):
+    """Holds OpenGL-related state objects for rendering."""
+
+    def __init__(self, vao: Optional[Union[VertexArrayObject, DrawableBuffer]] = None, vbo: Optional[ModernVBO] = None,
+                 nbo: Optional[ModernVBO] = None, uvs: Optional[ModernVBO] = None, ebo: Optional[ModernVBO] = None,
+                 cbo: Optional[ModernVBO] = None, index_count: Optional[int] = None,
+                 vertex_count: Optional[int] = None):
+        """set up the OpenGL context"""
+        super().__init__()
+        self.vao = vao
+        self.vbo = vbo
+        self.nbo = nbo
+        self.uvs = uvs
+        self.cbo = cbo
+        self.ebo = ebo
+        self.index_count = index_count
+        self.vertex_count = vertex_count
+
+        # Enforce correctness
+        if self.ebo is not None:
+            if self.index_count is None:
+                raise ValueError("index_count required when using EBO")
+        else:
+            if self.vertex_count is None:
+                raise ValueError("vertex_count required when no EBO is present")
+
+    def delete(self):
+        for buf in (self.nbo, self.ebo, self.cbo, self.vbo, self.uvs):
+            if buf is not None:
+                buf.delete()
+
+        if hasattr(self.vao, "delete"):
+            self.vao.delete()
+
+        self.vao = None
+        self.vbo = None
+        self.nbo = None
+        self.ebo = None
+        self.cbo = None
+        self.uvs = None
+
+    def draw(
+            self,
+            indices: int = None,
+            mvp_matrix: np.ndarray = None,
+            shader_type: str = None,
+            mode=GL_TRIANGLES
+    ):
+        """Draw the bond buffers using OpenGL"""
+        try:
+            # High-level path (preferred if present)
+            if isinstance(self.vao, DrawableBuffer):
+                self.vao.draw()
+                return
+
+            # Standard VAO path
+            if self.vao is not None:
+                self.bind()
+
+            if self.ebo is not None:
+                glDrawElements(mode, self.index_count, GL_UNSIGNED_INT, None)
+            else:
+                glDrawArrays(mode, 0, self.vertex_count)
+
+            if self.vao is not None:
+                self.unbind()
+
+        except Exception as ex:
+            log.error(f"Error drawing mesh: {ex}", scope=self.__class__.__name__)
+
+    def bind(self):
+        def bind(self):
+            if hasattr(self.vao, "bind"):
+                self.vao.bind()
+            else:
+                glBindVertexArray(self.vao)
+
+    def unbind(self):
+        glBindVertexArray(0)
+
+    def configure(self):
+        pass
+
+
+class MeshData:
+    """Mesh Data"""
+
+    mesh_data_classes = {
+        GLMode.LEGACY: MeshDataLegacy,
+        GLMode.MODERN: MeshDataModern,
+    }
+
+    def __init__(self, gl_mode: GLMode = GLMode.LEGACY, **kwargs):
+        self.gl_mode = gl_mode
+
+        impl_cls = self.mesh_data_classes.get(gl_mode)
+        if impl_cls is None:
+            raise ValueError(f"Unsupported GLMode: {gl_mode}")
+
+        self.impl = impl_cls(**kwargs)
+
+    @classmethod
+    def from_raw(cls, gl_mode: GLMode, **kwargs):
+        impl_cls = self.mesh_data_classes.get(gl_mode)
+        if impl_cls is None:
+            raise ValueError(f"Unsupported GLMode: {gl_mode}")
+
+        impl = impl_cls.from_raw(**kwargs)
+        obj = cls(gl_mode)
+        obj.impl = impl
+        return obj
+
+    def draw(self, *args, **kwargs):
+        return self.impl.draw(*args, **kwargs)
+
+    def bind(self):
+        if hasattr(self.impl, "bind"):
+            return self.impl.bind()
+
+    def unbind(self):
+        if hasattr(self.impl, "unbind"):
+            return self.impl.unbind()

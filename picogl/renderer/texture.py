@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from picogl.renderer import GLContext, MeshData
+from picogl.renderer import GLContext, MeshDataLegacy
 from picogl.renderer.object import ObjectRenderer
 from picogl.utils.loader.texture import TextureLoader
 
@@ -13,7 +13,7 @@ class TextureRenderer(ObjectRenderer):
     def __init__(
         self,
         context: GLContext,
-        data: MeshData,
+        data: MeshDataLegacy,
         base_dir: str | Path = None,
         glsl_dir: str | Path = None,
         use_texture: bool = False,

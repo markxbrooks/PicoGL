@@ -4,7 +4,7 @@ Qt Legacy GLMesh Molecular Viewer for PDB Files
 This example demonstrates how to:
 1. Load PDB files using the PDBLoader
 2. Extract C-alpha atoms (CA) from the structure
-3. Convert them to PicoGL MeshData format
+3. Convert them to PicoGL MeshDataLegacy format
 4. Display them using LegacyGLMesh for rendering
 5. Provide interactive controls for rotation and zoom
 """
@@ -26,7 +26,7 @@ from PySide6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, Q
 
 from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
-from picogl.renderer.meshdata import MeshData
+from picogl.renderer.meshdata import MeshDataLegacy
 
 # Add the examples directory to the path so we can import the PDB loader
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'utils'))
@@ -180,7 +180,7 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         return bonds
 
     def _create_mesh_data(self):
-        """Create MeshData for atoms and bonds using PicoGL"""
+        """Create MeshDataLegacy for atoms and bonds using PicoGL"""
         # Create sphere mesh data for atoms
         if self._initialized:
             return
@@ -190,9 +190,9 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         bond_vertices, bond_colors, bond_indices = self._create_bond_mesh_data()
         # Convert RGBA colors to RGB for LegacyGLMesh
         atom_colors_rgb = atom_colors_rgba[:, :3]  # Remove alpha channel
-        mesh_data = MeshData.from_raw(vertices=atom_vertices,
-                                      indices=atom_indices,
-                                      colors=atom_colors_rgb)
+        mesh_data = MeshDataLegacy.from_raw(vertices=atom_vertices,
+                                            indices=atom_indices,
+                                            colors=atom_colors_rgb)
 
         # Create atoms mesh
         if atom_vertices is not None:

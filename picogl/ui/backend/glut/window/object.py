@@ -4,7 +4,7 @@ Object Window for displaying Mesh Data
 
 from pathlib import Path
 
-from picogl.renderer import GLContext, MeshData
+from picogl.renderer import GLContext, MeshDataLegacy
 from picogl.renderer.object import ObjectRenderer
 from picogl.ui.backend.glut.window.glut import GlutRendererWindow
 
@@ -17,7 +17,7 @@ class RenderWindow(GlutRendererWindow):
         width: int = 800,
         height: int = 600,
         title: str = "RenderWindow",
-        data: MeshData | None = None,
+        data: MeshDataLegacy | None = None,
         base_dir: str | Path | None = None,
         glsl_dir: str | Path | None = None,
         use_texture: bool = False,

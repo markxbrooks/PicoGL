@@ -1,8 +1,8 @@
 """
-Unit tests for the MeshData class in the PicoGL OpenGL backend.
+Unit tests for the MeshDataLegacy class in the PicoGL OpenGL backend.
 
 This module contains a comprehensive suite of unit tests for verifying the correctness,
-robustness, and interface of the :class:`picogl.renderer.meshdata.MeshData`
+robustness, and interface of the :class:`picogl.renderer.meshdata.MeshDataLegacy`
 class, which manages OpenGL mesh data and rendering state.
 
 The tests cover:
@@ -20,7 +20,7 @@ Dependencies:
     - unittest (standard library)
     - unittest.mock.MagicMock for OpenGL function mocking
     - numpy for test data
-    - picogl.renderer.meshdata.MeshData
+    - picogl.renderer.meshdata.MeshDataLegacy
 
 To run the tests::
 
@@ -34,11 +34,11 @@ from unittest.mock import MagicMock, patch, call
 import numpy as np
 from OpenGL import GL
 
-from picogl.renderer.meshdata import MeshData
+from picogl.renderer.meshdata import MeshDataLegacy
 
 
 class TestMeshData(unittest.TestCase):
-    """Test cases for MeshData class."""
+    """Test cases for MeshDataLegacy class."""
 
     def setUp(self):
         """Set up test fixtures before each test method."""
@@ -101,8 +101,8 @@ class TestMeshData(unittest.TestCase):
             patch_obj.stop()
 
     def test_initialization_with_all_buffers(self):
-        """Test MeshData initialization with all buffer types."""
-        mesh = MeshData(
+        """Test MeshDataLegacy initialization with all buffer types."""
+        mesh = MeshDataLegacy(
             vbo=self.test_vertices,
             nbo=self.test_normals,
             uvs=self.test_uvs,
@@ -122,8 +122,8 @@ class TestMeshData(unittest.TestCase):
         self.assertEqual(mesh.vertex_count, expected_vertex_count)
 
     def test_initialization_with_minimal_data(self):
-        """Test MeshData initialization with only vertices."""
-        mesh = MeshData(vbo=self.test_vertices)
+        """Test MeshDataLegacy initialization with only vertices."""
+        mesh = MeshDataLegacy(vbo=self.test_vertices)
         
         self.assertIsNotNone(mesh.vbo)
         self.assertIsNone(mesh.nbo)
@@ -135,8 +135,8 @@ class TestMeshData(unittest.TestCase):
         self.assertEqual(mesh.vertex_count, expected_vertex_count)
 
     def test_initialization_with_none_vertices(self):
-        """Test MeshData initialization with None vertices."""
-        mesh = MeshData()
+        """Test MeshDataLegacy initialization with None vertices."""
+        mesh = MeshDataLegacy()
         
         self.assertIsNone(mesh.vbo)
         self.assertIsNone(mesh.nbo)
@@ -147,7 +147,7 @@ class TestMeshData(unittest.TestCase):
 
     def test_as_ribbon_args(self):
         """Test as_ribbon_args method."""
-        mesh = MeshData(
+        mesh = MeshDataLegacy(
             vbo=self.test_vertices,
             nbo=self.test_normals,
             cbo=self.test_colors,
@@ -166,8 +166,8 @@ class TestMeshData(unittest.TestCase):
         self.assertEqual(ribbon_args, expected)
 
     def test_str_representation(self):
-        """Test string representation of MeshData."""
-        mesh = MeshData(
+        """Test string representation of MeshDataLegacy."""
+        mesh = MeshDataLegacy(
             vbo=self.test_vertices,
             uvs=self.test_uvs,
             cbo=self.test_colors
@@ -182,7 +182,7 @@ class TestMeshData(unittest.TestCase):
     def test_to_float32_flat_with_valid_array(self):
         """Test _to_float32_flat with valid array."""
         test_array = [[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]]
-        result = MeshData._to_float32_flat(test_array, "test", required=True)
+        result = MeshDataLegacy._to_float32_flat(test_array, "test", required=True)
         
         expected = np.array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], dtype=np.float32)
         np.testing.assert_array_equal(result, expected)
@@ -190,19 +190,19 @@ class TestMeshData(unittest.TestCase):
     def test_to_float32_flat_with_none_required(self):
         """Test _to_float32_flat with None when required."""
         with self.assertRaises(ValueError) as context:
-            MeshData._to_float32_flat(None, "test", required=True)
+            MeshDataLegacy._to_float32_flat(None, "test", required=True)
         
         self.assertIn("test is required", str(context.exception))
 
     def test_to_float32_flat_with_none_not_required(self):
         """Test _to_float32_flat with None when not required."""
-        result = MeshData._to_float32_flat(None, "test", required=False)
+        result = MeshDataLegacy._to_float32_flat(None, "test", required=False)
         self.assertIsNone(result)
 
     def test_to_float32_flat_or_none(self):
         """Test _to_float32_flat_or_none method."""
         test_array = [1.0, 2.0, 3.0]
-        result = MeshData._to_float32_flat_or_none(test_array, "test")
+        result = MeshDataLegacy._to_float32_flat_or_none(test_array, "test")
         
         expected = np.array([1.0, 2.0, 3.0], dtype=np.float32)
         np.testing.assert_array_equal(result, expected)
@@ -210,7 +210,7 @@ class TestMeshData(unittest.TestCase):
     def test_to_int32_flat_with_valid_array(self):
         """Test _to_int32_flat with valid array."""
         test_array = [[1, 2, 3], [4, 5, 6]]
-        result = MeshData._to_int32_flat(test_array, "test", required=True)
+        result = MeshDataLegacy._to_int32_flat(test_array, "test", required=True)
         
         expected = np.array([1, 2, 3, 4, 5, 6], dtype=np.int32)
         np.testing.assert_array_equal(result, expected)
@@ -218,14 +218,14 @@ class TestMeshData(unittest.TestCase):
     def test_to_int32_flat_with_none_required(self):
         """Test _to_int32_flat with None when required."""
         with self.assertRaises(ValueError) as context:
-            MeshData._to_int32_flat(None, "test", required=True)
+            MeshDataLegacy._to_int32_flat(None, "test", required=True)
         
         self.assertIn("test is required", str(context.exception))
 
     def test_default_colors_for_vertices(self):
         """Test _default_colors_for_vertices method."""
         vertex_count = 3
-        result = MeshData._default_colors_for_vertices(vertex_count)
+        result = MeshDataLegacy._default_colors_for_vertices(vertex_count)
         
         expected = np.array([1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0], dtype=np.float32)
         np.testing.assert_array_equal(result, expected)
@@ -233,14 +233,14 @@ class TestMeshData(unittest.TestCase):
     def test_default_normals_for_vertices(self):
         """Test _default_normals_for_vertices method."""
         vertex_count = 2
-        result = MeshData._default_normals_for_vertices(vertex_count)
+        result = MeshDataLegacy._default_normals_for_vertices(vertex_count)
         
         expected = np.array([0.0, 0.0, 1.0, 0.0, 0.0, 1.0], dtype=np.float32)
         np.testing.assert_array_equal(result, expected)
 
     def test_from_raw_with_all_parameters(self):
         """Test from_raw with all parameters provided."""
-        mesh = MeshData.from_raw(
+        mesh = MeshDataLegacy.from_raw(
             vertices=self.test_vertices,
             normals=self.test_normals,
             uvs=self.test_uvs,
@@ -261,7 +261,7 @@ class TestMeshData(unittest.TestCase):
 
     def test_from_raw_with_minimal_parameters(self):
         """Test from_raw with only vertices."""
-        mesh = MeshData.from_raw(vertices=self.test_vertices)
+        mesh = MeshDataLegacy.from_raw(vertices=self.test_vertices)
         
         self.assertIsNotNone(mesh.vbo)
         self.assertIsNotNone(mesh.nbo)  # Should be generated
@@ -272,7 +272,7 @@ class TestMeshData(unittest.TestCase):
     def test_from_raw_with_color_per_vertex_array(self):
         """Test from_raw with color_per_vertex array."""
         color_per_vertex = [0.5, 0.5, 0.5]  # Single colour
-        mesh = MeshData.from_raw(
+        mesh = MeshDataLegacy.from_raw(
             vertices=self.test_vertices,
             color_per_vertex=color_per_vertex
         )
@@ -291,7 +291,7 @@ class TestMeshData(unittest.TestCase):
             [1.0, 1.0, 0.0]
         ], dtype=np.float32)
         
-        mesh = MeshData.from_raw(
+        mesh = MeshDataLegacy.from_raw(
             vertices=self.test_vertices,
             color_per_vertex=color_per_vertex
         )
@@ -303,7 +303,7 @@ class TestMeshData(unittest.TestCase):
     def test_from_raw_with_invalid_color_per_vertex(self):
         """Test from_raw with invalid color_per_vertex."""
         with self.assertRaises(ValueError) as context:
-            MeshData.from_raw(
+            MeshDataLegacy.from_raw(
                 vertices=self.test_vertices,
                 color_per_vertex="invalid"
             )
@@ -315,7 +315,7 @@ class TestMeshData(unittest.TestCase):
         invalid_uvs = np.array([[0.0, 0.0], [1.0, 1.0]])  # Wrong length
         
         with self.assertRaises(ValueError) as context:
-            MeshData.from_raw(
+            MeshDataLegacy.from_raw(
                 vertices=self.test_vertices,
                 uvs=invalid_uvs
             )
@@ -324,7 +324,7 @@ class TestMeshData(unittest.TestCase):
 
     def test_bind_with_all_buffers(self):
         """Test bind method with all buffers present."""
-        mesh = MeshData(
+        mesh = MeshDataLegacy(
             vbo=self.test_vertices,
             nbo=self.test_normals,
             uvs=self.test_uvs,
@@ -338,7 +338,7 @@ class TestMeshData(unittest.TestCase):
 
     def test_bind_with_minimal_buffers(self):
         """Test bind method with only vertices."""
-        mesh = MeshData(vbo=self.test_vertices)
+        mesh = MeshDataLegacy(vbo=self.test_vertices)
         
         mesh.bind()
         
@@ -346,7 +346,7 @@ class TestMeshData(unittest.TestCase):
 
     def test_bind_with_none_buffers(self):
         """Test bind method with None buffers."""
-        mesh = MeshData()
+        mesh = MeshDataLegacy()
         
         mesh.bind()
         
@@ -354,7 +354,7 @@ class TestMeshData(unittest.TestCase):
 
     def test_unbind_with_all_buffers(self):
         """Test unbind method with all buffers present."""
-        mesh = MeshData(
+        mesh = MeshDataLegacy(
             vbo=self.test_vertices,
             nbo=self.test_normals,
             uvs=self.test_uvs,
@@ -368,15 +368,15 @@ class TestMeshData(unittest.TestCase):
 
     def test_unbind_with_none_buffers(self):
         """Test unbind method with None buffers."""
-        mesh = MeshData()
+        mesh = MeshDataLegacy()
         
         mesh.unbind()
         
         # Should not raise any errors
 
     def test_context_manager(self):
-        """Test that MeshData can be used as a context manager."""
-        mesh = MeshData(vbo=self.test_vertices)
+        """Test that MeshDataLegacy can be used as a context manager."""
+        mesh = MeshDataLegacy(vbo=self.test_vertices)
         
         # Test that __enter__ and __exit__ methods exist
         self.assertTrue(hasattr(mesh, "__enter__"))
@@ -393,7 +393,7 @@ class TestMeshData(unittest.TestCase):
 
     def test_draw_with_vertex_colors(self):
         """Test draw method with vertex colors."""
-        mesh = MeshData(
+        mesh = MeshDataLegacy(
             vbo=self.test_vertices,
             cbo=self.test_colors,
             ebo=self.test_indices
@@ -406,7 +406,7 @@ class TestMeshData(unittest.TestCase):
 
     def test_draw_with_override_color(self):
         """Test draw method with override colour."""
-        mesh = MeshData(
+        mesh = MeshDataLegacy(
             vbo=self.test_vertices,
             ebo=self.test_indices
         )
@@ -419,7 +419,7 @@ class TestMeshData(unittest.TestCase):
 
     def test_draw_with_fill_mode(self):
         """Test draw method with fill mode."""
-        mesh = MeshData(
+        mesh = MeshDataLegacy(
             vbo=self.test_vertices,
             ebo=self.test_indices
         )
@@ -431,7 +431,7 @@ class TestMeshData(unittest.TestCase):
 
     def test_draw_with_alpha_blending(self):
         """Test draw method with alpha blending."""
-        mesh = MeshData(
+        mesh = MeshDataLegacy(
             vbo=self.test_vertices,
             ebo=self.test_indices
         )
@@ -443,7 +443,7 @@ class TestMeshData(unittest.TestCase):
 
     def test_draw_with_line_width(self):
         """Test draw method with custom line width."""
-        mesh = MeshData(
+        mesh = MeshDataLegacy(
             vbo=self.test_vertices,
             ebo=self.test_indices
         )
@@ -455,7 +455,7 @@ class TestMeshData(unittest.TestCase):
 
     def test_draw_with_custom_mode(self):
         """Test draw method with custom drawing mode."""
-        mesh = MeshData(
+        mesh = MeshDataLegacy(
             vbo=self.test_vertices,
             ebo=self.test_indices
         )
@@ -467,7 +467,7 @@ class TestMeshData(unittest.TestCase):
 
     def test_draw_without_ebo(self):
         """Test draw method without EBO."""
-        mesh = MeshData(vbo=self.test_vertices)
+        mesh = MeshDataLegacy(vbo=self.test_vertices)
         
         # This should raise an error because draw method expects ebo
         with self.assertRaises(TypeError):
@@ -477,25 +477,25 @@ class TestMeshData(unittest.TestCase):
         """Test vertex count calculation."""
         # Test with 2D array
         vertices_2d = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
-        mesh = MeshData(vbo=vertices_2d)
+        mesh = MeshDataLegacy(vbo=vertices_2d)
         self.assertEqual(mesh.vertex_count, 2)
         
         # Test with 1D array
         vertices_1d = np.array([1, 2, 3, 4, 5, 6], dtype=np.float32)
-        mesh = MeshData(vbo=vertices_1d)
+        mesh = MeshDataLegacy(vbo=vertices_1d)
         self.assertEqual(mesh.vertex_count, 2)
 
     def test_data_type_conversion(self):
         """Test that data is properly converted to correct types."""
         # Test with integer vertices
         int_vertices = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.int32)
-        mesh = MeshData.from_raw(vertices=int_vertices)
+        mesh = MeshDataLegacy.from_raw(vertices=int_vertices)
         
         self.assertEqual(mesh.vbo.dtype, np.float32)
         
         # Test with float64 vertices
         float64_vertices = np.array([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]], dtype=np.float64)
-        mesh = MeshData.from_raw(vertices=float64_vertices)
+        mesh = MeshDataLegacy.from_raw(vertices=float64_vertices)
         
         self.assertEqual(mesh.vbo.dtype, np.float32)
 
@@ -503,7 +503,7 @@ class TestMeshData(unittest.TestCase):
         """Test that multi-dimensional arrays are properly flattened."""
         # Test with 3D array
         vertices_3d = np.array([[[1, 2, 3], [4, 5, 6]]], dtype=np.float32)
-        mesh = MeshData.from_raw(vertices=vertices_3d)
+        mesh = MeshDataLegacy.from_raw(vertices=vertices_3d)
         
         self.assertEqual(mesh.vbo.ndim, 1)
         self.assertEqual(len(mesh.vbo), 6)
@@ -512,7 +512,7 @@ class TestMeshData(unittest.TestCase):
         """Test error handling in from_raw method."""
         # Test with None vertices
         with self.assertRaises(ValueError) as context:
-            MeshData.from_raw(vertices=None)
+            MeshDataLegacy.from_raw(vertices=None)
         
         self.assertIn("vertices is required", str(context.exception))
 
@@ -520,21 +520,21 @@ class TestMeshData(unittest.TestCase):
         """Test colour generation with edge cases."""
         # Test with single vertex
         single_vertex = np.array([[1, 2, 3]], dtype=np.float32)
-        mesh = MeshData.from_raw(vertices=single_vertex)
+        mesh = MeshDataLegacy.from_raw(vertices=single_vertex)
         
         self.assertIsNotNone(mesh.cbo)
         self.assertEqual(len(mesh.cbo), 3)  # Single colour (RGB)
         
         # Test with empty vertex array
         empty_vertices = np.array([], dtype=np.float32).reshape(0, 3)
-        mesh = MeshData.from_raw(vertices=empty_vertices)
+        mesh = MeshDataLegacy.from_raw(vertices=empty_vertices)
         
         self.assertIsNotNone(mesh.cbo)
         self.assertEqual(len(mesh.cbo), 0)
 
     def test_normal_generation(self):
         """Test normal generation when not provided."""
-        mesh = MeshData.from_raw(vertices=self.test_vertices)
+        mesh = MeshDataLegacy.from_raw(vertices=self.test_vertices)
         
         self.assertIsNotNone(mesh.nbo)
         # Should have generated normals for all vertices
@@ -542,8 +542,8 @@ class TestMeshData(unittest.TestCase):
         self.assertEqual(len(mesh.nbo), expected_length)
 
     def test_repr_string(self):
-        """Test string representation of MeshData."""
-        mesh = MeshData(
+        """Test string representation of MeshDataLegacy."""
+        mesh = MeshDataLegacy(
             vbo=self.test_vertices,
             uvs=self.test_uvs,
             cbo=self.test_colors

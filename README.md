@@ -93,7 +93,7 @@ Found in the Examples directory, with mouse control
 from pathlib import Path
 from typing import NoReturn
 from examples.data.cube_data import g_color_buffer_data, g_vertex_buffer_data
-from picogl.renderer import MeshData
+from picogl.renderer import MeshDataLegacy
 from picogl.ui.backend.glut.window.object import RenderWindow
 
 GLSL_DIR = Path(__file__).parent / "glsl" / "tu01"
@@ -101,7 +101,7 @@ GLSL_DIR = Path(__file__).parent / "glsl" / "tu01"
 
 def main() -> NoReturn:
     """Set up the colored object dat and show it"""
-    data = MeshData.from_raw(vertices=g_vertex_buffer_data, colors=g_color_buffer_data)
+    data = MeshDataLegacy.from_raw(vertices=g_vertex_buffer_data, colors=g_color_buffer_data)
     render_window = RenderWindow(
         width=800, height=600, title="Cube window", data=data, glsl_dir=GLSL_DIR
     )
@@ -119,7 +119,7 @@ if __name__ == "__main__":
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES
 
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
-from picogl.renderer import GLContext, MeshData, RendererBase
+from picogl.renderer import GLContext, MeshDataLegacy, RendererBase
 
 
 class ObjectRenderer(RendererBase):
@@ -127,7 +127,7 @@ class ObjectRenderer(RendererBase):
 
     def __init__(self,
                  context: GLContext,
-                 data: MeshData,
+                 data: MeshDataLegacy,
                  glsl_dir: str):
         super().__init__()
         self.context, self.data = context, data
@@ -182,7 +182,7 @@ from pathlib import Path
 from typing import NoReturn
 
 from examples import g_vertex_buffer_data, g_uv_buffer_data
-from picogl.renderer import MeshData
+from picogl.renderer import MeshDataLegacy
 from picogl.ui.backend.glut.window.texture import TextureWindow
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -191,7 +191,7 @@ GLSL_DIR = BASE_DIR / "glsl" / "tu02"
 
 def main() -> NoReturn:
     """Set up the cube and draw it with texture."""
-    cube_data = MeshData.from_raw(vertices=g_vertex_buffer_data, uvs=g_uv_buffer_data)
+    cube_data = MeshDataLegacy.from_raw(vertices=g_vertex_buffer_data, uvs=g_uv_buffer_data)
     render_window = TextureWindow(
         width=800,
         height=600,
@@ -216,7 +216,7 @@ if __name__ == "__main__":
 
 from pathlib import Path
 
-from picogl.renderer import MeshData
+from picogl.renderer import MeshDataLegacy
 from picogl.ui.backend.glut.window.object import RenderWindow
 from picogl.utils.loader.object import ObjectLoader
 
@@ -228,7 +228,7 @@ def main():
     object_file_name = "data/teapot.obj"
     obj_loader = ObjectLoader(object_file_name)
     teapot_data = obj_loader.to_array_style()
-    data = MeshData.from_raw(
+    data = MeshDataLegacy.from_raw(
         vertices=teapot_data.vertices,
         normals=teapot_data.normals,
         colors=([[1.0, 0.0, 0.0]] * (len(teapot_data.vertices) // 3))
@@ -308,7 +308,7 @@ qt_legacy_glmesh_molecular_viewer.py
         return bonds
 
     def _create_mesh_data(self):
-        """Create MeshData for atoms and bonds using PicoGL"""
+        """Create MeshDataLegacy for atoms and bonds using PicoGL"""
         # Create sphere mesh data for atoms
         if self._initialized:
             return
