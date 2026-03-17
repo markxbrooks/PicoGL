@@ -32,7 +32,7 @@ except ImportError as e:
     sys.exit(1)
 
 try:
-    from picogl.renderer import MeshDataLegacy
+    from picogl.renderer import MeshData
     from picogl.renderer.legacy_glmesh import LegacyGLMesh
 except ImportError as e:
     print(f"❌ Failed to import PicoGL modules: {e}")
@@ -330,7 +330,7 @@ class LegacyCubeRenderer:
         """Load cube data using PicoGL LegacyGLMesh."""
         try:
             # Create mesh data
-            mesh_data = MeshDataLegacy.from_raw(
+            mesh_data = MeshData.from_raw(
                 vertices=self.vertices.flatten(), colors=self.colors.flatten()
             )
 

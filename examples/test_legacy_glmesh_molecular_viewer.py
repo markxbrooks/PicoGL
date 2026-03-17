@@ -19,8 +19,8 @@ def test_imports():
         
         # Test PicoGL imports
         from picogl.renderer.legacy_glmesh import LegacyGLMesh
-        from picogl.renderer.meshdata import MeshDataLegacy
-        print("✅ Successfully imported LegacyGLMesh and MeshDataLegacy")
+        from picogl.renderer.meshdata import MeshData
+        print("✅ Successfully imported LegacyGLMesh and MeshData")
         
         # Test Qt imports
         from PySide6.QtCore import Qt

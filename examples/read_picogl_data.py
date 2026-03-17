@@ -4,7 +4,7 @@ Read PicoGL Data Script
 This script demonstrates how to:
 1. Read PicoGL data files (JSON format)
 2. Understand the data structure
-3. Convert the data back to PicoGL MeshDataLegacy
+3. Convert the data back to PicoGL MeshData
 4. Display the molecular structure
 """
 
@@ -13,7 +13,7 @@ import os
 import sys
 from pathlib import Path
 
-from picogl.renderer import MeshDataLegacy
+from picogl.renderer import MeshData
 from picogl.ui.backend.glut.window.object import RenderWindow
 
 
@@ -77,8 +77,8 @@ def analyze_picogl_data(picogl_data):
 
 
 def create_mesh_from_picogl_data(picogl_data):
-    """Create PicoGL MeshDataLegacy from the loaded data"""
-    print(f"\n🔧 Creating MeshDataLegacy...")
+    """Create PicoGL MeshData from the loaded data"""
+    print(f"\n🔧 Creating MeshData...")
 
     # Get atom data
     atom_positions = picogl_data.get("atoms", {}).get("positions", [])
@@ -104,10 +104,10 @@ def create_mesh_from_picogl_data(picogl_data):
     print(f"✓ Total vertices: {len(all_vertices) // 3}")
     print(f"✓ Total colors: {len(all_colors) // 3}")
 
-    # Create MeshDataLegacy
-    mesh_data = MeshDataLegacy.from_raw(vertices=all_vertices, colors=all_colors)
+    # Create MeshData
+    mesh_data = MeshData.from_raw(vertices=all_vertices, colors=all_colors)
 
-    print("✓ Successfully created MeshDataLegacy")
+    print("✓ Successfully created MeshData")
     return mesh_data
 
 

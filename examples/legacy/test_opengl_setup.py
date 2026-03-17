@@ -137,11 +137,11 @@ def test_picogl_imports():
     print("\nTesting PicoGL imports...")
 
     try:
-        from picogl.renderer import MeshDataLegacy
+        from picogl.renderer import MeshData
 
-        print("  ✅ picogl.renderer.MeshDataLegacy imported successfully")
+        print("  ✅ picogl.renderer.MeshData imported successfully")
     except ImportError as e:
-        print(f"  ❌ Failed to import picogl.renderer.MeshDataLegacy: {e}")
+        print(f"  ❌ Failed to import picogl.renderer.MeshData: {e}")
         return False
 
     try:

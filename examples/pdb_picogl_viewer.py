@@ -31,7 +31,7 @@ except ImportError as e:
 from OpenGL.GL import *
 
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
-from picogl.renderer import MeshDataLegacy
+from picogl.renderer import MeshData
 from picogl.ui.backend.glut.window.object import RenderWindow
 
 
@@ -78,7 +78,7 @@ class MolecularRenderWindow(RenderWindow):
         )
         atom_colors = np.array(self.picogl_data["atoms"]["colors"], dtype=np.float32)
 
-        self.atom_mesh = MeshDataLegacy.from_raw(
+        self.atom_mesh = MeshData.from_raw(
             vertices=atom_positions.flatten().tolist(),
             colors=atom_colors.flatten().tolist(),
         )
@@ -92,7 +92,7 @@ class MolecularRenderWindow(RenderWindow):
                 self.picogl_data["bonds"]["colors"], dtype=np.float32
             )
 
-            self.bond_mesh = MeshDataLegacy.from_raw(
+            self.bond_mesh = MeshData.from_raw(
                 vertices=bond_positions.flatten().tolist(),
                 colors=bond_colors.flatten().tolist(),
             )

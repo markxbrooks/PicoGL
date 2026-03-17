@@ -17,7 +17,7 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
 
-from picogl.renderer import MeshDataLegacy
+from picogl.renderer import MeshData
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.utils.loader.object import ObjectLoader
 
@@ -85,7 +85,7 @@ class LegacyRenderer:
             object_data = obj_loader.to_array_style()
 
             # Create mesh data
-            mesh_data = MeshDataLegacy.from_raw(
+            mesh_data = MeshData.from_raw(
                 vertices=object_data.vertices,
                 normals=object_data.normals,
                 colors=([[1.0, 0.0, 0.0]] * (len(object_data.vertices) // 3)),

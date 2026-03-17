@@ -3,10 +3,10 @@ Validation of input data
 """
 
 import numpy as np
-from picogl.renderer import MeshDataLegacy
+from picogl.renderer import MeshData
 
 
-def validate_mesh_data(data: MeshDataLegacy):
+def validate_mesh_data(data: MeshData):
     """validate mesh data"""
     validate_input_data(
         vertices=data.vbo, indices=data.ebo, normals=data.nbo, colors=data.cbo

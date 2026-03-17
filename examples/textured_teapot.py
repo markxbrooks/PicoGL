@@ -20,7 +20,7 @@ Available textures:
 
 from pathlib import Path
 
-from picogl.renderer import MeshDataLegacy
+from picogl.renderer import MeshData
 from picogl.renderer.texture import TextureRenderer
 from picogl.ui.backend.glut.window.object import RenderWindow
 from picogl.utils.loader.object import ObjectLoader
@@ -47,7 +47,7 @@ def main() -> None:
     print(f"   - Faces: {len(teapot_data.indices) // 3}")
     
     # Create mesh data with UV coordinates
-    data = MeshDataLegacy.from_raw(
+    data = MeshData.from_raw(
         vertices=teapot_data.vertices,
         normals=teapot_data.normals,
         uvs=teapot_data.texcoords,

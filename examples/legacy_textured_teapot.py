@@ -38,7 +38,7 @@ except ImportError as e:
     print("Please install PyOpenGL: pip install PyOpenGL PyOpenGL_accelerate")
     sys.exit(1)
 
-from picogl.renderer import MeshDataLegacy
+from picogl.renderer import MeshData
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.utils.loader.object import ObjectLoader
 from picogl.utils.loader.texture import TextureLoader
@@ -91,7 +91,7 @@ class LegacyTexturedTeapotRenderer(LegacyQtObjectRenderer):
         print(f"   - Faces: {len(teapot_data.indices) // 3}")
         
         # Create mesh data
-        self.mesh_data = MeshDataLegacy.from_raw(
+        self.mesh_data = MeshData.from_raw(
             vertices=teapot_data.vertices,
             normals=teapot_data.normals,
             uvs=teapot_data.texcoords,

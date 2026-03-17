@@ -150,9 +150,9 @@ atom_colors = picogl_data['atoms']['colors']
 bond_positions = picogl_data['bonds']['positions']
 
 # Use with PicoGL renderers
-from picogl.renderer import MeshDataLegacy
+from picogl.renderer import MeshData
 
-mesh_data = MeshDataLegacy.from_raw(
+mesh_data = MeshData.from_raw(
   vertices=atom_positions,
   colors=atom_colors
 )

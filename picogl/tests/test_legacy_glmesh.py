@@ -23,7 +23,7 @@ Dependencies:
     - unittest.mock.MagicMock for OpenGL function mocking
     - numpy for test data
     - picogl.renderer.legacy_glmesh.LegacyGLMesh
-    - picogl.renderer.meshdata.MeshDataLegacy
+    - picogl.renderer.meshdata.MeshData
 
 To run the tests::
 
@@ -40,7 +40,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT
 from OpenGL.raw.GL.VERSION.GL_1_1 import GL_COLOR_ARRAY, GL_VERTEX_ARRAY
 
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
-from picogl.renderer.meshdata import MeshDataLegacy
+from picogl.renderer.meshdata import MeshData
 
 
 class TestLegacyGLMesh(unittest.TestCase):
@@ -179,8 +179,8 @@ class TestLegacyGLMesh(unittest.TestCase):
         self.assertEqual(mesh.indices.shape, (3,))
 
     def test_from_mesh_data_with_all_attributes(self):
-        """Test from_mesh_data with all MeshDataLegacy attributes."""
-        mesh_data = MeshDataLegacy(
+        """Test from_mesh_data with all MeshData attributes."""
+        mesh_data = MeshData(
             vbo=self.test_vertices,
             ebo=self.test_faces,
             cbo=self.test_colors,
@@ -198,8 +198,8 @@ class TestLegacyGLMesh(unittest.TestCase):
         np.testing.assert_array_equal(legacy_mesh.uvs, self.test_uvs)
 
     def test_from_mesh_data_with_minimal_attributes(self):
-        """Test from_mesh_data with minimal MeshDataLegacy attributes."""
-        mesh_data = MeshDataLegacy(
+        """Test from_mesh_data with minimal MeshData attributes."""
+        mesh_data = MeshData(
             vbo=self.test_vertices,
             ebo=self.test_faces
         )
@@ -216,7 +216,7 @@ class TestLegacyGLMesh(unittest.TestCase):
 
     def test_from_mesh_data_without_uvs(self):
         """Test from_mesh_data without UVs attribute."""
-        mesh_data = MeshDataLegacy(
+        mesh_data = MeshData(
             vbo=self.test_vertices,
             ebo=self.test_faces,
             cbo=self.test_colors,
@@ -662,9 +662,9 @@ class TestLegacyGLMesh(unittest.TestCase):
         np.testing.assert_array_equal(mesh.uvs, expected_uvs)
 
     def test_mesh_data_integration(self):
-        """Test integration with MeshDataLegacy class."""
-        # Create MeshDataLegacy
-        mesh_data = MeshDataLegacy.from_raw(
+        """Test integration with MeshData class."""
+        # Create MeshData
+        mesh_data = MeshData.from_raw(
             vertices=self.test_vertices,
             indices=self.test_faces,
             colors=self.test_colors,
@@ -672,10 +672,10 @@ class TestLegacyGLMesh(unittest.TestCase):
             uvs=self.test_uvs
         )
         
-        # Create LegacyGLMesh from MeshDataLegacy
+        # Create LegacyGLMesh from MeshData
         legacy_mesh = LegacyGLMesh.from_mesh_data(mesh_data)
         
-        # Test data consistency - LegacyGLMesh reshapes data to (N, 3) while MeshDataLegacy keeps it flat
+        # Test data consistency - LegacyGLMesh reshapes data to (N, 3) while MeshData keeps it flat
         np.testing.assert_array_equal(legacy_mesh.vertices.reshape(-1), mesh_data.vbo)
         np.testing.assert_array_equal(legacy_mesh.indices, mesh_data.ebo)
         np.testing.assert_array_equal(legacy_mesh.colors.reshape(-1), mesh_data.cbo)

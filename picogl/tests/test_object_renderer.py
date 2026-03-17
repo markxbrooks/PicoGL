@@ -20,7 +20,7 @@ Dependencies:
     - unittest.mock.MagicMock for OpenGL function mocking
     - numpy for test data
     - picogl.renderer.object.ObjectRenderer
-    - picogl.renderer.meshdata.MeshDataLegacy
+    - picogl.renderer.meshdata.MeshData
 
 To run the tests::
 
@@ -36,7 +36,7 @@ import numpy as np
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES
 
 from picogl.renderer.object import ObjectRenderer
-from picogl.renderer.meshdata import MeshDataLegacy
+from picogl.renderer.meshdata import MeshData
 
 
 class TestObjectRenderer(unittest.TestCase):
@@ -73,8 +73,8 @@ class TestObjectRenderer(unittest.TestCase):
             [1.0, 1.0]
         ], dtype=np.float32)
         
-        # Create test MeshDataLegacy
-        self.test_mesh_data = MeshDataLegacy.from_raw(
+        # Create test MeshData
+        self.test_mesh_data = MeshData.from_raw(
             vertices=self.test_vertices,
             colors=self.test_colors,
             normals=self.test_normals,
@@ -319,7 +319,7 @@ class TestObjectRenderer(unittest.TestCase):
     def test_initialize_without_texture_without_colors(self):
         """Test initialize method without texture and without colors."""
         # Create mesh data without colors
-        mesh_data_no_colors = MeshDataLegacy.from_raw(
+        mesh_data_no_colors = MeshData.from_raw(
             vertices=self.test_vertices,
             normals=self.test_normals,
             uvs=self.test_uvs
@@ -506,7 +506,7 @@ class TestObjectRenderer(unittest.TestCase):
         
         # Test with different vertex data
         vertices_2d = np.array([[0, 0, 0], [1, 1, 1]], dtype=np.float32)
-        mesh_data_2d = MeshDataLegacy.from_raw(vertices=vertices_2d)
+        mesh_data_2d = MeshData.from_raw(vertices=vertices_2d)
         
         renderer = ObjectRenderer(
             context=mock_context,
@@ -585,7 +585,7 @@ class TestObjectRenderer(unittest.TestCase):
 
     def test_initialization_with_minimal_mesh_data(self):
         """Test initialization with minimal mesh data (only vertices)."""
-        minimal_mesh_data = MeshDataLegacy.from_raw(vertices=self.test_vertices)
+        minimal_mesh_data = MeshData.from_raw(vertices=self.test_vertices)
         
         mock_context = MagicMock()
         mock_context.vaos = {}
@@ -611,7 +611,7 @@ class TestObjectRenderer(unittest.TestCase):
 
     def test_initialization_with_texture_but_no_uvs(self):
         """Test initialization with texture enabled but no UVs in mesh data."""
-        mesh_data_no_uvs = MeshDataLegacy.from_raw(
+        mesh_data_no_uvs = MeshData.from_raw(
             vertices=self.test_vertices,
             colors=self.test_colors,
             normals=self.test_normals

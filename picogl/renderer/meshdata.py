@@ -11,8 +11,6 @@ from OpenGL.raw.GL.VERSION.GL_1_1 import glDrawArrays
 from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ARRAY_BUFFER_BINDING
 from OpenGL.raw.GL.VERSION.GL_3_0 import glBindVertexArray
 
-# from OpenGL.raw.GLES3 import glBindVertexArray
-
 from decologr import Decologr as log
 from elmo.gl.protocols import DrawableBuffer
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
@@ -50,7 +48,7 @@ def compute_vertex_normals(vertices: np.ndarray, faces: np.ndarray) -> np.ndarra
     return normals
 
 
-class MeshDataLegacy:
+class MeshData:
     """Holds OpenGL-related state objects for rendering."""
 
     def __init__(
@@ -161,7 +159,7 @@ class MeshDataLegacy:
             color_per_vertex: Optional[Union[np.ndarray, list[float]]] = None,
     ):
         """
-        Build a MeshDataLegacy from raw/python inputs.
+        Build a MeshData from raw/python inputs.
 
         :param vertices: np.ndarray required, list/array of x,y,z triplets
         :param normals: np.ndarray optional, list/array of x,y,z triplets
@@ -290,10 +288,10 @@ class MeshDataLegacy:
         if color is None and self.cbo is not None:
             # Use vertex colors (for fo-fc maps)
             GL.glEnableClientState(GL.GL_COLOR_ARRAY)
-            print("ARRAY_BUFFER_BINDING =", glGetIntegerv(GL_ARRAY_BUFFER_BINDING))
+            """print("ARRAY_BUFFER_BINDING =", glGetIntegerv(GL_ARRAY_BUFFER_BINDING))
             print("cbo")
             print(type(self.cbo))
-            print(self.cbo)
+            print(self.cbo)"""
             GL.glColorPointer(3, GL.GL_FLOAT, 0, self.cbo)
             # Note: Alpha blending for vertex colors would require 4-component colors
             # For now, we'll use the alpha value for the overall transparency
@@ -420,11 +418,11 @@ class MeshDataModern(VertexBase):
         pass
 
 
-class MeshData:
+class MeshDataTest:
     """Mesh Data"""
 
     mesh_data_classes = {
-        GLMode.LEGACY: MeshDataLegacy,
+        GLMode.LEGACY: MeshData,
         GLMode.MODERN: MeshDataModern,
     }
 

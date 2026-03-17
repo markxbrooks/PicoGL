@@ -16,7 +16,7 @@ from examples.utils.pdb_loader import PDBLoader
 # Add the utils directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "utils"))
 
-from picogl.renderer import MeshDataLegacy
+from picogl.renderer import MeshData
 from picogl.ui.backend.glut.window.object import RenderWindow
 
 
@@ -38,7 +38,7 @@ def load_pdb_as_picogl_data(pdb_path: str):
 
 
 def create_molecular_mesh_data(picogl_data):
-    """Create MeshDataLegacy from PicoGL molecular data"""
+    """Create MeshData from PicoGL molecular data"""
     # For simplicity, we'll combine atoms and bonds into one mesh
     # Atoms will be rendered as points, bonds as lines
 
@@ -56,7 +56,7 @@ def create_molecular_mesh_data(picogl_data):
 
     print(f"✓ Created mesh with {len(all_vertices) // 3} total vertices")
 
-    return MeshDataLegacy.from_raw(vertices=all_vertices, colors=all_colors)
+    return MeshData.from_raw(vertices=all_vertices, colors=all_colors)
 
 
 def main():

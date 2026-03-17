@@ -306,11 +306,11 @@ def test_picogl_imports():
     print("\nTesting PicoGL imports...")
 
     try:
-        from picogl.renderer import MeshDataLegacy
+        from picogl.renderer import MeshData
 
-        print("  ✅ picogl.renderer.MeshDataLegacy imported successfully")
+        print("  ✅ picogl.renderer.MeshData imported successfully")
     except ImportError as e:
-        print(f"  ❌ Failed to import picogl.renderer.MeshDataLegacy: {e}")
+        print(f"  ❌ Failed to import picogl.renderer.MeshData: {e}")
         return False
 
     try:
@@ -329,23 +329,23 @@ def test_mesh_creation():
     print("\nTesting mesh creation...")
 
     try:
-        from picogl.renderer import MeshDataLegacy
+        from picogl.renderer import MeshData
 
         # Create test data
         vertices = np.array([-1, -1, -1, 1, 1, 1], dtype=np.float32)
         colors = np.array([1, 0, 0, 0, 1, 0], dtype=np.float32)
 
         # Create mesh data
-        mesh_data = MeshDataLegacy.from_raw(vertices=vertices, colors=colors)
+        mesh_data = MeshData.from_raw(vertices=vertices, colors=colors)
 
-        print("  ✅ MeshDataLegacy created successfully")
-        print(f"  📊 MeshDataLegacy vertices: {mesh_data.vbo.shape}")
-        print(f"  📊 MeshDataLegacy colors: {mesh_data.cbo.shape}")
+        print("  ✅ MeshData created successfully")
+        print(f"  📊 MeshData vertices: {mesh_data.vbo.shape}")
+        print(f"  📊 MeshData colors: {mesh_data.cbo.shape}")
 
         return True
 
     except Exception as e:
-        print(f"  ❌ MeshDataLegacy creation failed: {e}")
+        print(f"  ❌ MeshData creation failed: {e}")
         return False
 
 

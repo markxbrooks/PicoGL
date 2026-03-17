@@ -12,7 +12,7 @@ from PySide6.QtWidgets import QWidget
 
 from examples import g_vertex_buffer_data, g_color_buffer_data
 from decologr.logger import Decologr as log
-from picogl.renderer import MeshDataLegacy
+from picogl.renderer import MeshData
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.ui.backend.qt.base import GLBase
 
@@ -32,7 +32,7 @@ class LegacyQtObjectRenderer(GLBase):
         # Cube data
         self._initialized: bool = False
         self.gl_mesh_data = None
-        self.mesh_data: Optional[MeshDataLegacy] = None
+        self.mesh_data: Optional[MeshData] = None
         self.vertices = np.array(g_vertex_buffer_data, dtype=np.float32)
         self.colors = np.array(g_color_buffer_data, dtype=np.float32)
 
@@ -77,7 +77,7 @@ class LegacyQtObjectRenderer(GLBase):
     def initialize(self):
         if self._initialized:
             return
-        self.mesh_data = MeshDataLegacy.from_raw(
+        self.mesh_data = MeshData.from_raw(
             vertices=self.vertices, colors=self.colors, indices=self.indices
         )
         self.gl_mesh_data = LegacyGLMesh.from_mesh_data(mesh=self.mesh_data)
