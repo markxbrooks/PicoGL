@@ -34,6 +34,7 @@ Intended for OpenGL 3.0+ with VAO support.
 """
 
 import ctypes
+from contextlib import contextmanager
 from typing import Optional
 
 import numpy as np
@@ -64,15 +65,14 @@ from picogl.buffers.base import VertexBase
 from picogl.buffers.glcleanup import delete_buffer
 from picogl.buffers.vertex.aliases import NAME_ALIASES
 from decologr import Decologr as log
+from picogl.buffers.vertex.registry import store_in_gl_registry
 from picogl.safe import gl_gen_safe
 
 
-def _current_gl_context_id():
-    """Return id of current Qt OpenGL context, or None if Qt not available."""
+def current_gl_context():
     try:
         from PySide6.QtGui import QOpenGLContext
-        ctx = QOpenGLContext.currentContext()
-        return id(ctx) if ctx is not None else None
+        return QOpenGLContext.currentContext()
     except Exception:
         return None
 
@@ -100,25 +100,66 @@ class VertexArrayObject(VertexBase):
         self.attributes = []
         self.vbos = []
         self.named_vbos: dict[str, VertexBuffer] = {}
-        self.vao = None  # Bonds Vertex Array Object. Does absolutely nothing
+        self.vao: int = None  # Bonds Vertex Array Object. Does absolutely nothing
         self.vbo = None  # Atom Vertex Buffer Object
         self.cbo = None  # Color Vertex Buffer Object
         self.nbo = None  # Normal Vertex Buffer Object
         self.ebo = None  # Bond Index Buffer Object
-        # self.named_vbos: dict[str, LegacyVBO] = {}  # store by semantic name
-        self.ebo = None
-        self.ebo = None
         self.layout: Optional[LayoutDescriptor] = None
-        # self.named_vbos: dict[str, ModernVBO] = {}  # store by semantic name
-        self._creation_context_id: Optional[int] = _current_gl_context_id()
+        self._creation_context_id: Optional[int] = current_gl_context()
+        # self.configure(self.layout)
         self.bind()
 
     def is_valid_in_current_context(self) -> bool:
         """True if this VAO was created in the current OpenGL context (safe to bind/draw)."""
-        if self._creation_context_id is None:
+        if self._creation_context_id == current_gl_context():
+            store_in_gl_registry(self.handle, label=self.__class__.__name__, ctx_id=id(current_gl_context()), buffer_type="VAO")
             return True
-        current_id = _current_gl_context_id()
-        return current_id is not None and current_id == self._creation_context_id
+        return False
+
+    def set_layout(self, layout: LayoutDescriptor) -> None:
+        """configure"""
+        if self._configured:
+            return
+
+        if self.vao is None:
+            return
+
+        if not self.bind():
+            raise RuntimeError("Invalid context")
+
+        self.layout = layout
+
+        # Bind buffers explicitly
+        if self.vbo:
+            glBindBuffer(GL_ARRAY_BUFFER, self.vbo.handle)
+
+        if self.ebo:
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.ebo.handle)
+
+        # Configure attributes
+        for attr in layout.attributes:
+            glEnableVertexAttribArray(attr.index)
+            glVertexAttribPointer(
+                attr.index,
+                attr.size,
+                attr.type,
+                attr.normalized,
+                attr.stride,
+                ctypes.c_void_p(attr.offset),
+            )
+
+        glBindVertexArray(0)
+        self._configured = True
+
+    @contextmanager
+    def bound(self):
+        if not self.bind():
+            raise RuntimeError("Failed to bind VAO")
+        try:
+            yield
+        finally:
+            glBindVertexArray(0)
 
     def bind(self) -> bool:
         """
@@ -126,7 +167,7 @@ class VertexArrayObject(VertexBase):
         :return: True if bound, False if skipped (wrong context — avoids GL_INVALID_OPERATION/segfault).
         """
         if not self.is_valid_in_current_context():
-            log.debug(
+            log.error(
                 "VAO created in different GL context; skipping bind to avoid invalid operation",
                 scope=self.__class__.__name__,
             )
@@ -146,7 +187,11 @@ class VertexArrayObject(VertexBase):
         """
         glDeleteVertexArrays(1, [self.handle])
 
-    def set_layout(self, layout: LayoutDescriptor) -> None:
+    def configure(self):
+        """set layout"""
+        self.set_layout(self.layout)
+
+    def set_layout_old(self, layout: LayoutDescriptor) -> None:
         """
         set_layout
 

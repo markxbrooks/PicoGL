@@ -53,8 +53,15 @@ def debug_vao(vao):
 
 
 def dump_gl_registry():
+    print(GL_REGISTRY)
     for obj in GL_REGISTRY.values():
         log.info(
             f"{obj.type} {obj.handle} label={obj.label} "
-            f"context={obj.context_id}"
+            f"context={obj.context_id}", scope="dump_gl_registry"
         )
+
+
+def store_in_gl_registry(handle: int, label: str, ctx_id: int, buffer_type: str = "VAO"):
+    """store in gl registry"""
+    GL_REGISTRY[handle] = GLObjectInfo(handle=handle, type=buffer_type, label=label,
+                                            context_id=ctx_id)
