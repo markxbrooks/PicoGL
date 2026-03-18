@@ -1,24 +1,22 @@
 """
 GLContext class
 """
-from typing import Union, Optional
+from typing import Optional, Protocol, Union
 
 import numpy as np
+from decologr import Decologr as log
 from OpenGL import GL
-from OpenGL.GL import glGetIntegerv, glDrawElements
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_UNSIGNED_INT, GL_TRIANGLES
+from OpenGL.GL import glDrawElements, glGetIntegerv
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT
 from OpenGL.raw.GL.VERSION.GL_1_1 import glDrawArrays
 from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ARRAY_BUFFER_BINDING
 from OpenGL.raw.GL.VERSION.GL_3_0 import glBindVertexArray
-
-from decologr import Decologr as log
-from elmo.gl.protocols import DrawableBuffer
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.backend.modern.core.vertex.buffer.object import ModernVBO
 from picogl.buffers.base import VertexBase
 from picogl.mode import GLMode
 
-from typing import Protocol
+from elmo.gl.protocols import DrawableBuffer
 
 
 class MeshBackend(Protocol):

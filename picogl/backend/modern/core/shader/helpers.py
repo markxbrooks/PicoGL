@@ -4,10 +4,9 @@ Shader Compilation
 
 from pathlib import Path
 
+from decologr import Decologr as log
 from OpenGL import GL
 from OpenGL.raw.GLU import gluErrorString
-
-from decologr import Decologr as log
 
 
 def log_gl_error():

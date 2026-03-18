@@ -7,12 +7,12 @@ details such as object handle, type, label, creation time, and associated
 attributes.
 """
 
+import time
 from dataclasses import dataclass, field
 from typing import Dict, Optional
-import time
 
-from PySide6 import QtGui
 from decologr import Decologr as log
+from PySide6 import QtGui
 
 
 class GLObjectAttrs:

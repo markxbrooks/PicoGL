@@ -2,7 +2,8 @@ from functools import wraps
 
 from OpenGL.GL import glGetIntegerv
 from OpenGL.raw.GL.VERSION.GL_2_0 import GL_CURRENT_PROGRAM, glUseProgram
-from OpenGL.raw.GL.VERSION.GL_3_0 import GL_VERTEX_ARRAY_BINDING, glBindVertexArray
+from OpenGL.raw.GL.VERSION.GL_3_0 import (GL_VERTEX_ARRAY_BINDING,
+                                          glBindVertexArray)
 
 
 def preserve_gl_state(func):

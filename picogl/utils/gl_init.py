@@ -2,28 +2,18 @@
 
 from typing import Callable
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import (
-    GL_COLOR_BUFFER_BIT,
-    GL_CULL_FACE,
-    GL_DEPTH_BUFFER_BIT,
-    GL_DEPTH_TEST,
-    GL_LESS,
-    glClear,
-    glClearColor,
-    glDepthFunc,
-    glEnable,
-)
-from OpenGL.raw.GL.VERSION.GL_1_3 import GL_MULTISAMPLE
-
-from picogl.backend.legacy.core.camera.lighting import setup_lighting
-from picogl.backend.legacy.core.camera.setup import (
-    enable_blending,
-    enable_depth_test,
-    enable_smoothing,
-    setup_materials,
-)
-from picogl.info import get_gl_info
 from decologr import Decologr as log
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_COLOR_BUFFER_BIT, GL_CULL_FACE,
+                                          GL_DEPTH_BUFFER_BIT, GL_DEPTH_TEST,
+                                          GL_LESS, glClear, glClearColor,
+                                          glDepthFunc, glEnable)
+from OpenGL.raw.GL.VERSION.GL_1_3 import GL_MULTISAMPLE
+from picogl.backend.legacy.core.camera.lighting import setup_lighting
+from picogl.backend.legacy.core.camera.setup import (enable_blending,
+                                                     enable_depth_test,
+                                                     enable_smoothing,
+                                                     setup_materials)
+from picogl.info import get_gl_info
 
 
 def execute_gl_tasks(task_list: list[tuple[str, Callable]]):

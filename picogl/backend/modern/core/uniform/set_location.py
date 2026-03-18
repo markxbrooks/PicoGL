@@ -1,11 +1,11 @@
 from typing import Union
 
 import numpy as np
-from pyglm import glm
-
-from picogl.backend.modern.core.uniform.location import get_uniform_location
-from picogl.backend.modern.core.uniform.location_value import set_uniform_location_value
 from decologr import Decologr as log
+from picogl.backend.modern.core.uniform.location import get_uniform_location
+from picogl.backend.modern.core.uniform.location_value import \
+    set_uniform_location_value
+from pyglm import glm
 
 
 def set_uniform_name_value(

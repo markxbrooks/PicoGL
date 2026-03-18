@@ -2,10 +2,9 @@
 Error checking
 """
 
+from decologr import Decologr as log
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_NO_ERROR, glGetError
 from OpenGL.raw.GLU import gluErrorString
-
-from decologr import Decologr as log
 
 
 def check_errors():

@@ -2,15 +2,11 @@ import numpy as np
 from OpenGL.GL import glDrawElements, glVertexPointer
 from OpenGL.raw.GL._types import GL_BYTE, GL_FLOAT, GL_INT, GL_SHORT
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT
-from OpenGL.raw.GL.VERSION.GL_1_1 import (
-    GL_DOUBLE,
-    GL_VERTEX_ARRAY,
-    glDrawArrays,
-    glEnableClientState,
-)
+from OpenGL.raw.GL.VERSION.GL_1_1 import (GL_DOUBLE, GL_VERTEX_ARRAY,
+                                          glDrawArrays, glEnableClientState)
 from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ARRAY_BUFFER
-
-from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
+from picogl.backend.legacy.core.vertex.buffer.client_states import \
+    legacy_client_states
 from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
 
 

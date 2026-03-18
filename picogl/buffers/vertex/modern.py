@@ -2,19 +2,16 @@ import ctypes
 from typing import Optional
 
 # from buffers.glcleanup import delete_buffer
-from OpenGL.GL import glDeleteVertexArrays, glGenVertexArrays, glVertexAttribPointer
-from OpenGL.raw.GL.VERSION.GL_1_5 import (
-    GL_ARRAY_BUFFER,
-    GL_ELEMENT_ARRAY_BUFFER,
-    glBindBuffer,
-)
+from OpenGL.GL import (glDeleteVertexArrays, glGenVertexArrays,
+                       glVertexAttribPointer)
+from OpenGL.raw.GL.VERSION.GL_1_5 import (GL_ARRAY_BUFFER,
+                                          GL_ELEMENT_ARRAY_BUFFER,
+                                          glBindBuffer)
 from OpenGL.raw.GL.VERSION.GL_2_0 import glEnableVertexAttribArray
 from OpenGL.raw.GL.VERSION.GL_3_0 import glBindVertexArray
-from picogl.buffers.glcleanup import delete_buffer
-
-from picogl.buffers.base import VertexBase
-
 from picogl.buffers.attributes import LayoutDescriptor
+from picogl.buffers.base import VertexBase
+from picogl.buffers.glcleanup import delete_buffer
 
 
 class ModernVertexArrayGroup(VertexBase):

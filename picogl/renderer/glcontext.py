@@ -7,7 +7,6 @@ from pathlib import Path
 from typing import Optional
 
 import numpy as np
-
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 

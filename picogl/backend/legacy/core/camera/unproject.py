@@ -5,21 +5,14 @@ Unproject
 from typing import Optional, Tuple
 
 import numpy as np
+from decologr import Decologr as log
 from OpenGL.GL import glGetDoublev, glGetIntegerv
 from OpenGL.GLU import gluUnProject
 from OpenGL.raw.GL._types import GL_FLOAT
-from OpenGL.raw.GL.VERSION.GL_1_0 import (
-    GL_DEPTH_COMPONENT,
-    GL_DEPTH_TEST,
-    GL_MODELVIEW_MATRIX,
-    GL_PROJECTION_MATRIX,
-    GL_VIEWPORT,
-    glFlush,
-    glIsEnabled,
-    glReadPixels,
-)
-
-from decologr import Decologr as log
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_DEPTH_COMPONENT, GL_DEPTH_TEST,
+                                          GL_MODELVIEW_MATRIX,
+                                          GL_PROJECTION_MATRIX, GL_VIEWPORT,
+                                          glFlush, glIsEnabled, glReadPixels)
 
 
 def unproject(x: int, y: int) -> Optional[Tuple[float, float, float]]:

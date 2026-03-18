@@ -2,18 +2,11 @@
 Setup Materials
 """
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import (
-    GL_AMBIENT_AND_DIFFUSE,
-    GL_COLOR_MATERIAL,
-    GL_DIFFUSE,
-    GL_FRONT_AND_BACK,
-    GL_SHININESS,
-    GL_SPECULAR,
-    glColorMaterial,
-    glEnable,
-    glMaterialf,
-    glMaterialfv,
-)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_AMBIENT_AND_DIFFUSE,
+                                          GL_COLOR_MATERIAL, GL_DIFFUSE,
+                                          GL_FRONT_AND_BACK, GL_SHININESS,
+                                          GL_SPECULAR, glColorMaterial,
+                                          glEnable, glMaterialf, glMaterialfv)
 
 
 def setup_materials() -> None:

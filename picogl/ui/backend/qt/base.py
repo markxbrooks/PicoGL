@@ -6,27 +6,22 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 import numpy as np
+from decologr import Decologr as log
 from OpenGL.GL import glGetIntegerv
 from OpenGL.raw.GL.ARB.viewport_array import GL_VIEWPORT
-from OpenGL.raw.GL.VERSION.GL_1_0 import (
-    GL_MODELVIEW,
-    glLoadIdentity,
-    glMatrixMode,
-    glViewport,
-)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_MODELVIEW, glLoadIdentity,
+                                          glMatrixMode, glViewport)
 from OpenGL.raw.GLU import gluPerspective
-from PySide6.QtGui import QMouseEvent, QOpenGLFunctions, Qt, QWheelEvent
-from PySide6.QtOpenGLWidgets import QOpenGLWidget
-from PySide6.QtWidgets import QWidget
-
 from picogl.backend.legacy.core.camera.lighting import set_background_color
 from picogl.backend.legacy.core.camera.matrices.setup import setup_matrices
 from picogl.backend.legacy.core.camera.setup import calculate_aspect
 from picogl.error import check_errors
 from picogl.frame import prepare_viewport
-from decologr import Decologr as log
 from picogl.mode import GLMode
 from picogl.utils.gl_init import execute_gl_tasks, initialize_gl_list
+from PySide6.QtGui import QMouseEvent, QOpenGLFunctions, Qt, QWheelEvent
+from PySide6.QtOpenGLWidgets import QOpenGLWidget
+from PySide6.QtWidgets import QWidget
 
 
 @dataclass

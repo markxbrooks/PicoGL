@@ -1,8 +1,11 @@
 """
 GL Clear Buffers
 """
-from OpenGL.raw.GL.VERSION.GL_1_0 import glMatrixMode, GL_MODELVIEW, glLoadIdentity, glEnable, GL_DEPTH_TEST, glClear, \
-    GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT, glColor3f
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_COLOR_BUFFER_BIT,
+                                          GL_DEPTH_BUFFER_BIT, GL_DEPTH_TEST,
+                                          GL_MODELVIEW, glClear, glColor3f,
+                                          glEnable, glLoadIdentity,
+                                          glMatrixMode)
 from OpenGL.raw.GL.VERSION.GL_1_3 import GL_MULTISAMPLE
 
 

@@ -2,17 +2,17 @@ import ctypes
 from typing import Optional
 
 import numpy as np
-from picogl.buffers.factory.layout import create_layout
 from OpenGL.GL import glDrawElements
 from OpenGL.raw.GL._types import GL_FLOAT
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT
-from OpenGL.raw.GL.VERSION.GL_1_1 import GL_COLOR_ARRAY, GL_VERTEX_ARRAY, glDrawArrays
-
-from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
+from OpenGL.raw.GL.VERSION.GL_1_1 import (GL_COLOR_ARRAY, GL_VERTEX_ARRAY,
+                                          glDrawArrays)
+from picogl.backend.legacy.core.vertex.buffer.client_states import \
+    legacy_client_states
 from picogl.buffers.attributes import AttributeSpec
+from picogl.buffers.factory.layout import create_layout
 from picogl.buffers.glcleanup import delete_buffer_object
 from picogl.buffers.vertex.legacy import VertexBufferGroup
-
 
 
 class LegacyGLMesh:

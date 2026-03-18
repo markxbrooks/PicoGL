@@ -29,14 +29,13 @@ To run the tests::
 """
 
 import unittest
-from unittest.mock import MagicMock, patch, call
 from pathlib import Path
+from unittest.mock import MagicMock, call, patch
 
 import numpy as np
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES
-
-from picogl.renderer.object import ObjectRenderer
 from picogl.renderer.meshdata import MeshData
+from picogl.renderer.object import ObjectRenderer
 
 
 class TestObjectRenderer(unittest.TestCase):

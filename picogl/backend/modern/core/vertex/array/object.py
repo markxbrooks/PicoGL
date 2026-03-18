@@ -38,25 +38,19 @@ from contextlib import contextmanager
 from typing import Optional
 
 import numpy as np
+from decologr import Decologr as log
 from OpenGL.GL import glDeleteVertexArrays, glGenVertexArrays
 from OpenGL.raw.GL._types import GL_FLOAT, GL_UNSIGNED_INT
 from OpenGL.raw.GL.ARB.vertex_array_object import glBindVertexArray
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POINTS
 from OpenGL.raw.GL.VERSION.GL_1_1 import glDrawArrays, glDrawElements
-from OpenGL.raw.GL.VERSION.GL_1_5 import (
-    GL_ARRAY_BUFFER,
-    GL_ELEMENT_ARRAY_BUFFER,
-    GL_STATIC_DRAW,
-    glBindBuffer,
-)
-from OpenGL.raw.GL.VERSION.GL_2_0 import (
-    glEnableVertexAttribArray,
-    glVertexAttribPointer,
-)
-
-from picogl.backend.modern.core.vertex.array.helpers import (
-    enable_points_rendering_state,
-)
+from OpenGL.raw.GL.VERSION.GL_1_5 import (GL_ARRAY_BUFFER,
+                                          GL_ELEMENT_ARRAY_BUFFER,
+                                          GL_STATIC_DRAW, glBindBuffer)
+from OpenGL.raw.GL.VERSION.GL_2_0 import (glEnableVertexAttribArray,
+                                          glVertexAttribPointer)
+from picogl.backend.modern.core.vertex.array.helpers import \
+    enable_points_rendering_state
 from picogl.backend.modern.core.vertex.base import VertexBuffer
 from picogl.backend.modern.core.vertex.buffer.element import ModernEBO
 from picogl.backend.modern.core.vertex.buffer.object import ModernVBO
@@ -64,7 +58,6 @@ from picogl.buffers.attributes import LayoutDescriptor
 from picogl.buffers.base import VertexBase
 from picogl.buffers.glcleanup import delete_buffer
 from picogl.buffers.vertex.aliases import NAME_ALIASES
-from decologr import Decologr as log
 from picogl.buffers.vertex.registry import store_in_gl_registry
 from picogl.safe import gl_gen_safe
 

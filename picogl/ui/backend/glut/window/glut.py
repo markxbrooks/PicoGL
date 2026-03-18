@@ -1,12 +1,11 @@
 import numpy as np
-from OpenGL.raw.GL.VERSION.GL_1_0 import glViewport
-from pyglm import glm
-
 from decologr import Decologr as log
+from OpenGL.raw.GL.VERSION.GL_1_0 import glViewport
 from picogl.logger import setup_logging
 from picogl.renderer import GLContext
 from picogl.ui.backend.glut.window.gl import GLWindow
 from picogl.utils.gl_init import execute_gl_tasks, init_gl_list, paint_gl_list
+from pyglm import glm
 
 
 class GlutRendererWindow(GLWindow):

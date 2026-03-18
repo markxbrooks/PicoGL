@@ -2,14 +2,9 @@
 Enable blending
 """
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import (
-    GL_BLEND,
-    GL_ONE_MINUS_SRC_ALPHA,
-    GL_SRC_ALPHA,
-    glBlendFunc,
-    glClearColor,
-    glEnable,
-)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_BLEND, GL_ONE_MINUS_SRC_ALPHA,
+                                          GL_SRC_ALPHA, glBlendFunc,
+                                          glClearColor, glEnable)
 
 
 def enable_blending() -> None:

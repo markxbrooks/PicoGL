@@ -1,10 +1,5 @@
-from OpenGL.raw.GL.VERSION.GL_1_0 import (
-    GL_DEPTH_TEST,
-    GL_LESS,
-    glClearColor,
-    glDepthFunc,
-    glEnable,
-)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_DEPTH_TEST, GL_LESS, glClearColor,
+                                          glDepthFunc, glEnable)
 
 
 def initialize_background() -> None:

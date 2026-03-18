@@ -1,9 +1,8 @@
 import numpy as np
 from OpenGL.GL import glUniformMatrix4fv
 from OpenGL.raw.GL._types import GL_FALSE
-from pyglm import glm
-
 from picogl.backend.modern.core.shader.helpers import log_gl_error
+from pyglm import glm
 
 
 def calculate_mvp_matrix(context: object, width: int = 1920, height: int = 1080):

@@ -32,13 +32,12 @@ To run the tests::
 """
 
 import unittest
-from unittest.mock import MagicMock, patch, call
+from unittest.mock import MagicMock, call, patch
 
 import numpy as np
 from OpenGL.raw.GL._types import GL_FLOAT
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT
 from OpenGL.raw.GL.VERSION.GL_1_1 import GL_COLOR_ARRAY, GL_VERTEX_ARRAY
-
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.renderer.meshdata import MeshData
 

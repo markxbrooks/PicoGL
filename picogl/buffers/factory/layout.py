@@ -3,8 +3,7 @@ Create layouts for VOAs and VBGs
 """
 
 from OpenGL.raw.GL._types import GL_FLOAT
-
-from picogl.buffers.attributes import LayoutDescriptor, AttributeSpec
+from picogl.buffers.attributes import AttributeSpec, LayoutDescriptor
 
 
 def create_layout(attributes):

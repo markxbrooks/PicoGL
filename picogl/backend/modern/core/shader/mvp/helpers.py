@@ -14,15 +14,15 @@ Set up model_matrix view projection (MVP) matrix for 3D rendering.
 """
 
 import numpy as np
+from decologr import Decologr as log
 from numpy import ndarray
 from OpenGL.GL import glGetUniformLocation, glUniformMatrix4fv
 from OpenGL.raw.GL._types import GL_TRUE
-from pyglm import glm
-
 from picogl.backend.legacy.core.camera.look_at import look_at
 from picogl.backend.legacy.core.camera.perspective import perspective
-from picogl.backend.modern.core.shader.rotation_matrix import create_rotation_matrix
-from decologr import Decologr as log
+from picogl.backend.modern.core.shader.rotation_matrix import \
+    create_rotation_matrix
+from pyglm import glm
 
 
 def setup_mvp(angle_x: float, angle_y: float, zoom: float, aspect: float) -> glm.mat4:

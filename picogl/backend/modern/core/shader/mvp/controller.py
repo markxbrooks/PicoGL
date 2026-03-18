@@ -1,4 +1,5 @@
-from elmo.gl.backend.modern.shaders.mvp.control import MVPControl, dummy_update_handler
+from elmo.gl.backend.modern.shaders.mvp.control import (MVPControl,
+                                                        dummy_update_handler)
 from elmo.gl.backend.modern.shaders.mvp.mouse import MouseMode
 
 

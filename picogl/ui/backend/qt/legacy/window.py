@@ -25,15 +25,11 @@ Usage:
 import sys
 from typing import Optional
 
+from picogl.mode import GLMode
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import (
-    QMainWindow,
-    QVBoxLayout,
-    QWidget,
-)
+from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget
 
 from elmo.ui.widgets.gl.mol.base import GLMolBase
-from picogl.mode import GLMode
 
 
 class LegacyQtObjectWindow(QMainWindow):

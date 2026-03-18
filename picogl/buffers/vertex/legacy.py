@@ -5,24 +5,22 @@ Legacy backend (no real GL VAO support)
 """
 
 import ctypes
-from typing import Optional, Any
+from typing import Any, Optional
 
 import numpy as np
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POINTS, GL_TRIANGLES, GL_UNSIGNED_INT, GL_FLOAT, GL_LINE_STRIP
-from OpenGL.raw.GL.VERSION.GL_1_1 import (
-    GL_COLOR_ARRAY,
-    GL_NORMAL_ARRAY,
-    GL_VERTEX_ARRAY,
-    glDrawArrays,
-    glDrawElements, glEnableClientState, glVertexPointer, glNormalPointer, glColorPointer,
-)
-from OpenGL.raw.GL.VERSION.GL_1_5 import (
-    GL_ARRAY_BUFFER,
-    GL_ELEMENT_ARRAY_BUFFER,
-    glBindBuffer,
-)
-from elmo.gl.backend.legacy.primitives.ribbon.model import RibbonAttrs
-from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
+from decologr import Decologr as log
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_FLOAT, GL_LINE_STRIP, GL_POINTS,
+                                          GL_TRIANGLES, GL_UNSIGNED_INT)
+from OpenGL.raw.GL.VERSION.GL_1_1 import (GL_COLOR_ARRAY, GL_NORMAL_ARRAY,
+                                          GL_VERTEX_ARRAY, glColorPointer,
+                                          glDrawArrays, glDrawElements,
+                                          glEnableClientState, glNormalPointer,
+                                          glVertexPointer)
+from OpenGL.raw.GL.VERSION.GL_1_5 import (GL_ARRAY_BUFFER,
+                                          GL_ELEMENT_ARRAY_BUFFER,
+                                          glBindBuffer)
+from picogl.backend.legacy.core.vertex.buffer.client_states import \
+    legacy_client_states
 from picogl.backend.legacy.core.vertex.buffer.color import LegacyColorVBO
 from picogl.backend.legacy.core.vertex.buffer.element import LegacyEBO
 from picogl.backend.legacy.core.vertex.buffer.normal import LegacyNormalVBO
@@ -31,8 +29,10 @@ from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
 from picogl.buffers.attributes import LayoutDescriptor
 from picogl.buffers.base import VertexBase
 from picogl.buffers.glcleanup import delete_buffer_object
-from picogl.buffers.vertex.aliases import NAME_ALIASES, VertexBufferRole, VertexArrayRole
-from decologr import Decologr as log
+from picogl.buffers.vertex.aliases import (NAME_ALIASES, VertexArrayRole,
+                                           VertexBufferRole)
+
+from elmo.gl.backend.legacy.primitives.ribbon.model import RibbonAttrs
 
 
 class VertexBufferGroup(VertexBase):

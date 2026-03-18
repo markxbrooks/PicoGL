@@ -4,7 +4,6 @@ Draw a VAO with attributes
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POINTS
 from OpenGL.raw.GL.VERSION.GL_1_1 import glDrawArrays
-
 from picogl.buffers.vao.configure import vao_configure_attributes
 
 

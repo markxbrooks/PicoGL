@@ -1,7 +1,7 @@
 from typing import Optional
 
-from picogl.backend.modern.core.shader.program import ShaderProgram
 from decologr import Decologr as log
+from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.shaders.compile import compile_shaders
 
 

@@ -29,11 +29,10 @@ To run the tests::
 """
 
 import unittest
-from unittest.mock import MagicMock, patch, call
+from unittest.mock import MagicMock, call, patch
 
 import numpy as np
 from OpenGL import GL
-
 from picogl.renderer.meshdata import MeshData
 
 

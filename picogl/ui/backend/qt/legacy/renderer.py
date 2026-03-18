@@ -1,20 +1,26 @@
 from typing import Optional
 
 import numpy as np
-from OpenGL.GL import glMaterialfv, glLightfv
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_FRONT_AND_BACK, GL_AMBIENT, GL_DIFFUSE, GL_SPECULAR, glMaterialf, \
-    GL_SHININESS, glClearColor, glEnable, GL_DEPTH_TEST, GL_LIGHTING, GL_LIGHT0, GL_COLOR_MATERIAL, glColorMaterial, \
-    GL_AMBIENT_AND_DIFFUSE, GL_POSITION, glMatrixMode, GL_PROJECTION, glLoadIdentity, GL_MODELVIEW, glClear, \
-    GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT, glRotatef
-from OpenGL.raw.GLU import gluPerspective, gluLookAt
-from PySide6.QtCore import QTimer, Qt
-from PySide6.QtWidgets import QWidget
-
-from examples import g_vertex_buffer_data, g_color_buffer_data
 from decologr import Decologr as log
+from examples import g_color_buffer_data, g_vertex_buffer_data
+from OpenGL.GL import glLightfv, glMaterialfv
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_AMBIENT, GL_AMBIENT_AND_DIFFUSE,
+                                          GL_COLOR_BUFFER_BIT,
+                                          GL_COLOR_MATERIAL,
+                                          GL_DEPTH_BUFFER_BIT, GL_DEPTH_TEST,
+                                          GL_DIFFUSE, GL_FRONT_AND_BACK,
+                                          GL_LIGHT0, GL_LIGHTING, GL_MODELVIEW,
+                                          GL_POSITION, GL_PROJECTION,
+                                          GL_SHININESS, GL_SPECULAR, glClear,
+                                          glClearColor, glColorMaterial,
+                                          glEnable, glLoadIdentity,
+                                          glMaterialf, glMatrixMode, glRotatef)
+from OpenGL.raw.GLU import gluLookAt, gluPerspective
 from picogl.renderer import MeshData
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.ui.backend.qt.base import GLBase
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtWidgets import QWidget
 
 
 class LegacyQtObjectRenderer(GLBase):

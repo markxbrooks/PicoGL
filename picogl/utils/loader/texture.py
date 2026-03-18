@@ -6,32 +6,18 @@ import struct
 from pathlib import Path
 from typing import Optional
 
-from OpenGL.GL import (
-    glCompressedTexImage2D,
-    glDeleteTextures,
-    glGenTextures,
-    glTexImage2D,
-)
+from OpenGL.GL import (glCompressedTexImage2D, glDeleteTextures, glGenTextures,
+                       glTexImage2D)
 from OpenGL.GL.framebufferobjects import glGenerateMipmap
 from OpenGL.raw.GL.EXT.texture_compression_s3tc import (
-    GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,
-    GL_COMPRESSED_RGBA_S3TC_DXT3_EXT,
-    GL_COMPRESSED_RGBA_S3TC_DXT5_EXT,
-)
-from OpenGL.raw.GL.VERSION.GL_1_0 import (
-    GL_LINEAR,
-    GL_LINEAR_MIPMAP_LINEAR,
-    GL_REPEAT,
-    GL_RGB,
-    GL_RGBA,
-    GL_TEXTURE_2D,
-    GL_TEXTURE_MAG_FILTER,
-    GL_TEXTURE_MIN_FILTER,
-    GL_TEXTURE_WRAP_S,
-    GL_TEXTURE_WRAP_T,
-    GL_UNSIGNED_BYTE,
-    glTexParameteri,
-)
+    GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, GL_COMPRESSED_RGBA_S3TC_DXT3_EXT,
+    GL_COMPRESSED_RGBA_S3TC_DXT5_EXT)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR,
+                                          GL_REPEAT, GL_RGB, GL_RGBA,
+                                          GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+                                          GL_TEXTURE_MIN_FILTER,
+                                          GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T,
+                                          GL_UNSIGNED_BYTE, glTexParameteri)
 from OpenGL.raw.GL.VERSION.GL_1_1 import glBindTexture
 from PIL import Image
 
