@@ -11,7 +11,7 @@ from PySide6.QtCore import QTimer, Qt
 from PySide6.QtWidgets import QWidget
 
 from examples import g_vertex_buffer_data, g_color_buffer_data
-from decologr.logger import Decologr as log
+from decologr import Decologr as log
 from picogl.renderer import MeshData
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.ui.backend.qt.base import GLBase

@@ -5,7 +5,7 @@ Error checking
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_NO_ERROR, glGetError
 from OpenGL.raw.GLU import gluErrorString
 
-from decologr.logger import Decologr as log
+from decologr import Decologr as log
 
 
 def check_errors():

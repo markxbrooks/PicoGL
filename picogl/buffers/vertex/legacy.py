@@ -32,7 +32,7 @@ from picogl.buffers.attributes import LayoutDescriptor
 from picogl.buffers.base import VertexBase
 from picogl.buffers.glcleanup import delete_buffer_object
 from picogl.buffers.vertex.aliases import NAME_ALIASES, VertexBufferRole, VertexArrayRole
-from decologr.logger import Decologr as log
+from decologr import Decologr as log
 
 
 class VertexBufferGroup(VertexBase):

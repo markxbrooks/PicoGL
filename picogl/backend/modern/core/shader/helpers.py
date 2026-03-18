@@ -7,7 +7,7 @@ from pathlib import Path
 from OpenGL import GL
 from OpenGL.raw.GLU import gluErrorString
 
-from decologr.logger import Decologr as log
+from decologr import Decologr as log
 
 
 def log_gl_error():

@@ -2,7 +2,7 @@
 Log properties from an ObjectLoader
 """
 
-from decologr.logger import Decologr as log
+from decologr import Decologr as log
 
 # from picogl.utils.loader.object import ObjectLoader
 

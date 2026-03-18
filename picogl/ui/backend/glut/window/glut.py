@@ -2,7 +2,7 @@ import numpy as np
 from OpenGL.raw.GL.VERSION.GL_1_0 import glViewport
 from pyglm import glm
 
-from decologr.logger import Decologr as log
+from decologr import Decologr as log
 from picogl.logger import setup_logging
 from picogl.renderer import GLContext
 from picogl.ui.backend.glut.window.gl import GLWindow

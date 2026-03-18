@@ -6,7 +6,7 @@ Open GL shader_manager.current_shader_program compilation
 from typing import Optional
 
 from picogl.backend.modern.core.shader.program import ShaderProgram
-from decologr.logger import Decologr as log
+from decologr import Decologr as log
 
 VERTEX_SHADER_SRC_HARDCODED_TEST = """#version 330 core
 

@@ -19,7 +19,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     glReadPixels,
 )
 
-from decologr.logger import Decologr as log
+from decologr import Decologr as log
 
 
 def unproject(x: int, y: int) -> Optional[Tuple[float, float, float]]:

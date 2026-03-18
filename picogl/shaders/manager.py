@@ -41,7 +41,7 @@ from pyglm import glm
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.backend.modern.core.uniform.mvp import shader_uniform_set_mvp
 from picogl.backend.modern.core.uniform.set_location import set_uniform_name_value
-from decologr.logger import Decologr as log
+from decologr import Decologr as log
 from picogl.shaders.compile import compile_shaders
 from picogl.shaders.generate import generate_shader_programs
 from picogl.shaders.load import load_fragment_and_vertex_for_shader_type

@@ -12,7 +12,7 @@ import numpy as np
 
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.ui.backend.glut.window.glut import GlutRendererWindow
-from decologr.logger import Decologr as log
+from decologr import Decologr as log
 from picogl.utils.loader.texture import TextureLoader
 
 

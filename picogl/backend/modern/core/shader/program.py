@@ -5,7 +5,7 @@ from OpenGL import GL as gl
 from picogl.backend.modern.core.shader.compile import compile_shader
 from picogl.backend.modern.core.shader.helpers import log_gl_error, read_shader_source
 from picogl.backend.modern.core.uniform.location_value import set_uniform_location_value
-from decologr.logger import Decologr as log
+from decologr import Decologr as log
 from picogl.shaders.uniform import get_uniform_location
 
 
