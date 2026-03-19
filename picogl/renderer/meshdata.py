@@ -38,7 +38,11 @@ class MeshData:
         self.cbo = cbo
         self.ebo = ebo
 
-        self.vertex_count = len(vbo.flatten()) // 3 if vbo is not None else None
+        self.vertex_count = (
+            len(np.asarray(vbo, dtype=np.float32).flatten()) // 3
+            if vbo is not None
+            else None
+        )
 
     def as_canonical_names(self) -> dict:
         """Convert into canonical names."""
