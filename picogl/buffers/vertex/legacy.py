@@ -33,6 +33,7 @@ from picogl.buffers.vertex.aliases import (NAME_ALIASES, VertexArrayRole,
                                            VertexBufferRole)
 
 from elmo.gl.backend.legacy.primitives.ribbon.model import RibbonAttrs
+from picogl.buffers.vertex.vbo.vbo_class import VBOType
 
 
 class VertexBufferGroup(VertexBase):
@@ -149,7 +150,7 @@ class VertexBufferGroup(VertexBase):
         self.add_vbo_object(name, vbo)
         return self
 
-    def get_buffer_class(self, name: str = "vbo") -> type[LegacyVBO]:
+    def get_buffer_class(self, name: str = VBOType.VBO) -> type[LegacyVBO]:
         """
         get_buffer_class
 
@@ -159,7 +160,7 @@ class VertexBufferGroup(VertexBase):
         vbo_class = self.vbo_classes.get(name, LegacyPositionVBO)
         return vbo_class
 
-    def add_ebo(self, name: str = "ebo", data: np.ndarray = None):
+    def add_ebo(self, name: str = VBOType.EBO, data: np.ndarray = None):
         """
         add_ebo
 

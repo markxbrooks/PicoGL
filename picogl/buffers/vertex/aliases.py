@@ -1,12 +1,14 @@
 from enum import Enum
 
+from picogl.buffers.vertex.vbo.vbo_class import VBOType
+
 
 class VertexBufferRole(str, Enum):
     """Enum for vertex buffer types."""
-    VBO = "vbo"
-    CBO = "cbo"
-    NBO = "nbo"
-    EBO = "ebo"
+    VBO = VBOType.VBO
+    CBO = VBOType.CBO
+    NBO = VBOType.NBO
+    EBO = VBOType.EBO
 
 
 class VertexArrayRole(str, Enum):
@@ -17,13 +19,13 @@ class VertexArrayRole(str, Enum):
 
 NAME_ALIASES = {
     "positions": VertexBufferRole.VBO,
-    "vbo": VertexBufferRole.VBO,
+    VBOType.VBO: VertexBufferRole.VBO,
     "colors": VertexBufferRole.CBO,
-    "cbo": VertexBufferRole.CBO,
+    VBOType.CBO: VertexBufferRole.CBO,
     "normals": VertexBufferRole.NBO,
-    "nbo": VertexBufferRole.NBO,
+    VBOType.NBO: VertexBufferRole.NBO,
     "indices": VertexBufferRole.EBO,
-    "ebo": VertexBufferRole.EBO,
+    VBOType.EBO: VertexBufferRole.EBO,
     "elements": VertexBufferRole.EBO,
 }
 

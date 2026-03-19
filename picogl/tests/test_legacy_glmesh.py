@@ -385,17 +385,17 @@ class TestLegacyGLMesh(unittest.TestCase):
         # Should have 4 VBO calls (vertices, colors, normals, uvs)
         self.assertEqual(len(calls), 4)
         
-        # Test vertex VBO (name "vbo", size 3)
+        # Test vertex VBO (name VBOType.VBO, size 3)
         vertex_call = next(call for call in calls if call[1].get('name') == 'vbo')
         self.assertEqual(vertex_call[1]['size'], 3)
         np.testing.assert_array_equal(vertex_call[1]['data'], self.test_vertices)
         
-        # Test colour VBO (name "cbo", size 3)
+        # Test colour VBO (name VBOType.CBO, size 3)
         color_call = next(call for call in calls if call[1].get('name') == 'cbo')
         self.assertEqual(color_call[1]['size'], 3)
         np.testing.assert_array_equal(color_call[1]['data'], self.test_colors)
         
-        # Test normal VBO (name "nbo", size 3)
+        # Test normal VBO (name VBOType.NBO, size 3)
         normal_call = next(call for call in calls if call[1].get('name') == 'nbo')
         self.assertEqual(normal_call[1]['size'], 3)
         np.testing.assert_array_equal(normal_call[1]['data'], self.test_normals)

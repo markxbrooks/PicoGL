@@ -93,9 +93,9 @@ class LegacyGLMesh:
         vao_layout = create_layout(attributes)
 
         self.vao = vao = VertexBufferGroup()
-        vao.add_vbo(data=self.vertices, name="vbo", size=3)
-        vao.add_vbo(data=self.colors, name="cbo", size=3)
-        vao.add_vbo(data=self.normals, name="nbo", size=3)
+        vao.add_vbo(data=self.vertices, name=VBOType.VBO, size=3)
+        vao.add_vbo(data=self.colors, name=VBOType.CBO, size=3)
+        vao.add_vbo(data=self.normals, name=VBOType.NBO, size=3)
         if self.uvs is not None:
             vao.add_vbo(data=self.uvs, name="uvs", size=2)
         vao.add_ebo(data=self.indices)

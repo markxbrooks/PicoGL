@@ -40,6 +40,8 @@ from OpenGL.raw.GL.VERSION.GL_1_1 import (GL_COLOR_ARRAY, GL_NORMAL_ARRAY,
                                           GL_VERTEX_ARRAY)
 from OpenGL.raw.GL.VERSION.GL_1_5 import (GL_ARRAY_BUFFER,
                                           GL_ELEMENT_ARRAY_BUFFER)
+
+from elmo.gl.buffers.molecule.bond import VBOType
 from picogl.buffers.attributes import AttributeSpec, LayoutDescriptor
 from picogl.buffers.vertex.legacy import VertexBufferGroup
 
@@ -103,7 +105,7 @@ class TestVertexBufferGroup(unittest.TestCase):
         self.assertEqual(vbg.named_vbos, {})
         
         # Test VBO classes mapping
-        expected_classes = ["vbo", "cbo", "ebo", "nbo"]
+        expected_classes = [VBOType.VBO, VBOType.CBO, VBOType.EBO, VBOType.NBO]
         for class_name in expected_classes:
             self.assertIn(class_name, vbg.vbo_classes)
 
@@ -172,10 +174,10 @@ class TestVertexBufferGroup(unittest.TestCase):
         
         with patch.object(vbg, 'get_buffer_class', return_value=mock_vbo_class):
             # Test adding position VBO with default parameters
-            result = vbg.add_vbo("vbo", data=self.test_data)
+            result = vbg.add_vbo(VBOType.VBO, data=self.test_data)
             
             # Verify get_buffer_class was called
-            vbg.get_buffer_class.assert_called_once_with("vbo")
+            vbg.get_buffer_class.assert_called_once_with(VBOType.VBO)
             
             # Verify VBO was created and added with default parameters
             mock_vbo_class.assert_called_once_with(
@@ -185,7 +187,7 @@ class TestVertexBufferGroup(unittest.TestCase):
                 dtype=GL_FLOAT
             )
             self.assertEqual(result, mock_vbo)
-            self.assertEqual(vbg.named_vbos["vbo"], mock_vbo)
+            self.assertEqual(vbg.named_vbos[VBOType.VBO], mock_vbo)
     
     def test_add_vbo_with_custom_parameters(self):
         """Test add_vbo method with custom parameters."""
@@ -203,7 +205,7 @@ class TestVertexBufferGroup(unittest.TestCase):
             custom_dtype = GL_UNSIGNED_INT
             
             result = vbg.add_vbo(
-                "vbo", 
+                VBOType.VBO, 
                 data=self.test_data, 
                 size=custom_size, 
                 handle=custom_handle, 
@@ -211,7 +213,7 @@ class TestVertexBufferGroup(unittest.TestCase):
             )
             
             # Verify get_buffer_class was called
-            vbg.get_buffer_class.assert_called_once_with("vbo")
+            vbg.get_buffer_class.assert_called_once_with(VBOType.VBO)
             
             # Verify VBO was created with custom parameters
             mock_vbo_class.assert_called_once_with(
@@ -221,7 +223,7 @@ class TestVertexBufferGroup(unittest.TestCase):
                 dtype=custom_dtype
             )
             self.assertEqual(result, mock_vbo)
-            self.assertEqual(vbg.named_vbos["vbo"], mock_vbo)
+            self.assertEqual(vbg.named_vbos[VBOType.VBO], mock_vbo)
     
     def test_add_vbo_invalid_parameters(self):
         """Test add_vbo method with invalid parameters."""
@@ -229,14 +231,14 @@ class TestVertexBufferGroup(unittest.TestCase):
         
         # Test with None data
         with self.assertRaises(ValueError):
-            vbg.add_vbo("vbo", data=None)
+            vbg.add_vbo(VBOType.VBO, data=None)
         
         # Test with size <= 0
         with self.assertRaises(ValueError):
-            vbg.add_vbo("vbo", data=self.test_data, size=0)
+            vbg.add_vbo(VBOType.VBO, data=self.test_data, size=0)
         
         with self.assertRaises(ValueError):
-            vbg.add_vbo("vbo", data=self.test_data, size=-1)
+            vbg.add_vbo(VBOType.VBO, data=self.test_data, size=-1)
 
     def test_add_ebo(self):
         """Test add_ebo method."""
@@ -248,30 +250,30 @@ class TestVertexBufferGroup(unittest.TestCase):
         mock_ebo_class.return_value = mock_ebo
         
         # Replace the EBO class in vbo_classes
-        original_ebo_class = vbg.vbo_classes["ebo"]
-        vbg.vbo_classes["ebo"] = mock_ebo_class
+        original_ebo_class = vbg.vbo_classes[VBOType.EBO]
+        vbg.vbo_classes[VBOType.EBO] = mock_ebo_class
         
         try:
-            vbg.add_ebo("ebo", data=self.test_indices)
+            vbg.add_ebo(VBOType.EBO, data=self.test_indices)
             
             mock_ebo_class.assert_called_once_with(data=self.test_indices)
-            self.assertEqual(vbg.named_vbos["ebo"], mock_ebo)
+            self.assertEqual(vbg.named_vbos[VBOType.EBO], mock_ebo)
         finally:
             # Restore original class
-            vbg.vbo_classes["ebo"] = original_ebo_class
+            vbg.vbo_classes[VBOType.EBO] = original_ebo_class
 
     def test_get_buffer_class(self):
         """Test get_buffer_class method."""
         vbg = VertexBufferGroup()
         
         # Test known buffer types
-        self.assertEqual(vbg.get_buffer_class("vbo"), vbg.vbo_classes["vbo"])
-        self.assertEqual(vbg.get_buffer_class("cbo"), vbg.vbo_classes["cbo"])
-        self.assertEqual(vbg.get_buffer_class("ebo"), vbg.vbo_classes["ebo"])
-        self.assertEqual(vbg.get_buffer_class("nbo"), vbg.vbo_classes["nbo"])
+        self.assertEqual(vbg.get_buffer_class(VBOType.VBO), vbg.vbo_classes[VBOType.VBO])
+        self.assertEqual(vbg.get_buffer_class(VBOType.CBO), vbg.vbo_classes[VBOType.CBO])
+        self.assertEqual(vbg.get_buffer_class(VBOType.EBO), vbg.vbo_classes[VBOType.EBO])
+        self.assertEqual(vbg.get_buffer_class(VBOType.NBO), vbg.vbo_classes[VBOType.NBO])
         
         # Test unknown buffer type (should return default)
-        self.assertEqual(vbg.get_buffer_class("unknown"), vbg.vbo_classes["vbo"])
+        self.assertEqual(vbg.get_buffer_class("unknown"), vbg.vbo_classes[VBOType.VBO])
 
     def test_draw_with_arrays(self):
         """Test draw method with vertex arrays."""
@@ -280,7 +282,7 @@ class TestVertexBufferGroup(unittest.TestCase):
         # Add some mock VBOs
         mock_vbo1 = MagicMock()
         mock_vbo2 = MagicMock()
-        vbg.named_vbos = {"vbo": mock_vbo1, "cbo": mock_vbo2}
+        vbg.named_vbos = {VBOType.VBO: mock_vbo1, VBOType.CBO: mock_vbo2}
         
         # Mock the context manager
         with patch('picogl.buffers.vertex.legacy.legacy_client_states') as mock_client_states:
@@ -307,7 +309,7 @@ class TestVertexBufferGroup(unittest.TestCase):
         
         # Add some mock VBOs
         mock_vbo = MagicMock()
-        vbg.named_vbos = {"vbo": mock_vbo}
+        vbg.named_vbos = {VBOType.VBO: mock_vbo}
         
         with patch('picogl.buffers.vertex.legacy.legacy_client_states') as mock_client_states:
             mock_client_states.return_value.__enter__ = MagicMock()
@@ -329,7 +331,7 @@ class TestVertexBufferGroup(unittest.TestCase):
         
         # Add some mock VBOs
         mock_vbo = MagicMock()
-        vbg.named_vbos = {"vbo": mock_vbo}
+        vbg.named_vbos = {VBOType.VBO: mock_vbo}
         
         with patch('picogl.buffers.vertex.legacy.legacy_client_states') as mock_client_states:
             mock_client_states.return_value.__enter__ = MagicMock()
@@ -364,7 +366,7 @@ class TestVertexBufferGroup(unittest.TestCase):
         
         # Add some mock VBOs
         mock_vbo = MagicMock()
-        vbg.named_vbos = {"vbo": mock_vbo}
+        vbg.named_vbos = {VBOType.VBO: mock_vbo}
         
         with patch('picogl.buffers.vertex.legacy.legacy_client_states') as mock_client_states:
             mock_client_states.return_value.__enter__ = MagicMock()
@@ -540,7 +542,7 @@ class TestVertexBufferGroup(unittest.TestCase):
         with patch.object(vbg, 'get_buffer_class', return_value=mock_vbo_class):
             # The new add_vbo method should let exceptions propagate
             with self.assertRaises(Exception) as context:
-                vbg.add_vbo("vbo", data=self.test_data)
+                vbg.add_vbo(VBOType.VBO, data=self.test_data)
             
             # Verify the exception message
             self.assertIn("VBO creation error", str(context.exception))
@@ -618,10 +620,10 @@ class TestVertexBufferGroup(unittest.TestCase):
         vbg = VertexBufferGroup()
         
         expected_mappings = {
-            "vbo": "LegacyPositionVBO",
-            "cbo": "LegacyColorVBO", 
-            "ebo": "LegacyEBO",
-            "nbo": "LegacyNormalVBO"
+            VBOType.VBO: "LegacyPositionVBO",
+            VBOType.CBO: "LegacyColorVBO", 
+            VBOType.EBO: "LegacyEBO",
+            VBOType.NBO: "LegacyNormalVBO"
         }
         
         for key, expected_class_name in expected_mappings.items():
@@ -634,7 +636,7 @@ class TestVertexBufferGroup(unittest.TestCase):
         
         # Add some mock VBOs
         mock_vbo = MagicMock()
-        vbg.named_vbos = {"vbo": mock_vbo}
+        vbg.named_vbos = {VBOType.VBO: mock_vbo}
         
         with patch('picogl.buffers.vertex.legacy.legacy_client_states') as mock_client_states:
             mock_client_states.return_value.__enter__ = MagicMock()
