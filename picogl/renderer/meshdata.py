@@ -1,49 +1,23 @@
 """
 GLContext class
 """
-from typing import Optional, Protocol, Union
+from typing import Optional, Union
 
 import numpy as np
 from decologr import Decologr as log
 from OpenGL import GL
-from OpenGL.GL import glDrawElements, glGetIntegerv
+from OpenGL.GL import glDrawElements
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT
 from OpenGL.raw.GL.VERSION.GL_1_1 import glDrawArrays
-from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ARRAY_BUFFER_BINDING
 from OpenGL.raw.GL.VERSION.GL_3_0 import glBindVertexArray
+
+from picogl.attrs.context_manager import ContextManagerAttrs
+from picogl.attrs.vertex import CanonicalVertexAttrs
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.backend.modern.core.vertex.buffer.object import ModernVBO
 from picogl.buffers.base import VertexBase
 from picogl.mode import GLMode
-
-from elmo.gl.protocols import DrawableBuffer
-
-
-class MeshBackend(Protocol):
-    def draw(self, *args, **kwargs): ...
-
-
-def compute_vertex_normals(vertices: np.ndarray, faces: np.ndarray) -> np.ndarray:
-    """
-    vertices: (N, 3)
-    faces:    (M, 3)  0-based indices
-    returns:  (N, 3) normalized vertex normals
-    """
-    normals = np.zeros_like(vertices, dtype=np.float32)
-    # gather vertices per triangle
-    v0 = vertices[faces[:, 0]]
-    v1 = vertices[faces[:, 1]]
-    v2 = vertices[faces[:, 2]]
-
-    face_normals = np.cross(v1 - v0, v2 - v0)
-    # accumulate
-    for i in range(3):
-        np.add.at(normals, faces[:, i], face_normals)
-
-    # normalize
-    lengths = np.linalg.norm(normals, axis=1)
-    normals[lengths > 0] /= lengths[lengths > 0][:, None]
-    return normals
+from picogl.protocols.drawable_buffer import DrawableBuffer
 
 
 class MeshData:
@@ -66,13 +40,13 @@ class MeshData:
 
         self.vertex_count = len(vbo.flatten()) // 3 if vbo is not None else None
 
-    def as_ribbon_args(self) -> dict:
-        """Convert into arguments for setup_ribbon_buffers."""
+    def as_canonical_names(self) -> dict:
+        """Convert into canonical names."""
         return {
-            "positions": self.vbo,
-            "colors": self.cbo,
-            "normals": self.nbo,
-            "indices": self.ebo,
+            CanonicalVertexAttrs.POSITIONS: self.vbo,
+            CanonicalVertexAttrs.COLORS: self.cbo,
+            CanonicalVertexAttrs.NORMALS: self.nbo,
+            CanonicalVertexAttrs.INDICES: self.ebo,
         }
 
     def __str__(self):
@@ -171,20 +145,12 @@ class MeshData:
 
         num_vertices = len(vertices)
         if normals is None:
-            """if indices is not None:
-                indices = np.asarray(indices, dtype=np.uint32).reshape(-1)
-                normals = compute_vertex_normals(vertices=vertices, faces=indices)
-            else:"""
             normals = np.zeros((num_vertices, 3), dtype=np.float32)
 
         nbo = cls._to_float32_flat_or_none(normals, "normals")
 
         if nbo is not None:
             expected = num_vertices * 3
-            """if len(nbo) != expected:
-                raise ValueError(
-                    f"normals length {len(nbo)} does not match 3 * num_vertices ({expected})"
-                )"""
 
         uvs_arr = cls._to_float32_flat_or_none(uvs, "uvs")
         if uvs_arr is not None and len(uvs_arr) // 2 != vertex_count:
@@ -228,10 +194,10 @@ class MeshData:
         alpha: float = 1.0,
     ):
         """
-        Draw the mesh with optional colour override and transparency.
+        Draw the mesh with optional color override and transparency.
 
         Args:
-            color: Optional colour override. If None and vertex colors exist, uses vertex colors.
+            color: Optional color override. If None and vertex colors exist, uses vertex colors.
             line_width: Line width for wireframe mode
             mode: OpenGL drawing mode
             fill: Whether to fill or use wireframe
@@ -286,10 +252,6 @@ class MeshData:
         if color is None and self.cbo is not None:
             # Use vertex colors (for fo-fc maps)
             GL.glEnableClientState(GL.GL_COLOR_ARRAY)
-            """print("ARRAY_BUFFER_BINDING =", glGetIntegerv(GL_ARRAY_BUFFER_BINDING))
-            print("cbo")
-            print(type(self.cbo))
-            print(self.cbo)"""
             GL.glColorPointer(3, GL.GL_FLOAT, 0, self.cbo)
             # Note: Alpha blending for vertex colors would require 4-component colors
             # For now, we'll use the alpha value for the overall transparency
@@ -309,11 +271,11 @@ class MeshData:
             if element_count > 0:
                 GL.glDrawElements(mode, element_count, GL.GL_UNSIGNED_INT, self.ebo)
         except Exception as e:
-            print(f"Error in glDrawElements: {e}")
-            print(f"Element count: {element_count}")
-            print(f"EBO dtype: {self.ebo.dtype}")
-            print(f"EBO shape: {self.ebo.shape}")
-            print(f"VBO length: {len(self.vbo) if self.vbo is not None else 'None'}")
+            log.error(f"Error in glDrawElements: {e}")
+            log.error(f"Element count: {element_count}")
+            log.error(f"EBO dtype: {self.ebo.dtype}")
+            log.error(f"EBO shape: {self.ebo.shape}")
+            log.error(f"VBO length: {len(self.vbo) if self.vbo is not None else 'None'}")
 
         # Restore fill mode
         GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL)
@@ -403,11 +365,10 @@ class MeshDataModern(VertexBase):
             log.error(f"Error drawing mesh: {ex}", scope=self.__class__.__name__)
 
     def bind(self):
-        def bind(self):
-            if hasattr(self.vao, "bind"):
-                self.vao.bind()
-            else:
-                glBindVertexArray(self.vao)
+        if hasattr(self.vao, ContextManagerAttrs.BIND):
+            self.vao.bind()
+        else:
+            glBindVertexArray(self.vao)
 
     def unbind(self):
         glBindVertexArray(0)
@@ -448,9 +409,9 @@ class MeshDataTest:
         return self.impl.draw(*args, **kwargs)
 
     def bind(self):
-        if hasattr(self.impl, "bind"):
+        if hasattr(self.impl, ContextManagerAttrs.BIND):
             return self.impl.bind()
 
     def unbind(self):
-        if hasattr(self.impl, "unbind"):
+        if hasattr(self.impl, ContextManagerAttrs.UNBIND):
             return self.impl.unbind()

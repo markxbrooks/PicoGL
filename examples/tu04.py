@@ -11,6 +11,7 @@ from utils.textureLoader import textureLoader
 import numpy as np
 
 from picogl.backend.modern.core.shader.program import ShaderProgram
+from picogl.buffers.vertex import data
 from picogl.ui.backend.glut.window.glut import GlutRendererWindow
 from decologr import Decologr as log
 from picogl.utils.loader.texture import TextureLoader
@@ -36,7 +37,7 @@ class MeshUE4:
 
     def getMesh(self):
         ue4LOD = self.load_mesh()
-        self.vertices = ue4LOD.VertexBuffers.PositionVertexBuffer.VertexData.to_array()
+        self.vertices = data.VertexData.to_array()
         self.indices = ue4LOD.IndexBuffer.to_array()
         self.texcoords = ue4LOD.VertexBuffers.StaticMeshVertexBuffer.TexcoordData.to_array()
         self.tangent_xz = ue4LOD.VertexBuffers.StaticMeshVertexBuffer.TangentsData.to_array()

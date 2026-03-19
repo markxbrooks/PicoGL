@@ -153,7 +153,7 @@ class TestMeshData(unittest.TestCase):
             ebo=self.test_indices
         )
         
-        ribbon_args = mesh.as_ribbon_args()
+        ribbon_args = mesh.as_canonical_names()
         
         expected = {
             "positions": self.test_vertices,
