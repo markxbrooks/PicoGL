@@ -8,6 +8,7 @@ class VBOType(StrEnum):
     CBO = "cbo"
     NBO = "nbo"
     EBO = "ebo"
+    UVS = "uvs"
 
 
 ATTRIBUTE_LAYOUT = {

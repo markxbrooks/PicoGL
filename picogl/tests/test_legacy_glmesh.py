@@ -38,6 +38,8 @@ import numpy as np
 from OpenGL.raw.GL._types import GL_FLOAT
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT
 from OpenGL.raw.GL.VERSION.GL_1_1 import GL_COLOR_ARRAY, GL_VERTEX_ARRAY
+
+from picogl.buffers.vertex.vbo.vbo_class import VBOType
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.renderer.meshdata import MeshData
 
@@ -276,7 +278,7 @@ class TestLegacyGLMesh(unittest.TestCase):
         
         # Test UV attribute
         uv_attr = attributes[3]
-        self.assertEqual(uv_attr.name, "uvs")
+        self.assertEqual(uv_attr.name, VBOType.UVS)
         self.assertEqual(uv_attr.index, 3)
         self.assertEqual(uv_attr.size, 2)
         self.assertEqual(uv_attr.type, GL_FLOAT)

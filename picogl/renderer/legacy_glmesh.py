@@ -7,12 +7,15 @@ from OpenGL.raw.GL._types import GL_FLOAT
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT
 from OpenGL.raw.GL.VERSION.GL_1_1 import (GL_COLOR_ARRAY, GL_VERTEX_ARRAY,
                                           glDrawArrays)
+
+from picogl.attrs.vertex import CanonicalVertexAttrs
 from picogl.backend.legacy.core.vertex.buffer.client_states import \
     legacy_client_states
 from picogl.buffers.attributes import AttributeSpec
 from picogl.buffers.factory.layout import create_layout
 from picogl.buffers.glcleanup import delete_buffer_object
 from picogl.buffers.vertex.legacy import VertexBufferGroup
+from picogl.buffers.vertex.vbo.vbo_class import VBOType
 
 
 class LegacyGLMesh:
@@ -81,7 +84,7 @@ class LegacyGLMesh:
             faces=mesh.ebo,
             colors=mesh.cbo,
             normals=mesh.nbo,
-            uvs=getattr(mesh, "uvs", None),
+            uvs=getattr(mesh, VBOType.UVS, None),
         )
 
     def upload(self) -> None:
@@ -97,7 +100,7 @@ class LegacyGLMesh:
         vao.add_vbo(data=self.colors, name=VBOType.CBO, size=3)
         vao.add_vbo(data=self.normals, name=VBOType.NBO, size=3)
         if self.uvs is not None:
-            vao.add_vbo(data=self.uvs, name="uvs", size=2)
+            vao.add_vbo(data=self.uvs, name=VBOType.UVS, size=2)
         vao.add_ebo(data=self.indices)
         vao.set_layout(vao_layout)
 
@@ -111,7 +114,7 @@ class LegacyGLMesh:
         """
         attributes = [
             AttributeSpec(
-                name="positions",
+                name=CanonicalVertexAttrs.POSITIONS,
                 index=0,
                 size=3,
                 type=GL_FLOAT,
@@ -120,7 +123,7 @@ class LegacyGLMesh:
                 offset=0,
             ),
             AttributeSpec(
-                name="colors",
+                name=CanonicalVertexAttrs.COLORS,
                 index=1,
                 size=3,
                 type=GL_FLOAT,
@@ -129,7 +132,7 @@ class LegacyGLMesh:
                 offset=0,
             ),
             AttributeSpec(
-                name="normals",
+                name=CanonicalVertexAttrs.NORMALS,
                 index=2,
                 size=3,
                 type=GL_FLOAT,
@@ -142,7 +145,7 @@ class LegacyGLMesh:
         if self.uvs is not None:
             attributes.append(
                 AttributeSpec(
-                    name="uvs",
+                    name=VBOType.UVS,
                     index=3,
                     size=2,
                     type=GL_FLOAT,

@@ -7,6 +7,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT
 from OpenGL.raw.GL.VERSION.GL_1_1 import glDrawArrays
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.buffers.glcleanup import delete_buffer_object
+from picogl.buffers.vertex.vbo.vbo_class import VBOType
 
 
 class GLMesh:
@@ -144,7 +145,7 @@ class GLMesh:
             faces=mesh.ebo,
             colors=mesh.cbo,
             normals=mesh.nbo,
-            uvs=getattr(mesh, "uvs", None),
+            uvs=getattr(mesh, VBOType.UVS, None),
         )
 
     def upload(self) -> None:

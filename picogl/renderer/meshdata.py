@@ -16,6 +16,7 @@ from picogl.attrs.vertex import CanonicalVertexAttrs
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.backend.modern.core.vertex.buffer.object import ModernVBO
 from picogl.buffers.base import VertexBase
+from picogl.buffers.vertex.vbo.vbo_class import VBOType
 from picogl.mode import GLMode
 from picogl.protocols.drawable_buffer import DrawableBuffer
 
@@ -156,7 +157,7 @@ class MeshData:
         if nbo is not None:
             expected = num_vertices * 3
 
-        uvs_arr = cls._to_float32_flat_or_none(uvs, "uvs")
+        uvs_arr = cls._to_float32_flat_or_none(uvs, VBOType.UVS)
         if uvs_arr is not None and len(uvs_arr) // 2 != vertex_count:
             raise ValueError("uvs length must be 2 * vertex_count (if provided)")
 
