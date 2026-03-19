@@ -1,5 +1,5 @@
 import ctypes
-from typing import Optional
+from typing import Literal, Optional
 
 import numpy as np
 from OpenGL.GL import glDrawElements
@@ -24,6 +24,8 @@ class GLMesh:
         normals: Optional[np.ndarray] = None,
         uvs: Optional[np.ndarray] = None,
         use_indices: bool = True,
+        *,
+        vertex_layout: Literal["surface", "ribbon"] = "surface",
     ):
         # strict (N, 3)
         self.vertices = np.asarray(vertices, dtype=np.float32).reshape(-1, 3)
@@ -40,6 +42,9 @@ class GLMesh:
             raise ValueError("GLMesh: faces must define a multiple of 3 indices (triangles)")
 
         self.use_indices = use_indices  # present for compatibility and potential path changes
+        if vertex_layout not in ("surface", "ribbon"):
+            raise ValueError("vertex_layout must be 'surface' or 'ribbon'")
+        self.vertex_layout = vertex_layout
 
         self.colors = (
             np.asarray(colors, dtype=np.float32).reshape(-1, 3)
@@ -126,7 +131,12 @@ class GLMesh:
         self.index_count = expanded_v.shape[0]  # equals tri_count * 3
 
     @classmethod
-    def from_mesh_data(cls, mesh: "MeshData") -> "GLMesh":
+    def from_mesh_data(
+        cls,
+        mesh: "MeshData",
+        *,
+        vertex_layout: Literal["surface", "ribbon"] = "surface",
+    ) -> "GLMesh":
         """
         Construct a GLMesh from a MeshData container.
 
@@ -134,6 +144,9 @@ class GLMesh:
         ----------
         mesh : MeshData
             Must have .vbo (Nx3), .ebo (Mx1), optional .cbo (Nx3), .nbo (Nx3), uvs (Nx2)
+        vertex_layout :
+            ``surface`` → attr order pos, color, normal (``surface_with_lighting`` / mesh).
+            ``ribbon`` → pos, normal, color (``ribbons`` / RibbonVAO).
 
         Returns
         -------
@@ -146,6 +159,7 @@ class GLMesh:
             colors=mesh.cbo,
             normals=mesh.nbo,
             uvs=getattr(mesh, VBOType.UVS, None),
+            vertex_layout=vertex_layout,
         )
 
     def upload(self) -> None:
@@ -154,9 +168,16 @@ class GLMesh:
             return  # already uploaded
 
         vao = VertexArrayObject()
-        vao.add_vbo(data=self.vertices, index=0, size=3)
-        vao.add_vbo(data=self.colors, index=1, size=3)
-        vao.add_vbo(data=self.normals, index=2, size=3)
+        if self.vertex_layout == "ribbon":
+            # Match elmo/glsl/src/ribbons/vertex.glsl (and RibbonVAO)
+            vao.add_vbo(data=self.vertices, index=0, size=3)
+            vao.add_vbo(data=self.normals, index=1, size=3)
+            vao.add_vbo(data=self.colors, index=2, size=3)
+        else:
+            # Match elmo/glsl/src/surface_with_lighting/vertex.glsl
+            vao.add_vbo(data=self.vertices, index=0, size=3)
+            vao.add_vbo(data=self.colors, index=1, size=3)
+            vao.add_vbo(data=self.normals, index=2, size=3)
         if self.uvs is not None:
             vao.add_vbo(data=self.uvs, index=3, size=2)
 
