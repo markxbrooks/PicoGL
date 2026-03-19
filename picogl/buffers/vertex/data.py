@@ -1,6 +1,8 @@
-from typing import Optional
+"""
 
-from black.brackets import Union
+"""
+
+from typing import Optional, Union
 
 from picogl.buffers.geometry import GeometryData
 from picogl.buffers.vertex.meta_data import VertexMetadata
