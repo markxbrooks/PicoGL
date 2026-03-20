@@ -78,14 +78,14 @@ class ShaderManager:
         """
 
         if not shader_program:
-            log.error("❌ Cannot bind: shader_program is None or invalid")
+            log.error("❌ Cannot bind: shader_program is None or invalid", scope="load_shader")
             return
         try:
             shader_program.bind()
             self.current_shader = shader_program
             self.current_shader_program = shader_program.program_id()
         except Exception as ex:
-            log.error(f"❌ Failed to bind shader shader_program: {ex}")
+            log.error(f"❌ Failed to bind shader shader_program: {ex}", scope="load_shader")
 
     def bind(self, shader_program: ShaderProgram) -> None:
         """
@@ -207,7 +207,7 @@ class ShaderManager:
         for shader_number, shader_type in enumerate(ShaderType):
             log.message(
                 f"Loading shader type: '{shader_type.value} from {self.shader_directory}'",
-                silent=True,
+                silent=True, scope="load_shader"
             )
             self.load_shader(shader_type, shader_number)
             if self.shaders[shader_type] is self.fallback_shader:
@@ -215,11 +215,11 @@ class ShaderManager:
 
         if failed:
             log.warning(
-                f"⚠️ Shader fallback used for: {', '.join(st.value for st in failed)}"
+                f"⚠️ Shader fallback used for: {', '.join(st.value for st in failed)}", scope="load_shader"
             )
 
         self._initialized = True
-        log.message("✅ GLState _initialized and src loaded (including fallback).")
+        log.message("✅ GLState _initialized and src loaded (including fallback).", scope="load_shader")
         self.use_default_shader()
         self.current_shader_program = self.current_shader.program_id()
         self.current_shader.bind()
@@ -232,7 +232,7 @@ class ShaderManager:
         :return: None
         """
         try:
-            log.message(f"Loading shaders from {self.shader_directory}", silent=True)
+            log.message(f"Loading shaders from {self.shader_directory}", silent=True, scope="load_shader")
             vertex_src, fragment_src = load_fragment_and_vertex_for_shader_type(
                 shader_type.value, self.shader_directory
             )
@@ -241,15 +241,16 @@ class ShaderManager:
             )
             if picogl_shader_program:
                 log.message(
-                    f"[{shader_number}/{len(ShaderType)}] ✅ Shader type `{shader_type}` compiled and registered", scope=self.__class__.__name__
+                    f"[{shader_number}/{len(ShaderType)}] ✅ Shader type `{shader_type}` compiled and registered",
+                    scope=self.__class__.__name__
                 )
                 self.shaders[shader_type] = picogl_shader_program
             else:
-                log.warning(f"⚠️ Falling back for {shader_type}")
+                log.warning(f"⚠️ Falling back for {shader_type}", scope="load_shader")
                 self._ensure_fallback()
                 self.shaders[shader_type] = self.fallback_shader
         except Exception as ex:
-            log.warning(f"⚠️ Shader load failed for {shader_type}: {ex}")
+            log.warning(f"⚠️ Shader load failed for {shader_type}: {ex}", scope="load_shader")
             self._ensure_fallback()
             self.shaders[shader_type] = self.fallback_shader
 
