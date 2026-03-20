@@ -2,24 +2,25 @@
 ShaderManager
 =============
 
-Example Usage:
-==============
->>>shader_manager = ShaderManager()
-...
-...# Load all src
-...for shader_type_value in ShaderType:
-...    shader_manager.load_shader_source_string(shader_type_value)
-...
-...# Use a shader_manager.current_shader_program
-...if shader_manager.use_shader_type(ShaderType.ATOMS):
-...    shader_manager.current_shader_program = shader_manager.get(ShaderType.ATOMS)
-...    set_common_uniforms(
-...        shader_manager.current_shader_program,
-...        mvp_matrix=my_mvp_matrix,
-...        point_size=15.0,
-...        highlight=True,
-...        highlight_color=(1.0, 1.0, 0.0)
-...    )
+Example Usage
+=============
+Illustrative only (needs an OpenGL context, loaded shader sources, ``my_mvp_matrix``,
+and ``set_common_uniforms`` in scope)::
+
+    shader_manager = ShaderManager()
+
+    for shader_type_value in ShaderType:
+        shader_manager.load_shader_source_string(shader_type_value)
+
+    if shader_manager.use_shader_type(ShaderType.ATOMS):
+        shader_manager.current_shader_program = shader_manager.get(ShaderType.ATOMS)
+        set_common_uniforms(
+            shader_manager.current_shader_program,
+            mvp_matrix=my_mvp_matrix,
+            point_size=15.0,
+            highlight=True,
+            highlight_color=(1.0, 1.0, 0.0),
+        )
 
 
 File naming convention:
@@ -137,7 +138,7 @@ class ShaderManager:
                 if self.current_shader_type == ShaderType.ATOMS:
                     self.set_uniform_value("zoom_scale", zoom_scale)
         else:
-            log.error(f"❌ Shader type {shader_type} could not be loaded or bound.")
+            log.error(f"❌ Shader type {shader_type} could not be loaded or bound.", scope=self.__class__.__name__)
 
     def update_mvp_uniform(self, mvp_matrix: np.ndarray | glm.mat4) -> None:
         """
@@ -225,7 +226,7 @@ class ShaderManager:
             )
             if picogl_shader_program:
                 log.message(
-                    f"[{shader_number}/{len(ShaderType)}] ✅ Shader type `{shader_type}` compiled and registered"
+                    f"[{shader_number}/{len(ShaderType)}] ✅ Shader type `{shader_type}` compiled and registered", scope=self.__class__.__name__
                 )
                 self.shaders[shader_type] = picogl_shader_program
             else:
