@@ -63,8 +63,8 @@ def load_fragment_and_vertex_for_shader_type(
     fragment_src = load_shader_source_string(frag_path, shader_directory)
     return vertex_src, fragment_src
 
+def get_shader_path(shader_type_value: str, shader_source_type = ShaderSourceType.vertex) -> Path:
+    """get shader path"""
+    vert_path = Path("src") / shader_type_value / f"{shader_source_type}.glsl"
+    return vert_path
 
-def get_shader_path(shader_type_value: str, shader_source_type=ShaderSourceType.vertex) -> Path:
-    """Return path under the app shader root: ``src/<type>_vert.glsl`` / ``_frag.glsl``."""
-    suffix = "vert" if shader_source_type == ShaderSourceType.vertex else "frag"
-    return Path("src") / f"{shader_type_value}_{suffix}.glsl"
