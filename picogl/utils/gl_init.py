@@ -65,7 +65,8 @@ def execute_gl_tasks(task_list: list[tuple[str, Callable]]):
             func()
         except Exception as ex:
             log.error(
-                f"Error in task #{i} ({message or 'no message'}): {ex}", exc_info=True
+                f"Error in task #{i} ({message or 'no message'}): {ex}",
+                exception=ex,
             )
             raise
 

@@ -1,5 +1,7 @@
-#version 120
-attribute vec3 in_position;
+#version 410 core
+
+layout(location = 0) in vec3 in_position;
+
 uniform mat4 mvp;
 
 void main() {

@@ -39,12 +39,19 @@ from typing import Dict, Optional, Union
 import numpy as np
 from decologr import Decologr as log
 from picogl.backend.modern.core.shader.program import ShaderProgram
+from picogl.backend.modern.core.uniform.location import get_uniform_location
+from picogl.backend.modern.core.uniform.location_value import \
+    set_uniform_location_value
 from picogl.backend.modern.core.uniform.mvp import shader_uniform_set_mvp
 from picogl.backend.modern.core.uniform.set_location import \
     set_uniform_name_value
 from picogl.shaders.compile import compile_shaders
 from picogl.shaders.generate import generate_shader_programs
-from picogl.shaders.load import load_fragment_and_vertex_for_shader_type
+from picogl.shaders.load import (
+    SHADER_SRC_DIRECTORY,
+    load_fragment_and_vertex_for_shader_type,
+    load_shader_source_string,
+)
 from picogl.shaders.type import ShaderType
 from pyglm import glm
 
@@ -108,10 +115,14 @@ class ShaderManager:
         """
         Return the shader shader_program for the given ShaderType, loading if necessary.
         """
+        cached = self.shaders.get(shader_type)
+        if cached is not None:
+            return cached
         if shader_type not in self.shaders:
             shader_number = list(ShaderType).index(shader_type)
             self.load_shader(shader_type, shader_number)
-        return self.shaders.get(shader_type)
+            return self.shaders.get(shader_type)
+        return None
 
     def use_shader_type(
         self,
@@ -136,7 +147,11 @@ class ShaderManager:
                 self.update_mvp_uniform(mvp_matrix=mvp_matrix)
             if zoom_scale is not None:
                 if self.current_shader_type == ShaderType.ATOMS:
-                    self.set_uniform_value("zoom_scale", zoom_scale)
+                    loc = get_uniform_location(
+                        self.current_shader.program_id(), "zoom_scale"
+                    )
+                    if loc != -1:
+                        set_uniform_location_value(loc, zoom_scale)
         else:
             log.error(f"❌ Shader type {shader_type} could not be loaded or bound.", scope=self.__class__.__name__)
 
@@ -246,8 +261,11 @@ class ShaderManager:
         """
         if self.fallback_shader is None:
             try:
-                vert, frag = load_fragment_and_vertex_for_shader_type(
-                    "fragment", self.shader_directory
+                vert = load_shader_source_string(
+                    "fallback_vertex.glsl", SHADER_SRC_DIRECTORY
+                )
+                frag = load_shader_source_string(
+                    "fallback_fragment.glsl", SHADER_SRC_DIRECTORY
                 )
                 self.fallback_shader = compile_shaders(vert, frag, "fallback")
                 log.message("✅ Fallback shader_manager.current_shader_program compiled")
