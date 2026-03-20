@@ -86,9 +86,12 @@ paint_gl_list = [
     ),
 ]
 
+
+
 initialize_gl_list = [
     ("✅ Enabling multisampling", lambda: glEnable(GL_MULTISAMPLE)),
     ("✅ Enabling depth test", enable_depth_test),
+    ("✅ Clearing background ", lambda: glClearColor(0.0, 0.0, 0.0, 1.0)),
     ("✅ Enabling blending", enable_blending),
     ("✅ Enabling smoothing", enable_smoothing),
     ("✅ Setting up materials", setup_materials),
