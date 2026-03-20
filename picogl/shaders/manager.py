@@ -41,7 +41,7 @@ from pyglm import glm
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.backend.modern.core.uniform.mvp import shader_uniform_set_mvp
 from picogl.backend.modern.core.uniform.set_location import set_uniform_name_value
-from picogl.logger import Logger as log
+from decologr import Logger as log
 from picogl.shaders.compile import compile_shaders
 from picogl.shaders.generate import generate_shader_programs
 from picogl.shaders.load import load_fragment_and_vertex_for_shader_type
@@ -226,10 +226,12 @@ class ShaderManager:
                     "fragment", self.shader_directory
                 )
                 self.fallback_shader = compile_shaders(vert, frag, "fallback")
-                log.message("✅ Fallback shader_manager.current_shader_program compiled")
+                log.message("✅ Fallback shader_manager.current_shader_program compiled",
+                            scope=self.__class__.__name__)
             except Exception as ex:
                 log.error(
-                    f"❌ Fallback shader_manager.current_shader_program setup failed: {ex}"
+                    f"❌ Fallback shader_manager.current_shader_program setup failed: {ex}",
+                    scope=self.__class__.__name__
                 )
 
     def get(self, shader_type: ShaderType) -> Optional[ShaderProgram | ShaderProgram]:
