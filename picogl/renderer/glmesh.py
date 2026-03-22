@@ -162,30 +162,46 @@ class GLMesh:
             vertex_layout=vertex_layout,
         )
 
+    def update_colors(self, colors: np.ndarray):
+        self.colors = colors.astype(np.float32)
+
+        if self.vao:
+            self.vao.update_vbo(index=1, data=self.colors)  # CBO slot
+
     def upload(self) -> None:
         """Allocate & fill GPU buffers."""
         if self.vao:
             return  # already uploaded
 
-        vao = VertexArrayObject()
-        if self.vertex_layout == "ribbon":
-            # Match elmo/glsl/src/ribbons/vertex.glsl (and RibbonVAO)
-            vao.add_vbo(data=self.vertices, index=0, size=3)
-            vao.add_vbo(data=self.normals, index=1, size=3)
-            vao.add_vbo(data=self.colors, index=2, size=3)
-        else:
-            # Match elmo/glsl/src/surface_with_lighting/vertex.glsl
-            vao.add_vbo(data=self.vertices, index=0, size=3)
-            vao.add_vbo(data=self.colors, index=1, size=3)
-            vao.add_vbo(data=self.normals, index=2, size=3)
-        if self.uvs is not None:
-            vao.add_vbo(data=self.uvs, index=3, size=2)
+        vao: Optional[VertexArrayObject] = None
+        try:
+            vao = VertexArrayObject()
+            if self.vertex_layout == "ribbon":
+                # Match elmo/glsl/src/ribbons/vertex.glsl (and RibbonVAO)
+                vao.add_vbo(data=self.vertices, index=0, size=3)
+                vao.add_vbo(data=self.normals, index=1, size=3)
+                vao.add_vbo(data=self.colors, index=2, size=3)
+            else:
+                # Match elmo/glsl/src/surface_with_lighting/vertex.glsl
+                vao.add_vbo(data=self.vertices, index=0, size=3)
+                vao.add_vbo(data=self.colors, index=1, size=3)
+                vao.add_vbo(data=self.normals, index=2, size=3)
+            if self.uvs is not None:
+                vao.add_vbo(data=self.uvs, index=3, size=2)
 
-        if self.use_indices:
-            vao.add_ebo(data=self.indices)
+            if self.use_indices:
+                vao.add_ebo(data=self.indices)
 
-        self.vao = vao
-        self.index_count = self.indices.size if self.use_indices else self.vertices.shape[0]
+            self.vao = vao
+            self.index_count = (
+                self.indices.size if self.use_indices else self.vertices.shape[0]
+            )
+            vao = None  # ownership transferred to self.vao
+        finally:
+            # If add_vbo/add_ebo failed after VAO gen, drop orphan VAO so the next
+            # upload() retry does not accumulate registry leaks.
+            if vao is not None:
+                delete_buffer_object(vao)
 
     def bind(self):
         self.upload()

@@ -290,13 +290,18 @@ class MeshData:
             GL.glDisableClientState(GL.GL_COLOR_ARRAY)
 
     def delete(self):
-        """delete to remove atoms_buffers"""
-        if self.nbo:
+        """Drop CPU references to mesh arrays (no GL objects on this type)."""
+        # Use ``is not None`` — nbo/cbo/ebo are often numpy arrays; ``if arr:`` is ambiguous.
+        if self.nbo is not None:
             self.nbo = None
-        if self.cbo:
+        if self.cbo is not None:
             self.cbo = None
-        if self.ebo:
+        if self.ebo is not None:
             self.ebo = None
+        if self.vbo is not None:
+            self.vbo = None
+        if self.uvs is not None:
+            self.uvs = None
 
 
 class MeshDataModern(VertexBase):
