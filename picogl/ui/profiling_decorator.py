@@ -4,7 +4,7 @@ import pstats
 from functools import wraps
 from typing import Callable, Optional
 
-from elmo.logger from decologr import Decologr as log as log  # Or replace with `import logging`
+from decologr import Decologr as log  # Or replace with `import logging`
 
 
 def function_profiler(
