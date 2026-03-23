@@ -5,6 +5,7 @@ Shader utilities
 import os
 from pathlib import Path
 from typing import Optional
+from picoui.resources import resource_path
 
 
 def load_shader_source_string(file_name: str | Path, directory: Optional[str] = None) -> str:
@@ -38,7 +39,7 @@ DEFAULT_VERTEX_SHADER_SRC = load_shader_source_string(
     os.path.join(SHADER_SRC_DIRECTORY, "default_vertex.glsl")
 )
 DEFAULT_FRAGMENT_SHADER_SRC = load_shader_source_string(
-    os.path.join(SHADER_SRC_DIRECTORY, "default_fragment.glsl")
+    resource_path(os.path.join(SHADER_SRC_DIRECTORY, "default_fragment.glsl"))
 )
 
 class ShaderSourceType:
@@ -66,5 +67,5 @@ def load_fragment_and_vertex_for_shader_type(
 def get_shader_path(shader_type_value: str, shader_source_type = ShaderSourceType.vertex) -> Path:
     """get shader path"""
     vert_path = Path("src") / shader_type_value / f"{shader_source_type}.glsl"
+    vert_path = resource_path(str(vert_path))
     return vert_path
-
