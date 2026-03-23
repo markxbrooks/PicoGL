@@ -66,7 +66,7 @@ def setup_logging():
         logger = logging.getLogger(__project__)
         logger.info("Logging setup complete")
         logger.info(f"{__project__} starting up...")
-        logger.debug(f"Log file: {log_file}")
+        log.debug(f"Log file: {log_file}")
         logging.getLogger("OpenGL").setLevel(logging.WARNING)
         return logger
 
