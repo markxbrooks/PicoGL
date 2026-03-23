@@ -248,6 +248,8 @@ class GLMesh:
         *,
         vertex_layout: Literal["surface", "ribbon"] = "surface",
     ):
+        self.vao: Optional[VertexArrayObject] = None
+        self.index_count: int = 0
         # strict (N, 3)
         self.vertices = np.asarray(vertices, dtype=np.float32).reshape(-1, 3)
 
@@ -282,9 +284,6 @@ class GLMesh:
             if uvs is not None
             else np.zeros((nverts, 2), dtype=np.float32)
         )
-
-        self.vao: Optional[VertexArrayObject] = None
-        self.index_count: int = 0
 
         # If non-indexed path is requested, prepare expanded data (optional)
         self._expanded_vertices = None  # per-triangle vertices if needed
