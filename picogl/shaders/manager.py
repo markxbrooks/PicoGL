@@ -33,6 +33,7 @@ bonds_vert.glsl
 bonds_frag.glsl
 """
 
+import os
 from dataclasses import dataclass, field
 from typing import Dict, Optional, Union
 
@@ -47,8 +48,8 @@ from picogl.backend.modern.core.uniform.set_location import \
     set_uniform_name_value
 from picogl.shaders.compile import compile_shaders
 from picogl.shaders.generate import generate_shader_programs
+from picogl.globals import PICOGL_SHADER_SRC_DIRECTORY, SHADER_SRC_DIRECTORY
 from picogl.shaders.load import (
-    SHADER_SRC_DIRECTORY,
     load_fragment_and_vertex_for_shader_type,
     load_shader_source_string,
 )
@@ -200,8 +201,12 @@ class ShaderManager:
 
     def initialize_shaders(self, shader_dir: str = None):
         """Initialize src and mark GL state as ready."""
-        # Load src into the manager
-        self.shader_directory = shader_dir
+        # Load src into the manager. If caller does not provide a directory,
+        # default to PicoGL's packaged shader root (<...>/picogl/shaders).
+        if shader_dir:
+            self.shader_directory = shader_dir
+        else:
+            self.shader_directory = os.path.dirname(str(PICOGL_SHADER_SRC_DIRECTORY))
 
         failed = []
         for shader_number, shader_type in enumerate(ShaderType):

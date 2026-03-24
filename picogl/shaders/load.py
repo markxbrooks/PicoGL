@@ -5,7 +5,11 @@ Shader utilities
 import os
 from pathlib import Path
 from typing import Optional
-from picoui.resources import resource_path
+
+from picogl.globals import PICOGL_SHADER_SRC_DIRECTORY
+
+
+# from picoui.resources import resource_path
 
 
 def load_shader_source_string(file_name: str | Path, directory: Optional[str] = None) -> str:
@@ -34,12 +38,12 @@ def load_shader_source_string(file_name: str | Path, directory: Optional[str] = 
         )
 
 
-SHADER_SRC_DIRECTORY = os.path.join(os.path.dirname(os.path.abspath(__file__)), "src")
 DEFAULT_VERTEX_SHADER_SRC = load_shader_source_string(
-    os.path.join(SHADER_SRC_DIRECTORY, "default_vertex.glsl")
+    os.path.join(PICOGL_SHADER_SRC_DIRECTORY, "default_vertex.glsl")
 )
 DEFAULT_FRAGMENT_SHADER_SRC = load_shader_source_string(
-    resource_path(os.path.join(SHADER_SRC_DIRECTORY, "default_fragment.glsl"))
+    os.path.join(PICOGL_SHADER_SRC_DIRECTORY, "default_fragment.glsl")
+    # resource_path(os.path.join(SHADER_SRC_DIRECTORY, "default_fragment.glsl"))
 )
 
 class ShaderSourceType:
@@ -58,14 +62,22 @@ def load_fragment_and_vertex_for_shader_type(
     :param shader_type_value: ShaderType
     :return: None
     """
-    vert_path = get_shader_path(shader_type_value, ShaderSourceType.vertex)
-    frag_path = get_shader_path(shader_type_value, ShaderSourceType.fragment)
-    vertex_src = load_shader_source_string(vert_path, shader_directory)
-    fragment_src = load_shader_source_string(frag_path, shader_directory)
+    base_dir = Path(shader_directory) if shader_directory else PICOGL_SHADER_SRC_DIRECTORY
+    # Support both bases:
+    # - <base>/src/<shader_type>/<stage>.glsl
+    # - <base>/<shader_type>/<stage>.glsl
+    # This keeps compatibility with external shader roots (e.g. ElMo shaders/src).
+    if (base_dir / "src").is_dir():
+        root = base_dir / "src"
+    else:
+        root = base_dir
+
+    vert_path = root / get_shader_path(shader_type_value, ShaderSourceType.vertex)
+    frag_path = root / get_shader_path(shader_type_value, ShaderSourceType.fragment)
+    vertex_src = load_shader_source_string(str(vert_path))
+    fragment_src = load_shader_source_string(str(frag_path))
     return vertex_src, fragment_src
 
 def get_shader_path(shader_type_value: str, shader_source_type = ShaderSourceType.vertex) -> Path:
     """get shader path"""
-    vert_path = Path("src") / shader_type_value / f"{shader_source_type}.glsl"
-    vert_path = resource_path(str(vert_path))
-    return vert_path
+    return Path(shader_type_value) / f"{shader_source_type}.glsl"
