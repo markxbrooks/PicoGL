@@ -1,5 +1,5 @@
 import ctypes
-from typing import TYPE_CHECKING, Literal, Optional
+from typing import TYPE_CHECKING, Literal, Optional, Union
 
 import numpy as np
 from OpenGL.GL import glDrawElements
@@ -13,12 +13,13 @@ from picogl.backend.modern.core.vertex.buffer.object import ModernVBO
 from picogl.buffers.attributes import AttributeSpec, LayoutDescriptor
 from picogl.buffers.glcleanup import delete_buffer_object
 from picogl.buffers.vertex.vbo.vbo_class import VBOType
+from picogl.shaders.type import ShaderType
 
 if TYPE_CHECKING:
     from picogl.renderer.meshdata import MeshData
 
 
-def get_layout_for(vertex_layout: Literal["surface", "ribbon"]) -> LayoutDescriptor:
+def get_layout_for(vertex_layout: Union[ShaderType.ISOSURFACE, ShaderType.RIBBONS]) -> LayoutDescriptor:
     """
     Build a :class:`LayoutDescriptor` for :class:`GLMeshModern` interleaved storage.
 
@@ -28,11 +29,11 @@ def get_layout_for(vertex_layout: Literal["surface", "ribbon"]) -> LayoutDescrip
     - ``surface``: locations ``0=pos, 1=color, 2=normal, 3=uv`` (surface / bonds mesh shaders).
     - ``ribbon``: ``0=pos, 1=normal, 2=color, 3=uv`` (ribbons shader).
     """
-    if vertex_layout not in ("surface", "ribbon"):
-        raise ValueError(f"vertex_layout must be 'surface' or 'ribbon', got {vertex_layout!r}")
+    if vertex_layout not in (ShaderType.ISOSURFACE, ShaderType.RIBBONS):
+        raise ValueError(f"vertex_layout must be 'ShaderType.ISOSURFACE' or 'ShaderType.RIBBONS', got {vertex_layout!r}")
     # Interleaved: vec3 pos, vec3 normal, vec3 color, vec2 uv → 11 floats → 44 bytes
     stride = 44
-    if vertex_layout == "ribbon":
+    if vertex_layout == ShaderType.RIBBONS:
         return LayoutDescriptor(
             attributes=[
                 AttributeSpec("position", 0, 3, GL_FLOAT, False, stride, 0),
@@ -49,7 +50,6 @@ def get_layout_for(vertex_layout: Literal["surface", "ribbon"]) -> LayoutDescrip
             AttributeSpec("uv", 3, 2, GL_FLOAT, False, stride, 36),
         ]
     )
-
 
 class GLMeshModern:
     """
@@ -198,7 +198,7 @@ class GLMeshModern:
             cls,
             mesh: "MeshData",
             *,
-            vertex_layout: Literal["surface", "ribbon"] = "surface",
+            vertex_layout: Literal[ShaderType.ISOSURFACE, ShaderType.RIBBONS] = ShaderType.ISOSURFACE,
     ) -> "GLMeshModern":
         """
         Construct a GLMesh from a MeshData container.
@@ -246,7 +246,7 @@ class GLMesh:
         uvs: Optional[np.ndarray] = None,
         use_indices: bool = True,
         *,
-        vertex_layout: Literal["surface", "ribbon"] = "surface",
+        vertex_layout: Literal[ShaderType.ISOSURFACE, ShaderType.RIBBONS] = ShaderType.ISOSURFACE,
     ):
         self.vao: Optional[VertexArrayObject] = None
         self.index_count: int = 0
@@ -265,8 +265,8 @@ class GLMesh:
             raise ValueError("GLMesh: faces must define a multiple of 3 indices (triangles)")
 
         self.use_indices = use_indices  # present for compatibility and potential path changes
-        if vertex_layout not in ("surface", "ribbon"):
-            raise ValueError("vertex_layout must be 'surface' or 'ribbon'")
+        if vertex_layout not in (ShaderType.ISOSURFACE, ShaderType.RIBBONS):
+            raise ValueError("vertex_layout must be ShaderType.ISOSURFACE or ShaderType.RIBBONS")
         self.vertex_layout = vertex_layout
 
         self.colors = (
@@ -290,9 +290,33 @@ class GLMesh:
         self._expanded_colors = None
         self._expanded_normals = None
         self._expanded_uvs = None
-
+        self._layouts = self._build_layouts()
+        self._layout_descriptor = self._layouts[vertex_layout]
         if not self.use_indices:
             self._expand_to_non_indexed()
+
+    def _build_layouts(self) -> dict[ShaderType, LayoutDescriptor]:
+        stride = 3
+        return {
+            ShaderType.RIBBONS: LayoutDescriptor(
+                # Match elmo/glsl/src/ribbons/vertex.glsl (and RibbonVAO)
+                attributes=[
+                    AttributeSpec("position", 0, 3, GL_FLOAT, False, stride, 0, VBOType.VBO, data=self.vertices),
+                    AttributeSpec("normal", 1, 3, GL_FLOAT, False, stride, 0, VBOType.NBO, data=self.normals),
+                    AttributeSpec("color", 2, 3, GL_FLOAT, False, stride, 0, VBOType.CBO, data=self.colors),
+                    AttributeSpec("uv", 3, 2, GL_FLOAT, False, stride, 0, VBOType.UVS, data=self.uvs),
+                ]
+            ),
+            ShaderType.ISOSURFACE: LayoutDescriptor(
+                # Match elmo/glsl/src/isosurface/vertex.glsl
+                attributes=[
+                    AttributeSpec("position", 0, 3, GL_FLOAT, False, stride, 0, VBOType.VBO, data=self.vertices),
+                    AttributeSpec("color", 1, 3, GL_FLOAT, False, stride, 0, VBOType.CBO, data=self.colors),
+                    AttributeSpec("normal", 2, 3, GL_FLOAT, False, stride, 0, VBOType.NBO, data=self.normals),
+                    AttributeSpec("uv", 3, 2, GL_FLOAT, False, stride, 0, VBOType.UVS, data=self.uvs),
+                ]
+            ),
+        }
 
     def _expand_to_non_indexed(self) -> None:
         """
@@ -355,7 +379,7 @@ class GLMesh:
         cls,
         mesh: "MeshData",
         *,
-        vertex_layout: Literal["surface", "ribbon"] = "surface",
+        vertex_layout: Union[ShaderType.ISOSURFACE, ShaderType.RIBBONS] = ShaderType.ISOSURFACE,
     ) -> "GLMesh":
         """
         Construct a GLMesh from a MeshData container.
@@ -396,16 +420,9 @@ class GLMesh:
         vao: Optional[VertexArrayObject] = None
         try:
             vao = VertexArrayObject()
-            if self.vertex_layout == "ribbon":
-                # Match elmo/glsl/src/ribbons/vertex.glsl (and RibbonVAO)
-                vao.add_vbo(data=self.vertices, index=0, size=3)
-                vao.add_vbo(data=self.normals, index=1, size=3)
-                vao.add_vbo(data=self.colors, index=2, size=3)
-            else:
-                # Match elmo/glsl/src/surface_with_lighting/vertex.glsl
-                vao.add_vbo(data=self.vertices, index=0, size=3)
-                vao.add_vbo(data=self.colors, index=1, size=3)
-                vao.add_vbo(data=self.normals, index=2, size=3)
+            descriptor = self._layout_descriptor
+            for attr in descriptor.attributes:
+                vao.add_vbo(name=attr.name, data=attr.data, index=attr.index, size=attr.size)
             if self.uvs is not None:
                 vao.add_vbo(data=self.uvs, index=3, size=2)
 
