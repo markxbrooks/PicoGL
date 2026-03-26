@@ -102,33 +102,6 @@ class VertexArrayObject(VertexBase):
         self._creation_context_id: Optional[int] = current_gl_context()
         self.bind()
 
-    def configure_from_descriptor(self, descriptor: LayoutDescriptor):
-        if not self.bind():
-            raise RuntimeError("Invalid context")
-
-        for attr in descriptor.attributes:
-            vbo = self.get_vbo_object(attr.name)
-            if not vbo:
-                continue
-
-            glBindBuffer(GL_ARRAY_BUFFER, vbo.handle)
-
-            glEnableVertexAttribArray(attr.index)
-            glVertexAttribPointer(
-                attr.index,
-                attr.size,
-                attr.type,
-                attr.normalized,
-                attr.stride,
-                ctypes.c_void_p(attr.offset),
-            )
-
-        if self.ebo:
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.ebo.handle)
-
-        glBindVertexArray(0)
-        self._configured = True
-
     def is_valid_in_current_context(self) -> bool:
         """True if this VAO was created in the current OpenGL context (safe to bind/draw)."""
         if self._creation_context_id == current_gl_context():
