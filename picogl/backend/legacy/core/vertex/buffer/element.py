@@ -39,6 +39,8 @@ class LegacyEBO(LegacyVBO):
         """
         if not index_count:
             index_count = self.index_count
+        if index_count <= 0:
+            return
         glDrawElements(mode, index_count, index_type, pointer)
 
     def configure(self):

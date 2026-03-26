@@ -61,12 +61,12 @@ class LegacyPositionVBO(LegacyVBO):
             glDrawElements(mode, index_count, index_type, self.pointer)
 
     def configure(self):
-        """Configure the vertex pointer for the position buffer."""
-        self.bind()
-        try:
-            if self.dtype not in self.SUPPORTED_GL_TYPES:
-                raise ValueError(f"Unsupported GL data type: {self.dtype}")
-            glEnableClientState(GL_VERTEX_ARRAY)
-            glVertexPointer(self.size, self.dtype, self.stride, self.pointer)
-        finally:
-            self.unbind()
+        """Configure the vertex pointer for the position buffer.
+
+        ``LegacyVBO.__enter__`` has already bound this buffer; do not unbind here
+        or the vertex array may lose its buffer object binding before ``glDraw*``.
+        """
+        if self.dtype not in self.SUPPORTED_GL_TYPES:
+            raise ValueError(f"Unsupported GL data type: {self.dtype}")
+        glEnableClientState(GL_VERTEX_ARRAY)
+        glVertexPointer(self.size, self.dtype, self.stride, self.pointer)
