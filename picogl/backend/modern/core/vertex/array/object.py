@@ -94,9 +94,6 @@ class VertexArrayObject(VertexBase):
         self.vbos = []
         self.named_vbos: dict[str, VertexBuffer] = {}
         self.vao: Optional[int] = None  # Bonds Vertex Array Object. Does absolutely nothing
-        self.vbo = None  # Atom Vertex Buffer Object
-        self.cbo = None  # Color Vertex Buffer Object
-        self.nbo = None  # Normal Vertex Buffer Object
         self.ebo = None  # Bond Index Buffer Object
         self.layout: Optional[LayoutDescriptor] = None
         self._creation_context_id: Optional[int] = current_gl_context()
@@ -122,9 +119,9 @@ class VertexArrayObject(VertexBase):
 
         self.layout = layout
 
-        # Bind buffers explicitly
+        """# Bind buffers explicitly
         if self.vbo:
-            glBindBuffer(GL_ARRAY_BUFFER, self.vbo.handle)
+            glBindBuffer(GL_ARRAY_BUFFER, self.vbo.handle)"""
 
         if self.ebo:
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.ebo.handle)
@@ -183,7 +180,7 @@ class VertexArrayObject(VertexBase):
         """set layout"""
         self.set_layout(self.layout)
 
-    def add_vbo_object(self, name: str, vbo: "LegacyVBO") -> "LegacyVBO":
+    def add_vbo_object(self, name: str, vbo: "ModernVBO") -> "ModernVBO":
         """Register a VBO by semantic name or shorthand alias."""
         # normalize to canonical key
         canonical = NAME_ALIASES.get(name, name)
@@ -197,7 +194,7 @@ class VertexArrayObject(VertexBase):
 
         return vbo
 
-    def get_vbo_object(self, name: str) -> "LegacyVBO":
+    def get_vbo_object(self, name: str) -> VertexBuffer | None:
         """Retrieve a VBO by its semantic or shorthand name."""
         canonical = NAME_ALIASES.get(name, name)
         return self.named_vbos.get(canonical)
