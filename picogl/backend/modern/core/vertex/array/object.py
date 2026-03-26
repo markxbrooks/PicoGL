@@ -194,6 +194,19 @@ class VertexArrayObject(VertexBase):
         canonical = NAME_ALIASES.get(name, name)
         return self.named_vbos.get(canonical)
 
+    def add_vbo_data(self, data: np.ndarray):
+        """
+        add VBO data
+        """
+        vbo = ModernVBO(handle=handle)
+        vbo.bind()
+        vbo.set_data(data)
+        with self.bound():
+            vbo.bind()
+            glEnableVertexAttribArray(index)
+            glVertexAttribPointer(index, size, dtype, False, 0, ctypes.c_void_p(0))
+        self.vbos.append(vbo)
+
     def add_vbo(
         self,
         index: int,
