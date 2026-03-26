@@ -295,25 +295,34 @@ class GLMesh:
         if not self.use_indices:
             self._expand_to_non_indexed()
 
+    def _get_buffer_data(self, vbo_type: VBOType) -> Optional[np.ndarray]:
+        """get_buffer_data(vbo_type) -> np.ndarray"""
+        return {
+            VBOType.VBO: self.vertices,
+            VBOType.CBO: self.colors,
+            VBOType.NBO: self.normals,
+            VBOType.UVS: self.uvs,
+        }.get(vbo_type)
+
     def _build_layouts(self) -> dict[ShaderType, LayoutDescriptor]:
         stride = 3
         return {
             ShaderType.RIBBONS: LayoutDescriptor(
                 # Match elmo/glsl/src/ribbons/vertex.glsl (and RibbonVAO)
                 attributes=[
-                    AttributeSpec("position", 0, 3, GL_FLOAT, False, stride, 0, VBOType.VBO, data=self.vertices),
-                    AttributeSpec("normal", 1, 3, GL_FLOAT, False, stride, 0, VBOType.NBO, data=self.normals),
-                    AttributeSpec("color", 2, 3, GL_FLOAT, False, stride, 0, VBOType.CBO, data=self.colors),
-                    AttributeSpec("uv", 3, 2, GL_FLOAT, False, stride, 0, VBOType.UVS, data=self.uvs),
+                    AttributeSpec("position", 0, 3, GL_FLOAT, False, stride, 0, VBOType.VBO),
+                    AttributeSpec("normal", 1, 3, GL_FLOAT, False, stride, 0, VBOType.NBO),
+                    AttributeSpec("color", 2, 3, GL_FLOAT, False, stride, 0, VBOType.CBO),
+                    AttributeSpec("uv", 3, 2, GL_FLOAT, False, stride, 0, VBOType.UVS),
                 ]
             ),
             ShaderType.ISOSURFACE: LayoutDescriptor(
                 # Match elmo/glsl/src/isosurface/vertex.glsl
                 attributes=[
-                    AttributeSpec("position", 0, 3, GL_FLOAT, False, stride, 0, VBOType.VBO, data=self.vertices),
-                    AttributeSpec("color", 1, 3, GL_FLOAT, False, stride, 0, VBOType.CBO, data=self.colors),
-                    AttributeSpec("normal", 2, 3, GL_FLOAT, False, stride, 0, VBOType.NBO, data=self.normals),
-                    AttributeSpec("uv", 3, 2, GL_FLOAT, False, stride, 0, VBOType.UVS, data=self.uvs),
+                    AttributeSpec("position", 0, 3, GL_FLOAT, False, stride, 0, VBOType.VBO),
+                    AttributeSpec("color", 1, 3, GL_FLOAT, False, stride, 0, VBOType.CBO),
+                    AttributeSpec("normal", 2, 3, GL_FLOAT, False, stride, 0, VBOType.NBO),
+                    AttributeSpec("uv", 3, 2, GL_FLOAT, False, stride, 0, VBOType.UVS),
                 ]
             ),
         }
@@ -422,7 +431,16 @@ class GLMesh:
             vao = VertexArrayObject()
             descriptor = self._layout_descriptor
             for attr in descriptor.attributes:
-                vao.add_vbo(name=attr.name, data=attr.data, index=attr.index, size=attr.size)
+                data = self._get_buffer_data(attr.vbo_type)
+                if data is None:
+                    continue
+
+                vao.add_vbo(
+                    name=attr.name,
+                    data=data,
+                    index=attr.index,
+                    size=attr.size,
+                )
             if self.uvs is not None:
                 vao.add_vbo(data=self.uvs, index=3, size=2)
 

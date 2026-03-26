@@ -26,7 +26,6 @@ class AttributeSpec:
     stride: int
     offset: int  # in bytes
     vbo_type: VBOType = VBOType.VBO
-    data: np.ndarray = None
 
 
 @dataclass
