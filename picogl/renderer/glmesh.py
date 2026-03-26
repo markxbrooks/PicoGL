@@ -1,235 +1,28 @@
+"""
+A module for GPU-resident indexed triangle meshes.
+
+This module defines the `GLMesh` class, which represents a 3D mesh stored on the
+GPU. It provides mechanisms for defining a mesh's vertices, faces, colors, normals,
+UVs, and vertex layout, along with functionality for uploading these attributes to
+GPU buffers and expanding indexed meshes into per-triangle vertex lists if needed.
+"""
+
 import ctypes
 from typing import TYPE_CHECKING, Literal, Optional, Union
 
 import numpy as np
 from OpenGL.GL import glDrawElements
-from OpenGL.raw.GL._types import GL_FLOAT
-from OpenGL.raw.GL.ARB.vertex_array_object import glBindVertexArray
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT
 from OpenGL.raw.GL.VERSION.GL_1_1 import glDrawArrays
+
+from elmo.glsl.layouts import build_shader_layouts
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
-from picogl.backend.modern.core.vertex.buffer.element import ModernEBO
-from picogl.backend.modern.core.vertex.buffer.object import ModernVBO
-from picogl.buffers.attributes import AttributeSpec, LayoutDescriptor
 from picogl.buffers.glcleanup import delete_buffer_object
 from picogl.buffers.vertex.vbo.vbo_class import VBOType
 from picogl.shaders.type import ShaderType
 
 if TYPE_CHECKING:
     from picogl.renderer.meshdata import MeshData
-
-
-def get_layout_for(vertex_layout: Union[ShaderType.ISOSURFACE, ShaderType.RIBBONS]) -> LayoutDescriptor:
-    """
-    Build a :class:`LayoutDescriptor` for :class:`GLMeshModern` interleaved storage.
-
-    CPU / interleaved order is always ``position, normal, color, uv`` (see
-    :meth:`GLMeshModern._build_interleaved`). Shader attribute locations differ:
-
-    - ``surface``: locations ``0=pos, 1=color, 2=normal, 3=uv`` (surface / bonds mesh shaders).
-    - ``ribbon``: ``0=pos, 1=normal, 2=color, 3=uv`` (ribbons shader).
-    """
-    if vertex_layout not in (ShaderType.ISOSURFACE, ShaderType.RIBBONS):
-        raise ValueError(f"vertex_layout must be 'ShaderType.ISOSURFACE' or 'ShaderType.RIBBONS', got {vertex_layout!r}")
-    # Interleaved: vec3 pos, vec3 normal, vec3 color, vec2 uv → 11 floats → 44 bytes
-    stride = 44
-    if vertex_layout == ShaderType.RIBBONS:
-        return LayoutDescriptor(
-            attributes=[
-                AttributeSpec("position", 0, 3, GL_FLOAT, False, stride, 0),
-                AttributeSpec("normal", 1, 3, GL_FLOAT, False, stride, 12),
-                AttributeSpec("color", 2, 3, GL_FLOAT, False, stride, 24),
-                AttributeSpec("uv", 3, 2, GL_FLOAT, False, stride, 36),
-            ]
-        )
-    return LayoutDescriptor(
-        attributes=[
-            AttributeSpec("position", 0, 3, GL_FLOAT, False, stride, 0),
-            AttributeSpec("color", 1, 3, GL_FLOAT, False, stride, 24),
-            AttributeSpec("normal", 2, 3, GL_FLOAT, False, stride, 12),
-            AttributeSpec("uv", 3, 2, GL_FLOAT, False, stride, 36),
-        ]
-    )
-
-class GLMeshModern:
-    """
-    Modern GLMesh using:
-    - Interleaved VBO
-    - Your existing VertexArrayObject + LayoutDescriptor
-    """
-
-    def __init__(
-        self,
-        vertices: np.ndarray,
-        indices: Optional[np.ndarray] = None,
-        normals: Optional[np.ndarray] = None,
-        colors: Optional[np.ndarray] = None,
-        uvs: Optional[np.ndarray] = None,
-        layout: Optional["LayoutDescriptor"] = None,
-    ):
-        self.vertices = np.asarray(vertices, dtype=np.float32).reshape(-1, 3)
-        n = self.vertices.shape[0]
-
-        self.normals = (
-            np.asarray(normals, dtype=np.float32).reshape(-1, 3)
-            if normals is not None
-            else np.zeros((n, 3), dtype=np.float32)
-        )
-
-        self.colors = (
-            np.asarray(colors, dtype=np.float32).reshape(-1, 3)
-            if colors is not None
-            else np.ones((n, 3), dtype=np.float32)
-        )
-
-        self.uvs = (
-            np.asarray(uvs, dtype=np.float32).reshape(-1, 2)
-            if uvs is not None
-            else np.zeros((n, 2), dtype=np.float32)
-        )
-
-        self.indices = (
-            np.asarray(indices, dtype=np.uint32).reshape(-1)
-            if indices is not None
-            else None
-        )
-
-        self.vertex_count = n
-        self.index_count = 0 if self.indices is None else self.indices.size
-
-        # GPU
-        self.vao: Optional[VertexArrayObject] = None
-        self.vbo: Optional[ModernVBO] = None
-        self.ebo: Optional[ModernEBO] = None
-
-        self.layout = layout
-        self._uploaded = False
-
-    # ------------------------------------------------------------------
-    # Interleaved buffer
-    # ------------------------------------------------------------------
-    def _build_interleaved(self) -> np.ndarray:
-        return np.hstack([
-            self.vertices,
-            self.normals,
-            self.colors,
-            self.uvs,
-        ]).astype(np.float32)
-
-    # ------------------------------------------------------------------
-    # Upload
-    # ------------------------------------------------------------------
-    def upload(self):
-        if self._uploaded:
-            return
-
-        interleaved = self._build_interleaved()
-
-        stride = interleaved.shape[1] * 4  # float32 = 4 bytes
-
-        self.vao = VertexArrayObject()
-        self.vao.bind()
-
-        # --- VBO ---
-        self.vbo = ModernVBO()
-        self.vbo.bind()
-        self.vbo.set_data(interleaved)
-
-        # --- Layout (CRITICAL) ---
-        if self.layout is None:
-            raise RuntimeError("LayoutDescriptor required for GLMeshModern")
-
-        # Patch layout stride dynamically
-        for attr in self.layout.attributes:
-            attr.stride = stride
-
-        self.vao.vbo = self.vbo
-        self.vao.layout = self.layout
-        # VertexArrayObject.set_layout early-outs if ``self.vao`` is None (legacy gate; misnamed).
-        self.vao.vao = self.vao.handle
-        self.vao.configure()
-
-        # --- EBO ---
-        if self.indices is not None:
-            self.ebo = ModernEBO(data=self.indices)
-            self.ebo.bind()
-            self.vao.ebo = self.ebo
-
-        glBindVertexArray(0)
-
-        self._uploaded = True
-
-    # ------------------------------------------------------------------
-    # Draw
-    # ------------------------------------------------------------------
-    def draw(self):
-        if not self._uploaded:
-            self.upload()
-
-        if not self.vao:
-            raise RuntimeError("VAO not initialized")
-
-        with self.vao.bound():
-            if self.indices is not None:
-                glDrawElements(
-                    GL_TRIANGLES,
-                    self.index_count,
-                    GL_UNSIGNED_INT,
-                    ctypes.c_void_p(0),
-                )
-            else:
-                glDrawArrays(GL_TRIANGLES, 0, self.vertex_count)
-
-    # ------------------------------------------------------------------
-    # Cleanup
-    # ------------------------------------------------------------------
-    def delete(self):
-        if self.vao:
-            self.vao.delete_buffers()
-            self.vao.delete()
-            self.vao = None
-
-        self.vbo = None
-        self.ebo = None
-        self._uploaded = False
-
-    @classmethod
-    def from_mesh_data(
-            cls,
-            mesh: "MeshData",
-            *,
-            vertex_layout: Literal[ShaderType.ISOSURFACE, ShaderType.RIBBONS] = ShaderType.ISOSURFACE,
-    ) -> "GLMeshModern":
-        """
-        Construct a GLMesh from a MeshData container.
-
-        Parameters
-        ----------
-        mesh : MeshData
-            Must have .vbo (Nx3), .ebo (Mx1), optional .cbo (Nx3), .nbo (Nx3), uvs (Nx2)
-        vertex_layout :
-            ``surface`` → attr order pos, color, normal (``surface_with_lighting`` / mesh).
-            ``ribbon`` → pos, normal, color (``ribbons`` / RibbonVAO).
-
-        Returns
-        -------
-        GLMesh
-            Ready-to-upload mesh (GPU buffers are allocated only when `upload()` is called).
-        """
-        return cls(
-            vertices=mesh.vbo,
-            indices=mesh.ebo,
-            colors=mesh.cbo,
-            normals=mesh.nbo,
-            uvs=getattr(mesh, VBOType.UVS, None),
-            layout=get_layout_for(vertex_layout),
-        )
-
-    def update_colors(self, colors: np.ndarray):
-        self.colors = colors.astype(np.float32)
-
-        if self.vao:
-            self.vao.update_vbo(index=1, data=self.colors)  # CBO slot
 
 class GLMesh:
     """
@@ -290,7 +83,7 @@ class GLMesh:
         self._expanded_colors = None
         self._expanded_normals = None
         self._expanded_uvs = None
-        self._layouts = self._build_layouts()
+        self._layouts = build_shader_layouts()
         self._layout_descriptor = self._layouts[vertex_layout]
         if not self.use_indices:
             self._expand_to_non_indexed()
@@ -303,29 +96,6 @@ class GLMesh:
             VBOType.NBO: self.normals,
             VBOType.UVS: self.uvs,
         }.get(vbo_type)
-
-    def _build_layouts(self) -> dict[ShaderType, LayoutDescriptor]:
-        stride = 3
-        return {
-            ShaderType.RIBBONS: LayoutDescriptor(
-                # Match elmo/glsl/src/ribbons/vertex.glsl (and RibbonVAO)
-                attributes=[
-                    AttributeSpec("position", 0, 3, GL_FLOAT, False, stride, 0, VBOType.VBO),
-                    AttributeSpec("normal", 1, 3, GL_FLOAT, False, stride, 0, VBOType.NBO),
-                    AttributeSpec("color", 2, 3, GL_FLOAT, False, stride, 0, VBOType.CBO),
-                    AttributeSpec("uv", 3, 2, GL_FLOAT, False, stride, 0, VBOType.UVS),
-                ]
-            ),
-            ShaderType.ISOSURFACE: LayoutDescriptor(
-                # Match elmo/glsl/src/isosurface/vertex.glsl
-                attributes=[
-                    AttributeSpec("position", 0, 3, GL_FLOAT, False, stride, 0, VBOType.VBO),
-                    AttributeSpec("color", 1, 3, GL_FLOAT, False, stride, 0, VBOType.CBO),
-                    AttributeSpec("normal", 2, 3, GL_FLOAT, False, stride, 0, VBOType.NBO),
-                    AttributeSpec("uv", 3, 2, GL_FLOAT, False, stride, 0, VBOType.UVS),
-                ]
-            ),
-        }
 
     def _expand_to_non_indexed(self) -> None:
         """
