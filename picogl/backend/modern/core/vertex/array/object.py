@@ -183,52 +183,6 @@ class VertexArrayObject(VertexBase):
         """set layout"""
         self.set_layout(self.layout)
 
-    def set_layout_old(self, layout: LayoutDescriptor) -> None:
-        """
-        set_layout
-
-        :param layout: LayoutDescriptor: The layout descriptor to define the vertex attribute format.
-        :raises: None
-
-        Sets the layout for the rendering setup by binding the buffers and configuring the attributes.
-        The state is stored in the Vertex Array Object (VAO). This method assumes a single Vertex Buffer
-        Object (VBO) holds all position data but can be adapted as required. Handles optional usage of
-        Normal Buffer Object (NBO) and Element Buffer Object (EBO) if present.
-        """
-        try:
-            self.layout = layout
-            if self.vao is None:
-                return
-            glBindVertexArray(self.handle)
-
-            if self.vbo is not None:
-                glBindBuffer(GL_ARRAY_BUFFER, getattr(self.vbo, "_id", self.vbo))
-            if self.nbo is not None:
-                # If you have multiple buffers, bind as needed per attribute
-                pass  # adapt as needed
-
-            if self.layout:
-                for attr in self.layout.attributes:
-                    log.parameter("attr", attr)
-                    glEnableVertexAttribArray(attr.index)
-                    glVertexAttribPointer(
-                        attr.index,
-                        attr.size,
-                        attr.type,
-                        attr.normalized,
-                        attr.stride,
-                        ctypes.c_void_p(attr.offset),
-                    )
-            if self.ebo is not None:
-                glBindBuffer(
-                    GL_ELEMENT_ARRAY_BUFFER, getattr(self.ebo, "_id", self.ebo)
-                )
-
-            glBindVertexArray(0)
-            self._configured = True
-        except Exception as ex:
-            log.error(f"error {ex} occurred setting layout")
-
     def add_vbo_object(self, name: str, vbo: "LegacyVBO") -> "LegacyVBO":
         """Register a VBO by semantic name or shorthand alias."""
         # normalize to canonical key
