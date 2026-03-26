@@ -39,7 +39,7 @@ from typing import Optional
 
 import numpy as np
 from decologr import Decologr as log
-from OpenGL.GL import glDeleteVertexArrays, glGenVertexArrays
+from OpenGL.GL import glDeleteVertexArrays, glGenVertexArrays, glBufferSubData
 from OpenGL.raw.GL._types import GL_FLOAT, GL_UNSIGNED_INT
 from OpenGL.raw.GL.ARB.vertex_array_object import glBindVertexArray
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POINTS
@@ -384,3 +384,62 @@ class VertexArrayObject(VertexBase):
             glDrawElements(mode, atom_count, dtype, pointer)
         else:
             glDrawArrays(mode, 0, atom_count)
+
+    def _modern_vbo_for_attrib(self, attrib_index: int) -> Optional[ModernVBO]:
+        """Return the :class:`ModernVBO` created for ``add_vbo(index=attrib_index, ...)``."""
+        for j, attr in enumerate(self.attributes):
+            if not attr:
+                continue
+            if attr[0] == attrib_index and j < len(self.vbos):
+                vbo = self.vbos[j]
+                if isinstance(vbo, ModernVBO):
+                    return vbo
+        return None
+
+    def update_vbo(self, index: int, data: np.ndarray) -> None:
+        """
+        Upload new contents for the vertex buffer tied to attribute ``index``.
+
+        ``index`` is the same value passed to :meth:`add_vbo` (e.g. ``0`` positions,
+        ``1`` colours, ``2`` normals). If the new array has the same byte size as
+        the existing GPU store, :func:`glBufferSubData` is used; otherwise
+        :meth:`ModernVBO.set_data` (``glBufferData``) reallocates the buffer.
+
+        The VAO must have been built via :meth:`add_vbo`; arbitrary
+        :meth:`add_attribute` entries (raw handles only) are not updated here.
+        """
+        if data is None:
+            raise TypeError("update_vbo: data must be a numpy array")
+        arr = np.ascontiguousarray(np.asarray(data, dtype=np.float32))
+
+        if not self.bind():
+            log.error(
+                "update_vbo: VAO not valid in current context",
+                scope=self.__class__.__name__,
+            )
+            return
+
+        vbo = self._modern_vbo_for_attrib(index)
+        if vbo is None:
+            log.warning(
+                f"update_vbo: no ModernVBO for attribute index {index}",
+                scope=self.__class__.__name__,
+            )
+            self.unbind()
+            return
+
+        try:
+            vbo.bind()
+            old = getattr(vbo, "data", None)
+            if (
+                old is not None
+                and isinstance(old, np.ndarray)
+                and old.dtype == arr.dtype
+                and old.nbytes == arr.nbytes
+            ):
+                glBufferSubData(GL_ARRAY_BUFFER, 0, arr.nbytes, arr)
+            else:
+                vbo.set_data(arr)
+        finally:
+            glBindBuffer(GL_ARRAY_BUFFER, 0)
+            self.unbind()
