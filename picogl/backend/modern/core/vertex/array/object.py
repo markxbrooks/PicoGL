@@ -35,7 +35,7 @@ Intended for OpenGL 3.0+ with VAO support.
 
 import ctypes
 from contextlib import contextmanager
-from typing import Optional
+from typing import Optional, Union
 
 import numpy as np
 from decologr import Decologr as log
@@ -114,32 +114,27 @@ class VertexArrayObject(VertexBase):
         if self.vao is None:
             return
 
-        if not self.bind():
-            raise RuntimeError("Invalid context")
+        with self.bind():
 
-        self.layout = layout
+            self.layout = layout
 
-        """# Bind buffers explicitly
-        if self.vbo:
-            glBindBuffer(GL_ARRAY_BUFFER, self.vbo.handle)"""
+            if self.ebo:
+                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.ebo.handle)
 
-        if self.ebo:
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.ebo.handle)
+            # Configure attributes
+            for attr in layout.attributes:
+                glEnableVertexAttribArray(attr.index)
+                glVertexAttribPointer(
+                    attr.index,
+                    attr.size,
+                    attr.type,
+                    attr.normalized,
+                    attr.stride,
+                    ctypes.c_void_p(attr.offset),
+                )
 
-        # Configure attributes
-        for attr in layout.attributes:
-            glEnableVertexAttribArray(attr.index)
-            glVertexAttribPointer(
-                attr.index,
-                attr.size,
-                attr.type,
-                attr.normalized,
-                attr.stride,
-                ctypes.c_void_p(attr.offset),
-            )
-
-        glBindVertexArray(0)
-        self._configured = True
+            glBindVertexArray(0)
+            self._configured = True
 
     @contextmanager
     def bound(self):
@@ -150,7 +145,7 @@ class VertexArrayObject(VertexBase):
         finally:
             glBindVertexArray(0)
 
-    def bind(self) -> bool:
+    def bind(self) -> Union["VertexArrayObject", None]:
         """
         Bind the VAO for use in rendering.
         :return: True if bound, False if skipped (wrong context — avoids GL_INVALID_OPERATION/segfault).
@@ -160,9 +155,9 @@ class VertexArrayObject(VertexBase):
                 "VAO created in different GL context; skipping bind to avoid invalid operation",
                 scope=self.__class__.__name__,
             )
-            return False
+            return None
         glBindVertexArray(self.handle)
-        return True
+        return self
 
     def unbind(self):
         """
