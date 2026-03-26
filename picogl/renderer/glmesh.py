@@ -39,7 +39,7 @@ class GLMesh:
         uvs: Optional[np.ndarray] = None,
         use_indices: bool = True,
         *,
-        vertex_layout: Literal[ShaderType.ISOSURFACE, ShaderType.RIBBONS] = ShaderType.ISOSURFACE,
+        shader_type: Literal[ShaderType.ISOSURFACE, ShaderType.RIBBONS] = ShaderType.ISOSURFACE,
     ):
         self.vao: Optional[VertexArrayObject] = None
         self.index_count: int = 0
@@ -58,9 +58,9 @@ class GLMesh:
             raise ValueError("GLMesh: faces must define a multiple of 3 indices (triangles)")
 
         self.use_indices = use_indices  # present for compatibility and potential path changes
-        if vertex_layout not in (ShaderType.ISOSURFACE, ShaderType.RIBBONS):
-            raise ValueError("vertex_layout must be ShaderType.ISOSURFACE or ShaderType.RIBBONS")
-        self.vertex_layout = vertex_layout
+        if shader_type not in (ShaderType.ISOSURFACE, ShaderType.RIBBONS):
+            raise ValueError("shader_type must be ShaderType.ISOSURFACE or ShaderType.RIBBONS")
+        self.shader_type = shader_type
 
         self.colors = (
             np.asarray(colors, dtype=np.float32).reshape(-1, 3)
@@ -84,7 +84,7 @@ class GLMesh:
         self._expanded_normals = None
         self._expanded_uvs = None
         self._layouts = build_shader_layouts()
-        self._layout_descriptor = self._layouts[vertex_layout]
+        self._layout_descriptor = self._layouts[shader_type]
         if not self.use_indices:
             self._expand_to_non_indexed()
 
@@ -182,7 +182,7 @@ class GLMesh:
             colors=mesh.cbo,
             normals=mesh.nbo,
             uvs=getattr(mesh, VBOType.UVS, None),
-            vertex_layout=vertex_layout,
+            shader_type=vertex_layout,
         )
 
     def update_colors(self, colors: np.ndarray):
@@ -217,11 +217,12 @@ class GLMesh:
             if self.use_indices:
                 vao.add_ebo(data=self.indices)
 
+            # vao.configure_from_descriptor(descriptor)
             self.vao = vao
             self.index_count = (
                 self.indices.size if self.use_indices else self.vertices.shape[0]
             )
-            vao = None  # ownership transferred to self.vao
+            vao = None  # ownership transferred to self.vao"""
         finally:
             # If add_vbo/add_ebo failed after VAO gen, drop orphan VAO so the next
             # upload() retry does not accumulate registry leaks.
@@ -267,5 +268,3 @@ class GLMesh:
         except Exception as e:
             # You might want to log e or re-raise
             raise
-
-
