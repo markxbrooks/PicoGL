@@ -35,7 +35,7 @@ Intended for OpenGL 3.0+ with VAO support.
 
 import ctypes
 from contextlib import contextmanager
-from typing import Optional
+from typing import Optional, Union
 
 import numpy as np
 from decologr import Decologr as log
@@ -94,13 +94,9 @@ class VertexArrayObject(VertexBase):
         self.vbos = []
         self.named_vbos: dict[str, VertexBuffer] = {}
         self.vao: Optional[int] = None  # Bonds Vertex Array Object. Does absolutely nothing
-        self.vbo = None  # Atom Vertex Buffer Object
-        self.cbo = None  # Color Vertex Buffer Object
-        self.nbo = None  # Normal Vertex Buffer Object
         self.ebo = None  # Bond Index Buffer Object
         self.layout: Optional[LayoutDescriptor] = None
         self._creation_context_id: Optional[int] = current_gl_context()
-        # self.configure(self.layout)
         self.bind()
 
     def is_valid_in_current_context(self) -> bool:
@@ -118,32 +114,27 @@ class VertexArrayObject(VertexBase):
         if self.vao is None:
             return
 
-        if not self.bind():
-            raise RuntimeError("Invalid context")
+        with self.bind():
 
-        self.layout = layout
+            self.layout = layout
 
-        # Bind buffers explicitly
-        if self.vbo:
-            glBindBuffer(GL_ARRAY_BUFFER, self.vbo.handle)
+            if self.ebo:
+                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.ebo.handle)
 
-        if self.ebo:
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.ebo.handle)
+            # Configure attributes
+            for attr in layout.attributes:
+                glEnableVertexAttribArray(attr.index)
+                glVertexAttribPointer(
+                    attr.index,
+                    attr.size,
+                    attr.type,
+                    attr.normalized,
+                    attr.stride,
+                    ctypes.c_void_p(attr.offset),
+                )
 
-        # Configure attributes
-        for attr in layout.attributes:
-            glEnableVertexAttribArray(attr.index)
-            glVertexAttribPointer(
-                attr.index,
-                attr.size,
-                attr.type,
-                attr.normalized,
-                attr.stride,
-                ctypes.c_void_p(attr.offset),
-            )
-
-        glBindVertexArray(0)
-        self._configured = True
+            glBindVertexArray(0)
+            self._configured = True
 
     @contextmanager
     def bound(self):
@@ -154,7 +145,7 @@ class VertexArrayObject(VertexBase):
         finally:
             glBindVertexArray(0)
 
-    def bind(self) -> bool:
+    def bind(self) -> Union["VertexArrayObject", None]:
         """
         Bind the VAO for use in rendering.
         :return: True if bound, False if skipped (wrong context — avoids GL_INVALID_OPERATION/segfault).
@@ -164,9 +155,9 @@ class VertexArrayObject(VertexBase):
                 "VAO created in different GL context; skipping bind to avoid invalid operation",
                 scope=self.__class__.__name__,
             )
-            return False
+            return None
         glBindVertexArray(self.handle)
-        return True
+        return self
 
     def unbind(self):
         """
@@ -184,53 +175,7 @@ class VertexArrayObject(VertexBase):
         """set layout"""
         self.set_layout(self.layout)
 
-    def set_layout_old(self, layout: LayoutDescriptor) -> None:
-        """
-        set_layout
-
-        :param layout: LayoutDescriptor: The layout descriptor to define the vertex attribute format.
-        :raises: None
-
-        Sets the layout for the rendering setup by binding the buffers and configuring the attributes.
-        The state is stored in the Vertex Array Object (VAO). This method assumes a single Vertex Buffer
-        Object (VBO) holds all position data but can be adapted as required. Handles optional usage of
-        Normal Buffer Object (NBO) and Element Buffer Object (EBO) if present.
-        """
-        try:
-            self.layout = layout
-            if self.vao is None:
-                return
-            glBindVertexArray(self.handle)
-
-            if self.vbo is not None:
-                glBindBuffer(GL_ARRAY_BUFFER, getattr(self.vbo, "_id", self.vbo))
-            if self.nbo is not None:
-                # If you have multiple buffers, bind as needed per attribute
-                pass  # adapt as needed
-
-            if self.layout:
-                for attr in self.layout.attributes:
-                    log.parameter("attr", attr)
-                    glEnableVertexAttribArray(attr.index)
-                    glVertexAttribPointer(
-                        attr.index,
-                        attr.size,
-                        attr.type,
-                        attr.normalized,
-                        attr.stride,
-                        ctypes.c_void_p(attr.offset),
-                    )
-            if self.ebo is not None:
-                glBindBuffer(
-                    GL_ELEMENT_ARRAY_BUFFER, getattr(self.ebo, "_id", self.ebo)
-                )
-
-            glBindVertexArray(0)
-            self._configured = True
-        except Exception as ex:
-            log.error(f"error {ex} occurred setting layout")
-
-    def add_vbo_object(self, name: str, vbo: "LegacyVBO") -> "LegacyVBO":
+    def add_vbo_object(self, name: str, vbo: "ModernVBO") -> "ModernVBO":
         """Register a VBO by semantic name or shorthand alias."""
         # normalize to canonical key
         canonical = NAME_ALIASES.get(name, name)
@@ -244,10 +189,23 @@ class VertexArrayObject(VertexBase):
 
         return vbo
 
-    def get_vbo_object(self, name: str) -> "LegacyVBO":
+    def get_vbo_object(self, name: str) -> VertexBuffer | None:
         """Retrieve a VBO by its semantic or shorthand name."""
         canonical = NAME_ALIASES.get(name, name)
         return self.named_vbos.get(canonical)
+
+    def add_vbo_data(self, data: np.ndarray):
+        """
+        add VBO data
+        """
+        vbo = ModernVBO(handle=handle)
+        vbo.bind()
+        vbo.set_data(data)
+        with self.bound():
+            vbo.bind()
+            glEnableVertexAttribArray(index)
+            glVertexAttribPointer(index, size, dtype, False, 0, ctypes.c_void_p(0))
+        self.vbos.append(vbo)
 
     def add_vbo(
         self,
