@@ -78,7 +78,8 @@ class VertexBuffer(VertexBase):
         self.index = index
         self.normalized = False
         self.target = target
-        self.size = size
+        self.components = size
+        self.buffer_size = data.nbytes if data is not None else 0
         self.stride = stride
         self.dtype = dtype
         self.pointer = pointer
@@ -148,7 +149,7 @@ class VertexBuffer(VertexBase):
         self.index = index
         if data is not None:
             self.data = data
-        self.size = size or self.size
+        self.components = size or self.components
         self.normalized = normalized
         self.stride = stride
         self.offset = offset
@@ -162,7 +163,7 @@ class VertexBuffer(VertexBase):
         glEnableVertexAttribArray(self.index)
         glVertexAttribPointer(
             self.index,
-            self.size,
+            self.components,
             self.dtype,
             self.normalized,
             self.stride,
@@ -192,23 +193,23 @@ class VertexBuffer(VertexBase):
             data_preview = data_preview[:97] + "..."
         return (
             f"{class_name}(index={self.index}, handle={self.handle}, pointer={self.pointer}, "
-            f"target={self.target}, size={self.size}, stride={self.stride}, offset={self.offset}, "
+            f"target={self.target}, size={self.components}, stride={self.stride}, offset={self.offset}, "
             f"dtype={self.dtype}, normalized={self.normalized}, data={data_preview})"
         )
 
     def allocate(self, data: np.ndarray, usage: int = GL_STATIC_DRAW):
         """Initial allocation (glBufferData)"""
         self.bind()
-        self.size = data.nbytes
+        self.buffer_size = data.nbytes
         glBufferData(self.target, data.nbytes, data, usage)
 
     def update_data(self, data: np.ndarray, offset: int = 0):
         """Fast path update (glBufferSubData)"""
         self.bind()
 
-        if data.nbytes > self.size:
+        if data.nbytes > self.buffer_size:
             # Fallback: reallocate only if absolutely required
             glBufferData(self.target, data.nbytes, data, GL_DYNAMIC_DRAW)
-            self.size = data.nbytes
+            self.buffer_size = data.nbytes
         else:
             glBufferSubData(self.target, offset, data.nbytes, data)

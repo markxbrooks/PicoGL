@@ -179,6 +179,8 @@ class VertexArrayObject(VertexBase):
         """Register a VBO by semantic name or shorthand alias."""
         # normalize to canonical key
         canonical = NAME_ALIASES.get(name, name)
+        if not isinstance(vbo, VertexBuffer):
+            raise TypeError(f"Expected VertexBuffer, got {type(vbo)}")
 
         # store consistently
         self.named_vbos[canonical] = vbo
