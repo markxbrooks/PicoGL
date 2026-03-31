@@ -18,7 +18,7 @@ from OpenGL.raw.GL.VERSION.GL_1_1 import glDrawArrays
 from elmo.glsl.layouts import build_shader_layouts
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.buffers.glcleanup import delete_buffer_object
-from picogl.buffers.vertex.vbo.vbo_class import VBOType
+from picogl.buffers.vertex.vbo.vbo_class import VBOType, MeshDataAttrs
 from picogl.shaders.type import ShaderType
 
 if TYPE_CHECKING:
@@ -181,7 +181,7 @@ class GLMesh:
             faces=mesh.indices,
             colors=mesh.colors,
             normals=mesh.normals,
-            uvs=getattr(mesh, VBOType.UVS, None),
+            uvs=getattr(mesh, MeshDataAttrs.TEXCOORDS, None),
             shader_type=vertex_layout,
         )
 

@@ -1,23 +1,28 @@
+"""
+Vertex Attributes
+"""
+
 from picogl.utils.strenum import StrEnum
 
 
 class VBOType(StrEnum):
     """VBO Type"""
 
-    VBO = "vertices"
+    VBO = "vbo"
     CBO = "cbo"
     NBO = "nbo"
     EBO = "ebo"
     UVS = "uvs"
 
-class VBODataType(StrEnum):
-    """VBO Type"""
 
-    VBO = "vertices"
-    CBO = "colors"
-    NBO = "normals"
-    EBO = "indices"
-    UVS = "texcoords"
+class MeshDataAttrs(StrEnum):
+    """Mesh Data Attrs"""
+
+    VERTICES = "vertices"
+    COLORS = "colors"
+    NORMALS = "normals"
+    INDICES = "indices"
+    TEXCOORDS = "texcoords"
 
 
 ATTRIBUTE_LAYOUT = {

@@ -15,7 +15,7 @@ from picogl.buffers.attributes import AttributeSpec
 from picogl.buffers.factory.layout import create_layout
 from picogl.buffers.glcleanup import delete_buffer_object
 from picogl.buffers.vertex.legacy import VertexBufferGroup
-from picogl.buffers.vertex.vbo.vbo_class import VBOType
+from picogl.buffers.vertex.vbo.vbo_class import VBOType, MeshDataAttrs
 
 
 class LegacyGLMesh:
@@ -84,7 +84,7 @@ class LegacyGLMesh:
             faces=mesh.indices,
             colors=mesh.colors,
             normals=mesh.normals,
-            uvs=getattr(mesh, VBOType.UVS, None),
+            uvs=getattr(mesh, MeshDataAttrs.TEXCOORDS, None),
         )
 
     def upload(self) -> None:
