@@ -114,7 +114,7 @@ class TestMeshData(unittest.TestCase):
         np.testing.assert_array_equal(mesh.nbo, self.test_normals)
         np.testing.assert_array_equal(mesh.texcoords, self.test_uvs)
         np.testing.assert_array_equal(mesh.cbo, self.test_colors)
-        np.testing.assert_array_equal(mesh.ebo, self.test_indices)
+        np.testing.assert_array_equal(mesh.indices, self.test_indices)
         
         # Test vertex count calculation
         expected_vertex_count = len(self.test_vertices.flatten()) // 3
@@ -128,7 +128,7 @@ class TestMeshData(unittest.TestCase):
         self.assertIsNone(mesh.nbo)
         self.assertIsNone(mesh.texcoords)
         self.assertIsNone(mesh.cbo)
-        self.assertIsNone(mesh.ebo)
+        self.assertIsNone(mesh.indices)
         
         expected_vertex_count = len(self.test_vertices.flatten()) // 3
         self.assertEqual(mesh.vertex_count, expected_vertex_count)
@@ -141,7 +141,7 @@ class TestMeshData(unittest.TestCase):
         self.assertIsNone(mesh.nbo)
         self.assertIsNone(mesh.texcoords)
         self.assertIsNone(mesh.cbo)
-        self.assertIsNone(mesh.ebo)
+        self.assertIsNone(mesh.indices)
         self.assertIsNone(mesh.vertex_count)
 
     def test_as_ribbon_args(self):
@@ -252,7 +252,7 @@ class TestMeshData(unittest.TestCase):
         self.assertIsNotNone(mesh.nbo)
         self.assertIsNotNone(mesh.texcoords)
         self.assertIsNotNone(mesh.cbo)
-        self.assertIsNotNone(mesh.ebo)
+        self.assertIsNotNone(mesh.indices)
         
         # Test vertex count
         expected_vertex_count = len(self.test_vertices)
@@ -266,7 +266,7 @@ class TestMeshData(unittest.TestCase):
         self.assertIsNotNone(mesh.nbo)  # Should be generated
         self.assertIsNone(mesh.texcoords)
         self.assertIsNotNone(mesh.cbo)  # Should be generated
-        self.assertIsNone(mesh.ebo)
+        self.assertIsNone(mesh.indices)
 
     def test_from_raw_with_color_per_vertex_array(self):
         """Test from_raw with color_per_vertex array."""

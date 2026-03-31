@@ -81,7 +81,7 @@ class LegacyGLMesh:
         """
         return cls(
             vertices=mesh.vbo,
-            faces=mesh.ebo,
+            faces=mesh.indices,
             colors=mesh.cbo,
             normals=mesh.nbo,
             uvs=getattr(mesh, VBOType.UVS, None),

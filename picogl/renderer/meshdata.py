@@ -37,7 +37,7 @@ class MeshData:
         self.nbo = normals
         self.texcoords = texcoords
         self.cbo = colors
-        self.ebo = indices
+        self.indices = indices
 
         self.vertex_count = (
             len(np.asarray(vertices, dtype=np.float32).flatten()) // 3
@@ -51,7 +51,7 @@ class MeshData:
             CanonicalVertexAttrs.POSITIONS: self.vbo,
             CanonicalVertexAttrs.COLORS: self.cbo,
             CanonicalVertexAttrs.NORMALS: self.nbo,
-            CanonicalVertexAttrs.INDICES: self.ebo,
+            CanonicalVertexAttrs.INDICES: self.indices,
         }
 
     def __str__(self):
@@ -213,30 +213,30 @@ class MeshData:
             print("Warning: Cannot draw mesh - no vertex data (vbo)")
             return
         
-        if self.ebo is None:
+        if self.indices is None:
             print("Warning: Cannot draw mesh - no element data (ebo)")
             return
             
-        if len(self.ebo) == 0:
+        if len(self.indices) == 0:
             print("Warning: Cannot draw mesh - empty element buffer")
             return
             
         # Validate ebo data to prevent segfaults
-        if self.ebo.dtype != np.uint32 and self.ebo.dtype != np.int32:
-            print(f"Warning: Invalid ebo dtype {self.ebo.dtype}, converting to uint32")
-            self.ebo = self.ebo.astype(np.uint32)
+        if self.indices.dtype != np.uint32 and self.indices.dtype != np.int32:
+            print(f"Warning: Invalid ebo dtype {self.indices.dtype}, converting to uint32")
+            self.indices = self.indices.astype(np.uint32)
             
         # Check for invalid indices that could cause segfaults
         max_vertex_index = len(self.vbo) // 3 - 1
-        if np.any(self.ebo > max_vertex_index):
+        if np.any(self.indices > max_vertex_index):
             print(f"Warning: Invalid vertex indices in ebo (max: {max_vertex_index})")
             # Clamp indices to valid range
-            self.ebo = np.clip(self.ebo, 0, max_vertex_index)
+            self.indices = np.clip(self.indices, 0, max_vertex_index)
             
-        if np.any(self.ebo < 0):
+        if np.any(self.indices < 0):
             print("Warning: Negative vertex indices in ebo")
             # Set negative indices to 0
-            self.ebo = np.maximum(self.ebo, 0)
+            self.indices = np.maximum(self.indices, 0)
 
         if fill:
             fill_mode = GL.GL_FILL
@@ -272,14 +272,14 @@ class MeshData:
 
         try:
             # Draw the mesh with additional safety checks
-            element_count = len(self.ebo)
+            element_count = len(self.indices)
             if element_count > 0:
-                GL.glDrawElements(mode, element_count, GL.GL_UNSIGNED_INT, self.ebo)
+                GL.glDrawElements(mode, element_count, GL.GL_UNSIGNED_INT, self.indices)
         except Exception as e:
             log.error(f"Error in glDrawElements: {e}")
             log.error(f"Element count: {element_count}")
-            log.error(f"EBO dtype: {self.ebo.dtype}")
-            log.error(f"EBO shape: {self.ebo.shape}")
+            log.error(f"EBO dtype: {self.indices.dtype}")
+            log.error(f"EBO shape: {self.indices.shape}")
             log.error(f"VBO length: {len(self.vbo) if self.vbo is not None else 'None'}")
 
         # Restore fill mode
@@ -296,8 +296,8 @@ class MeshData:
             self.nbo = None
         if self.cbo is not None:
             self.cbo = None
-        if self.ebo is not None:
-            self.ebo = None
+        if self.indices is not None:
+            self.indices = None
         if self.vbo is not None:
             self.vbo = None
         if self.texcoords is not None:
