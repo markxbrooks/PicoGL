@@ -32,7 +32,7 @@ class TextureRenderer(ObjectRenderer):
         self.texture = None
         self.context = context
         self.data = data
-        self.data.vertex_count = len(self.data.vbo.flatten()) // 3
+        self.data.vertex_count = len(self.data.vertices.flatten()) // 3
         self.show_model = True
         self.base_dir = base_dir
         self.base_path = Path(base_dir) if base_dir is not None else Path(".")
