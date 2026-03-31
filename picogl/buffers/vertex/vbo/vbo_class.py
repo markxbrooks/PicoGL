@@ -4,7 +4,7 @@ from picogl.utils.strenum import StrEnum
 class VBOType(StrEnum):
     """VBO Type"""
 
-    VBO = "vbo"
+    VBO = "vertices"
     CBO = "cbo"
     NBO = "nbo"
     EBO = "ebo"

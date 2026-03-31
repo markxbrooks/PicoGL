@@ -388,7 +388,7 @@ class TestLegacyGLMesh(unittest.TestCase):
         self.assertEqual(len(calls), 4)
         
         # Test vertex VBO (name VBOType.VBO, size 3)
-        vertex_call = next(call for call in calls if call[1].get('name') == 'vbo')
+        vertex_call = next(call for call in calls if call[1].get('name') == 'vertices')
         self.assertEqual(vertex_call[1]['size'], 3)
         np.testing.assert_array_equal(vertex_call[1]['data'], self.test_vertices)
         

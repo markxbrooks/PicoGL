@@ -45,6 +45,53 @@ class MeshData:
             else None
         )
 
+    # ---- Backward compatibility aliases ----
+
+    # VBO → vertices
+    @property
+    def vbo(self):
+        return self.vertices
+
+    @vbo.setter
+    def vbo(self, value):
+        self.vertices = value
+
+    # NBO → normals
+    @property
+    def nbo(self):
+        return self.normals
+
+    @nbo.setter
+    def nbo(self, value):
+        self.normals = value
+
+    # UVs → texcoords
+    @property
+    def uvs(self):
+        return self.texcoords
+
+    @uvs.setter
+    def uvs(self, value):
+        self.texcoords = value
+
+    # CBO → colors
+    @property
+    def cbo(self):
+        return self.colors
+
+    @cbo.setter
+    def cbo(self, value):
+        self.colors = value
+
+    # EBO → indices
+    @property
+    def ebo(self):
+        return self.indices
+
+    @ebo.setter
+    def ebo(self, value):
+        self.indices = value
+
     def as_canonical_names(self) -> dict:
         """Convert into canonical names."""
         return {
@@ -210,7 +257,7 @@ class MeshData:
         """
         # Safety checks to prevent segfaults
         if self.vertices is None:
-            print("Warning: Cannot draw mesh - no vertex data (vbo)")
+            print("Warning: Cannot draw mesh - no vertex data (vertices)")
             return
         
         if self.indices is None:
