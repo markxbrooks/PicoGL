@@ -26,22 +26,22 @@ class MeshData:
 
     def __init__(
         self,
-        vbo: np.ndarray = None,
-        nbo: np.ndarray = None,
+        vertices: np.ndarray = None,
+        normals: np.ndarray = None,
         uvs: np.ndarray = None,
         cbo: np.ndarray = None,
         ebo: np.ndarray = None,
     ):
         """set up the OpenGL context"""
-        self.vbo = vbo
-        self.nbo = nbo
+        self.vbo = vertices
+        self.nbo = normals
         self.uvs = uvs
         self.cbo = cbo
         self.ebo = ebo
 
         self.vertex_count = (
-            len(np.asarray(vbo, dtype=np.float32).flatten()) // 3
-            if vbo is not None
+            len(np.asarray(vertices, dtype=np.float32).flatten()) // 3
+            if vertices is not None
             else None
         )
 
@@ -188,7 +188,7 @@ class MeshData:
         # Indices (optional)
         indices_arr = cls._to_int32_flat(indices, "indices", required=False)
 
-        return cls(vbo=vbo, nbo=nbo, uvs=uvs_arr, cbo=cbo_arr, ebo=indices_arr)
+        return cls(vertices=vbo, normals=nbo, uvs=uvs_arr, cbo=cbo_arr, ebo=indices_arr)
 
     def draw(
         self,

@@ -102,8 +102,8 @@ class TestMeshData(unittest.TestCase):
     def test_initialization_with_all_buffers(self):
         """Test MeshData initialization with all buffer types."""
         mesh = MeshData(
-            vbo=self.test_vertices,
-            nbo=self.test_normals,
+            vertices=self.test_vertices,
+            normals=self.test_normals,
             uvs=self.test_uvs,
             cbo=self.test_colors,
             ebo=self.test_indices
@@ -122,7 +122,7 @@ class TestMeshData(unittest.TestCase):
 
     def test_initialization_with_minimal_data(self):
         """Test MeshData initialization with only vertices."""
-        mesh = MeshData(vbo=self.test_vertices)
+        mesh = MeshData(vertices=self.test_vertices)
         
         self.assertIsNotNone(mesh.vbo)
         self.assertIsNone(mesh.nbo)
@@ -147,8 +147,8 @@ class TestMeshData(unittest.TestCase):
     def test_as_ribbon_args(self):
         """Test as_ribbon_args method."""
         mesh = MeshData(
-            vbo=self.test_vertices,
-            nbo=self.test_normals,
+            vertices=self.test_vertices,
+            normals=self.test_normals,
             cbo=self.test_colors,
             ebo=self.test_indices
         )
@@ -167,7 +167,7 @@ class TestMeshData(unittest.TestCase):
     def test_str_representation(self):
         """Test string representation of MeshData."""
         mesh = MeshData(
-            vbo=self.test_vertices,
+            vertices=self.test_vertices,
             uvs=self.test_uvs,
             cbo=self.test_colors
         )
@@ -324,8 +324,8 @@ class TestMeshData(unittest.TestCase):
     def test_bind_with_all_buffers(self):
         """Test bind method with all buffers present."""
         mesh = MeshData(
-            vbo=self.test_vertices,
-            nbo=self.test_normals,
+            vertices=self.test_vertices,
+            normals=self.test_normals,
             uvs=self.test_uvs,
             cbo=self.test_colors
         )
@@ -337,7 +337,7 @@ class TestMeshData(unittest.TestCase):
 
     def test_bind_with_minimal_buffers(self):
         """Test bind method with only vertices."""
-        mesh = MeshData(vbo=self.test_vertices)
+        mesh = MeshData(vertices=self.test_vertices)
         
         mesh.bind()
         
@@ -354,8 +354,8 @@ class TestMeshData(unittest.TestCase):
     def test_unbind_with_all_buffers(self):
         """Test unbind method with all buffers present."""
         mesh = MeshData(
-            vbo=self.test_vertices,
-            nbo=self.test_normals,
+            vertices=self.test_vertices,
+            normals=self.test_normals,
             uvs=self.test_uvs,
             cbo=self.test_colors
         )
@@ -375,7 +375,7 @@ class TestMeshData(unittest.TestCase):
 
     def test_context_manager(self):
         """Test that MeshData can be used as a context manager."""
-        mesh = MeshData(vbo=self.test_vertices)
+        mesh = MeshData(vertices=self.test_vertices)
         
         # Test that __enter__ and __exit__ methods exist
         self.assertTrue(hasattr(mesh, "__enter__"))
@@ -393,7 +393,7 @@ class TestMeshData(unittest.TestCase):
     def test_draw_with_vertex_colors(self):
         """Test draw method with vertex colors."""
         mesh = MeshData(
-            vbo=self.test_vertices,
+            vertices=self.test_vertices,
             cbo=self.test_colors,
             ebo=self.test_indices
         )
@@ -406,7 +406,7 @@ class TestMeshData(unittest.TestCase):
     def test_draw_with_override_color(self):
         """Test draw method with override colour."""
         mesh = MeshData(
-            vbo=self.test_vertices,
+            vertices=self.test_vertices,
             ebo=self.test_indices
         )
         
@@ -419,7 +419,7 @@ class TestMeshData(unittest.TestCase):
     def test_draw_with_fill_mode(self):
         """Test draw method with fill mode."""
         mesh = MeshData(
-            vbo=self.test_vertices,
+            vertices=self.test_vertices,
             ebo=self.test_indices
         )
         
@@ -431,7 +431,7 @@ class TestMeshData(unittest.TestCase):
     def test_draw_with_alpha_blending(self):
         """Test draw method with alpha blending."""
         mesh = MeshData(
-            vbo=self.test_vertices,
+            vertices=self.test_vertices,
             ebo=self.test_indices
         )
         
@@ -443,7 +443,7 @@ class TestMeshData(unittest.TestCase):
     def test_draw_with_line_width(self):
         """Test draw method with custom line width."""
         mesh = MeshData(
-            vbo=self.test_vertices,
+            vertices=self.test_vertices,
             ebo=self.test_indices
         )
         
@@ -455,7 +455,7 @@ class TestMeshData(unittest.TestCase):
     def test_draw_with_custom_mode(self):
         """Test draw method with custom drawing mode."""
         mesh = MeshData(
-            vbo=self.test_vertices,
+            vertices=self.test_vertices,
             ebo=self.test_indices
         )
         
@@ -466,7 +466,7 @@ class TestMeshData(unittest.TestCase):
 
     def test_draw_without_ebo(self):
         """Test draw method without EBO."""
-        mesh = MeshData(vbo=self.test_vertices)
+        mesh = MeshData(vertices=self.test_vertices)
         
         # This should raise an error because draw method expects ebo
         with self.assertRaises(TypeError):
@@ -476,12 +476,12 @@ class TestMeshData(unittest.TestCase):
         """Test vertex count calculation."""
         # Test with 2D array
         vertices_2d = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
-        mesh = MeshData(vbo=vertices_2d)
+        mesh = MeshData(vertices=vertices_2d)
         self.assertEqual(mesh.vertex_count, 2)
         
         # Test with 1D array
         vertices_1d = np.array([1, 2, 3, 4, 5, 6], dtype=np.float32)
-        mesh = MeshData(vbo=vertices_1d)
+        mesh = MeshData(vertices=vertices_1d)
         self.assertEqual(mesh.vertex_count, 2)
 
     def test_data_type_conversion(self):
@@ -543,7 +543,7 @@ class TestMeshData(unittest.TestCase):
     def test_repr_string(self):
         """Test string representation of MeshData."""
         mesh = MeshData(
-            vbo=self.test_vertices,
+            vertices=self.test_vertices,
             uvs=self.test_uvs,
             cbo=self.test_colors
         )

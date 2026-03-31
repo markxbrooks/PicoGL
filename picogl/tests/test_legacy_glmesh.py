@@ -182,10 +182,10 @@ class TestLegacyGLMesh(unittest.TestCase):
     def test_from_mesh_data_with_all_attributes(self):
         """Test from_mesh_data with all MeshData attributes."""
         mesh_data = MeshData(
-            vbo=self.test_vertices,
+            vertices=self.test_vertices,
             ebo=self.test_faces,
             cbo=self.test_colors,
-            nbo=self.test_normals,
+            normals=self.test_normals,
             uvs=self.test_uvs
         )
         
@@ -201,7 +201,7 @@ class TestLegacyGLMesh(unittest.TestCase):
     def test_from_mesh_data_with_minimal_attributes(self):
         """Test from_mesh_data with minimal MeshData attributes."""
         mesh_data = MeshData(
-            vbo=self.test_vertices,
+            vertices=self.test_vertices,
             ebo=self.test_faces
         )
         
@@ -218,10 +218,10 @@ class TestLegacyGLMesh(unittest.TestCase):
     def test_from_mesh_data_without_uvs(self):
         """Test from_mesh_data without UVs attribute."""
         mesh_data = MeshData(
-            vbo=self.test_vertices,
+            vertices=self.test_vertices,
             ebo=self.test_faces,
             cbo=self.test_colors,
-            nbo=self.test_normals
+            normals=self.test_normals
         )
         # Remove uvs attribute
         delattr(mesh_data, 'uvs')
