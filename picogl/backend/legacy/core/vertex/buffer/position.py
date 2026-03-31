@@ -69,4 +69,4 @@ class LegacyPositionVBO(LegacyVBO):
         if self.dtype not in self.SUPPORTED_GL_TYPES:
             raise ValueError(f"Unsupported GL data type: {self.dtype}")
         glEnableClientState(GL_VERTEX_ARRAY)
-        glVertexPointer(self.size, self.dtype, self.stride, self.pointer)
+        glVertexPointer(self.components, self.dtype, self.stride, self.pointer)
