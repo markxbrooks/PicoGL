@@ -1,6 +1,9 @@
 """
-Mesh Data
+Provides functionality for managing OpenGL mesh data, including vertices, normals,
+texture coordinates, colors, and indices. This class offers a set of utilities to
+handle OpenGL-related state objects and simplify rendering workflows.
 """
+
 from typing import Optional, Union
 
 import numpy as np
@@ -22,7 +25,36 @@ from picogl.protocols.drawable_buffer import DrawableBuffer
 
 
 class MeshData:
-    """Holds OpenGL-related state objects for rendering."""
+    """
+    Representation of mesh data for OpenGL rendering.
+
+    This class encapsulates mesh data and provides utilities for setting up and
+    managing vertex attributes such as positions, normals, texture coordinates,
+    colors, and indices. It enables interoperability with OpenGL through context
+    management and binding/unbinding functions. Additionally, the class includes
+    methods for raw data conversion and generation of default attributes.
+
+    Attributes:
+        vertices: Optional array of vertex positions as np.ndarray.
+        normals: Optional array of vertex normals as np.ndarray.
+        texcoords: Optional array of texture coordinates as np.ndarray.
+        colors: Optional array of vertex colors as np.ndarray.
+        indices: Optional array of vertex indices as np.ndarray.
+        vertex_count: Optional count of vertices, computed from vertices input.
+
+    Methods:
+        bind:
+            Binds vertex attributes to OpenGL client states for rendering.
+        unbind:
+            Unbinds vertex attributes from OpenGL client states.
+        as_canonical_names:
+            Converts the mesh data into a dictionary with canonical attribute names.
+        draw:
+            Draws the mesh with optional OpenGL parameters for color, line width,
+            drawing mode, fill mode, and alpha transparency.
+        from_raw:
+            Class method for constructing a MeshData object from raw input data.
+    """
 
     def __init__(
         self,
