@@ -184,9 +184,9 @@ class TestLegacyGLMesh(unittest.TestCase):
         mesh_data = MeshData(
             vertices=self.test_vertices,
             ebo=self.test_faces,
-            cbo=self.test_colors,
+            colors=self.test_colors,
             normals=self.test_normals,
-            uvs=self.test_uvs
+            texcoords=self.test_uvs
         )
         
         legacy_mesh = LegacyGLMesh.from_mesh_data(mesh_data)
@@ -220,7 +220,7 @@ class TestLegacyGLMesh(unittest.TestCase):
         mesh_data = MeshData(
             vertices=self.test_vertices,
             ebo=self.test_faces,
-            cbo=self.test_colors,
+            colors=self.test_colors,
             normals=self.test_normals
         )
         # Remove uvs attribute

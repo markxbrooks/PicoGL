@@ -104,8 +104,8 @@ class TestMeshData(unittest.TestCase):
         mesh = MeshData(
             vertices=self.test_vertices,
             normals=self.test_normals,
-            uvs=self.test_uvs,
-            cbo=self.test_colors,
+            texcoords=self.test_uvs,
+            colors=self.test_colors,
             ebo=self.test_indices
         )
         
@@ -149,7 +149,7 @@ class TestMeshData(unittest.TestCase):
         mesh = MeshData(
             vertices=self.test_vertices,
             normals=self.test_normals,
-            cbo=self.test_colors,
+            colors=self.test_colors,
             ebo=self.test_indices
         )
         
@@ -168,8 +168,8 @@ class TestMeshData(unittest.TestCase):
         """Test string representation of MeshData."""
         mesh = MeshData(
             vertices=self.test_vertices,
-            uvs=self.test_uvs,
-            cbo=self.test_colors
+            texcoords=self.test_uvs,
+            colors=self.test_colors
         )
         
         str_repr = str(mesh)
@@ -326,8 +326,8 @@ class TestMeshData(unittest.TestCase):
         mesh = MeshData(
             vertices=self.test_vertices,
             normals=self.test_normals,
-            uvs=self.test_uvs,
-            cbo=self.test_colors
+            texcoords=self.test_uvs,
+            colors=self.test_colors
         )
         
         mesh.bind()
@@ -356,8 +356,8 @@ class TestMeshData(unittest.TestCase):
         mesh = MeshData(
             vertices=self.test_vertices,
             normals=self.test_normals,
-            uvs=self.test_uvs,
-            cbo=self.test_colors
+            texcoords=self.test_uvs,
+            colors=self.test_colors
         )
         
         mesh.unbind()
@@ -394,7 +394,7 @@ class TestMeshData(unittest.TestCase):
         """Test draw method with vertex colors."""
         mesh = MeshData(
             vertices=self.test_vertices,
-            cbo=self.test_colors,
+            colors=self.test_colors,
             ebo=self.test_indices
         )
         
@@ -544,8 +544,8 @@ class TestMeshData(unittest.TestCase):
         """Test string representation of MeshData."""
         mesh = MeshData(
             vertices=self.test_vertices,
-            uvs=self.test_uvs,
-            cbo=self.test_colors
+            texcoords=self.test_uvs,
+            colors=self.test_colors
         )
         
         repr_str = str(mesh)
