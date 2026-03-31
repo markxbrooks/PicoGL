@@ -10,6 +10,15 @@ class VBOType(StrEnum):
     EBO = "ebo"
     UVS = "uvs"
 
+class VBODataType(StrEnum):
+    """VBO Type"""
+
+    VBO = "vertices"
+    CBO = "colors"
+    NBO = "normals"
+    EBO = "indices"
+    UVS = "texcoords"
+
 
 ATTRIBUTE_LAYOUT = {
     VBOType.VBO: 3,
