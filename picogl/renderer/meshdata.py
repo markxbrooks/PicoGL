@@ -9,19 +9,9 @@ from typing import Optional, Union
 import numpy as np
 from decologr import Decologr as log
 from OpenGL import GL
-from OpenGL.GL import glDrawElements
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT
-from OpenGL.raw.GL.VERSION.GL_1_1 import glDrawArrays
-from OpenGL.raw.GL.VERSION.GL_3_0 import glBindVertexArray
 
-from picogl.attrs.context_manager import ContextManagerAttrs
 from picogl.attrs.vertex import CanonicalVertexAttrs
-from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
-from picogl.backend.modern.core.vertex.buffer.object import ModernVBO
-from picogl.buffers.base import VertexBase
 from picogl.buffers.vertex.vbo.vbo_class import VBOType
-from picogl.mode import GLMode
-from picogl.protocols.drawable_buffer import DrawableBuffer
 
 
 class MeshData:
