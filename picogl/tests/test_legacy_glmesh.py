@@ -388,7 +388,7 @@ class TestLegacyGLMesh(unittest.TestCase):
         self.assertEqual(len(calls), 4)
         
         # Test vertex VBO (name VBOType.VBO, size 3)
-        vertex_call = next(call for call in calls if call[1].get('name') == 'vbo')
+        vertex_call = next(call for call in calls if call[1].get('name') == 'vertices')
         self.assertEqual(vertex_call[1]['size'], 3)
         np.testing.assert_array_equal(vertex_call[1]['data'], self.test_vertices)
         
@@ -677,7 +677,7 @@ class TestLegacyGLMesh(unittest.TestCase):
         legacy_mesh = LegacyGLMesh.from_mesh_data(mesh_data)
         
         # Test data consistency - LegacyGLMesh reshapes data to (N, 3) while MeshData keeps it flat
-        np.testing.assert_array_equal(legacy_mesh.vertices.reshape(-1), mesh_data.vbo)
+        np.testing.assert_array_equal(legacy_mesh.vertices.reshape(-1), mesh_data.vertices)
         np.testing.assert_array_equal(legacy_mesh.indices, mesh_data.indices)
         np.testing.assert_array_equal(legacy_mesh.colors.reshape(-1), mesh_data.colors)
         np.testing.assert_array_equal(legacy_mesh.normals.reshape(-1), mesh_data.normals)

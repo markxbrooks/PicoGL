@@ -265,7 +265,7 @@ class TestObjectRenderer(unittest.TestCase):
         vertex_call = next(call for call in calls if call[1].get('index') == 0)
         self.assertEqual(vertex_call[1]['index'], 0)
         self.assertEqual(vertex_call[1]['size'], 3)
-        np.testing.assert_array_equal(vertex_call[1]['data'], self.test_mesh_data.vbo)
+        np.testing.assert_array_equal(vertex_call[1]['data'], self.test_mesh_data.vertices)
         
         # Test UV VBO (index 1, size 2)
         uv_call = next(call for call in calls if call[1].get('index') == 1)

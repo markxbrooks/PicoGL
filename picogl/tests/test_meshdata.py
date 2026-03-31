@@ -110,7 +110,7 @@ class TestMeshData(unittest.TestCase):
         )
         
         # Test buffer assignments
-        np.testing.assert_array_equal(mesh.vbo, self.test_vertices)
+        np.testing.assert_array_equal(mesh.vertices, self.test_vertices)
         np.testing.assert_array_equal(mesh.normals, self.test_normals)
         np.testing.assert_array_equal(mesh.texcoords, self.test_uvs)
         np.testing.assert_array_equal(mesh.colors, self.test_colors)
@@ -124,7 +124,7 @@ class TestMeshData(unittest.TestCase):
         """Test MeshData initialization with only vertices."""
         mesh = MeshData(vertices=self.test_vertices)
         
-        self.assertIsNotNone(mesh.vbo)
+        self.assertIsNotNone(mesh.vertices)
         self.assertIsNone(mesh.normals)
         self.assertIsNone(mesh.texcoords)
         self.assertIsNone(mesh.colors)
@@ -137,7 +137,7 @@ class TestMeshData(unittest.TestCase):
         """Test MeshData initialization with None vertices."""
         mesh = MeshData()
         
-        self.assertIsNone(mesh.vbo)
+        self.assertIsNone(mesh.vertices)
         self.assertIsNone(mesh.normals)
         self.assertIsNone(mesh.texcoords)
         self.assertIsNone(mesh.colors)
@@ -248,7 +248,7 @@ class TestMeshData(unittest.TestCase):
         )
         
         # Test that data is properly converted and stored
-        self.assertIsNotNone(mesh.vbo)
+        self.assertIsNotNone(mesh.vertices)
         self.assertIsNotNone(mesh.normals)
         self.assertIsNotNone(mesh.texcoords)
         self.assertIsNotNone(mesh.colors)
@@ -262,7 +262,7 @@ class TestMeshData(unittest.TestCase):
         """Test from_raw with only vertices."""
         mesh = MeshData.from_raw(vertices=self.test_vertices)
         
-        self.assertIsNotNone(mesh.vbo)
+        self.assertIsNotNone(mesh.vertices)
         self.assertIsNotNone(mesh.normals)  # Should be generated
         self.assertIsNone(mesh.texcoords)
         self.assertIsNotNone(mesh.colors)  # Should be generated
@@ -490,13 +490,13 @@ class TestMeshData(unittest.TestCase):
         int_vertices = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.int32)
         mesh = MeshData.from_raw(vertices=int_vertices)
         
-        self.assertEqual(mesh.vbo.dtype, np.float32)
+        self.assertEqual(mesh.vertices.dtype, np.float32)
         
         # Test with float64 vertices
         float64_vertices = np.array([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]], dtype=np.float64)
         mesh = MeshData.from_raw(vertices=float64_vertices)
         
-        self.assertEqual(mesh.vbo.dtype, np.float32)
+        self.assertEqual(mesh.vertices.dtype, np.float32)
 
     def test_array_flattening(self):
         """Test that multi-dimensional arrays are properly flattened."""
@@ -504,8 +504,8 @@ class TestMeshData(unittest.TestCase):
         vertices_3d = np.array([[[1, 2, 3], [4, 5, 6]]], dtype=np.float32)
         mesh = MeshData.from_raw(vertices=vertices_3d)
         
-        self.assertEqual(mesh.vbo.ndim, 1)
-        self.assertEqual(len(mesh.vbo), 6)
+        self.assertEqual(mesh.vertices.ndim, 1)
+        self.assertEqual(len(mesh.vertices), 6)
 
     def test_error_handling_in_from_raw(self):
         """Test error handling in from_raw method."""

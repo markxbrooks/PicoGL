@@ -339,7 +339,7 @@ def test_mesh_creation():
         mesh_data = MeshData.from_raw(vertices=vertices, colors=colors)
 
         print("  ✅ MeshData created successfully")
-        print(f"  📊 MeshData vertices: {mesh_data.vbo.shape}")
+        print(f"  📊 MeshData vertices: {mesh_data.vertices.shape}")
         print(f"  📊 MeshData colors: {mesh_data.colors.shape}")
 
         return True

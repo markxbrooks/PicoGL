@@ -33,7 +33,7 @@ class MeshData:
         indices: np.ndarray = None,
     ):
         """set up the OpenGL context"""
-        self.vbo = vertices
+        self.vertices = vertices
         self.normals = normals
         self.texcoords = texcoords
         self.colors = colors
@@ -45,17 +45,64 @@ class MeshData:
             else None
         )
 
+    # ---- Backward compatibility aliases ----
+
+    # VBO → vertices
+    @property
+    def vbo(self):
+        return self.vertices
+
+    @vbo.setter
+    def vbo(self, value):
+        self.vertices = value
+
+    # NBO → normals
+    @property
+    def nbo(self):
+        return self.normals
+
+    @nbo.setter
+    def nbo(self, value):
+        self.normals = value
+
+    # UVs → texcoords
+    @property
+    def uvs(self):
+        return self.texcoords
+
+    @uvs.setter
+    def uvs(self, value):
+        self.texcoords = value
+
+    # CBO → colors
+    @property
+    def cbo(self):
+        return self.colors
+
+    @cbo.setter
+    def cbo(self, value):
+        self.colors = value
+
+    # EBO → indices
+    @property
+    def ebo(self):
+        return self.indices
+
+    @ebo.setter
+    def ebo(self, value):
+        self.indices = value
+
     def as_canonical_names(self) -> dict:
         """Convert into canonical names."""
         return {
-            CanonicalVertexAttrs.POSITIONS: self.vbo,
+            CanonicalVertexAttrs.POSITIONS: self.vertices,
             CanonicalVertexAttrs.COLORS: self.colors,
             CanonicalVertexAttrs.NORMALS: self.normals,
             CanonicalVertexAttrs.INDICES: self.indices,
         }
 
     def __str__(self):
-        return f"{self.vbo} {self.texcoords} {self.colors} "
+        return f"{self.vertices} {self.texcoords} {self.colors} "
 
     @classmethod
     def _to_float32_flat(cls, arr, name: str, required: bool = False) -> np.ndarray:
@@ -102,9 +149,9 @@ class MeshData:
         self.unbind()
 
     def bind(self):
-        if self.vbo is not None:
+        if self.vertices is not None:
             GL.glEnableClientState(GL.GL_VERTEX_ARRAY)
-            GL.glVertexPointer(3, GL.GL_FLOAT, 0, self.vbo)
+            GL.glVertexPointer(3, GL.GL_FLOAT, 0, self.vertices)
         if self.normals is not None:
             GL.glEnableClientState(GL.GL_NORMAL_ARRAY)
             GL.glNormalPointer(GL.GL_FLOAT, 0, self.normals)
@@ -122,7 +169,7 @@ class MeshData:
             GL.glDisableClientState(GL.GL_COLOR_ARRAY)
         if self.normals is not None:
             GL.glDisableClientState(GL.GL_NORMAL_ARRAY)
-        if self.vbo is not None:
+        if self.vertices is not None:
             GL.glDisableClientState(GL.GL_VERTEX_ARRAY)
 
     @classmethod
@@ -209,8 +256,8 @@ class MeshData:
             alpha: Transparency value from 0.0 (opaque) to 1.0 (fully transparent)
         """
         # Safety checks to prevent segfaults
-        if self.vbo is None:
-            print("Warning: Cannot draw mesh - no vertex data (vbo)")
+        if self.vertices is None:
+            print("Warning: Cannot draw mesh - no vertex data (vertices)")
             return
         
         if self.indices is None:
@@ -227,7 +274,7 @@ class MeshData:
             self.indices = self.indices.astype(np.uint32)
             
         # Check for invalid indices that could cause segfaults
-        max_vertex_index = len(self.vbo) // 3 - 1
+        max_vertex_index = len(self.vertices) // 3 - 1
         if np.any(self.indices > max_vertex_index):
             print(f"Warning: Invalid vertex indices in ebo (max: {max_vertex_index})")
             # Clamp indices to valid range
@@ -280,7 +327,7 @@ class MeshData:
             log.error(f"Element count: {element_count}")
             log.error(f"EBO dtype: {self.indices.dtype}")
             log.error(f"EBO shape: {self.indices.shape}")
-            log.error(f"VBO length: {len(self.vbo) if self.vbo is not None else 'None'}")
+            log.error(f"VBO length: {len(self.vertices) if self.vertices is not None else 'None'}")
 
         # Restore fill mode
         GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL)
@@ -298,8 +345,8 @@ class MeshData:
             self.colors = None
         if self.indices is not None:
             self.indices = None
-        if self.vbo is not None:
-            self.vbo = None
+        if self.vertices is not None:
+            self.vertices = None
         if self.texcoords is not None:
             self.texcoords = None
 

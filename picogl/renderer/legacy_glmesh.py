@@ -72,7 +72,7 @@ class LegacyGLMesh:
         Parameters
         ----------
         mesh : MeshData
-            Must have .vbo (Nx3), .ebo (Mx1), optional .cbo (Nx3), .nbo (Nx3), uvs (Nx2)
+            Must have .vertices (Nx3), .ebo (Mx1), optional .cbo (Nx3), .nbo (Nx3), uvs (Nx2)
 
         Returns
         -------
@@ -80,7 +80,7 @@ class LegacyGLMesh:
             Ready-to-upload mesh (GPU buffers are allocated only when `upload()` is called).
         """
         return cls(
-            vertices=mesh.vbo,
+            vertices=mesh.vertices,
             faces=mesh.indices,
             colors=mesh.colors,
             normals=mesh.normals,
