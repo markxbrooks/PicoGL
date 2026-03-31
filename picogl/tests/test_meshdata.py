@@ -106,7 +106,7 @@ class TestMeshData(unittest.TestCase):
             normals=self.test_normals,
             texcoords=self.test_uvs,
             colors=self.test_colors,
-            ebo=self.test_indices
+            indices=self.test_indices
         )
         
         # Test buffer assignments
@@ -150,7 +150,7 @@ class TestMeshData(unittest.TestCase):
             vertices=self.test_vertices,
             normals=self.test_normals,
             colors=self.test_colors,
-            ebo=self.test_indices
+            indices=self.test_indices
         )
         
         ribbon_args = mesh.as_canonical_names()
@@ -395,7 +395,7 @@ class TestMeshData(unittest.TestCase):
         mesh = MeshData(
             vertices=self.test_vertices,
             colors=self.test_colors,
-            ebo=self.test_indices
+            indices=self.test_indices
         )
         
         mesh.draw()
@@ -407,7 +407,7 @@ class TestMeshData(unittest.TestCase):
         """Test draw method with override colour."""
         mesh = MeshData(
             vertices=self.test_vertices,
-            ebo=self.test_indices
+            indices=self.test_indices
         )
         
         override_color = (1.0, 0.0, 0.0)
@@ -420,7 +420,7 @@ class TestMeshData(unittest.TestCase):
         """Test draw method with fill mode."""
         mesh = MeshData(
             vertices=self.test_vertices,
-            ebo=self.test_indices
+            indices=self.test_indices
         )
         
         mesh.draw(fill=True)
@@ -432,7 +432,7 @@ class TestMeshData(unittest.TestCase):
         """Test draw method with alpha blending."""
         mesh = MeshData(
             vertices=self.test_vertices,
-            ebo=self.test_indices
+            indices=self.test_indices
         )
         
         mesh.draw(alpha=0.5)
@@ -444,7 +444,7 @@ class TestMeshData(unittest.TestCase):
         """Test draw method with custom line width."""
         mesh = MeshData(
             vertices=self.test_vertices,
-            ebo=self.test_indices
+            indices=self.test_indices
         )
         
         mesh.draw(line_width=2.0)
@@ -456,7 +456,7 @@ class TestMeshData(unittest.TestCase):
         """Test draw method with custom drawing mode."""
         mesh = MeshData(
             vertices=self.test_vertices,
-            ebo=self.test_indices
+            indices=self.test_indices
         )
         
         mesh.draw(mode=GL.GL_LINES)

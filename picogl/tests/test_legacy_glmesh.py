@@ -183,7 +183,7 @@ class TestLegacyGLMesh(unittest.TestCase):
         """Test from_mesh_data with all MeshData attributes."""
         mesh_data = MeshData(
             vertices=self.test_vertices,
-            ebo=self.test_faces,
+            indices=self.test_faces,
             colors=self.test_colors,
             normals=self.test_normals,
             texcoords=self.test_uvs
@@ -202,7 +202,7 @@ class TestLegacyGLMesh(unittest.TestCase):
         """Test from_mesh_data with minimal MeshData attributes."""
         mesh_data = MeshData(
             vertices=self.test_vertices,
-            ebo=self.test_faces
+            indices=self.test_faces
         )
         
         legacy_mesh = LegacyGLMesh.from_mesh_data(mesh_data)
@@ -219,7 +219,7 @@ class TestLegacyGLMesh(unittest.TestCase):
         """Test from_mesh_data without UVs attribute."""
         mesh_data = MeshData(
             vertices=self.test_vertices,
-            ebo=self.test_faces,
+            indices=self.test_faces,
             colors=self.test_colors,
             normals=self.test_normals
         )
