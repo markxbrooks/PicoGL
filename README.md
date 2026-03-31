@@ -146,7 +146,7 @@ class ObjectRenderer(RendererBase):
             self.context.vaos = {}
         self.context.vaos["cube"] = cube_vao = VertexArrayObject()
         cube_vao.add_vbo(index=0, data=self.data.vbo, size=3)
-        cube_vao.add_vbo(index=1, data=self.data.cbo, size=3)
+        cube_vao.add_vbo(index=1, data=self.data.colors, size=3)
         if self.data.normals is not None:
             cube_vao.add_vbo(index=2, data=self.data.normals, size=3)
 

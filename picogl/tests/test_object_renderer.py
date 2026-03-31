@@ -307,7 +307,7 @@ class TestObjectRenderer(unittest.TestCase):
         color_call = next(call for call in calls if call[1].get('index') == 1)
         self.assertEqual(color_call[1]['index'], 1)
         self.assertEqual(color_call[1]['size'], 3)
-        np.testing.assert_array_equal(color_call[1]['data'], self.test_mesh_data.cbo)
+        np.testing.assert_array_equal(color_call[1]['data'], self.test_mesh_data.colors)
         
         # Test normal VBO (index 2, size 3)
         normal_call = next(call for call in calls if call[1].get('index') == 2)

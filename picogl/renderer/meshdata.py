@@ -36,7 +36,7 @@ class MeshData:
         self.vbo = vertices
         self.normals = normals
         self.texcoords = texcoords
-        self.cbo = colors
+        self.colors = colors
         self.indices = indices
 
         self.vertex_count = (
@@ -49,13 +49,13 @@ class MeshData:
         """Convert into canonical names."""
         return {
             CanonicalVertexAttrs.POSITIONS: self.vbo,
-            CanonicalVertexAttrs.COLORS: self.cbo,
+            CanonicalVertexAttrs.COLORS: self.colors,
             CanonicalVertexAttrs.NORMALS: self.normals,
             CanonicalVertexAttrs.INDICES: self.indices,
         }
 
     def __str__(self):
-        return f"{self.vbo} {self.texcoords} {self.cbo} "
+        return f"{self.vbo} {self.texcoords} {self.colors} "
 
     @classmethod
     def _to_float32_flat(cls, arr, name: str, required: bool = False) -> np.ndarray:
@@ -108,9 +108,9 @@ class MeshData:
         if self.normals is not None:
             GL.glEnableClientState(GL.GL_NORMAL_ARRAY)
             GL.glNormalPointer(GL.GL_FLOAT, 0, self.normals)
-        if self.cbo is not None:
+        if self.colors is not None:
             GL.glEnableClientState(GL.GL_COLOR_ARRAY)
-            GL.glColorPointer(3, GL.GL_FLOAT, 0, self.cbo)
+            GL.glColorPointer(3, GL.GL_FLOAT, 0, self.colors)
         if self.texcoords is not None:
             GL.glEnableClientState(GL.GL_TEXTURE_COORD_ARRAY)
             GL.glTexCoordPointer(2, GL.GL_FLOAT, 0, self.texcoords)
@@ -118,7 +118,7 @@ class MeshData:
     def unbind(self):
         if self.texcoords is not None:
             GL.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY)
-        if self.cbo is not None:
+        if self.colors is not None:
             GL.glDisableClientState(GL.GL_COLOR_ARRAY)
         if self.normals is not None:
             GL.glDisableClientState(GL.GL_NORMAL_ARRAY)
@@ -254,10 +254,10 @@ class MeshData:
             GL.glDisable(GL.GL_BLEND)
 
         # Check if we should use vertex colors or override colour
-        if color is None and self.cbo is not None:
+        if color is None and self.colors is not None:
             # Use vertex colors (for fo-fc maps)
             GL.glEnableClientState(GL.GL_COLOR_ARRAY)
-            GL.glColorPointer(3, GL.GL_FLOAT, 0, self.cbo)
+            GL.glColorPointer(3, GL.GL_FLOAT, 0, self.colors)
             # Note: Alpha blending for vertex colors would require 4-component colors
             # For now, we'll use the alpha value for the overall transparency
         else:
@@ -286,7 +286,7 @@ class MeshData:
         GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL)
 
         # Clean up colour array state if we used it
-        if color is None and self.cbo is not None:
+        if color is None and self.colors is not None:
             GL.glDisableClientState(GL.GL_COLOR_ARRAY)
 
     def delete(self):
@@ -294,8 +294,8 @@ class MeshData:
         # Use ``is not None`` — nbo/cbo/ebo are often numpy arrays; ``if arr:`` is ambiguous.
         if self.normals is not None:
             self.normals = None
-        if self.cbo is not None:
-            self.cbo = None
+        if self.colors is not None:
+            self.colors = None
         if self.indices is not None:
             self.indices = None
         if self.vbo is not None:

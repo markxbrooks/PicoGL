@@ -95,8 +95,8 @@ class LegacyRenderer:
             self.mesh = LegacyGLMesh(
                 vertices=mesh_data.vbo.reshape(-1, 3),
                 faces=np.arange(len(mesh_data.vbo) // 3).reshape(-1, 3),
-                colors=mesh_data.cbo.reshape(-1, 3)
-                if mesh_data.cbo is not None
+                colors=mesh_data.colors.reshape(-1, 3)
+                if mesh_data.colors is not None
                 else None,
                 normals=mesh_data.normals.reshape(-1, 3)
                 if mesh_data.normals is not None

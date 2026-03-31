@@ -113,7 +113,7 @@ class TestMeshData(unittest.TestCase):
         np.testing.assert_array_equal(mesh.vbo, self.test_vertices)
         np.testing.assert_array_equal(mesh.normals, self.test_normals)
         np.testing.assert_array_equal(mesh.texcoords, self.test_uvs)
-        np.testing.assert_array_equal(mesh.cbo, self.test_colors)
+        np.testing.assert_array_equal(mesh.colors, self.test_colors)
         np.testing.assert_array_equal(mesh.indices, self.test_indices)
         
         # Test vertex count calculation
@@ -127,7 +127,7 @@ class TestMeshData(unittest.TestCase):
         self.assertIsNotNone(mesh.vbo)
         self.assertIsNone(mesh.normals)
         self.assertIsNone(mesh.texcoords)
-        self.assertIsNone(mesh.cbo)
+        self.assertIsNone(mesh.colors)
         self.assertIsNone(mesh.indices)
         
         expected_vertex_count = len(self.test_vertices.flatten()) // 3
@@ -140,7 +140,7 @@ class TestMeshData(unittest.TestCase):
         self.assertIsNone(mesh.vbo)
         self.assertIsNone(mesh.normals)
         self.assertIsNone(mesh.texcoords)
-        self.assertIsNone(mesh.cbo)
+        self.assertIsNone(mesh.colors)
         self.assertIsNone(mesh.indices)
         self.assertIsNone(mesh.vertex_count)
 
@@ -251,7 +251,7 @@ class TestMeshData(unittest.TestCase):
         self.assertIsNotNone(mesh.vbo)
         self.assertIsNotNone(mesh.normals)
         self.assertIsNotNone(mesh.texcoords)
-        self.assertIsNotNone(mesh.cbo)
+        self.assertIsNotNone(mesh.colors)
         self.assertIsNotNone(mesh.indices)
         
         # Test vertex count
@@ -265,7 +265,7 @@ class TestMeshData(unittest.TestCase):
         self.assertIsNotNone(mesh.vbo)
         self.assertIsNotNone(mesh.normals)  # Should be generated
         self.assertIsNone(mesh.texcoords)
-        self.assertIsNotNone(mesh.cbo)  # Should be generated
+        self.assertIsNotNone(mesh.colors)  # Should be generated
         self.assertIsNone(mesh.indices)
 
     def test_from_raw_with_color_per_vertex_array(self):
@@ -276,10 +276,10 @@ class TestMeshData(unittest.TestCase):
             color_per_vertex=color_per_vertex
         )
         
-        self.assertIsNotNone(mesh.cbo)
+        self.assertIsNotNone(mesh.colors)
         # Should have replicated the colour for all vertices
         expected_length = len(self.test_vertices) * 3
-        self.assertEqual(len(mesh.cbo), expected_length)
+        self.assertEqual(len(mesh.colors), expected_length)
 
     def test_from_raw_with_color_per_vertex_full_array(self):
         """Test from_raw with color_per_vertex as full array."""
@@ -295,9 +295,9 @@ class TestMeshData(unittest.TestCase):
             color_per_vertex=color_per_vertex
         )
         
-        self.assertIsNotNone(mesh.cbo)
+        self.assertIsNotNone(mesh.colors)
         expected = color_per_vertex.reshape(-1)
-        np.testing.assert_array_equal(mesh.cbo, expected)
+        np.testing.assert_array_equal(mesh.colors, expected)
 
     def test_from_raw_with_invalid_color_per_vertex(self):
         """Test from_raw with invalid color_per_vertex."""
@@ -521,15 +521,15 @@ class TestMeshData(unittest.TestCase):
         single_vertex = np.array([[1, 2, 3]], dtype=np.float32)
         mesh = MeshData.from_raw(vertices=single_vertex)
         
-        self.assertIsNotNone(mesh.cbo)
-        self.assertEqual(len(mesh.cbo), 3)  # Single colour (RGB)
+        self.assertIsNotNone(mesh.colors)
+        self.assertEqual(len(mesh.colors), 3)  # Single colour (RGB)
         
         # Test with empty vertex array
         empty_vertices = np.array([], dtype=np.float32).reshape(0, 3)
         mesh = MeshData.from_raw(vertices=empty_vertices)
         
-        self.assertIsNotNone(mesh.cbo)
-        self.assertEqual(len(mesh.cbo), 0)
+        self.assertIsNotNone(mesh.colors)
+        self.assertEqual(len(mesh.colors), 0)
 
     def test_normal_generation(self):
         """Test normal generation when not provided."""
