@@ -34,7 +34,7 @@ class MeshData:
     ):
         """set up the OpenGL context"""
         self.vbo = vertices
-        self.nbo = normals
+        self.normals = normals
         self.texcoords = texcoords
         self.cbo = colors
         self.indices = indices
@@ -50,7 +50,7 @@ class MeshData:
         return {
             CanonicalVertexAttrs.POSITIONS: self.vbo,
             CanonicalVertexAttrs.COLORS: self.cbo,
-            CanonicalVertexAttrs.NORMALS: self.nbo,
+            CanonicalVertexAttrs.NORMALS: self.normals,
             CanonicalVertexAttrs.INDICES: self.indices,
         }
 
@@ -105,9 +105,9 @@ class MeshData:
         if self.vbo is not None:
             GL.glEnableClientState(GL.GL_VERTEX_ARRAY)
             GL.glVertexPointer(3, GL.GL_FLOAT, 0, self.vbo)
-        if self.nbo is not None:
+        if self.normals is not None:
             GL.glEnableClientState(GL.GL_NORMAL_ARRAY)
-            GL.glNormalPointer(GL.GL_FLOAT, 0, self.nbo)
+            GL.glNormalPointer(GL.GL_FLOAT, 0, self.normals)
         if self.cbo is not None:
             GL.glEnableClientState(GL.GL_COLOR_ARRAY)
             GL.glColorPointer(3, GL.GL_FLOAT, 0, self.cbo)
@@ -120,7 +120,7 @@ class MeshData:
             GL.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY)
         if self.cbo is not None:
             GL.glDisableClientState(GL.GL_COLOR_ARRAY)
-        if self.nbo is not None:
+        if self.normals is not None:
             GL.glDisableClientState(GL.GL_NORMAL_ARRAY)
         if self.vbo is not None:
             GL.glDisableClientState(GL.GL_VERTEX_ARRAY)
@@ -292,8 +292,8 @@ class MeshData:
     def delete(self):
         """Drop CPU references to mesh arrays (no GL objects on this type)."""
         # Use ``is not None`` — nbo/cbo/ebo are often numpy arrays; ``if arr:`` is ambiguous.
-        if self.nbo is not None:
-            self.nbo = None
+        if self.normals is not None:
+            self.normals = None
         if self.cbo is not None:
             self.cbo = None
         if self.indices is not None:

@@ -680,7 +680,7 @@ class TestLegacyGLMesh(unittest.TestCase):
         np.testing.assert_array_equal(legacy_mesh.vertices.reshape(-1), mesh_data.vbo)
         np.testing.assert_array_equal(legacy_mesh.indices, mesh_data.indices)
         np.testing.assert_array_equal(legacy_mesh.colors.reshape(-1), mesh_data.cbo)
-        np.testing.assert_array_equal(legacy_mesh.normals.reshape(-1), mesh_data.nbo)
+        np.testing.assert_array_equal(legacy_mesh.normals.reshape(-1), mesh_data.normals)
         np.testing.assert_array_equal(legacy_mesh.uvs.reshape(-1), mesh_data.texcoords)
 
     def test_legacy_client_states_integration(self):

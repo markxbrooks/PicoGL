@@ -513,7 +513,7 @@ class TestGLMesh(unittest.TestCase):
         np.testing.assert_array_equal(glmesh.vertices.reshape(-1), mesh_data.vbo)
         np.testing.assert_array_equal(glmesh.indices, mesh_data.indices)
         np.testing.assert_array_equal(glmesh.colors.reshape(-1), mesh_data.cbo)
-        np.testing.assert_array_equal(glmesh.normals.reshape(-1), mesh_data.nbo)
+        np.testing.assert_array_equal(glmesh.normals.reshape(-1), mesh_data.normals)
         np.testing.assert_array_equal(glmesh.uvs.reshape(-1), mesh_data.texcoords)
 
     def test_upload_vbo_parameters(self):

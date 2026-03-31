@@ -313,7 +313,7 @@ class TestObjectRenderer(unittest.TestCase):
         normal_call = next(call for call in calls if call[1].get('index') == 2)
         self.assertEqual(normal_call[1]['index'], 2)
         self.assertEqual(normal_call[1]['size'], 3)
-        np.testing.assert_array_equal(normal_call[1]['data'], self.test_mesh_data.nbo)
+        np.testing.assert_array_equal(normal_call[1]['data'], self.test_mesh_data.normals)
 
     def test_initialize_without_texture_without_colors(self):
         """Test initialize method without texture and without colors."""

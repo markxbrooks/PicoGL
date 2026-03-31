@@ -72,8 +72,8 @@ class ObjectRenderer(RendererBase):
             # fall back to colors + normals
             if self.data.cbo is not None:
                 model_vao.add_vbo(index=1, data=self.data.cbo, size=3)
-            if self.data.nbo is not None:
-                model_vao.add_vbo(index=2, data=self.data.nbo, size=3)
+            if self.data.normals is not None:
+                model_vao.add_vbo(index=2, data=self.data.normals, size=3)
             self.context.vaos["model"] = model_vao
 
     def render(self) -> None:

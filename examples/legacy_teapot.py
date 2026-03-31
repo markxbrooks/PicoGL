@@ -98,8 +98,8 @@ class LegacyRenderer:
                 colors=mesh_data.cbo.reshape(-1, 3)
                 if mesh_data.cbo is not None
                 else None,
-                normals=mesh_data.nbo.reshape(-1, 3)
-                if mesh_data.nbo is not None
+                normals=mesh_data.normals.reshape(-1, 3)
+                if mesh_data.normals is not None
                 else None,
             )
 

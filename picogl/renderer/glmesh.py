@@ -180,7 +180,7 @@ class GLMesh:
             vertices=mesh.vbo,
             faces=mesh.indices,
             colors=mesh.cbo,
-            normals=mesh.nbo,
+            normals=mesh.normals,
             uvs=getattr(mesh, VBOType.UVS, None),
             shader_type=vertex_layout,
         )

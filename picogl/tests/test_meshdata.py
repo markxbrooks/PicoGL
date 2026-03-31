@@ -111,7 +111,7 @@ class TestMeshData(unittest.TestCase):
         
         # Test buffer assignments
         np.testing.assert_array_equal(mesh.vbo, self.test_vertices)
-        np.testing.assert_array_equal(mesh.nbo, self.test_normals)
+        np.testing.assert_array_equal(mesh.normals, self.test_normals)
         np.testing.assert_array_equal(mesh.texcoords, self.test_uvs)
         np.testing.assert_array_equal(mesh.cbo, self.test_colors)
         np.testing.assert_array_equal(mesh.indices, self.test_indices)
@@ -125,7 +125,7 @@ class TestMeshData(unittest.TestCase):
         mesh = MeshData(vertices=self.test_vertices)
         
         self.assertIsNotNone(mesh.vbo)
-        self.assertIsNone(mesh.nbo)
+        self.assertIsNone(mesh.normals)
         self.assertIsNone(mesh.texcoords)
         self.assertIsNone(mesh.cbo)
         self.assertIsNone(mesh.indices)
@@ -138,7 +138,7 @@ class TestMeshData(unittest.TestCase):
         mesh = MeshData()
         
         self.assertIsNone(mesh.vbo)
-        self.assertIsNone(mesh.nbo)
+        self.assertIsNone(mesh.normals)
         self.assertIsNone(mesh.texcoords)
         self.assertIsNone(mesh.cbo)
         self.assertIsNone(mesh.indices)
@@ -249,7 +249,7 @@ class TestMeshData(unittest.TestCase):
         
         # Test that data is properly converted and stored
         self.assertIsNotNone(mesh.vbo)
-        self.assertIsNotNone(mesh.nbo)
+        self.assertIsNotNone(mesh.normals)
         self.assertIsNotNone(mesh.texcoords)
         self.assertIsNotNone(mesh.cbo)
         self.assertIsNotNone(mesh.indices)
@@ -263,7 +263,7 @@ class TestMeshData(unittest.TestCase):
         mesh = MeshData.from_raw(vertices=self.test_vertices)
         
         self.assertIsNotNone(mesh.vbo)
-        self.assertIsNotNone(mesh.nbo)  # Should be generated
+        self.assertIsNotNone(mesh.normals)  # Should be generated
         self.assertIsNone(mesh.texcoords)
         self.assertIsNotNone(mesh.cbo)  # Should be generated
         self.assertIsNone(mesh.indices)
@@ -535,10 +535,10 @@ class TestMeshData(unittest.TestCase):
         """Test normal generation when not provided."""
         mesh = MeshData.from_raw(vertices=self.test_vertices)
         
-        self.assertIsNotNone(mesh.nbo)
+        self.assertIsNotNone(mesh.normals)
         # Should have generated normals for all vertices
         expected_length = len(self.test_vertices) * 3
-        self.assertEqual(len(mesh.nbo), expected_length)
+        self.assertEqual(len(mesh.normals), expected_length)
 
     def test_repr_string(self):
         """Test string representation of MeshData."""
