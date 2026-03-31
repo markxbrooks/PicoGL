@@ -46,9 +46,9 @@ class TextureRenderer(ObjectRenderer):
         self.texture = texture = TextureLoader(texture_path)
         self.context.texture_id = texture.texture_gl_id
         if texture.inversed_v_coords:
-            for index, _ in enumerate(self.data.uvs):
+            for index, _ in enumerate(self.data.texcoords):
                 if index % 2:
-                    self.data.uvs[index] = 1.0 - self.data.uvs[index]
+                    self.data.texcoords[index] = 1.0 - self.data.texcoords[index]
 
     def get_texture_filename(self):
         """

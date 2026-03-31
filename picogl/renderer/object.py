@@ -65,8 +65,8 @@ class ObjectRenderer(RendererBase):
         model_vao = VertexArrayObject()
         model_vao.add_vbo(index=0, data=self.data.vbo, size=3)
 
-        if self.use_texture and self.data.uvs is not None:
-            model_vao.add_vbo(index=1, data=self.data.uvs, size=2)
+        if self.use_texture and self.data.texcoords is not None:
+            model_vao.add_vbo(index=1, data=self.data.texcoords, size=2)
             self.context.vaos["model"] = model_vao
         else:
             # fall back to colors + normals

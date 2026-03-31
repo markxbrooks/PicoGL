@@ -1,5 +1,5 @@
 """
-GLContext class
+Mesh Data
 """
 from typing import Optional, Union
 
@@ -35,7 +35,7 @@ class MeshData:
         """set up the OpenGL context"""
         self.vbo = vertices
         self.nbo = normals
-        self.uvs = texcoords
+        self.texcoords = texcoords
         self.cbo = colors
         self.ebo = indices
 
@@ -55,7 +55,7 @@ class MeshData:
         }
 
     def __str__(self):
-        return f"{self.vbo} {self.uvs} {self.cbo} "
+        return f"{self.vbo} {self.texcoords} {self.cbo} "
 
     @classmethod
     def _to_float32_flat(cls, arr, name: str, required: bool = False) -> np.ndarray:
@@ -111,12 +111,12 @@ class MeshData:
         if self.cbo is not None:
             GL.glEnableClientState(GL.GL_COLOR_ARRAY)
             GL.glColorPointer(3, GL.GL_FLOAT, 0, self.cbo)
-        if self.uvs is not None:
+        if self.texcoords is not None:
             GL.glEnableClientState(GL.GL_TEXTURE_COORD_ARRAY)
-            GL.glTexCoordPointer(2, GL.GL_FLOAT, 0, self.uvs)
+            GL.glTexCoordPointer(2, GL.GL_FLOAT, 0, self.texcoords)
 
     def unbind(self):
-        if self.uvs is not None:
+        if self.texcoords is not None:
             GL.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY)
         if self.cbo is not None:
             GL.glDisableClientState(GL.GL_COLOR_ARRAY)
@@ -300,8 +300,8 @@ class MeshData:
             self.ebo = None
         if self.vbo is not None:
             self.vbo = None
-        if self.uvs is not None:
-            self.uvs = None
+        if self.texcoords is not None:
+            self.texcoords = None
 
 
 class MeshDataModern(VertexBase):

@@ -112,7 +112,7 @@ class TestMeshData(unittest.TestCase):
         # Test buffer assignments
         np.testing.assert_array_equal(mesh.vbo, self.test_vertices)
         np.testing.assert_array_equal(mesh.nbo, self.test_normals)
-        np.testing.assert_array_equal(mesh.uvs, self.test_uvs)
+        np.testing.assert_array_equal(mesh.texcoords, self.test_uvs)
         np.testing.assert_array_equal(mesh.cbo, self.test_colors)
         np.testing.assert_array_equal(mesh.ebo, self.test_indices)
         
@@ -126,7 +126,7 @@ class TestMeshData(unittest.TestCase):
         
         self.assertIsNotNone(mesh.vbo)
         self.assertIsNone(mesh.nbo)
-        self.assertIsNone(mesh.uvs)
+        self.assertIsNone(mesh.texcoords)
         self.assertIsNone(mesh.cbo)
         self.assertIsNone(mesh.ebo)
         
@@ -139,7 +139,7 @@ class TestMeshData(unittest.TestCase):
         
         self.assertIsNone(mesh.vbo)
         self.assertIsNone(mesh.nbo)
-        self.assertIsNone(mesh.uvs)
+        self.assertIsNone(mesh.texcoords)
         self.assertIsNone(mesh.cbo)
         self.assertIsNone(mesh.ebo)
         self.assertIsNone(mesh.vertex_count)
@@ -250,7 +250,7 @@ class TestMeshData(unittest.TestCase):
         # Test that data is properly converted and stored
         self.assertIsNotNone(mesh.vbo)
         self.assertIsNotNone(mesh.nbo)
-        self.assertIsNotNone(mesh.uvs)
+        self.assertIsNotNone(mesh.texcoords)
         self.assertIsNotNone(mesh.cbo)
         self.assertIsNotNone(mesh.ebo)
         
@@ -264,7 +264,7 @@ class TestMeshData(unittest.TestCase):
         
         self.assertIsNotNone(mesh.vbo)
         self.assertIsNotNone(mesh.nbo)  # Should be generated
-        self.assertIsNone(mesh.uvs)
+        self.assertIsNone(mesh.texcoords)
         self.assertIsNotNone(mesh.cbo)  # Should be generated
         self.assertIsNone(mesh.ebo)
 

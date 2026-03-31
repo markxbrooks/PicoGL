@@ -218,7 +218,7 @@ class TestTextureRenderer(unittest.TestCase):
             )
         
         # Test that UVs are not modified (compare flattened arrays)
-        np.testing.assert_array_equal(renderer.data.uvs.flatten(), original_uvs.flatten())
+        np.testing.assert_array_equal(renderer.data.texcoords.flatten(), original_uvs.flatten())
         
         # Test texture setup
         self.assertEqual(renderer.texture, mock_texture)
@@ -247,7 +247,7 @@ class TestTextureRenderer(unittest.TestCase):
             if index % 2:  # Odd indices are V coordinates
                 expected_uvs_flat[index] = 1.0 - expected_uvs_flat[index]
         
-        np.testing.assert_array_equal(renderer.data.uvs.flatten(), expected_uvs_flat)
+        np.testing.assert_array_equal(renderer.data.texcoords.flatten(), expected_uvs_flat)
         
         # Test texture setup
         self.assertEqual(renderer.texture, mock_texture)
@@ -473,7 +473,7 @@ class TestTextureRenderer(unittest.TestCase):
         
         # Expected result: [0.  1.  1.  0.5 0.5 0.  1.  0. ]
         # This matches the actual behavior of the TextureRenderer
-        np.testing.assert_array_equal(renderer.data.uvs.flatten(), expected_uvs_flat)
+        np.testing.assert_array_equal(renderer.data.texcoords.flatten(), expected_uvs_flat)
 
     def test_draw_selection_method(self):
         """Test _draw_selection method exists and is callable."""
