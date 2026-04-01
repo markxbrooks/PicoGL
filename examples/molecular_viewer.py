@@ -74,7 +74,7 @@ class MolecularViewer:
             raise ValueError("No atom data loaded")
 
         # For now, we'll represent atoms as points
-        # In a full implementation, you'd generate sphere geometry
+        # In a full implementation, you'd generate sphere meshdata
         vertices = np.array(self.atom_data["positions"], dtype=np.float32).reshape(
             -1, 3
         )

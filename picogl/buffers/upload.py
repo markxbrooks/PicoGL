@@ -81,7 +81,7 @@ def upload_geometry_buffers(
     :param ebo_target: Name of the EBO attribute in render_buffers
     :param usage: GL_STATIC_DRAW or GL_DYNAMIC_DRAW
 
-    General-purpose VAO/VBO upload function for vertex geometry.
+    General-purpose VAO/VBO upload function for vertex meshdata.
     """
 
     vao = glGenVertexArrays(1)

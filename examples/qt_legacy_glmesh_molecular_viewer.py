@@ -215,7 +215,7 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         colors = []
         indices = []
 
-        # Generate sphere geometry
+        # Generate sphere meshdata
         for i in range(stacks + 1):
             lat = math.pi * (-0.5 + i / stacks)
             z = radius * math.sin(lat)

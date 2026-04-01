@@ -13,7 +13,7 @@ from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
 class LegacyPositionVBO(LegacyVBO):
     """
     OpenGL buffer class specialized for storing and managing position data,
-    commonly used for rendering ribbons_legacy-like geometry.
+    commonly used for rendering ribbons_legacy-like meshdata.
 
     Inherits from LegacyVBO and adds behavior specific to position data,
     such as setting up the vertex pointer and handling data uploads.
