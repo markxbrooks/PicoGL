@@ -36,7 +36,7 @@ class RendererBase(AbstractRenderer):
 
     @property
     def dispatch_list(self):
-        dispatch_list = [
+        dispatch_list: list[tuple[bool, Callable]] = [
             (self.show_model, self._draw_model()),
             # Add more conditions and corresponding draw functions as needed
         ]
@@ -70,14 +70,6 @@ class RendererBase(AbstractRenderer):
             self._draw_selection()
 
         self._finalize_render()
-
-    def initialize(self) -> None:
-        """
-        initialize_rendering_buffers
-
-        :return:
-        """
-        raise NotImplementedError("Subclasses must implement the method.")
 
     def initialize_rendering_buffers(self):
         """For back compatibility"""
