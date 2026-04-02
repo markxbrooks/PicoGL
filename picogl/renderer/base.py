@@ -13,7 +13,7 @@ from picogl.renderer.abstract import AbstractRenderer
 class RendererBase(AbstractRenderer):
     """Base Renderer Class"""
 
-    def __init__(self, parent: object = None):
+    def __init__(self, parent = None):
         """
         Initialize the renderer.
 
