@@ -75,12 +75,15 @@ class VertexArrayObject(VertexBase):
     OpenGL Vertex Array Objects (VAO) class
     """
 
-    def __init__(self, handle: int = None):
+    def __init__(self, handle: int = None, *, registry_label: Optional[str] = None):
         """
         VertexArrayObject
 
         :param handle: int Handle (ID) of the OpenGL Vertex Array Object (VAO).
+        :param registry_label: Optional custom label for :func:`store_in_gl_registry`
+            (defaults to ``self.__class__.__name__``).
         """
+        self._registry_label = registry_label
         self._configured: bool = False
         if not handle or handle is None:
             if glGenVertexArrays:
@@ -102,7 +105,17 @@ class VertexArrayObject(VertexBase):
     def is_valid_in_current_context(self) -> bool:
         """True if this VAO was created in the current OpenGL context (safe to bind/draw)."""
         if self._creation_context_id == current_gl_context():
-            store_in_gl_registry(self.handle, label=self.__class__.__name__, ctx_id=id(current_gl_context()), buffer_type="VAO")
+            label = (
+                self._registry_label
+                if self._registry_label is not None
+                else self.__class__.__name__
+            )
+            store_in_gl_registry(
+                self.handle,
+                label=label,
+                ctx_id=id(current_gl_context()),
+                buffer_type="VAO",
+            )
             return True
         return False
 

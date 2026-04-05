@@ -40,6 +40,7 @@ class GLMesh:
         use_indices: bool = True,
         *,
         shader_type: Literal[ShaderType.ISOSURFACE, ShaderType.RIBBONS] = ShaderType.ISOSURFACE,
+        registry_label: Optional[str] = None,
     ):
         self.vao: Optional[VertexArrayObject] = None
         self.index_count: int = 0
@@ -61,6 +62,7 @@ class GLMesh:
         if shader_type not in (ShaderType.ISOSURFACE, ShaderType.RIBBONS):
             raise ValueError("shader_type must be ShaderType.ISOSURFACE or ShaderType.RIBBONS")
         self.shader_type = shader_type
+        self._registry_label = registry_label
 
         self.colors = (
             np.asarray(colors, dtype=np.float32).reshape(-1, 3)
@@ -159,6 +161,7 @@ class GLMesh:
         mesh: "MeshData",
         *,
         vertex_layout: Union[ShaderType.ISOSURFACE, ShaderType.RIBBONS] = ShaderType.ISOSURFACE,
+        registry_label: Optional[str] = None,
     ) -> "GLMesh":
         """
         Construct a GLMesh from a MeshData container.
@@ -183,6 +186,7 @@ class GLMesh:
             normals=mesh.normals,
             uvs=getattr(mesh, MeshDataAttrs.TEXCOORDS, None),
             shader_type=vertex_layout,
+            registry_label=registry_label,
         )
 
     def update_colors(self, colors: np.ndarray):
@@ -198,7 +202,7 @@ class GLMesh:
 
         vao: Optional[VertexArrayObject] = None
         try:
-            vao = VertexArrayObject()
+            vao = VertexArrayObject(registry_label=self._registry_label)
             descriptor = self._layout_descriptor
             for attr in descriptor.attributes:
                 data = self._get_buffer_data(attr.vbo_type)

@@ -7,7 +7,9 @@ details such as object handle, type, label, creation time, and associated
 attributes.
 """
 
+import os
 import time
+from collections import Counter
 from dataclasses import dataclass, field
 from typing import Dict, Optional
 
@@ -52,13 +54,54 @@ def debug_vao(vao):
     )
 
 
-def dump_gl_registry():
-    print(GL_REGISTRY)
-    for obj in GL_REGISTRY.values():
-        log.info(
-            f"{obj.type} {obj.handle} label={obj.label} "
-            f"context={obj.context_id}", scope="dump_gl_registry"
+def dump_gl_registry(verbose: Optional[bool] = None) -> None:
+    """Log registered VAOs on shutdown.
+
+    * Always logs a sorted **summary** (counts by label) to the logger and **prints** that
+      line to stdout so it stays visible above profilers or truncated IDE output.
+    * Logs one line **per VAO** at INFO by default (same as pre-summary behaviour).
+
+    * ``DUMP_GL_REGISTRY_QUIET=1`` — summary only (no per-VAO lines).
+    * ``DUMP_GL_REGISTRY_VERBOSE=0`` — same as quiet (optional alias).
+    * Force full listing: pass ``verbose=True`` (overrides quiet).
+    """
+    if verbose is None:
+        quiet = os.environ.get("DUMP_GL_REGISTRY_QUIET", "").strip().lower() in (
+            "1",
+            "true",
+            "yes",
+        ) or os.environ.get("DUMP_GL_REGISTRY_VERBOSE", "").strip().lower() in (
+            "0",
+            "false",
+            "no",
         )
+        verbose = not quiet
+
+    if not GL_REGISTRY:
+        msg = "GL registry: empty"
+        log.info(msg, scope="dump_gl_registry")
+        print(f"[dump_gl_registry] {msg}", flush=True)
+        return
+
+    by_label = Counter(info.label for info in GL_REGISTRY.values())
+    ctx_ids = {info.context_id for info in GL_REGISTRY.values()}
+    breakdown = ", ".join(
+        f"{label}={n}" for label, n in sorted(by_label.items(), key=lambda x: (-x[1], x[0]))
+    )
+    summary = (
+        f"GL registry: {len(GL_REGISTRY)} VAO(s), {len(ctx_ids)} context id(s). "
+        f"By label: {breakdown}"
+    )
+    log.info(summary, scope="dump_gl_registry")
+    print(f"[dump_gl_registry] {summary}", flush=True)
+
+    if verbose:
+        for obj in sorted(GL_REGISTRY.values(), key=lambda i: i.handle):
+            log.info(
+                f"{obj.type} {obj.handle} label={obj.label} "
+                f"context={obj.context_id}",
+                scope="dump_gl_registry",
+            )
 
 
 def store_in_gl_registry(handle: int, label: str, ctx_id: int, buffer_type: str = "VAO"):
