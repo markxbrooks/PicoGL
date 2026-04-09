@@ -35,6 +35,7 @@ This base class is abstract and cannot be used directly;
 import ctypes
 
 import numpy as np
+from OpenGL import error as _gl_err
 from OpenGL.raw.GL._types import GL_FLOAT, GL_UNSIGNED_INT
 from OpenGL.raw.GL.VERSION.GL_1_5 import (GL_ARRAY_BUFFER, GL_DYNAMIC_DRAW,
                                           GL_STATIC_DRAW, glBindBuffer,
@@ -204,7 +205,14 @@ class VertexBuffer(VertexBase):
         glBufferData(self.target, data.nbytes, data, usage)
 
     def update_data(self, data: np.ndarray, offset: int = 0):
-        """Fast path update (glBufferSubData)"""
+        """Upload buffer contents; prefer SubData, fall back to full Data if needed.
+
+        Non-contiguous NumPy arrays can make ``glBufferSubData`` fail with
+        ``GL_INVALID_VALUE`` (1281) under PyOpenGL; normalize layout first.
+        If SubData still fails (e.g. stale ``buffer_size`` vs GPU store), reallocate.
+        """
+        if not data.flags.c_contiguous:
+            data = np.ascontiguousarray(data)
         self.bind()
 
         if data.nbytes > self.buffer_size:
@@ -212,4 +220,8 @@ class VertexBuffer(VertexBase):
             glBufferData(self.target, data.nbytes, data, GL_DYNAMIC_DRAW)
             self.buffer_size = data.nbytes
         else:
-            glBufferSubData(self.target, offset, data.nbytes, data)
+            try:
+                glBufferSubData(self.target, offset, data.nbytes, data)
+            except _gl_err.GLError:
+                glBufferData(self.target, data.nbytes, data, GL_DYNAMIC_DRAW)
+                self.buffer_size = data.nbytes
