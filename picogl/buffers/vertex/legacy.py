@@ -199,10 +199,13 @@ class VertexBufferGroup(VertexBase):
                 for vbo in self.named_vbos.values():
                     vbo.bind()
 
-                # Bind EBO for indexed drawing
-                glBindBuffer(
-                    GL_ELEMENT_ARRAY_BUFFER, getattr(self.ebo, "_id", self.ebo)
-                )
+                # Bind EBO for indexed drawing (LegacyEBO uses ``handle``, not ``_id``)
+                ebo_id = getattr(self.ebo, "handle", None)
+                if ebo_id is None:
+                    ebo_id = getattr(self.ebo, "_id", None)
+                if ebo_id is None:
+                    raise RuntimeError("EBO has no GL buffer name (handle/_id)")
+                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_id)
                 glDrawElements(mode, count, dtype, ctypes.c_void_p(offset))
                 # Unbind EBO afterwards to prevent accidental reuse
                 glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0)
