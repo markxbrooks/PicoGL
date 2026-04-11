@@ -197,14 +197,16 @@ class GLMesh:
 
     def upload(self) -> None:
         """Allocate & fill GPU buffers."""
+
         if self.vao:
             return  # already uploaded
-
+        print("=== GLMesh layout ===")
         vao: Optional[VertexArrayObject] = None
         try:
             vao = VertexArrayObject(registry_label=self._registry_label)
             descriptor = self._layout_descriptor
             for attr in descriptor.attributes:
+                print(attr.name, attr.index, attr.vbo_type, attr.size)
                 data = self._get_buffer_data(attr.vbo_type)
                 if data is None:
                     continue
