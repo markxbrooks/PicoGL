@@ -136,6 +136,12 @@ class VertexArrayObject(VertexBase):
 
             # Configure attributes
             for attr in layout.attributes:
+                vbo = self.get_vbo_object(attr.name)  # <-- CRITICAL
+
+                if vbo is None:
+                    raise RuntimeError(f"No VBO bound for attribute '{attr.name}'")
+
+                vbo.bind()  # <-- THIS IS THE FIX
                 glEnableVertexAttribArray(attr.index)
                 glVertexAttribPointer(
                     attr.index,
