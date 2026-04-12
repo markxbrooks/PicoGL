@@ -49,6 +49,7 @@ from OpenGL.raw.GL.VERSION.GL_1_5 import (GL_ARRAY_BUFFER,
                                           GL_STATIC_DRAW, glBindBuffer)
 from OpenGL.raw.GL.VERSION.GL_2_0 import (glEnableVertexAttribArray,
                                           glVertexAttribPointer)
+from OpenGL.raw.GL.VERSION.GL_3_0 import glIsVertexArray
 from picogl.backend.modern.core.vertex.array.helpers import \
     enable_points_rendering_state
 from picogl.backend.modern.core.vertex.base import VertexBuffer
@@ -103,21 +104,40 @@ class VertexArrayObject(VertexBase):
         self.bind()
 
     def is_valid_in_current_context(self) -> bool:
-        """True if this VAO was created in the current OpenGL context (safe to bind/draw)."""
-        if self._creation_context_id == current_gl_context():
-            label = (
-                self._registry_label
-                if self._registry_label is not None
-                else self.__class__.__name__
-            )
+        """True if this VAO is usable in the current OpenGL context (safe to bind/draw).
+
+        Prefer matching the ``QOpenGLContext`` captured at creation time, but fall back
+        to ``glIsVertexArray`` when a context is current: Qt may return a distinct
+        ``QOpenGLContext`` wrapper across calls for the same underlying GL context,
+        which would otherwise cause false ``different GL context`` failures and bind
+        skips despite a valid VAO name in the current GL namespace.
+        """
+        cur = current_gl_context()
+        same_qt_wrapper = self._creation_context_id == cur
+        handle = getattr(self, "handle", None)
+        valid_in_gl_namespace = False
+        if not same_qt_wrapper and cur is not None and handle:
+            try:
+                valid_in_gl_namespace = bool(glIsVertexArray(handle))
+            except Exception:
+                valid_in_gl_namespace = False
+        if not (same_qt_wrapper or valid_in_gl_namespace):
+            return False
+        label = (
+            self._registry_label
+            if self._registry_label is not None
+            else self.__class__.__name__
+        )
+        try:
             store_in_gl_registry(
                 self.handle,
                 label=label,
-                ctx_id=id(current_gl_context()),
+                ctx_id=id(cur) if cur is not None else 0,
                 buffer_type="VAO",
             )
-            return True
-        return False
+        except Exception:
+            pass
+        return True
 
     def set_layout(self, layout: LayoutDescriptor) -> None:
         """configure"""
