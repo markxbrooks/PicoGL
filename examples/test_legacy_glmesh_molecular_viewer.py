@@ -68,7 +68,7 @@ def test_pdb_loading():
         print(f"   Residues: {len(structure.residues)}")
         
         # Test C-alpha extraction
-        calpha_atoms = [atom for atom in structure.atoms if atom.name == "CA"]
+        calpha_atoms = [atom for atom in structure.atoms if atom.name == MoLibConstant.PEPTIDE_CHAIN_ATOMNAME]
         print(f"✅ C-alpha atoms: {len(calpha_atoms)}")
         
         # Test chain distribution

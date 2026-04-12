@@ -142,7 +142,7 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
             print(f"✓ Residues: {len(structure.residues)}")
 
             # Extract C-alpha atoms
-            self.calpha_atoms = [atom for atom in structure.atoms if atom.name == "CA"]
+            self.calpha_atoms = [atom for atom in structure.atoms if atom.name == MoLibConstant.PEPTIDE_CHAIN_ATOMNAME]
             print(f"✓ Found {len(self.calpha_atoms)} C-alpha atoms")
 
             # Generate C-alpha bonds (sequential bonds within each chain)

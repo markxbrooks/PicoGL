@@ -110,7 +110,7 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
             structure = self.pdb_loader.structure
             
             # Extract C-alpha atoms (CA)
-            self.calpha_atoms = [atom for atom in structure.atoms if atom.name.strip() == "CA"]
+            self.calpha_atoms = [atom for atom in structure.atoms if atom.name.strip() == MoLibConstant.PEPTIDE_CHAIN_ATOMNAME]
             
             print(f"✓ Found {len(self.calpha_atoms)} C-alpha atoms")
             print(f"✓ Structure: {structure.title}")

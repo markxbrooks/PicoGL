@@ -258,12 +258,12 @@ class PDBLoader:
                 ca2 = None
 
                 for atom in curr_res.atoms:
-                    if atom.name.strip() == "CA":
+                    if atom.name.strip() == MoLibConstant.PEPTIDE_CHAIN_ATOMNAME:
                         ca1 = atom
                         break
 
                 for atom in next_res.atoms:
-                    if atom.name.strip() == "CA":
+                    if atom.name.strip() == MoLibConstant.PEPTIDE_CHAIN_ATOMNAME:
                         ca2 = atom
                         break
 
