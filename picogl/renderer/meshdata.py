@@ -69,6 +69,38 @@ class MeshData:
 
     # ---- Backward compatibility aliases ----
 
+    def extend(self, vertices=None, normals=None, colors=None, uvs=None):
+        if vertices is not None:
+            vertices = np.asarray(vertices, dtype=np.float32)
+            self.vertices = (
+                vertices if self.vertices is None
+                else np.vstack([self.vertices, vertices])
+            )
+
+        if normals is not None:
+            normals = np.asarray(normals, dtype=np.float32)
+            self.normals = (
+                normals if self.normals is None
+                else np.vstack([self.normals, normals])
+            )
+
+        if colors is not None:
+            colors = np.asarray(colors, dtype=np.float32)
+            self.colors = (
+                colors if self.colors is None
+                else np.vstack([self.colors, colors])
+            )
+
+        if uvs is not None:
+            uvs = np.asarray(uvs, dtype=np.float32)
+            self.uvs = (
+                uvs if self.uvs is None
+                else np.vstack([self.uvs, uvs])
+            )
+
+    def extend_from_mesh(self, other: "MeshData"):
+        self.extend(vertices=other.vertices, normals=other.normals, colors=other.colors, uvs=other.uvs)
+
     # VBO → vertices
     @property
     def vbo(self):
