@@ -77,7 +77,8 @@ class ShaderManager:
         :return: None
         Bind the given shader shader_program and update current_shader/shader_program ID
         """
-
+        if not self._initialized:
+            self.initialize_shaders()
         if not shader_program:
             log.error("❌ Cannot bind: shader_program is None or invalid", scope="load_shader")
             return
@@ -140,6 +141,8 @@ class ShaderManager:
         :return: None
         Load (if needed) and bind the shader of the given type
         """
+        if not self._initialized:
+            self.initialize_shaders()
         self.current_shader = self.get_shader_type(shader_type)
         if self.current_shader:
             self.current_shader_type = shader_type
@@ -195,6 +198,8 @@ class ShaderManager:
         :return:
         Bind the default shader type.
         """
+        if not self._initialized:
+            self.initialize_shaders()
         self.use_shader_type(
             shader_type=self.default_shader_type, mvp_matrix=mvp_matrix
         )
@@ -203,6 +208,8 @@ class ShaderManager:
         """Initialize src and mark GL state as ready."""
         # Load src into the manager. If caller does not provide a directory,
         # default to PicoGL's packaged shader root (<...>/picogl/shaders).
+        if self._initialized:
+            return
         if shader_dir:
             self.shader_directory = shader_dir
         else:
@@ -228,6 +235,7 @@ class ShaderManager:
         self.use_default_shader()
         self.current_shader_program = self.current_shader.program_id()
         self.current_shader.bind()
+        self._initialized = True
 
     def load_shader(self, shader_type: str, shader_number: int) -> None:
         """
