@@ -17,6 +17,7 @@ from OpenGL.raw.GL.VERSION.GL_1_1 import glDrawArrays
 
 from elmo.glsl.layouts import build_shader_layouts
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
+from picogl.buffers.helper import as_vec3_array
 from picogl.buffers.glcleanup import delete_buffer_object
 from picogl.buffers.vertex.vbo.vbo_class import VBOType, MeshDataAttrs
 from picogl.shaders.type import ShaderType
@@ -45,7 +46,7 @@ class GLMesh:
         self.vao: Optional[VertexArrayObject] = None
         self.index_count: int = 0
         # strict (N, 3)
-        self.vertices = np.asarray(vertices, dtype=np.float32).reshape(-1, 3)
+        self.vertices = as_vec3_array(vertices)
 
         # If using indices, expect a flat array of indices
         self.indices = np.asarray(faces, dtype=np.uint32).reshape(-1)
@@ -65,12 +66,12 @@ class GLMesh:
         self._registry_label = registry_label
 
         self.colors = (
-            np.asarray(colors, dtype=np.float32).reshape(-1, 3)
+            as_vec3_array(colors)
             if colors is not None
             else np.tile((0.0, 0.0, 1.0), (nverts, 1)).astype(np.float32)
         )
         self.normals = (
-            np.asarray(normals, dtype=np.float32).reshape(-1, 3)
+            as_vec3_array(normals)
             if normals is not None
             else np.zeros_like(self.vertices)
         )

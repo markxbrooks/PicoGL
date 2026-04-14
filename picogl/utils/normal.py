@@ -1,5 +1,7 @@
 import numpy as np
 
+from picogl.buffers.helper import as_vec3_array
+
 
 def compute_vertex_normals(vertices, indices):
     normals = np.zeros_like(vertices)
@@ -23,7 +25,7 @@ def compute_vertex_normals(vertices, indices):
 
 
 def compute_normals_from_vbo(vbo):
-    vertices = np.array(vbo, dtype=np.float32).reshape(-1, 3)
+    vertices = as_vec3_array(vbo)
     normals = np.zeros_like(vertices)
     for i in range(0, len(vertices), 3):
         if i + 2 >= len(vertices):

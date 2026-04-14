@@ -13,6 +13,7 @@ from picogl.backend.legacy.core.vertex.buffer.client_states import \
     legacy_client_states
 from picogl.buffers.attributes import AttributeSpec
 from picogl.buffers.factory.layout import create_layout
+from picogl.buffers.helper import as_vec3_array
 from picogl.buffers.glcleanup import delete_buffer_object
 from picogl.buffers.vertex.legacy import VertexBufferGroup
 from picogl.buffers.vertex.vbo.vbo_class import VBOType, MeshDataAttrs
@@ -35,7 +36,7 @@ class LegacyGLMesh:
         uvs: Optional[np.ndarray] = None,
     ):
         # strict (N, 3)
-        self.vertices = np.asarray(vertices, dtype=np.float32).reshape(-1, 3)
+        self.vertices = as_vec3_array(vertices)
         if faces is not None:
             self.indices = np.asarray(faces, dtype=np.uint32).reshape(-1)
         else:
@@ -46,12 +47,12 @@ class LegacyGLMesh:
             raise ValueError("GLMesh requires non-empty faces")
 
         self.colors = (
-            np.asarray(colors, dtype=np.float32).reshape(-1, 3)
+            as_vec3_array(colors)
             if colors is not None
             else np.tile((0.0, 0.0, 1.0), (nverts, 1)).astype(np.float32)
         )
         self.normals = (
-            np.asarray(normals, dtype=np.float32).reshape(-1, 3)
+            as_vec3_array(normals)
             if normals is not None
             else np.zeros_like(self.vertices)
         )
