@@ -29,6 +29,7 @@ class ShaderProgram:
         self.fragment_shader = None
         self.program = None
         self.uniforms = {}
+        self._uniform_state = {}
 
         if vertex_source_file is not None and vertex_source_file is not None:
             self.init_shader_from_glsl_files(
@@ -99,7 +100,7 @@ class ShaderProgram:
         )
         self.link_shader_program()
 
-    def uniform(self, name: str, value):
+    def uniform_old(self, name: str, value):
         """
         uniform
 
@@ -132,7 +133,50 @@ class ShaderProgram:
             raise RuntimeError(f"Shader link failed: {err}")
         log_gl_error()
 
-    def get_uniform_location(self, uniform_name):
+    def uniform(self, name: str, value):
+        if name in self._uniform_state:
+            if np.array_equal(self._uniform_state[name], value):
+                return self  # skip redundant upload
+
+        loc = self.get_uniform_location(name)
+
+        if loc == -1:
+            return self
+
+        set_uniform_location_value(loc, value)
+        self._uniform_state[name] = value
+        return self
+
+    def uniform_new(self, name: str, value):
+        """
+        Set uniform value with proper location caching.
+        """
+        if name not in self.uniforms:
+            loc = self.get_uniform_location(name)
+            self.uniforms[name] = loc
+        else:
+            loc = self.uniforms[name]
+
+        # Optional: skip invalid uniforms
+        if loc == -1:
+            return self
+
+        set_uniform_location_value(loc, value)
+        return self
+
+    def get_uniform_location(self, uniform_name: str) -> int:
+        if uniform_name in self.uniforms:
+            return self.uniforms[uniform_name]
+
+        loc = get_uniform_location(
+            shader_program=self.program,
+            uniform_name=uniform_name
+        )
+
+        self.uniforms[uniform_name] = loc
+        return loc
+
+    def get_uniform_location_old(self, uniform_name):
         """get_uniform_location"""
         mvp_id = get_uniform_location(
             shader_program=self.program, uniform_name=uniform_name
