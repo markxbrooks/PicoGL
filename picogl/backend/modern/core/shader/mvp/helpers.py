@@ -57,7 +57,7 @@ def setup_mvp(angle_x: float, angle_y: float, zoom: float, aspect: float) -> glm
     return projection * view
 
 
-def np_setup_mvp(shader, width, height, angle_x, angle_y, zoom) -> ndarray:
+def np_setup_mvp(shader, width, height, angle_x, angle_y, zoom) -> np.ndarray:
     """
     setup_mvp
 
