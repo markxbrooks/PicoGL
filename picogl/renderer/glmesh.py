@@ -201,13 +201,11 @@ class GLMesh:
 
         if self.vao:
             return  # already uploaded
-        print("=== GLMesh layout ===")
         vao: Optional[VertexArrayObject] = None
         try:
             vao = VertexArrayObject(registry_label=self._registry_label)
             descriptor = self._layout_descriptor
             for attr in descriptor.attributes:
-                print(attr.name, attr.index, attr.vbo_type, attr.size)
                 data = self._get_buffer_data(attr.vbo_type)
                 if data is None:
                     continue
@@ -229,7 +227,7 @@ class GLMesh:
             self.index_count = (
                 self.indices.size if self.use_indices else self.vertices.shape[0]
             )
-            vao = None  # ownership transferred to self.vao"""
+            vao = None  # ownership transferred to self.vao
         finally:
             # If add_vbo/add_ebo failed after VAO gen, drop orphan VAO so the next
             # upload() retry does not accumulate registry leaks.
