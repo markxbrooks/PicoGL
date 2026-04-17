@@ -55,10 +55,12 @@ class MeshData:
         indices: np.ndarray = None,
     ):
         """set up the OpenGL context"""
-        self.vertices = vertices
-        self.normals = normals
+        self.vertices = self._ensure_xyz(vertices)
+        n = self._xyz_row_count(self.vertices)
+
+        self.normals = self._ensure_xyz(normals, n)
+        self.colors = self._ensure_xyz(colors, n)
         self.texcoords = texcoords
-        self.colors = colors
         self.indices = indices
 
         self.vertex_count = (
@@ -66,6 +68,20 @@ class MeshData:
             if vertices is not None
             else None
         )
+
+    @staticmethod
+    def _ensure_xyz(arr, n=None):
+        if arr is None:
+            if n is None:
+                return None
+            return np.zeros((n, 3), dtype=np.float32)
+
+        a = np.asarray(arr, dtype=np.float32).reshape(-1, 3)
+
+        if n is not None and a.shape[0] != n:
+            raise ValueError("Attribute length mismatch")
+
+        return a
 
     # ---- Backward compatibility aliases ----
 
@@ -403,3 +419,126 @@ class MeshData:
             self.vertices = None
         if self.texcoords is not None:
             self.texcoords = None
+
+    @staticmethod
+    def _xyz_row_count(arr: Optional[np.ndarray]) -> int:
+        if arr is None:
+            return 0
+        a = np.asarray(arr)
+        if a.size == 0:
+            return 0
+        if a.ndim == 2 and a.shape[-1] == 3:
+            return int(a.shape[0])
+        return int(a.size // 3)
+
+    @staticmethod
+    def _as_xyz_f32(
+        arr: Optional[np.ndarray],
+        n: int,
+        name: str,
+    ) -> np.ndarray:
+        """Return (n, 3) float32; ``None`` becomes zeros."""
+        if arr is None:
+            return np.zeros((n, 3), dtype=np.float32)
+        out = np.asarray(arr, dtype=np.float32).reshape(-1, 3)
+        if out.shape[0] != n:
+            raise ValueError(f"{name} length {out.shape[0]} != vertex count {n}")
+        return out
+
+    @staticmethod
+    def _as_uv_f32(arr: Optional[np.ndarray], n: int) -> np.ndarray:
+        """Return (n, 2) float32; ``None`` becomes zeros."""
+        if arr is None:
+            return np.zeros((n, 2), dtype=np.float32)
+        out = np.asarray(arr, dtype=np.float32).reshape(-1, 2)
+        if out.shape[0] != n:
+            raise ValueError(f"texcoords length {out.shape[0]} != vertex count {n}")
+        return out
+
+    @staticmethod
+    def _indices_u32_flat(indices: Optional[np.ndarray]) -> Optional[np.ndarray]:
+        if indices is None:
+            return None
+        return np.asarray(indices, dtype=np.uint32).reshape(-1)
+
+    def append_mesh(self, mesh: "MeshData") -> None:
+        """
+        Concatenate ``mesh`` after this mesh: vertices/normals/colors/uvs are stacked;
+        triangle indices from ``mesh`` are offset by the current vertex count.
+
+        Invariants:
+            * Vertices are (N, 3), float32.
+            * Normals and colors, if present on either mesh, are expanded to (N, 3) with
+              zeros for missing rows so lengths match vertices.
+            * Indices are uint32 element buffer; merged as ``concat(self, mesh + base)``.
+            * Optional texcoords (N, 2); if either side has them, both sides are padded.
+
+        :param mesh: Another :class:`MeshData` instance (same attribute layout).
+        """
+        if mesh is None:
+            raise TypeError("append_mesh: mesh must not be None")
+
+        if mesh.colors is None:
+            raise ValueError("append_mesh: incoming mesh must have colors")
+
+        mv = mesh.vertices
+        if mv is None:
+            return
+
+        m_count = self._xyz_row_count(mv)
+        if m_count == 0:
+            return
+
+        mv3 = np.asarray(mv, dtype=np.float32).reshape(-1, 3)
+
+        # --- Empty receiver: copy mesh wholesale ---
+        if self.vertices is None:
+            self.vertices = mv3.copy()
+            self.normals = self._as_xyz_f32(mesh.normals, m_count, "normals")
+            self.colors = self._as_xyz_f32(mesh.colors, m_count, "colors")
+            mi = self._indices_u32_flat(mesh.indices)
+            self.indices = None if mi is None else mi.copy()
+            want_uv = mesh.texcoords is not None
+            self.texcoords = (
+                self._as_uv_f32(mesh.texcoords, m_count) if want_uv else None
+            )
+            self.vertex_count = m_count
+            return
+
+        sv3 = np.asarray(self.vertices, dtype=np.float32).reshape(-1, 3)
+        s_count = sv3.shape[0]
+
+        si = self._indices_u32_flat(self.indices)
+        mi = self._indices_u32_flat(mesh.indices)
+        if si is None:
+            raise ValueError(
+                "append_mesh: base mesh has vertices but no indices (cannot merge)"
+            )
+        if mi is None:
+            raise ValueError(
+                "append_mesh: appended mesh has vertices but no indices (cannot merge)"
+            )
+
+        base = np.uint32(s_count)
+        mn = self._as_xyz_f32(mesh.normals, m_count, "normals")
+        mc = self._as_xyz_f32(mesh.colors, m_count, "colors")
+        sn = self._as_xyz_f32(self.normals, s_count, "normals")
+        sc = self._as_xyz_f32(self.colors, s_count, "colors")
+
+        want_uv = (self.texcoords is not None) or (mesh.texcoords is not None)
+        if want_uv:
+            st = self._as_uv_f32(self.texcoords, s_count)
+            mt = self._as_uv_f32(mesh.texcoords, m_count)
+            self.texcoords = np.vstack([st, mt])
+        else:
+            self.texcoords = None
+
+        self.vertices = np.vstack([sv3, mv3])
+        self.normals = np.vstack([sn, mn])
+        self.colors = np.vstack([sc, mc])
+
+        mi_shift = mi.astype(np.uint64) + np.uint64(base)
+        self.indices = np.concatenate([si.astype(np.uint64), mi_shift]).astype(
+            np.uint32
+        )
+        self.vertex_count = int(self.vertices.shape[0])
