@@ -96,5 +96,5 @@ initialize_gl_list = [
     ("✅ Enabling smoothing", enable_smoothing),
     ("✅ Setting up materials", setup_materials),
     ("✅ Setting up lighting", setup_lighting),
-    (None, lambda: print(get_gl_info())),
+    (None, lambda: log.header_message(title="OpenGL Information",  message=get_gl_info())),
 ]

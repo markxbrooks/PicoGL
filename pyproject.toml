@@ -19,7 +19,8 @@ requires-python = ">=3.8"
 dependencies = [
     "PyOpenGL",
     "numpy",
-    "pyglm"
+    "pyglm",
+    "tqdm",
 ]
 
 [project.urls]

@@ -35,7 +35,7 @@ bonds_frag.glsl
 
 import os
 from dataclasses import dataclass, field
-from typing import Dict, Optional, Union
+from typing import Dict, Iterable, Optional, Tuple, Union
 
 import numpy as np
 from decologr import Decologr as log
@@ -55,6 +55,20 @@ from picogl.shaders.load import (
 )
 from picogl.shaders.type import ShaderType
 from pyglm import glm
+
+
+def _progress_iter(
+    pairs: Iterable[Tuple[int, ShaderType]], *, desc: str, total: int
+) -> Iterable[Tuple[int, ShaderType]]:
+    """Rich tqdm when available, plain ``tqdm`` otherwise, or no wrapping if tqdm is absent."""
+    try:
+        from tqdm.rich import tqdm
+    except ImportError:
+        try:
+            from tqdm import tqdm
+        except ImportError:
+            return pairs
+    return tqdm(pairs, desc=desc, total=total, unit="shader", leave=False)
 
 
 @dataclass
@@ -216,10 +230,15 @@ class ShaderManager:
             self.shader_directory = os.path.dirname(str(PICOGL_SHADER_SRC_DIRECTORY))
 
         failed = []
-        for shader_number, shader_type in enumerate(ShaderType):
+        shader_pairs = list(enumerate(ShaderType))
+        n = len(shader_pairs)
+        for shader_number, shader_type in _progress_iter(
+            shader_pairs, desc="Shader programs", total=n
+        ):
             log.message(
                 f"Loading shader type: '{shader_type.value} from {self.shader_directory}'",
-                silent=True, scope="load_shader"
+                silent=True,
+                scope="load_shader",
             )
             self.load_shader(shader_type, shader_number)
             if self.shaders[shader_type] is self.fallback_shader:
@@ -227,11 +246,16 @@ class ShaderManager:
 
         if failed:
             log.warning(
-                f"⚠️ Shader fallback used for: {', '.join(st.value for st in failed)}", scope="load_shader"
+                f"⚠️ Shader fallback used for: {', '.join(st.value for st in failed)}",
+                scope="load_shader",
             )
 
         self._initialized = True
-        log.message("✅ GLState _initialized and src loaded (including fallback).", scope="load_shader")
+        log.message(
+            "✅ GLState _initialized and src loaded (including fallback).",
+            scope="load_shader",
+            silent=True,
+        )
         self.use_default_shader()
         self.current_shader_program = self.current_shader.program_id()
         self.current_shader.bind()
@@ -282,7 +306,11 @@ class ShaderManager:
                     "fallback_fragment.glsl", SHADER_SRC_DIRECTORY
                 )
                 self.fallback_shader = compile_shaders(vert, frag, "fallback")
-                log.message("✅ Fallback shader_manager.current_shader_program compiled")
+                log.message(
+                    "✅ Fallback shader_manager.current_shader_program compiled",
+                    silent=True,
+                    scope="load_shader",
+                )
             except Exception as ex:
                 log.error(
                     f"❌ Fallback shader_manager.current_shader_program setup failed: {ex}"
