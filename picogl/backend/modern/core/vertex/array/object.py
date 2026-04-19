@@ -64,6 +64,8 @@ from picogl.buffers.vertex.aliases import NAME_ALIASES
 from picogl.buffers.vertex.registry import store_in_gl_registry
 from picogl.safe import gl_gen_safe
 
+SILENT_VAO = True
+
 
 def current_gl_context() -> int:
     try:
@@ -114,7 +116,7 @@ class VertexArrayObject(VertexBase, GLResource):
             (defaults to ``self.__class__.__name__``).
         """
         self._creation_context = QOpenGLContext.currentContext()
-        log.message(f"VAO context :{id(self._creation_context)}", scope="VertexArrayObject")
+        log.message(f"VAO context :{id(self._creation_context)}", scope="VertexArrayObject", silent=SILENT_VAO)
         self._registry_label = registry_label
         self._configured: bool = False
         if not handle or handle is None:
