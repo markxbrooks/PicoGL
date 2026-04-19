@@ -1,6 +1,6 @@
 """execute gl task lists"""
 
-from typing import Callable
+from typing import Callable, Optional
 
 from decologr import Decologr as log
 from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_COLOR_BUFFER_BIT, GL_CULL_FACE,
@@ -16,7 +16,11 @@ from picogl.backend.legacy.core.camera.setup import (enable_blending,
 from picogl.info import get_gl_info
 
 
-def execute_gl_tasks(task_list: list[tuple[str, Callable]]):
+def execute_gl_tasks(
+    task_list: list[tuple[str, Callable]],
+    *,
+    on_step: Optional[Callable[[int, int, Optional[str]], None]] = None,
+):
     """
     Execute a sequence of OpenGL-related tasks.
 
@@ -28,6 +32,9 @@ def execute_gl_tasks(task_list: list[tuple[str, Callable]]):
     :param task_list:
         A list of ``(message, callable)`` tuples describing the tasks to run.
     :type task_list: list[tuple[str | None, callable]]
+    :param on_step:
+        Optional ``callback(step_index, total_steps, message)`` after each task is
+        scheduled (1-based index). ``message`` may be ``None``.
 
     :raises TypeError:
         If ``task_list`` is not a list or any element is not a 2-tuple.
@@ -69,6 +76,12 @@ def execute_gl_tasks(task_list: list[tuple[str, Callable]]):
                 exception=ex,
             )
             raise
+
+        if on_step is not None:
+            try:
+                on_step(i, len(task_list), message)
+            except Exception:
+                pass
 
 
 init_gl_list = [

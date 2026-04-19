@@ -35,7 +35,7 @@ bonds_frag.glsl
 
 import os
 from dataclasses import dataclass, field
-from typing import Dict, Iterable, Optional, Tuple, Union
+from typing import Callable, Dict, Iterable, Optional, Tuple, Union
 
 import numpy as np
 from decologr import Decologr as log
@@ -60,7 +60,13 @@ from pyglm import glm
 def _progress_iter(
     pairs: Iterable[Tuple[int, ShaderType]], *, desc: str, total: int
 ) -> Iterable[Tuple[int, ShaderType]]:
-    """Rich tqdm when available, plain ``tqdm`` otherwise, or no wrapping if tqdm is absent."""
+    """Optional tqdm in real terminals only; GUI apps use plain iteration (no monitor thread)."""
+    import sys
+
+    # tqdm spawns a background monitor thread; mixing that with Qt + GL init has
+    # caused segfaults when stderr is not a TTY (IDE / GUI runs).
+    if not sys.stderr.isatty():
+        return pairs
     try:
         from tqdm.rich import tqdm
     except ImportError:
@@ -68,7 +74,14 @@ def _progress_iter(
             from tqdm import tqdm
         except ImportError:
             return pairs
-    return tqdm(pairs, desc=desc, total=total, unit="shader", leave=False)
+    return tqdm(
+        pairs,
+        desc=desc,
+        total=total,
+        unit="shader",
+        leave=False,
+        monitor_interval=0,
+    )
 
 
 @dataclass
@@ -218,7 +231,12 @@ class ShaderManager:
             shader_type=self.default_shader_type, mvp_matrix=mvp_matrix
         )
 
-    def initialize_shaders(self, shader_dir: str = None):
+    def initialize_shaders(
+        self,
+        shader_dir: str = None,
+        *,
+        on_shader_loaded: Optional[Callable[[int, int, ShaderType], None]] = None,
+    ):
         """Initialize src and mark GL state as ready."""
         # Load src into the manager. If caller does not provide a directory,
         # default to PicoGL's packaged shader root (<...>/picogl/shaders).
@@ -241,6 +259,11 @@ class ShaderManager:
                 scope="load_shader",
             )
             self.load_shader(shader_type, shader_number)
+            if on_shader_loaded is not None:
+                try:
+                    on_shader_loaded(shader_number, n, shader_type)
+                except Exception:
+                    pass
             if self.shaders[shader_type] is self.fallback_shader:
                 failed.append(shader_type)
 
@@ -279,7 +302,8 @@ class ShaderManager:
             if picogl_shader_program:
                 log.message(
                     f"[{shader_number}/{len(ShaderType)}] ✅ Shader type `{shader_type}` compiled and registered",
-                    scope=self.__class__.__name__
+                    scope=self.__class__.__name__,
+                    silent=True,
                 )
                 self.shaders[shader_type] = picogl_shader_program
             else:
