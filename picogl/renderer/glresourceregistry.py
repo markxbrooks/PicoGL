@@ -19,7 +19,7 @@ class GLResourceRegistry:
 
     def __init__(self):
         self._creation_context = QOpenGLContext.currentContext()
-        log.message(f"Current GL context :{id(self._creation_context)}", scope="GLResourceRegistry")
+        log.message(f"GL context :{id(self._creation_context)}", scope="GLResourceRegistry")
         self._contexts = WeakKeyDictionary()
         self.vaos: dict[str, VertexArrayObject] = field(default_factory=dict)
         self.current_vao: Optional[VertexArrayObject] = None
