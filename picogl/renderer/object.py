@@ -7,7 +7,7 @@ from pathlib import Path
 from decologr import Decologr as log
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
-from picogl.renderer import GLContext, MeshData, RendererBase
+from picogl.renderer import GLResourceRegistry, MeshData, RendererBase
 from picogl.utils.loader.texture import TextureLoader
 from picogl.utils.texture import bind_texture_array
 
@@ -17,7 +17,7 @@ class ObjectRenderer(RendererBase):
 
     def __init__(
         self,
-        context: GLContext,
+        context: GLResourceRegistry,
         data: MeshData,
         base_dir: str | Path | None = None,
         glsl_dir: str | Path | None = None,
@@ -51,7 +51,7 @@ class ObjectRenderer(RendererBase):
         """Load and compile shaders."""
         log.message("Loading shaders...")
         if not self.context:
-            self.context = GLContext()
+            self.context = GLResourceRegistry()
         self.context.create_shader_program(
             vertex_source_file="vertex.glsl",
             fragment_source_file="fragment.glsl",

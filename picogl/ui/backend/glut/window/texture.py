@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from picogl.renderer import GLContext, MeshData
+from picogl.renderer import GLResourceRegistry, MeshData
 from picogl.renderer.texture import TextureRenderer
 from picogl.ui.backend.glut.window.glut import GlutRendererWindow
 
@@ -20,7 +20,7 @@ class TextureWindow(GlutRendererWindow):
         *args,
         **kwargs,
     ):
-        self.context = GLContext()
+        self.context = GLResourceRegistry()
         self.base_dir = base_dir
         self.data = data
         super().__init__(

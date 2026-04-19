@@ -38,6 +38,8 @@ from contextlib import contextmanager
 from typing import Optional, Union
 
 import numpy as np
+from PySide6.QtGui import QOpenGLContext
+
 from decologr import Decologr as log
 from OpenGL.GL import glDeleteVertexArrays, glGenVertexArrays, glBufferSubData
 from OpenGL.raw.GL._types import GL_FLOAT, GL_UNSIGNED_INT
@@ -63,15 +65,42 @@ from picogl.buffers.vertex.registry import store_in_gl_registry
 from picogl.safe import gl_gen_safe
 
 
-def current_gl_context():
+def current_gl_context() -> int:
     try:
         from PySide6.QtGui import QOpenGLContext
-        return QOpenGLContext.currentContext()
+        # return QOpenGLContext.currentContext()
+        return id(QOpenGLContext.currentContext())
     except Exception:
         return None
 
+class GLResource:
+    """Base class for all GL-owned objects."""
 
-class VertexArrayObject(VertexBase):
+    def __init__(self, handle):
+        self._creation_context = QOpenGLContext.currentContext()
+        self._deleted = False
+        self._handle = None
+
+    @property
+    def context(self):
+        return self._creation_context
+
+    def validate_context(self):
+        ctx = QOpenGLContext.currentContext()
+
+        if ctx is None:
+            raise RuntimeError("No current GL context")
+
+        if self._creation_context is None:
+            raise RuntimeError("Resource has no creation context")
+
+        if ctx is not self._creation_context:
+            raise RuntimeError(
+                f"Context mismatch: created in {self._creation_context}, current {ctx}"
+            )
+
+
+class VertexArrayObject(VertexBase, GLResource):
     """
     OpenGL Vertex Array Objects (VAO) class
     """
@@ -84,6 +113,8 @@ class VertexArrayObject(VertexBase):
         :param registry_label: Optional custom label for :func:`store_in_gl_registry`
             (defaults to ``self.__class__.__name__``).
         """
+        self._creation_context = QOpenGLContext.currentContext()
+        log.message(f"VAO context :{id(self._creation_context)}", scope="VertexArrayObject")
         self._registry_label = registry_label
         self._configured: bool = False
         if not handle or handle is None:
@@ -100,44 +131,27 @@ class VertexArrayObject(VertexBase):
         self.vao: Optional[int] = None  # Bonds Vertex Array Object. Does absolutely nothing
         self.ebo = None  # Bond Index Buffer Object
         self.layout: Optional[LayoutDescriptor] = None
-        self._creation_context_id: Optional[int] = current_gl_context()
         self.bind()
 
     def is_valid_in_current_context(self) -> bool:
-        """True if this VAO is usable in the current OpenGL context (safe to bind/draw).
+        ctx = QOpenGLContext.currentContext()
 
-        Prefer matching the ``QOpenGLContext`` captured at creation time, but fall back
-        to ``glIsVertexArray`` when a context is current: Qt may return a distinct
-        ``QOpenGLContext`` wrapper across calls for the same underlying GL context,
-        which would otherwise cause false ``different GL context`` failures and bind
-        skips despite a valid VAO name in the current GL namespace.
-        """
-        cur = current_gl_context()
-        same_qt_wrapper = self._creation_context_id == cur
-        handle = getattr(self, "handle", None)
-        valid_in_gl_namespace = False
-        if not same_qt_wrapper and cur is not None and handle:
-            try:
-                valid_in_gl_namespace = bool(glIsVertexArray(handle))
-            except Exception:
-                valid_in_gl_namespace = False
-        if not (same_qt_wrapper or valid_in_gl_namespace):
+        if ctx is None:
             return False
-        label = (
-            self._registry_label
-            if self._registry_label is not None
-            else self.__class__.__name__
-        )
+
+        # Fast path: correct context
+        if ctx is self.context:
+            return True
+
+        # Optional fallback: GL-level validation (ONLY if sharing contexts exist)
         try:
-            store_in_gl_registry(
-                self.handle,
-                label=label,
-                ctx_id=id(cur) if cur is not None else 0,
-                buffer_type="VAO",
-            )
+            handle = getattr(self, "handle", None)
+            if handle:
+                return bool(glIsVertexArray(handle))
         except Exception:
-            pass
-        return True
+            return False
+
+        return False
 
     def set_layout(self, layout: LayoutDescriptor) -> None:
         """configure"""

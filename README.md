@@ -119,14 +119,14 @@ if __name__ == "__main__":
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES
 
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
-from picogl.renderer import GLContext, MeshData, RendererBase
+from picogl.renderer import GLResourceRegistry, MeshData, RendererBase
 
 
 class ObjectRenderer(RendererBase):
     """ Basic renderer class """
 
     def __init__(self,
-                 context: GLContext,
+                 context: GLResourceRegistry,
                  data: MeshData,
                  glsl_dir: str):
         super().__init__()

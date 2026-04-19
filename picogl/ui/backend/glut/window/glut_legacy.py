@@ -2,7 +2,7 @@ import numpy as np
 from decologr import Decologr as log
 from OpenGL.raw.GL.VERSION.GL_1_0 import glViewport
 from decologr import setup_logging
-from picogl.renderer import GLContext
+from picogl.renderer import GLResourceRegistry
 from picogl.ui.backend.glut.window.gl import GLWindow
 from picogl.utils.gl_init import execute_gl_tasks, init_gl_list, paint_gl_list
 from pyglm import glm
@@ -16,12 +16,12 @@ class GlutRendererWindow(GLWindow):
         width,
         height,
         title: str = None,
-        context: GLContext = None,
+        context: GLResourceRegistry = None,
         *args,
         **kwargs,
     ):
         super().__init__(title=title, *args, **kwargs)
-        self.context = GLContext() if context is None else context
+        self.context = GLResourceRegistry() if context is None else context
         self.title = title
         self.renderer = None
         self.width = width
