@@ -157,12 +157,12 @@ class ShaderManager:
         self,
         shader_type: ShaderType,
         mvp_matrix: np.ndarray | glm.mat4 = None,
-        zoom_scale: int = None,
+        zoom_scale: int | float = None,
     ) -> None:
         """
         use_shader_type
 
-        :param zoom_scale: int
+        :param zoom_scale: int | float
         :param shader_type: ShaderType
         :param mvp_matrix: np.ndarray | glm.mat4 = None
         :return: None
