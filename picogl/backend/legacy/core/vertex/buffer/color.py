@@ -17,8 +17,6 @@ class LegacyColorVBO(LegacyVBO):
         super().__init__(handle=handle, size=size, dtype=dtype)
         if data is not None:
             self.set_data(data)
-        # Binding in __init__ is optional – keep if consistent with other subclasses
-        self.bind()
 
     def configure(self):
         """Configure vertex attribute pointer for colors."""

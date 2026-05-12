@@ -21,27 +21,12 @@ class LegacyEBO(LegacyVBO):
         """constructor"""
         super().__init__(handle=handle, data=data, target=target, size=size, dtype=dtype)
 
-    def draw(
-        self,
-        index_count: int,
-        index_type: int = GL_UNSIGNED_INT,
-        mode: int = GL_LINES,
-        pointer: int = ctypes.c_void_p(0),
-    ):
-        """
-        draw
-
-        :param index_count: int
-        :param index_type: int e.g. GL_UNSIGNED_INT
-        :param mode: int e.g. GL_LINES
-        :param pointer: int
-        :return: None
-        """
-        if not index_count:
-            index_count = self.index_count
+    def draw(self, index_count: int, index_type: int = GL_UNSIGNED_INT, mode: int = GL_LINES):
         if index_count <= 0:
             return
-        glDrawElements(mode, index_count, index_type, pointer)
+
+        # MUST already be bound externally
+        glDrawElements(mode, index_count, index_type, None)
 
     def configure(self):
         """
