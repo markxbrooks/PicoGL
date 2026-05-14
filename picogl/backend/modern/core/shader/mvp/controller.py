@@ -1,6 +1,19 @@
-from elmo.gl.backend.modern.shaders.mvp.control import (MVPControl,
-                                                        dummy_update_handler)
-from elmo.gl.backend.modern.shaders.mvp.mouse import MouseMode
+"""
+Handles user input to manipulate MVPControl.
+
+This module provides the MVPController class for handling user input, such as
+keyboard and mouse events, to control an MVP transformation in a 3D scene. The
+class supports special keys, such as arrow keys and page up/down, as well as
+common keyboard inputs (like WASD) for navigation and movement. It also allows
+for mouse-based interactions, including rotation and panning, to control the
+scene's model-view-projection state.
+
+Classes:
+- MVPController: Inherits from MVPControl and implements input-related logic.
+"""
+
+from picogl.backend.modern.core.shader.mvp.control import MVPControl, dummy_update_handler
+from picogl.backend.modern.core.shader.mvp.mouse import MouseMode
 
 
 class MVPController(MVPControl):
