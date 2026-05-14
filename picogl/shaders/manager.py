@@ -46,13 +46,11 @@ from picogl.backend.modern.core.uniform.location_value import \
 from picogl.backend.modern.core.uniform.mvp import shader_uniform_set_mvp
 from picogl.backend.modern.core.uniform.set_location import \
     set_uniform_name_value
+from picogl.globals import PICOGL_SHADER_SRC_DIRECTORY, SHADER_SRC_DIRECTORY
 from picogl.shaders.compile import compile_shaders
 from picogl.shaders.generate import generate_shader_programs
-from picogl.globals import PICOGL_SHADER_SRC_DIRECTORY, SHADER_SRC_DIRECTORY
-from picogl.shaders.load import (
-    load_fragment_and_vertex_for_shader_type,
-    load_shader_source_string,
-)
+from picogl.shaders.load import (load_fragment_and_vertex_for_shader_type,
+                                 load_shader_source_string)
 from picogl.shaders.type import ShaderType
 from pyglm import glm
 

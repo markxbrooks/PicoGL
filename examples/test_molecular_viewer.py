@@ -4,8 +4,8 @@ Test script for Qt Legacy Molecular Viewer
 This script tests the molecular viewer functionality without requiring a display.
 """
 
-import sys
 import os
+import sys
 from pathlib import Path
 
 # Add the examples directory to the path so we can import the PDB loader
@@ -118,7 +118,8 @@ def test_molecular_viewer_import():
     
     try:
         # Try to import the molecular viewer
-        from qt_legacy_molecular_viewer import QtLegacyMolecularViewer, LegacyMolecularViewerWindow
+        from qt_legacy_molecular_viewer import (LegacyMolecularViewerWindow,
+                                                QtLegacyMolecularViewer)
         print("✅ Successfully imported QtLegacyMolecularViewer")
         print("✅ Successfully imported LegacyMolecularViewerWindow")
         return True

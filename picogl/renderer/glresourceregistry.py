@@ -1,17 +1,16 @@
 """
 GL Context Class
 """
-from decologr import Decologr as log
 import threading
 from dataclasses import field
 from typing import Optional
 from weakref import WeakKeyDictionary
 
 import numpy as np
-from PySide6.QtGui import QOpenGLContext
-
+from decologr import Decologr as log
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.shaders import ShaderType
+from PySide6.QtGui import QOpenGLContext
 
 
 class GLResourceRegistry:

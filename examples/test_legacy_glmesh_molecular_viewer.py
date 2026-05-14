@@ -3,8 +3,9 @@
 Test script for the LegacyGLMesh Molecular Viewer
 """
 
-import sys
 import os
+import sys
+
 
 def test_imports():
     """Test importing the molecular viewer components"""
@@ -14,7 +15,7 @@ def test_imports():
     try:
         # Test PDB loader import
         sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'utils'))
-        from pdb_loader import PDBLoader, Atom
+        from pdb_loader import Atom, PDBLoader
         print("✅ Successfully imported PDBLoader and Atom")
         
         # Test PicoGL imports
@@ -29,7 +30,8 @@ def test_imports():
         print("✅ Successfully imported PySide6 components")
         
         # Test molecular viewer import
-        from qt_legacy_glmesh_molecular_viewer import QtLegacyGLMeshMolecularViewer, LegacyGLMeshMolecularViewerWindow
+        from qt_legacy_glmesh_molecular_viewer import (
+            LegacyGLMeshMolecularViewerWindow, QtLegacyGLMeshMolecularViewer)
         print("✅ Successfully imported QtLegacyGLMeshMolecularViewer")
         print("✅ Successfully imported LegacyGLMeshMolecularViewerWindow")
         
@@ -91,8 +93,9 @@ def test_mesh_data_creation():
     
     try:
         import math
+
         import numpy as np
-        
+
         # Create simple sphere data
         radius = 0.2
         slices = 8

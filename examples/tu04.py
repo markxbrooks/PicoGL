@@ -2,19 +2,16 @@
 # sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 
 
-from OpenGL.GL import *  # pylint: disable=W0614
-
-from pyglm import glm
-from utils.objLoader import objLoader
-from utils.textureLoader import textureLoader
-
 import numpy as np
-
+from decologr import Decologr as log
+from OpenGL.GL import *  # pylint: disable=W0614
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.buffers.vertex import data
 from picogl.ui.backend.glut.window.glut import GlutRendererWindow
-from decologr import Decologr as log
 from picogl.utils.loader.texture import TextureLoader
+from pyglm import glm
+from utils.objLoader import objLoader
+from utils.textureLoader import textureLoader
 
 
 class MeshUE4:

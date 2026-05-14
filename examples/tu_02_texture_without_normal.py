@@ -3,11 +3,10 @@
 
 
 from OpenGL.GL import *  # pylint: disable=W0614
-from pyglm import glm
-from utils.shader_loader import Shader
-
 from picogl.ui.backend.glut.window.gl import GLWindow
 from picogl.utils.loader.texture import TextureLoader
+from pyglm import glm
+from utils.shader_loader import Shader
 
 g_vertex_buffer_data = [
     -1.0,

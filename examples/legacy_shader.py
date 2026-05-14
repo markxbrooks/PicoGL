@@ -1,8 +1,9 @@
 
 import os
 import sys
+from math import cos, sin
+
 import numpy as np
-from math import sin, cos
 
 # Check for display before importing OpenGL
 if os.environ.get("DISPLAY") is None and os.name != "nt":

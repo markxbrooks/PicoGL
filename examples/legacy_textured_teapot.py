@@ -22,12 +22,12 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-from PySide6.QtWidgets import QApplication, QVBoxLayout, QWidget, QLabel, QPushButton, QComboBox
-from PySide6.QtCore import Qt, QTimer
-
 from picogl.mode import GLMode
 from picogl.ui.backend.qt.legacy.renderer import LegacyQtObjectRenderer
 from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtWidgets import (QApplication, QComboBox, QLabel, QPushButton,
+                               QVBoxLayout, QWidget)
 
 # OpenGL imports
 try:

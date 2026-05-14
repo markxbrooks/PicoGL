@@ -14,7 +14,6 @@ import sys
 from pathlib import Path
 
 import numpy as np
-
 from examples.utils.pdb_loader import PDBLoader
 
 # Add the current directory to the path to find pdb_loader.py
@@ -29,7 +28,6 @@ except ImportError as e:
     sys.exit(1)
 
 from OpenGL.GL import *
-
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.renderer import MeshData
 from picogl.ui.backend.glut.window.object import RenderWindow

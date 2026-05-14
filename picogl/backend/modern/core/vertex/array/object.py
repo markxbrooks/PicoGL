@@ -38,10 +38,8 @@ from contextlib import contextmanager
 from typing import Optional, Union
 
 import numpy as np
-from PySide6.QtGui import QOpenGLContext
-
 from decologr import Decologr as log
-from OpenGL.GL import glDeleteVertexArrays, glGenVertexArrays, glBufferSubData
+from OpenGL.GL import glBufferSubData, glDeleteVertexArrays, glGenVertexArrays
 from OpenGL.raw.GL._types import GL_FLOAT, GL_UNSIGNED_INT
 from OpenGL.raw.GL.ARB.vertex_array_object import glBindVertexArray
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POINTS
@@ -52,8 +50,6 @@ from OpenGL.raw.GL.VERSION.GL_1_5 import (GL_ARRAY_BUFFER,
 from OpenGL.raw.GL.VERSION.GL_2_0 import (glEnableVertexAttribArray,
                                           glVertexAttribPointer)
 from OpenGL.raw.GL.VERSION.GL_3_0 import glIsVertexArray
-
-from elmo.log.silence import SILENT_VAO
 from picogl.backend.modern.core.vertex.array.helpers import \
     enable_points_rendering_state
 from picogl.backend.modern.core.vertex.base import VertexBuffer
@@ -65,11 +61,15 @@ from picogl.buffers.glcleanup import delete_buffer
 from picogl.buffers.vertex.aliases import NAME_ALIASES
 from picogl.buffers.vertex.registry import store_in_gl_registry
 from picogl.safe import gl_gen_safe
+from PySide6.QtGui import QOpenGLContext
+
+from elmo.log.silence import SILENT_VAO
 
 
 def current_gl_context() -> int:
     try:
         from PySide6.QtGui import QOpenGLContext
+
         # return QOpenGLContext.currentContext()
         return id(QOpenGLContext.currentContext())
     except Exception:

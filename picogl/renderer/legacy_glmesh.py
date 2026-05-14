@@ -7,16 +7,15 @@ from OpenGL.raw.GL._types import GL_FLOAT
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT
 from OpenGL.raw.GL.VERSION.GL_1_1 import (GL_COLOR_ARRAY, GL_VERTEX_ARRAY,
                                           glDrawArrays)
-
 from picogl.attrs.vertex import CanonicalVertexAttrs
 from picogl.backend.legacy.core.vertex.buffer.client_states import \
     legacy_client_states
 from picogl.buffers.attributes import AttributeSpec
 from picogl.buffers.factory.layout import create_layout
-from picogl.buffers.helper import as_vec3_array
 from picogl.buffers.glcleanup import delete_buffer_object
+from picogl.buffers.helper import as_vec3_array
 from picogl.buffers.vertex.legacy import VertexBufferGroup
-from picogl.buffers.vertex.vbo.vbo_class import VBOType, MeshDataAttrs
+from picogl.buffers.vertex.vbo.vbo_class import MeshDataAttrs, VBOType
 
 
 class LegacyGLMesh:

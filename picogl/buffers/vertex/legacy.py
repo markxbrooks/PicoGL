@@ -31,9 +31,9 @@ from picogl.buffers.base import VertexBase
 from picogl.buffers.glcleanup import delete_buffer_object
 from picogl.buffers.vertex.aliases import (NAME_ALIASES, VertexArrayRole,
                                            VertexBufferRole)
+from picogl.buffers.vertex.vbo.vbo_class import VBOType
 
 from elmo.gl.backend.legacy.primitives.ribbon.model import RibbonAttrs
-from picogl.buffers.vertex.vbo.vbo_class import VBOType
 
 
 class VertexBufferGroup(VertexBase):

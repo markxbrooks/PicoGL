@@ -32,39 +32,24 @@ import numpy as np
 try:
     from PySide6.QtCore import Qt, QTimer
     from PySide6.QtOpenGLWidgets import QOpenGLWidget
-    from PySide6.QtWidgets import (
-        QApplication,
-        QLabel,
-        QMainWindow,
-        QVBoxLayout,
-        QWidget,
-    )
+    from PySide6.QtWidgets import (QApplication, QLabel, QMainWindow,
+                                   QVBoxLayout, QWidget)
 
     QT_VERSION = "PySide6"
 except ImportError:
     try:
         from PyQt5.QtCore import Qt, QTimer
         from PyQt5.QtOpenGL import QGLWidget as QOpenGLWidget
-        from PyQt5.QtWidgets import (
-            QApplication,
-            QLabel,
-            QMainWindow,
-            QVBoxLayout,
-            QWidget,
-        )
+        from PyQt5.QtWidgets import (QApplication, QLabel, QMainWindow,
+                                     QVBoxLayout, QWidget)
 
         QT_VERSION = "PyQt5"
     except ImportError:
         try:
             from PyQt6.QtCore import Qt, QTimer
             from PyQt6.QtOpenGLWidgets import QOpenGLWidget
-            from PyQt6.QtWidgets import (
-                QApplication,
-                QLabel,
-                QMainWindow,
-                QVBoxLayout,
-                QWidget,
-            )
+            from PyQt6.QtWidgets import (QApplication, QLabel, QMainWindow,
+                                         QVBoxLayout, QWidget)
 
             QT_VERSION = "PyQt6"
         except ImportError:

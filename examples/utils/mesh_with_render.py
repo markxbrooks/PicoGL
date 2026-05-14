@@ -1,7 +1,6 @@
 import numpy as np
-
-from picogl.backend.modern.core.shader.program import ShaderProgram
 from decologr import Decologr as log
+from picogl.backend.modern.core.shader.program import ShaderProgram
 
 
 class MeshWithRender(object):

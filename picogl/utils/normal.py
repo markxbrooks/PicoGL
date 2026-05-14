@@ -1,5 +1,4 @@
 import numpy as np
-
 from picogl.buffers.helper import as_vec3_array
 
 

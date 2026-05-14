@@ -9,7 +9,6 @@ from typing import Optional, Union
 import numpy as np
 from decologr import Decologr as log
 from OpenGL import GL
-
 from picogl.attrs.vertex import CanonicalVertexAttrs
 from picogl.buffers.vertex.vbo.vbo_class import VBOType
 

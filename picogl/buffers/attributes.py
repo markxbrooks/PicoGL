@@ -11,7 +11,6 @@ from dataclasses import dataclass
 from typing import List
 
 import numpy as np
-
 from picogl.buffers.vertex.vbo.vbo_class import VBOType
 
 

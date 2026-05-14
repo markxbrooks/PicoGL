@@ -9,27 +9,26 @@ This example demonstrates how to:
 5. Provide interactive controls for rotation and zoom
 """
 
-import sys
-import os
 import math
+import os
+import sys
 
 import numpy as np
 from OpenGL.GL import *
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_LINES
 from OpenGL.raw.GLU import gluPerspective
-from PySide6.QtCore import Qt, QTimer
-from PySide6.QtOpenGLWidgets import QOpenGLWidget
-from PySide6.QtWidgets import QApplication, QVBoxLayout, QWidget, QLabel, QPushButton, QHBoxLayout, \
-    QMessageBox, QSplitter
-
-from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.renderer.meshdata import MeshData
+from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtOpenGLWidgets import QOpenGLWidget
+from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMessageBox,
+                               QPushButton, QSplitter, QVBoxLayout, QWidget)
 
 # Add the examples directory to the path so we can import the PDB loader
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'utils'))
 
-from pdb_loader import PDBLoader, Atom
+from pdb_loader import Atom, PDBLoader
 
 
 class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):

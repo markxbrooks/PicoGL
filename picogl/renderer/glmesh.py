@@ -14,13 +14,13 @@ import numpy as np
 from OpenGL.GL import glDrawElements
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT
 from OpenGL.raw.GL.VERSION.GL_1_1 import glDrawArrays
+from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
+from picogl.buffers.glcleanup import delete_buffer_object
+from picogl.buffers.helper import as_vec3_array
+from picogl.buffers.vertex.vbo.vbo_class import MeshDataAttrs, VBOType
+from picogl.shaders.type import ShaderType
 
 from elmo.glsl.layouts import build_shader_layouts
-from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
-from picogl.buffers.helper import as_vec3_array
-from picogl.buffers.glcleanup import delete_buffer_object
-from picogl.buffers.vertex.vbo.vbo_class import VBOType, MeshDataAttrs
-from picogl.shaders.type import ShaderType
 
 if TYPE_CHECKING:
     from picogl.renderer.meshdata import MeshData

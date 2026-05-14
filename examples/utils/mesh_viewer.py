@@ -1,11 +1,10 @@
+from decologr import Decologr as log
+from examples.utils.world_sheet import WorldSheet
 from OpenGL.GL import *  # pylint: disable=W0614
 from OpenGL.GLUT import *  # pylint: disable=W0614
-from pyglm import glm
-
-from examples.utils.world_sheet import WorldSheet
 from picogl.backend.modern.core.shader.mvp.controller import MVPController
-from decologr import Decologr as log
 from picogl.ui.backend.glut.window.gl import GLWindow
+from pyglm import glm
 
 
 class MeshViewWindow(GLWindow):

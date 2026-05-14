@@ -1,7 +1,7 @@
 from typing import Any
 
 import numpy as np
-from numpy import ndarray, dtype, generic
+from numpy import dtype, generic, ndarray
 
 
 def as_vec3_array(data) -> np.ndarray[Any, dtype[generic]]:

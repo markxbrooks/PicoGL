@@ -30,7 +30,7 @@ def test_texture_loader():
             try:
                 # Test TextureLoader constructor
                 from picogl.utils.loader.texture import TextureLoader
-                
+
                 # This will fail without OpenGL context, but we can test the constructor
                 try:
                     loader = TextureLoader(str(texture_path))

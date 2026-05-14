@@ -8,7 +8,6 @@ from typing import Optional
 
 from picogl.globals import PICOGL_SHADER_SRC_DIRECTORY
 
-
 # from picoui.resources import resource_path
 
 

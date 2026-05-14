@@ -1,4 +1,4 @@
 from .base import RendererBase
-from .glresourceregistry import GLResourceRegistry
 from .glmesh import GLMesh
+from .glresourceregistry import GLResourceRegistry
 from .meshdata import MeshData
