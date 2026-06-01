@@ -16,6 +16,7 @@ import numpy as np
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
+from picogl.polygon.mode import set_polygon_mode_fill
 from picogl.renderer import MeshData
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.utils.loader.object import ObjectLoader
@@ -143,7 +144,7 @@ class LegacyRenderer:
         glColor3f(1.0, 0.0, 0.0)  # Red wireframe
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
         glutWireTeapot(1.0)
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+        set_polygon_mode_fill()
         glEnable(GL_LIGHTING)
 
     def reshape(self, width, height):
@@ -166,7 +167,8 @@ class LegacyRenderer:
         elif key == b"w":  # Wireframe mode
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
         elif key == b"f":  # Fill mode
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+            set_polygon_mode_fill()
+            # glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
         glutPostRedisplay()
 
     def mouse(self, button, state, x, y):

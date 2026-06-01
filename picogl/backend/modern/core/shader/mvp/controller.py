@@ -12,7 +12,8 @@ Classes:
 - MVPController: Inherits from MVPControl and implements input-related logic.
 """
 
-from picogl.backend.modern.core.shader.mvp.control import MVPControl, dummy_update_handler
+from picogl.backend.modern.core.shader.mvp.control import (
+    MVPControl, dummy_update_handler)
 from picogl.backend.modern.core.shader.mvp.mouse import MouseMode
 
 
