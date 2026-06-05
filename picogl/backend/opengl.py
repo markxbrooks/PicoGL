@@ -9,8 +9,43 @@ Classes:
     GLBackend: A class defining the interface for the GL backend with
                various methods for rendering and managing rendering states.
 """
+from abc import ABC, abstractmethod
 
-class GLBackend:
+
+class AbstractGLBackend(ABC):
+    """
+    ALL rendering must go through this interface.
+    """
+
+    @abstractmethod
+    def set_blend(self, enabled: bool): ...
+
+    @abstractmethod
+    def set_depth_test(self, enabled: bool): ...
+
+    @abstractmethod
+    def set_depth_write(self, enabled: bool): ...
+
+    @abstractmethod
+    def set_cull_face(self, enabled: bool): ...
+
+    @abstractmethod
+    def set_line_width(self, width: float): ...
+
+    @abstractmethod
+    def set_polygon_mode(self, mode: int): ...
+
+    @abstractmethod
+    def set_lighting(self, enabled: bool): ...
+
+    @abstractmethod
+    def set_uniform_color(self, color: tuple, alpha: float): ...
+
+    @abstractmethod
+    def draw_elements(self, mode: int, indices): ...
+
+
+class GLBackend(AbstractGLBackend):
     """GL Backend Interface"""
     def enable(self, cap): ...
     def disable(self, cap): ...

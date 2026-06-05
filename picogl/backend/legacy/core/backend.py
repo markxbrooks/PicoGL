@@ -1,13 +1,20 @@
 from OpenGL.GL import glDrawElements, glTexCoordPointer
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_FLOAT, GL_TEXTURE_2D,
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_FLOAT,
                                           GL_UNSIGNED_INT, glColor4f,
                                           glDisable, glEnable, glLineWidth,
-                                          glPolygonMode, glIsEnabled, glBlendFunc)
+                                          glPolygonMode, glIsEnabled, glBlendFunc, GL_LINEAR_MIPMAP_LINEAR)
 from OpenGL.raw.GL.VERSION.GL_1_1 import (GL_COLOR_ARRAY, GL_NORMAL_ARRAY,
                                           GL_TEXTURE_COORD_ARRAY,
-                                          GL_VERTEX_ARRAY, glBindTexture,
+                                          GL_VERTEX_ARRAY,
                                           glColorPointer, glEnableClientState,
-                                          glNormalPointer, glVertexPointer)
+                                          glNormalPointer, glVertexPointer, glDeleteTextures)
+from OpenGL.GL import (GL_CLAMP_TO_EDGE, GL_LINEAR, GL_RGB,
+                       GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+                       GL_TEXTURE_MIN_FILTER, GL_TEXTURE_WRAP_S,
+                       GL_TEXTURE_WRAP_T, GL_UNSIGNED_BYTE,
+                       glBindTexture, glGenTextures, glTexImage2D,
+                       glTexParameteri)
+from OpenGL.GL.framebufferobjects import glGenerateMipmap
 from picogl.backend.opengl import GLBackend
 
 
@@ -63,3 +70,28 @@ class LegacyGLBackend(GLBackend):
 
     def set_blend_func(self, src, dst):
         glBlendFunc(src, dst)
+
+    def create_texture(self, width, height, data) -> int:
+        tex = glGenTextures(1)
+        glBindTexture(GL_TEXTURE_2D, tex)
+
+        glTexImage2D(
+            GL_TEXTURE_2D, 0, GL_RGB,
+            width, height, 0,
+            GL_RGB, GL_UNSIGNED_BYTE, data
+        )
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR)
+
+        glGenerateMipmap(GL_TEXTURE_2D)
+
+        return tex
+
+    def delete_texture(self, tex_id: int):
+        glDeleteTextures([tex_id])
+
+    def bind_texture(self, tex_id: int, slot: int = 0):
+        glBindTexture(GL_TEXTURE_2D, tex_id)
