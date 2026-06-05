@@ -1,9 +1,12 @@
 from dataclasses import dataclass
 from typing import Sequence
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_BLEND, GL_LIGHTING, GL_LIGHT0, GL_DEPTH_TEST, GL_CULL_FACE, GL_SRC_ALPHA, \
-    GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO, GL_FRONT, GL_BACK, GL_FRONT_AND_BACK
-
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_BACK, GL_BLEND, GL_CULL_FACE,
+                                          GL_DEPTH_TEST, GL_FRONT,
+                                          GL_FRONT_AND_BACK, GL_LIGHT0,
+                                          GL_LIGHTING, GL_ONE,
+                                          GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA,
+                                          GL_ZERO)
 from picogl.utils.strenum import StrEnum
 
 

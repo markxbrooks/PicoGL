@@ -9,10 +9,12 @@ over low-level OpenGL calls using the pyOpenGL library.
 """
 
 from OpenGL.GL import glGetBooleanv
-from OpenGL.raw.GL.VERSION.GL_1_0 import glEnable, glDisable, glIsEnabled, glBlendFunc, GL_DEPTH_WRITEMASK, \
-    glMaterialfv, GL_AMBIENT, GL_DIFFUSE, GL_SPECULAR, glMaterialf, GL_SHININESS
-
-from picogl.backend.capability import GLMaterialFace, PhongMaterial, FACE_MAP
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_AMBIENT, GL_DEPTH_WRITEMASK,
+                                          GL_DIFFUSE, GL_SHININESS,
+                                          GL_SPECULAR, glBlendFunc, glDisable,
+                                          glEnable, glIsEnabled, glMaterialf,
+                                          glMaterialfv)
+from picogl.backend.capability import FACE_MAP, GLMaterialFace, PhongMaterial
 from picogl.renderer.backend import RenderBackend
 
 
@@ -26,7 +28,7 @@ class LegacyOpenGLBackend(RenderBackend):
         glBlendFunc(src, dst)
 
     def set_depth_mask(self, flag):
-        from OpenGL.GL import glDepthMask, GL_TRUE, GL_FALSE
+        from OpenGL.GL import GL_FALSE, GL_TRUE, glDepthMask
         glDepthMask(GL_TRUE if flag else GL_FALSE)
 
     def get_depth_mask(self):
