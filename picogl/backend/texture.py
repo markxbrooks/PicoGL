@@ -7,7 +7,7 @@ from OpenGL.raw.GL.ARB.internalformat_query2 import GL_TEXTURE_2D
 from OpenGL.raw.GL.VERSION.GL_1_0 import glEnable, glDisable
 from OpenGL.raw.GL.VERSION.GL_1_1 import glBindTexture
 
-from elmo.ui.widgets.gl.renderer.legacy import RESOURCE_DIR
+from elmo.globals import RESOURCE_DIR
 
 
 @contextmanager
