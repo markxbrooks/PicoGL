@@ -57,21 +57,27 @@ class LegacyGLBackend(GLBackend):
         glEnableClientState(GL_TEXTURE_COORD_ARRAY)
 
     def set_texcoord_pointer(self, data):
+        """set texcoord pointer"""
         glTexCoordPointer(2, GL_FLOAT, 0, data)
 
     def draw_elements(self, mode, indices):
+        """draw elements"""
         glDrawElements(mode, len(indices), GL_UNSIGNED_INT, indices)
 
     def bind_texture(self, texture_id):
+        """bind texture"""
         glBindTexture(GL_TEXTURE_2D, texture_id)
 
     def is_enabled(self, cap):
+        """is enabled"""
         return bool(glIsEnabled(cap))
 
     def set_blend_func(self, src, dst):
+        """set blend function"""
         glBlendFunc(src, dst)
 
     def create_texture(self, width, height, data) -> int:
+        """create texture"""
         tex = glGenTextures(1)
         glBindTexture(GL_TEXTURE_2D, tex)
 
@@ -92,6 +98,3 @@ class LegacyGLBackend(GLBackend):
 
     def delete_texture(self, tex_id: int):
         glDeleteTextures([tex_id])
-
-    def bind_texture(self, tex_id: int, slot: int = 0):
-        glBindTexture(GL_TEXTURE_2D, tex_id)
