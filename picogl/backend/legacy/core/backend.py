@@ -2,7 +2,7 @@ from OpenGL.GL import glDrawElements, glTexCoordPointer
 from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_FLOAT, GL_TEXTURE_2D,
                                           GL_UNSIGNED_INT, glColor4f,
                                           glDisable, glEnable, glLineWidth,
-                                          glPolygonMode)
+                                          glPolygonMode, glIsEnabled, glBlendFunc)
 from OpenGL.raw.GL.VERSION.GL_1_1 import (GL_COLOR_ARRAY, GL_NORMAL_ARRAY,
                                           GL_TEXTURE_COORD_ARRAY,
                                           GL_VERTEX_ARRAY, glBindTexture,
@@ -57,3 +57,9 @@ class LegacyGLBackend(GLBackend):
 
     def bind_texture(self, texture_id):
         glBindTexture(GL_TEXTURE_2D, texture_id)
+
+    def is_enabled(self, cap):
+        return bool(glIsEnabled(cap))
+
+    def set_blend_func(self, src, dst):
+        glBlendFunc(src, dst)
