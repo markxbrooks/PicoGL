@@ -3,7 +3,7 @@ GL Context Class
 """
 import threading
 from dataclasses import field
-from typing import Optional
+from typing import Callable, Optional, TypeVar
 from weakref import WeakKeyDictionary
 
 import numpy as np
@@ -13,6 +13,9 @@ from picogl.shaders import ShaderType
 from PySide6.QtGui import QOpenGLContext
 
 
+T = TypeVar("T")
+
+
 class GLResourceRegistry:
     """GL Resource Registry"""
 
@@ -20,6 +23,7 @@ class GLResourceRegistry:
         self._creation_context = QOpenGLContext.currentContext()
         log.message(f"GL context :{id(self._creation_context)}", scope="GLResourceRegistry")
         self._contexts = WeakKeyDictionary()
+        self._cache: dict[object, object] = {}
         self.vaos: dict[str, VertexArrayObject] = field(default_factory=dict)
         self.current_vao: Optional[VertexArrayObject] = None
         self._creation_thread_id = threading.get_ident()
@@ -75,5 +79,11 @@ class GLResourceRegistry:
         if ctx is None:
             return None
         return ctx  # simple version
+
+    def get_or_create(self, key: object, factory: Callable[[], T]) -> T:
+        """Return a cached GL resource, creating it with *factory* if needed."""
+        if key not in self._cache:
+            self._cache[key] = factory()
+        return self._cache[key]
 
 
