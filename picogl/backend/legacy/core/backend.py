@@ -1,20 +1,20 @@
-from OpenGL.GL import glDrawElements, glTexCoordPointer
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_FLOAT,
-                                          GL_UNSIGNED_INT, glColor4f,
-                                          glDisable, glEnable, glLineWidth,
-                                          glPolygonMode, glIsEnabled, glBlendFunc, GL_LINEAR_MIPMAP_LINEAR)
+from OpenGL.GL import (GL_CLAMP_TO_EDGE, GL_LINEAR, GL_RGB, GL_TEXTURE_2D,
+                       GL_TEXTURE_MAG_FILTER, GL_TEXTURE_MIN_FILTER,
+                       GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T, GL_UNSIGNED_BYTE,
+                       glBindTexture, glDrawElements, glGenTextures,
+                       glTexCoordPointer, glTexImage2D, glTexParameteri)
+from OpenGL.GL.framebufferobjects import glGenerateMipmap
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_FLOAT, GL_LINEAR_MIPMAP_LINEAR,
+                                          GL_UNSIGNED_INT, glBlendFunc,
+                                          glColor4f, glDisable, glEnable,
+                                          glIsEnabled, glLineWidth,
+                                          glPolygonMode)
 from OpenGL.raw.GL.VERSION.GL_1_1 import (GL_COLOR_ARRAY, GL_NORMAL_ARRAY,
                                           GL_TEXTURE_COORD_ARRAY,
-                                          GL_VERTEX_ARRAY,
-                                          glColorPointer, glEnableClientState,
-                                          glNormalPointer, glVertexPointer, glDeleteTextures)
-from OpenGL.GL import (GL_CLAMP_TO_EDGE, GL_LINEAR, GL_RGB,
-                       GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
-                       GL_TEXTURE_MIN_FILTER, GL_TEXTURE_WRAP_S,
-                       GL_TEXTURE_WRAP_T, GL_UNSIGNED_BYTE,
-                       glBindTexture, glGenTextures, glTexImage2D,
-                       glTexParameteri)
-from OpenGL.GL.framebufferobjects import glGenerateMipmap
+                                          GL_VERTEX_ARRAY, glColorPointer,
+                                          glDeleteTextures,
+                                          glEnableClientState, glNormalPointer,
+                                          glVertexPointer)
 from picogl.backend.opengl import GLBackend
 
 

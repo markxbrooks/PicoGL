@@ -11,12 +11,11 @@ Features:
 - Interactive rotation and zoom
 """
 
-import sys
-
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
-
+from picogl.state.draw_mode import GLDrawMode
+from picogl.state.immediate import immediate_drawing
 
 class SimpleTeapotRenderer:
     """Simple teapot renderer using only built-in OpenGL primitives."""
@@ -117,24 +116,22 @@ class SimpleTeapotRenderer:
         """Draw normal vectors (simplified)."""
         glDisable(GL_LIGHTING)
         glColor3f(0.0, 1.0, 0.0)  # Green normals
-        glBegin(GL_LINES)
+        with immediate_drawing(GLDrawMode.LINES):
+            # Draw a few normal vectors for demonstration
+            for i in range(0, 360, 30):
+                angle = i * 3.14159 / 180.0
+                x = 0.5 * np.cos(angle)
+                y = 0.5 * np.sin(angle)
+                z = 0.0
 
-        # Draw a few normal vectors for demonstration
-        for i in range(0, 360, 30):
-            angle = i * 3.14159 / 180.0
-            x = 0.5 * np.cos(angle)
-            y = 0.5 * np.sin(angle)
-            z = 0.0
+                # Normal vector (simplified)
+                nx = x
+                ny = y
+                nz = z
 
-            # Normal vector (simplified)
-            nx = x
-            ny = y
-            nz = z
+                glVertex3f(x, y, z)
+                glVertex3f(x + nx * 0.2, y + ny * 0.2, z + nz * 0.2)
 
-            glVertex3f(x, y, z)
-            glVertex3f(x + nx * 0.2, y + ny * 0.2, z + nz * 0.2)
-
-        glEnd()
         glEnable(GL_LIGHTING)
 
     def reshape(self, width, height):

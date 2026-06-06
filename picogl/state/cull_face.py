@@ -1,10 +1,10 @@
 """
 GL Cull Face
 """
+from contextlib import contextmanager
 
-from typing import Any
-
-from OpenGL.raw.GL.VERSION.GL_1_0 import glIsEnabled, GL_CULL_FACE, glEnable, glDisable
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_CULL_FACE, glDisable, glEnable,
+                                          glIsEnabled)
 
 
 class GLCullFace:
@@ -23,13 +23,26 @@ class GLCullFace:
         glDisable(GL_CULL_FACE)
 
 
-def gl_get_cull_face_enabled() -> Any:
-    return glIsEnabled(GL_CULL_FACE)
+def gl_capability_enabled(capability: int) -> bool:
+    return bool(glIsEnabled(capability))
 
 
-def gl_enable_cull_face():
-    glEnable(GL_CULL_FACE)
+def gl_set_capability(capability: int, enabled: bool) -> None:
+    if enabled:
+        glEnable(capability)
+    else:
+        glDisable(capability)
 
 
-def gl_disable_cull_face():
-    glDisable(GL_CULL_FACE)
+@contextmanager
+def preserve_gl_capability(capability: int):
+    was_enabled = gl_capability_enabled(capability)
+    try:
+        yield
+    finally:
+        gl_set_capability(capability, was_enabled)
+@contextmanager
+def cull_face(enabled: bool = True):
+    with preserve_gl_capability(GL_CULL_FACE):
+        gl_set_capability(GL_CULL_FACE, enabled)
+        yield

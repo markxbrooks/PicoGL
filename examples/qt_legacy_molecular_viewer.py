@@ -10,18 +10,19 @@ This example demonstrates how to:
 
 import os
 import sys
-from pathlib import Path
-from typing import List, Tuple
-
 import numpy as np
 from OpenGL.GL import *
 from OpenGL.raw.GLU import gluPerspective
+
+from molib.core.constants import MoLibConstant
 from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
-from PySide6.QtCore import Qt, QTimer
+from PySide6.QtCore import Qt
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
-from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMainWindow,
+from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel,
                                QMessageBox, QPushButton, QSplitter,
                                QVBoxLayout, QWidget)
+from picogl.state.draw_mode import GLDrawMode
+from picogl.state.immediate import immediate_drawing
 
 # Add the examples directory to the path so we can import the PDB loader
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'utils'))
@@ -244,29 +245,27 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
         if not self.calpha_bonds or self.calpha_positions is None:
             return
         
-        glBegin(GL_LINES)
-        
-        for atom1_idx, atom2_idx in self.calpha_bonds:
-            if 0 <= atom1_idx < len(self.calpha_positions) and 0 <= atom2_idx < len(self.calpha_positions):
-                # Get the chain ID for the first atom to determine colour
-                atom1 = self.calpha_atoms[atom1_idx]
-                chain_id = atom1.chain_id
-                
-                # Set colour based on chain
-                if chain_id == 'A':
-                    glColor3f(0.0, 1.0, 0.0)  # Green for chain A
-                elif chain_id == 'B':
-                    glColor3f(0.0, 0.0, 1.0)  # Blue for chain B
-                else:
-                    glColor3f(1.0, 1.0, 1.0)  # White for other chains
-                
-                pos1 = self.calpha_positions[atom1_idx]
-                pos2 = self.calpha_positions[atom2_idx]
-                
-                glVertex3f(pos1[0], pos1[1], pos1[2])
-                glVertex3f(pos2[0], pos2[1], pos2[2])
-        
-        glEnd()
+        with immediate_drawing(GLDrawMode.LINES):
+            for atom1_idx, atom2_idx in self.calpha_bonds:
+                if 0 <= atom1_idx < len(self.calpha_positions) and 0 <= atom2_idx < len(self.calpha_positions):
+                    # Get the chain ID for the first atom to determine colour
+                    atom1 = self.calpha_atoms[atom1_idx]
+                    chain_id = atom1.chain_id
+
+                    # Set colour based on chain
+                    if chain_id == 'A':
+                        glColor3f(0.0, 1.0, 0.0)  # Green for chain A
+                    elif chain_id == 'B':
+                        glColor3f(0.0, 0.0, 1.0)  # Blue for chain B
+                    else:
+                        glColor3f(1.0, 1.0, 1.0)  # White for other chains
+
+                    pos1 = self.calpha_positions[atom1_idx]
+                    pos2 = self.calpha_positions[atom2_idx]
+
+                    glVertex3f(pos1[0], pos1[1], pos1[2])
+                    glVertex3f(pos2[0], pos2[1], pos2[2])
+
     
     def _draw_wireframe_sphere(self, radius, slices, stacks):
         """Draw a sphere (filled or wireframe) using legacy OpenGL"""
@@ -283,50 +282,47 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
             
             if not self.wireframe_mode:
                 # Draw filled triangles between the two latitude rings
-                glBegin(GL_TRIANGLE_STRIP)
+                with immediate_drawing(GLDrawMode.TRIANGLE_STRIP):
+                    for j in range(slices + 1):
+                        lng = 2 * math.pi * j / slices
+                        x = math.cos(lng)
+                        y = math.sin(lng)
+
+                        # Calculate normals for proper lighting
+                        nx0 = x * math.cos(lat0)
+                        ny0 = y * math.cos(lat0)
+                        nz0 = math.sin(lat0)
+
+                        nx1 = x * math.cos(lat1)
+                        ny1 = y * math.cos(lat1)
+                        nz1 = math.sin(lat1)
+
+                        # First vertex of the strip
+                        glNormal3f(nx0, ny0, nz0)
+                        glVertex3f(x * zr0, y * zr0, z0)
+
+                        # Second vertex of the strip
+                        glNormal3f(nx1, ny1, nz1)
+                        glVertex3f(x * zr1, y * zr1, z1)
+            
+            # Draw wireframe lines for the latitude rings
+            with immediate_drawing(GLDrawMode.LINE_LOOP):
                 for j in range(slices + 1):
                     lng = 2 * math.pi * j / slices
                     x = math.cos(lng)
                     y = math.sin(lng)
-                    
-                    # Calculate normals for proper lighting
-                    nx0 = x * math.cos(lat0)
-                    ny0 = y * math.cos(lat0)
-                    nz0 = math.sin(lat0)
-                    
-                    nx1 = x * math.cos(lat1)
-                    ny1 = y * math.cos(lat1)
-                    nz1 = math.sin(lat1)
-                    
-                    # First vertex of the strip
-                    glNormal3f(nx0, ny0, nz0)
+
                     glVertex3f(x * zr0, y * zr0, z0)
-                    
-                    # Second vertex of the strip
-                    glNormal3f(nx1, ny1, nz1)
-                    glVertex3f(x * zr1, y * zr1, z1)
-                glEnd()
-            
-            # Draw wireframe lines for the latitude rings
-            glBegin(GL_LINE_LOOP)
-            for j in range(slices + 1):
-                lng = 2 * math.pi * j / slices
-                x = math.cos(lng)
-                y = math.sin(lng)
-                
-                glVertex3f(x * zr0, y * zr0, z0)
-            glEnd()
             
             # Draw vertical lines connecting the rings
-            glBegin(GL_LINES)
-            for j in range(slices + 1):
-                lng = 2 * math.pi * j / slices
-                x = math.cos(lng)
-                y = math.sin(lng)
-                
-                glVertex3f(x * zr0, y * zr0, z0)
-                glVertex3f(x * zr1, y * zr1, z1)
-            glEnd()
+            with immediate_drawing(GLDrawMode.LINES):
+                for j in range(slices + 1):
+                    lng = 2 * math.pi * j / slices
+                    x = math.cos(lng)
+                    y = math.sin(lng)
+
+                    glVertex3f(x * zr0, y * zr0, z0)
+                    glVertex3f(x * zr1, y * zr1, z1)
 
     def mousePressEvent(self, event):
         """Handle mouse press for rotation"""

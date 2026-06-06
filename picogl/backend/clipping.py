@@ -1,6 +1,7 @@
 from contextlib import contextmanager
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import glEnable, GL_CLIP_PLANE0, GL_CLIP_PLANE1, glDisable
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_CLIP_PLANE0, GL_CLIP_PLANE1,
+                                          glDisable, glEnable)
 
 
 @contextmanager

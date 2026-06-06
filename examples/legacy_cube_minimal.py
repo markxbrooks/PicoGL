@@ -17,6 +17,8 @@ import os
 import sys
 
 import numpy as np
+from picogl.state.draw_mode import GLDrawMode
+from picogl.state.immediate import immediate_drawing
 
 # Check for display before importing OpenGL
 if os.environ.get("DISPLAY") is None and os.name != "nt":
@@ -347,27 +349,26 @@ class MinimalCubeRenderer:
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
         # Draw the cube using immediate mode
-        glBegin(GL_TRIANGLES)
-        for i in range(0, len(self.vertices), 3):
-            # Each triangle has 3 vertices
-            for j in range(3):
-                vertex_idx = i + j
-                if vertex_idx < len(self.vertices):
-                    # Set colour for this vertex
-                    if not self.wireframe_mode:
-                        glColor3f(
-                            self.colors[vertex_idx][0],
-                            self.colors[vertex_idx][1],
-                            self.colors[vertex_idx][2],
-                        )
+        with immediate_drawing(GLDrawMode.TRIANGLES):
+            for i in range(0, len(self.vertices), 3):
+                # Each triangle has 3 vertices
+                for j in range(3):
+                    vertex_idx = i + j
+                    if vertex_idx < len(self.vertices):
+                        # Set colour for this vertex
+                        if not self.wireframe_mode:
+                            glColor3f(
+                                self.colors[vertex_idx][0],
+                                self.colors[vertex_idx][1],
+                                self.colors[vertex_idx][2],
+                            )
 
-                    # Set vertex position
-                    glVertex3f(
-                        self.vertices[vertex_idx][0],
-                        self.vertices[vertex_idx][1],
-                        self.vertices[vertex_idx][2],
-                    )
-        glEnd()
+                        # Set vertex position
+                        glVertex3f(
+                            self.vertices[vertex_idx][0],
+                            self.vertices[vertex_idx][1],
+                            self.vertices[vertex_idx][2],
+                        )
 
         # Draw normals if enabled
         if self.show_normals and not self.wireframe_mode:
@@ -381,36 +382,34 @@ class MinimalCubeRenderer:
         """Draw normal vectors (simplified)."""
         glDisable(GL_LIGHTING)
         glColor3f(0.0, 1.0, 0.0)  # Green normals
-        glBegin(GL_LINES)
+        with immediate_drawing(GLDrawMode.LINES):
 
-        # Draw a few normal vectors for demonstration
-        for i in range(0, len(self.vertices), 6):  # Every 6 vertices (2 triangles)
-            if i + 2 < len(self.vertices):
-                # Calculate normal for this triangle
-                v1 = self.vertices[i]
-                v2 = self.vertices[i + 1]
-                v3 = self.vertices[i + 2]
+            # Draw a few normal vectors for demonstration
+            for i in range(0, len(self.vertices), 6):  # Every 6 vertices (2 triangles)
+                if i + 2 < len(self.vertices):
+                    # Calculate normal for this triangle
+                    v1 = self.vertices[i]
+                    v2 = self.vertices[i + 1]
+                    v3 = self.vertices[i + 2]
 
-                # Calculate two edge vectors
-                edge1 = v2 - v1
-                edge2 = v3 - v1
+                    # Calculate two edge vectors
+                    edge1 = v2 - v1
+                    edge2 = v3 - v1
 
-                # Calculate normal (cross product)
-                normal = np.cross(edge1, edge2)
-                normal = normal / np.linalg.norm(normal)  # Normalize
+                    # Calculate normal (cross product)
+                    normal = np.cross(edge1, edge2)
+                    normal = normal / np.linalg.norm(normal)  # Normalize
 
-                # Center of triangle
-                center = (v1 + v2 + v3) / 3.0
+                    # Center of triangle
+                    center = (v1 + v2 + v3) / 3.0
 
-                # Draw normal vector
-                glVertex3f(center[0], center[1], center[2])
-                glVertex3f(
-                    center[0] + normal[0] * 0.5,
-                    center[1] + normal[1] * 0.5,
-                    center[2] + normal[2] * 0.5,
-                )
-
-        glEnd()
+                    # Draw normal vector
+                    glVertex3f(center[0], center[1], center[2])
+                    glVertex3f(
+                        center[0] + normal[0] * 0.5,
+                        center[1] + normal[1] * 0.5,
+                        center[2] + normal[2] * 0.5,
+                    )
         glEnable(GL_LIGHTING)
 
     def reshape(self, width, height):

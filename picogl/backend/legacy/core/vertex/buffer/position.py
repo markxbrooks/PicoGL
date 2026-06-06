@@ -1,13 +1,15 @@
 import numpy as np
 from OpenGL.GL import glDrawElements, glVertexPointer
-from OpenGL.raw.GL._types import GL_BYTE, GL_FLOAT, GL_INT, GL_SHORT
+from OpenGL.raw.GL._types import GL_FLOAT
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT
-from OpenGL.raw.GL.VERSION.GL_1_1 import (GL_DOUBLE, GL_VERTEX_ARRAY,
-                                          glDrawArrays, glEnableClientState)
+from OpenGL.raw.GL.VERSION.GL_1_1 import (GL_VERTEX_ARRAY, glDrawArrays,
+                                          glEnableClientState)
 from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ARRAY_BUFFER
 from picogl.backend.legacy.core.vertex.buffer.client_states import \
     legacy_client_states
 from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
+from picogl.numerical import GLNumeric
+from picogl.state.draw_mode import GLDrawMode
 
 
 class LegacyPositionVBO(LegacyVBO):
@@ -19,7 +21,7 @@ class LegacyPositionVBO(LegacyVBO):
     such as setting up the vertex pointer and handling data uploads.
     """
 
-    SUPPORTED_GL_TYPES = {GL_FLOAT, GL_DOUBLE, GL_INT, GL_SHORT, GL_BYTE}
+    SUPPORTED_GL_TYPES = GLNumeric.supported_gl_types()
 
     def __init__(
         self,
@@ -36,17 +38,22 @@ class LegacyPositionVBO(LegacyVBO):
         if data is not None:
             self.set_data(data)
 
-    def draw_arrays(self, count: int = None, mode: int = GL_TRIANGLES):
+    def draw_arrays(
+        self,
+        count: int = None,
+        mode: int | GLDrawMode = GLDrawMode.TRIANGLES,
+    ):
         if count is None:
             count = len(self.data) // self.size
+        mode_value = mode.value if isinstance(mode, GLDrawMode) else mode
         with legacy_client_states(GL_VERTEX_ARRAY):
-            glDrawArrays(mode, 0, count)
+            glDrawArrays(mode_value, 0, count)
 
     def draw(
         self,
         index_count: int = None,
-        index_type: int = GL_UNSIGNED_INT,
-        mode: int = GL_TRIANGLES,
+        index_type: int = GLNumeric.UNSIGNED_INT,
+        mode: int | GLDrawMode = GLDrawMode.TRIANGLES,
     ):
         """
         Draw the buffer.
@@ -57,8 +64,9 @@ class LegacyPositionVBO(LegacyVBO):
         """
         if index_count is None:
             index_count = self.index_count
+        mode_value = mode.value if isinstance(mode, GLDrawMode) else mode
         with legacy_client_states(GL_VERTEX_ARRAY):
-            glDrawElements(mode, index_count, index_type, self.pointer)
+            glDrawElements(mode_value, index_count, index_type, self.pointer)
 
     def configure(self):
         """Configure the vertex pointer for the position buffer.

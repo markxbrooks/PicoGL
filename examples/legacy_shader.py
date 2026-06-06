@@ -4,7 +4,8 @@ import sys
 from math import cos, sin
 
 import numpy as np
-
+from picogl.state.draw_mode import GLDrawMode
+from picogl.state.immediate import immediate_drawing
 # Check for display before importing OpenGL
 if os.environ.get("DISPLAY") is None and os.name != "nt":
     print("❌ No display available. This requires a graphical environment.")
@@ -201,14 +202,13 @@ def display():
 
 
 def render(mvp_matrix, vertex_processor):
-    glBegin(GL_TRIANGLES)
-    for idx in quad_indices:
-        for i in idx:
-            v = quad_verts[i]
-            result = vertex_processor(v, mvp_matrix)
-            glColor3f(*result['colour'])
-            glVertex3f(*v['pos'])
-    glEnd()
+    with immediate_drawing(GLDrawMode.TRIANGLES):
+        for idx in quad_indices:
+            for i in idx:
+                v = quad_verts[i]
+                result = vertex_processor(v, mvp_matrix)
+                glColor3f(*result['colour'])
+                glVertex3f(*v['pos'])
 
 
 def reshape(width, height):

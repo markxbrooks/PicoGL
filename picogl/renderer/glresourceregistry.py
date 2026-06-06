@@ -12,7 +12,6 @@ from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.shaders import ShaderType
 from PySide6.QtGui import QOpenGLContext
 
-
 T = TypeVar("T")
 
 
