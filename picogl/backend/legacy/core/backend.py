@@ -8,7 +8,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_FLOAT, GL_LINEAR_MIPMAP_LINEAR,
                                           GL_UNSIGNED_INT, glBlendFunc,
                                           glColor4f, glDisable, glEnable,
                                           glIsEnabled, glLineWidth,
-                                          glPolygonMode)
+                                          glPolygonMode, glTexCoord2f, glVertex3f)
 from OpenGL.raw.GL.VERSION.GL_1_1 import (GL_COLOR_ARRAY, GL_NORMAL_ARRAY,
                                           GL_TEXTURE_COORD_ARRAY,
                                           GL_VERTEX_ARRAY, glColorPointer,
@@ -16,6 +16,8 @@ from OpenGL.raw.GL.VERSION.GL_1_1 import (GL_COLOR_ARRAY, GL_NORMAL_ARRAY,
                                           glEnableClientState, glNormalPointer,
                                           glVertexPointer)
 from picogl.backend.opengl import GLBackend
+
+from picogl.state.texture import TexCoord2f
 
 
 class LegacyGLBackend(GLBackend):
@@ -67,6 +69,18 @@ class LegacyGLBackend(GLBackend):
     def bind_texture(self, texture_id):
         """bind texture"""
         glBindTexture(GL_TEXTURE_2D, texture_id)
+
+    @staticmethod
+    def tex_coord2f(coord: TexCoord2f):
+        return glTexCoord2f(coord.u, coord.v)
+
+    @staticmethod
+    def tex_coords(t1):
+        glTexCoord2f(t1[0], t1[1])
+
+    @staticmethod
+    def vertex_3f(v1):
+        glVertex3f(v1[0], v1[1], v1[2])
 
     def is_enabled(self, cap):
         """is enabled"""
