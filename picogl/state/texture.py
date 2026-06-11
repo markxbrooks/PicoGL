@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from enum import IntEnum
 
 from OpenGL.GL import glActiveTexture, GL_TEXTURE_2D, glEnable, glBindTexture, glDisable, glIsEnabled, glGetIntegerv, GL_TEXTURE_BINDING_2D, GL_TEXTURE0, GL_ACTIVE_TEXTURE
+from OpenGL.raw.GL.VERSION.GL_1_3 import glActiveTexture, GL_TEXTURE0
 
 
 class GLTexture(IntEnum):
@@ -52,3 +53,7 @@ def bound_texture(texture_id, unit=GL_TEXTURE0):
     finally:
         glBindTexture(GL_TEXTURE_2D, prev)
         glActiveTexture(prev_active)
+
+
+def gl_active_texture0():
+    glActiveTexture(GL_TEXTURE0)
