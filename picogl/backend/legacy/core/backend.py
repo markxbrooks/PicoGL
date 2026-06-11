@@ -1,10 +1,12 @@
 from abc import ABC
+from enum import Enum
+
 from numpy import dtype, generic, ndarray
 from typing import Any
 
 from OpenGL.GL import (GL_CLAMP_TO_EDGE, GL_LINEAR, GL_RGB, GL_TEXTURE_2D,
                        GL_TEXTURE_MAG_FILTER, GL_TEXTURE_MIN_FILTER, GL_CLIP_DISTANCE0, GL_CLIP_DISTANCE1,
-                       GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T, GL_UNSIGNED_BYTE, glReadPixels, glViewport,
+                       GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T, GL_UNSIGNED_BYTE, glReadPixels, glViewport, GL_FILL, GL_LINE,
                        glBindTexture, glDrawElements, glGenTextures, GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT,
                        glTexCoordPointer, glTexImage2D, glTexParameteri, glClearColor, glClear, GL_MULTISAMPLE, GL_DEPTH_COMPONENT)
 from OpenGL.GL.framebufferobjects import glGenerateMipmap
