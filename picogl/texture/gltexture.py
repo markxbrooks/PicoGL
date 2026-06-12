@@ -32,7 +32,7 @@ class Texture2D:
     def __init__(self, spec: TextureSpec, data: ndarray | None = None):
         self.spec = spec
         self.data = data
-        self.handle = None  # assigned by backend
+        self.id = None  # assigned by backend
 
 
 class GLTextureDriver:
@@ -40,21 +40,30 @@ class GLTextureDriver:
 
     def __init__(self):
         self.format = GL_RGB
+        self.tex: Texture2D | None = None
+        self.id: int | None = None
 
     def create(self, tex: Texture2D):
         tex.id = glGenTextures(1)
+        self.tex = tex
+        self.id = int(tex.id)
 
-    def bind(self, tex: Texture2D):
+    def bind(self, tex: Texture2D | None = None):
+        tex = tex or self.tex
+        if tex is None or tex.id is None:
+            raise RuntimeError("Cannot bind texture before create()")
         glBindTexture(GLTexture.TEXTURE_2D, tex.id)
 
     def upload(self, data: ndarray):
-        self.bind()
+        if self.tex is None:
+            raise RuntimeError("Cannot upload texture before create()")
+        self.bind(self.tex)
         glTexImage2D(
             GLTexture.TEXTURE_2D,
             0,
             self.format,
-            self.tex.spec.width,
-            self.tex.spec.height,
+            int(self.tex.spec.width),
+            int(self.tex.spec.height),
             0,
             self.format,
             GL_UNSIGNED_BYTE,
@@ -71,4 +80,5 @@ class GLTextureDriver:
         glGenerateMipmap(GLTexture.TEXTURE_2D)
 
     def delete(self):
-        glDeleteTextures([self.id])
+        if self.id is not None:
+            glDeleteTextures([self.id])
