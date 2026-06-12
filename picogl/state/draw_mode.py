@@ -5,9 +5,9 @@ from enum import IntEnum
 
 from OpenGL.GL import (GL_LINE_LOOP, GL_LINE_STRIP, GL_LINE_STRIP_ADJACENCY,
                        GL_LINES, GL_LINES_ADJACENCY, GL_PATCHES, GL_POINTS,
-                       GL_POLYGON, GL_QUADS, GL_TRIANGLE_STRIP,
+                       GL_POLYGON, GL_QUAD_STRIP, GL_QUADS, GL_TRIANGLE_STRIP,
                        GL_TRIANGLE_STRIP_ADJACENCY, GL_TRIANGLES,
-                       GL_TRIANGLES_ADJACENCY, GL_QUAD_STRIP)
+                       GL_TRIANGLES_ADJACENCY)
 
 
 class GLDrawMode(IntEnum):

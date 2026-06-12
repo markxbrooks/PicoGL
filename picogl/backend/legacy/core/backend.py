@@ -1,21 +1,27 @@
 from abc import ABC
 from dataclasses import dataclass, field
 from enum import Enum
+from typing import Any
 
 from numpy import dtype, generic, ndarray
-from typing import Any
 from OpenGL import GL
-from OpenGL.GL import (GL_CLAMP_TO_EDGE, GL_LINEAR, GL_RGB, GL_TEXTURE_2D,
-                       GL_TEXTURE_MAG_FILTER, GL_TEXTURE_MIN_FILTER, GL_CLIP_DISTANCE0, GL_CLIP_DISTANCE1,
-                       GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T, GL_UNSIGNED_BYTE, glReadPixels, glViewport, GL_FILL, GL_LINE,
-                       glBindTexture, glDrawElements, glGenTextures, GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA,
-                       glTexCoordPointer, glTexImage2D, glTexParameteri, glClearColor, glClear, GL_MULTISAMPLE, GL_DEPTH_COMPONENT)
+from OpenGL.GL import (GL_CLAMP_TO_EDGE, GL_CLIP_DISTANCE0, GL_CLIP_DISTANCE1,
+                       GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT,
+                       GL_DEPTH_COMPONENT, GL_FILL, GL_LINE, GL_LINEAR,
+                       GL_MULTISAMPLE, GL_ONE_MINUS_SRC_ALPHA, GL_RGB,
+                       GL_SRC_ALPHA, GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+                       GL_TEXTURE_MIN_FILTER, GL_TEXTURE_WRAP_S,
+                       GL_TEXTURE_WRAP_T, GL_UNSIGNED_BYTE, glBindTexture,
+                       glClear, glClearColor, glDrawElements, glGenTextures,
+                       glReadPixels, glTexCoordPointer, glTexImage2D,
+                       glTexParameteri, glViewport)
 from OpenGL.GL.framebufferobjects import glGenerateMipmap
 from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_FLOAT, GL_LINEAR_MIPMAP_LINEAR,
                                           GL_UNSIGNED_INT, glBlendFunc,
                                           glColor4f, glDisable, glEnable,
                                           glIsEnabled, glLineWidth,
-                                          glPolygonMode, glTexCoord2f, glVertex3f)
+                                          glPolygonMode, glTexCoord2f,
+                                          glVertex3f)
 from OpenGL.raw.GL.VERSION.GL_1_1 import (GL_COLOR_ARRAY, GL_NORMAL_ARRAY,
                                           GL_TEXTURE_COORD_ARRAY,
                                           GL_VERTEX_ARRAY, glColorPointer,
@@ -23,7 +29,6 @@ from OpenGL.raw.GL.VERSION.GL_1_1 import (GL_COLOR_ARRAY, GL_NORMAL_ARRAY,
                                           glEnableClientState, glNormalPointer,
                                           glVertexPointer)
 from picogl.backend.opengl import GLBackend
-
 from picogl.state.texture import TexCoord2f
 
 
@@ -563,15 +568,6 @@ class ModernGLBackend(GLBackend, ABC):
             if enabled
             else self.disable(GL.GL_CULL_FACE)
         )
-
-    def set_polygon_mode(self, *args):
-        if len(args) == 1:
-            face, mode = GL.GL_FRONT_AND_BACK, args[0]
-        elif len(args) == 2:
-            face, mode = args
-        else:
-            raise TypeError("set_polygon_mode expects mode or face, mode")
-        super().set_polygon_mode(face, mode)
 
     def set_lighting(self, enabled: bool):
         (

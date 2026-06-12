@@ -3,7 +3,9 @@ GL Fill Mode
 """
 
 from enum import IntEnum
+
 from OpenGL.GL import GL_FILL, GL_LINE, GL_POINT
+
 
 class GLFillMode(IntEnum):
     """GL Fill Mode"""

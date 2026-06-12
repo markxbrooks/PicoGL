@@ -6,8 +6,10 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from enum import IntEnum
 
-from OpenGL.GL import glActiveTexture, GL_TEXTURE_2D, glEnable, glBindTexture, glDisable, glIsEnabled, glGetIntegerv, GL_TEXTURE_BINDING_2D, GL_TEXTURE0, GL_ACTIVE_TEXTURE
-from OpenGL.raw.GL.VERSION.GL_1_3 import glActiveTexture, GL_TEXTURE0
+from OpenGL.GL import (GL_ACTIVE_TEXTURE, GL_TEXTURE0, GL_TEXTURE_2D,
+                       GL_TEXTURE_BINDING_2D, glActiveTexture, glBindTexture,
+                       glDisable, glEnable, glGetIntegerv, glIsEnabled)
+from OpenGL.raw.GL.VERSION.GL_1_3 import GL_TEXTURE0, glActiveTexture
 
 
 class GLTexture(IntEnum):
