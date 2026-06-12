@@ -10,16 +10,15 @@ Classes:
                various methods for rendering and managing rendering states.
 """
 from abc import ABC, abstractmethod
-from typing import Any
 
-from numpy import dtype, generic, ndarray
 from OpenGL.GL import (GL_BLEND, GL_CULL_FACE, GL_VERTEX_ARRAY, glTexCoordPointer, glDrawElements,
-                       glReadPixels, glEnableClientState,
+                       glEnableClientState,
                         GL_CLIP_DISTANCE0, GL_CLIP_DISTANCE1, glViewport, GL_FLOAT, GL_UNSIGNED_INT, glEnable, glDisable, glClear, \
     glLineWidth, glColor4f, GL_DEPTH_TEST, glDepthMask, glPolygonMode, GL_LIGHTING, glClearColor, GL_TEXTURE_2D, \
     glTexCoord2f, glVertex3f, glIsEnabled, glBlendFunc, glVertexPointer, GL_NORMAL_ARRAY, glNormalPointer, \
     GL_COLOR_ARRAY, glColorPointer, GL_TEXTURE_COORD_ARRAY, glBindTexture, glDeleteTextures, GL_MULTISAMPLE)
 
+from picogl.renderer.readback import GLReadback
 from picogl.buffers.glframe import GLFramebuffer
 from picogl.texture.gltexture import GLTextureDriver, TextureSpec, Texture2D
 from picogl.state.texture import TexCoord2f
@@ -102,6 +101,7 @@ class GLBackend:
     def __init__(self, binding: GLBindingStrategy):
         self.binding = binding
         self.framebuffer = GLFramebuffer()
+        self.read = GLReadback()
 
     def enable(self, cap):
         glEnable(cap)
@@ -123,9 +123,6 @@ class GLBackend:
 
     def set_color(self, rgba):
         glColor4f(*rgba)
-
-    def read_pixels(self, depth: ndarray[Any, dtype[Any]] | ndarray[Any, dtype[generic]], x: int, y_gl: int):
-        glReadPixels(x, y_gl, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, depth)
 
     # --- State ---
     def set_blend(self, enabled: bool):

@@ -1,39 +1,33 @@
-from abc import ABC
+"""
+Module providing classes and utilities for managing OpenGL state and rendering.
+
+This module includes classes for handling rasterization, blending, depth testing,
+rendering states, vertex buffers, attribute arrays, clipping planes, and OpenGL
+backend implementations. These classes are designed to abstract and encapsulate
+detailed OpenGL operations for easier high-level rendering management.
+"""
+
 from dataclasses import dataclass, field
-from enum import Enum
 from typing import Any
 
-from numpy import dtype, generic, ndarray
-from OpenGL import GL
+from numpy import ndarray
 from OpenGL.GL import (GL_CLIP_DISTANCE0, GL_CLIP_DISTANCE1,
-                       GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT,
-                       GL_DEPTH_COMPONENT, GL_FILL, GL_LINE, GL_MULTISAMPLE, GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA, GL_TEXTURE_2D,
-                       glBindTexture,
-                       glClearColor, glDrawElements, glReadPixels, glTexCoordPointer, glViewport)
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_FLOAT, GL_UNSIGNED_INT, glBlendFunc,
-                                          glDisable, glEnable,
-                                          glIsEnabled, glLineWidth,
-                                          glPolygonMode, glTexCoord2f,
-                                          glVertex3f)
+                       GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA,
+                       glDrawElements, glViewport)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_FLOAT, GL_UNSIGNED_INT, glBlendFunc)
 from OpenGL.raw.GL.VERSION.GL_1_1 import (GL_COLOR_ARRAY, GL_NORMAL_ARRAY,
-                                          GL_TEXTURE_COORD_ARRAY,
                                           GL_VERTEX_ARRAY, glColorPointer,
-                                          glDeleteTextures,
                                           glEnableClientState, glNormalPointer,
                                           glVertexPointer)
 from picogl.backend.opengl import GLBackend
-from picogl.state.texture import TexCoord2f
+from picogl.polygon.mode import PolygonMode
 from picogl.texture.gltexture import GLTextureDriver
 
 
-class PolygonMode(Enum):
-    FILL = GL_FILL
-    LINE = GL_LINE
-
-
-@dataclass
+@dataclass(frozen=True)
 class RasterState:
-    polygon_mode: int = GL_FILL
+    """Raster State"""
+    polygon_mode: int = PolygonMode.FILL
     line_width: float = 1.0
 
     def apply(self, backend: GLBackend):
@@ -62,6 +56,7 @@ class GLStateManager:
 
 @dataclass
 class BlendState:
+    """Blend State"""
     enabled: bool = False
     src: int = GL_SRC_ALPHA
     dst: int = GL_ONE_MINUS_SRC_ALPHA
@@ -73,26 +68,21 @@ class BlendState:
 
 
 @dataclass(frozen=True)
-class RasterState:
-    polygon_mode: int = GL_FILL
-    line_width: float = 1.0
-
-
-@dataclass(frozen=True)
-class BlendState:
-    enabled: bool = False
-    src: int = GL_SRC_ALPHA
-    dst: int = GL_ONE_MINUS_SRC_ALPHA
-
-
-@dataclass(frozen=True)
 class DepthState:
+    """Depth State"""
+    enabled: bool = False
     test: bool = True
     write: bool = True
+
+    def apply(self, state: GLStateManager):
+        state.set_enabled(GL_BLEND, self.enabled)
+        if self.enabled:
+            glBlendFunc(self.src, self.dst)
 
 
 @dataclass(frozen=True)
 class RenderState:
+    """Render State"""
     raster: RasterState = field(default_factory=RasterState)
     depth: DepthState = field(default_factory=DepthState)
     blend: BlendState = field(default_factory=BlendState)
@@ -102,6 +92,7 @@ class RenderState:
 
 
 class RenderStateApplier:
+    """Render State Applier"""
     def __init__(self, backend: GLBackend):
         self.backend = backend
         self.current = None
@@ -143,109 +134,6 @@ class RenderStateApplier:
             self.backend.set_lighting(state.lighting)
 
 
-class LegacyGLBackend(GLBackend):
-    """Legacy GL Backend"""
-
-    def read_pixels(self, depth: ndarray[Any, dtype[Any]] | ndarray[Any, dtype[generic]], x: int, y_gl: int):
-        glReadPixels(x, y_gl, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, depth)
-
-    def enable_vertex_array(self):
-        glEnableClientState(GL_VERTEX_ARRAY)
-
-    def set_vertex_pointer(self, data):
-        glVertexPointer(3, GL_FLOAT, 0, data)
-
-    def enable_normal_array(self):
-        glEnableClientState(GL_NORMAL_ARRAY)
-
-    def set_normal_pointer(self, data):
-        glNormalPointer(GL_FLOAT, 0, data)
-
-    def enable_color_array(self):
-        glEnableClientState(GL_COLOR_ARRAY)
-
-    def set_color_pointer(self, data, size):
-        glColorPointer(size, GL_FLOAT, 0, data)
-
-    def enable_texcoord_array(self):
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY)
-
-    def set_texcoord_pointer(self, data):
-        """set texcoord pointer"""
-        glTexCoordPointer(2, GL_FLOAT, 0, data)
-
-    def draw_elements(self, mode, indices):
-        """draw elements"""
-        glDrawElements(mode, len(indices), GL_UNSIGNED_INT, indices)
-
-    def bind_texture(self, texture_id):
-        """bind texture"""
-        glBindTexture(GL_TEXTURE_2D, texture_id)
-
-    @staticmethod
-    def tex_coord2f(coord: TexCoord2f):
-        return glTexCoord2f(coord.u, coord.v)
-
-    @staticmethod
-    def tex_coords(t1):
-        glTexCoord2f(t1[0], t1[1])
-
-    @staticmethod
-    def vertex_3f(v1):
-        glVertex3f(v1[0], v1[1], v1[2])
-
-    def is_enabled(self, cap):
-        """is enabled"""
-        return bool(glIsEnabled(cap))
-
-    def set_blend_func(self, src, dst):
-        """set blend function"""
-        glBlendFunc(src, dst)
-
-    def delete_texture(self, tex_id: int):
-        glDeleteTextures([tex_id])
-
-    def set_blend(self, enabled: bool):
-        self.enable(GL.GL_BLEND) if enabled else self.disable(GL.GL_BLEND)
-
-    def enable_clip0(self):
-        self.enable(GL_CLIP_DISTANCE0)
-
-    def enable_clip1(self):
-        self.enable(GL_CLIP_DISTANCE1)
-
-    def set_depth_test(self, enabled: bool):
-        (
-            self.enable(GL.GL_DEPTH_TEST)
-            if enabled
-            else self.disable(GL.GL_DEPTH_TEST)
-        )
-
-    def set_depth_write(self, enabled: bool):
-        GL.glDepthMask(bool(enabled))
-
-    def set_cull_face(self, enabled: bool):
-        (
-            self.enable(GL.GL_CULL_FACE)
-            if enabled
-            else self.disable(GL.GL_CULL_FACE)
-        )
-
-    def set_polygon_mode(self, face, mode):
-        glPolygonMode(face, mode)
-
-    def set_lighting(self, enabled: bool):
-        (
-            self.enable(GL.GL_LIGHTING)
-            if enabled
-            else self.disable(GL.GL_LIGHTING)
-        )
-
-    def set_uniform_color(self, color: tuple, alpha: float):
-        r, g, b = color[:3]
-        self.set_color((r, g, b, 1.0 - alpha))
-
-
 class GLVertexBuffer:
     def __init__(self, data: ndarray):
         self.data = data
@@ -285,6 +173,7 @@ class GLViewport:
 
 
 class TestGLMesh:
+    """Test GL Mesh"""
     def __init__(self, vertices, indices=None):
         self.vertices = vertices
         self.indices = indices
@@ -319,137 +208,11 @@ class DrawCommand:
 
 @dataclass
 class GLClipPlaneState:
+    """GL Clipping Plane State"""
     enabled0: bool = False
     enabled1: bool = False
 
     def apply(self, state: GLStateManager):
         state.set_enabled(GL_CLIP_DISTANCE0, self.enabled0)
         state.set_enabled(GL_CLIP_DISTANCE1, self.enabled1)
-
-
-class GLReadback:
-    @staticmethod
-    def read_depth(x, y, w, h):
-        return glReadPixels(x, y, w, h, GL_DEPTH_COMPONENT, GL_FLOAT)
-
-
-class ModernGLBackend(GLBackend, ABC):
-    """Legacy GL Backend"""
-
-    def viewport(self, x, y, width, height):
-        glViewport(x, y, width, height)
-
-    def enable_multisample(self):
-        glEnable(GL_MULTISAMPLE)
-
-    def clear_background(self):
-        self.clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-
-    def read_pixels(self, depth: ndarray[Any, dtype[Any]] | ndarray[Any, dtype[generic]], x: int, y_gl: int):
-        glReadPixels(x, y_gl, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, depth)
-
-    def enable_clip0(self):
-        self.enable(GL_CLIP_DISTANCE0)
-
-    def enable_clip1(self):
-        self.enable(GL_CLIP_DISTANCE1)
-
-    def clear_color(self, clear_color):
-        glClearColor(*clear_color)
-
-    def disable(self, cap):
-        glDisable(cap)
-
-    def set_line_width(self, width):
-        glLineWidth(width)
-
-    def set_polygon_mode(self, face, mode):
-        glPolygonMode(face, mode)
-
-    def enable_vertex_array(self):
-        glEnableClientState(GL_VERTEX_ARRAY)
-
-    def set_vertex_pointer(self, data):
-        glVertexPointer(3, GL_FLOAT, 0, data)
-
-    def enable_normal_array(self):
-        glEnableClientState(GL_NORMAL_ARRAY)
-
-    def set_normal_pointer(self, data):
-        glNormalPointer(GL_FLOAT, 0, data)
-
-    def enable_color_array(self):
-        glEnableClientState(GL_COLOR_ARRAY)
-
-    def set_color_pointer(self, data, size):
-        glColorPointer(size, GL_FLOAT, 0, data)
-
-    def enable_texcoord_array(self):
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY)
-
-    def set_texcoord_pointer(self, data):
-        """set texcoord pointer"""
-        glTexCoordPointer(2, GL_FLOAT, 0, data)
-
-    def draw_elements(self, mode, indices):
-        """draw elements"""
-        glDrawElements(mode, len(indices), GL_UNSIGNED_INT, indices)
-
-    def bind_texture(self, texture_id):
-        """bind texture"""
-        glBindTexture(GL_TEXTURE_2D, texture_id)
-
-    @staticmethod
-    def tex_coord2f(coord: TexCoord2f):
-        return glTexCoord2f(coord.u, coord.v)
-
-    @staticmethod
-    def tex_coords(t1):
-        glTexCoord2f(t1[0], t1[1])
-
-    @staticmethod
-    def vertex_3f(v1):
-        glVertex3f(v1[0], v1[1], v1[2])
-
-    def is_enabled(self, cap):
-        """is enabled"""
-        return bool(glIsEnabled(cap))
-
-    def set_blend_func(self, src, dst):
-        """set blend function"""
-        glBlendFunc(src, dst)
-
-    def delete_texture(self, tex_id: int):
-        glDeleteTextures([tex_id])
-
-    def set_blend(self, enabled: bool):
-        self.enable(GL.GL_BLEND) if enabled else self.disable(GL.GL_BLEND)
-
-    def set_depth_test(self, enabled: bool):
-        (
-            self.enable(GL.GL_DEPTH_TEST)
-            if enabled
-            else self.disable(GL.GL_DEPTH_TEST)
-        )
-
-    def set_depth_write(self, enabled: bool):
-        GL.glDepthMask(bool(enabled))
-
-    def set_cull_face(self, enabled: bool):
-        (
-            self.enable(GL.GL_CULL_FACE)
-            if enabled
-            else self.disable(GL.GL_CULL_FACE)
-        )
-
-    def set_lighting(self, enabled: bool):
-        (
-            self.enable(GL.GL_LIGHTING)
-            if enabled
-            else self.disable(GL.GL_LIGHTING)
-        )
-
-    def set_uniform_color(self, color: tuple, alpha: float):
-        r, g, b = color[:3]
-        self.set_color((r, g, b, 1.0 - alpha))
 
