@@ -21,7 +21,7 @@ from OpenGL.GL import (GL_BLEND, GL_CULL_FACE, GL_VERTEX_ARRAY, glTexCoordPointe
     GL_COLOR_ARRAY, glColorPointer, GL_TEXTURE_COORD_ARRAY, glBindTexture, glDeleteTextures, GL_MULTISAMPLE)
 
 from picogl.buffers.glframe import GLFramebuffer
-from picogl.texture.gltexture import GLTexture2D
+from picogl.texture.gltexture import GLTextureDriver
 from picogl.state.texture import TexCoord2f
 
 
@@ -222,12 +222,15 @@ class GLBackend:
 
     def create_texture(self, width, height, data) -> int:
         """create texture"""
-        texture = GLTexture2D(width=width, height=height)
-        texture.bind()
-        texture.set_parameters()
-        texture.upload(data)
-        texture.generate_mipmap()
-        return texture.id
+        spec = TextureSpec(width=width, height=height)
+        tex = Texture2D(spec, data)
+        driver = GLTextureDriver()
+        driver.create(tex)
+        driver.bind(tex)
+        driver.set_parameters()
+        driver.upload(data)
+        driver.generate_mipmap()
+        return driver.id
 
     def delete_texture(self, tex_id: int):
         glDeleteTextures([tex_id])

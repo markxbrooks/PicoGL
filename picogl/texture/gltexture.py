@@ -1,33 +1,60 @@
+"""
+This module provides functionality for managing 2D OpenGL textures.
+
+It includes a class for creating, binding, uploading data, setting parameters, generating mipmaps, and deleting
+2D textures in OpenGL. This class ensures efficient management of texture resources in graphics applications.
+"""
+
 from OpenGL.GL import glGenTextures, glTexImage2D
 from OpenGL.GL.framebufferobjects import glGenerateMipmap
-from OpenGL.raw.GL.ARB.internalformat_query2 import GL_TEXTURE_2D
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_RGB, glTexParameteri, GL_TEXTURE_MIN_FILTER, GL_LINEAR, \
-    GL_TEXTURE_MAG_FILTER, GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_RGB, glTexParameteri, GL_LINEAR
 from OpenGL.raw.GL.VERSION.GL_1_1 import glBindTexture, glDeleteTextures
 from OpenGL.raw.GL.VERSION.GL_1_2 import GL_CLAMP_TO_EDGE
 from OpenGL.raw.GL._types import GL_UNSIGNED_BYTE
 from numpy import ndarray
 
+from picogl.state.texture import GLTexture
 
-class GLTexture2D:
+from dataclasses import dataclass
+
+@dataclass(frozen=True)
+class TextureSpec:
+    width: int
+    height: int
+    format: str = "rgb"
+    min_filter: str = "linear"
+    mag_filter: str = "linear"
+    wrap_s: str = "clamp"
+    wrap_t: str = "clamp"
+
+
+class Texture2D:
+    def __init__(self, spec: TextureSpec, data: ndarray | None = None):
+        self.spec = spec
+        self.data = data
+        self.handle = None  # assigned by backend
+
+
+class GLTextureDriver:
     """GL Texture 2d"""
-    def __init__(self, width: int, height: int, fmt=GL_RGB):
-        self.id = glGenTextures(1)
-        self.width = width
-        self.height = height
-        self.format = fmt
 
-    def bind(self):
-        glBindTexture(GL_TEXTURE_2D, self.id)
+    def __init__(self):
+        self.format = GL_RGB
+
+    def create(self, tex: Texture2D):
+        tex.id = glGenTextures(1)
+
+    def bind(self, tex: Texture2D):
+        glBindTexture(GLTexture.TEXTURE_2D, tex.id)
 
     def upload(self, data: ndarray):
         self.bind()
         glTexImage2D(
-            GL_TEXTURE_2D,
+            GLTexture.TEXTURE_2D,
             0,
             self.format,
-            self.width,
-            self.height,
+            self.tex.spec.width,
+            self.tex.spec.height,
             0,
             self.format,
             GL_UNSIGNED_BYTE,
@@ -35,13 +62,13 @@ class GLTexture2D:
         )
 
     def set_parameters(self):
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
+        glTexParameteri(GLTexture.TEXTURE_2D, GLTexture.TEXTURE_MIN_FILTER, GL_LINEAR)
+        glTexParameteri(GLTexture.TEXTURE_2D, GLTexture.TEXTURE_MAG_FILTER, GL_LINEAR)
+        glTexParameteri(GLTexture.TEXTURE_2D, GLTexture.TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
+        glTexParameteri(GLTexture.TEXTURE_2D, GLTexture.TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
 
     def generate_mipmap(self):
-        glGenerateMipmap(GL_TEXTURE_2D)
+        glGenerateMipmap(GLTexture.TEXTURE_2D)
 
     def delete(self):
         glDeleteTextures([self.id])

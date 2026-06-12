@@ -1,20 +1,30 @@
 """
-GL Draw Mode
+Provides utilities and context managers for managing OpenGL textures.
+
+This module defines enumerations and helper classes for texture handling, along
+with context managers for safely enabling and binding textures in an OpenGL
+environment. It aims to simplify texture management tasks and ensure proper
+state restoration after operations.
 """
 
 from contextlib import contextmanager
 from dataclasses import dataclass
 from enum import IntEnum
 
-from OpenGL.GL import (GL_ACTIVE_TEXTURE, GL_TEXTURE0, GL_TEXTURE_2D,
-                       GL_TEXTURE_BINDING_2D, glActiveTexture, glBindTexture,
-                       glDisable, glEnable, glGetIntegerv, glIsEnabled)
+from OpenGL.GL import (GL_ACTIVE_TEXTURE, GL_TEXTURE_2D,
+                       GL_TEXTURE_BINDING_2D, glBindTexture,
+                       glDisable, glEnable, glGetIntegerv, glIsEnabled, GL_TEXTURE_MIN_FILTER, GL_TEXTURE_MAG_FILTER, GL_TEXTURE_WRAP_S, \
+    GL_TEXTURE_WRAP_T)
 from OpenGL.raw.GL.VERSION.GL_1_3 import GL_TEXTURE0, glActiveTexture
 
 
 class GLTexture(IntEnum):
     """GL Draw Mode"""
     TEXTURE_2D = GL_TEXTURE_2D
+    TEXTURE_MIN_FILTER = GL_TEXTURE_MIN_FILTER
+    TEXTURE_MAG_FILTER = GL_TEXTURE_MAG_FILTER
+    TEXTURE_WRAP_S = GL_TEXTURE_WRAP_S
+    TEXTURE_WRAP_T = GL_TEXTURE_WRAP_T
 
     @classmethod
     def choices(cls):

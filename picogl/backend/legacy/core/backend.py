@@ -23,7 +23,7 @@ from OpenGL.raw.GL.VERSION.GL_1_1 import (GL_COLOR_ARRAY, GL_NORMAL_ARRAY,
                                           glVertexPointer)
 from picogl.backend.opengl import GLBackend
 from picogl.state.texture import TexCoord2f
-from picogl.texture.gltexture import GLTexture2D
+from picogl.texture.gltexture import GLTextureDriver
 
 
 class PolygonMode(Enum):
@@ -304,7 +304,7 @@ class TestGLMesh:
 class DrawCommand:
     """Draw Command"""
     mesh: TestGLMesh
-    texture: GLTexture2D | None = None
+    texture: GLTextureDriver | None = None
     state: RenderState | None = None
 
     def execute(self, state: GLStateManager):
