@@ -19,6 +19,7 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class TextureSpec:
+    """Texture Spec"""
     width: int
     height: int
     format: str = "rgb"
@@ -29,6 +30,7 @@ class TextureSpec:
 
 
 class Texture2D:
+    """Texture 2D"""
     def __init__(self, spec: TextureSpec, data: ndarray | None = None):
         self.spec = spec
         self.data = data
@@ -39,15 +41,19 @@ class GLTextureDriver:
     """GL Texture 2d"""
 
     def __init__(self):
+        """init"""
         self.format = GL_RGB
 
     def create(self, tex: Texture2D):
+        """create"""
         tex.handle = glGenTextures(1)
 
     def bind(self, tex: Texture2D):
+        """bind"""
         glBindTexture(GLTexture.TEXTURE_2D, tex.handle)
 
     def upload(self, tex: Texture2D):
+        """upload"""
         glTexImage2D(
             GLTexture.TEXTURE_2D,
             0,
@@ -61,13 +67,17 @@ class GLTextureDriver:
         )
 
     def set_parameters(self):
+        """set parameters"""
         glTexParameteri(GLTexture.TEXTURE_2D, GLTexture.TEXTURE_MIN_FILTER, GL_LINEAR)
         glTexParameteri(GLTexture.TEXTURE_2D, GLTexture.TEXTURE_MAG_FILTER, GL_LINEAR)
         glTexParameteri(GLTexture.TEXTURE_2D, GLTexture.TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
         glTexParameteri(GLTexture.TEXTURE_2D, GLTexture.TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
 
     def generate_mipmap(self):
+        """generate mipmap"""
         glGenerateMipmap(GLTexture.TEXTURE_2D)
 
-    def delete(self, tex: Texture2D):
+    @staticmethod
+    def delete(tex: Texture2D):
+        """delete"""
         glDeleteTextures([tex.handle])
