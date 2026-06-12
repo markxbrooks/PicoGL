@@ -189,11 +189,6 @@ class RenderStateApplier:
 
 class LegacyGLBackend(GLBackend):
     """Legacy GL Backend"""
-    def enable(self, cap):
-        glEnable(cap)
-
-    def clear(self, cap):
-        glClear(cap)
 
     def viewport(self, x, y, width, height):
         glViewport(x, y, width, height)
@@ -206,9 +201,6 @@ class LegacyGLBackend(GLBackend):
 
     def set_line_width(self, width):
         glLineWidth(width)
-
-    def set_color(self, rgba):
-        glColor4f(*rgba)
 
     def read_pixels(self, depth: ndarray[Any, dtype[Any]] | ndarray[Any, dtype[generic]], x: int, y_gl: int):
         glReadPixels(x, y_gl, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, depth)
@@ -434,12 +426,6 @@ class GLReadback:
 class ModernGLBackend(GLBackend, ABC):
     """Legacy GL Backend"""
 
-    def enable(self, cap):
-        glEnable(cap)
-
-    def clear(self, cap):
-        glClear(cap)
-
     def viewport(self, x, y, width, height):
         glViewport(x, y, width, height)
 
@@ -469,9 +455,6 @@ class ModernGLBackend(GLBackend, ABC):
 
     def set_polygon_mode(self, face, mode):
         glPolygonMode(face, mode)
-
-    def set_color(self, rgba):
-        glColor4f(*rgba)
 
     def enable_vertex_array(self):
         glEnableClientState(GL_VERTEX_ARRAY)
