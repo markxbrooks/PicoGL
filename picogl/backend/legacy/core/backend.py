@@ -1,13 +1,14 @@
 from abc import ABC
+from dataclasses import dataclass, field
 from enum import Enum
 
 from numpy import dtype, generic, ndarray
 from typing import Any
-
+from OpenGL import GL
 from OpenGL.GL import (GL_CLAMP_TO_EDGE, GL_LINEAR, GL_RGB, GL_TEXTURE_2D,
                        GL_TEXTURE_MAG_FILTER, GL_TEXTURE_MIN_FILTER, GL_CLIP_DISTANCE0, GL_CLIP_DISTANCE1,
                        GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T, GL_UNSIGNED_BYTE, glReadPixels, glViewport, GL_FILL, GL_LINE,
-                       glBindTexture, glDrawElements, glGenTextures, GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT,
+                       glBindTexture, glDrawElements, glGenTextures, GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA,
                        glTexCoordPointer, glTexImage2D, glTexParameteri, glClearColor, glClear, GL_MULTISAMPLE, GL_DEPTH_COMPONENT)
 from OpenGL.GL.framebufferobjects import glGenerateMipmap
 from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_FLOAT, GL_LINEAR_MIPMAP_LINEAR,
@@ -31,6 +32,156 @@ class PolygonMode(Enum):
     LINE = GL_LINE
 
 
+@dataclass
+class RasterState:
+    polygon_mode: int = GL_FILL
+    line_width: float = 1.0
+
+    def apply(self, backend: GLBackend):
+        backend.set_polygon_mode(GL_FRONT_AND_BACK, self.polygon_mode)
+        backend.set_line_width(self.line_width)
+
+
+class GLStateManager:
+    def __init__(self, backend: GLBackend):
+        self.backend = backend
+        self._caps: dict[int, bool] = {}
+
+    def set_enabled(self, cap: int, enabled: bool) -> None:
+        if self._caps.get(cap) == enabled:
+            return
+        self._caps[cap] = enabled
+
+        if enabled:
+            self.backend.enable(cap)
+        else:
+            self.backend.disable(cap)
+
+    def is_enabled(self, cap: int) -> bool:
+        return self._caps.get(cap, False)
+
+
+@dataclass
+class BlendState:
+    enabled: bool = False
+    src: int = GL_SRC_ALPHA
+    dst: int = GL_ONE_MINUS_SRC_ALPHA
+
+    def apply(self, state: GLStateManager):
+        state.set_enabled(GL_BLEND, self.enabled)
+        if self.enabled:
+            glBlendFunc(self.src, self.dst)
+
+
+class GLTexture2D:
+    """GL Texture 2d"""
+    def __init__(self, width: int, height: int, fmt=GL_RGB):
+        self.id = glGenTextures(1)
+        self.width = width
+        self.height = height
+        self.format = fmt
+
+    def bind(self):
+        glBindTexture(GL_TEXTURE_2D, self.id)
+
+    def upload(self, data: ndarray):
+        self.bind()
+        glTexImage2D(
+            GL_TEXTURE_2D,
+            0,
+            self.format,
+            self.width,
+            self.height,
+            0,
+            self.format,
+            GL_UNSIGNED_BYTE,
+            data,
+        )
+
+    def set_parameters(self):
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
+
+    def generate_mipmap(self):
+        glGenerateMipmap(GL_TEXTURE_2D)
+
+    def delete(self):
+        glDeleteTextures([self.id])
+
+
+@dataclass(frozen=True)
+class RasterState:
+    polygon_mode: int = GL_FILL
+    line_width: float = 1.0
+
+
+@dataclass(frozen=True)
+class BlendState:
+    enabled: bool = False
+    src: int = GL_SRC_ALPHA
+    dst: int = GL_ONE_MINUS_SRC_ALPHA
+
+
+@dataclass(frozen=True)
+class DepthState:
+    test: bool = True
+    write: bool = True
+
+
+@dataclass(frozen=True)
+class RenderState:
+    raster: RasterState = field(default_factory=RasterState)
+    depth: DepthState = field(default_factory=DepthState)
+    blend: BlendState = field(default_factory=BlendState)
+
+    cull_face: bool = False
+    lighting: bool = False
+
+
+class RenderStateApplier:
+    def __init__(self, backend: GLBackend):
+        self.backend = backend
+        self.current = None
+
+    def apply(self, state: RenderState):
+        if self.current == state:
+            return
+
+        prev = self.current
+        self.current = state
+
+        # --- Raster ---
+        if prev is None or prev.raster != state.raster:
+            self.backend.set_line_width(state.raster.line_width)
+            self.backend.set_polygon_mode(
+                GL_FRONT_AND_BACK,
+                state.raster.polygon_mode.value
+            )
+
+        # --- Depth ---
+        if prev is None or prev.depth != state.depth:
+            self.backend.set_depth_test(state.depth.test)
+            self.backend.set_depth_write(state.depth.write)
+
+        # --- Blend ---
+        if prev is None or prev.blend != state.blend:
+            self.backend.set_blend(state.blend.enabled)
+            if state.blend.enabled:
+                self.backend.set_blend_func(
+                    state.blend.src,
+                    state.blend.dst
+                )
+
+        # --- Misc ---
+        if prev is None or prev.cull_face != state.cull_face:
+            self.backend.set_cull_face(state.cull_face)
+
+        if prev is None or prev.lighting != state.lighting:
+            self.backend.set_lighting(state.lighting)
+
+
 class LegacyGLBackend(GLBackend):
     """Legacy GL Backend"""
     def enable(self, cap):
@@ -50,9 +201,6 @@ class LegacyGLBackend(GLBackend):
 
     def set_line_width(self, width):
         glLineWidth(width)
-
-    def set_polygon_mode(self, face, mode):
-        glPolygonMode(face, mode)
 
     def set_color(self, rgba):
         glColor4f(*rgba)
@@ -135,6 +283,147 @@ class LegacyGLBackend(GLBackend):
 
     def delete_texture(self, tex_id: int):
         glDeleteTextures([tex_id])
+
+    def set_blend(self, enabled: bool):
+        self.enable(GL.GL_BLEND) if enabled else self.disable(GL.GL_BLEND)
+
+    def enable_clip0(self):
+        self.enable(GL_CLIP_DISTANCE0)
+
+    def enable_clip1(self):
+        self.enable(GL_CLIP_DISTANCE1)
+
+    def set_depth_test(self, enabled: bool):
+        (
+            self.enable(GL.GL_DEPTH_TEST)
+            if enabled
+            else self.disable(GL.GL_DEPTH_TEST)
+        )
+
+    def set_depth_write(self, enabled: bool):
+        GL.glDepthMask(bool(enabled))
+
+    def set_cull_face(self, enabled: bool):
+        (
+            self.enable(GL.GL_CULL_FACE)
+            if enabled
+            else self.disable(GL.GL_CULL_FACE)
+        )
+
+    def set_polygon_mode(self, face, mode):
+        glPolygonMode(face, mode)
+
+    def set_lighting(self, enabled: bool):
+        (
+            self.enable(GL.GL_LIGHTING)
+            if enabled
+            else self.disable(GL.GL_LIGHTING)
+        )
+
+    def set_uniform_color(self, color: tuple, alpha: float):
+        r, g, b = color[:3]
+        self.set_color((r, g, b, 1.0 - alpha))
+
+
+class GLVertexBuffer:
+    def __init__(self, data: ndarray):
+        self.data = data
+
+    def bind_legacy(self):
+        # fallback path
+        pass
+
+
+@dataclass
+class GLAttributeArray:
+    """GL Attribute Array"""
+    size: int
+    dtype: Any
+    stride: int
+    pointer: Any
+
+    def enable_legacy(self, kind):
+        glEnableClientState(kind)
+        if kind == GL_VERTEX_ARRAY:
+            glVertexPointer(self.size, GL_FLOAT, self.stride, self.pointer)
+        elif kind == GL_NORMAL_ARRAY:
+            glNormalPointer(GL_FLOAT, self.stride, self.pointer)
+        elif kind == GL_COLOR_ARRAY:
+            glColorPointer(self.size, GL_FLOAT, self.stride, self.pointer)
+
+
+class GLFramebuffer:
+    """GL Frame Buffer"""
+    def __init__(self):
+        self.color_attachments = []
+        self.depth_attachment = None
+
+    def bind(self):
+        pass
+
+    def clear(self, color=(0,0,0,1)):
+        glClearColor(*color)
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+
+
+@dataclass
+class GLViewport:
+    x: int
+    y: int
+    width: int
+    height: int
+
+    def apply(self):
+        glViewport(self.x, self.y, self.width, self.height)
+
+
+class TestGLMesh:
+    def __init__(self, vertices, indices=None):
+        self.vertices = vertices
+        self.indices = indices
+        self.attributes: list[GLAttributeArray] = []
+
+    def add_attribute(self, attr: GLAttributeArray):
+        self.attributes.append(attr)
+
+    def draw(self):
+        for attr in self.attributes:
+            attr.enable_legacy(GL_VERTEX_ARRAY)  # refine mapping
+
+        if self.indices is not None:
+            glDrawElements(GL_TRIANGLES, len(self.indices), GL_UNSIGNED_INT, self.indices)
+
+@dataclass
+class DrawCommand:
+    """Draw Command"""
+    mesh: TestGLMesh
+    texture: GLTexture2D | None = None
+    state: RenderState | None = None
+
+    def execute(self, state: GLStateManager):
+        self.raster.apply(state.backend)
+        self.blend.apply(state)
+
+        if self.texture:
+            self.texture.bind()
+
+        self.mesh.draw()
+
+
+@dataclass
+class GLClipPlaneState:
+    enabled0: bool = False
+    enabled1: bool = False
+
+    def apply(self, state: GLStateManager):
+        state.set_enabled(GL_CLIP_DISTANCE0, self.enabled0)
+        state.set_enabled(GL_CLIP_DISTANCE1, self.enabled1)
+
+
+class GLReadback:
+    @staticmethod
+    def read_depth(x, y, w, h):
+        return glReadPixels(x, y, w, h, GL_DEPTH_COMPONENT, GL_FLOAT)
 
 
 class ModernGLBackend(GLBackend, ABC):
