@@ -190,9 +190,6 @@ class RenderStateApplier:
 class LegacyGLBackend(GLBackend):
     """Legacy GL Backend"""
 
-    def viewport(self, x, y, width, height):
-        glViewport(x, y, width, height)
-
     def clear_background(self):
         self.clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
