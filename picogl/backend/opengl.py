@@ -227,9 +227,7 @@ class GLBackend:
         driver = GLTextureDriver()
         driver.create(tex)
         driver.bind(tex)
-        driver.set_parameters()
-        driver.upload(tex)
-        driver.generate_mipmap()
+        driver.initialize(tex)
         return tex.handle
 
     def delete_texture(self, tex_id: int):

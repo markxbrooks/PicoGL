@@ -29,6 +29,18 @@ from picogl.state.texture import GLTexture
 
 from dataclasses import dataclass
 
+FORMAT_MAP = {
+    "rgb": GL_RGB,
+}
+
+FILTER_MAP = {
+    "linear": GL_LINEAR,
+}
+
+WRAP_MAP = {
+    "clamp": GL_CLAMP_TO_EDGE,
+}
+
 @dataclass(frozen=True)
 class TextureSpec:
     """Texture Spec"""
@@ -63,32 +75,37 @@ class GLTextureDriver:
         glBindTexture(GLTexture.TEXTURE_2D, tex.handle)
 
     @staticmethod
-    def upload(tex: Texture2D, format=GL_RGB):
-        """upload"""
+    def initialize(tex: Texture2D):
+        """initialize"""
+        GLTextureDriver.bind(tex)
+
+        spec = tex.spec
+
+        internal_format = FORMAT_MAP[spec.format]
+        min_filter = FILTER_MAP[spec.min_filter]
+        mag_filter = FILTER_MAP[spec.mag_filter]
+        wrap_s = WRAP_MAP[spec.wrap_s]
+        wrap_t = WRAP_MAP[spec.wrap_t]
+
         glTexImage2D(
             GLTexture.TEXTURE_2D,
             0,
-            format,
-            tex.spec.width,
-            tex.spec.height,
+            internal_format,
+            spec.width,
+            spec.height,
             0,
-            format,
+            internal_format,
             GL_UNSIGNED_BYTE,
             tex.data,
         )
 
-    @staticmethod
-    def set_parameters():
-        """set parameters"""
-        glTexParameteri(GLTexture.TEXTURE_2D, GLTexture.TEXTURE_MIN_FILTER, GL_LINEAR)
-        glTexParameteri(GLTexture.TEXTURE_2D, GLTexture.TEXTURE_MAG_FILTER, GL_LINEAR)
-        glTexParameteri(GLTexture.TEXTURE_2D, GLTexture.TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
-        glTexParameteri(GLTexture.TEXTURE_2D, GLTexture.TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
+        glTexParameteri(GLTexture.TEXTURE_2D, GLTexture.TEXTURE_MIN_FILTER, min_filter)
+        glTexParameteri(GLTexture.TEXTURE_2D, GLTexture.TEXTURE_MAG_FILTER, mag_filter)
+        glTexParameteri(GLTexture.TEXTURE_2D, GLTexture.TEXTURE_WRAP_S, wrap_s)
+        glTexParameteri(GLTexture.TEXTURE_2D, GLTexture.TEXTURE_WRAP_T, wrap_t)
 
-    @staticmethod
-    def generate_mipmap():
-        """generate mipmap"""
-        glGenerateMipmap(GLTexture.TEXTURE_2D)
+        if spec.min_filter == "mipmap":
+            glGenerateMipmap(GLTexture.TEXTURE_2D)
 
     @staticmethod
     def delete(tex: Texture2D):
