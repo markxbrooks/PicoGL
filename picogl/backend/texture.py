@@ -8,19 +8,40 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import glDisable, glEnable
 from OpenGL.raw.GL.VERSION.GL_1_1 import glBindTexture
 
 from elmo.globals import RESOURCE_DIR
+from picogl.state.texture import GLTexture
+from picogl.texture.gltexture import Texture2D, GLTextureDriver
 
 
 @contextmanager
 def gl_texture_binding(texture_gl_id: int | None):
     try:
         if texture_gl_id is not None:
-            glEnable(GL_TEXTURE_2D)
-            glBindTexture(GL_TEXTURE_2D, texture_gl_id)
+            glEnable(GLTexture.TEXTURE_2D)
+            glBindTexture(GLTexture.TEXTURE_2D, texture_gl_id)
         yield
     finally:
         if texture_gl_id is not None:
-            glBindTexture(GL_TEXTURE_2D, 0)
-            glDisable(GL_TEXTURE_2D)
+            glBindTexture(GLTexture.TEXTURE_2D, 0)
+            glDisable(GLTexture.TEXTURE_2D)
+
+
+@contextmanager
+def bind_texture(tex: Texture2D | None):
+    """bind_texture"""
+    if tex is None:
+        yield
+        return
+    driver = GLTextureDriver()
+    driver.create(tex)
+    if driver is not None:
+        try:
+            if tex.handle is not None:
+                glEnable(GLTexture.TEXTURE_2D)
+                driver.bind(tex)
+                driver.ensure_initialized(tex)
+            yield
+        finally:
+            driver.unbind()
 
 
 def get_texture_path(texture_name: str) -> Path:

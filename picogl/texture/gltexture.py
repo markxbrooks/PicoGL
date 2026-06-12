@@ -6,15 +6,17 @@ It includes a class for creating, binding, uploading data, setting parameters, g
 
 Example Usage:
 ==============
-spec = TextureSpec(width=width, height=height)
-tex = Texture2D(spec, data)
-driver = GLTextureDriver()
-driver.create(tex)
-driver.bind(tex)
-driver.set_parameters()
-driver.upload(tex)
-driver.generate_mipmap()
-return tex.handle
+
+  >>  spec = TextureSpec(width=width, height=height)
+  >>  tex = Texture2D(spec, data)
+  >>  driver = GLTextureDriver()
+  >>  driver.create(tex)
+  >>  driver.bind(tex)
+  >>  driver.set_parameters()
+  >>  driver.upload(tex)
+  >>  driver.generate_mipmap()
+  >>  return tex.handle
+
 """
 
 from OpenGL.GL import glGenTextures, glTexImage2D
@@ -59,6 +61,7 @@ class Texture2D:
         self.spec = spec
         self.data = data
         self.handle = None  # assigned by backend
+        self.initialized = False
 
 
 class GLTextureDriver:
@@ -73,6 +76,17 @@ class GLTextureDriver:
     def bind(tex: Texture2D):
         """bind"""
         glBindTexture(GLTexture.TEXTURE_2D, tex.handle)
+
+    @staticmethod
+    def ensure_initialized(tex: Texture2D):
+        if not tex.initialized:
+            GLTextureDriver.initialize(tex)
+            tex.initialized = True
+
+    @staticmethod
+    def unbind():
+        """bind"""
+        glBindTexture(GLTexture.TEXTURE_2D, 0)
 
     @staticmethod
     def initialize(tex: Texture2D):
@@ -110,4 +124,7 @@ class GLTextureDriver:
     @staticmethod
     def delete(tex: Texture2D):
         """delete"""
-        glDeleteTextures([tex.handle])
+        if tex.handle is not None:
+            glDeleteTextures([tex.handle])
+            tex.handle = None
+            tex.initialized = False
