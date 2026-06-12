@@ -21,7 +21,7 @@ from OpenGL.GL import (GL_BLEND, GL_CULL_FACE, GL_VERTEX_ARRAY, glTexCoordPointe
     GL_COLOR_ARRAY, glColorPointer, GL_TEXTURE_COORD_ARRAY, glBindTexture, glDeleteTextures, GL_MULTISAMPLE)
 
 from picogl.buffers.glframe import GLFramebuffer
-from picogl.texture.gltexture import GLTextureDriver, Texture2D, TextureSpec
+from picogl.texture.gltexture import GLTextureDriver, TextureSpec, Texture2D
 from picogl.state.texture import TexCoord2f
 
 
@@ -228,9 +228,9 @@ class GLBackend:
         driver.create(tex)
         driver.bind(tex)
         driver.set_parameters()
-        driver.upload(data)
+        driver.upload(tex)
         driver.generate_mipmap()
-        return tex.id
+        return tex.handle
 
     def delete_texture(self, tex_id: int):
         glDeleteTextures([tex_id])
