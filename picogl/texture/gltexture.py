@@ -42,23 +42,22 @@ class GLTextureDriver:
         self.format = GL_RGB
 
     def create(self, tex: Texture2D):
-        tex.id = glGenTextures(1)
+        tex.handle = glGenTextures(1)
 
     def bind(self, tex: Texture2D):
-        glBindTexture(GLTexture.TEXTURE_2D, tex.id)
+        glBindTexture(GLTexture.TEXTURE_2D, tex.handle)
 
-    def upload(self, data: ndarray):
-        self.bind()
+    def upload(self, tex: Texture2D):
         glTexImage2D(
             GLTexture.TEXTURE_2D,
             0,
             self.format,
-            self.tex.spec.width,
-            self.tex.spec.height,
+            tex.spec.width,
+            tex.spec.height,
             0,
             self.format,
             GL_UNSIGNED_BYTE,
-            data,
+            tex.data,
         )
 
     def set_parameters(self):
@@ -70,5 +69,5 @@ class GLTextureDriver:
     def generate_mipmap(self):
         glGenerateMipmap(GLTexture.TEXTURE_2D)
 
-    def delete(self):
-        glDeleteTextures([self.id])
+    def delete(self, tex: Texture2D):
+        glDeleteTextures([tex.handle])
