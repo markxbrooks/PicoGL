@@ -1,4 +1,6 @@
-from OpenGL.raw.GL.VERSION.GL_1_0 import glClearColor, GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_COLOR_BUFFER_BIT,
+                                          GL_DEPTH_BUFFER_BIT, glClear,
+                                          glClearColor)
 
 
 class GLFramebuffer:
@@ -10,9 +12,9 @@ class GLFramebuffer:
     def bind(self):
         pass
 
-    def clear(self, color=(0,0,0,1)):
+    def clear(self, color=(0.0, 0.0, 0.0, 1.0)):
         glClearColor(*color)
         self.clear_background()
 
     def clear_background(self):
-        self.clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)

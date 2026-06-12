@@ -40,7 +40,11 @@ class GLMesh:
         uvs: Optional[np.ndarray] = None,
         use_indices: bool = True,
         *,
-        shader_type: Literal[ShaderType.ISOSURFACE, ShaderType.RIBBONS] = ShaderType.ISOSURFACE,
+        shader_type: Literal[
+            ShaderType.ISOSURFACE,
+            ShaderType.RIBBONS,
+            ShaderType.TEXTURES,
+        ] = ShaderType.ISOSURFACE,
         registry_label: Optional[str] = None,
     ):
         self.vao: Optional[VertexArrayObject] = None
@@ -60,8 +64,15 @@ class GLMesh:
             raise ValueError("GLMesh: faces must define a multiple of 3 indices (triangles)")
 
         self.use_indices = use_indices  # present for compatibility and potential path changes
-        if shader_type not in (ShaderType.ISOSURFACE, ShaderType.RIBBONS):
-            raise ValueError("shader_type must be ShaderType.ISOSURFACE or ShaderType.RIBBONS")
+        if shader_type not in (
+            ShaderType.ISOSURFACE,
+            ShaderType.RIBBONS,
+            ShaderType.TEXTURES,
+        ):
+            raise ValueError(
+                "shader_type must be ShaderType.ISOSURFACE, "
+                "ShaderType.RIBBONS, or ShaderType.TEXTURES"
+            )
         self.shader_type = shader_type
         self._registry_label = registry_label
 
@@ -161,7 +172,11 @@ class GLMesh:
         cls,
         mesh: "MeshData",
         *,
-        vertex_layout: Union[ShaderType.ISOSURFACE, ShaderType.RIBBONS] = ShaderType.ISOSURFACE,
+        vertex_layout: Union[
+            ShaderType.ISOSURFACE,
+            ShaderType.RIBBONS,
+            ShaderType.TEXTURES,
+        ] = ShaderType.ISOSURFACE,
         registry_label: Optional[str] = None,
     ) -> "GLMesh":
         """

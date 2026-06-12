@@ -13,11 +13,12 @@ from abc import ABC, abstractmethod
 from typing import Any
 
 from numpy import dtype, generic, ndarray
-from OpenGL.GL import (GL_BLEND, GL_COLOR_BUFFER_BIT, GL_CULL_FACE,
-                       GL_DEPTH_BUFFER_BIT, GL_DEPTH_TEST, GL_LIGHTING,
-                       glClear, glClearColor, glColor4f, glDepthMask,
-                       glDisable, glEnable, glLineWidth, glPolygonMode,
-                       glTexCoord2f, GL_CLIP_DISTANCE0, GL_CLIP_DISTANCE1, glIsEnabled)
+from OpenGL.GL import (GL_BLEND, GL_CULL_FACE, GL_VERTEX_ARRAY, glTexCoordPointer, glDrawElements,
+                       glReadPixels, glEnableClientState,
+                        GL_CLIP_DISTANCE0, GL_CLIP_DISTANCE1, glViewport, GL_FLOAT, GL_UNSIGNED_INT, glEnable, glDisable, glClear, \
+    glLineWidth, glColor4f, GL_DEPTH_TEST, glDepthMask, glPolygonMode, GL_LIGHTING, glClearColor, GL_TEXTURE_2D, \
+    glTexCoord2f, glVertex3f, glIsEnabled, glBlendFunc, glVertexPointer, GL_NORMAL_ARRAY, glNormalPointer, \
+    GL_COLOR_ARRAY, glColorPointer, GL_TEXTURE_COORD_ARRAY, glBindTexture, glDeleteTextures, GL_MULTISAMPLE)
 
 from picogl.buffers.glframe import GLFramebuffer
 from picogl.texture.gltexture import GLTexture2D
