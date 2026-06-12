@@ -3,6 +3,18 @@ This module provides functionality for managing 2D OpenGL textures.
 
 It includes a class for creating, binding, uploading data, setting parameters, generating mipmaps, and deleting
 2D textures in OpenGL. This class ensures efficient management of texture resources in graphics applications.
+
+Example Usage:
+==============
+spec = TextureSpec(width=width, height=height)
+tex = Texture2D(spec, data)
+driver = GLTextureDriver()
+driver.create(tex)
+driver.bind(tex)
+driver.set_parameters()
+driver.upload(tex)
+driver.generate_mipmap()
+return tex.handle
 """
 
 from OpenGL.GL import glGenTextures, glTexImage2D
@@ -40,40 +52,41 @@ class Texture2D:
 class GLTextureDriver:
     """GL Texture 2d"""
 
-    def __init__(self):
-        """init"""
-        self.format = GL_RGB
-
-    def create(self, tex: Texture2D):
+    @staticmethod
+    def create(tex: Texture2D):
         """create"""
         tex.handle = glGenTextures(1)
 
-    def bind(self, tex: Texture2D):
+    @staticmethod
+    def bind(tex: Texture2D):
         """bind"""
         glBindTexture(GLTexture.TEXTURE_2D, tex.handle)
 
-    def upload(self, tex: Texture2D):
+    @staticmethod
+    def upload(tex: Texture2D, format=GL_RGB):
         """upload"""
         glTexImage2D(
             GLTexture.TEXTURE_2D,
             0,
-            self.format,
+            format,
             tex.spec.width,
             tex.spec.height,
             0,
-            self.format,
+            format,
             GL_UNSIGNED_BYTE,
             tex.data,
         )
 
-    def set_parameters(self):
+    @staticmethod
+    def set_parameters():
         """set parameters"""
         glTexParameteri(GLTexture.TEXTURE_2D, GLTexture.TEXTURE_MIN_FILTER, GL_LINEAR)
         glTexParameteri(GLTexture.TEXTURE_2D, GLTexture.TEXTURE_MAG_FILTER, GL_LINEAR)
         glTexParameteri(GLTexture.TEXTURE_2D, GLTexture.TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
         glTexParameteri(GLTexture.TEXTURE_2D, GLTexture.TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
 
-    def generate_mipmap(self):
+    @staticmethod
+    def generate_mipmap():
         """generate mipmap"""
         glGenerateMipmap(GLTexture.TEXTURE_2D)
 
