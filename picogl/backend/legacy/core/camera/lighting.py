@@ -2,8 +2,7 @@
 Setup lighting
 """
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_AMBIENT, GL_COLOR_BUFFER_BIT,
-                                          GL_DEPTH_BUFFER_BIT, GL_DIFFUSE,
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_AMBIENT, GL_DIFFUSE,
                                           GL_FOG, GL_FOG_COLOR, GL_FOG_END,
                                           GL_FOG_MODE, GL_FOG_START,
                                           GL_FRONT_AND_BACK, GL_LIGHT0,
@@ -11,12 +10,14 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_AMBIENT, GL_COLOR_BUFFER_BIT,
                                           GL_LIGHT4, GL_LIGHTING, GL_LINEAR,
                                           GL_MODELVIEW, GL_POSITION,
                                           GL_SHININESS, GL_SPECULAR,
-                                          GL_UNPACK_ALIGNMENT, glClear,
-                                          glClearColor, glDisable, glEnable,
+                                          GL_UNPACK_ALIGNMENT,
+                                          glDisable, glEnable,
                                           glFogf, glFogfv, glFogi, glLightfv,
                                           glLoadIdentity, glMaterialf,
                                           glMatrixMode, glPixelStorei,
                                           glPopMatrix, glPushMatrix)
+
+from picogl.buffers.glframe import GLFramebuffer
 
 
 def set_fog_state(
@@ -94,10 +95,11 @@ def set_background_color(show_white_background: bool) -> None:
     Choose bg color_array
     """
     if show_white_background:
-        glClearColor(1.0, 1.0, 1.0, 1.0)  # White background
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)  # Black
+        color = (1.0, 1.0, 1.0, 1.0) # White background
     else:
-        glClearColor(0.0, 0.0, 0.0, 1.0)
+        color = (0.0, 0.0, 0.0, 1.0)
+    buffer = GLFramebuffer()
+    buffer.clear(color=color)
 
 
 def setup_lighting(mode: int = 0) -> None:

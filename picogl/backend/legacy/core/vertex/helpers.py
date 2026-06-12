@@ -1,12 +1,13 @@
 """
 GL Clear Buffers
 """
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_COLOR_BUFFER_BIT,
-                                          GL_DEPTH_BUFFER_BIT, GL_DEPTH_TEST,
-                                          GL_MODELVIEW, glClear, glColor3f,
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_DEPTH_TEST,
+                                          GL_MODELVIEW,
                                           glEnable, glLoadIdentity,
                                           glMatrixMode)
 from OpenGL.raw.GL.VERSION.GL_1_3 import GL_MULTISAMPLE
+
+from picogl.buffers.glframe import GLFramebuffer
 
 
 def gl_clear_buffers() -> None:
@@ -19,5 +20,5 @@ def gl_clear_buffers() -> None:
     glLoadIdentity()  # Reset modelview matrix
     glEnable(GL_DEPTH_TEST)
     glEnable(GL_MULTISAMPLE)
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-    glColor3f(1.0, 1.0, 1.0)  # Reset color_array to white (legacy state)
+    buffer = GLFramebuffer()
+    buffer.clear(color=(0.0, 0.0, 0.0, 1.0))

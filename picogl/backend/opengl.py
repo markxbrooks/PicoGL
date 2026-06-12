@@ -17,7 +17,10 @@ from OpenGL.GL import (GL_BLEND, GL_COLOR_BUFFER_BIT, GL_CULL_FACE,
                        GL_DEPTH_BUFFER_BIT, GL_DEPTH_TEST, GL_LIGHTING,
                        glClear, glClearColor, glColor4f, glDepthMask,
                        glDisable, glEnable, glLineWidth, glPolygonMode,
-                       glTexCoord2f, GL_CLIP_DISTANCE0, GL_CLIP_DISTANCE1)
+                       glTexCoord2f, GL_CLIP_DISTANCE0, GL_CLIP_DISTANCE1, glIsEnabled)
+
+from picogl.buffers.glframe import GLFramebuffer
+from picogl.texture.gltexture import GLTexture2D
 from picogl.state.texture import TexCoord2f
 
 
@@ -97,9 +100,13 @@ class ModernBinding(GLBindingStrategy):
 class GLBackend:
     def __init__(self, binding: GLBindingStrategy):
         self.binding = binding
+        self.framebuffer = GLFramebuffer()
 
     def enable(self, cap):
         glEnable(cap)
+
+    def disable(self, cap):
+        glDisable(cap)
 
     def clear(self, cap):
         glClear(cap)
@@ -108,10 +115,7 @@ class GLBackend:
         glViewport(x, y, width, height)
 
     def clear_background(self):
-        self.clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-
-    def disable(self, cap):
-        glDisable(cap)
+        self.framebuffer.clear_background()
 
     def set_line_width(self, width):
         glLineWidth(width)
@@ -217,23 +221,12 @@ class GLBackend:
 
     def create_texture(self, width, height, data) -> int:
         """create texture"""
-        tex = glGenTextures(1)
-        glBindTexture(GL_TEXTURE_2D, tex)
-
-        glTexImage2D(
-            GL_TEXTURE_2D, 0, GL_RGB,
-            width, height, 0,
-            GL_RGB, GL_UNSIGNED_BYTE, data
-        )
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR)
-
-        glGenerateMipmap(GL_TEXTURE_2D)
-
-        return tex
+        texture = GLTexture2D(width=width, height=height)
+        texture.bind()
+        texture.set_parameters()
+        texture.upload(data)
+        texture.generate_mipmap()
+        return texture.id
 
     def delete_texture(self, tex_id: int):
         glDeleteTextures([tex_id])

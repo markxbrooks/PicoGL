@@ -5,20 +5,13 @@ from typing import Any
 
 from numpy import dtype, generic, ndarray
 from OpenGL import GL
-from OpenGL.GL import (GL_CLAMP_TO_EDGE, GL_CLIP_DISTANCE0, GL_CLIP_DISTANCE1,
+from OpenGL.GL import (GL_CLIP_DISTANCE0, GL_CLIP_DISTANCE1,
                        GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT,
-                       GL_DEPTH_COMPONENT, GL_FILL, GL_LINE, GL_LINEAR,
-                       GL_MULTISAMPLE, GL_ONE_MINUS_SRC_ALPHA, GL_RGB,
-                       GL_SRC_ALPHA, GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
-                       GL_TEXTURE_MIN_FILTER, GL_TEXTURE_WRAP_S,
-                       GL_TEXTURE_WRAP_T, GL_UNSIGNED_BYTE, glBindTexture,
-                       glClear, glClearColor, glDrawElements, glGenTextures,
-                       glReadPixels, glTexCoordPointer, glTexImage2D,
-                       glTexParameteri, glViewport)
-from OpenGL.GL.framebufferobjects import glGenerateMipmap
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_FLOAT, GL_LINEAR_MIPMAP_LINEAR,
-                                          GL_UNSIGNED_INT, glBlendFunc,
-                                          glColor4f, glDisable, glEnable,
+                       GL_DEPTH_COMPONENT, GL_FILL, GL_LINE, GL_MULTISAMPLE, GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA, GL_TEXTURE_2D,
+                       glBindTexture,
+                       glClearColor, glDrawElements, glReadPixels, glTexCoordPointer, glViewport)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_FLOAT, GL_UNSIGNED_INT, glBlendFunc,
+                                          glDisable, glEnable,
                                           glIsEnabled, glLineWidth,
                                           glPolygonMode, glTexCoord2f,
                                           glVertex3f)
@@ -30,6 +23,7 @@ from OpenGL.raw.GL.VERSION.GL_1_1 import (GL_COLOR_ARRAY, GL_NORMAL_ARRAY,
                                           glVertexPointer)
 from picogl.backend.opengl import GLBackend
 from picogl.state.texture import TexCoord2f
+from picogl.texture.gltexture import GLTexture2D
 
 
 class PolygonMode(Enum):
@@ -76,44 +70,6 @@ class BlendState:
         state.set_enabled(GL_BLEND, self.enabled)
         if self.enabled:
             glBlendFunc(self.src, self.dst)
-
-
-class GLTexture2D:
-    """GL Texture 2d"""
-    def __init__(self, width: int, height: int, fmt=GL_RGB):
-        self.id = glGenTextures(1)
-        self.width = width
-        self.height = height
-        self.format = fmt
-
-    def bind(self):
-        glBindTexture(GL_TEXTURE_2D, self.id)
-
-    def upload(self, data: ndarray):
-        self.bind()
-        glTexImage2D(
-            GL_TEXTURE_2D,
-            0,
-            self.format,
-            self.width,
-            self.height,
-            0,
-            self.format,
-            GL_UNSIGNED_BYTE,
-            data,
-        )
-
-    def set_parameters(self):
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
-
-    def generate_mipmap(self):
-        glGenerateMipmap(GL_TEXTURE_2D)
-
-    def delete(self):
-        glDeleteTextures([self.id])
 
 
 @dataclass(frozen=True)
@@ -190,15 +146,6 @@ class RenderStateApplier:
 class LegacyGLBackend(GLBackend):
     """Legacy GL Backend"""
 
-    def clear_background(self):
-        self.clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-
-    def disable(self, cap):
-        glDisable(cap)
-
-    def set_line_width(self, width):
-        glLineWidth(width)
-
     def read_pixels(self, depth: ndarray[Any, dtype[Any]] | ndarray[Any, dtype[generic]], x: int, y_gl: int):
         glReadPixels(x, y_gl, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, depth)
 
@@ -254,26 +201,6 @@ class LegacyGLBackend(GLBackend):
     def set_blend_func(self, src, dst):
         """set blend function"""
         glBlendFunc(src, dst)
-
-    def create_texture(self, width, height, data) -> int:
-        """create texture"""
-        tex = glGenTextures(1)
-        glBindTexture(GL_TEXTURE_2D, tex)
-
-        glTexImage2D(
-            GL_TEXTURE_2D, 0, GL_RGB,
-            width, height, 0,
-            GL_RGB, GL_UNSIGNED_BYTE, data
-        )
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR)
-
-        glGenerateMipmap(GL_TEXTURE_2D)
-
-        return tex
 
     def delete_texture(self, tex_id: int):
         glDeleteTextures([tex_id])
@@ -344,20 +271,6 @@ class GLAttributeArray:
             glNormalPointer(GL_FLOAT, self.stride, self.pointer)
         elif kind == GL_COLOR_ARRAY:
             glColorPointer(self.size, GL_FLOAT, self.stride, self.pointer)
-
-
-class GLFramebuffer:
-    """GL Frame Buffer"""
-    def __init__(self):
-        self.color_attachments = []
-        self.depth_attachment = None
-
-    def bind(self):
-        pass
-
-    def clear(self, color=(0,0,0,1)):
-        glClearColor(*color)
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
 
 @dataclass
@@ -505,26 +418,6 @@ class ModernGLBackend(GLBackend, ABC):
     def set_blend_func(self, src, dst):
         """set blend function"""
         glBlendFunc(src, dst)
-
-    def create_texture(self, width, height, data) -> int:
-        """create texture"""
-        tex = glGenTextures(1)
-        glBindTexture(GL_TEXTURE_2D, tex)
-
-        glTexImage2D(
-            GL_TEXTURE_2D, 0, GL_RGB,
-            width, height, 0,
-            GL_RGB, GL_UNSIGNED_BYTE, data
-        )
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR)
-
-        glGenerateMipmap(GL_TEXTURE_2D)
-
-        return tex
 
     def delete_texture(self, tex_id: int):
         glDeleteTextures([tex_id])
