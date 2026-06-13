@@ -12,7 +12,7 @@ Example Usage:
 ...# Later...
 ...shader_manager.current_shader_program = shader_registry.get(ShaderType.ATOMS)
 ...if shader_manager.current_shader_program:
-...    shader_manager.current_shader_program.bind()
+...    bind()
 ...
 
 

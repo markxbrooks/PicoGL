@@ -90,7 +90,7 @@ class LegacyBinding(GLBindingStrategy):
 
 class ModernBinding(GLBindingStrategy):
     def bind_mesh(self, mesh):
-        mesh.vao.bind()   # assumes VAO already configured
+        bind()   # assumes VAO already configured
 
     def draw(self, mesh, mode):
         if mesh.ebo is not None:

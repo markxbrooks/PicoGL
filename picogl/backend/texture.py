@@ -8,8 +8,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import glDisable, glEnable
 from OpenGL.raw.GL.VERSION.GL_1_1 import glBindTexture
 
 from elmo.globals import RESOURCE_DIR
-from picogl.state.texture import GLTexture
-from picogl.texture.gltexture import Texture2D, GLTextureDriver
+from picogl.texture.gltexture import Texture2D, GLTextureDriver, GLTexture
 
 
 @contextmanager

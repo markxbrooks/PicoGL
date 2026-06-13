@@ -15,7 +15,7 @@ The class handles:
 Example usage:
 ==============
 >>>ebo = ModernEBO(data=data)
-...ebo.bind()
+...bind()
 ...ebo.set_element_attributes(indices, indices.nbytes)
 ...ebo.configure()
 ...ebo.unbind()

@@ -18,18 +18,25 @@ Example Usage:
   >>  return tex.handle
 
 """
+from contextlib import contextmanager
+from enum import IntEnum
 
 from OpenGL.GL import glGenTextures, glTexImage2D
 from OpenGL.GL.framebufferobjects import glGenerateMipmap
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_RGB, glTexParameteri, GL_LINEAR
+from OpenGL.raw.GL.ARB.internalformat_query2 import GL_TEXTURE_2D
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_RGB, glTexParameteri, GL_LINEAR, GL_TEXTURE_MIN_FILTER, \
+    GL_TEXTURE_MAG_FILTER, GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T
 from OpenGL.raw.GL.VERSION.GL_1_1 import glBindTexture, glDeleteTextures
 from OpenGL.raw.GL.VERSION.GL_1_2 import GL_CLAMP_TO_EDGE
+from OpenGL.raw.GL.VERSION.GL_1_3 import GL_TEXTURE0, GL_ACTIVE_TEXTURE, glActiveTexture
+from OpenGL.raw.GL.VERSION.GL_4_5 import GL_TEXTURE_BINDING_2D
 from OpenGL.raw.GL._types import GL_UNSIGNED_BYTE
 from numpy import ndarray
 
-from picogl.state.texture import GLTexture
-
 from dataclasses import dataclass
+
+from picogl.state.param import GLParam
+from picogl.state.query import GLStateQuery
 
 FORMAT_MAP = {
     "rgb": GL_RGB,
@@ -128,3 +135,58 @@ class GLTextureDriver:
             glDeleteTextures([tex.handle])
             tex.handle = None
             tex.initialized = False
+
+
+class GLTexture(IntEnum):
+    """GL Texture Mode"""
+    TEXTURE_2D = GL_TEXTURE_2D
+    TEXTURE_BINDING_2D = GL_TEXTURE_BINDING_2D
+    TEXTURE_MIN_FILTER = GL_TEXTURE_MIN_FILTER
+    TEXTURE_MAG_FILTER = GL_TEXTURE_MAG_FILTER
+    TEXTURE_WRAP_S = GL_TEXTURE_WRAP_S
+    TEXTURE_WRAP_T = GL_TEXTURE_WRAP_T
+    TEXTURE0 = GL_TEXTURE0
+    ACTIVE_TEXTURE = GL_ACTIVE_TEXTURE
+
+    @classmethod
+    def choices(cls):
+        return [m.value for m in cls]
+
+    @staticmethod
+    def set_active(unit=TEXTURE0):
+        glActiveTexture(unit)
+
+    @staticmethod
+    def bind(target: int, texture: int):
+        glBindTexture(target, texture)
+
+    @staticmethod
+    @contextmanager
+    def bound_texture(texture_id: int, unit: int = GL_TEXTURE0):
+        """
+        Bind a texture to a specific unit, restoring previous state.
+        """
+
+        state = GLStateQuery()
+
+        # 1. Save currently active unit (GL_TEXTUREi enum)
+        prev_active = state.get(GLParam.ACTIVE_TEXTURE)
+
+        try:
+            # 2. Switch to requested unit
+            GLTexture.set_active(unit)
+
+            # 3. NOW read binding for this unit
+            prev_binding = state.get(GLParam.TEXTURE_BINDING_2D)
+
+            # 4. Bind new texture
+            GLTexture.bind(GL_TEXTURE_2D, texture_id or 0)
+
+            yield
+
+        finally:
+            # Restore binding on the SAME unit
+            GLTexture.bind(GL_TEXTURE_2D, prev_binding)
+
+            # Restore previously active unit
+            GLTexture.set_active(prev_active)
