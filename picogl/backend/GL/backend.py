@@ -142,9 +142,6 @@ class GLBackend:
     def enable_clip1(self):
         self.enable(GL_CLIP_DISTANCE1)
 
-    def clear_color_old(self, clear_color):
-        glClearColor(*clear_color)
-
     def enable_vertex_array(self):
         glEnableClientState(GL_VERTEX_ARRAY)
 

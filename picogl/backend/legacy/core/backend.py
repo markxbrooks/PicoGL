@@ -189,6 +189,7 @@ class TestGLMesh:
         if self.indices is not None:
             glDrawElements(GL_TRIANGLES, len(self.indices), GL_UNSIGNED_INT, self.indices)
 
+
 @dataclass
 class DrawCommand:
     """Draw Command"""
