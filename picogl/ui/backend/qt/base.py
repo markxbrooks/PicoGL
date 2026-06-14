@@ -18,7 +18,7 @@ from picogl.backend.legacy.core.camera.setup import calculate_aspect
 from picogl.error import gl_check_errors
 from picogl.frame import prepare_viewport
 from picogl.mode import GLMode
-from picogl.utils.gl_init import execute_gl_tasks, initialize_gl_list
+from picogl.utils.gl_init import execute_gl_tasks, modern_init_gl_list
 from PySide6.QtGui import QMouseEvent, QOpenGLFunctions, Qt, QWheelEvent
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
 from PySide6.QtWidgets import QWidget
@@ -89,7 +89,7 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
         """
         # Viewport setup
         glViewport(0, 0, self.width(), self.height())
-        execute_gl_tasks(initialize_gl_list)
+        execute_gl_tasks(modern_init_gl_list, backend=self.backend)
 
     def resizeGL(self, w: int, h: int) -> None:
         """

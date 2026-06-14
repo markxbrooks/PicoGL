@@ -2,9 +2,13 @@ import numpy as np
 from decologr import Decologr as log
 from decologr import setup_logging
 from OpenGL.raw.GL.VERSION.GL_1_0 import glViewport
+
+from examples.legacy import legacy_teapot
+from picogl.backend.GL.backend import GLBackend
+from picogl.backend.opengl import LegacyBinding
 from picogl.renderer import GLResourceRegistry
 from picogl.ui.backend.glut.window.gl import GLWindow
-from picogl.utils.gl_init import execute_gl_tasks, init_gl_list, paint_gl_list
+from picogl.utils.gl_init import execute_gl_tasks, legacy_init_gl_list, paint_gl_list
 from pyglm import glm
 
 
@@ -35,11 +39,12 @@ class GlutRendererWindow(GLWindow):
         self.zoom_fov: int = 45  # field of view
         self.zoom_distance: int = 10  # camera backwards in Z
         self.distance_threshold: float = 5.0
+        self.backend = GLBackend(binding=LegacyBinding())
 
     def initializeGL(self):
         """Initial OpenGL configuration."""
         log.message("Initializing OpenGL context...")
-        execute_gl_tasks(init_gl_list)
+        execute_gl_tasks(legacy_init_gl_list, backend=self.backend)
         self.renderer.initialize_shaders()
         self.renderer.initialize()
 
@@ -74,7 +79,7 @@ class GlutRendererWindow(GLWindow):
 
     def paintGL(self):
         """paintGL"""
-        execute_gl_tasks(paint_gl_list)
+        execute_gl_tasks(paint_gl_list, backend=self.backend)
         self.renderer.render()
 
     def update_mvp(self):

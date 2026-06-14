@@ -100,7 +100,6 @@ def set_background_color(show_white_background: bool) -> None:
     buffer = GLFramebuffer()
     buffer.clear(color=color)
 
-
 def setup_lighting(mode: int = 0) -> None:
     """
     setup_lighting
@@ -166,3 +165,6 @@ def setup_lighting(mode: int = 0) -> None:
             1.0,
         ]  # Positional light, relative to object/world
         glLightfv(GL_LIGHT0, GL_POSITION, light_pos)
+
+def setup_lighting_mode_zero(backend: "GLBackend"):
+    setup_lighting(mode=0)

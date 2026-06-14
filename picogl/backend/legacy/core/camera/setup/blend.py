@@ -7,7 +7,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_BLEND, GL_ONE_MINUS_SRC_ALPHA,
                                           glClearColor, glEnable)
 
 
-def enable_blending() -> None:
+def enable_blending(backend: "GLBackend") -> None:
     """
     enable_blending
 

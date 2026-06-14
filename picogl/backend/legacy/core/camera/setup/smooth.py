@@ -9,7 +9,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_LINE_SMOOTH, GL_LINE_SMOOTH_HINT,
                                           glHint)
 
 
-def enable_smoothing() -> None:
+def enable_smoothing(backend: "GLBackend") -> None:
     """
     Legacy point/line smoothing (GL_POINT_SMOOTH, GL_LINE_SMOOTH).
 

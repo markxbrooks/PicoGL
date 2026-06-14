@@ -9,7 +9,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_AMBIENT_AND_DIFFUSE,
                                           glEnable, glMaterialf, glMaterialfv)
 
 
-def setup_materials() -> None:
+def setup_materials(backend: "GLBackend") -> None:
     """
     setup_materials
 
