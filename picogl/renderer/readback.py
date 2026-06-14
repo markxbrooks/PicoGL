@@ -18,6 +18,8 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import GL_DEPTH_COMPONENT, GL_FLOAT
 
 
 class GLReadback:
+    """GL Readback class"""
+
     @staticmethod
     def read_depth(x, y, w, h):
         return glReadPixels(x, y, w, h, GL_DEPTH_COMPONENT, GL_FLOAT)

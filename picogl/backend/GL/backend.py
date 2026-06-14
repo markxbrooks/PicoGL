@@ -28,17 +28,21 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_COLOR_BUFFER_BIT,
                                           GL_DEPTH_BUFFER_BIT, GL_PROJECTION,
                                           GL_AMBIENT, GL_DIFFUSE, GL_LESS,
                                           GL_SHININESS, GL_SPECULAR,
-                                          glDepthFunc)
+                                          glDepthFunc, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 from OpenGL.raw.GL.VERSION.GL_1_1 import GL_CLIP_PLANE0, GL_CLIP_PLANE1
 from OpenGL.raw.GLU import gluPerspective
 
 from picogl.backend.capability import FACE_MAP
 from picogl.backend.opengl import GLBindingStrategy
-from picogl.backend.state import DrawCommand, RenderState, RenderStateApplier, gl_value
+from picogl.backend.state import DrawCommand, RenderState, RenderStateApplier, gl_value, GLClipPlaneState
 from picogl.buffers.glframe import GLFramebuffer
 from picogl.renderer.readback import GLReadback
 from picogl.state.texture import TexCoord2f
 from picogl.texture.gltexture import GLTextureDriver, Texture2D, TextureSpec
+
+
+def set_depth_write(enabled: bool):
+    glDepthMask(bool(enabled))
 
 
 class GLBackend:
@@ -48,6 +52,7 @@ class GLBackend:
         self.binding = binding
         self.framebuffer = GLFramebuffer()
         self.read = GLReadback()
+        self.clip = GLClipPlaneState(enabled0=False, enabled1=False)
         self.state_applier = RenderStateApplier(self)
 
     def enable(self, cap):
@@ -60,13 +65,13 @@ class GLBackend:
         glClear(gl_value(cap))
 
     def clear_grey(self) -> Any:
-        self.clear_color(color=(0.2, 0.2, 0.2, 0.0))
+        self.set_clear_background_and_color(color=(0.2, 0.2, 0.2, 0.0))
 
     def set_clear_color(self, color=(0.0, 0.0, 0.0, 1.0)):
         """Set the OpenGL clear color without clearing the framebuffer."""
         glClearColor(*color)
 
-    def clear_color(self, color=(0.0, 0.0, 0.0, 1.0)):
+    def set_clear_background_and_color(self, color=(0.0, 0.0, 0.0, 1.0)):
         """
         Clears the screen to a specified color using OpenGL commands.
 
@@ -81,6 +86,9 @@ class GLBackend:
         """
         self.set_clear_color(color)
         self.clear_background()
+
+    def setup_blending():
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
     @staticmethod
     def set_matrix_mode_model_view():
@@ -151,22 +159,25 @@ class GLBackend:
     def set_blend(self, enabled: bool):
         glEnable(GL_BLEND) if enabled else glDisable(GL_BLEND)
 
-    def set_depth_test(self, enabled: bool):
+    def setup_blending_funcs(self):
+        self.set_blend_func(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+
+    @staticmethod
+    def set_depth_test(enabled: bool):
         glEnable(GL_DEPTH_TEST) if enabled else glDisable(GL_DEPTH_TEST)
 
     def enable_depth_test(self):
         self.set_depth_test(True)
 
-    def set_depth_write(self, enabled: bool):
-        glDepthMask(bool(enabled))
-
-    def set_cull_face(self, enabled: bool):
+    @staticmethod
+    def set_cull_face(enabled: bool):
         glEnable(GL_CULL_FACE) if enabled else glDisable(GL_CULL_FACE)
 
     def enable_cull_face(self):
         self.set_cull_face(True)
 
-    def set_polygon_mode(self, *args):
+    @staticmethod
+    def set_polygon_mode(*args):
         if len(args) == 1:
             face, mode = GL_FRONT_AND_BACK, args[0]
         elif len(args) == 2:
@@ -175,7 +186,8 @@ class GLBackend:
             raise TypeError("set_polygon_mode expects mode or face, mode")
         glPolygonMode(gl_value(face), gl_value(mode))
 
-    def set_lighting(self, enabled: bool):
+    @staticmethod
+    def set_lighting(enabled: bool):
         glEnable(GL_LIGHTING) if enabled else glDisable(GL_LIGHTING)
 
     def set_uniform_color(self, color, alpha):
@@ -195,7 +207,8 @@ class GLBackend:
         """Apply command state/resources and draw through this backend."""
         command.execute(self)
 
-    def enable_multisample(self):
+    @staticmethod
+    def enable_multisample():
         glEnable(GL_MULTISAMPLE)
 
     def enable_clip0(self):

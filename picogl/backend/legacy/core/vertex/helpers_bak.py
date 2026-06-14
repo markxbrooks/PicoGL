@@ -15,4 +15,4 @@ def gl_clear_buffers(backend: GLBackend) -> None:
     backend.load_identity()
     backend.set_depth_test()
     backend.enable_multisample()
-    backend.clear_color(color=(0.0, 0.0, 0.0, 1.0))
+    backend.set_clear_background_and_color(color=(0.0, 0.0, 0.0, 1.0))
