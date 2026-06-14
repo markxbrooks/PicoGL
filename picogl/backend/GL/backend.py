@@ -23,8 +23,11 @@ from OpenGL.GL import (glColorPointer, glDeleteTextures, glDrawElements,
                                           GL_FRONT_AND_BACK, GL_LIGHT0,
                                           GL_POSITION, glBindTexture,
                                           glEnableClientState, glTranslatef)
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT, glDepthFunc, GL_LESS
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_COLOR_BUFFER_BIT,
+                                          GL_DEPTH_BUFFER_BIT, GL_PROJECTION,
+                                          glDepthFunc, GL_LESS)
 from OpenGL.raw.GL.VERSION.GL_1_1 import GL_CLIP_PLANE0, GL_CLIP_PLANE1
+from OpenGL.raw.GLU import gluPerspective
 
 from picogl.backend.opengl import GLBindingStrategy
 from picogl.backend.state import DrawCommand, RenderState, RenderStateApplier, gl_value
@@ -55,6 +58,10 @@ class GLBackend:
     def clear_grey(self) -> Any:
         self.clear_color(color=(0.2, 0.2, 0.2, 0.0))
 
+    def set_clear_color(self, color=(0.0, 0.0, 0.0, 1.0)):
+        """Set the OpenGL clear color without clearing the framebuffer."""
+        glClearColor(*color)
+
     def clear_color(self, color=(0.0, 0.0, 0.0, 1.0)):
         """
         Clears the screen to a specified color using OpenGL commands.
@@ -68,12 +75,16 @@ class GLBackend:
                 color values to clear the screen. Each value should be between
                 0.0 and 1.0. Defaults to (0.0, 0.0, 0.0, 1.0).
         """
-        glClearColor(*color)
+        self.set_clear_color(color)
         self.clear_background()
 
     @staticmethod
     def set_matrix_mode_model_view():
         glMatrixMode(GL_MODELVIEW)  # Legacy pipeline
+
+    @staticmethod
+    def set_matrix_mode_projection():
+        glMatrixMode(GL_PROJECTION)
 
     @staticmethod
     def set_depth_func_gl_less() -> Any:
@@ -98,6 +109,17 @@ class GLBackend:
 
     def viewport(self, x, y, width, height):
         glViewport(x, y, width, height)
+
+    def set_perspective(self, fovy, aspect, znear, zfar):
+        """Apply a GLU perspective projection to the current matrix."""
+        gluPerspective(float(fovy), float(aspect), float(znear), float(zfar))
+
+    def set_perspective_projection(self, fovy, aspect, znear, zfar):
+        """Configure the legacy projection matrix and return to modelview mode."""
+        self.set_matrix_mode_projection()
+        self.load_identity()
+        self.set_perspective(fovy, aspect, znear, zfar)
+        self.set_matrix_mode_model_view()
 
     def translate(self, x, y, z):
         """Apply a legacy fixed-function translation."""

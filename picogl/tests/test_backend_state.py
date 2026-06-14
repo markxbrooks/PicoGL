@@ -1,9 +1,10 @@
 """Tests for backend render-state helpers."""
 
 import unittest
-from unittest.mock import patch
+from unittest.mock import call, patch
 
-from OpenGL.GL import GL_LIGHT0, GL_LINE, GL_ONE, GL_POSITION, GL_ZERO
+from OpenGL.GL import GL_LIGHT0, GL_LINE, GL_MODELVIEW, GL_ONE, GL_POSITION, GL_ZERO
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_PROJECTION
 from OpenGL.raw.GL.VERSION.GL_1_1 import GL_CLIP_PLANE0, GL_CLIP_PLANE1
 
 from picogl.backend.GL.backend import GLBackend
@@ -173,6 +174,7 @@ class TestDrawCommand(unittest.TestCase):
             patch("picogl.backend.GL.backend.glLightfv") as lightfv,
             patch("picogl.backend.GL.backend.glEnable") as enable,
             patch("picogl.backend.GL.backend.glDisable") as disable,
+            patch("picogl.backend.GL.backend.glClearColor") as clear_color,
         ):
             backend.viewport(1, 2, 3, 4)
             backend.load_identity()
@@ -180,6 +182,7 @@ class TestDrawCommand(unittest.TestCase):
             backend.set_light_position([0.0, 0.0, 10.0, 1.0])
             backend.enable_clip_plane0()
             backend.disable_clip_plane1()
+            backend.set_clear_color((0.1, 0.2, 0.3, 1.0))
 
         viewport.assert_called_once_with(1, 2, 3, 4)
         load_identity.assert_called_once_with()
@@ -187,6 +190,27 @@ class TestDrawCommand(unittest.TestCase):
         lightfv.assert_called_once_with(GL_LIGHT0, GL_POSITION, [0.0, 0.0, 10.0, 1.0])
         enable.assert_called_once_with(GL_CLIP_PLANE0)
         disable.assert_called_once_with(GL_CLIP_PLANE1)
+        clear_color.assert_called_once_with(0.1, 0.2, 0.3, 1.0)
+
+    def test_glbackend_perspective_projection_delegates_to_opengl(self):
+        backend = GLBackend(binding=FakeBinding())
+
+        with (
+            patch("picogl.backend.GL.backend.glMatrixMode") as matrix_mode,
+            patch("picogl.backend.GL.backend.glLoadIdentity") as load_identity,
+            patch("picogl.backend.GL.backend.gluPerspective") as perspective,
+        ):
+            backend.set_perspective_projection(45.0, 1.5, 0.1, 1000.0)
+
+        self.assertEqual(
+            matrix_mode.call_args_list,
+            [
+                call(GL_PROJECTION),
+                call(GL_MODELVIEW),
+            ],
+        )
+        load_identity.assert_called_once_with()
+        perspective.assert_called_once_with(45.0, 1.5, 0.1, 1000.0)
 
 
 if __name__ == "__main__":

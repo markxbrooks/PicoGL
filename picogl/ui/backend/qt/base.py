@@ -136,7 +136,7 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
         """
         gl_check_errors()
         width, height = self.width(), self.height()
-        prepare_viewport(width, height)
+        prepare_viewport(width, height, self.backend)
         set_background_color(show_white_background=False)  # Then set visuals
         gl_check_errors()
 
