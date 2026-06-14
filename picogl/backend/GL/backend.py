@@ -16,7 +16,8 @@ from OpenGL.GL import (glColorPointer, glDeleteTextures, glDrawElements,
                                           glBlendFunc, glClear, glClearColor,
                                           glColor4f, glDepthMask, glDisable,
                                           glEnable, glIsEnabled, glLightfv,
-                                          glLineWidth, glPolygonMode,
+                                          glLineWidth, glMaterialf,
+                                          glMaterialfv, glPolygonMode,
                                           glTexCoord2f, glLoadIdentity,
                                           glVertex3f, glViewport, glMatrixMode, GL_MODELVIEW, GL_COLOR_ARRAY, GL_NORMAL_ARRAY,
                                           GL_TEXTURE_COORD_ARRAY, GL_MULTISAMPLE, GL_CLIP_DISTANCE0, GL_CLIP_DISTANCE1,
@@ -25,10 +26,13 @@ from OpenGL.GL import (glColorPointer, glDeleteTextures, glDrawElements,
                                           glEnableClientState, glTranslatef)
 from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_COLOR_BUFFER_BIT,
                                           GL_DEPTH_BUFFER_BIT, GL_PROJECTION,
-                                          glDepthFunc, GL_LESS)
+                                          GL_AMBIENT, GL_DIFFUSE, GL_LESS,
+                                          GL_SHININESS, GL_SPECULAR,
+                                          glDepthFunc)
 from OpenGL.raw.GL.VERSION.GL_1_1 import GL_CLIP_PLANE0, GL_CLIP_PLANE1
 from OpenGL.raw.GLU import gluPerspective
 
+from picogl.backend.capability import FACE_MAP
 from picogl.backend.opengl import GLBindingStrategy
 from picogl.backend.state import DrawCommand, RenderState, RenderStateApplier, gl_value
 from picogl.buffers.glframe import GLFramebuffer
@@ -128,6 +132,14 @@ class GLBackend:
     def set_light_position(self, position, light=GL_LIGHT0):
         """Set a fixed-function light position."""
         glLightfv(gl_value(light), GL_POSITION, position)
+
+    def set_material(self, face, material):
+        """Set fixed-function Phong material values."""
+        f = FACE_MAP.get(face, gl_value(face))
+        glMaterialfv(f, GL_AMBIENT, material.ambient)
+        glMaterialfv(f, GL_DIFFUSE, material.diffuse)
+        glMaterialfv(f, GL_SPECULAR, material.specular)
+        glMaterialf(f, GL_SHININESS, material.shininess)
 
     def set_line_width(self, width):
         glLineWidth(width)

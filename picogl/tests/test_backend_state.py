@@ -4,9 +4,12 @@ import unittest
 from unittest.mock import call, patch
 
 from OpenGL.GL import GL_LIGHT0, GL_LINE, GL_MODELVIEW, GL_ONE, GL_POSITION, GL_ZERO
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_PROJECTION
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_AMBIENT, GL_DIFFUSE,
+                                          GL_FRONT_AND_BACK, GL_PROJECTION,
+                                          GL_SHININESS, GL_SPECULAR)
 from OpenGL.raw.GL.VERSION.GL_1_1 import GL_CLIP_PLANE0, GL_CLIP_PLANE1
 
+from picogl.backend.capability import GLMaterialFace, PhongMaterial
 from picogl.backend.GL.backend import GLBackend
 from picogl.backend.state import (
     BlendState,
@@ -211,6 +214,35 @@ class TestDrawCommand(unittest.TestCase):
         )
         load_identity.assert_called_once_with()
         perspective.assert_called_once_with(45.0, 1.5, 0.1, 1000.0)
+
+    def test_glbackend_set_material_delegates_to_opengl(self):
+        backend = GLBackend(binding=FakeBinding())
+        material = PhongMaterial(
+            ambient=(0.1, 0.2, 0.3, 1.0),
+            diffuse=(0.4, 0.5, 0.6, 1.0),
+            specular=(0.7, 0.8, 0.9, 1.0),
+            shininess=32.0,
+        )
+
+        with (
+            patch("picogl.backend.GL.backend.glMaterialfv") as materialfv,
+            patch("picogl.backend.GL.backend.glMaterialf") as materialf,
+        ):
+            backend.set_material(GLMaterialFace.FRONT_AND_BACK, material)
+
+        self.assertEqual(
+            materialfv.call_args_list,
+            [
+                call(GL_FRONT_AND_BACK, GL_AMBIENT, material.ambient),
+                call(GL_FRONT_AND_BACK, GL_DIFFUSE, material.diffuse),
+                call(GL_FRONT_AND_BACK, GL_SPECULAR, material.specular),
+            ],
+        )
+        materialf.assert_called_once_with(
+            GL_FRONT_AND_BACK,
+            GL_SHININESS,
+            material.shininess,
+        )
 
 
 if __name__ == "__main__":
