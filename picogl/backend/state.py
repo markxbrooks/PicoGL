@@ -7,7 +7,7 @@ desired OpenGL state and delegate the actual GL calls to a backend object.
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any
+from typing import Any, Protocol
 
 from numpy import ndarray
 from OpenGL.GL import (
@@ -55,6 +55,13 @@ def gl_value(value: Any) -> Any:
     return value
 
 
+class CapabilityDriver(Protocol):
+    """Capability Driver"""
+
+    def enable(self, cap: int) -> None: ...
+    def disable(self, cap: int) -> None: ...
+
+
 @dataclass(frozen=True)
 class RasterState:
     """Raster State"""
@@ -62,7 +69,7 @@ class RasterState:
     polygon_mode: int = PolygonMode.FILL
     line_width: float = 1.0
 
-    def apply(self, backend: Any):
+    def apply(self, backend: CapabilityDriver):
         backend.set_polygon_mode(GL_FRONT_AND_BACK, gl_value(self.polygon_mode))
         backend.set_line_width(self.line_width)
 
@@ -70,7 +77,7 @@ class RasterState:
 class GLStateManager:
     """Tracks capability state without querying OpenGL."""
 
-    def __init__(self, backend: Any):
+    def __init__(self, backend: CapabilityDriver):
         self.backend = backend
         self._caps: dict[int, bool] = {}
 

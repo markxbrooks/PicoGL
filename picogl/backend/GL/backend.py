@@ -41,10 +41,6 @@ from picogl.state.texture import TexCoord2f
 from picogl.texture.gltexture import GLTextureDriver, Texture2D, TextureSpec
 
 
-def set_depth_write(enabled: bool):
-    glDepthMask(bool(enabled))
-
-
 class GLBackend:
     """GL Backend"""
 
@@ -89,6 +85,10 @@ class GLBackend:
 
     def setup_blending():
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+
+    @staticmethod
+    def set_depth_write(enabled: bool):
+        glDepthMask(bool(enabled))
 
     @staticmethod
     def set_matrix_mode_model_view():
@@ -282,7 +282,7 @@ class GLBackend:
         """is enabled"""
         return bool(glIsEnabled(gl_value(cap)))
 
-    def set_blend_func(self, src, dst):
+    def set_blend_func(self, src: Any, dst: Any) -> None:
         """set blend function"""
         glBlendFunc(gl_value(src), gl_value(dst))
 
