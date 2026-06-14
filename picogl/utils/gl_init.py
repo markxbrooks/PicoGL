@@ -1,13 +1,20 @@
-"""execute gl task lists"""
+"""
+Module for executing sequences of OpenGL tasks in a specified order.
+
+This module provides a utility function to execute a list of OpenGL-related
+tasks using a provided backend. Each task is represented by a tuple that includes
+an optional message to log and a callable representing the task to be executed.
+
+Classes and Functions:
+- execute_gl_tasks: Executes a list of OpenGL task tuples, optionally logging the progress
+  or providing step callbacks.
+"""
 
 from typing import Callable, Optional
 
 from decologr import Decologr as log
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_COLOR_BUFFER_BIT, GL_CULL_FACE,
-                                          GL_DEPTH_BUFFER_BIT, GL_DEPTH_TEST,
-                                          GL_LESS, glClear, glClearColor,
-                                          glDepthFunc, glEnable)
-from OpenGL.raw.GL.VERSION.GL_1_3 import GL_MULTISAMPLE
+
+from picogl.backend.GL.backend import GLBackend
 from picogl.backend.legacy.core.camera.lighting import setup_lighting
 from picogl.backend.legacy.core.camera.setup import (enable_blending,
                                                      enable_depth_test,
@@ -17,7 +24,7 @@ from picogl.info import get_gl_info
 
 
 def execute_gl_tasks(
-    task_list: list[tuple[str, Callable]],
+    task_list: list[tuple[str, Callable]], backend: GLBackend,
     *,
     on_step: Optional[Callable[[int, int, Optional[str]], None]] = None,
 ):
@@ -35,6 +42,9 @@ def execute_gl_tasks(
     :param on_step:
         Optional ``callback(step_index, total_steps, message)`` after each task is
         scheduled (1-based index). ``message`` may be ``None``.
+
+    :param backend:
+        A Renderer Backend eg GLBackend, which is used to create a window and
 
     :raises TypeError:
         If ``task_list`` is not a list or any element is not a 2-tuple.
@@ -84,27 +94,29 @@ def execute_gl_tasks(
                 pass
 
 
+
+
 init_gl_list = [
     ("✅ Initializing OpenGL context...", lambda: None),  # Message only
-    ("✅ Setting clear colour", lambda: glClearColor(0.2, 0.2, 0.2, 0.0)),
-    ("✅ Setting depth function", lambda: glDepthFunc(GL_LESS)),
-    ("✅ Enabling depth test", lambda: glEnable(GL_DEPTH_TEST)),
-    ("✅ Enabling face culling", lambda: glEnable(GL_CULL_FACE)),
+    ("✅ Setting clear colour", lambda: backend.clear_grey()),
+    ("✅ Setting depth function", lambda: backend.set_depth_func_gl_less()),
+    ("✅ Enabling depth test", lambda: backbend.enable_depth_test()),
+    ("✅ Enabling face culling", lambda: backbend.enable_cull_face()),
 ]
 
 paint_gl_list = [
     (
         None,
-        lambda: glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT),
+        lambda: backend.framebuffer.clear_background(),
     ),
 ]
 
 
 
 initialize_gl_list = [
-    ("✅ Enabling multisampling", lambda: glEnable(GL_MULTISAMPLE)),
+    ("✅ Enabling multisampling", lambda: backend.enable_multisample()),
     ("✅ Enabling depth test", enable_depth_test),
-    ("✅ Clearing background ", lambda: glClearColor(0.0, 0.0, 0.0, 1.0)),
+    ("✅ Clearing background ", lambda: backend.clear()),
     ("✅ Enabling blending", enable_blending),
     ("✅ Enabling smoothing", enable_smoothing),
     ("✅ Setting up materials", setup_materials),

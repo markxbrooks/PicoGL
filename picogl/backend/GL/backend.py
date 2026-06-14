@@ -8,23 +8,20 @@ Classes:
     - GLBackend: Encapsulates functions for managing OpenGL state and
       performing rendering operations.
 """
+from typing import Any
+
 from OpenGL.GL import (glColorPointer, glDeleteTextures, glDrawElements,
-                       glNormalPointer, glTexCoordPointer, glVertexPointer)
-from OpenGL.raw.GL._types import GL_FLOAT, GL_UNSIGNED_INT
-from OpenGL.raw.GL.ARB.internalformat_query2 import GL_TEXTURE_2D
-from OpenGL.raw.GL.KHR.debug import GL_VERTEX_ARRAY
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_BLEND, GL_CULL_FACE,
-                                          GL_DEPTH_TEST, GL_LIGHTING,
+                       glNormalPointer, glTexCoordPointer, glVertexPointer, GL_BLEND, GL_CULL_FACE, GL_VERTEX_ARRAY, GL_FLOAT, GL_UNSIGNED_INT,
+                                          GL_DEPTH_TEST, GL_LIGHTING, GL_TEXTURE_2D,
                                           glBlendFunc, glClear, glClearColor,
                                           glColor4f, glDepthMask, glDisable,
                                           glEnable, glIsEnabled, glLineWidth,
-                                          glPolygonMode, glTexCoord2f,
-                                          glVertex3f, glViewport)
-from OpenGL.raw.GL.VERSION.GL_1_1 import (GL_COLOR_ARRAY, GL_NORMAL_ARRAY,
-                                          GL_TEXTURE_COORD_ARRAY,
+                                          glPolygonMode, glTexCoord2f, glLoadIdentity,
+                                          glVertex3f, glViewport, glMatrixMode, GL_MODELVIEW, GL_COLOR_ARRAY, GL_NORMAL_ARRAY,
+                                          GL_TEXTURE_COORD_ARRAY, GL_MULTISAMPLE, GL_CLIP_DISTANCE0, GL_CLIP_DISTANCE1,
                                           glBindTexture, glEnableClientState)
-from OpenGL.raw.GL.VERSION.GL_1_3 import GL_MULTISAMPLE
-from OpenGL.raw.GL.VERSION.GL_3_0 import GL_CLIP_DISTANCE0, GL_CLIP_DISTANCE1
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT
+
 from picogl.backend.opengl import GLBindingStrategy
 from picogl.buffers.glframe import GLFramebuffer
 from picogl.renderer.readback import GLReadback
@@ -49,11 +46,52 @@ class GLBackend:
     def clear(self, cap):
         glClear(cap)
 
-    def viewport(self, x, y, width, height):
-        glViewport(x, y, width, height)
+    def clear_grey(self) -> Any:
+        self.clear_color(color=(0.2, 0.2, 0.2, 0.0))
+
+    def clear_color(self, color=(0.0, 0.0, 0.0, 1.0)):
+        """
+        Clears the screen to a specified color using OpenGL commands.
+
+        This method sets the clear color and then clears the color buffer
+        to ensure the screen is rendered with the specified or default background
+        color.
+
+        Args:
+            color (tuple[float, float, float, float]): A tuple representing the RGBA
+                color values to clear the screen. Each value should be between
+                0.0 and 1.0. Defaults to (0.0, 0.0, 0.0, 1.0).
+        """
+        glClearColor(*color)
+        self.clear_background()
+
+    @staticmethod
+    def set_matrix_mode_model_view():
+        glMatrixMode(GL_MODELVIEW)  # Legacy pipeline
+
+    @staticmethod
+    def set_depth_func_gl_less() -> Any:
+        return glDepthFunc(GL_LESS)
 
     def clear_background(self):
-        self.framebuffer.clear_background()
+        """
+        Clears the background by removing all color and depth information from
+        the current OpenGL framebuffer.
+
+        This method clears the framebuffer's color and depth buffers, preparing
+        it for rendering the next frame.
+
+        Raises:
+            OpenGL.GL.error.GLError: If an OpenGL error occurs during the
+            clearing operation.
+        """
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+
+    def load_identity():
+        glLoadIdentity()  # Reset modelview matrix
+
+    def viewport(self, x, y, width, height):
+        glViewport(x, y, width, height)
 
     def set_line_width(self, width):
         glLineWidth(width)
@@ -68,11 +106,17 @@ class GLBackend:
     def set_depth_test(self, enabled: bool):
         glEnable(GL_DEPTH_TEST) if enabled else glDisable(GL_DEPTH_TEST)
 
+    def enable_depth_test(self):
+        self.set_depth_test(True)
+
     def set_depth_write(self, enabled: bool):
         glDepthMask(bool(enabled))
 
     def set_cull_face(self, enabled: bool):
         glEnable(GL_CULL_FACE) if enabled else glDisable(GL_CULL_FACE)
+
+    def enable_cull_face(self):
+        self.set_cull_face(True)
 
     def set_polygon_mode(self, face, mode):
         glPolygonMode(face, mode)
