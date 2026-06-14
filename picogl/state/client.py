@@ -3,7 +3,7 @@ GL Client State
 """
 from enum import IntEnum
 
-from OpenGL.raw.GL.VERSION.GL_1_1 import (GL_COLOR_ARRAY, GL_NORMAL_ARRAY,
+from OpenGL.GL import (GL_COLOR_ARRAY, GL_NORMAL_ARRAY,
                                           GL_TEXTURE_COORD_ARRAY,
                                           GL_VERTEX_ARRAY)
 

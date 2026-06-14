@@ -2,21 +2,20 @@
 Setup lighting
 """
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_AMBIENT, GL_DIFFUSE,
-                                          GL_FOG, GL_FOG_COLOR, GL_FOG_END,
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_AMBIENT, GL_DIFFUSE, GL_FOG,
+                                          GL_FOG_COLOR, GL_FOG_END,
                                           GL_FOG_MODE, GL_FOG_START,
                                           GL_FRONT_AND_BACK, GL_LIGHT0,
                                           GL_LIGHT1, GL_LIGHT2, GL_LIGHT3,
                                           GL_LIGHT4, GL_LIGHTING, GL_LINEAR,
                                           GL_MODELVIEW, GL_POSITION,
                                           GL_SHININESS, GL_SPECULAR,
-                                          GL_UNPACK_ALIGNMENT,
-                                          glDisable, glEnable,
-                                          glFogf, glFogfv, glFogi, glLightfv,
-                                          glLoadIdentity, glMaterialf,
-                                          glMatrixMode, glPixelStorei,
-                                          glPopMatrix, glPushMatrix)
-
+                                          GL_UNPACK_ALIGNMENT, glDisable,
+                                          glEnable, glFogf, glFogfv, glFogi,
+                                          glLightfv, glLoadIdentity,
+                                          glMaterialf, glMatrixMode,
+                                          glPixelStorei, glPopMatrix,
+                                          glPushMatrix)
 from picogl.buffers.glframe import GLFramebuffer
 
 

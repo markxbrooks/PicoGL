@@ -1,12 +1,10 @@
 """
 GL Clear Buffers
 """
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_DEPTH_TEST,
-                                          GL_MODELVIEW,
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_DEPTH_TEST, GL_MODELVIEW,
                                           glEnable, glLoadIdentity,
                                           glMatrixMode)
 from OpenGL.raw.GL.VERSION.GL_1_3 import GL_MULTISAMPLE
-
 from picogl.buffers.glframe import GLFramebuffer
 
 

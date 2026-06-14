@@ -19,22 +19,24 @@ Example Usage:
 
 """
 from contextlib import contextmanager
+from dataclasses import dataclass
 from enum import IntEnum
 
+from numpy import ndarray
 from OpenGL.GL import glGenTextures, glTexImage2D
 from OpenGL.GL.framebufferobjects import glGenerateMipmap
+from OpenGL.raw.GL._types import GL_UNSIGNED_BYTE
 from OpenGL.raw.GL.ARB.internalformat_query2 import GL_TEXTURE_2D
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_RGB, glTexParameteri, GL_LINEAR, GL_TEXTURE_MIN_FILTER, \
-    GL_TEXTURE_MAG_FILTER, GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_LINEAR, GL_RGB,
+                                          GL_TEXTURE_MAG_FILTER,
+                                          GL_TEXTURE_MIN_FILTER,
+                                          GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T,
+                                          glTexParameteri)
 from OpenGL.raw.GL.VERSION.GL_1_1 import glBindTexture, glDeleteTextures
 from OpenGL.raw.GL.VERSION.GL_1_2 import GL_CLAMP_TO_EDGE
-from OpenGL.raw.GL.VERSION.GL_1_3 import GL_TEXTURE0, GL_ACTIVE_TEXTURE, glActiveTexture
+from OpenGL.raw.GL.VERSION.GL_1_3 import (GL_ACTIVE_TEXTURE, GL_TEXTURE0,
+                                          glActiveTexture)
 from OpenGL.raw.GL.VERSION.GL_4_5 import GL_TEXTURE_BINDING_2D
-from OpenGL.raw.GL._types import GL_UNSIGNED_BYTE
-from numpy import ndarray
-
-from dataclasses import dataclass
-
 from picogl.state.param import GLParam
 from picogl.state.query import GLStateQuery
 

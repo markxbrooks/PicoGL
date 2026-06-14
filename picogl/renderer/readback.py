@@ -12,9 +12,9 @@ Classes:
 
 from typing import Any
 
+from numpy import dtype, generic, ndarray
 from OpenGL.GL import glReadPixels
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_DEPTH_COMPONENT, GL_FLOAT
-from numpy import ndarray, dtype, generic
 
 
 class GLReadback:

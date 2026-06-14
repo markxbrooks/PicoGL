@@ -12,14 +12,14 @@ from typing import Any
 
 from numpy import ndarray
 from OpenGL.GL import (GL_CLIP_DISTANCE0, GL_CLIP_DISTANCE1,
-                       GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA,
-                       glDrawElements, glViewport)
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_FLOAT, GL_UNSIGNED_INT, glBlendFunc)
+                       GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA, glDrawElements,
+                       glViewport)
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_FLOAT, GL_UNSIGNED_INT, glBlendFunc
 from OpenGL.raw.GL.VERSION.GL_1_1 import (GL_COLOR_ARRAY, GL_NORMAL_ARRAY,
                                           GL_VERTEX_ARRAY, glColorPointer,
                                           glEnableClientState, glNormalPointer,
                                           glVertexPointer)
-from picogl.backend.opengl import GLBackend
+from picogl.backend.GL.backend import GLBackend
 from picogl.polygon.mode import PolygonMode
 from picogl.texture.gltexture import GLTextureDriver
 

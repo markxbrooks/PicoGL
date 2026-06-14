@@ -2,9 +2,9 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Callable
 
-from OpenGL.GL import glGetIntegerv, glGetFloatv
+from OpenGL.GL import glGetFloatv, glGetIntegerv
 from OpenGL.raw.GL.ARB.viewport_array import GL_VIEWPORT
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_MAX_TEXTURE_SIZE, GL_LINE_WIDTH
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_LINE_WIDTH, GL_MAX_TEXTURE_SIZE
 from OpenGL.raw.GL.VERSION.GL_1_3 import GL_ACTIVE_TEXTURE
 from OpenGL.raw.GL.VERSION.GL_2_0 import GL_CURRENT_PROGRAM
 from OpenGL.raw.GL.VERSION.GL_4_5 import GL_TEXTURE_BINDING_2D
