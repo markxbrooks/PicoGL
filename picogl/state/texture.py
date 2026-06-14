@@ -27,17 +27,17 @@ class TexCoord2f:
 @contextmanager
 def texture2d_legacy_manager():
     """texture legacy manager"""
-    was_enabled = glIsEnabled(TEXTURE_2D.TEXTURE_2D)
+    was_enabled = glIsEnabled(GLTexture.TEXTURE_2D)
     previous_binding = glGetIntegerv(GLTexture.TEXTURE_BINDING_2D)
 
     try:
         if not was_enabled:
-            glEnable(TEXTURE_2D.TEXTURE_2D)
+            glEnable(GLTexture.TEXTURE_2D)
         yield
     finally:
-        glBindTexture(TEXTURE_2D.TEXTURE_2D, previous_binding)
+        glBindTexture(GLTexture.TEXTURE_2D, previous_binding)
         if not was_enabled:
-            glDisable(TEXTURE_2D.TEXTURE_2D)
+            glDisable(GLTexture.TEXTURE_2D)
 
 
 @contextmanager
