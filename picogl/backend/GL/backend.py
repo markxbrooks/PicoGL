@@ -20,7 +20,7 @@ from OpenGL.GL import (glColorPointer, glDeleteTextures, glDrawElements,
                                           glVertex3f, glViewport, glMatrixMode, GL_MODELVIEW, GL_COLOR_ARRAY, GL_NORMAL_ARRAY,
                                           GL_TEXTURE_COORD_ARRAY, GL_MULTISAMPLE, GL_CLIP_DISTANCE0, GL_CLIP_DISTANCE1,
                                           glBindTexture, glEnableClientState)
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT, glDepthFunc, GL_LESS
 
 from picogl.backend.opengl import GLBindingStrategy
 from picogl.buffers.glframe import GLFramebuffer
@@ -142,7 +142,7 @@ class GLBackend:
     def enable_clip1(self):
         self.enable(GL_CLIP_DISTANCE1)
 
-    def clear_color(self, clear_color):
+    def clear_color_old(self, clear_color):
         glClearColor(*clear_color)
 
     def enable_vertex_array(self):
