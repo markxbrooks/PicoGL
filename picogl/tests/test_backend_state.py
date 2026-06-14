@@ -1,8 +1,10 @@
 """Tests for backend render-state helpers."""
 
 import unittest
+from unittest.mock import patch
 
-from OpenGL.GL import GL_LINE, GL_ONE, GL_ZERO
+from OpenGL.GL import GL_LIGHT0, GL_LINE, GL_ONE, GL_POSITION, GL_ZERO
+from OpenGL.raw.GL.VERSION.GL_1_1 import GL_CLIP_PLANE0, GL_CLIP_PLANE1
 
 from picogl.backend.GL.backend import GLBackend
 from picogl.backend.state import (
@@ -160,6 +162,31 @@ class TestDrawCommand(unittest.TestCase):
         backend = GLBackend(binding=FakeBinding())
         self.assertTrue(hasattr(backend, "apply_state"))
         self.assertTrue(hasattr(backend, "draw_command"))
+
+    def test_glbackend_fixed_function_delegates_to_opengl(self):
+        backend = GLBackend(binding=FakeBinding())
+
+        with (
+            patch("picogl.backend.GL.backend.glViewport") as viewport,
+            patch("picogl.backend.GL.backend.glLoadIdentity") as load_identity,
+            patch("picogl.backend.GL.backend.glTranslatef") as translate,
+            patch("picogl.backend.GL.backend.glLightfv") as lightfv,
+            patch("picogl.backend.GL.backend.glEnable") as enable,
+            patch("picogl.backend.GL.backend.glDisable") as disable,
+        ):
+            backend.viewport(1, 2, 3, 4)
+            backend.load_identity()
+            backend.translate(1, 2, 3)
+            backend.set_light_position([0.0, 0.0, 10.0, 1.0])
+            backend.enable_clip_plane0()
+            backend.disable_clip_plane1()
+
+        viewport.assert_called_once_with(1, 2, 3, 4)
+        load_identity.assert_called_once_with()
+        translate.assert_called_once_with(1.0, 2.0, 3.0)
+        lightfv.assert_called_once_with(GL_LIGHT0, GL_POSITION, [0.0, 0.0, 10.0, 1.0])
+        enable.assert_called_once_with(GL_CLIP_PLANE0)
+        disable.assert_called_once_with(GL_CLIP_PLANE1)
 
 
 if __name__ == "__main__":

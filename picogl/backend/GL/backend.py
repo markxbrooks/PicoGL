@@ -15,13 +15,16 @@ from OpenGL.GL import (glColorPointer, glDeleteTextures, glDrawElements,
                                           GL_DEPTH_TEST, GL_LIGHTING, GL_TEXTURE_2D,
                                           glBlendFunc, glClear, glClearColor,
                                           glColor4f, glDepthMask, glDisable,
-                                          glEnable, glIsEnabled, glLineWidth,
-                                          glPolygonMode, glTexCoord2f, glLoadIdentity,
+                                          glEnable, glIsEnabled, glLightfv,
+                                          glLineWidth, glPolygonMode,
+                                          glTexCoord2f, glLoadIdentity,
                                           glVertex3f, glViewport, glMatrixMode, GL_MODELVIEW, GL_COLOR_ARRAY, GL_NORMAL_ARRAY,
                                           GL_TEXTURE_COORD_ARRAY, GL_MULTISAMPLE, GL_CLIP_DISTANCE0, GL_CLIP_DISTANCE1,
-                                          GL_FRONT_AND_BACK, glBindTexture,
-                                          glEnableClientState)
+                                          GL_FRONT_AND_BACK, GL_LIGHT0,
+                                          GL_POSITION, glBindTexture,
+                                          glEnableClientState, glTranslatef)
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT, glDepthFunc, GL_LESS
+from OpenGL.raw.GL.VERSION.GL_1_1 import GL_CLIP_PLANE0, GL_CLIP_PLANE1
 
 from picogl.backend.opengl import GLBindingStrategy
 from picogl.backend.state import DrawCommand, RenderState, RenderStateApplier, gl_value
@@ -90,11 +93,19 @@ class GLBackend:
         """
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
-    def load_identity():
+    def load_identity(self):
         glLoadIdentity()  # Reset modelview matrix
 
     def viewport(self, x, y, width, height):
         glViewport(x, y, width, height)
+
+    def translate(self, x, y, z):
+        """Apply a legacy fixed-function translation."""
+        glTranslatef(float(x), float(y), float(z))
+
+    def set_light_position(self, position, light=GL_LIGHT0):
+        """Set a fixed-function light position."""
+        glLightfv(gl_value(light), GL_POSITION, position)
 
     def set_line_width(self, width):
         glLineWidth(width)
@@ -158,6 +169,22 @@ class GLBackend:
 
     def enable_clip1(self):
         self.enable(GL_CLIP_DISTANCE1)
+
+    def set_clip_plane_enabled(self, plane, enabled: bool):
+        """Enable or disable a legacy clipping plane."""
+        self.enable(plane) if enabled else self.disable(plane)
+
+    def enable_clip_plane0(self):
+        self.set_clip_plane_enabled(GL_CLIP_PLANE0, True)
+
+    def disable_clip_plane0(self):
+        self.set_clip_plane_enabled(GL_CLIP_PLANE0, False)
+
+    def enable_clip_plane1(self):
+        self.set_clip_plane_enabled(GL_CLIP_PLANE1, True)
+
+    def disable_clip_plane1(self):
+        self.set_clip_plane_enabled(GL_CLIP_PLANE1, False)
 
     def enable_vertex_array(self):
         glEnableClientState(GL_VERTEX_ARRAY)
