@@ -19,10 +19,12 @@ from OpenGL.GL import (glColorPointer, glDeleteTextures, glDrawElements,
                                           glPolygonMode, glTexCoord2f, glLoadIdentity,
                                           glVertex3f, glViewport, glMatrixMode, GL_MODELVIEW, GL_COLOR_ARRAY, GL_NORMAL_ARRAY,
                                           GL_TEXTURE_COORD_ARRAY, GL_MULTISAMPLE, GL_CLIP_DISTANCE0, GL_CLIP_DISTANCE1,
-                                          glBindTexture, glEnableClientState)
+                                          GL_FRONT_AND_BACK, glBindTexture,
+                                          glEnableClientState)
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT, glDepthFunc, GL_LESS
 
 from picogl.backend.opengl import GLBindingStrategy
+from picogl.backend.state import DrawCommand, RenderState, RenderStateApplier, gl_value
 from picogl.buffers.glframe import GLFramebuffer
 from picogl.renderer.readback import GLReadback
 from picogl.state.texture import TexCoord2f
@@ -36,15 +38,16 @@ class GLBackend:
         self.binding = binding
         self.framebuffer = GLFramebuffer()
         self.read = GLReadback()
+        self.state_applier = RenderStateApplier(self)
 
     def enable(self, cap):
-        glEnable(cap)
+        glEnable(gl_value(cap))
 
     def disable(self, cap):
-        glDisable(cap)
+        glDisable(gl_value(cap))
 
     def clear(self, cap):
-        glClear(cap)
+        glClear(gl_value(cap))
 
     def clear_grey(self) -> Any:
         self.clear_color(color=(0.2, 0.2, 0.2, 0.0))
@@ -118,8 +121,14 @@ class GLBackend:
     def enable_cull_face(self):
         self.set_cull_face(True)
 
-    def set_polygon_mode(self, face, mode):
-        glPolygonMode(face, mode)
+    def set_polygon_mode(self, *args):
+        if len(args) == 1:
+            face, mode = GL_FRONT_AND_BACK, args[0]
+        elif len(args) == 2:
+            face, mode = args
+        else:
+            raise TypeError("set_polygon_mode expects mode or face, mode")
+        glPolygonMode(gl_value(face), gl_value(mode))
 
     def set_lighting(self, enabled: bool):
         glEnable(GL_LIGHTING) if enabled else glDisable(GL_LIGHTING)
@@ -131,7 +140,15 @@ class GLBackend:
     # --- Unified Draw ---
     def draw_mesh(self, mesh, mode):
         self.binding.bind_mesh(mesh)
-        self.binding.draw(mesh, mode)
+        self.binding.draw(mesh, gl_value(mode))
+
+    def apply_state(self, state: RenderState):
+        """Apply a structured render state through this backend."""
+        self.state_applier.apply(state)
+
+    def draw_command(self, command: DrawCommand):
+        """Apply command state/resources and draw through this backend."""
+        command.execute(self)
 
     def enable_multisample(self):
         glEnable(GL_MULTISAMPLE)
@@ -189,11 +206,11 @@ class GLBackend:
 
     def is_enabled(self, cap):
         """is enabled"""
-        return bool(glIsEnabled(cap))
+        return bool(glIsEnabled(gl_value(cap)))
 
     def set_blend_func(self, src, dst):
         """set blend function"""
-        glBlendFunc(src, dst)
+        glBlendFunc(gl_value(src), gl_value(dst))
 
     def create_texture(self, width, height, data) -> int:
         """create texture"""

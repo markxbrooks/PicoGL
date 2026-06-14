@@ -13,6 +13,7 @@ from abc import ABC, abstractmethod
 
 from OpenGL.GL import glColorPointer, glDrawElements, glEnableClientState, glNormalPointer, glTexCoordPointer, glVertexPointer
 
+from picogl.numerical import GLNumeric
 from picogl.state.client import GLClientState
 
 
@@ -37,7 +38,7 @@ class AbstractGLBackend(ABC):
     def set_line_width(self, width: float): ...
 
     @abstractmethod
-    def set_polygon_mode(self, mode: int): ...
+    def set_polygon_mode(self, *args): ...
 
     @abstractmethod
     def set_lighting(self, enabled: bool): ...
