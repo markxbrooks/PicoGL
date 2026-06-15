@@ -352,6 +352,8 @@ class GLBackend:
         """Apply a GLU perspective projection to the current matrix."""
         self.pipeline.set_perspective(fovy, aspect, znear, zfar)
 
+    # -- Legacy ---
+
     def set_perspective_projection(self, fovy, aspect, znear, zfar):
         """Configure the legacy projection matrix and return to modelview mode."""
         self.legacy.set_projection(fovy, aspect, znear, zfar)
