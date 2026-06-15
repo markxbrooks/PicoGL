@@ -21,6 +21,14 @@ class TexCoord2f:
     v: float
 
 
+@dataclass(frozen=True)
+class Vertex3f:
+    """Vertex 3F"""
+    x: float
+    y: float
+    z: float
+
+
 @contextmanager
 def texture2d_enabled():
     """Texture 2D Enabled"""

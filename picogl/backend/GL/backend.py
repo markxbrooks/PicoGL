@@ -38,7 +38,7 @@ from picogl.backend.opengl import GLBindingStrategy, GLPipeline
 from picogl.backend.state import DrawCommand, RenderState, RenderStateApplier, gl_value, GLClipPlaneState
 from picogl.buffers.glframe import GLFramebuffer
 from picogl.renderer.readback import GLReadback
-from picogl.state.texture import TexCoord2f
+from picogl.state.texture import TexCoord2f, Vertex3f
 from picogl.texture.gltexture import GLTextureDriver, Texture2D, TextureSpec
 
 
@@ -175,12 +175,8 @@ class GLLegacyPipeline:
         return glTexCoord2f(coord.u, coord.v)
 
     @staticmethod
-    def tex_coords(t1: list):
-        glTexCoord2f(t1[0], t1[1])
-
-    @staticmethod
-    def vertex_3f(v1):
-        glVertex3f(v1[0], v1[1], v1[2])
+    def vertex_3f(v1: Vertex3f):
+        glVertex3f(v1.x, v1.y, v1.z)
 
 
 class GLGeometryDriver:
@@ -477,9 +473,6 @@ class GLBackend:
 
     def tex_coord2f(self, coord: TexCoord2f):
         return self.pipeline.tex_coord2f(coord)
-
-    def tex_coords(self, t1: list):
-        self.pipeline.tex_coords(t1)
 
     def vertex_3f(self, v1):
         self.pipeline.vertex_3f(v1)
