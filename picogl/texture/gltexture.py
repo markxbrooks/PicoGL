@@ -7,20 +7,21 @@ It includes a class for creating, binding, uploading data, setting parameters, g
 Example Usage:
 ==============
 
-  >>  spec = TextureSpec(width=width, height=height)
-  >>  tex = Texture2D(spec, data)
-  >>  driver = GLTextureDriver()
-  >>  driver.create(tex)
-  >>  driver.bind(tex)
-  >>  driver.set_parameters()
-  >>  driver.upload(tex)
-  >>  driver.generate_mipmap()
-  >>  return tex.handle
+  >> spec = TextureSpec(width=width, height=height)
+  >> tex = Texture2D(spec, data)
+  >> driver = GLTextureDriver()
+  >> driver.create(tex)
+  >> driver.bind(tex)
+  >> driver.set_parameters()
+  >> driver.upload(tex)
+  >> driver.generate_mipmap()
+  >> return tex.handle
 
 """
 from contextlib import contextmanager
 from dataclasses import dataclass
 from enum import IntEnum
+from typing import Any
 
 from numpy import ndarray
 from OpenGL.GL import glGenTextures, glTexImage2D
@@ -161,6 +162,31 @@ class GLTexture(IntEnum):
     @staticmethod
     def bind(target: int, texture: int):
         glBindTexture(target, texture)
+
+    @staticmethod
+    @contextmanager
+    def enabled_texture2d():
+        """Texture 2D Enabled"""
+        was_enabled = self.get_enabled_tex2d()
+        try:
+            if not was_enabled:
+                GLTexture.enable_tex2d()
+            yield
+        finally:
+            if not was_enabled:
+                GLTexture.disable_tex2d()
+
+    @staticmethod
+    def disable_tex2d():
+        glDisable(GL_TEXTURE_2D)
+
+    @staticmethod
+    def enable_tex2d():
+        glEnable(GL_TEXTURE_2D)
+
+    @staticmethod
+    def get_enabled_tex2d(self) -> Any:
+        return glIsEnabled(GL_TEXTURE_2D)
 
     @staticmethod
     @contextmanager
