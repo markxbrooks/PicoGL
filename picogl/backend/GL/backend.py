@@ -34,14 +34,52 @@ from OpenGL.raw.GLU import gluPerspective
 
 from picogl.backend.capability import FACE_MAP
 from picogl.backend.opengl import GLBindingStrategy
-from picogl.backend.state import DrawCommand, RenderState, RenderStateApplier, gl_value, GLClipPlaneState
+from picogl.backend.state import DrawCommand, RenderState, RenderStateApplier, gl_value, GLClipPlaneState, \
+    GLStateManager
 from picogl.buffers.glframe import GLFramebuffer
 from picogl.renderer.readback import GLReadback
 from picogl.state.texture import TexCoord2f
 from picogl.texture.gltexture import GLTextureDriver, Texture2D, TextureSpec
 
 
+class GLRasterDriver:
+    def set_line_width(self, width): ...
+    def set_polygon_mode(self, face, mode): ...
+
+class GLLegacyPipeline:
+    def set_projection(...)
+    def translate(...)
+    def set_light(...)
+    def set_material(...)
+
+class RenderStateTarget(Protocol):
+    def set_line_width(...)
+    def set_polygon_mode(...)
+
 class GLBackend:
+    def __init__(self, binding: GLBindingStrategy):
+        self.raster = GLRasterDriver()
+        self.depth = GLDepthDriver()
+        self.blend = GLBlendDriver()
+        self.capabilities = GLCapabilityDriver()
+
+        self.state = GLStateManager(self.capabilities)
+
+        self.state_applier = RenderStateApplier(
+            raster=self.raster,
+            depth=self.depth,
+            blend=self.blend,
+            capabilities=self.capabilities,
+        )
+
+    # minimal surface
+    def apply_state(self, state: RenderState):
+        self.state_applier.apply(state)
+
+    def draw_command(self, command: DrawCommand):
+        command.execute(self)
+
+class GLBackendOld:
     """GL Backend"""
 
     def __init__(self, binding: GLBindingStrategy):
