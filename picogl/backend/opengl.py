@@ -10,6 +10,7 @@ Classes:
                various methods for rendering and managing rendering states.
 """
 from abc import ABC, abstractmethod
+from typing import Any, Protocol, runtime_checkable
 
 from OpenGL.GL import glColorPointer, glDrawElements, glEnableClientState, glNormalPointer, glTexCoordPointer, glVertexPointer
 
@@ -56,6 +57,18 @@ class GLBindingStrategy(ABC):
 
     @abstractmethod
     def draw(self, mesh, mode): ...
+
+
+@runtime_checkable
+class GLPipeline(Protocol):
+    """Pipeline strategy for fixed-function or modern rendering operations."""
+
+    def set_projection(self, fovy, aspect, znear, zfar): ...
+    def translate(self, x, y, z): ...
+    def set_light(self, position, light: Any = ...): ...
+    def set_material(self, face, material): ...
+    def set_uniform_color(self, color, alpha): ...
+    def vertex_3f(self, v1): ...
 
 
 class LegacyBinding(GLBindingStrategy):
