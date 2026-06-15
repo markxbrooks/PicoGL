@@ -30,15 +30,15 @@ from OpenGL.raw.GL.VERSION.GL_1_1 import GL_CLIP_PLANE0, GL_CLIP_PLANE1
 from picogl.backend.capability import GLMaterialFace, PhongMaterial
 from picogl.backend.GL.backend import (
     GLBackend,
-    GLBlendDriver,
-    GLCapabilityDriver,
-    GLDepthDriver,
-    GLGeometryDriver,
-    GLLegacyPipeline,
-    GLRasterDriver,
-    GLTextureSystem,
-    LegacyAttributeBinder,
 )
+from picogl.backend.legacy.core.pipeline import GLLegacyPipeline
+from picogl.backend.legacy.core.attribute_binder import LegacyAttributeBinder
+from picogl.backend.GL.driver.texture import GLTextureSystem
+from picogl.backend.GL.driver.geometry import GLGeometryDriver
+from picogl.backend.GL.driver.blend import GLBlendDriver
+from picogl.backend.GL.driver.depth import GLDepthDriver
+from picogl.backend.GL.driver.capability import GLCapabilityDriver
+from picogl.backend.GL.driver.raster import GLRasterDriver
 from picogl.backend.state import (
     BlendState,
     DepthState,
