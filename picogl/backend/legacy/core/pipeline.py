@@ -1,7 +1,7 @@
 from OpenGL.GL import glLightfv, glMaterialfv
 from OpenGL.raw.GL.VERSION.GL_1_0 import glMatrixMode, GL_MODELVIEW, GL_PROJECTION, glLoadIdentity, glTranslatef, \
     GL_LIGHT0, GL_POSITION, GL_AMBIENT, GL_DIFFUSE, GL_SPECULAR, glMaterialf, GL_SHININESS, glColor4f, glTexCoord2f, \
-    glVertex3f
+    glVertex3f, GL_AMBIENT_AND_DIFFUSE, GL_FRONT_AND_BACK, glColorMaterial
 from OpenGL.raw.GLU import gluPerspective
 
 from picogl.backend.capability import FACE_MAP
@@ -50,6 +50,11 @@ class GLLegacyPipeline:
         glMaterialfv(f, GL_DIFFUSE, material.diffuse)
         glMaterialfv(f, GL_SPECULAR, material.specular)
         glMaterialf(f, GL_SHININESS, material.shininess)
+
+    @staticmethod
+    def set_color_material(face=GL_FRONT_AND_BACK, mode=GL_AMBIENT_AND_DIFFUSE):
+        f = FACE_MAP.get(face, gl_value(face))
+        glColorMaterial(f, gl_value(mode))
 
     @staticmethod
     def set_color(rgba):
