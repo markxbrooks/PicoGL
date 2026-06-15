@@ -235,6 +235,7 @@ class LegacyAttributeBinder:
 
     @staticmethod
     def disable_vertex_array():
+        """disable vertex array"""
         glDisableClientState(GL_VERTEX_ARRAY)
 
     @staticmethod
