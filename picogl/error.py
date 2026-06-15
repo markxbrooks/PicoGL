@@ -7,7 +7,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import GL_NO_ERROR, glGetError
 from OpenGL.raw.GLU import gluErrorString
 
 
-def check_errors():
+def gl_check_errors():
     """
     check_errors
 

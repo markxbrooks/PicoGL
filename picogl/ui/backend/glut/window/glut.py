@@ -4,7 +4,7 @@ from decologr import setup_logging
 from OpenGL.raw.GL.VERSION.GL_1_0 import glViewport
 from picogl.renderer import GLResourceRegistry
 from picogl.ui.backend.glut.window.gl import GLWindow
-from picogl.utils.gl_init import execute_gl_tasks, init_gl_list, paint_gl_list
+from picogl.utils.gl_init import execute_gl_tasks, legacy_init_gl_list, paint_gl_list
 from pyglm import glm
 
 
@@ -39,7 +39,7 @@ class GlutRendererWindow(GLWindow):
     def initializeGL(self):
         """Initial OpenGL configuration."""
         log.message("Initializing OpenGL context...")
-        execute_gl_tasks(init_gl_list)
+        execute_gl_tasks(legacy_init_gl_list)
         self.renderer.initialize_shaders()
         self.renderer.initialize()
 

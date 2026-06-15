@@ -4,7 +4,7 @@ Numerical GL Values
 
 from enum import IntEnum
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_BYTE, GL_DOUBLE, GL_FLOAT, GL_INT,
+from OpenGL.GL import (GL_BYTE, GL_DOUBLE, GL_FLOAT, GL_INT,
                                           GL_SHORT, GL_UNSIGNED_BYTE,
                                           GL_UNSIGNED_INT, GL_UNSIGNED_SHORT)
 

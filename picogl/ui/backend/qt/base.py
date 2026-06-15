@@ -15,10 +15,10 @@ from OpenGL.raw.GLU import gluPerspective
 from picogl.backend.legacy.core.camera.lighting import set_background_color
 from picogl.backend.legacy.core.camera.matrices.setup import setup_matrices
 from picogl.backend.legacy.core.camera.setup import calculate_aspect
-from picogl.error import check_errors
+from picogl.error import gl_check_errors
 from picogl.frame import prepare_viewport
 from picogl.mode import GLMode
-from picogl.utils.gl_init import execute_gl_tasks, initialize_gl_list
+from picogl.utils.gl_init import execute_gl_tasks, modern_init_gl_list
 from PySide6.QtGui import QMouseEvent, QOpenGLFunctions, Qt, QWheelEvent
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
 from PySide6.QtWidgets import QWidget
@@ -89,7 +89,7 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
         """
         # Viewport setup
         glViewport(0, 0, self.width(), self.height())
-        execute_gl_tasks(initialize_gl_list)
+        execute_gl_tasks(modern_init_gl_list, backend=self.backend)
 
     def resizeGL(self, w: int, h: int) -> None:
         """
@@ -134,11 +134,11 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
         OpenGL rendering entry point. Calls the appropriate rendering method based g.
         Modern OpenGL rendering entry point.
         """
-        check_errors()
+        gl_check_errors()
         width, height = self.width(), self.height()
-        prepare_viewport(width, height)
+        prepare_viewport(width, height, self.backend)
         set_background_color(show_white_background=False)  # Then set visuals
-        check_errors()
+        gl_check_errors()
 
     def mousePressEvent(self, event: QMouseEvent) -> None:
         """
