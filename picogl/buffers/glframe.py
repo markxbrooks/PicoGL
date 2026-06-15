@@ -11,7 +11,57 @@ from OpenGL.GL import (glBindFramebuffer, GL_FRAMEBUFFER, glFramebufferTexture2D
                        GL_COLOR_ATTACHMENT0, glCheckFramebufferStatus, GL_FRAMEBUFFER_COMPLETE,
                        glGenFramebuffers, GL_DEPTH_ATTACHMENT)
 
-from picogl.texture.gltexture import GLTexture
+from picogl.texture.gltexture import GLTexture, Texture2D
+
+
+def gl_framebuffer_tex2d(tex: Texture2D):
+    """
+    Binds a 2D texture to the depth attachment of the currently bound framebuffer.
+
+    This function associates a given 2D texture with the depth attachment of the
+    currently active OpenGL framebuffer object. It ensures that rendering operations
+    targeting the framebuffer will use the specified texture for depth buffering.
+
+    Parameters:
+        tex (Texture2D): The 2D texture to bind to the depth attachment. The `handle`
+        attribute of the texture is used as a reference in this operation.
+    """
+    attachment=GL_DEPTH_ATTACHMENT
+    gl_framebuffer_tex2d_with_attachment(attachment, tex)
+    """glFramebufferTexture2D(
+        target=GL_FRAMEBUFFER,
+        attachment=attachment,
+        textarget=GLTexture.TEXTURE_2D,
+        texture=tex.handle,
+        level=0,
+    )"""
+
+
+def gl_framebuffer_tex2d_with_index(index: int, tex: Texture2D):
+    """
+    Binds a 2D texture to a specific color attachment index in the currently bound framebuffer.
+
+    This function associates a Texture2D object with a specific color attachment point in the active
+    OpenGL framebuffer. The index determines which color attachment the texture will be bound to.
+
+    Parameters:
+    index (int): The index of the color attachment in the framebuffer to which the texture is to be
+    bound. The attachment point is calculated as GL_COLOR_ATTACHMENT0 + index.
+    tex (Texture2D): The 2D texture object to bind to the specified color attachment.
+
+    """
+    attachment=GL_COLOR_ATTACHMENT0 + index
+    gl_framebuffer_tex2d_with_attachment(attachment, tex)
+
+
+def gl_framebuffer_tex2d_with_attachment(attachment: float | int, tex: Texture2D):
+    glFramebufferTexture2D(
+        target=GL_FRAMEBUFFER,
+        attachment=attachment,
+        textarget=GLTexture.TEXTURE_2D,
+        texture=tex.handle,
+        level=0,
+    )
 
 
 class GLFramebuffer:
@@ -89,13 +139,7 @@ class GLFramebuffer:
             None
         """
         with self.bound():
-            glFramebufferTexture2D(
-                GL_FRAMEBUFFER,
-                GL_COLOR_ATTACHMENT0 + index,
-                GLTexture.TEXTURE_2D,
-                tex.handle,
-                0,
-            )
+            gl_framebuffer_tex2d_with_index(index, tex)
             self.color_attachments.append(tex.handle)
 
     def attach_depth_texture(self, tex: "Texture2D"):
@@ -110,13 +154,7 @@ class GLFramebuffer:
 
         """
         with self.bound():
-            glFramebufferTexture2D(
-                GL_FRAMEBUFFER,
-                GL_DEPTH_ATTACHMENT,
-                GLTexture.TEXTURE_2D,
-                tex.handle,
-                0,
-            )
+            gl_framebuffer_tex2d(tex)
             self.depth_attachment = tex.handle
 
     def check_complete(self):

@@ -53,6 +53,12 @@ WRAP_MAP = {
     "clamp": GL_CLAMP_TO_EDGE,
 }
 
+
+class TextureFilter:
+    """Texture Filter"""
+    LINEAR = "linear"
+
+
 @dataclass(frozen=True)
 class TextureSpec:
     """Texture Spec"""
