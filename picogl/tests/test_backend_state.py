@@ -10,7 +10,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_AMBIENT, GL_DIFFUSE,
 from OpenGL.raw.GL.VERSION.GL_1_1 import GL_CLIP_PLANE0, GL_CLIP_PLANE1
 
 from picogl.backend.capability import GLMaterialFace, PhongMaterial
-from picogl.backend.GL.backend import GLBackend
+from picogl.backend.GL.backend import GLBackend, GLLegacyPipeline, GLRasterDriver
 from picogl.backend.state import (
     BlendState,
     DepthState,
@@ -166,6 +166,104 @@ class TestDrawCommand(unittest.TestCase):
         backend = GLBackend(binding=FakeBinding())
         self.assertTrue(hasattr(backend, "apply_state"))
         self.assertTrue(hasattr(backend, "draw_command"))
+        self.assertIsInstance(backend.raster, GLRasterDriver)
+        self.assertIsInstance(backend.legacy, GLLegacyPipeline)
+
+    def test_raster_driver_delegates_to_opengl(self):
+        raster = GLRasterDriver()
+
+        with (
+            patch("picogl.backend.GL.backend.glLineWidth") as line_width,
+            patch("picogl.backend.GL.backend.glPolygonMode") as polygon_mode,
+        ):
+            raster.set_line_width(2.0)
+            raster.set_polygon_mode(GL_FRONT_AND_BACK, GL_LINE)
+
+        line_width.assert_called_once_with(2.0)
+        polygon_mode.assert_called_once_with(GL_FRONT_AND_BACK, GL_LINE)
+
+    def test_glbackend_polygon_mode_uses_raster_driver(self):
+        backend = GLBackend(binding=FakeBinding())
+
+        with (
+            patch.object(backend.raster, "set_line_width") as set_line_width,
+            patch.object(backend.raster, "set_polygon_mode") as set_polygon_mode,
+        ):
+            backend.set_line_width(2.0)
+            backend.set_polygon_mode(GL_FRONT_AND_BACK, GL_LINE)
+
+        set_line_width.assert_called_once_with(2.0)
+        set_polygon_mode.assert_called_once_with(GL_FRONT_AND_BACK, GL_LINE)
+
+    def test_legacy_pipeline_delegates_to_opengl(self):
+        legacy = GLLegacyPipeline()
+        material = PhongMaterial(
+            ambient=(0.1, 0.2, 0.3, 1.0),
+            diffuse=(0.4, 0.5, 0.6, 1.0),
+            specular=(0.7, 0.8, 0.9, 1.0),
+            shininess=32.0,
+        )
+
+        with (
+            patch("picogl.backend.GL.backend.glMatrixMode") as matrix_mode,
+            patch("picogl.backend.GL.backend.glLoadIdentity") as load_identity,
+            patch("picogl.backend.GL.backend.gluPerspective") as perspective,
+            patch("picogl.backend.GL.backend.glTranslatef") as translate,
+            patch("picogl.backend.GL.backend.glLightfv") as lightfv,
+            patch("picogl.backend.GL.backend.glMaterialfv") as materialfv,
+            patch("picogl.backend.GL.backend.glMaterialf") as materialf,
+        ):
+            legacy.set_projection(45.0, 1.5, 0.1, 1000.0)
+            legacy.translate(1, 2, 3)
+            legacy.set_light([0.0, 0.0, 10.0, 1.0])
+            legacy.set_material(GLMaterialFace.FRONT_AND_BACK, material)
+
+        self.assertEqual(matrix_mode.call_args_list, [call(GL_PROJECTION), call(GL_MODELVIEW)])
+        load_identity.assert_called_once_with()
+        perspective.assert_called_once_with(45.0, 1.5, 0.1, 1000.0)
+        translate.assert_called_once_with(1.0, 2.0, 3.0)
+        lightfv.assert_called_once_with(GL_LIGHT0, GL_POSITION, [0.0, 0.0, 10.0, 1.0])
+        self.assertEqual(
+            materialfv.call_args_list,
+            [
+                call(GL_FRONT_AND_BACK, GL_AMBIENT, material.ambient),
+                call(GL_FRONT_AND_BACK, GL_DIFFUSE, material.diffuse),
+                call(GL_FRONT_AND_BACK, GL_SPECULAR, material.specular),
+            ],
+        )
+        materialf.assert_called_once_with(
+            GL_FRONT_AND_BACK,
+            GL_SHININESS,
+            material.shininess,
+        )
+
+    def test_glbackend_fixed_function_uses_legacy_pipeline(self):
+        backend = GLBackend(binding=FakeBinding())
+        material = PhongMaterial(
+            ambient=(0.1, 0.2, 0.3, 1.0),
+            diffuse=(0.4, 0.5, 0.6, 1.0),
+            specular=(0.7, 0.8, 0.9, 1.0),
+            shininess=32.0,
+        )
+
+        with (
+            patch.object(backend.legacy, "set_projection") as set_projection,
+            patch.object(backend.legacy, "translate") as translate,
+            patch.object(backend.legacy, "set_light") as set_light,
+            patch.object(backend.legacy, "set_material") as set_material,
+        ):
+            backend.set_perspective_projection(45.0, 1.5, 0.1, 1000.0)
+            backend.translate(1, 2, 3)
+            backend.set_light_position([0.0, 0.0, 10.0, 1.0])
+            backend.set_material(GLMaterialFace.FRONT_AND_BACK, material)
+
+        set_projection.assert_called_once_with(45.0, 1.5, 0.1, 1000.0)
+        translate.assert_called_once_with(1, 2, 3)
+        set_light.assert_called_once_with(
+            [0.0, 0.0, 10.0, 1.0],
+            light=GL_LIGHT0,
+        )
+        set_material.assert_called_once_with(GLMaterialFace.FRONT_AND_BACK, material)
 
     def test_glbackend_fixed_function_delegates_to_opengl(self):
         backend = GLBackend(binding=FakeBinding())

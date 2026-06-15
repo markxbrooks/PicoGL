@@ -43,43 +43,55 @@ from picogl.texture.gltexture import GLTextureDriver, Texture2D, TextureSpec
 
 
 class GLRasterDriver:
-    def set_line_width(self, width): ...
-    def set_polygon_mode(self, face, mode): ...
+    """Fixed-function raster state operations."""
+
+    @staticmethod
+    def set_line_width(width):
+        glLineWidth(width)
+
+    @staticmethod
+    def set_polygon_mode(*args):
+        if len(args) == 1:
+            face, mode = GL_FRONT_AND_BACK, args[0]
+        elif len(args) == 2:
+            face, mode = args
+        else:
+            raise TypeError("set_polygon_mode expects mode or face, mode")
+        glPolygonMode(gl_value(face), gl_value(mode))
+
 
 class GLLegacyPipeline:
-    def set_projection(...)
-    def translate(...)
-    def set_light(...)
-    def set_material(...)
+    """Fixed-function matrix, light, and material operations."""
 
-class RenderStateTarget(Protocol):
-    def set_line_width(...)
-    def set_polygon_mode(...)
+    @staticmethod
+    def set_projection(fovy, aspect, znear, zfar):
+        glMatrixMode(GL_PROJECTION)
+        glLoadIdentity()
+        gluPerspective(float(fovy), float(aspect), float(znear), float(zfar))
+        glMatrixMode(GL_MODELVIEW)
+
+    @staticmethod
+    def translate(x, y, z):
+        glTranslatef(float(x), float(y), float(z))
+
+    @staticmethod
+    def set_light(position, light=GL_LIGHT0):
+        glLightfv(gl_value(light), GL_POSITION, position)
+
+    @staticmethod
+    def set_material(face, material):
+        f = FACE_MAP.get(face, gl_value(face))
+        glMaterialfv(f, GL_AMBIENT, material.ambient)
+        glMaterialfv(f, GL_DIFFUSE, material.diffuse)
+        glMaterialfv(f, GL_SPECULAR, material.specular)
+        glMaterialf(f, GL_SHININESS, material.shininess)
+
+
+def set_vertex_pointer(data):
+    glVertexPointer(3, GL_FLOAT, 0, data)
+
 
 class GLBackend:
-    def __init__(self, binding: GLBindingStrategy):
-        self.raster = GLRasterDriver()
-        self.depth = GLDepthDriver()
-        self.blend = GLBlendDriver()
-        self.capabilities = GLCapabilityDriver()
-
-        self.state = GLStateManager(self.capabilities)
-
-        self.state_applier = RenderStateApplier(
-            raster=self.raster,
-            depth=self.depth,
-            blend=self.blend,
-            capabilities=self.capabilities,
-        )
-
-    # minimal surface
-    def apply_state(self, state: RenderState):
-        self.state_applier.apply(state)
-
-    def draw_command(self, command: DrawCommand):
-        command.execute(self)
-
-class GLBackendOld:
     """GL Backend"""
 
     def __init__(self, binding: GLBindingStrategy):
@@ -87,6 +99,8 @@ class GLBackendOld:
         self.framebuffer = GLFramebuffer()
         self.read = GLReadback()
         self.clip = GLClipPlaneState(enabled0=False, enabled1=False)
+        self.raster = GLRasterDriver()
+        self.legacy = GLLegacyPipeline()
         self.state_applier = RenderStateApplier(self)
 
     def enable(self, cap):
@@ -121,6 +135,7 @@ class GLBackendOld:
         self.set_clear_color(color)
         self.clear_background()
 
+    @staticmethod
     def setup_blending():
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
@@ -140,7 +155,8 @@ class GLBackendOld:
     def set_depth_func_gl_less() -> Any:
         return glDepthFunc(GL_LESS)
 
-    def clear_background(self):
+    @staticmethod
+    def clear_background():
         """
         Clears the background by removing all color and depth information from
         the current OpenGL framebuffer.
@@ -154,47 +170,45 @@ class GLBackendOld:
         """
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
-    def load_identity(self):
+    @staticmethod
+    def load_identity():
         glLoadIdentity()  # Reset modelview matrix
 
-    def viewport(self, x, y, width, height):
+    @staticmethod
+    def viewport(x, y, width, height):
         glViewport(x, y, width, height)
 
-    def set_perspective(self, fovy, aspect, znear, zfar):
+    @staticmethod
+    def set_perspective(fovy, aspect, znear, zfar):
         """Apply a GLU perspective projection to the current matrix."""
         gluPerspective(float(fovy), float(aspect), float(znear), float(zfar))
 
     def set_perspective_projection(self, fovy, aspect, znear, zfar):
         """Configure the legacy projection matrix and return to modelview mode."""
-        self.set_matrix_mode_projection()
-        self.load_identity()
-        self.set_perspective(fovy, aspect, znear, zfar)
-        self.set_matrix_mode_model_view()
+        self.legacy.set_projection(fovy, aspect, znear, zfar)
 
     def translate(self, x, y, z):
         """Apply a legacy fixed-function translation."""
-        glTranslatef(float(x), float(y), float(z))
+        self.legacy.translate(x, y, z)
 
     def set_light_position(self, position, light=GL_LIGHT0):
         """Set a fixed-function light position."""
-        glLightfv(gl_value(light), GL_POSITION, position)
+        self.legacy.set_light(position, light=light)
 
     def set_material(self, face, material):
         """Set fixed-function Phong material values."""
-        f = FACE_MAP.get(face, gl_value(face))
-        glMaterialfv(f, GL_AMBIENT, material.ambient)
-        glMaterialfv(f, GL_DIFFUSE, material.diffuse)
-        glMaterialfv(f, GL_SPECULAR, material.specular)
-        glMaterialf(f, GL_SHININESS, material.shininess)
+        self.legacy.set_material(face, material)
 
     def set_line_width(self, width):
-        glLineWidth(width)
+        self.raster.set_line_width(width)
 
-    def set_color(self, rgba):
+    @staticmethod
+    def set_color(rgba):
         glColor4f(*rgba)
 
     # --- State ---
-    def set_blend(self, enabled: bool):
+    @staticmethod
+    def set_blend(enabled: bool):
         glEnable(GL_BLEND) if enabled else glDisable(GL_BLEND)
 
     def setup_blending_funcs(self):
@@ -214,15 +228,8 @@ class GLBackendOld:
     def enable_cull_face(self):
         self.set_cull_face(True)
 
-    @staticmethod
-    def set_polygon_mode(*args):
-        if len(args) == 1:
-            face, mode = GL_FRONT_AND_BACK, args[0]
-        elif len(args) == 2:
-            face, mode = args
-        else:
-            raise TypeError("set_polygon_mode expects mode or face, mode")
-        glPolygonMode(gl_value(face), gl_value(mode))
+    def set_polygon_mode(self, *args):
+        self.raster.set_polygon_mode(*args)
 
     @staticmethod
     def set_lighting(enabled: bool):
@@ -271,36 +278,42 @@ class GLBackendOld:
     def disable_clip_plane1(self):
         self.set_clip_plane_enabled(GL_CLIP_PLANE1, False)
 
-    def enable_vertex_array(self):
+    @staticmethod
+    def enable_vertex_array():
         glEnableClientState(GL_VERTEX_ARRAY)
 
-    def set_vertex_pointer(self, data):
-        glVertexPointer(3, GL_FLOAT, 0, data)
-
-    def enable_normal_array(self):
+    @staticmethod
+    def enable_normal_array():
         glEnableClientState(GL_NORMAL_ARRAY)
 
-    def set_normal_pointer(self, data):
+    @staticmethod
+    def set_normal_pointer(data):
         glNormalPointer(GL_FLOAT, 0, data)
 
-    def enable_color_array(self):
+    @staticmethod
+    def enable_color_array():
         glEnableClientState(GL_COLOR_ARRAY)
 
-    def set_color_pointer(self, data, size):
+    @staticmethod
+    def set_color_pointer(data, size):
         glColorPointer(size, GL_FLOAT, 0, data)
 
-    def enable_texcoord_array(self):
+    @staticmethod
+    def enable_texcoord_array():
         glEnableClientState(GL_TEXTURE_COORD_ARRAY)
 
-    def set_texcoord_pointer(self, data):
+    @staticmethod
+    def set_texcoord_pointer(data):
         """set texcoord pointer"""
         glTexCoordPointer(2, GL_FLOAT, 0, data)
 
-    def draw_elements(self, mode, indices):
+    @staticmethod
+    def draw_elements(mode, indices):
         """draw elements"""
         glDrawElements(mode, len(indices), GL_UNSIGNED_INT, indices)
 
-    def bind_texture(self, texture_id):
+    @staticmethod
+    def bind_texture(texture_id):
         """bind texture"""
         glBindTexture(GL_TEXTURE_2D, texture_id)
 
@@ -316,15 +329,18 @@ class GLBackendOld:
     def vertex_3f(v1):
         glVertex3f(v1[0], v1[1], v1[2])
 
-    def is_enabled(self, cap):
+    @staticmethod
+    def is_enabled(cap):
         """is enabled"""
         return bool(glIsEnabled(gl_value(cap)))
 
-    def set_blend_func(self, src: Any, dst: Any) -> None:
+    @staticmethod
+    def set_blend_func(src: Any, dst: Any) -> None:
         """set blend function"""
         glBlendFunc(gl_value(src), gl_value(dst))
 
-    def create_texture(self, width, height, data) -> int:
+    @staticmethod
+    def create_texture(width, height, data) -> int:
         """create texture"""
         spec = TextureSpec(width=width, height=height)
         tex = Texture2D(spec, data)
@@ -334,5 +350,6 @@ class GLBackendOld:
         driver.initialize(tex)
         return tex.handle
 
-    def delete_texture(self, tex_id: int):
+    @staticmethod
+    def delete_texture(tex_id: int):
         glDeleteTextures([tex_id])
