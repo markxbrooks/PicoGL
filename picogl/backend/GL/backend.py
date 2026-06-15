@@ -34,8 +34,7 @@ from OpenGL.raw.GLU import gluPerspective
 
 from picogl.backend.capability import FACE_MAP
 from picogl.backend.opengl import GLBindingStrategy
-from picogl.backend.state import DrawCommand, RenderState, RenderStateApplier, gl_value, GLClipPlaneState, \
-    GLStateManager
+from picogl.backend.state import DrawCommand, RenderState, RenderStateApplier, gl_value, GLClipPlaneState
 from picogl.buffers.glframe import GLFramebuffer
 from picogl.renderer.readback import GLReadback
 from picogl.state.texture import TexCoord2f
