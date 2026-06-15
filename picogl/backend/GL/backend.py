@@ -175,7 +175,7 @@ class GLLegacyPipeline:
         return glTexCoord2f(coord.u, coord.v)
 
     @staticmethod
-    def tex_coords(t1):
+    def tex_coords(t1: list):
         glTexCoord2f(t1[0], t1[1])
 
     @staticmethod
@@ -478,7 +478,7 @@ class GLBackend:
     def tex_coord2f(self, coord: TexCoord2f):
         return self.pipeline.tex_coord2f(coord)
 
-    def tex_coords(self, t1):
+    def tex_coords(self, t1: list):
         self.pipeline.tex_coords(t1)
 
     def vertex_3f(self, v1):

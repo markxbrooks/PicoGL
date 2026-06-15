@@ -52,8 +52,7 @@ class GLFramebuffer(Initializable):
     def _bind_frame_buffer_handle(self, handle):
         glBindFramebuffer(GL_FRAMEBUFFER, handle)
 
-    @staticmethod
-    def unbind():
+    def unbind(self):
         """
         Unbinds any currently bound framebuffer by binding to the default framebuffer.
 
