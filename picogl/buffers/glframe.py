@@ -28,13 +28,6 @@ def gl_framebuffer_tex2d(tex: Texture2D):
     """
     attachment=GL_DEPTH_ATTACHMENT
     gl_framebuffer_tex2d_with_attachment(attachment, tex)
-    """glFramebufferTexture2D(
-        target=GL_FRAMEBUFFER,
-        attachment=attachment,
-        textarget=GLTexture.TEXTURE_2D,
-        texture=tex.handle,
-        level=0,
-    )"""
 
 
 def gl_framebuffer_tex2d_with_index(index: int, tex: Texture2D):
@@ -55,6 +48,28 @@ def gl_framebuffer_tex2d_with_index(index: int, tex: Texture2D):
 
 
 def gl_framebuffer_tex2d_with_attachment(attachment: float | int, tex: Texture2D):
+    """
+    Binds a 2D texture to a specified framebuffer attachment point.
+
+    This function is used to attach a 2D texture object to a specific attachment point
+    of a framebuffer. The function acts as a wrapper around the OpenGL `glFramebufferTexture2D`
+    to simplify the attachment process.
+
+    Parameters:
+        attachment: float | int
+            The attachment point of the framebuffer to which the texture will
+            be bound. This is typically an OpenGL constant value, such as
+            `GL_COLOR_ATTACHMENT0`, `GL_DEPTH_ATTACHMENT`, or `GL_STENCIL_ATTACHMENT`.
+
+        tex: Texture2D
+            The texture object to be attached to the framebuffer. The texture
+            must be an instance of `Texture2D` and already have an initialized
+            handle.
+
+    Raises:
+        Any exception that might be triggered by the `glFramebufferTexture2D`
+        function or improper argument usage.
+    """
     glFramebufferTexture2D(
         target=GL_FRAMEBUFFER,
         attachment=attachment,
