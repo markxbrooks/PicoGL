@@ -357,7 +357,7 @@ class DrawCommand:
     def execute(self, backend: Any):
         if self.state is not None:
             if hasattr(backend, "apply_state"):
-                backend.apply_state(self.state)
+                backend.state_applier.apply(self.state)
             else:
                 RenderStateApplier(backend).apply(self.state)
 

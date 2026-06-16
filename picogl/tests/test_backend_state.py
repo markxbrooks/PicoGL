@@ -702,6 +702,14 @@ class TestDrawCommand(unittest.TestCase):
         self.assertIs(backend.clip, clip)
         apply.assert_called_once_with(backend.state_manager)
 
+    def test_glbackend_applies_stored_clip_state(self):
+        backend = GLBackend(binding=FakeBinding())
+
+        with patch.object(backend.clip, "apply") as apply:
+            backend.apply_clip_state()
+
+        apply.assert_called_once_with(backend.state_manager)
+
     def test_glbackend_perspective_projection_delegates_to_opengl(self):
         backend = GLBackend(binding=FakeBinding())
 

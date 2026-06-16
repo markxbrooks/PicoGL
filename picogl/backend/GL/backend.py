@@ -51,18 +51,6 @@ class GLBackend:
         self.state_manager = GLStateManager(self.capabilities)
         self.state_applier = RenderStateApplier(self)
 
-    def apply_state(self, state: RenderState):
-        """Apply a structured render state through this backend."""
-        self.state_applier.apply(state)
-
-    def apply_clip_state(self, clip: GLClipPlaneState | None = None):
-        """Apply declarative clipping state through the capability subsystem."""
-        if clip is not None:
-            self.clip = clip
-        else:
-            self.clip = GLClipPlaneState()
-        self.clip.apply(self.state_manager)
-
     def draw_command(self, command: DrawCommand):
         """Apply command state/resources and draw through this backend."""
         command.execute(self)
