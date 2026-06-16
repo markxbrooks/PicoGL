@@ -11,7 +11,6 @@ from OpenGL.GLU import gluUnProject
 from OpenGL.raw.GL._types import GL_FLOAT
 from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_DEPTH_COMPONENT,
-    GL_DEPTH_TEST,
     GL_MODELVIEW_MATRIX,
     GL_PROJECTION_MATRIX,
     GL_VIEWPORT,
@@ -19,6 +18,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     glIsEnabled,
     glReadPixels,
 )
+from picogl.backend.capability import GLPipelineCapability
 
 
 def unproject(x: int, y: int) -> Optional[Tuple[float, float, float]]:
@@ -47,7 +47,7 @@ def unproject(x: int, y: int) -> Optional[Tuple[float, float, float]]:
         log.message(f"Coordinates out of bounds: ({x}, {y_gl})")
         return None
 
-    if not glIsEnabled(GL_DEPTH_TEST):
+    if not glIsEnabled(GLPipelineCapability.DEPTH_TEST):
         log.warning("Warning: GL_DEPTH_TEST is not enabled")
 
     # Read depth safely

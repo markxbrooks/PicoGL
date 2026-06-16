@@ -11,12 +11,10 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_FOG_MODE,
     GL_FOG_START,
     GL_FRONT_AND_BACK,
-    GL_LIGHT0,
     GL_LIGHT1,
     GL_LIGHT2,
     GL_LIGHT3,
     GL_LIGHT4,
-    GL_LIGHTING,
     GL_LINEAR,
     GL_MODELVIEW,
     GL_POSITION,
@@ -37,6 +35,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     glPushMatrix,
 )
 
+from picogl.backend.capability import GLFixedFunctionCapability
 from picogl.buffers.glframe import GLFramebuffer
 
 
@@ -131,31 +130,31 @@ def setup_lighting(mode: int = 0) -> None:
     """
     current_shininess = 1.0
     if mode == 0:
-        glEnable(GL_LIGHTING)
-        glEnable(GL_LIGHT0)
+        glEnable(GLFixedFunctionCapability.LIGHTING)
+        glEnable(GLFixedFunctionCapability.LIGHT0)
         # glEnable(GL_COLOR_MATERIAL)
         # Set up light position_array (in eye space)
         light_pos = [10.0, 10.0, 10.0, 1.0]  # positional black light
-        glLightfv(GL_LIGHT0, GL_POSITION, light_pos)
+        glLightfv(GLFixedFunctionCapability.LIGHT0, GL_POSITION, light_pos)
         # Set light color_array
-        glLightfv(GL_LIGHT0, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
-        glLightfv(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
-        glLightfv(GL_LIGHT0, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
+        glLightfv(GLFixedFunctionCapability.LIGHT0, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
+        glLightfv(GLFixedFunctionCapability.LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
+        glLightfv(GLFixedFunctionCapability.LIGHT0, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
         glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 128.0 * current_shininess)
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1)
     if mode == 2:
-        glEnable(GL_LIGHTING)
-        glEnable(GL_LIGHT0)
+        glEnable(GLFixedFunctionCapability.LIGHTING)
+        glEnable(GLFixedFunctionCapability.LIGHT0)
         # Set up light position_array (in eye space)
         light_pos = [0.0, 0.0, 0.0, 1.0]  # positional light
-        glLightfv(GL_LIGHT0, GL_POSITION, light_pos)
+        glLightfv(GLFixedFunctionCapability.LIGHT0, GL_POSITION, light_pos)
         # Set light color_array
-        glLightfv(GL_LIGHT0, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
-        glLightfv(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
-        glLightfv(GL_LIGHT0, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
+        glLightfv(GLFixedFunctionCapability.LIGHT0, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
+        glLightfv(GLFixedFunctionCapability.LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
+        glLightfv(GLFixedFunctionCapability.LIGHT0, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
     elif mode == 1:
-        glEnable(GL_LIGHTING)
-        glEnable(GL_LIGHT0)
+        glEnable(GLFixedFunctionCapability.LIGHTING)
+        glEnable(GLFixedFunctionCapability.LIGHT0)
 
         glMatrixMode(GL_MODELVIEW)
         glPushMatrix()
@@ -163,21 +162,21 @@ def setup_lighting(mode: int = 0) -> None:
 
         # Set light position_array (camera-relative)
         light_pos = [10.0, 10.0, 10.0, 1.0]
-        glLightfv(GL_LIGHT0, GL_POSITION, light_pos)
+        glLightfv(GLFixedFunctionCapability.LIGHT0, GL_POSITION, light_pos)
 
         glPopMatrix()
 
         # Set light properties (these are not affected by the matrix)
-        glLightfv(GL_LIGHT0, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
-        glLightfv(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
-        glLightfv(GL_LIGHT0, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
+        glLightfv(GLFixedFunctionCapability.LIGHT0, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
+        glLightfv(GLFixedFunctionCapability.LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
+        glLightfv(GLFixedFunctionCapability.LIGHT0, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
     elif mode == 3:
-        glEnable(GL_LIGHTING)
-        glEnable(GL_LIGHT0)
+        glEnable(GLFixedFunctionCapability.LIGHTING)
+        glEnable(GLFixedFunctionCapability.LIGHT0)
         # Set light properties (independent of matrix)
-        glLightfv(GL_LIGHT0, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
-        glLightfv(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
-        glLightfv(GL_LIGHT0, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
+        glLightfv(GLFixedFunctionCapability.LIGHT0, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
+        glLightfv(GLFixedFunctionCapability.LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
+        glLightfv(GLFixedFunctionCapability.LIGHT0, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
 
         # Call this *after* your model_matrix/view transforms (e.g., after gl_update_camera_matrix)
         light_pos = [
@@ -186,7 +185,7 @@ def setup_lighting(mode: int = 0) -> None:
             10.0,
             1.0,
         ]  # Positional light, relative to object/world
-        glLightfv(GL_LIGHT0, GL_POSITION, light_pos)
+        glLightfv(GLFixedFunctionCapability.LIGHT0, GL_POSITION, light_pos)
 
 
 def setup_lighting_mode_zero(backend: "GLBackend"):
