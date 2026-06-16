@@ -6,26 +6,45 @@ from unittest.mock import patch
 from OpenGL.raw.GL.VERSION.GL_3_2 import GL_PROGRAM_POINT_SIZE
 
 from picogl.frame import prepare_viewport
+from picogl.state.draw_mode import GLBitMask
+
+
+class RecordingFrame:
+    def __init__(self, calls):
+        self.calls = calls
+
+    def viewport(self, x, y, width, height):
+        self.calls.append(("viewport", x, y, width, height))
+
+    def set_clear_color(self, color):
+        self.calls.append(("set_clear_color", color))
+
+    def clear(self, mask):
+        self.calls.append(("clear", mask))
+
+
+class RecordingDepth:
+    def __init__(self, calls):
+        self.calls = calls
+
+    def set_depth_test(self, enabled):
+        self.calls.append(("depth_test", enabled))
+
+
+class RecordingCapabilities:
+    def __init__(self, calls):
+        self.calls = calls
+
+    def enable(self, cap):
+        self.calls.append(("enable", cap))
 
 
 class RecordingBackend:
     def __init__(self):
         self.calls = []
-
-    def viewport(self, x, y, width, height):
-        self.calls.append(("viewport", x, y, width, height))
-
-    def enable_depth_test(self):
-        self.calls.append(("enable_depth_test",))
-
-    def set_clear_color(self, color):
-        self.calls.append(("set_clear_color", color))
-
-    def enable(self, cap):
-        self.calls.append(("enable", cap))
-
-    def clear_background(self):
-        self.calls.append(("clear_background",))
+        self.frame = RecordingFrame(self.calls)
+        self.depth = RecordingDepth(self.calls)
+        self.capabilities = RecordingCapabilities(self.calls)
 
 
 class TestPrepareViewport(unittest.TestCase):
@@ -39,10 +58,10 @@ class TestPrepareViewport(unittest.TestCase):
             backend.calls,
             [
                 ("viewport", 0, 0, 640, 480),
-                ("enable_depth_test",),
+                ("depth_test", True),
                 ("set_clear_color", (0.1, 0.1, 0.1, 1.0)),
                 ("enable", GL_PROGRAM_POINT_SIZE),
-                ("clear_background",),
+                ("clear", GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER),
             ],
         )
 

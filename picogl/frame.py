@@ -7,6 +7,7 @@ import platform
 from OpenGL.raw.GL.VERSION.GL_3_2 import GL_PROGRAM_POINT_SIZE
 
 from picogl.backend.GL.backend import GLBackend
+from picogl.state.draw_mode import GLBitMask
 
 
 def prepare_viewport(width: int, height: int, backend: GLBackend) -> None:
@@ -24,8 +25,8 @@ def prepare_viewport(width: int, height: int, backend: GLBackend) -> None:
         dpr = 2  # macOS Retina displays
     else:
         dpr = 1
-    backend.viewport(0, 0, width * dpr, height * dpr)
+    backend.frame.viewport(0, 0, width * dpr, height * dpr)
     backend.depth.set_depth_test(True)
-    backend.set_clear_color((0.1, 0.1, 0.1, 1.0))
+    backend.frame.set_clear_color((0.1, 0.1, 0.1, 1.0))
     backend.capabilities.enable(GL_PROGRAM_POINT_SIZE)
-    backend.clear_background()
+    backend.frame.clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)

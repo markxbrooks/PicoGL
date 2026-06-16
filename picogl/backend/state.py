@@ -12,12 +12,7 @@ from typing import Any, Protocol
 from numpy import ndarray
 from OpenGL.GL import (
     GL_BLEND,
-    GL_CLIP_DISTANCE0,
-    GL_CLIP_DISTANCE1,
-    GL_CULL_FACE,
     GL_DEPTH_TEST,
-    GL_ONE_MINUS_SRC_ALPHA,
-    GL_SRC_ALPHA,
     glBlendFunc,
     glColorPointer,
     glDrawElements,
@@ -32,10 +27,17 @@ from OpenGL.raw.GL.VERSION.GL_1_1 import (
     GL_VERTEX_ARRAY,
 )
 
-from picogl.backend.capability import BLEND_FACTOR_MAP, CAP_MAP, FACE_MAP
+from picogl.backend.capability import (
+    BLEND_FACTOR_MAP,
+    CAP_MAP,
+    FACE_MAP,
+    GLBlendFactor,
+    GLFixedFunctionCapability,
+    GLPipelineCapability,
+)
 from picogl.polygon.mode import PolygonMode
 from picogl.state.draw_mode import GLDataType, GLDrawMode, GLIndexType
-from picogl.state.fill import GLFace, GLLight
+from picogl.state.fill import GLFace, GLCapability
 from picogl.texture.gltexture import GLTextureDriver
 
 
@@ -65,7 +67,7 @@ class CapabilityDriver(Protocol):
 class RasterState:
     """Raster State"""
 
-    polygon_mode: int = PolygonMode.FILL
+    polygon_mode: Any = PolygonMode.FILL
     line_width: float = 1.0
 
     def apply(self, backend: CapabilityDriver):
@@ -101,8 +103,8 @@ class BlendState:
     """Blend State"""
 
     enabled: bool = False
-    src: int = GL_SRC_ALPHA
-    dst: int = GL_ONE_MINUS_SRC_ALPHA
+    src: Any = GLBlendFactor.SRC_ALPHA
+    dst: Any = GLBlendFactor.ONE_MINUS_SRC_ALPHA
 
     def apply(self, state: GLStateManager):
         state.set_enabled(GL_BLEND, self.enabled)
@@ -142,12 +144,12 @@ class RenderState:
     """Flat render-state descriptor with nested-state constructor support."""
 
     blend: bool = False
-    blend_src: int = GL_SRC_ALPHA
-    blend_dst: int = GL_ONE_MINUS_SRC_ALPHA
+    blend_src: Any = GLBlendFactor.SRC_ALPHA
+    blend_dst: Any = GLBlendFactor.ONE_MINUS_SRC_ALPHA
     depth_test: bool = True
     depth_write: bool = True
     line_width: float = 1.0
-    polygon_mode: int = PolygonMode.FILL
+    polygon_mode: Any = PolygonMode.FILL
     cull_face: bool = False
     lighting: bool = False
 
@@ -157,12 +159,12 @@ class RenderState:
         raster: RasterState | None = None,
         depth: DepthState | None = None,
         blend: BlendState | bool | None = None,
-        blend_src: int = GL_SRC_ALPHA,
-        blend_dst: int = GL_ONE_MINUS_SRC_ALPHA,
+        blend_src: Any = GLBlendFactor.SRC_ALPHA,
+        blend_dst: Any = GLBlendFactor.ONE_MINUS_SRC_ALPHA,
         depth_test: bool | None = None,
         depth_write: bool | None = None,
         line_width: float | None = None,
-        polygon_mode: int | None = None,
+        polygon_mode: Any | None = None,
         cull_face: bool = False,
         lighting: bool = False,
     ):
@@ -182,8 +184,8 @@ class RenderState:
             blend_enabled = bool(blend) if blend is not None else False
 
         object.__setattr__(self, "blend", bool(blend_enabled))
-        object.__setattr__(self, "blend_src", gl_value(blend_src))
-        object.__setattr__(self, "blend_dst", gl_value(blend_dst))
+        object.__setattr__(self, "blend_src", blend_src)
+        object.__setattr__(self, "blend_dst", blend_dst)
         object.__setattr__(
             self,
             "depth_test",
@@ -202,7 +204,7 @@ class RenderState:
         object.__setattr__(
             self,
             "polygon_mode",
-            gl_value(PolygonMode.FILL if polygon_mode is None else polygon_mode),
+            PolygonMode.FILL if polygon_mode is None else polygon_mode,
         )
         object.__setattr__(self, "cull_face", bool(cull_face))
         object.__setattr__(self, "lighting", bool(lighting))
@@ -245,7 +247,10 @@ class RenderStateApplier:
             self.backend.raster.set_line_width(state.line_width)
 
         if prev is None or prev.polygon_mode != state.polygon_mode:
-            self.backend.raster.set_polygon_mode(GLFace.FRONT_AND_BACK, state.polygon_mode)
+            self.backend.raster.set_polygon_mode(
+                GLFace.FRONT_AND_BACK,
+                gl_value(state.polygon_mode),
+            )
 
         if prev is None or prev.depth_test != state.depth_test:
             self.backend.depth.set_depth_test(state.depth_test)
@@ -261,13 +266,22 @@ class RenderStateApplier:
             or prev.blend_src != state.blend_src
             or prev.blend_dst != state.blend_dst
         ):
-            self.backend.blend.set_blend_func(state.blend_src, state.blend_dst)
+            self.backend.blend.set_blend_func(
+                gl_value(state.blend_src),
+                gl_value(state.blend_dst),
+            )
 
         if prev is None or prev.cull_face != state.cull_face:
-            self.backend.capabilities.set_enabled(GL_CULL_FACE, state.cull_face)
+            self.backend.capabilities.set_enabled(
+                GLPipelineCapability.CULL_FACE,
+                state.cull_face,
+            )
 
         if prev is None or prev.lighting != state.lighting:
-            self.backend.capabilities.set_enabled(GLLight.LIGHTING, state.lighting)
+            self.backend.capabilities.set_enabled(
+                GLFixedFunctionCapability.LIGHTING,
+                state.lighting,
+            )
 
 
 class GLVertexBuffer:
@@ -350,13 +364,17 @@ class DrawCommand:
                 RenderStateApplier(backend).apply(self.state)
 
         if self.texture:
-            if isinstance(self.texture, int) and hasattr(backend, "bind_texture"):
+            if isinstance(self.texture, int) and hasattr(backend, "textures"):
                 backend.textures.bind_texture(self.texture)
+            elif isinstance(self.texture, int) and hasattr(backend, "bind_texture"):
+                backend.bind_texture(self.texture)
             elif hasattr(self.texture, "bind"):
                 self.texture.bind()
 
-        if self.mode is not None and hasattr(backend, "draw_mesh"):
+        if self.mode is not None and hasattr(backend, "geometry"):
             backend.geometry.draw_mesh(self.mesh, self.mode)
+        elif self.mode is not None and hasattr(backend, "draw_mesh"):
+            backend.draw_mesh(self.mesh, self.mode)
         elif hasattr(self.mesh, "draw"):
             self.mesh.draw()
         else:
@@ -373,8 +391,8 @@ class GLClipPlaneState:
     enabled1: bool = False
 
     def apply(self, state: GLStateManager):
-        state.set_enabled(GL_CLIP_DISTANCE0, self.enabled0)
-        state.set_enabled(GL_CLIP_DISTANCE1, self.enabled1)
+        state.set_enabled(GLCapability.CLIP_DISTANCE0, self.enabled0)
+        state.set_enabled(GLCapability.CLIP_DISTANCE1, self.enabled1)
 
 
 __all__ = [

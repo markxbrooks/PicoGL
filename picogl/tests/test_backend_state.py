@@ -23,7 +23,7 @@ from OpenGL.GL import (
     GL_ZERO,
 )
 
-from picogl.state.fill import GLLightParameter
+from picogl.state.fill import GLFace, GLLightParameter
 from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_AMBIENT,
     GL_DIFFUSE,
@@ -32,11 +32,18 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_SHININESS,
     GL_SPECULAR,
 )
-from picogl.backend.capability import GLMaterialFace, PhongMaterial
+from picogl.backend.capability import (
+    GLBlendFactor,
+    GLFixedFunctionCapability,
+    GLMaterialFace,
+    GLPipelineCapability,
+    PhongMaterial,
+)
 from picogl.backend.GL.backend import GLBackend
 from picogl.backend.GL.driver.blend import GLBlendDriver
 from picogl.backend.GL.driver.capability import GLCapabilityDriver
 from picogl.backend.GL.driver.depth import GLDepthDriver
+from picogl.backend.GL.driver.frame import GLFrameDriver
 from picogl.backend.GL.driver.geometry import GLGeometryDriver
 from picogl.backend.GL.driver.raster import GLRasterDriver
 from picogl.backend.GL.driver.texture import GLTextureSystem
@@ -51,6 +58,7 @@ from picogl.backend.state import (
     RenderState,
     RenderStateApplier,
 )
+from picogl.polygon.mode import PolygonMode
 
 
 class _RecordingBlend:
@@ -75,6 +83,17 @@ class _RecordingDepth:
         self.calls.append(("depth_write", enabled))
 
 
+class _RecordingRaster:
+    def __init__(self, calls):
+        self.calls = calls
+
+    def set_line_width(self, width):
+        self.calls.append(("line_width", width))
+
+    def set_polygon_mode(self, face, mode):
+        self.calls.append(("polygon_mode", face, mode))
+
+
 class _RecordingCapabilities:
     def __init__(self, calls):
         self.calls = calls
@@ -88,6 +107,7 @@ class RecordingBackend:
         self.calls = []
         self.blend = _RecordingBlend(self.calls)
         self.depth = _RecordingDepth(self.calls)
+        self.raster = _RecordingRaster(self.calls)
         self.capabilities = _RecordingCapabilities(self.calls)
 
     def enable(self, cap):
@@ -168,17 +188,28 @@ class TestRenderState(unittest.TestCase):
         self.assertEqual(state.raster, RasterState(GL_LINE, 2.5))
         self.assertEqual(state.depth, DepthState(test=True, write=False))
 
+    def test_default_constructor_stores_semantic_values(self):
+        state = RenderState()
+
+        self.assertEqual(state.blend_src, GLBlendFactor.SRC_ALPHA)
+        self.assertEqual(state.blend_dst, GLBlendFactor.ONE_MINUS_SRC_ALPHA)
+        self.assertEqual(state.polygon_mode, PolygonMode.FILL)
+
     def test_nested_constructor_inputs_are_flattened(self):
         state = RenderState(
             raster=RasterState(polygon_mode=GL_LINE, line_width=3.0),
             depth=DepthState(test=False, write=False),
-            blend=BlendState(enabled=True, src=GL_ONE, dst=GL_ZERO),
+            blend=BlendState(
+                enabled=True,
+                src=GLBlendFactor.ONE,
+                dst=GLBlendFactor.ZERO,
+            ),
             cull_face=True,
         )
 
         self.assertTrue(state.blend)
-        self.assertEqual(state.blend_src, GL_ONE)
-        self.assertEqual(state.blend_dst, GL_ZERO)
+        self.assertEqual(state.blend_src, GLBlendFactor.ONE)
+        self.assertEqual(state.blend_dst, GLBlendFactor.ZERO)
         self.assertFalse(state.depth_test)
         self.assertFalse(state.depth_write)
         self.assertEqual(state.line_width, 3.0)
@@ -192,9 +223,11 @@ class TestRenderStateApplier(unittest.TestCase):
         applier = RenderStateApplier(backend)
         state = RenderState(
             blend=True,
+            blend_src=GLBlendFactor.ONE,
+            blend_dst=GLBlendFactor.ZERO,
             depth_write=False,
             line_width=2.0,
-            polygon_mode=GL_LINE,
+            polygon_mode=PolygonMode.LINE,
             lighting=True,
         )
 
@@ -204,9 +237,13 @@ class TestRenderStateApplier(unittest.TestCase):
 
         self.assertEqual(len(backend.calls), first_call_count)
         self.assertIn(("blend", True), backend.calls)
-        self.assertIn(("blend_func", state.blend_src, state.blend_dst), backend.calls)
+        self.assertIn(("blend_func", GL_ONE, GL_ZERO), backend.calls)
+        self.assertIn(("polygon_mode", GLFace.FRONT_AND_BACK, GL_LINE), backend.calls)
         self.assertIn(("depth_write", False), backend.calls)
-        self.assertIn(("enabled", GL_LIGHTING, True), backend.calls)
+        self.assertIn(
+            ("enabled", GLFixedFunctionCapability.LIGHTING, True),
+            backend.calls,
+        )
 
     def test_depth_state_applies_depth_not_blend(self):
         backend = RecordingBackend()
@@ -253,6 +290,7 @@ class TestDrawCommand(unittest.TestCase):
         backend = GLBackend(binding=FakeBinding())
         self.assertTrue(hasattr(backend, "apply_state"))
         self.assertTrue(hasattr(backend, "draw_command"))
+        self.assertIsInstance(backend.frame, GLFrameDriver)
         self.assertIsInstance(backend.raster, GLRasterDriver)
         self.assertIsInstance(backend.legacy, GLLegacyPipeline)
 
@@ -332,8 +370,8 @@ class TestDrawCommand(unittest.TestCase):
             patch.object(backend.blend, "set_blend_func") as set_blend_func,
             patch.object(backend.blend, "setup_blending") as setup_blending,
         ):
-            backend.enable(GL_CULL_FACE)
-            backend.disable(GL_LIGHTING)
+            backend.capabilities.enable(GL_CULL_FACE)
+            backend.capabilities.disable(GL_LIGHTING)
             self.assertTrue(backend.capabilities.is_enabled(GL_DEPTH_TEST))
             backend.depth.set_depth_test(True)
             backend.depth.set_depth_write(False)
@@ -341,8 +379,8 @@ class TestDrawCommand(unittest.TestCase):
             backend.blend.set_blend(True)
             backend.blend.set_blend_func(GL_ONE, GL_ZERO)
             backend.blend.setup_blending()
-            backend.capabilities.set_enabled(GL_CULL_FACE, True)
-            backend.capabilities.set_enabled(GL_LIGHTING, False)
+            backend.capabilities.set_enabled(GLPipelineCapability.CULL_FACE, True)
+            backend.capabilities.set_enabled(GLFixedFunctionCapability.LIGHTING, False)
 
         enable.assert_called_once_with(GL_CULL_FACE)
         disable.assert_called_once_with(GL_LIGHTING)
@@ -355,7 +393,10 @@ class TestDrawCommand(unittest.TestCase):
         setup_blending.assert_called_once_with()
         self.assertEqual(
             set_enabled.call_args_list,
-            [call(GL_CULL_FACE, True), call(GL_LIGHTING, False)],
+            [
+                call(GLPipelineCapability.CULL_FACE, True),
+                call(GLFixedFunctionCapability.LIGHTING, False),
+            ],
         )
 
     def test_glbackend_polygon_mode_uses_raster_driver(self):
@@ -372,7 +413,7 @@ class TestDrawCommand(unittest.TestCase):
             patch.object(backend.raster, "set_polygon_offset") as set_polygon_offset,
         ):
             backend.raster.set_line_width(2.0)
-            backend.raster.set_polygon_mode(GLLight.LIGHTING, GL_LINE)
+            backend.raster.set_polygon_mode(GLFace.FRONT_AND_BACK, GL_LINE)
             backend.raster.set_point_size(3.0)
             backend.raster.set_clamped_point_size(4.0)
             backend.raster.set_polygon_offset(-1.0, -1.0)
@@ -443,7 +484,7 @@ class TestDrawCommand(unittest.TestCase):
             patch.object(backend.legacy, "set_material") as set_material,
         ):
             backend.legacy.set_projection(45.0, 1.5, 0.1, 1000.0)
-            backend.translate(1, 2, 3)
+            backend.legacy.translate(1, 2, 3)
             backend.legacy.set_light([0.0, 0.0, 10.0, 1.0])
             backend.legacy.set_material(GLMaterialFace.FRONT_AND_BACK, material)
 
@@ -451,7 +492,6 @@ class TestDrawCommand(unittest.TestCase):
         translate.assert_called_once_with(1, 2, 3)
         set_light.assert_called_once_with(
             [0.0, 0.0, 10.0, 1.0],
-            light=GL_LIGHT0,
         )
         set_material.assert_called_once_with(GLMaterialFace.FRONT_AND_BACK, material)
 
@@ -597,10 +637,10 @@ class TestDrawCommand(unittest.TestCase):
             ) as set_texcoord_pointer,
         ):
             backend.geometry.draw_mesh(mesh, GL_LINE)
-            backend.draw_elements(GL_LINE, [0, 1, 2])
-            backend.draw_bound_elements(GL_LINE, 4, GL_UNSIGNED_INT, None)
-            backend.draw_arrays(GL_LINE, 1, 6)
-            backend.draw_arrays_bound_vao(9, GL_LINE, 2, 7)
+            backend.geometry.draw_elements(GL_LINE, [0, 1, 2])
+            backend.geometry.draw_bound_elements(GL_LINE, 4, GL_UNSIGNED_INT, None)
+            backend.geometry.draw_arrays(GL_LINE, 1, 6)
+            backend.geometry.draw_arrays_bound_vao(9, GL_LINE, 2, 7)
             self.assertEqual(backend.textures.create_texture(4, 5, None), 9)
             backend.textures.bind_texture(7)
             backend.textures.delete_texture(7)
@@ -634,17 +674,17 @@ class TestDrawCommand(unittest.TestCase):
         backend = GLBackend(binding=FakeBinding())
 
         with (
-            patch("picogl.backend.GL.backend.glViewport") as viewport,
+            patch("picogl.backend.GL.driver.frame.glViewport") as viewport,
             patch("picogl.backend.legacy.core.pipeline.glLoadIdentity") as load_identity,
             patch("picogl.backend.legacy.core.pipeline.glTranslatef") as translate,
             patch("picogl.backend.legacy.core.pipeline.glLightfv") as lightfv,
-            patch("picogl.backend.GL.backend.glClearColor") as clear_color,
+            patch("picogl.backend.GL.driver.frame.glClearColor") as clear_color,
         ):
-            backend.viewport(1, 2, 3, 4)
+            backend.frame.viewport(1, 2, 3, 4)
             backend.pipeline.load_identity()
             backend.pipeline.translate(1, 2, 3)
             backend.legacy.set_light([0.0, 0.0, 10.0, 1.0])
-            backend.set_clear_color((0.1, 0.2, 0.3, 1.0))
+            backend.frame.set_clear_color((0.1, 0.2, 0.3, 1.0))
 
         viewport.assert_called_once_with(1, 2, 3, 4)
         load_identity.assert_called_once_with()
@@ -657,7 +697,7 @@ class TestDrawCommand(unittest.TestCase):
         clip = GLClipPlaneState(enabled0=True, enabled1=False)
 
         with patch.object(clip, "apply") as apply:
-            backend.apply_clip_state(clip)
+            backend.clip.apply(clip)
 
         self.assertIs(backend.clip, clip)
         apply.assert_called_once_with(backend.state_manager)

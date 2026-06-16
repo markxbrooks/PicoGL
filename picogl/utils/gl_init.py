@@ -24,6 +24,13 @@ from picogl.backend.legacy.core.camera.setup import (
     setup_materials,
 )
 from picogl.info import get_gl_info
+from picogl.state.draw_mode import GLBitMask
+
+
+def clear_to_color(backend: GLBackend, color: tuple[float, float, float, float]) -> None:
+    """Apply a clear color and clear the color/depth buffers."""
+    backend.frame.set_clear_color(color)
+    backend.frame.clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
 
 
 @dataclass(frozen=True)
@@ -70,7 +77,7 @@ legacy_init_gl_list = [
     GLTask("✅ Initializing OpenGL context...", lambda b: None),
     GLTask(
         "✅ Setting clear colour",
-        lambda b: b.set_clear_background_and_color(color=(0.2, 0.2, 0.2, 0.0)),
+        lambda b: clear_to_color(b, (0.2, 0.2, 0.2, 0.0)),
     ),
     GLTask("✅ Setting depth function", lambda b: b.depth.set_depth_func_gl_less()),
     GLTask("✅ Enabling depth test", lambda b: b.depth.set_depth_test(True)),
@@ -81,13 +88,19 @@ legacy_init_gl_list = [
 ]
 
 paint_gl_list = [
-    GLTask(None, lambda b: b.clear_background()),
+    GLTask(
+        None,
+        lambda b: b.frame.clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER),
+    ),
 ]
 
 modern_init_gl_list = [
-    GLTask("✅ Enabling multisampling", lambda b: b.enable_multisample()),
+    GLTask("✅ Enabling multisampling", lambda b: b.capabilities.enable_multisample()),
     GLTask("✅ Enabling depth test", lambda b: b.depth.set_depth_test(True)),
-    GLTask("✅ Clearing background", lambda b: b.clear_background()),
+    GLTask(
+        "✅ Clearing background",
+        lambda b: b.frame.clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER),
+    ),
     GLTask("✅ Enabling blending", lambda b: enable_blending(b)),
     GLTask("✅ Enabling smoothing", lambda b: enable_smoothing(b)),
     GLTask("✅ Setting up materials", lambda b: setup_materials(b)),

@@ -1,13 +1,14 @@
-from typing import Any
+"""
+GL Blend Driver
+"""
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import (
+from OpenGL.GL import (
     GL_BLEND,
-    GL_ONE_MINUS_SRC_ALPHA,
-    GL_SRC_ALPHA,
-    glBlendFunc, glGetIntegerv, GL_BLEND_SRC, GL_BLEND_DST
+    glBlendFunc, glGetIntegerv
 )
 
 from picogl.backend.GL.driver.capability import GLCapabilityDriver
+from picogl.backend.capability import GLBlendTarget, GLBlendFactor
 from picogl.backend.state import gl_value
 
 
@@ -21,12 +22,12 @@ class GLBlendDriver:
         self.capabilities.set_enabled(GL_BLEND, enabled)
 
     @staticmethod
-    def set_blend_func(src: Any, dst: Any) -> None:
+    def set_blend_func(src: GLBlendFactor, dst: GLBlendFactor) -> None:
         glBlendFunc(gl_value(src), gl_value(dst))
 
     def setup_blending(self):
-        self.set_blend_func(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+        self.set_blend_func(GLBlendFactor.SRC_ALPHA, GLBlendFactor.ONE_MINUS_SRC_ALPHA)
 
     @staticmethod
     def get_blend_func() -> tuple[int, int]:
-        return int(glGetIntegerv(GL_BLEND_SRC)), int(glGetIntegerv(GL_BLEND_DST))
+        return int(glGetIntegerv(GLBlendTarget.BLEND_SRC)), int(glGetIntegerv(GLBlendTarget.BLEND_DST))

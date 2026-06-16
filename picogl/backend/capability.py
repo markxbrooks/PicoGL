@@ -13,7 +13,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_ONE,
     GL_ONE_MINUS_SRC_ALPHA,
     GL_SRC_ALPHA,
-    GL_ZERO,
+    GL_ZERO, GL_BLEND_SRC, GL_BLEND_DST
 )
 
 from picogl.utils.strenum import StrEnum
@@ -22,31 +22,30 @@ from picogl.utils.strenum import StrEnum
 class GLPipelineCapability(StrEnum):
     """GL Capabilities"""
 
-    BLEND = "blend"
-    DEPTH_TEST = "depth_test"
-    CULL_FACE = "cull_face"
-
-
-class GLStateValue(StrEnum):
-    """GL State Value"""
-
-    DEPTH_MASK = "depth_mask"
+    BLEND = GL_BLEND
+    DEPTH_TEST = GL_DEPTH_TEST
+    CULL_FACE = GL_CULL_FACE
 
 
 class GLFixedFunctionCapability(StrEnum):
     """GL Fixed Function Capabilities"""
 
-    LIGHTING = "lighting"
-    LIGHT0 = "light0"
+    LIGHTING = GL_LIGHTING
+    LIGHT0 = GL_LIGHT0
 
+
+class GLBlendTarget(StrEnum):
+    """GL Blend Dest"""
+    BLEND_SRC = GL_BLEND_SRC
+    BLEND_DST = GL_BLEND_DST
 
 class GLBlendFactor(StrEnum):
-    """GL BLend Factor"""
+    """GL Blend Factor"""
 
-    SRC_ALPHA = "src_alpha"
-    ONE_MINUS_SRC_ALPHA = "one_minus_src_alpha"
-    ONE = "one"
-    ZERO = "zero"
+    SRC_ALPHA = GL_SRC_ALPHA
+    ONE_MINUS_SRC_ALPHA = GL_ONE_MINUS_SRC_ALPHA
+    ONE = GL_ONE
+    ZERO = GL_ZERO
 
 
 @dataclass(frozen=True)
@@ -60,9 +59,9 @@ class GLBlendFunc:
 class GLMaterialFace(StrEnum):
     """GL Material Face"""
 
-    FRONT = "front"
-    BACK = "back"
-    FRONT_AND_BACK = "front_and_back"
+    FRONT = GL_FRONT
+    BACK = GL_BACK
+    FRONT_AND_BACK = GL_FRONT_AND_BACK
 
 
 @dataclass(frozen=True)
