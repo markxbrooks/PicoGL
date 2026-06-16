@@ -6,6 +6,7 @@ from enum import IntEnum
 
 from OpenGL.GL import GL_FILL, GL_LINE, GL_POINT, GL_FRONT, GL_BACK, GL_FRONT_AND_BACK
 
+
 class Selectable:
     """Selectable"""
 
