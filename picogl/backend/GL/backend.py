@@ -155,11 +155,11 @@ class GLBackend:
         """Apply a legacy fixed-function translation."""
         self.legacy.translate(x, y, z)
 
-    def set_light_position(self, position, light=GLLight.LIGHT0):
+    def set_light_position(self, position, light: GLLight=GLLight.LIGHT0):
         """Set a fixed-function light position."""
         self.legacy.set_light(position, light=light)
 
-    def set_material(self, face, material):
+    def set_material(self, face: GLFace, material: GLColorMaterialMode):
         """Set fixed-function Phong material values."""
         self.legacy.set_material(face, material)
 
