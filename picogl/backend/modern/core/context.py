@@ -72,7 +72,7 @@ class Tu01Win(GLWindow):
     def initializeGL(self):
         glClearColor(0.0, 0, 0.4, 0)
         glDepthFunc(GL_LESS)
-        glEnable(GL_DEPTH_TEST)
+        glEnable(GLPipelineCapability.DEPTH_TEST)
         glEnable(GLPipelineCapability.CULL_FACE)
 
     def init_context(self):

@@ -11,8 +11,6 @@ from typing import Any, Protocol
 
 from numpy import ndarray
 from OpenGL.GL import (
-    GL_BLEND,
-    GL_DEPTH_TEST,
     glBlendFunc,
     glColorPointer,
     glDrawElements,
@@ -107,7 +105,7 @@ class BlendState:
     dst: Any = GLBlendFactor.ONE_MINUS_SRC_ALPHA
 
     def apply(self, state: GLStateManager):
-        state.set_enabled(GL_BLEND, self.enabled)
+        state.set_enabled(GLPipelineCapability.BLEND, self.enabled)
         if self.enabled:
             glBlendFunc(gl_value(self.src), gl_value(self.dst))
 
@@ -135,7 +133,7 @@ class DepthState:
         return self.test
 
     def apply(self, state: GLStateManager):
-        state.set_enabled(GL_DEPTH_TEST, self.test)
+        state.set_enabled(GLPipelineCapability.DEPTH_TEST, self.test)
         state.backend.set_depth_write(self.write)
 
 
