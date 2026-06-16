@@ -36,7 +36,7 @@ import ctypes
 
 import numpy as np
 from OpenGL import error as _gl_err
-from OpenGL.raw.GL._types import GL_FLOAT, GL_UNSIGNED_INT
+from OpenGL.raw.GL._types import GL_FLOAT
 from OpenGL.raw.GL.VERSION.GL_1_5 import (
     GL_ARRAY_BUFFER,
     GL_DYNAMIC_DRAW,
@@ -50,7 +50,8 @@ from OpenGL.raw.GL.VERSION.GL_2_0 import (
     glEnableVertexAttribArray,
     glVertexAttribPointer,
 )
-
+from picogl.numerical import GLNumeric
+from picogl.state.draw_mode import GLDrawMode, GLBufferTarget
 from picogl.buffers.base import VertexBase
 
 
@@ -68,18 +69,18 @@ class VertexBuffer(VertexBase):
     """
 
     _GL_TYPE_MAP = {
-        np.float32: GL_FLOAT,
-        np.uint32: GL_UNSIGNED_INT,
+        np.float32: GLNumeric.FLOAT,
+        np.uint32: GLNumeric.UNSIGNED_INT,
     }
 
     def __init__(
         self,
         handle: int = None,
         data: np.ndarray = None,
-        target: int = GL_ARRAY_BUFFER,
+        target: int = GLBufferTarget.ARRAY,
         size: int = 3,
         stride: int = 0,
-        dtype: int = GL_FLOAT,
+        dtype: int = GLNumeric.FLOAT,
         index: int = None,
         pointer: ctypes.c_void_p = ctypes.c_void_p(0),
     ):
