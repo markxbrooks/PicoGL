@@ -46,13 +46,9 @@ from OpenGL.raw.GL.VERSION.GL_2_0 import (
     glEnableVertexAttribArray,
     glVertexAttribPointer,
 )
+
 from picogl.buffers.base import VertexBase
-from picogl.state.draw_mode import (
-    GLBufferTarget,
-    GLDataType,
-    GLIndexType,
-    GLUsageHint,
-)
+from picogl.state.draw_mode import GLBufferTarget, GLDataType, GLIndexType, GLUsageHint
 
 
 class VertexBuffer(VertexBase):

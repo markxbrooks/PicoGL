@@ -38,12 +38,7 @@ from picogl.buffers.vertex.aliases import (
     VertexBufferRole,
 )
 from picogl.buffers.vertex.vbo.vbo_class import VBOType
-from picogl.state.draw_mode import (
-    GLBufferTarget,
-    GLDataType,
-    GLDrawMode,
-    GLIndexType,
-)
+from picogl.state.draw_mode import GLBufferTarget, GLDataType, GLDrawMode, GLIndexType
 
 
 class VertexBufferGroup(VertexBase):

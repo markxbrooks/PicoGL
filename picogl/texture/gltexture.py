@@ -45,9 +45,9 @@ from OpenGL.raw.GL.VERSION.GL_1_2 import GL_CLAMP_TO_EDGE
 from OpenGL.raw.GL.VERSION.GL_1_3 import GL_ACTIVE_TEXTURE, GL_TEXTURE0, glActiveTexture
 from OpenGL.raw.GL.VERSION.GL_4_5 import GL_TEXTURE_BINDING_2D
 
+from picogl.numerical import GLNumeric
 from picogl.state.param import GLParam
 from picogl.state.query import GLStateQuery
-from picogl.numerical import GLNumeric
 
 FORMAT_MAP = {
     "rgb": GL_RGB,

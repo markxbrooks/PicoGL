@@ -35,6 +35,7 @@ from PySide6.QtWidgets import QWidget
 from examples import g_color_buffer_data, g_vertex_buffer_data
 from picogl.renderer import MeshData
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
+from picogl.state.draw_mode import GLBitMask
 from picogl.ui.backend.qt.base import GLBase
 
 
@@ -148,7 +149,7 @@ class LegacyQtObjectRenderer(GLBase):
     def paintGL(self):
         """Render the cube scene"""
         # Clear buffers
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        glClear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
 
         # Set up modelview matrix
         glMatrixMode(GL_MODELVIEW)

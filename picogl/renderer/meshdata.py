@@ -401,7 +401,9 @@ class MeshData:
             # Draw the mesh with additional safety checks
             element_count = len(self.indices)
             if element_count > 0:
-                GL.glDrawElements(mode, element_count, GLIndexType.UNSIGNED_INT, self.indices)
+                GL.glDrawElements(
+                    mode, element_count, GLIndexType.UNSIGNED_INT, self.indices
+                )
         except Exception as e:
             log.error(f"Error in glDrawElements: {e}")
             log.error(f"Element count: {element_count}")

@@ -12,6 +12,7 @@ from OpenGL.raw.GL.VERSION.GL_1_1 import (
     glDisableClientState,
     glEnableClientState,
 )
+
 from picogl.state.draw_mode import GLDataType
 
 

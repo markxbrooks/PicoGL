@@ -68,4 +68,6 @@ class ModernEBO(VertexBuffer):
 
         :return: None
         """
-        glBufferData(GLBufferTarget.ELEMENT_ARRAY_BUFFER, self.size, self.data, self.dtype)
+        glBufferData(
+            GLBufferTarget.ELEMENT_ARRAY_BUFFER, self.size, self.data, self.dtype
+        )
