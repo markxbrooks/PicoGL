@@ -1,15 +1,8 @@
 from OpenGL.GL import glLightfv, glMaterialfv
 from OpenGL.raw.GL.VERSION.GL_1_0 import (
-    GL_AMBIENT,
-    GL_AMBIENT_AND_DIFFUSE,
-    GL_DIFFUSE,
-    GL_FRONT_AND_BACK,
-    GL_LIGHT0,
     GL_MODELVIEW,
-    GL_POSITION,
     GL_PROJECTION,
     GL_SHININESS,
-    GL_SPECULAR,
     glColor4f,
     glColorMaterial,
     glLoadIdentity,
@@ -23,6 +16,12 @@ from OpenGL.raw.GLU import gluPerspective
 
 from picogl.backend.capability import FACE_MAP
 from picogl.backend.state import gl_value
+from picogl.state.fill import (
+    GLColorMaterialMode,
+    GLFace,
+    GLLight,
+    GLLightParameter,
+)
 from picogl.state.texture import TexCoord2f, Vertex3f
 
 
@@ -57,19 +56,22 @@ class GLLegacyPipeline:
         glTranslatef(float(x), float(y), float(z))
 
     @staticmethod
-    def set_light(position, light=GL_LIGHT0):
-        glLightfv(gl_value(light), GL_POSITION, position)
+    def set_light(position, light=GLLight.LIGHT0):
+        glLightfv(gl_value(light), GLLightParameter.POSITION, position)
 
     @staticmethod
     def set_material(face, material):
         f = FACE_MAP.get(face, gl_value(face))
-        glMaterialfv(f, GL_AMBIENT, material.ambient)
-        glMaterialfv(f, GL_DIFFUSE, material.diffuse)
-        glMaterialfv(f, GL_SPECULAR, material.specular)
+        glMaterialfv(f, GLLightParameter.AMBIENT, material.ambient)
+        glMaterialfv(f, GLLightParameter.DIFFUSE, material.diffuse)
+        glMaterialfv(f, GLLightParameter.SPECULAR, material.specular)
         glMaterialf(f, GL_SHININESS, material.shininess)
 
     @staticmethod
-    def set_color_material(face=GL_FRONT_AND_BACK, mode=GL_AMBIENT_AND_DIFFUSE):
+    def set_color_material(
+        face=GLFace.FRONT_AND_BACK,
+        mode=GLColorMaterialMode.AMBIENT_AND_DIFFUSE,
+    ):
         f = FACE_MAP.get(face, gl_value(face))
         glColorMaterial(f, gl_value(mode))
 

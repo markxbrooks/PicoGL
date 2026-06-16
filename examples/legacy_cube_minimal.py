@@ -17,7 +17,8 @@ import os
 import sys
 
 import numpy as np
-from picogl.state.draw_mode import GLDrawMode
+from picogl.state.draw_mode import GLDrawMode, GLBitMask
+from picogl.state.fill import GLColorMaterialMode, GLLightParameter, GLFace, GLFillMode, GLLight
 from picogl.state.immediate import immediate_drawing
 
 # Check for display before importing OpenGL
@@ -304,26 +305,26 @@ class MinimalCubeRenderer:
         """Initialize OpenGL state."""
         glClearColor(0.1, 0.1, 0.2, 1.0)  # Dark blue background
         glEnable(GL_DEPTH_TEST)
-        glEnable(GL_LIGHTING)
+        glEnable(GLLight.LIGHTING)
         glEnable(GL_LIGHT0)
         glEnable(GL_COLOR_MATERIAL)
-        glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
+        glColorMaterial(GL_FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE)
 
         # Set up lighting
-        glLightfv(GL_LIGHT0, GL_POSITION, [1.0, 1.0, 1.0, 0.0])
-        glLightfv(GL_LIGHT0, GL_AMBIENT, [0.3, 0.3, 0.3, 1.0])
-        glLightfv(GL_LIGHT0, GL_DIFFUSE, [0.8, 0.8, 0.8, 1.0])
-        glLightfv(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
+        glLightfv(GL_LIGHT0, GLLightParameter.POSITION, [1.0, 1.0, 1.0, 0.0])
+        glLightfv(GL_LIGHT0, GLLightParameter.AMBIENT, [0.3, 0.3, 0.3, 1.0])
+        glLightfv(GL_LIGHT0, GLLightParameter.DIFFUSE, [0.8, 0.8, 0.8, 1.0])
+        glLightfv(GL_LIGHT0, GLLightParameter.SPECULAR, [1.0, 1.0, 1.0, 1.0])
 
         # Set up material properties
-        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
-        glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, [0.8, 0.8, 0.8, 1.0])
-        glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
-        glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50.0)
+        glMaterialfv(GL_FRONT_AND_BACK, GLLightParameter.AMBIENT, [0.2, 0.2, 0.2, 1.0])
+        glMaterialfv(GL_FRONT_AND_BACK, GLLightParameter.DIFFUSE, [0.8, 0.8, 0.8, 1.0])
+        glMaterialfv(GL_FRONT_AND_BACK, GLLightParameter.SPECULAR, [1.0, 1.0, 1.0, 1.0])
+        glMaterialf(GL_FRONT_AND_BACK, GLLightParameter.SHININESS, 50.0)
 
     def display(self):
         """Display callback - render the scene."""
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        glClear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
         glLoadIdentity()
 
         # Set up camera
@@ -341,12 +342,12 @@ class MinimalCubeRenderer:
     def draw_cube(self):
         """Draw the cube using immediate mode OpenGL."""
         if self.wireframe_mode:
-            glDisable(GL_LIGHTING)
+            glDisable(GLLight.LIGHTING)
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
             glColor3f(1.0, 0.0, 0.0)  # Red wireframe
         else:
-            glEnable(GL_LIGHTING)
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+            glEnable(GLLight.LIGHTING)
+            glPolygonMode(GLFace.FRONT_AND_BACK, GLFillMode.FILL)
 
         # Draw the cube using immediate mode
         with immediate_drawing(GLDrawMode.TRIANGLES):
@@ -375,12 +376,12 @@ class MinimalCubeRenderer:
             self.draw_normals()
 
         # Reset polygon mode
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
-        glEnable(GL_LIGHTING)
+        glPolygonMode(GLFace.FRONT_AND_BACK, GLFillMode.FILL)
+        glEnable(GLLight.LIGHTING)
 
     def draw_normals(self):
         """Draw normal vectors (simplified)."""
-        glDisable(GL_LIGHTING)
+        glDisable(GLLight.LIGHTING)
         glColor3f(0.0, 1.0, 0.0)  # Green normals
         with immediate_drawing(GLDrawMode.LINES):
 
@@ -410,7 +411,7 @@ class MinimalCubeRenderer:
                         center[1] + normal[1] * 0.5,
                         center[2] + normal[2] * 0.5,
                     )
-        glEnable(GL_LIGHTING)
+        glEnable(GLLight.LIGHTING)
 
     def reshape(self, width, height):
         """Reshape callback - handle window resize."""

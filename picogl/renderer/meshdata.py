@@ -13,6 +13,7 @@ from OpenGL import GL
 from picogl.attrs.vertex import CanonicalVertexAttrs
 from picogl.buffers.vertex.vbo.vbo_class import VBOType
 from picogl.state.draw_mode import GLDataType, GLDrawMode, GLIndexType
+from picogl.state.fill import GLFace, GLFillMode
 
 
 class MeshData:
@@ -366,9 +367,9 @@ class MeshData:
             self.indices = np.maximum(self.indices, 0)
 
         if fill:
-            fill_mode = GL.GL_FILL
+            fill_mode = GLFillMode.FILL
         else:
-            fill_mode = GL.GL_LINE
+            fill_mode = GLFillMode.LINE
 
         # Set material properties for the isosurface
         GL.glLineWidth(line_width)
@@ -395,7 +396,7 @@ class MeshData:
             GL.glColor4f(color[0], color[1], color[2], 1.0 - alpha)
 
         # Draw as wireframe for better visibility
-        GL.glPolygonMode(GL.GL_FRONT_AND_BACK, fill_mode)
+        GL.glPolygonMode(GLFace.FRONT_AND_BACK, fill_mode)
 
         try:
             # Draw the mesh with additional safety checks
@@ -414,7 +415,7 @@ class MeshData:
             )
 
         # Restore fill mode
-        GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL)
+        GL.glPolygonMode(GLFace.FRONT_AND_BACK, GLFillMode.FILL)
 
         # Clean up colour array state if we used it
         if color is None and self.colors is not None:

@@ -5,7 +5,7 @@ GL Fill Mode
 from enum import IntEnum
 
 from OpenGL.GL import GL_BACK, GL_FILL, GL_FRONT, GL_FRONT_AND_BACK, GL_LINE, GL_POINT, GL_LIGHT0, GL_LIGHT1, GL_LIGHTING, GL_AMBIENT_AND_DIFFUSE, GL_POSITION, GL_AMBIENT, GL_DIFFUSE, GL_SPECULAR
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_COLOR_MATERIAL
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_COLOR_MATERIAL, GL_SHININESS
 
 
 class Selectable:
@@ -43,6 +43,7 @@ class GLLightParameter(IntEnum):
     AMBIENT = GL_AMBIENT
     DIFFUSE = GL_DIFFUSE
     SPECULAR = GL_SPECULAR
+    SHININESS = GL_SHININESS
 
 
 class GLFace(Selectable, IntEnum):

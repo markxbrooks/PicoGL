@@ -12,16 +12,12 @@ Classes:
 from typing import Any
 
 from OpenGL.GL import (
-    GL_AMBIENT_AND_DIFFUSE,
     GL_BLEND_DST,
     GL_BLEND_SRC,
     GL_CLIP_DISTANCE0,
     GL_CLIP_DISTANCE1,
     GL_CULL_FACE,
     GL_DEPTH_WRITEMASK,
-    GL_FRONT_AND_BACK,
-    GL_LIGHT0,
-    GL_LIGHTING,
     GL_LINE_WIDTH,
     GL_POLYGON_MODE,
     glClear,
@@ -52,6 +48,7 @@ from picogl.backend.state import (
 )
 from picogl.buffers.glframe import GLFramebuffer
 from picogl.renderer.readback import GLReadback
+from picogl.state.fill import GLColorMaterialMode, GLFace, GLLight
 from picogl.state.texture import TexCoord2f
 
 
@@ -161,7 +158,7 @@ class GLBackend:
         """Apply a legacy fixed-function translation."""
         self.legacy.translate(x, y, z)
 
-    def set_light_position(self, position, light=GL_LIGHT0):
+    def set_light_position(self, position, light=GLLight.LIGHT0):
         """Set a fixed-function light position."""
         self.legacy.set_light(position, light=light)
 
@@ -169,7 +166,11 @@ class GLBackend:
         """Set fixed-function Phong material values."""
         self.legacy.set_material(face, material)
 
-    def set_color_material(self, face=GL_FRONT_AND_BACK, mode=GL_AMBIENT_AND_DIFFUSE):
+    def set_color_material(
+        self,
+        face=GLFace.FRONT_AND_BACK,
+        mode=GLColorMaterialMode.AMBIENT_AND_DIFFUSE,
+    ):
         """Set fixed-function color material tracking."""
         self.legacy.set_color_material(face, mode)
 
@@ -222,7 +223,7 @@ class GLBackend:
         return float(glGetFloatv(GL_LINE_WIDTH))
 
     def set_lighting(self, enabled: bool):
-        self.capabilities.set_enabled(GL_LIGHTING, enabled)
+        self.capabilities.set_enabled(GLLight.LIGHTING, enabled)
 
     def set_uniform_color(self, color, alpha):
         self.pipeline.set_uniform_color(color, alpha)

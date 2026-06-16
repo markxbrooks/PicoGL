@@ -15,7 +15,6 @@ from OpenGL.GL import (
     GL_CLIP_DISTANCE0,
     GL_CLIP_DISTANCE1,
     GL_DEPTH_TEST,
-    GL_FRONT_AND_BACK,
     GL_ONE_MINUS_SRC_ALPHA,
     GL_SRC_ALPHA,
     glBlendFunc,
@@ -35,6 +34,7 @@ from OpenGL.raw.GL.VERSION.GL_1_1 import (
 from picogl.backend.capability import BLEND_FACTOR_MAP, CAP_MAP, FACE_MAP
 from picogl.polygon.mode import PolygonMode
 from picogl.state.draw_mode import GLDataType, GLDrawMode, GLIndexType
+from picogl.state.fill import GLFace
 from picogl.texture.gltexture import GLTextureDriver
 
 
@@ -68,7 +68,7 @@ class RasterState:
     line_width: float = 1.0
 
     def apply(self, backend: CapabilityDriver):
-        backend.set_polygon_mode(GL_FRONT_AND_BACK, gl_value(self.polygon_mode))
+        backend.set_polygon_mode(GLFace.FRONT_AND_BACK, gl_value(self.polygon_mode))
         backend.set_line_width(self.line_width)
 
 
@@ -244,7 +244,7 @@ class RenderStateApplier:
             self.backend.set_line_width(state.line_width)
 
         if prev is None or prev.polygon_mode != state.polygon_mode:
-            self.backend.set_polygon_mode(GL_FRONT_AND_BACK, state.polygon_mode)
+            self.backend.set_polygon_mode(GLFace.FRONT_AND_BACK, state.polygon_mode)
 
         if prev is None or prev.depth_test != state.depth_test:
             self.backend.set_depth_test(state.depth_test)
