@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from enum import IntEnum
 from typing import Sequence
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import (
@@ -16,10 +17,8 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_ZERO, GL_BLEND_SRC, GL_BLEND_DST
 )
 
-from picogl.utils.strenum import StrEnum
 
-
-class GLPipelineCapability(StrEnum):
+class GLPipelineCapability(IntEnum):
     """GL Capabilities"""
 
     BLEND = GL_BLEND
@@ -27,25 +26,33 @@ class GLPipelineCapability(StrEnum):
     CULL_FACE = GL_CULL_FACE
 
 
-class GLFixedFunctionCapability(StrEnum):
+class GLFixedFunctionCapability(IntEnum):
     """GL Fixed Function Capabilities"""
 
     LIGHTING = GL_LIGHTING
     LIGHT0 = GL_LIGHT0
 
 
-class GLBlendTarget(StrEnum):
+class GLBlendTarget(IntEnum):
     """GL Blend Dest"""
     BLEND_SRC = GL_BLEND_SRC
     BLEND_DST = GL_BLEND_DST
 
-class GLBlendFactor(StrEnum):
+
+class GLBlendFactor(IntEnum):
     """GL Blend Factor"""
 
     SRC_ALPHA = GL_SRC_ALPHA
     ONE_MINUS_SRC_ALPHA = GL_ONE_MINUS_SRC_ALPHA
     ONE = GL_ONE
     ZERO = GL_ZERO
+
+    @classmethod
+    def from_gl(cls, param: int) -> "GLBlendFactor":
+        try:
+            return cls(param)
+        except ValueError:
+            raise ValueError(f"Unknown GL blend factor: {param}")
 
 
 @dataclass(frozen=True)
@@ -56,7 +63,7 @@ class GLBlendFunc:
     dst: GLBlendFactor
 
 
-class GLMaterialFace(StrEnum):
+class GLMaterialFace(IntEnum):
     """GL Material Face"""
 
     FRONT = GL_FRONT
