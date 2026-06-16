@@ -1,10 +1,10 @@
 from typing import Any
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import (
+from OpenGL.GL import (
     GL_DEPTH_TEST,
     GL_LESS,
     glDepthFunc,
-    glDepthMask,
+    glDepthMask, glGetBooleanv, GL_DEPTH_WRITEMASK,
 )
 
 from picogl.backend.GL.driver.capability import GLCapabilityDriver
@@ -18,6 +18,10 @@ class GLDepthDriver:
 
     def set_depth_test(self, enabled: bool):
         self.capabilities.set_enabled(GL_DEPTH_TEST, enabled)
+
+    @staticmethod
+    def get_depth_write_enabled() -> bool:
+        return bool(glGetBooleanv(GL_DEPTH_WRITEMASK))
 
     @staticmethod
     def set_depth_write(enabled: bool):

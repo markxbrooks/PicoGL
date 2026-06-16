@@ -25,7 +25,7 @@ def prepare_viewport(width: int, height: int, backend: GLBackend) -> None:
     else:
         dpr = 1
     backend.viewport(0, 0, width * dpr, height * dpr)
-    backend.enable_depth_test()
+    backend.depth.set_depth_test(True)
     backend.set_clear_color((0.1, 0.1, 0.1, 1.0))
     backend.enable(GL_PROGRAM_POINT_SIZE)
     backend.clear_background()

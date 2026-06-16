@@ -60,6 +60,8 @@ class AbstractGLBackend(ABC):
 
 
 class GLBindingStrategy(ABC):
+    """GL Binding Strategy"""
+
     @abstractmethod
     def bind_mesh(self, mesh): ...
 
@@ -79,9 +81,18 @@ class GLPipeline(Protocol):
     def vertex_3f(self, v1): ...
     def tex_coord2f(self, coord): ...
     def set_matrix_mode_projection(self): ...
+    def set_matrix_mode_model_view(self): ...
+    def load_identity(self): ...
+    def set_perspective(self, fovy, aspect, znear, zfar): ...
+    def set_color(self, rgba): ...
 
 
 class LegacyBinding(GLBindingStrategy):
+    """Legacy Binding"""
+
+    def bind(self):
+        pass
+
     def bind_mesh(self, mesh):
         if mesh.vertices is not None:
             glEnableClientState(GLClientState.VERTEX)
@@ -107,6 +118,11 @@ class LegacyBinding(GLBindingStrategy):
 
 
 class ModernBinding(GLBindingStrategy):
+    """Modern Binding"""
+
+    def bind(self):
+        pass
+
     def bind_mesh(self, mesh):
         self.bind()  # assumes VAO already configured
 

@@ -25,5 +25,3 @@ class GLCapabilityDriver:
     def enable_multisample(self):
         self.enable(GL_MULTISAMPLE)
 
-    def set_clip_plane_enabled(self, plane, enabled: bool):
-        self.set_enabled(plane, enabled)

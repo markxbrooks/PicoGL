@@ -14,6 +14,7 @@ from dataclasses import dataclass
 from typing import Callable, Optional
 
 from decologr import Decologr as log
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_CULL_FACE
 
 from picogl.backend.GL.backend import GLBackend
 from picogl.backend.legacy.core.camera.lighting import setup_lighting_mode_zero
@@ -67,10 +68,16 @@ def execute_gl_tasks(
 
 legacy_init_gl_list = [
     GLTask("✅ Initializing OpenGL context...", lambda b: None),
-    GLTask("✅ Setting clear colour", lambda b: b.clear_grey()),
+    GLTask(
+        "✅ Setting clear colour",
+        lambda b: b.set_clear_background_and_color(color=(0.2, 0.2, 0.2, 0.0)),
+    ),
     GLTask("✅ Setting depth function", lambda b: b.set_depth_func_gl_less()),
-    GLTask("✅ Enabling depth test", lambda b: b.enable_depth_test()),
-    GLTask("✅ Enabling face culling", lambda b: b.enable_cull_face()),
+    GLTask("✅ Enabling depth test", lambda b: b.depth.set_depth_test(True)),
+    GLTask(
+        "✅ Enabling face culling",
+        lambda b: b.capabilities.set_enabled(GL_CULL_FACE, True),
+    ),
 ]
 
 paint_gl_list = [
@@ -79,7 +86,7 @@ paint_gl_list = [
 
 modern_init_gl_list = [
     GLTask("✅ Enabling multisampling", lambda b: b.enable_multisample()),
-    GLTask("✅ Enabling depth test", lambda b: b.enable_depth_test()),
+    GLTask("✅ Enabling depth test", lambda b: b.depth.set_depth_test(True)),
     GLTask("✅ Clearing background", lambda b: b.clear_background()),
     GLTask("✅ Enabling blending", lambda b: enable_blending(b)),
     GLTask("✅ Enabling smoothing", lambda b: enable_smoothing(b)),

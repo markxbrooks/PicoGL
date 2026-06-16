@@ -14,7 +14,6 @@ from typing import Any
 from OpenGL.GL import (
     GL_BLEND_DST,
     GL_BLEND_SRC,
-    GL_CULL_FACE,
     GL_DEPTH_WRITEMASK,
     GL_LINE_WIDTH,
     GL_POLYGON_MODE,
@@ -38,14 +37,15 @@ from picogl.backend.opengl import GLBindingStrategy, GLPipeline
 from picogl.backend.state import (
     DrawCommand,
     GLClipPlaneState,
+    GLStateManager,
     RenderState,
     RenderStateApplier,
     gl_value,
 )
 from picogl.buffers.glframe import GLFramebuffer
 from picogl.renderer.readback import GLReadback
-from picogl.state.draw_mode import GLLegacyClipPlane
-from picogl.state.fill import GLColorMaterialMode, GLFace, GLLight, GLCapability
+from picogl.state.draw_mode import GLBitMask
+from picogl.state.fill import GLColorMaterialMode, GLFace, GLLight
 from picogl.state.texture import TexCoord2f
 
 
@@ -66,6 +66,7 @@ class GLBackend:
         self.geometry = GLGeometryDriver(binding)
         self.textures = GLTextureSystem()
         self.attributes = LegacyAttributeBinder()
+        self.state_manager = GLStateManager(self.capabilities)
         self.state_applier = RenderStateApplier(self)
 
     def enable(self, cap):
@@ -76,9 +77,6 @@ class GLBackend:
 
     def clear(self, cap):
         glClear(gl_value(cap))
-
-    def clear_grey(self) -> Any:
-        self.set_clear_background_and_color(color=(0.2, 0.2, 0.2, 0.0))
 
     def set_clear_color(self, color=(0.0, 0.0, 0.0, 1.0)):
         """Set the OpenGL clear color without clearing the framebuffer."""
@@ -100,17 +98,14 @@ class GLBackend:
         self.set_clear_color(color)
         self.clear_background()
 
-    def setup_blending(self):
-        self.blend.setup_blending()
-
-    def set_depth_write(self, enabled: bool):
+    def set_depth_write_old(self, enabled: bool):
         self.depth.set_depth_write(enabled)
 
     @staticmethod
     def get_depth_write_enabled() -> bool:
         return bool(glGetBooleanv(GL_DEPTH_WRITEMASK))
 
-    def set_matrix_mode_model_view(self):
+    def set_matrix_mode_model_view_old(self):
         self.pipeline.set_matrix_mode_model_view()
 
     def set_matrix_mode_projection(self):
@@ -119,8 +114,7 @@ class GLBackend:
     def set_depth_func_gl_less(self) -> Any:
         return self.depth.set_depth_func_gl_less()
 
-    @staticmethod
-    def clear_background():
+    def clear_background(self):
         """
         Clears the background by removing all color and depth information from
         the current OpenGL framebuffer.
@@ -132,7 +126,7 @@ class GLBackend:
             OpenGL.GL.error.GLError: If an OpenGL error occurs during the
             clearing operation.
         """
-        glClear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
+        self.clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
 
     def load_identity(self):
         self.pipeline.load_identity()
@@ -141,29 +135,25 @@ class GLBackend:
     def viewport(x, y, width, height):
         glViewport(x, y, width, height)
 
-    def set_perspective(self, fovy, aspect, znear, zfar):
+    def set_perspective_old(self, fovy, aspect, znear, zfar):
         """Apply a GLU perspective projection to the current matrix."""
         self.pipeline.set_perspective(fovy, aspect, znear, zfar)
 
     # -- Legacy ---
 
-    def set_perspective_projection(self, fovy, aspect, znear, zfar):
-        """Configure the legacy projection matrix and return to modelview mode."""
-        self.legacy.set_projection(fovy, aspect, znear, zfar)
-
-    def translate(self, x, y, z):
+    def translate_old(self, x, y, z):
         """Apply a legacy fixed-function translation."""
         self.legacy.translate(x, y, z)
 
-    def set_light_position(self, position, light: GLLight=GLLight.LIGHT0):
+    def set_light_position_old(self, position, light: GLLight=GLLight.LIGHT0):
         """Set a fixed-function light position."""
         self.legacy.set_light(position, light=light)
 
-    def set_material(self, face: GLFace, material: GLColorMaterialMode):
+    def set_material_old(self, face: GLFace, material: GLColorMaterialMode):
         """Set fixed-function Phong material values."""
         self.legacy.set_material(face, material)
 
-    def set_color_material(
+    def set_color_material_old(
         self,
         face=GLFace.FRONT_AND_BACK,
         mode=GLColorMaterialMode.AMBIENT_AND_DIFFUSE,
@@ -171,67 +161,49 @@ class GLBackend:
         """Set fixed-function color material tracking."""
         self.legacy.set_color_material(face, mode)
 
-    def set_line_width(self, width):
+    def set_line_width_old(self, width: int):
         self.raster.set_line_width(width)
 
-    def set_point_size(self, size):
+    def set_point_size_old(self, size: int):
         self.raster.set_point_size(size)
 
-    def set_clamped_point_size(self, size):
+    def set_clamped_point_size_old(self, size: int):
         self.raster.set_clamped_point_size(size)
 
-    def set_polygon_offset(self, factor, units):
+    def set_polygon_offset_old(self, factor, units):
         self.raster.set_polygon_offset(factor, units)
 
-    def set_color(self, rgba):
+    def set_color_old(self, rgba):
         self.pipeline.set_color(rgba)
 
     # --- State ---
-    def set_blend(self, enabled: bool):
-        self.blend.set_blend(enabled)
-
-    def setup_blending_funcs(self):
-        self.blend.setup_blending()
-
-    def set_depth_test(self, enabled: bool):
-        self.depth.set_depth_test(enabled)
-
-    def enable_depth_test(self):
-        self.set_depth_test(True)
-
-    def set_cull_face(self, enabled: bool):
-        self.capabilities.set_enabled(GL_CULL_FACE, enabled)
-
-    def set_capability_enabled(self, cap, enabled: bool):
+    def set_capability_enabled_old(self, cap, enabled: bool):
         self.capabilities.set_enabled(cap, enabled)
 
-    def enable_cull_face(self):
-        self.set_cull_face(True)
-
-    def set_polygon_mode(self, *args):
+    def set_polygon_mode_old(self, *args):
         self.raster.set_polygon_mode(*args)
 
     @staticmethod
-    def get_polygon_mode():
+    def get_polygon_mode_old():
         return glGetIntegerv(GL_POLYGON_MODE)
 
     @staticmethod
-    def get_line_width() -> float:
+    def get_line_width_old() -> float:
         return float(glGetFloatv(GL_LINE_WIDTH))
 
-    def set_lighting(self, enabled: bool):
-        self.capabilities.set_enabled(GLLight.LIGHTING, enabled)
-
-    def set_uniform_color(self, color, alpha):
-        self.pipeline.set_uniform_color(color, alpha)
-
     # --- Unified Draw ---
-    def draw_mesh(self, mesh, mode):
+    def draw_mesh_old(self, mesh, mode):
         self.geometry.draw_mesh(mesh, mode)
 
     def apply_state(self, state: RenderState):
         """Apply a structured render state through this backend."""
         self.state_applier.apply(state)
+
+    def apply_clip_state(self, clip: GLClipPlaneState | None = None):
+        """Apply declarative clipping state through the capability subsystem."""
+        if clip is not None:
+            self.clip = clip
+        self.clip.apply(self.state_manager)
 
     def draw_command(self, command: DrawCommand):
         """Apply command state/resources and draw through this backend."""
@@ -239,65 +211,6 @@ class GLBackend:
 
     def enable_multisample(self):
         self.capabilities.enable_multisample()
-
-    def enable_clip0(self):
-        self.enable(GLCapability.CLIP_DISTANCE0)
-
-    def enable_clip1(self):
-        self.enable(GLCapability.CLIP_DISTANCE1)
-
-    def set_clip_plane_enabled(self, plane, enabled: bool):
-        """Enable or disable a legacy clipping plane."""
-        self.capabilities.set_clip_plane_enabled(plane, enabled)
-
-    def enable_clip_plane0(self):
-        self.set_clip_plane_enabled(GLLegacyClipPlane.CLIP_PLANE0, True)
-
-    def disable_clip_plane0(self):
-        self.set_clip_plane_enabled(GLLegacyClipPlane.CLIP_PLANE0, False)
-
-    def enable_clip_plane1(self):
-        self.set_clip_plane_enabled(GLLegacyClipPlane.CLIP_PLANE1, True)
-
-    def disable_clip_plane1(self):
-        self.set_clip_plane_enabled(GLLegacyClipPlane.CLIP_PLANE1, False)
-
-    def enable_vertex_array(self):
-        self.attributes.enable_vertex_array()
-
-    def disable_vertex_array(self):
-        self.attributes.disable_vertex_array()
-
-    def set_vertex_pointer(self, data):
-        self.attributes.set_vertex_pointer(data)
-
-    def enable_normal_array(self):
-        self.attributes.enable_normal_array()
-
-    def disable_normal_array(self):
-        self.attributes.disable_normal_array()
-
-    def set_normal_pointer(self, data):
-        self.attributes.set_normal_pointer(data)
-
-    def enable_color_array(self):
-        self.attributes.enable_color_array()
-
-    def disable_color_array(self):
-        self.attributes.disable_color_array()
-
-    def set_color_pointer(self, data, size):
-        self.attributes.set_color_pointer(data, size)
-
-    def enable_texcoord_array(self):
-        self.attributes.enable_texcoord_array()
-
-    def disable_texcoord_array(self):
-        self.attributes.disable_texcoord_array()
-
-    def set_texcoord_pointer(self, data):
-        """set texcoord pointer"""
-        self.attributes.set_texcoord_pointer(data)
 
     def draw_elements(self, mode, indices):
         """draw elements"""
@@ -327,16 +240,12 @@ class GLBackend:
     def tex_coord2f(self, coord: TexCoord2f):
         return self.pipeline.tex_coord2f(coord)
 
-    def vertex_3f(self, v1):
+    def vertex_3f_old(self, v1):
         self.pipeline.vertex_3f(v1)
 
-    def is_enabled(self, cap):
+    def is_enabled_old(self, cap):
         """is enabled"""
         return self.capabilities.is_enabled(cap)
-
-    def set_blend_func(self, src: Any, dst: Any) -> None:
-        """set blend function"""
-        self.blend.set_blend_func(src, dst)
 
     @staticmethod
     def get_blend_func() -> tuple[int, int]:

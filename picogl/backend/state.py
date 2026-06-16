@@ -14,6 +14,7 @@ from OpenGL.GL import (
     GL_BLEND,
     GL_CLIP_DISTANCE0,
     GL_CLIP_DISTANCE1,
+    GL_CULL_FACE,
     GL_DEPTH_TEST,
     GL_ONE_MINUS_SRC_ALPHA,
     GL_SRC_ALPHA,
@@ -34,7 +35,7 @@ from OpenGL.raw.GL.VERSION.GL_1_1 import (
 from picogl.backend.capability import BLEND_FACTOR_MAP, CAP_MAP, FACE_MAP
 from picogl.polygon.mode import PolygonMode
 from picogl.state.draw_mode import GLDataType, GLDrawMode, GLIndexType
-from picogl.state.fill import GLFace
+from picogl.state.fill import GLFace, GLLight
 from picogl.texture.gltexture import GLTextureDriver
 
 
@@ -241,32 +242,32 @@ class RenderStateApplier:
         self.current = state
 
         if prev is None or prev.line_width != state.line_width:
-            self.backend.set_line_width(state.line_width)
+            self.backend.raster.set_line_width(state.line_width)
 
         if prev is None or prev.polygon_mode != state.polygon_mode:
-            self.backend.set_polygon_mode(GLFace.FRONT_AND_BACK, state.polygon_mode)
+            self.backend.raster.set_polygon_mode(GLFace.FRONT_AND_BACK, state.polygon_mode)
 
         if prev is None or prev.depth_test != state.depth_test:
-            self.backend.set_depth_test(state.depth_test)
+            self.backend.depth.set_depth_test(state.depth_test)
 
         if prev is None or prev.depth_write != state.depth_write:
-            self.backend.set_depth_write(state.depth_write)
+            self.backend.depth.set_depth_write(state.depth_write)
 
         if prev is None or prev.blend != state.blend:
-            self.backend.set_blend(state.blend)
+            self.backend.blend.set_blend(state.blend)
 
         if state.blend and (
             prev is None
             or prev.blend_src != state.blend_src
             or prev.blend_dst != state.blend_dst
         ):
-            self.backend.set_blend_func(state.blend_src, state.blend_dst)
+            self.backend.blend.set_blend_func(state.blend_src, state.blend_dst)
 
         if prev is None or prev.cull_face != state.cull_face:
-            self.backend.set_cull_face(state.cull_face)
+            self.backend.capabilities.set_enabled(GL_CULL_FACE, state.cull_face)
 
         if prev is None or prev.lighting != state.lighting:
-            self.backend.set_lighting(state.lighting)
+            self.backend.capabilities.set_enabled(GLLight.LIGHTING, state.lighting)
 
 
 class GLVertexBuffer:
@@ -355,7 +356,7 @@ class DrawCommand:
                 self.texture.bind()
 
         if self.mode is not None and hasattr(backend, "draw_mesh"):
-            backend.draw_mesh(self.mesh, self.mode)
+            backend.geometry.draw_mesh(self.mesh, self.mode)
         elif hasattr(self.mesh, "draw"):
             self.mesh.draw()
         else:

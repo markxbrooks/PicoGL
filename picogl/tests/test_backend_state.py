@@ -22,6 +22,8 @@ from OpenGL.GL import (
     GL_VERTEX_ARRAY,
     GL_ZERO,
 )
+
+from picogl.state.fill import GLLightParameter
 from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_AMBIENT,
     GL_DIFFUSE,
@@ -30,8 +32,6 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_SHININESS,
     GL_SPECULAR,
 )
-from OpenGL.raw.GL.VERSION.GL_1_1 import GL_CLIP_PLANE0, GL_CLIP_PLANE1
-
 from picogl.backend.capability import GLMaterialFace, PhongMaterial
 from picogl.backend.GL.backend import GLBackend
 from picogl.backend.GL.driver.blend import GLBlendDriver
@@ -46,15 +46,49 @@ from picogl.backend.state import (
     BlendState,
     DepthState,
     DrawCommand,
+    GLClipPlaneState,
     RasterState,
     RenderState,
     RenderStateApplier,
 )
 
 
+class _RecordingBlend:
+    def __init__(self, calls):
+        self.calls = calls
+
+    def set_blend(self, enabled):
+        self.calls.append(("blend", enabled))
+
+    def set_blend_func(self, src, dst):
+        self.calls.append(("blend_func", src, dst))
+
+
+class _RecordingDepth:
+    def __init__(self, calls):
+        self.calls = calls
+
+    def set_depth_test(self, enabled):
+        self.calls.append(("depth_test", enabled))
+
+    def set_depth_write(self, enabled):
+        self.calls.append(("depth_write", enabled))
+
+
+class _RecordingCapabilities:
+    def __init__(self, calls):
+        self.calls = calls
+
+    def set_enabled(self, cap, enabled):
+        self.calls.append(("enabled", cap, enabled))
+
+
 class RecordingBackend:
     def __init__(self):
         self.calls = []
+        self.blend = _RecordingBlend(self.calls)
+        self.depth = _RecordingDepth(self.calls)
+        self.capabilities = _RecordingCapabilities(self.calls)
 
     def enable(self, cap):
         self.calls.append(("enable", cap))
@@ -68,23 +102,8 @@ class RecordingBackend:
     def set_polygon_mode(self, *args):
         self.calls.append(("polygon_mode", args))
 
-    def set_depth_test(self, enabled):
-        self.calls.append(("depth_test", enabled))
-
     def set_depth_write(self, enabled):
         self.calls.append(("depth_write", enabled))
-
-    def set_blend(self, enabled):
-        self.calls.append(("blend", enabled))
-
-    def set_blend_func(self, src, dst):
-        self.calls.append(("blend_func", src, dst))
-
-    def set_cull_face(self, enabled):
-        self.calls.append(("cull_face", enabled))
-
-    def set_lighting(self, enabled):
-        self.calls.append(("lighting", enabled))
 
     def apply_state(self, state):
         self.calls.append(("apply_state", state))
@@ -187,7 +206,7 @@ class TestRenderStateApplier(unittest.TestCase):
         self.assertIn(("blend", True), backend.calls)
         self.assertIn(("blend_func", state.blend_src, state.blend_dst), backend.calls)
         self.assertIn(("depth_write", False), backend.calls)
-        self.assertIn(("lighting", True), backend.calls)
+        self.assertIn(("enabled", GL_LIGHTING, True), backend.calls)
 
     def test_depth_state_applies_depth_not_blend(self):
         backend = RecordingBackend()
@@ -251,13 +270,13 @@ class TestDrawCommand(unittest.TestCase):
             patch("picogl.backend.GL.driver.raster.glPolygonOffset") as polygon_offset,
         ):
             raster.set_line_width(2.0)
-            raster.set_polygon_mode(GL_FRONT_AND_BACK, GL_LINE)
+            raster.set_polygon_mode(GLFace.FRONT_AND_BACK, GL_LINE)
             raster.set_point_size(3.0)
             raster.set_clamped_point_size(12.0)
             raster.set_polygon_offset(-1.0, -1.0)
 
         line_width.assert_called_once_with(2.0)
-        polygon_mode.assert_called_once_with(GL_FRONT_AND_BACK, GL_LINE)
+        polygon_mode.assert_called_once_with(GLFace.FRONT_AND_BACK, GL_LINE)
         self.assertEqual(point_size.call_args_list, [call(3.0), call(10.0)])
         get_float.assert_called_once()
         polygon_offset.assert_called_once_with(-1.0, -1.0)
@@ -268,14 +287,14 @@ class TestDrawCommand(unittest.TestCase):
         blend = GLBlendDriver(capabilities)
 
         with (
-            patch("picogl.backend.GL.backend.glEnable") as enable,
-            patch("picogl.backend.GL.backend.glDisable") as disable,
+            patch("picogl.backend.GL.driver.capability.glEnable") as enable,
+            patch("picogl.backend.GL.driver.capability.glDisable") as disable,
             patch(
-                "picogl.backend.GL.backend.glIsEnabled", return_value=True
+                "picogl.backend.GL.driver.capability.glIsEnabled", return_value=True
             ) as is_enabled,
-            patch("picogl.backend.GL.backend.glDepthMask") as depth_mask,
-            patch("picogl.backend.GL.backend.glDepthFunc") as depth_func,
-            patch("picogl.backend.GL.backend.glBlendFunc") as blend_func,
+            patch("picogl.backend.GL.driver.depth.glDepthMask") as depth_mask,
+            patch("picogl.backend.GL.driver.depth.glDepthFunc") as depth_func,
+            patch("picogl.backend.GL.driver.blend.glBlendFunc") as blend_func,
         ):
             capabilities.enable(GL_CULL_FACE)
             capabilities.disable(GL_LIGHTING)
@@ -315,15 +334,15 @@ class TestDrawCommand(unittest.TestCase):
         ):
             backend.enable(GL_CULL_FACE)
             backend.disable(GL_LIGHTING)
-            self.assertTrue(backend.is_enabled(GL_DEPTH_TEST))
-            backend.set_depth_test(True)
-            backend.set_depth_write(False)
-            backend.set_depth_func_gl_less()
-            backend.set_blend(True)
-            backend.set_blend_func(GL_ONE, GL_ZERO)
-            backend.setup_blending()
-            backend.set_cull_face(True)
-            backend.set_lighting(False)
+            self.assertTrue(backend.capabilities.is_enabled(GL_DEPTH_TEST))
+            backend.depth.set_depth_test(True)
+            backend.depth.set_depth_write(False)
+            backend.depth.set_depth_func_gl_less()
+            backend.blend.set_blend(True)
+            backend.blend.set_blend_func(GL_ONE, GL_ZERO)
+            backend.blend.setup_blending()
+            backend.capabilities.set_enabled(GL_CULL_FACE, True)
+            backend.capabilities.set_enabled(GL_LIGHTING, False)
 
         enable.assert_called_once_with(GL_CULL_FACE)
         disable.assert_called_once_with(GL_LIGHTING)
@@ -352,14 +371,14 @@ class TestDrawCommand(unittest.TestCase):
             ) as set_clamped_point_size,
             patch.object(backend.raster, "set_polygon_offset") as set_polygon_offset,
         ):
-            backend.set_line_width(2.0)
-            backend.set_polygon_mode(GL_FRONT_AND_BACK, GL_LINE)
-            backend.set_point_size(3.0)
-            backend.set_clamped_point_size(4.0)
-            backend.set_polygon_offset(-1.0, -1.0)
+            backend.raster.set_line_width(2.0)
+            backend.raster.set_polygon_mode(GLLight.LIGHTING, GL_LINE)
+            backend.raster.set_point_size(3.0)
+            backend.raster.set_clamped_point_size(4.0)
+            backend.raster.set_polygon_offset(-1.0, -1.0)
 
         set_line_width.assert_called_once_with(2.0)
-        set_polygon_mode.assert_called_once_with(GL_FRONT_AND_BACK, GL_LINE)
+        set_polygon_mode.assert_called_once_with(GLFace.FRONT_AND_BACK, GL_LINE)
         set_point_size.assert_called_once_with(3.0)
         set_clamped_point_size.assert_called_once_with(4.0)
         set_polygon_offset.assert_called_once_with(-1.0, -1.0)
@@ -374,13 +393,13 @@ class TestDrawCommand(unittest.TestCase):
         )
 
         with (
-            patch("picogl.backend.GL.backend.glMatrixMode") as matrix_mode,
-            patch("picogl.backend.GL.backend.glLoadIdentity") as load_identity,
-            patch("picogl.backend.GL.backend.gluPerspective") as perspective,
-            patch("picogl.backend.GL.backend.glTranslatef") as translate,
-            patch("picogl.backend.GL.backend.glLightfv") as lightfv,
-            patch("picogl.backend.GL.backend.glMaterialfv") as materialfv,
-            patch("picogl.backend.GL.backend.glMaterialf") as materialf,
+            patch("picogl.backend.legacy.core.pipeline.glMatrixMode") as matrix_mode,
+            patch("picogl.backend.legacy.core.pipeline.glLoadIdentity") as load_identity,
+            patch("picogl.backend.legacy.core.pipeline.gluPerspective") as perspective,
+            patch("picogl.backend.legacy.core.pipeline.glTranslatef") as translate,
+            patch("picogl.backend.legacy.core.pipeline.glLightfv") as lightfv,
+            patch("picogl.backend.legacy.core.pipeline.glMaterialfv") as materialfv,
+            patch("picogl.backend.legacy.core.pipeline.glMaterialf") as materialf,
         ):
             legacy.set_projection(45.0, 1.5, 0.1, 1000.0)
             legacy.translate(1, 2, 3)
@@ -397,13 +416,13 @@ class TestDrawCommand(unittest.TestCase):
         self.assertEqual(
             materialfv.call_args_list,
             [
-                call(GL_FRONT_AND_BACK, GL_AMBIENT, material.ambient),
-                call(GL_FRONT_AND_BACK, GL_DIFFUSE, material.diffuse),
-                call(GL_FRONT_AND_BACK, GL_SPECULAR, material.specular),
+                call(GLFace.FRONT_AND_BACK, GLLightParameter.AMBIENT, material.ambient),
+                call(GLFace.FRONT_AND_BACK, GLLightParameter.DIFFUSE, material.diffuse),
+                call(GLFace.FRONT_AND_BACK, GLLightParameter.SPECULAR, material.specular),
             ],
         )
         materialf.assert_called_once_with(
-            GL_FRONT_AND_BACK,
+            GLFace.FRONT_AND_BACK,
             GL_SHININESS,
             material.shininess,
         )
@@ -423,10 +442,10 @@ class TestDrawCommand(unittest.TestCase):
             patch.object(backend.legacy, "set_light") as set_light,
             patch.object(backend.legacy, "set_material") as set_material,
         ):
-            backend.set_perspective_projection(45.0, 1.5, 0.1, 1000.0)
+            backend.legacy.set_projection(45.0, 1.5, 0.1, 1000.0)
             backend.translate(1, 2, 3)
-            backend.set_light_position([0.0, 0.0, 10.0, 1.0])
-            backend.set_material(GLMaterialFace.FRONT_AND_BACK, material)
+            backend.legacy.set_light([0.0, 0.0, 10.0, 1.0])
+            backend.legacy.set_material(GLMaterialFace.FRONT_AND_BACK, material)
 
         set_projection.assert_called_once_with(45.0, 1.5, 0.1, 1000.0)
         translate.assert_called_once_with(1, 2, 3)
@@ -471,8 +490,10 @@ class TestDrawCommand(unittest.TestCase):
         textures = GLTextureSystem(driver=driver)
 
         with (
-            patch("picogl.backend.GL.backend.glBindTexture") as bind_texture,
-            patch("picogl.backend.GL.backend.glDeleteTextures") as delete_textures,
+            patch("picogl.backend.GL.driver.texture.glBindTexture") as bind_texture,
+            patch(
+                "picogl.backend.GL.driver.texture.glDeleteTextures"
+            ) as delete_textures,
         ):
             handle = textures.create_texture(4, 5, data=None)
             textures.bind_texture(7)
@@ -492,11 +513,21 @@ class TestDrawCommand(unittest.TestCase):
         data = object()
 
         with (
-            patch("picogl.backend.GL.backend.glEnableClientState") as enable_client,
-            patch("picogl.backend.GL.backend.glVertexPointer") as vertex_pointer,
-            patch("picogl.backend.GL.backend.glNormalPointer") as normal_pointer,
-            patch("picogl.backend.GL.backend.glColorPointer") as color_pointer,
-            patch("picogl.backend.GL.backend.glTexCoordPointer") as texcoord_pointer,
+            patch(
+                "picogl.backend.legacy.core.attribute_binder.glEnableClientState"
+            ) as enable_client,
+            patch(
+                "picogl.backend.legacy.core.attribute_binder.glVertexPointer"
+            ) as vertex_pointer,
+            patch(
+                "picogl.backend.legacy.core.attribute_binder.glNormalPointer"
+            ) as normal_pointer,
+            patch(
+                "picogl.backend.legacy.core.attribute_binder.glColorPointer"
+            ) as color_pointer,
+            patch(
+                "picogl.backend.legacy.core.attribute_binder.glTexCoordPointer"
+            ) as texcoord_pointer,
         ):
             binder.enable_vertex_array()
             binder.set_vertex_pointer(data)
@@ -521,7 +552,7 @@ class TestDrawCommand(unittest.TestCase):
         color_pointer.assert_called_once_with(4, GL_FLOAT, 0, data)
         texcoord_pointer.assert_called_once_with(2, GL_FLOAT, 0, data)
 
-    def test_glbackend_geometry_texture_and_attribute_facades_use_subsystems(self):
+    def test_glbackend_geometry_texture_facades_and_attribute_subsystem(self):
         backend = GLBackend(binding=FakeBinding())
         mesh = object()
         data = object()
@@ -565,7 +596,7 @@ class TestDrawCommand(unittest.TestCase):
                 backend.attributes, "set_texcoord_pointer"
             ) as set_texcoord_pointer,
         ):
-            backend.draw_mesh(mesh, GL_LINE)
+            backend.geometry.draw_mesh(mesh, GL_LINE)
             backend.draw_elements(GL_LINE, [0, 1, 2])
             backend.draw_bound_elements(GL_LINE, 4, GL_UNSIGNED_INT, None)
             backend.draw_arrays(GL_LINE, 1, 6)
@@ -573,14 +604,14 @@ class TestDrawCommand(unittest.TestCase):
             self.assertEqual(backend.create_texture(4, 5, None), 9)
             backend.bind_texture(7)
             backend.delete_texture(7)
-            backend.enable_vertex_array()
-            backend.set_vertex_pointer(data)
-            backend.enable_normal_array()
-            backend.set_normal_pointer(data)
-            backend.enable_color_array()
-            backend.set_color_pointer(data, 4)
-            backend.enable_texcoord_array()
-            backend.set_texcoord_pointer(data)
+            backend.attributes.enable_vertex_array()
+            backend.attributes.set_vertex_pointer(data)
+            backend.attributes.enable_normal_array()
+            backend.attributes.set_normal_pointer(data)
+            backend.attributes.enable_color_array()
+            backend.attributes.set_color_pointer(data, 4)
+            backend.attributes.enable_texcoord_array()
+            backend.attributes.set_texcoord_pointer(data)
 
         draw_mesh.assert_called_once_with(mesh, GL_LINE)
         draw_elements.assert_called_once_with(GL_LINE, [0, 1, 2])
@@ -604,38 +635,42 @@ class TestDrawCommand(unittest.TestCase):
 
         with (
             patch("picogl.backend.GL.backend.glViewport") as viewport,
-            patch("picogl.backend.GL.backend.glLoadIdentity") as load_identity,
-            patch("picogl.backend.GL.backend.glTranslatef") as translate,
-            patch("picogl.backend.GL.backend.glLightfv") as lightfv,
-            patch("picogl.backend.GL.backend.glEnable") as enable,
-            patch("picogl.backend.GL.backend.glDisable") as disable,
+            patch("picogl.backend.legacy.core.pipeline.glLoadIdentity") as load_identity,
+            patch("picogl.backend.legacy.core.pipeline.glTranslatef") as translate,
+            patch("picogl.backend.legacy.core.pipeline.glLightfv") as lightfv,
             patch("picogl.backend.GL.backend.glClearColor") as clear_color,
         ):
             backend.viewport(1, 2, 3, 4)
             backend.load_identity()
             backend.translate(1, 2, 3)
-            backend.set_light_position([0.0, 0.0, 10.0, 1.0])
-            backend.enable_clip_plane0()
-            backend.disable_clip_plane1()
+            backend.legacy.set_light([0.0, 0.0, 10.0, 1.0])
             backend.set_clear_color((0.1, 0.2, 0.3, 1.0))
 
         viewport.assert_called_once_with(1, 2, 3, 4)
         load_identity.assert_called_once_with()
         translate.assert_called_once_with(1.0, 2.0, 3.0)
         lightfv.assert_called_once_with(GL_LIGHT0, GL_POSITION, [0.0, 0.0, 10.0, 1.0])
-        enable.assert_called_once_with(GL_CLIP_PLANE0)
-        disable.assert_called_once_with(GL_CLIP_PLANE1)
         clear_color.assert_called_once_with(0.1, 0.2, 0.3, 1.0)
+
+    def test_glbackend_applies_clip_state(self):
+        backend = GLBackend(binding=FakeBinding())
+        clip = GLClipPlaneState(enabled0=True, enabled1=False)
+
+        with patch.object(clip, "apply") as apply:
+            backend.apply_clip_state(clip)
+
+        self.assertIs(backend.clip, clip)
+        apply.assert_called_once_with(backend.state_manager)
 
     def test_glbackend_perspective_projection_delegates_to_opengl(self):
         backend = GLBackend(binding=FakeBinding())
 
         with (
-            patch("picogl.backend.GL.backend.glMatrixMode") as matrix_mode,
-            patch("picogl.backend.GL.backend.glLoadIdentity") as load_identity,
-            patch("picogl.backend.GL.backend.gluPerspective") as perspective,
+            patch("picogl.backend.legacy.core.pipeline.glMatrixMode") as matrix_mode,
+            patch("picogl.backend.legacy.core.pipeline.glLoadIdentity") as load_identity,
+            patch("picogl.backend.legacy.core.pipeline.gluPerspective") as perspective,
         ):
-            backend.set_perspective_projection(45.0, 1.5, 0.1, 1000.0)
+            backend.legacy.set_projection(45.0, 1.5, 0.1, 1000.0)
 
         self.assertEqual(
             matrix_mode.call_args_list,
@@ -657,21 +692,21 @@ class TestDrawCommand(unittest.TestCase):
         )
 
         with (
-            patch("picogl.backend.GL.backend.glMaterialfv") as materialfv,
-            patch("picogl.backend.GL.backend.glMaterialf") as materialf,
+            patch("picogl.backend.legacy.core.pipeline.glMaterialfv") as materialfv,
+            patch("picogl.backend.legacy.core.pipeline.glMaterialf") as materialf,
         ):
-            backend.set_material(GLMaterialFace.FRONT_AND_BACK, material)
+            backend.legacy.set_material(GLMaterialFace.FRONT_AND_BACK, material)
 
         self.assertEqual(
             materialfv.call_args_list,
             [
-                call(GL_FRONT_AND_BACK, GL_AMBIENT, material.ambient),
-                call(GL_FRONT_AND_BACK, GL_DIFFUSE, material.diffuse),
-                call(GL_FRONT_AND_BACK, GL_SPECULAR, material.specular),
+                call(GLFace.FRONT_AND_BACK, GL_AMBIENT, material.ambient),
+                call(GLFace.FRONT_AND_BACK, GL_DIFFUSE, material.diffuse),
+                call(GLFace.FRONT_AND_BACK, GL_SPECULAR, material.specular),
             ],
         )
         materialf.assert_called_once_with(
-            GL_FRONT_AND_BACK,
+            GLFace.FRONT_AND_BACK,
             GL_SHININESS,
             material.shininess,
         )
