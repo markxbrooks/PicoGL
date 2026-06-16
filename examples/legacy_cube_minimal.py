@@ -502,6 +502,7 @@ class MinimalCubeRenderer:
             f"   Rendering {len(self.vertices)} vertices with {len(self.colors)} colors"
         )
 
+
         glutMainLoop()
 
 
