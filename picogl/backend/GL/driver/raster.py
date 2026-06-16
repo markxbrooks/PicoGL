@@ -1,10 +1,10 @@
-from OpenGL.GL import (GL_FRONT_AND_BACK,
-                       GL_POINT_SIZE_RANGE, glGetFloatv,
+from OpenGL.GL import (GL_POINT_SIZE_RANGE, glGetFloatv,
                        glLineWidth, glPointSize,
                        glPolygonMode)
 from OpenGL.raw.GL.VERSION.GL_1_1 import glPolygonOffset
 
 from picogl.backend.state import gl_value
+from picogl.state.fill import GLFace
 
 
 class GLRasterDriver:
@@ -35,7 +35,7 @@ class GLRasterDriver:
     @staticmethod
     def set_polygon_mode(*args):
         if len(args) == 1:
-            face, mode = GL_FRONT_AND_BACK, args[0]
+            face, mode = GLFace.FRONT_AND_BACK, args[0]
         elif len(args) == 2:
             face, mode = args
         else:
