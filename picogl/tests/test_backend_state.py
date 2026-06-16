@@ -697,7 +697,7 @@ class TestDrawCommand(unittest.TestCase):
         clip = GLClipPlaneState(enabled0=True, enabled1=False)
 
         with patch.object(clip, "apply") as apply:
-            backend.clip.apply(clip)
+            backend.apply_clip_state(clip)
 
         self.assertIs(backend.clip, clip)
         apply.assert_called_once_with(backend.state_manager)

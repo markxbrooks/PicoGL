@@ -24,10 +24,12 @@ class GLBlendDriver:
     def set_blend(self, enabled: bool):
         self.capabilities.set_enabled(GLPipelineCapability.BLEND, enabled)
 
-    def set_blend_func(self, src: GLBlendFactor, dst: GLBlendFactor):
+    @staticmethod
+    def set_blend_func(src: GLBlendFactor, dst: GLBlendFactor):
         glBlendFunc(gl_value(src), gl_value(dst))
 
-    def get_blend_func(self) -> tuple[GLBlendFactor, GLBlendFactor]:
+    @staticmethod
+    def get_blend_func() -> tuple[GLBlendFactor, GLBlendFactor]:
         src = GLBlendFactor.from_gl(int(glGetIntegerv(GLBlendTarget.BLEND_SRC)))
         dst = GLBlendFactor.from_gl(int(glGetIntegerv(GLBlendTarget.BLEND_DST)))
         return src, dst

@@ -51,10 +51,6 @@ class GLBackend:
         self.state_manager = GLStateManager(self.capabilities)
         self.state_applier = RenderStateApplier(self)
 
-
-    def viewport_old(self, x, y, width, height):
-        self.frame.viewport(x, y, width, height)
-
     def apply_state(self, state: RenderState):
         """Apply a structured render state through this backend."""
         self.state_applier.apply(state)
@@ -63,32 +59,10 @@ class GLBackend:
         """Apply declarative clipping state through the capability subsystem."""
         if clip is not None:
             self.clip = clip
+        else:
+            self.clip = GLClipPlaneState()
         self.clip.apply(self.state_manager)
 
     def draw_command(self, command: DrawCommand):
         """Apply command state/resources and draw through this backend."""
         command.execute(self)
-
-    def enable_multisample_old(self):
-        self.capabilities.enable_multisample()
-
-    def draw_elements_old(self, mode, indices):
-        """draw elements"""
-        self.geometry.draw_elements(mode, indices)
-
-    def draw_bound_elements_old(
-        self, mode, index_count: int, index_type=None, pointer=None
-    ):
-        """Draw using the currently bound element buffer."""
-        if index_type is None:
-            self.geometry.draw_bound_elements(mode, index_count, pointer=pointer)
-        else:
-            self.geometry.draw_bound_elements(mode, index_count, index_type, pointer)
-
-    def draw_arrays_old(self, mode, first: int, count: int):
-        """Draw non-indexed vertex arrays."""
-        self.geometry.draw_arrays(mode, first, count)
-
-    def draw_arrays_bound_vao_old(self, vao: int, mode, first: int, count: int):
-        """Borrow a VAO handle for a non-indexed draw, then unbind it."""
-        self.geometry.draw_arrays_bound_vao(vao, mode, first, count)
