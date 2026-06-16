@@ -6,9 +6,7 @@ from OpenGL.GL import glLightfv, glMaterialfv
 from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_AMBIENT,
     GL_AMBIENT_AND_DIFFUSE,
-    GL_COLOR_BUFFER_BIT,
     GL_COLOR_MATERIAL,
-    GL_DEPTH_BUFFER_BIT,
     GL_DEPTH_TEST,
     GL_DIFFUSE,
     GL_FRONT_AND_BACK,
@@ -35,7 +33,8 @@ from PySide6.QtWidgets import QWidget
 from examples import g_color_buffer_data, g_vertex_buffer_data
 from picogl.renderer import MeshData
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
-from picogl.state.draw_mode import GLBitMask
+from picogl.state.draw_mode import GLBitMask, GLLegacyMatrixMode
+from picogl.state.fill import GLFace, GLLight, GLMaterialParameter, GLLightParameter, GLCapability
 from picogl.ui.backend.qt.base import GLBase
 
 
@@ -109,10 +108,10 @@ class LegacyQtObjectRenderer(GLBase):
 
     def initialize_materials(self):
         # Set up material properties
-        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
-        glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, [0.8, 0.8, 0.8, 1.0])
-        glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
-        glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50.0)
+        glMaterialfv(GLFace.FRONT_AND_BACK, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
+        glMaterialfv(GLFace.FRONT_AND_BACK, GL_DIFFUSE, [0.8, 0.8, 0.8, 1.0])
+        glMaterialfv(GLFace.FRONT_AND_BACK, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
+        glMaterialf(GLFace.FRONT_AND_BACK, GL_SHININESS, 50.0)
 
     def initialize_state(self):
         # Set up OpenGL state
@@ -120,27 +119,27 @@ class LegacyQtObjectRenderer(GLBase):
         glEnable(GL_DEPTH_TEST)
 
     def initialize_lighting(self):
-        glEnable(GL_LIGHTING)
-        glEnable(GL_LIGHT0)
-        glEnable(GL_COLOR_MATERIAL)
-        glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
+        glEnable(GLLight.LIGHTING)
+        glEnable(GLLight.LIGHT0)
+        glEnable(GLCapability.COLOR_MATERIAL)
+        glColorMaterial(GLFace.FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
         # Set up lighting
-        glLightfv(GL_LIGHT0, GL_POSITION, [1.0, 1.0, 1.0, 0.0])
-        glLightfv(GL_LIGHT0, GL_AMBIENT, [0.3, 0.3, 0.3, 1.0])
-        glLightfv(GL_LIGHT0, GL_DIFFUSE, [0.8, 0.8, 0.8, 1.0])
-        glLightfv(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
+        glLightfv(GLLight.LIGHT0, GLLightParameter.POSITION, [1.0, 1.0, 1.0, 0.0])
+        glLightfv(GLLight.LIGHT0, GLLightParameter.AMBIENT, [0.3, 0.3, 0.3, 1.0])
+        glLightfv(GLLight.LIGHT0, GLLightParameter.DIFFUSE, [0.8, 0.8, 0.8, 1.0])
+        glLightfv(GLLight.LIGHT0, GLLightParameter.SPECULAR, [1.0, 1.0, 1.0, 1.0])
 
     def resizeGL(self, w: int, h: int):
         """Handle window resize"""
         super().resizeGL(w, h)
 
         # Set up projection matrix
-        glMatrixMode(GL_PROJECTION)
+        glMatrixMode(GLLegacyMatrixMode.PROJECTION)
         glLoadIdentity()
         gluPerspective(45.0, w / h, 0.1, 100.0)
 
         # Return to modelview matrix
-        glMatrixMode(GL_MODELVIEW)
+        glMatrixMode(GLLegacyMatrixMode.MODELVIEW)
         glLoadIdentity()
 
     def _emit_rotation_feedback(self):
@@ -152,7 +151,7 @@ class LegacyQtObjectRenderer(GLBase):
         glClear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
 
         # Set up modelview matrix
-        glMatrixMode(GL_MODELVIEW)
+        glMatrixMode(GLLegacyMatrixMode.MODELVIEW)
         glLoadIdentity()
 
         # Position camera
