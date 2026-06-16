@@ -1,18 +1,15 @@
 import numpy as np
 from OpenGL.GL import glDrawElements, glVertexPointer
-from OpenGL.raw.GL._types import GL_FLOAT
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT
 from OpenGL.raw.GL.VERSION.GL_1_1 import (
     GL_VERTEX_ARRAY,
     glDrawArrays,
     glEnableClientState,
 )
-from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ARRAY_BUFFER
 
 from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
 from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
 from picogl.numerical import GLNumeric
-from picogl.state.draw_mode import GLDrawMode
+from picogl.state.draw_mode import GLBufferTarget, GLDataType, GLDrawMode, GLIndexType
 
 
 class LegacyPositionVBO(LegacyVBO):
@@ -31,8 +28,8 @@ class LegacyPositionVBO(LegacyVBO):
         handle: int = None,
         data: np.ndarray = None,
         size: int = 3,
-        target: int = GL_ARRAY_BUFFER,
-        dtype: int = GL_FLOAT,
+        target: int = GLBufferTarget.ARRAY,
+        dtype: int = GLDataType.FLOAT,
     ):
         """Initialize the position VBO."""
         super().__init__(
@@ -57,7 +54,7 @@ class LegacyPositionVBO(LegacyVBO):
     def draw(
         self,
         index_count: int = None,
-        index_type: int = GLNumeric.UNSIGNED_INT,
+        index_type: int = GLIndexType.UNSIGNED_INT,
         mode: int | GLDrawMode = GLDrawMode.TRIANGLES,
     ):
         """

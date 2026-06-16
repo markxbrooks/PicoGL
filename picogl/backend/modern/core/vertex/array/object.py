@@ -41,16 +41,9 @@ import numpy as np
 from decologr import Decologr as log
 from elmo.log.silence import SILENT_VAO
 from OpenGL.GL import glBufferSubData, glDeleteVertexArrays, glGenVertexArrays
-from OpenGL.raw.GL._types import GL_FLOAT, GL_UNSIGNED_INT
 from OpenGL.raw.GL.ARB.vertex_array_object import glBindVertexArray
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POINTS
 from OpenGL.raw.GL.VERSION.GL_1_1 import glDrawArrays, glDrawElements
-from OpenGL.raw.GL.VERSION.GL_1_5 import (
-    GL_ARRAY_BUFFER,
-    GL_ELEMENT_ARRAY_BUFFER,
-    GL_STATIC_DRAW,
-    glBindBuffer,
-)
+from OpenGL.raw.GL.VERSION.GL_1_5 import glBindBuffer
 from OpenGL.raw.GL.VERSION.GL_2_0 import (
     glEnableVertexAttribArray,
     glVertexAttribPointer,
@@ -70,6 +63,13 @@ from picogl.buffers.glcleanup import delete_buffer
 from picogl.buffers.vertex.aliases import NAME_ALIASES
 from picogl.buffers.vertex.registry import store_in_gl_registry
 from picogl.safe import gl_gen_safe
+from picogl.state.draw_mode import (
+    GLBufferTarget,
+    GLDataType,
+    GLDrawMode,
+    GLIndexType,
+    GLUsageHint,
+)
 
 
 def current_gl_context() -> int:
@@ -181,7 +181,7 @@ class VertexArrayObject(VertexBase, GLResource):
             self.layout = layout
 
             if self.ebo:
-                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.ebo.handle)
+                glBindBuffer(GLBufferTarget.ELEMENT_ARRAY_BUFFER, self.ebo.handle)
 
             # Configure attributes
             for attr in layout.attributes:
@@ -269,7 +269,7 @@ class VertexArrayObject(VertexBase, GLResource):
         data: np.ndarray,
         index: int = 0,
         size: int = 3,
-        dtype: int = GL_FLOAT,
+        dtype: int = GLDataType.FLOAT,
         name: str = None,
         handle: int = None,
     ) -> ModernVBO:
@@ -292,7 +292,7 @@ class VertexArrayObject(VertexBase, GLResource):
         index: int,
         data: np.ndarray,
         size: int,
-        dtype: int = GL_FLOAT,
+        dtype: int = GLDataType.FLOAT,
         name: str = None,
         handle: int = None,
     ) -> ModernVBO:
@@ -339,7 +339,7 @@ class VertexArrayObject(VertexBase, GLResource):
         index: int,
         vbo: int,
         size: int = 3,
-        dtype: int = GL_FLOAT,
+        dtype: int = GLDataType.FLOAT,
         normalized: bool = False,
         stride: int = 0,
         offset: int = 0,
@@ -368,7 +368,9 @@ class VertexArrayObject(VertexBase, GLResource):
         """
         ebo = ModernEBO(data=data)
         ebo.bind()
-        ebo.set_element_attributes(data=data, size=data.nbytes, dtype=GL_STATIC_DRAW)
+        ebo.set_element_attributes(
+            data=data, size=data.nbytes, dtype=GLUsageHint.STATIC_DRAW
+        )
         ebo.configure()
         self.ebo = ebo
         return ebo
@@ -402,8 +404,8 @@ class VertexArrayObject(VertexBase, GLResource):
     def draw(
         self,
         index_count: int = None,
-        dtype: int = GL_UNSIGNED_INT,
-        mode: int = GL_POINTS,
+        dtype: int = GLIndexType.UNSIGNED_INT,
+        mode: int = GLDrawMode.POINTS,
         pointer: int = ctypes.c_void_p(0),
         first: int = 0,
     ):
@@ -418,7 +420,7 @@ class VertexArrayObject(VertexBase, GLResource):
         :return: None
         """
         atom_count = index_count or self.index_count
-        if mode == GL_POINTS:
+        if mode == GLDrawMode.POINTS:
             enable_points_rendering_state()
         if self.ebo:
             glDrawElements(mode, atom_count, dtype, pointer)
@@ -477,9 +479,9 @@ class VertexArrayObject(VertexBase, GLResource):
                 and old.dtype == arr.dtype
                 and old.nbytes == arr.nbytes
             ):
-                glBufferSubData(GL_ARRAY_BUFFER, 0, arr.nbytes, arr)
+                glBufferSubData(GLBufferTarget.ARRAY, 0, arr.nbytes, arr)
             else:
                 vbo.set_data(arr)
         finally:
-            glBindBuffer(GL_ARRAY_BUFFER, 0)
+            glBindBuffer(GLBufferTarget.ARRAY, 0)
             self.unbind()

@@ -4,7 +4,6 @@ from OpenGL.GL import (
     glTexCoordPointer,
     glVertexPointer,
 )
-from OpenGL.raw.GL._types import GL_FLOAT
 from OpenGL.raw.GL.KHR.debug import GL_VERTEX_ARRAY
 from OpenGL.raw.GL.VERSION.GL_1_1 import (
     GL_COLOR_ARRAY,
@@ -13,6 +12,7 @@ from OpenGL.raw.GL.VERSION.GL_1_1 import (
     glDisableClientState,
     glEnableClientState,
 )
+from picogl.state.draw_mode import GLDataType
 
 
 class LegacyAttributeBinder:
@@ -28,7 +28,7 @@ class LegacyAttributeBinder:
 
     @staticmethod
     def set_vertex_pointer(data):
-        glVertexPointer(3, GL_FLOAT, 0, data)
+        glVertexPointer(3, GLDataType.FLOAT, 0, data)
 
     @staticmethod
     def enable_normal_array():
@@ -40,7 +40,7 @@ class LegacyAttributeBinder:
 
     @staticmethod
     def set_normal_pointer(data):
-        glNormalPointer(GL_FLOAT, 0, data)
+        glNormalPointer(GLDataType.FLOAT, 0, data)
 
     @staticmethod
     def enable_color_array():
@@ -52,7 +52,7 @@ class LegacyAttributeBinder:
 
     @staticmethod
     def set_color_pointer(data, size):
-        glColorPointer(size, GL_FLOAT, 0, data)
+        glColorPointer(size, GLDataType.FLOAT, 0, data)
 
     @staticmethod
     def enable_texcoord_array():
@@ -64,4 +64,4 @@ class LegacyAttributeBinder:
 
     @staticmethod
     def set_texcoord_pointer(data):
-        glTexCoordPointer(2, GL_FLOAT, 0, data)
+        glTexCoordPointer(2, GLDataType.FLOAT, 0, data)

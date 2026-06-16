@@ -6,15 +6,16 @@ import ctypes
 
 import numpy as np
 from OpenGL.GL import glBufferData, glGenBuffers
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_FLOAT, GL_LINES, GL_UNSIGNED_INT
-from OpenGL.raw.GL.VERSION.GL_1_5 import (
-    GL_ARRAY_BUFFER,
-    GL_DYNAMIC_DRAW,
-    GL_STATIC_DRAW,
-    glBufferSubData,
-)
+from OpenGL.raw.GL.VERSION.GL_1_5 import glBufferSubData
 
 from picogl.backend.modern.core.vertex.base import VertexBuffer
+from picogl.state.draw_mode import (
+    GLBufferTarget,
+    GLDataType,
+    GLDrawMode,
+    GLIndexType,
+    GLUsageHint,
+)
 
 
 class LegacyVBO(VertexBuffer):
@@ -24,11 +25,11 @@ class LegacyVBO(VertexBuffer):
         self,
         handle: int = None,
         data: np.ndarray = None,
-        target: int = GL_ARRAY_BUFFER,
+        target: int = GLBufferTarget.ARRAY,
         configure: bool = True,
         size: int = 3,
         stride: int = 0,
-        dtype: int = GL_FLOAT,
+        dtype: int = GLDataType.FLOAT,
         pointer: ctypes.c_void_p = ctypes.c_void_p(0),
     ):
         self.nbytes = None
@@ -64,7 +65,7 @@ class LegacyVBO(VertexBuffer):
     def __exit__(self, exc_type, exc_value, traceback):
         self.unbind()
 
-    def set_data(self, data: np.ndarray, usage: int = GL_STATIC_DRAW) -> None:
+    def set_data(self, data: np.ndarray, usage: int = GLUsageHint.STATIC_DRAW) -> None:
         """
         Upload data to the GPU.
 
@@ -84,7 +85,7 @@ class LegacyVBO(VertexBuffer):
         finally:
             self.unbind()
 
-    def allocate(self, data: np.ndarray, usage: int = GL_STATIC_DRAW):
+    def allocate(self, data: np.ndarray, usage: int = GLUsageHint.STATIC_DRAW):
         """Initial allocation (glBufferData)"""
         self.bind()
         self.nbytes = data.nbytes
@@ -95,12 +96,12 @@ class LegacyVBO(VertexBuffer):
 
         # First-time allocation case
         if self.nbytes is None:
-            glBufferData(self.target, data.nbytes, data, GL_DYNAMIC_DRAW)
+            glBufferData(self.target, data.nbytes, data, GLUsageHint.DYNAMIC_DRAW)
             self.nbytes = data.nbytes
             return
 
         if data.nbytes > self.nbytes:
-            glBufferData(self.target, data.nbytes, data, GL_DYNAMIC_DRAW)
+            glBufferData(self.target, data.nbytes, data, GLUsageHint.DYNAMIC_DRAW)
             self.nbytes = data.nbytes
         else:
             glBufferSubData(self.target, offset, data.nbytes, data)
@@ -110,7 +111,10 @@ class LegacyVBO(VertexBuffer):
         pass
 
     def draw(
-        self, index_count: int, index_type: int = GL_UNSIGNED_INT, mode: int = GL_LINES
+        self,
+        index_count: int,
+        index_type: int = GLIndexType.UNSIGNED_INT,
+        mode: int = GLDrawMode.LINES,
     ):
         """Draw call (must be implemented in subclasses)."""
         raise NotImplementedError("Subclasses must implement draw()!")

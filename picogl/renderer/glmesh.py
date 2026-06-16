@@ -12,14 +12,13 @@ from typing import TYPE_CHECKING, Literal, Optional, Union
 
 import numpy as np
 from elmo.glsl.layouts import build_shader_layouts
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT
 
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.buffers.glcleanup import delete_buffer_object
 from picogl.buffers.helper import as_vec3_array
 from picogl.buffers.vertex.vbo.vbo_class import MeshDataAttrs, VBOType
 from picogl.shaders.type import ShaderType
-from picogl.state.draw_mode import GLDrawMode
+from picogl.state.draw_mode import GLDrawMode, GLIndexType
 
 if TYPE_CHECKING:
     from picogl.renderer.meshdata import MeshData
@@ -286,7 +285,7 @@ class GLMesh:
                 self.vao.draw(
                     index_count=self.index_count,
                     mode=mode,
-                    dtype=GL_UNSIGNED_INT,
+                    dtype=GLIndexType.UNSIGNED_INT,
                     pointer=ctypes.c_void_p(0),
                 )
         except Exception as e:

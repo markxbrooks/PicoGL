@@ -1,7 +1,13 @@
 from OpenGL.GL import *  # pylint: disable=W0614
 from pyglm import glm
 
+from examples.utils.shader_loader import Shader
 from examples.utils.test_window import GLWindow
+from picogl.state.draw_mode import GLBufferTarget, GLUsageHint
+
+
+class GObject:
+    pass
 
 
 class GLContext(GObject):
@@ -23,22 +29,22 @@ class GLContext(GObject):
 
         # Vertex Buffer
         self.vertexbuffer = glGenBuffers(1)
-        glBindBuffer(GL_ARRAY_BUFFER, self.vertexbuffer)
+        glBindBuffer(GLBufferTarget.ARRAY, self.vertexbuffer)
         glBufferData(
-            GL_ARRAY_BUFFER,
+            GLBufferTarget.ARRAY,
             len(vertex_data) * 4,
             (GLfloat * len(vertex_data))(*vertex_data),
-            GL_STATIC_DRAW,
+            GLUsageHint.STATIC_DRAW,
         )
 
         # Color Buffer
         self.colorbuffer = glGenBuffers(1)
-        glBindBuffer(GL_ARRAY_BUFFER, self.colorbuffer)
+        glBindBuffer(GLBufferTarget.ARRAY, self.colorbuffer)
         glBufferData(
-            GL_ARRAY_BUFFER,
+            GLBufferTarget.ARRAY,
             len(color_data) * 4,
             (GLfloat * len(color_data))(*color_data),
-            GL_STATIC_DRAW,
+            GLUsageHint.STATIC_DRAW,
         )
 
     def calculate_mvp(self, width=1920, height=1080):
@@ -66,7 +72,7 @@ class Tu01Win(GLWindow):
         glClearColor(0.0, 0, 0.4, 0)
         glDepthFunc(GL_LESS)
         glEnable(GL_DEPTH_TEST)
-        glEnable(GL_CULL_FACE)
+        glEnable(GLPipelineCapability.CULL_FACE)
 
     def init_context(self):
         self.shader = Shader()
@@ -92,11 +98,11 @@ class Tu01Win(GLWindow):
         )
 
         glEnableVertexAttribArray(0)
-        glBindBuffer(GL_ARRAY_BUFFER, self.context.vertexbuffer)
+        glBindBuffer(GLBufferTarget.ARRAY, self.context.vertexbuffer)
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, None)
 
         glEnableVertexAttribArray(1)
-        glBindBuffer(GL_ARRAY_BUFFER, self.context.colorbuffer)
+        glBindBuffer(GLBufferTarget.ARRAY, self.context.colorbuffer)
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, None)
 
         glDrawArrays(

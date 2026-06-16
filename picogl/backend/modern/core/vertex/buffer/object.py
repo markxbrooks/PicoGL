@@ -2,9 +2,9 @@
 
 import numpy as np
 from OpenGL.GL import glGenBuffers
-from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ARRAY_BUFFER
 
 from picogl.backend.modern.core.vertex.base import VertexBuffer
+from picogl.state.draw_mode import GLBufferTarget
 
 
 class ModernVBO(VertexBuffer):
@@ -15,7 +15,7 @@ class ModernVBO(VertexBuffer):
         handle: int = None,
         data: np.ndarray = None,
         size: int = 3,
-        target: int = GL_ARRAY_BUFFER,
+        target: int = GLBufferTarget.ARRAY,
         index: int = None,
     ):
         """ """

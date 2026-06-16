@@ -25,9 +25,9 @@ from typing import Optional
 
 import numpy as np
 from OpenGL.GL import glBufferData, glGenBuffers
-from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW
 
 from picogl.backend.modern.core.vertex.base import VertexBuffer
+from picogl.state.draw_mode import GLBufferTarget, GLUsageHint
 
 
 class ModernEBO(VertexBuffer):
@@ -40,7 +40,7 @@ class ModernEBO(VertexBuffer):
         handle: Optional[int] = None,
         data: Optional[np.ndarray] = None,
         size: int = 3,
-        target: int = GL_ELEMENT_ARRAY_BUFFER,
+        target: int = GLBufferTarget.ELEMENT_ARRAY_BUFFER,
     ):
         """ """
         if handle is None:
@@ -48,7 +48,7 @@ class ModernEBO(VertexBuffer):
         super().__init__(handle=handle, size=size, data=data, target=target)
 
     def set_element_attributes(
-        self, data: np.ndarray, size: int, dtype: int = GL_STATIC_DRAW
+        self, data: np.ndarray, size: int, dtype: int = GLUsageHint.STATIC_DRAW
     ):
         """
         set_element_attributes
@@ -68,4 +68,4 @@ class ModernEBO(VertexBuffer):
 
         :return: None
         """
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, self.size, self.data, self.dtype)
+        glBufferData(GLBufferTarget.ELEMENT_ARRAY_BUFFER, self.size, self.data, self.dtype)

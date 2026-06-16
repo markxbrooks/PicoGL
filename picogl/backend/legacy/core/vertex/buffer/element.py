@@ -1,11 +1,15 @@
 import ctypes
 
 import numpy as np
-from OpenGL.GL import GL_FLOAT, glDrawElements
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_LINES, GL_UNSIGNED_INT
-from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ELEMENT_ARRAY_BUFFER
+from OpenGL.GL import glDrawElements
 
 from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
+from picogl.state.draw_mode import (
+    GLBufferTarget,
+    GLDataType,
+    GLDrawMode,
+    GLIndexType,
+)
 
 
 class LegacyEBO(LegacyVBO):
@@ -15,9 +19,9 @@ class LegacyEBO(LegacyVBO):
         self,
         handle: int = None,
         data: np.ndarray = None,
-        target: int = GL_ELEMENT_ARRAY_BUFFER,
+        target: int = GLBufferTarget.ELEMENT_ARRAY_BUFFER,
         size: int = 3,
-        dtype: int = GL_FLOAT,
+        dtype: int = GLDataType.FLOAT,
     ):
         """constructor"""
         super().__init__(
@@ -25,7 +29,10 @@ class LegacyEBO(LegacyVBO):
         )
 
     def draw(
-        self, index_count: int, index_type: int = GL_UNSIGNED_INT, mode: int = GL_LINES
+        self,
+        index_count: int,
+        index_type: int = GLIndexType.UNSIGNED_INT,
+        mode: int = GLDrawMode.LINES,
     ):
         if index_count <= 0:
             return
