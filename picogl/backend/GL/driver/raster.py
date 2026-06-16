@@ -1,7 +1,7 @@
 from OpenGL.GL import (GL_FRONT_AND_BACK,
-                                          GL_POINT_SIZE_RANGE, glGetFloatv,
-                                          glLineWidth, glPointSize,
-                                          glPolygonMode)
+                       GL_POINT_SIZE_RANGE, glGetFloatv,
+                       glLineWidth, glPointSize,
+                       glPolygonMode)
 from OpenGL.raw.GL.VERSION.GL_1_1 import glPolygonOffset
 
 from picogl.backend.state import gl_value
