@@ -11,7 +11,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import GL_COLOR_MATERIAL
 class Selectable:
     """Selectable"""
 
-    @classmethodGL_LIGHT0
+    @classmethod
     def choices(cls):
         return [m.value for m in cls]
 
