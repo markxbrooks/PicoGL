@@ -94,4 +94,4 @@ class ObjectRenderer(RendererBase):
                 bind_texture_array(self.context.texture_id)
                 shader.uniform("texture0", 0)
 
-            model_vao.draw(mode=GL_TRIANGLES, index_count=self.data.vertex_count)
+            model_vao.draw(mode=GLDrawMode.TRIANGLES, index_count=self.data.vertex_count)

@@ -172,7 +172,7 @@ class LegacyGLMesh:
     def __exit__(self, exc_type, exc, tb):
         self.unbind()
 
-    def draw(self, mode=GL_TRIANGLES) -> None:
+    def draw(self, mode=GLDrawMode.TRIANGLES) -> None:
         """Draw the mesh."""
         try:
             if not self.vao:

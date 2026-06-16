@@ -561,7 +561,7 @@ class TestLegacyGLMesh(unittest.TestCase):
                 mock_client_states.return_value.__enter__ = MagicMock()
                 mock_client_states.return_value.__exit__ = MagicMock()
                 
-                mesh.draw(mode=GL_TRIANGLES)
+                mesh.draw(mode=GLDrawMode.TRIANGLES)
         
         # Test draw call was made with custom mode
         mock_draw.assert_called_once()

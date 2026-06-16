@@ -438,7 +438,7 @@ class TestObjectRenderer(unittest.TestCase):
         mock_shader.uniform.assert_any_call("viewPos", mock_context.eye_np)
         
         # Test draw call
-        mock_draw.assert_called_once_with(mode=GL_TRIANGLES, index_count=renderer.data.vertex_count)
+        mock_draw.assert_called_once_with(mode=GLDrawMode.TRIANGLES, index_count=renderer.data.vertex_count)
 
     def test_draw_model_with_texture(self):
         """Test _draw_model method with texture."""
