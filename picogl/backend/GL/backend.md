@@ -1,252 +1,219 @@
-ou already are using composition—but it’s inconsistent and stops at the “driver” layer. Right now GLBackend is doing three conflicting jobs:
+This version of GLBackend is substantially better—you’ve crossed the line from “utility wrapper” into an actual composed rendering system. The structure now mostly makes sense.
 
-Facade (good): delegating to binding, raster, legacy
-God object (problem): owns dozens of raw GL calls
-State executor (partially duplicated with RenderStateApplier)
+That said, there are still a few architectural inconsistencies and redundancies worth tightening.
 
-That tension is exactly where deeper composition helps.
+✅ What You Got Right (This Is Important)
+1. Clear Subsystem Composition
 
-The Core Problem
+You now have real separation:
 
-Your backend still exposes raw OpenGL verbs everywhere:
-
-glEnable(...)
-glDisable(...)
-glVertexPointer(...)
-glTexCoordPointer(...)
-
-That means:
-
-No real abstraction boundary
-No swappability (modern vs legacy still leaks everywhere)
-State logic is split between:
-GLBackend
-RenderStateApplier
-GLStateManager (from your file)
-What “More Composition” Actually Means Here
-
-You want to invert GLBackend into a coordinator of subsystems, not a container of functions.
-
-Instead of:
-
+self.capabilities = GLCapabilityDriver()
+self.depth = GLDepthDriver(self.capabilities)
+self.blend = GLBlendDriver(self.capabilities)
 self.raster = GLRasterDriver()
-self.legacy = GLLegacyPipeline()
+self.pipeline = self.legacy
+self.geometry = GLGeometryDriver(binding)
+self.textures = GLTextureSystem()
+self.attributes = LegacyAttributeBinder()
 
-You push further into orthogonal, replaceable domains:
+This is exactly the direction you want:
 
-1. Introduce a Capability/State Subsystem (You already started this)
+backend = orchestrator
+subsystems = domain owners
+2. Pipeline Abstraction Is Working
+self.pipeline: GLPipeline = self.legacy
 
-You already have:
+And:
 
-GLStateManager
-RenderStateApplier
+def tex_coord2f(self, coord: TexCoord2f):
+    return self.pipeline.tex_coord2f(coord)
 
-But GLBackend still bypasses them:
+This is clean:
 
-def set_depth_test(enabled):
-    glEnable(GL_DEPTH_TEST) if enabled else glDisable(GL_DEPTH_TEST)
-Fix: Fully delegate state
-class GLBackend:
-    def __init__(self, ...):
-        self.state = GLStateManager(self)
-        self.state_applier = RenderStateApplier(self)
-
-Then remove:
-
-set_depth_test
-set_blend
-set_cull_face
-set_lighting
-enable/disable
-
-Replace with:
-
-self.state.set_enabled(GL_DEPTH_TEST, True)
-
-Now:
-
-All capability transitions are centralized
-Redundant state changes disappear
-Backend becomes stateless executor
-2. Split Fixed-Function vs Modern into Strategy Objects
-
-Right now:
-
-self.legacy = GLLegacyPipeline()
-
-But GLBackend still exposes:
-
-glMatrixMode
-glLoadIdentity
-glColor4f
-glVertex3f
-Instead: full pipeline composition
-class GLPipeline(Protocol):
-    def set_projection(...)
-    def apply_transform(...)
-    def set_material(...)
-    def draw_mesh(...)
-
-Then:
-
-self.pipeline: GLPipeline = LegacyPipeline()  # or ModernPipeline
-
-Now remove ALL of these from GLBackend:
-
-set_matrix_mode_*
-load_identity
-translate
-set_light_position
-set_material
-immediate mode calls (vertex_3f, etc.)
-
-Those belong to the pipeline strategy, not the backend.
-
-3. Extract a Geometry Submission Layer
-
-You currently mix:
-
-binding.bind_mesh
-raw glDrawElements
-client state (glVertexPointer)
-Create:
-class GeometryDriver:
-    def bind(self, mesh): ...
-    def draw(self, mesh, mode): ...
-
-Then:
-
-self.geometry = GeometryDriver(binding)
-
-And replace:
-
+legacy vs modern is swappable
+immediate-mode logic is isolated
+3. Geometry Is Properly Extracted
 def draw_mesh(self, mesh, mode):
-    self.binding.bind_mesh(mesh)
-    self.binding.draw(mesh, gl_value(mode))
+    self.geometry.draw_mesh(mesh, mode)
 
-with:
+You’ve removed binding/draw leakage → good.
 
-self.geometry.draw(mesh, mode)
+🔴 Remaining Problems (The Important Ones)
+1. You Still Have “Pass-Through Explosion”
 
-Now binding is no longer leaked into backend API.
+Your backend still exposes dozens of thin wrappers:
 
-4. Extract Texture System (big win)
+def enable_vertex_array(self):
+    self.attributes.enable_vertex_array()
 
-Right now:
+def set_vertex_pointer(self, data):
+    self.attributes.set_vertex_pointer(data)
 
-@staticmethod
-def create_texture(...)
+This is just API mirroring, not abstraction.
 
-This is a red flag—resource lifecycle inside backend.
+Why this is a problem
+Backend becomes a proxy class
+Adds no semantic value
+Couples callers to backend unnecessarily
+✅ Fix
 
-Move to:
-class TextureSystem:
-    def create(self, spec, data) -> Texture
-    def bind(self, texture)
-    def delete(self, texture)
+Call subsystems directly where appropriate:
 
-Then:
+backend.attributes.enable_vertex_array()
 
-self.textures = TextureSystem(GLTextureDriver())
+Or better: move this entirely into mesh/geometry layer.
 
-Now backend no longer knows:
+2. Capability System Is Still Fragmented
 
-how textures are created
-how they’re initialized
-5. Extract Legacy Client-State (this is currently the messiest part)
+You now have:
 
-All of this:
+self.capabilities
+self.depth
+self.blend
 
-enable_vertex_array
-glVertexPointer
-glNormalPointer
-glColorPointer
+But also:
 
-→ should live in something like:
+def set_cull_face(self, enabled: bool):
+    self.capabilities.set_enabled(GL_CULL_FACE, enabled)
 
-class LegacyAttributeBinder:
-    def bind(mesh)
+and:
 
-You already almost have this:
+def set_lighting(self, enabled: bool):
+    self.capabilities.set_enabled(GLLight.LIGHTING, enabled)
 
-GLAttributeArray.enable_legacy()
+and:
 
-So finish it:
+def set_depth_test(self, enabled: bool):
+    self.depth.set_depth_test(enabled)
+Problem
 
-Remove all client-state functions from GLBackend
-Let mesh/attribute system handle it
-6. Clip Planes → State Object Only
+You have two overlapping APIs:
 
-You already have:
+generic: capabilities.set_enabled(...)
+specialized: depth.set_*, blend.set_*
+✅ Fix (pick one model)
+Option A (recommended)
+Keep specialized drivers
+Remove generic calls from backend
+self.depth.set_test(enabled)
+self.blend.set_enabled(enabled)
 
-GLClipPlaneState.apply(state)
+And hide capabilities entirely.
 
-But GLBackend still has:
+Option B (lower-level)
+Use only capabilities
+Remove depth/blend drivers
 
-enable_clip_plane0()
-disable_clip_plane0()
+But this loses semantic clarity.
 
-Delete those.
+3. Clip Plane API Is Still Split (You Were Right to Question It)
 
-Use:
+You now have:
 
-clip_state.apply(self.state)
-7. Reduce GLBackend to a Thin Orchestrator
+self.clip = GLClipPlaneState(...)
 
-After decomposition, GLBackend should look closer to:
+AND:
+
+def enable_clip0(self):
+    self.enable(GLCapability.CLIP_DISTANCE0)
+
+def set_clip_plane_enabled(self, plane, enabled):
+    self.capabilities.set_clip_plane_enabled(plane, enabled)
+
+AND:
+
+GLLegacyClipPlane.CLIP_PLANE0
+Problem
+
+You are mixing:
+
+modern (CLIP_DISTANCE0)
+legacy (CLIP_PLANE0)
+declarative (GLClipPlaneState)
+✅ Fix (strong recommendation)
+
+Pick one abstraction layer:
+
+👉 Use only:
+
+GLClipPlaneState
+
+And apply it via your existing system:
+
+clip.apply(self.capabilities)
+
+Delete:
+
+enable_clip0/1
+set_clip_plane_enabled
+GLLegacyClipPlane (unless strictly inside legacy pipeline)
+4. Backend Still Owns Too Many “Convenience Methods”
+
+Example:
+
+def clear_grey(self)
+def set_uniform_color(self)
+def enable_depth_test(self)
+
+These are policy decisions, not backend responsibilities.
+
+✅ Better separation
+Backend → execution only
+Higher layer → decides what to do
+
+Example:
+
+renderer.setup_default_state()
+
+instead of:
+
+backend.enable_depth_test()
+backend.clear_grey()
+5. Minor: Duplicate Blending Entry Points
+def setup_blending(self):
+    self.blend.setup_blending()
+
+def setup_blending_funcs(self):
+    self.blend.setup_blending()
+
+This is duplication.
+
+🧠 Big Picture: Where You Are Now
+
+You’ve successfully moved to:
+
+Subsystem-oriented rendering backend
+
+But you’re still halfway between:
+
+façade API (old style)
+system composition (new style)
+✨ What the Final Shape Should Look Like
+
+Your backend should trend toward:
 
 class GLBackend:
-    def __init__(self, pipeline, geometry, textures):
-        self.pipeline = pipeline
-        self.geometry = geometry
-        self.textures = textures
-        self.state = GLStateManager(self)
-        self.state_applier = RenderStateApplier(self)
+    def __init__(...):
+        self.pipeline
+        self.geometry
+        self.textures
+        self.state
+        self.framebuffer
 
-    def apply_state(self, state: RenderState):
-        self.state_applier.apply(state)
+    def apply_state(...)
+    def draw_command(...)
 
-    def draw(self, command: DrawCommand):
-        command.execute(self)
+Everything else:
 
-That’s it.
+lives in subsystems
+or higher-level renderer
+🎯 Bottom Line
+You’re doing very well architecturally now.
 
-Everything else is delegated.
+But to finish the job:
 
-8. What You Gain
-Before
-Backend = 70+ methods
-Mixed abstraction levels
-Hard to swap legacy/modern
-State logic duplicated
-After
-Backend = orchestrator only
-Systems:
-StateManager
-Pipeline
-GeometryDriver
-TextureSystem
-Clean boundaries
-True backend interchangeability
-The Key Insight
-
-You don’t want:
-
-“GLBackend with composed helpers”
-
-You want:
-
-“A rendering system composed of subsystems, with GLBackend as the wiring layer”
-
-If You Want the Next Step
-
-The natural evolution from here (and what your current design is very close to) is:
-
-Frame graph / render graph
-Resource registry (textures, buffers, FBOs)
-Stateless command submission
-
-Which eliminates almost all manual orchestration.
-
-If you want, I can take your current code and show a 
-minimal frame graph built on top of this design—that’s the point where PicoGL-style architecture really clicks.
+❌ Stop mirroring subsystem APIs in GLBackend
+❌ Eliminate duplicate state paths (capabilities vs depth/blend)
+❌ Unify clip plane handling (prefer declarative state)
+❌ Remove policy/convenience methods from backend
+✅ Let subsystems be used directly where appropriate
