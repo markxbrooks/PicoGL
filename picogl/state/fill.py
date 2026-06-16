@@ -28,20 +28,17 @@ class GLLight(Selectable, IntEnum):
 
 
 class GLCapability(IntEnum):
+    """GL Capability"""
     COLOR_MATERIAL = GL_COLOR_MATERIAL
 
 
-class GLMaterialParameter(IntEnum):
-    AMBIENT = GL_AMBIENT
-    DIFFUSE = GL_DIFFUSE
-    SPECULAR = GL_SPECULAR
-
-
 class GLColorMaterialMode(IntEnum):
+    """GL Color Material Mode"""
     AMBIENT_AND_DIFFUSE = GL_AMBIENT_AND_DIFFUSE
 
 
 class GLLightParameter(IntEnum):
+    """GL Light Parameter"""
     POSITION = GL_POSITION
     AMBIENT = GL_AMBIENT
     DIFFUSE = GL_DIFFUSE
@@ -50,7 +47,6 @@ class GLLightParameter(IntEnum):
 
 class GLFace(Selectable, IntEnum):
     """GL Face"""
-
     FRONT = GL_FRONT
     BACK = GL_BACK
     FRONT_AND_BACK = GL_FRONT_AND_BACK

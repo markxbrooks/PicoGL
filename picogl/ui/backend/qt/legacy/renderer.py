@@ -34,7 +34,7 @@ from examples import g_color_buffer_data, g_vertex_buffer_data
 from picogl.renderer import MeshData
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.state.draw_mode import GLBitMask, GLLegacyMatrixMode
-from picogl.state.fill import GLFace, GLLight, GLMaterialParameter, GLLightParameter, GLCapability
+from picogl.state.fill import GLFace, GLLight, GLLightParameter, GLCapability
 from picogl.ui.backend.qt.base import GLBase
 
 
