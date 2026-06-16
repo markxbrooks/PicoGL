@@ -5,6 +5,7 @@ from unittest.mock import call, patch
 
 from OpenGL.GL import (
     GL_BLEND,
+    GL_COLOR_ARRAY,
     GL_CULL_FACE,
     GL_DEPTH_TEST,
     GL_FLOAT,
@@ -12,33 +13,35 @@ from OpenGL.GL import (
     GL_LIGHTING,
     GL_LINE,
     GL_MODELVIEW,
+    GL_NORMAL_ARRAY,
     GL_ONE,
     GL_POSITION,
     GL_TEXTURE_2D,
     GL_TEXTURE_COORD_ARRAY,
     GL_UNSIGNED_INT,
-    GL_ZERO,
-    GL_COLOR_ARRAY,
-    GL_NORMAL_ARRAY,
     GL_VERTEX_ARRAY,
+    GL_ZERO,
 )
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_AMBIENT, GL_DIFFUSE,
-                                          GL_FRONT_AND_BACK, GL_PROJECTION,
-                                          GL_SHININESS, GL_SPECULAR)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (
+    GL_AMBIENT,
+    GL_DIFFUSE,
+    GL_FRONT_AND_BACK,
+    GL_PROJECTION,
+    GL_SHININESS,
+    GL_SPECULAR,
+)
 from OpenGL.raw.GL.VERSION.GL_1_1 import GL_CLIP_PLANE0, GL_CLIP_PLANE1
 
 from picogl.backend.capability import GLMaterialFace, PhongMaterial
-from picogl.backend.GL.backend import (
-    GLBackend,
-)
-from picogl.backend.legacy.core.pipeline import GLLegacyPipeline
-from picogl.backend.legacy.core.attribute_binder import LegacyAttributeBinder
-from picogl.backend.GL.driver.texture import GLTextureSystem
-from picogl.backend.GL.driver.geometry import GLGeometryDriver
+from picogl.backend.GL.backend import GLBackend
 from picogl.backend.GL.driver.blend import GLBlendDriver
-from picogl.backend.GL.driver.depth import GLDepthDriver
 from picogl.backend.GL.driver.capability import GLCapabilityDriver
+from picogl.backend.GL.driver.depth import GLDepthDriver
+from picogl.backend.GL.driver.geometry import GLGeometryDriver
 from picogl.backend.GL.driver.raster import GLRasterDriver
+from picogl.backend.GL.driver.texture import GLTextureSystem
+from picogl.backend.legacy.core.attribute_binder import LegacyAttributeBinder
+from picogl.backend.legacy.core.pipeline import GLLegacyPipeline
 from picogl.backend.state import (
     BlendState,
     DepthState,
@@ -190,7 +193,18 @@ class TestRenderStateApplier(unittest.TestCase):
         backend = RecordingBackend()
         depth = DepthState(test=False, write=False)
 
-        depth.apply(state=type("State", (), {"backend": backend, "set_enabled": lambda _self, cap, enabled: backend.calls.append(("enabled", cap, enabled))})())
+        depth.apply(
+            state=type(
+                "State",
+                (),
+                {
+                    "backend": backend,
+                    "set_enabled": lambda _self, cap, enabled: backend.calls.append(
+                        ("enabled", cap, enabled)
+                    ),
+                },
+            )()
+        )
 
         call_names = [call[0] for call in backend.calls]
         self.assertIn("enabled", call_names)
@@ -256,7 +270,9 @@ class TestDrawCommand(unittest.TestCase):
         with (
             patch("picogl.backend.GL.backend.glEnable") as enable,
             patch("picogl.backend.GL.backend.glDisable") as disable,
-            patch("picogl.backend.GL.backend.glIsEnabled", return_value=True) as is_enabled,
+            patch(
+                "picogl.backend.GL.backend.glIsEnabled", return_value=True
+            ) as is_enabled,
             patch("picogl.backend.GL.backend.glDepthMask") as depth_mask,
             patch("picogl.backend.GL.backend.glDepthFunc") as depth_func,
             patch("picogl.backend.GL.backend.glBlendFunc") as blend_func,
@@ -286,7 +302,9 @@ class TestDrawCommand(unittest.TestCase):
         with (
             patch.object(backend.capabilities, "enable") as enable,
             patch.object(backend.capabilities, "disable") as disable,
-            patch.object(backend.capabilities, "is_enabled", return_value=True) as is_enabled,
+            patch.object(
+                backend.capabilities, "is_enabled", return_value=True
+            ) as is_enabled,
             patch.object(backend.capabilities, "set_enabled") as set_enabled,
             patch.object(backend.depth, "set_depth_test") as set_depth_test,
             patch.object(backend.depth, "set_depth_write") as set_depth_write,
@@ -369,7 +387,9 @@ class TestDrawCommand(unittest.TestCase):
             legacy.set_light([0.0, 0.0, 10.0, 1.0])
             legacy.set_material(GLMaterialFace.FRONT_AND_BACK, material)
 
-        self.assertEqual(matrix_mode.call_args_list, [call(GL_PROJECTION), call(GL_MODELVIEW)])
+        self.assertEqual(
+            matrix_mode.call_args_list, [call(GL_PROJECTION), call(GL_MODELVIEW)]
+        )
         load_identity.assert_called_once_with()
         perspective.assert_called_once_with(45.0, 1.5, 0.1, 1000.0)
         translate.assert_called_once_with(1.0, 2.0, 3.0)
@@ -459,7 +479,9 @@ class TestDrawCommand(unittest.TestCase):
             textures.delete_texture(7)
 
         self.assertEqual(handle, 42)
-        self.assertEqual([call[0] for call in driver.calls], ["create", "bind", "initialize"])
+        self.assertEqual(
+            [call[0] for call in driver.calls], ["create", "bind", "initialize"]
+        )
         self.assertEqual(driver.calls[0][1].spec.width, 4)
         self.assertEqual(driver.calls[0][1].spec.height, 5)
         bind_texture.assert_called_once_with(GL_TEXTURE_2D, 7)
@@ -507,23 +529,41 @@ class TestDrawCommand(unittest.TestCase):
         with (
             patch.object(backend.geometry, "draw_mesh") as draw_mesh,
             patch.object(backend.geometry, "draw_elements") as draw_elements,
-            patch.object(backend.geometry, "draw_bound_elements") as draw_bound_elements,
+            patch.object(
+                backend.geometry, "draw_bound_elements"
+            ) as draw_bound_elements,
             patch.object(backend.geometry, "draw_arrays") as draw_arrays,
             patch.object(
                 backend.geometry,
                 "draw_arrays_bound_vao",
             ) as draw_arrays_bound_vao,
-            patch.object(backend.textures, "create_texture", return_value=9) as create_texture,
+            patch.object(
+                backend.textures, "create_texture", return_value=9
+            ) as create_texture,
             patch.object(backend.textures, "bind_texture") as bind_texture,
             patch.object(backend.textures, "delete_texture") as delete_texture,
-            patch.object(backend.attributes, "enable_vertex_array") as enable_vertex_array,
-            patch.object(backend.attributes, "set_vertex_pointer") as set_vertex_pointer,
-            patch.object(backend.attributes, "enable_normal_array") as enable_normal_array,
-            patch.object(backend.attributes, "set_normal_pointer") as set_normal_pointer,
-            patch.object(backend.attributes, "enable_color_array") as enable_color_array,
+            patch.object(
+                backend.attributes, "enable_vertex_array"
+            ) as enable_vertex_array,
+            patch.object(
+                backend.attributes, "set_vertex_pointer"
+            ) as set_vertex_pointer,
+            patch.object(
+                backend.attributes, "enable_normal_array"
+            ) as enable_normal_array,
+            patch.object(
+                backend.attributes, "set_normal_pointer"
+            ) as set_normal_pointer,
+            patch.object(
+                backend.attributes, "enable_color_array"
+            ) as enable_color_array,
             patch.object(backend.attributes, "set_color_pointer") as set_color_pointer,
-            patch.object(backend.attributes, "enable_texcoord_array") as enable_texcoord_array,
-            patch.object(backend.attributes, "set_texcoord_pointer") as set_texcoord_pointer,
+            patch.object(
+                backend.attributes, "enable_texcoord_array"
+            ) as enable_texcoord_array,
+            patch.object(
+                backend.attributes, "set_texcoord_pointer"
+            ) as set_texcoord_pointer,
         ):
             backend.draw_mesh(mesh, GL_LINE)
             backend.draw_elements(GL_LINE, [0, 1, 2])

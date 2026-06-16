@@ -34,8 +34,7 @@ Usage Example:
     projection_matrix = get_matrix(GL_PROJECTION_MATRIX)
 """
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_PROJECTION, glLoadIdentity,
-                                          glMatrixMode)
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_PROJECTION, glLoadIdentity, glMatrixMode
 from OpenGL.raw.GLU import gluPerspective
 
 

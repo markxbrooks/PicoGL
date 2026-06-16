@@ -22,7 +22,9 @@ class GLGeometryDriver:
         glDrawElements(gl_value(mode), len(indices), GL_UNSIGNED_INT, indices)
 
     @staticmethod
-    def draw_bound_elements(mode, index_count: int, index_type=GL_UNSIGNED_INT, pointer=None):
+    def draw_bound_elements(
+        mode, index_count: int, index_type=GL_UNSIGNED_INT, pointer=None
+    ):
         glDrawElements(gl_value(mode), int(index_count), gl_value(index_type), pointer)
 
     @staticmethod

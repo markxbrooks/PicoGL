@@ -39,19 +39,28 @@ from typing import Optional, Union
 
 import numpy as np
 from decologr import Decologr as log
+from elmo.log.silence import SILENT_VAO
 from OpenGL.GL import glBufferSubData, glDeleteVertexArrays, glGenVertexArrays
 from OpenGL.raw.GL._types import GL_FLOAT, GL_UNSIGNED_INT
 from OpenGL.raw.GL.ARB.vertex_array_object import glBindVertexArray
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POINTS
 from OpenGL.raw.GL.VERSION.GL_1_1 import glDrawArrays, glDrawElements
-from OpenGL.raw.GL.VERSION.GL_1_5 import (GL_ARRAY_BUFFER,
-                                          GL_ELEMENT_ARRAY_BUFFER,
-                                          GL_STATIC_DRAW, glBindBuffer)
-from OpenGL.raw.GL.VERSION.GL_2_0 import (glEnableVertexAttribArray,
-                                          glVertexAttribPointer)
+from OpenGL.raw.GL.VERSION.GL_1_5 import (
+    GL_ARRAY_BUFFER,
+    GL_ELEMENT_ARRAY_BUFFER,
+    GL_STATIC_DRAW,
+    glBindBuffer,
+)
+from OpenGL.raw.GL.VERSION.GL_2_0 import (
+    glEnableVertexAttribArray,
+    glVertexAttribPointer,
+)
 from OpenGL.raw.GL.VERSION.GL_3_0 import glIsVertexArray
-from picogl.backend.modern.core.vertex.array.helpers import \
-    enable_points_rendering_state
+from PySide6.QtGui import QOpenGLContext
+
+from picogl.backend.modern.core.vertex.array.helpers import (
+    enable_points_rendering_state,
+)
 from picogl.backend.modern.core.vertex.base import VertexBuffer
 from picogl.backend.modern.core.vertex.buffer.element import ModernEBO
 from picogl.backend.modern.core.vertex.buffer.object import ModernVBO
@@ -61,9 +70,6 @@ from picogl.buffers.glcleanup import delete_buffer
 from picogl.buffers.vertex.aliases import NAME_ALIASES
 from picogl.buffers.vertex.registry import store_in_gl_registry
 from picogl.safe import gl_gen_safe
-from PySide6.QtGui import QOpenGLContext
-
-from elmo.log.silence import SILENT_VAO
 
 
 def current_gl_context() -> int:
@@ -74,6 +80,7 @@ def current_gl_context() -> int:
         return id(QOpenGLContext.currentContext())
     except Exception:
         return None
+
 
 class GLResource:
     """Base class for all GL-owned objects."""
@@ -116,7 +123,11 @@ class VertexArrayObject(VertexBase, GLResource):
             (defaults to ``self.__class__.__name__``).
         """
         self._creation_context = QOpenGLContext.currentContext()
-        log.message(f"VAO context :{id(self._creation_context)}", scope="VertexArrayObject", silent=SILENT_VAO)
+        log.message(
+            f"VAO context :{id(self._creation_context)}",
+            scope="VertexArrayObject",
+            silent=SILENT_VAO,
+        )
         self._registry_label = registry_label
         self._configured: bool = False
         if not handle or handle is None:
@@ -130,7 +141,9 @@ class VertexArrayObject(VertexBase, GLResource):
         self.attributes = []
         self.vbos = []
         self.named_vbos: dict[str, VertexBuffer] = {}
-        self.vao: Optional[int] = None  # Bonds Vertex Array Object. Does absolutely nothing
+        self.vao: Optional[int] = (
+            None  # Bonds Vertex Array Object. Does absolutely nothing
+        )
         self.ebo = None  # Bond Index Buffer Object
         self.layout: Optional[LayoutDescriptor] = None
         self.bind()

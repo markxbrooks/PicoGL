@@ -169,9 +169,7 @@ class RenderState:
     ):
         if raster is not None:
             line_width = raster.line_width if line_width is None else line_width
-            polygon_mode = (
-                raster.polygon_mode if polygon_mode is None else polygon_mode
-            )
+            polygon_mode = raster.polygon_mode if polygon_mode is None else polygon_mode
 
         if depth is not None:
             depth_test = depth.test if depth_test is None else depth_test
@@ -328,7 +326,9 @@ class TestGLMesh:
             attr.enable_legacy(GL_VERTEX_ARRAY)  # refine mapping
 
         if self.indices is not None:
-            glDrawElements(GL_TRIANGLES, len(self.indices), GL_UNSIGNED_INT, self.indices)
+            glDrawElements(
+                GL_TRIANGLES, len(self.indices), GL_UNSIGNED_INT, self.indices
+            )
 
 
 @dataclass
@@ -358,7 +358,9 @@ class DrawCommand:
         elif hasattr(self.mesh, "draw"):
             self.mesh.draw()
         else:
-            raise TypeError("DrawCommand requires a mode/backend draw_mesh or a drawable mesh.")
+            raise TypeError(
+                "DrawCommand requires a mode/backend draw_mesh or a drawable mesh."
+            )
 
 
 @dataclass

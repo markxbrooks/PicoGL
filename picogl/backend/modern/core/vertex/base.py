@@ -37,12 +37,20 @@ import ctypes
 import numpy as np
 from OpenGL import error as _gl_err
 from OpenGL.raw.GL._types import GL_FLOAT, GL_UNSIGNED_INT
-from OpenGL.raw.GL.VERSION.GL_1_5 import (GL_ARRAY_BUFFER, GL_DYNAMIC_DRAW,
-                                          GL_STATIC_DRAW, glBindBuffer,
-                                          glBufferData, glBufferSubData,
-                                          glIsBuffer)
-from OpenGL.raw.GL.VERSION.GL_2_0 import (glEnableVertexAttribArray,
-                                          glVertexAttribPointer)
+from OpenGL.raw.GL.VERSION.GL_1_5 import (
+    GL_ARRAY_BUFFER,
+    GL_DYNAMIC_DRAW,
+    GL_STATIC_DRAW,
+    glBindBuffer,
+    glBufferData,
+    glBufferSubData,
+    glIsBuffer,
+)
+from OpenGL.raw.GL.VERSION.GL_2_0 import (
+    glEnableVertexAttribArray,
+    glVertexAttribPointer,
+)
+
 from picogl.buffers.base import VertexBase
 
 

@@ -24,5 +24,10 @@ class GLReadback:
     def read_depth(x, y, w, h):
         return glReadPixels(x, y, w, h, GL_DEPTH_COMPONENT, GL_FLOAT)
 
-    def read_pixels(self, depth: ndarray[Any, dtype[Any]] | ndarray[Any, dtype[generic]], x: int, y_gl: int):
+    def read_pixels(
+        self,
+        depth: ndarray[Any, dtype[Any]] | ndarray[Any, dtype[generic]],
+        x: int,
+        y_gl: int,
+    ):
         glReadPixels(x, y_gl, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, depth)

@@ -1,7 +1,24 @@
 from OpenGL.GL import glLightfv, glMaterialfv
-from OpenGL.raw.GL.VERSION.GL_1_0 import glMatrixMode, GL_MODELVIEW, GL_PROJECTION, glLoadIdentity, glTranslatef, \
-    GL_LIGHT0, GL_POSITION, GL_AMBIENT, GL_DIFFUSE, GL_SPECULAR, glMaterialf, GL_SHININESS, glColor4f, glTexCoord2f, \
-    glVertex3f, GL_AMBIENT_AND_DIFFUSE, GL_FRONT_AND_BACK, glColorMaterial
+from OpenGL.raw.GL.VERSION.GL_1_0 import (
+    GL_AMBIENT,
+    GL_AMBIENT_AND_DIFFUSE,
+    GL_DIFFUSE,
+    GL_FRONT_AND_BACK,
+    GL_LIGHT0,
+    GL_MODELVIEW,
+    GL_POSITION,
+    GL_PROJECTION,
+    GL_SHININESS,
+    GL_SPECULAR,
+    glColor4f,
+    glColorMaterial,
+    glLoadIdentity,
+    glMaterialf,
+    glMatrixMode,
+    glTexCoord2f,
+    glTranslatef,
+    glVertex3f,
+)
 from OpenGL.raw.GLU import gluPerspective
 
 from picogl.backend.capability import FACE_MAP

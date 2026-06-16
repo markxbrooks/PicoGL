@@ -3,9 +3,9 @@ from typing import Optional
 
 import numpy as np
 from OpenGL.GL import glDrawElements
+
 from picogl.attrs.vertex import CanonicalVertexAttrs
-from picogl.backend.legacy.core.vertex.buffer.client_states import \
-    legacy_client_states
+from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
 from picogl.buffers.attributes import AttributeSpec
 from picogl.buffers.factory.layout import create_layout
 from picogl.buffers.glcleanup import delete_buffer_object
@@ -190,7 +190,10 @@ class LegacyGLMesh:
             with legacy_client_states(GLClientState.VERTEX, GLClientState.COLOR):
                 with self.vao.vbo, self.vao.cbo, self.vao.ebo:
                     glDrawElements(
-                        mode, int(self.index_count), GLNumeric.UNSIGNED_INT, ctypes.c_void_p(0)
+                        mode,
+                        int(self.index_count),
+                        GLNumeric.UNSIGNED_INT,
+                        ctypes.c_void_p(0),
                     )
         except Exception as ex:
             print(f"Error drawing mesh: {ex}")

@@ -19,6 +19,7 @@ from PySide6 import QtGui
 
 class GLObjectAttrs:
     """GL Object Attributes"""
+
     handle = "handle"
     label = "label"
     created_context = "created_context"
@@ -33,6 +34,7 @@ class GLObjectInfo:
     created_at: float = field(default_factory=time.time)
     context_id: Optional[int] = None
     attributes: dict = field(default_factory=dict)
+
 
 GL_REGISTRY: Dict[int, GLObjectInfo] = {}
 
@@ -49,8 +51,7 @@ def debug_vao(vao):
     log.parameter(GLObjectAttrs.label, info.label)
     log.parameter(GLObjectAttrs.created_context, info.context_id)
     log.parameter(
-        GLObjectAttrs.current_context,
-        id(QtGui.QOpenGLContext.currentContext())
+        GLObjectAttrs.current_context, id(QtGui.QOpenGLContext.currentContext())
     )
 
 
@@ -86,7 +87,8 @@ def dump_gl_registry(verbose: Optional[bool] = None) -> None:
     by_label = Counter(info.label for info in GL_REGISTRY.values())
     ctx_ids = {info.context_id for info in GL_REGISTRY.values()}
     breakdown = ", ".join(
-        f"{label}={n}" for label, n in sorted(by_label.items(), key=lambda x: (-x[1], x[0]))
+        f"{label}={n}"
+        for label, n in sorted(by_label.items(), key=lambda x: (-x[1], x[0]))
     )
     summary = (
         f"GL registry: {len(GL_REGISTRY)} VAO(s), {len(ctx_ids)} context id(s). "
@@ -104,7 +106,10 @@ def dump_gl_registry(verbose: Optional[bool] = None) -> None:
             )
 
 
-def store_in_gl_registry(handle: int, label: str, ctx_id: int, buffer_type: str = "VAO"):
+def store_in_gl_registry(
+    handle: int, label: str, ctx_id: int, buffer_type: str = "VAO"
+):
     """store in gl registry"""
-    GL_REGISTRY[handle] = GLObjectInfo(handle=handle, type=buffer_type, label=label,
-                                            context_id=ctx_id)
+    GL_REGISTRY[handle] = GLObjectInfo(
+        handle=handle, type=buffer_type, label=label, context_id=ctx_id
+    )

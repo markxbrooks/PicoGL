@@ -9,10 +9,18 @@ Classes:
     GLBackend: A class defining the interface for the GL backend with
                various methods for rendering and managing rendering states.
 """
+
 from abc import ABC, abstractmethod
 from typing import Any, Protocol, runtime_checkable
 
-from OpenGL.GL import glColorPointer, glDrawElements, glEnableClientState, glNormalPointer, glTexCoordPointer, glVertexPointer
+from OpenGL.GL import (
+    glColorPointer,
+    glDrawElements,
+    glEnableClientState,
+    glNormalPointer,
+    glTexCoordPointer,
+    glVertexPointer,
+)
 
 from picogl.numerical import GLNumeric
 from picogl.state.client import GLClientState
@@ -93,15 +101,15 @@ class LegacyBinding(GLBindingStrategy):
 
     def draw(self, mesh, mode):
         if mesh.indices is not None:
-            glDrawElements(mode, len(mesh.indices), GLNumeric.UNSIGNED_INT, mesh.indices)
+            glDrawElements(
+                mode, len(mesh.indices), GLNumeric.UNSIGNED_INT, mesh.indices
+            )
 
 
 class ModernBinding(GLBindingStrategy):
     def bind_mesh(self, mesh):
-        self.bind()   # assumes VAO already configured
+        self.bind()  # assumes VAO already configured
 
     def draw(self, mesh, mode):
         if mesh.ebo is not None:
             glDrawElements(mode, mesh.index_count, GLNumeric.UNSIGNED_INT, None)
-
-

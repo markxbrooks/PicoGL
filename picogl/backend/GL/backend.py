@@ -8,16 +8,30 @@ Classes:
     - GLBackend: Encapsulates functions for managing OpenGL state and
       performing rendering operations.
 """
+
 from typing import Any
 
-from OpenGL.GL import (GL_AMBIENT_AND_DIFFUSE, GL_BLEND_DST, GL_BLEND_SRC,
-                       GL_DEPTH_WRITEMASK,
-                       GL_LINE_WIDTH, GL_POLYGON_MODE,glGetBooleanv,
-                       glGetFloatv, glGetIntegerv, GL_CULL_FACE, GL_LIGHTING, glClear, glClearColor,
-                      glViewport, GL_CLIP_DISTANCE0, GL_CLIP_DISTANCE1,
-                       GL_FRONT_AND_BACK, GL_LIGHT0)
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_COLOR_BUFFER_BIT,
-                                          GL_DEPTH_BUFFER_BIT)
+from OpenGL.GL import (
+    GL_AMBIENT_AND_DIFFUSE,
+    GL_BLEND_DST,
+    GL_BLEND_SRC,
+    GL_CLIP_DISTANCE0,
+    GL_CLIP_DISTANCE1,
+    GL_CULL_FACE,
+    GL_DEPTH_WRITEMASK,
+    GL_FRONT_AND_BACK,
+    GL_LIGHT0,
+    GL_LIGHTING,
+    GL_LINE_WIDTH,
+    GL_POLYGON_MODE,
+    glClear,
+    glClearColor,
+    glGetBooleanv,
+    glGetFloatv,
+    glGetIntegerv,
+    glViewport,
+)
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT
 from OpenGL.raw.GL.VERSION.GL_1_1 import GL_CLIP_PLANE0, GL_CLIP_PLANE1
 
 from picogl.backend.GL.driver.blend import GLBlendDriver
@@ -29,7 +43,13 @@ from picogl.backend.GL.driver.texture import GLTextureSystem
 from picogl.backend.legacy.core.attribute_binder import LegacyAttributeBinder
 from picogl.backend.legacy.core.pipeline import GLLegacyPipeline
 from picogl.backend.opengl import GLBindingStrategy, GLPipeline
-from picogl.backend.state import DrawCommand, RenderState, RenderStateApplier, gl_value, GLClipPlaneState
+from picogl.backend.state import (
+    DrawCommand,
+    GLClipPlaneState,
+    RenderState,
+    RenderStateApplier,
+    gl_value,
+)
 from picogl.buffers.glframe import GLFramebuffer
 from picogl.renderer.readback import GLReadback
 from picogl.state.texture import TexCoord2f
@@ -285,7 +305,9 @@ class GLBackend:
         """draw elements"""
         self.geometry.draw_elements(mode, indices)
 
-    def draw_bound_elements(self, mode, index_count: int, index_type=None, pointer=None):
+    def draw_bound_elements(
+        self, mode, index_count: int, index_type=None, pointer=None
+    ):
         """Draw using the currently bound element buffer."""
         if index_type is None:
             self.geometry.draw_bound_elements(mode, index_count, pointer=pointer)

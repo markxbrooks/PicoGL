@@ -20,12 +20,13 @@ Example usage:
 ...ebo.configure()
 ...ebo.unbind()
 """
+
 from typing import Optional
 
 import numpy as np
 from OpenGL.GL import glBufferData, glGenBuffers
-from OpenGL.raw.GL.VERSION.GL_1_5 import (GL_ELEMENT_ARRAY_BUFFER,
-                                          GL_STATIC_DRAW)
+from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW
+
 from picogl.backend.modern.core.vertex.base import VertexBuffer
 
 

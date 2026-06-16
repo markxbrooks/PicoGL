@@ -73,9 +73,7 @@ class Tu01Win(GLWindow):
         self.shader.initShaderFromGLSL(
             ["glsl/tu01/vertex.glsl"], ["glsl/tu01/fragment.glsl"]
         )
-        self.context.initialize(
-            self.shader, g_vertex_buffer_data, g_color_buffer_data
-        )
+        self.context.initialize(self.shader, g_vertex_buffer_data, g_color_buffer_data)
 
     def calc_MVP(self, width=1920, height=1080):
         self.context.calculate_mvp(width, height)

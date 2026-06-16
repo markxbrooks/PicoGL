@@ -2,9 +2,13 @@
 GLRaster Driver
 """
 
-from OpenGL.GL import (GL_POINT_SIZE_RANGE, glGetFloatv,
-                       glLineWidth, glPointSize,
-                       glPolygonMode)
+from OpenGL.GL import (
+    GL_POINT_SIZE_RANGE,
+    glGetFloatv,
+    glLineWidth,
+    glPointSize,
+    glPolygonMode,
+)
 from OpenGL.raw.GL.VERSION.GL_1_1 import glPolygonOffset
 
 from picogl.backend.state import gl_value

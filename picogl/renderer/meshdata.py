@@ -9,6 +9,7 @@ from typing import Optional, Union
 import numpy as np
 from decologr import Decologr as log
 from OpenGL import GL
+
 from picogl.attrs.vertex import CanonicalVertexAttrs
 from picogl.buffers.vertex.vbo.vbo_class import VBOType
 
@@ -88,33 +89,34 @@ class MeshData:
         if vertices is not None:
             vertices = np.asarray(vertices, dtype=np.float32)
             self.vertices = (
-                vertices if self.vertices is None
+                vertices
+                if self.vertices is None
                 else np.vstack([self.vertices, vertices])
             )
 
         if normals is not None:
             normals = np.asarray(normals, dtype=np.float32)
             self.normals = (
-                normals if self.normals is None
-                else np.vstack([self.normals, normals])
+                normals if self.normals is None else np.vstack([self.normals, normals])
             )
 
         if colors is not None:
             colors = np.asarray(colors, dtype=np.float32)
             self.colors = (
-                colors if self.colors is None
-                else np.vstack([self.colors, colors])
+                colors if self.colors is None else np.vstack([self.colors, colors])
             )
 
         if uvs is not None:
             uvs = np.asarray(uvs, dtype=np.float32)
-            self.uvs = (
-                uvs if self.uvs is None
-                else np.vstack([self.uvs, uvs])
-            )
+            self.uvs = uvs if self.uvs is None else np.vstack([self.uvs, uvs])
 
     def extend_from_mesh(self, other: "MeshData"):
-        self.extend(vertices=other.vertices, normals=other.normals, colors=other.colors, uvs=other.uvs)
+        self.extend(
+            vertices=other.vertices,
+            normals=other.normals,
+            colors=other.colors,
+            uvs=other.uvs,
+        )
 
     # VBO → vertices
     @property
@@ -243,13 +245,13 @@ class MeshData:
 
     @classmethod
     def from_raw(
-            cls,
-            vertices: Union[np.ndarray, list[float]],
-            normals: Optional[Union[np.ndarray, list[float]]] = None,
-            uvs: Optional[Union[np.ndarray, list[float]]] = None,
-            colors: Optional[Union[np.ndarray, list[float]]] = None,
-            indices: Optional[Union[np.ndarray, list[float]]] = None,
-            color_per_vertex: Optional[Union[np.ndarray, list[float]]] = None,
+        cls,
+        vertices: Union[np.ndarray, list[float]],
+        normals: Optional[Union[np.ndarray, list[float]]] = None,
+        uvs: Optional[Union[np.ndarray, list[float]]] = None,
+        colors: Optional[Union[np.ndarray, list[float]]] = None,
+        indices: Optional[Union[np.ndarray, list[float]]] = None,
+        color_per_vertex: Optional[Union[np.ndarray, list[float]]] = None,
     ):
         """
         Build a MeshData from raw/python inputs.
@@ -304,7 +306,13 @@ class MeshData:
         # Indices (optional)
         indices_arr = cls._to_int32_flat(indices, "indices", required=False)
 
-        return cls(vertices=vbo, normals=nbo, texcoords=uvs_arr, colors=cbo_arr, indices=indices_arr)
+        return cls(
+            vertices=vbo,
+            normals=nbo,
+            texcoords=uvs_arr,
+            colors=cbo_arr,
+            indices=indices_arr,
+        )
 
     def draw(
         self,
@@ -328,27 +336,29 @@ class MeshData:
         if self.vertices is None:
             print("Warning: Cannot draw mesh - no vertex data (vertices)")
             return
-        
+
         if self.indices is None:
             print("Warning: Cannot draw mesh - no element data (ebo)")
             return
-            
+
         if len(self.indices) == 0:
             print("Warning: Cannot draw mesh - empty element buffer")
             return
-            
+
         # Validate ebo data to prevent segfaults
         if self.indices.dtype != np.uint32 and self.indices.dtype != np.int32:
-            print(f"Warning: Invalid ebo dtype {self.indices.dtype}, converting to uint32")
+            print(
+                f"Warning: Invalid ebo dtype {self.indices.dtype}, converting to uint32"
+            )
             self.indices = self.indices.astype(np.uint32)
-            
+
         # Check for invalid indices that could cause segfaults
         max_vertex_index = len(self.vertices) // 3 - 1
         if np.any(self.indices > max_vertex_index):
             print(f"Warning: Invalid vertex indices in ebo (max: {max_vertex_index})")
             # Clamp indices to valid range
             self.indices = np.clip(self.indices, 0, max_vertex_index)
-            
+
         if np.any(self.indices < 0):
             print("Warning: Negative vertex indices in ebo")
             # Set negative indices to 0
@@ -396,7 +406,9 @@ class MeshData:
             log.error(f"Element count: {element_count}")
             log.error(f"EBO dtype: {self.indices.dtype}")
             log.error(f"EBO shape: {self.indices.shape}")
-            log.error(f"VBO length: {len(self.vertices) if self.vertices is not None else 'None'}")
+            log.error(
+                f"VBO length: {len(self.vertices) if self.vertices is not None else 'None'}"
+            )
 
         # Restore fill mode
         GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL)

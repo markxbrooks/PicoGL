@@ -1,12 +1,14 @@
 """
 GL Mode
 """
+
 from enum import Enum
 
 
-#class GlMode(str):
+# class GlMode(str):
 class GLMode(str, Enum):
     """OpenGL rendering mode"""
+
     LEGACY = "legacy"
     MODERN = "modern"
 

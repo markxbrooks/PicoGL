@@ -1,6 +1,11 @@
 from typing import Any
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_DEPTH_TEST, glDepthMask, glDepthFunc, GL_LESS
+from OpenGL.raw.GL.VERSION.GL_1_0 import (
+    GL_DEPTH_TEST,
+    GL_LESS,
+    glDepthFunc,
+    glDepthMask,
+)
 
 from picogl.backend.GL.driver.capability import GLCapabilityDriver
 

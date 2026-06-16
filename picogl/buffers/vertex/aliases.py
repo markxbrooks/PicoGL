@@ -5,6 +5,7 @@ from picogl.buffers.vertex.vbo.vbo_class import VBOType
 
 class VertexBufferRole(str, Enum):
     """Enum for vertex buffer types."""
+
     VBO = VBOType.VBO
     CBO = VBOType.CBO
     NBO = VBOType.NBO
@@ -13,6 +14,7 @@ class VertexBufferRole(str, Enum):
 
 class VertexArrayRole(str, Enum):
     """Enum for vertex array types."""
+
     VAO = "handle"
     named_vbos: dict[VertexBufferRole, int]
 

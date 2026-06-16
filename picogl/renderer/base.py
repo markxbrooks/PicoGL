@@ -1,19 +1,26 @@
 """
 Base Renderer Class
 """
-from typing import Optional, Callable
+
+from typing import Callable, Optional
 
 import numpy as np
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_DEPTH_TEST, GL_LINE_SMOOTH,
-                                          glDisable, glEnable, glFlush,
-                                          glLineWidth)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (
+    GL_DEPTH_TEST,
+    GL_LINE_SMOOTH,
+    glDisable,
+    glEnable,
+    glFlush,
+    glLineWidth,
+)
+
 from picogl.renderer.abstract import AbstractRenderer
 
 
 class RendererBase(AbstractRenderer):
     """Base Renderer Class"""
 
-    def __init__(self, parent = None):
+    def __init__(self, parent=None):
         """
         Initialize the renderer.
 

@@ -1,22 +1,23 @@
 import numpy as np
+
 from picogl.buffers.helper import as_vec3_array
 
 
 def compute_vertex_normals(vertices, indices):
     normals = np.zeros_like(vertices)
     for i in range(0, len(indices), 3):
-        i0, i1, i2 = indices[i: i + 3]
+        i0, i1, i2 = indices[i : i + 3]
         v0, v1, v2 = (
-            vertices[i0 * 3: i0 * 3 + 3],
-            vertices[i1 * 3: i1 * 3 + 3],
-            vertices[i2 * 3: i2 * 3 + 3],
+            vertices[i0 * 3 : i0 * 3 + 3],
+            vertices[i1 * 3 : i1 * 3 + 3],
+            vertices[i2 * 3 : i2 * 3 + 3],
         )
         edge1 = np.subtract(v1, v0)
         edge2 = np.subtract(v2, v0)
         n = np.cross(edge1, edge2)
         n /= np.linalg.norm(n) + 1e-8
         for idx in (i0, i1, i2):
-            normals[idx * 3: idx * 3 + 3] += n
+            normals[idx * 3 : idx * 3 + 3] += n
     # Normalize
     norms = np.linalg.norm(normals.reshape(-1, 3), axis=1)
     normals = (normals.reshape(-1, 3).T / (norms + 1e-8)).T

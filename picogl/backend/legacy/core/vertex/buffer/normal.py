@@ -1,13 +1,20 @@
 import numpy as np
 from OpenGL.GL import glNormalPointer
 from OpenGL.raw.GL._types import GL_FLOAT
+
 from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
 
 
 class LegacyNormalVBO(LegacyVBO):
     """Specialized Class for Position Buffers"""
 
-    def __init__(self, handle: int = None, data: np.ndarray = None, size: int = 3, dtype: int = GL_FLOAT):
+    def __init__(
+        self,
+        handle: int = None,
+        data: np.ndarray = None,
+        size: int = 3,
+        dtype: int = GL_FLOAT,
+    ):
         """constructor"""
         super().__init__(handle=handle, size=size, dtype=dtype)
         self.data = data

@@ -1,6 +1,7 @@
 """
 GL Context Class
 """
+
 import threading
 from dataclasses import field
 from typing import Callable, Optional, TypeVar
@@ -8,9 +9,10 @@ from weakref import WeakKeyDictionary
 
 import numpy as np
 from decologr import Decologr as log
+from PySide6.QtGui import QOpenGLContext
+
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.shaders import ShaderType
-from PySide6.QtGui import QOpenGLContext
 
 T = TypeVar("T")
 
@@ -20,7 +22,9 @@ class GLResourceRegistry:
 
     def __init__(self):
         self._creation_context = QOpenGLContext.currentContext()
-        log.message(f"GL context :{id(self._creation_context)}", scope="GLResourceRegistry")
+        log.message(
+            f"GL context :{id(self._creation_context)}", scope="GLResourceRegistry"
+        )
         self._contexts = WeakKeyDictionary()
         self._cache: dict[object, object] = {}
         self.vaos: dict[str, VertexArrayObject] = field(default_factory=dict)
@@ -32,10 +36,18 @@ class GLResourceRegistry:
         self.textures: dict[str, int] = field(default_factory=dict)
         self.active_texture: Optional[str] = None
 
-        self.model_matrix: np.ndarray = field(default_factory=lambda: np.identity(4, dtype=np.float32))
-        self.view_matrix: np.ndarray = field(default_factory=lambda: np.identity(4, dtype=np.float32))
-        self.projection_matrix: np.ndarray = field(default_factory=lambda: np.identity(4, dtype=np.float32))
-        self.eye_position: np.ndarray = field(default_factory=lambda: np.zeros(3, dtype=np.float32))
+        self.model_matrix: np.ndarray = field(
+            default_factory=lambda: np.identity(4, dtype=np.float32)
+        )
+        self.view_matrix: np.ndarray = field(
+            default_factory=lambda: np.identity(4, dtype=np.float32)
+        )
+        self.projection_matrix: np.ndarray = field(
+            default_factory=lambda: np.identity(4, dtype=np.float32)
+        )
+        self.eye_position: np.ndarray = field(
+            default_factory=lambda: np.zeros(3, dtype=np.float32)
+        )
 
     @property
     def context(self):
@@ -84,5 +96,3 @@ class GLResourceRegistry:
         if key not in self._cache:
             self._cache[key] = factory()
         return self._cache[key]
-
-

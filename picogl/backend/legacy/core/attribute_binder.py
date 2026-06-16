@@ -1,10 +1,18 @@
-from OpenGL.GL import glVertexPointer, glNormalPointer, glColorPointer, glTexCoordPointer
-from OpenGL.raw.GL.KHR.debug import GL_VERTEX_ARRAY
-from OpenGL.raw.GL.VERSION.GL_1_1 import (GL_COLOR_ARRAY, GL_NORMAL_ARRAY,
-                                          GL_TEXTURE_COORD_ARRAY,
-                                          glDisableClientState,
-                                          glEnableClientState)
+from OpenGL.GL import (
+    glColorPointer,
+    glNormalPointer,
+    glTexCoordPointer,
+    glVertexPointer,
+)
 from OpenGL.raw.GL._types import GL_FLOAT
+from OpenGL.raw.GL.KHR.debug import GL_VERTEX_ARRAY
+from OpenGL.raw.GL.VERSION.GL_1_1 import (
+    GL_COLOR_ARRAY,
+    GL_NORMAL_ARRAY,
+    GL_TEXTURE_COORD_ARRAY,
+    glDisableClientState,
+    glEnableClientState,
+)
 
 
 class LegacyAttributeBinder:

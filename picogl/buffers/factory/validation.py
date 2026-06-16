@@ -3,13 +3,17 @@ Validation of input data
 """
 
 import numpy as np
+
 from picogl.renderer import MeshData
 
 
 def validate_mesh_data(data: MeshData):
     """validate mesh data"""
     validate_input_data(
-        vertices=data.vertices, indices=data.indices, normals=data.normals, colors=data.colors
+        vertices=data.vertices,
+        indices=data.indices,
+        normals=data.normals,
+        colors=data.colors,
     )
 
 

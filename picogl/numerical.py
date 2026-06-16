@@ -4,9 +4,16 @@ Numerical GL Values
 
 from enum import IntEnum
 
-from OpenGL.GL import (GL_BYTE, GL_DOUBLE, GL_FLOAT, GL_INT,
-                       GL_SHORT, GL_UNSIGNED_BYTE,
-                       GL_UNSIGNED_INT, GL_UNSIGNED_SHORT)
+from OpenGL.GL import (
+    GL_BYTE,
+    GL_DOUBLE,
+    GL_FLOAT,
+    GL_INT,
+    GL_SHORT,
+    GL_UNSIGNED_BYTE,
+    GL_UNSIGNED_INT,
+    GL_UNSIGNED_SHORT,
+)
 
 _SUPPORTED_VERTEX_POINTER_TYPES = {
     GL_FLOAT,
@@ -19,6 +26,7 @@ _SUPPORTED_VERTEX_POINTER_TYPES = {
 
 class GLNumeric(IntEnum):
     """GL Numerical Values"""
+
     FLOAT = GL_FLOAT
     DOUBLE = GL_DOUBLE
     INT = GL_INT

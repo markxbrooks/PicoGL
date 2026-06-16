@@ -2,11 +2,14 @@ import numpy as np
 from OpenGL.GL import glDrawElements, glVertexPointer
 from OpenGL.raw.GL._types import GL_FLOAT
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT
-from OpenGL.raw.GL.VERSION.GL_1_1 import (GL_VERTEX_ARRAY, glDrawArrays,
-                                          glEnableClientState)
+from OpenGL.raw.GL.VERSION.GL_1_1 import (
+    GL_VERTEX_ARRAY,
+    glDrawArrays,
+    glEnableClientState,
+)
 from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ARRAY_BUFFER
-from picogl.backend.legacy.core.vertex.buffer.client_states import \
-    legacy_client_states
+
+from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
 from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
 from picogl.numerical import GLNumeric
 from picogl.state.draw_mode import GLDrawMode
@@ -29,10 +32,12 @@ class LegacyPositionVBO(LegacyVBO):
         data: np.ndarray = None,
         size: int = 3,
         target: int = GL_ARRAY_BUFFER,
-        dtype: int = GL_FLOAT
+        dtype: int = GL_FLOAT,
     ):
         """Initialize the position VBO."""
-        super().__init__(handle=handle, size=size, data=data, target=target, dtype=dtype)
+        super().__init__(
+            handle=handle, size=size, data=data, target=target, dtype=dtype
+        )
         self.size = size
         self.data = data
         if data is not None:

@@ -3,6 +3,7 @@ from enum import Enum
 
 class ShaderType(str, Enum):
     """Shader Type"""
+
     AXIS = "axis"
     ATOMS = "atoms"
     BONDS = "bonds"

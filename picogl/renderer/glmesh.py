@@ -11,18 +11,19 @@ import ctypes
 from typing import TYPE_CHECKING, Literal, Optional, Union
 
 import numpy as np
+from elmo.glsl.layouts import build_shader_layouts
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT
+
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.buffers.glcleanup import delete_buffer_object
 from picogl.buffers.helper import as_vec3_array
 from picogl.buffers.vertex.vbo.vbo_class import MeshDataAttrs, VBOType
 from picogl.shaders.type import ShaderType
-
-from elmo.glsl.layouts import build_shader_layouts
 from picogl.state.draw_mode import GLDrawMode
 
 if TYPE_CHECKING:
     from picogl.renderer.meshdata import MeshData
+
 
 class GLMesh:
     """
@@ -60,9 +61,13 @@ class GLMesh:
 
         # Validate that we have a multiple of 3 indices for triangles
         if self.indices.size % 3 != 0:
-            raise ValueError("GLMesh: faces must define a multiple of 3 indices (triangles)")
+            raise ValueError(
+                "GLMesh: faces must define a multiple of 3 indices (triangles)"
+            )
 
-        self.use_indices = use_indices  # present for compatibility and potential path changes
+        self.use_indices = (
+            use_indices  # present for compatibility and potential path changes
+        )
         if shader_type not in (
             ShaderType.ISOSURFACE,
             ShaderType.RIBBONS,

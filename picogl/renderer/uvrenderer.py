@@ -5,16 +5,28 @@ UV render
 from typing import Optional
 
 from OpenGL.GL import glDrawElements, glGetIntegerv
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_BACK, GL_FALSE, GL_FLOAT,
-                                          GL_FRONT, GL_LINE, GL_POLYGON_MODE,
-                                          GL_TRIANGLES, GL_UNSIGNED_SHORT,
-                                          glPolygonMode)
-from OpenGL.raw.GL.VERSION.GL_1_5 import (GL_ARRAY_BUFFER,
-                                          GL_ELEMENT_ARRAY_BUFFER,
-                                          glBindBuffer)
-from OpenGL.raw.GL.VERSION.GL_2_0 import (glDisableVertexAttribArray,
-                                          glEnableVertexAttribArray,
-                                          glVertexAttribPointer)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (
+    GL_BACK,
+    GL_FALSE,
+    GL_FLOAT,
+    GL_FRONT,
+    GL_LINE,
+    GL_POLYGON_MODE,
+    GL_TRIANGLES,
+    GL_UNSIGNED_SHORT,
+    glPolygonMode,
+)
+from OpenGL.raw.GL.VERSION.GL_1_5 import (
+    GL_ARRAY_BUFFER,
+    GL_ELEMENT_ARRAY_BUFFER,
+    glBindBuffer,
+)
+from OpenGL.raw.GL.VERSION.GL_2_0 import (
+    glDisableVertexAttribArray,
+    glEnableVertexAttribArray,
+    glVertexAttribPointer,
+)
+
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.renderer import RendererBase
 

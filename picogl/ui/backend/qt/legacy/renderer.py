@@ -2,25 +2,40 @@ from typing import Optional
 
 import numpy as np
 from decologr import Decologr as log
-from examples import g_color_buffer_data, g_vertex_buffer_data
 from OpenGL.GL import glLightfv, glMaterialfv
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_AMBIENT, GL_AMBIENT_AND_DIFFUSE,
-                                          GL_COLOR_BUFFER_BIT,
-                                          GL_COLOR_MATERIAL,
-                                          GL_DEPTH_BUFFER_BIT, GL_DEPTH_TEST,
-                                          GL_DIFFUSE, GL_FRONT_AND_BACK,
-                                          GL_LIGHT0, GL_LIGHTING, GL_MODELVIEW,
-                                          GL_POSITION, GL_PROJECTION,
-                                          GL_SHININESS, GL_SPECULAR, glClear,
-                                          glClearColor, glColorMaterial,
-                                          glEnable, glLoadIdentity,
-                                          glMaterialf, glMatrixMode, glRotatef)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (
+    GL_AMBIENT,
+    GL_AMBIENT_AND_DIFFUSE,
+    GL_COLOR_BUFFER_BIT,
+    GL_COLOR_MATERIAL,
+    GL_DEPTH_BUFFER_BIT,
+    GL_DEPTH_TEST,
+    GL_DIFFUSE,
+    GL_FRONT_AND_BACK,
+    GL_LIGHT0,
+    GL_LIGHTING,
+    GL_MODELVIEW,
+    GL_POSITION,
+    GL_PROJECTION,
+    GL_SHININESS,
+    GL_SPECULAR,
+    glClear,
+    glClearColor,
+    glColorMaterial,
+    glEnable,
+    glLoadIdentity,
+    glMaterialf,
+    glMatrixMode,
+    glRotatef,
+)
 from OpenGL.raw.GLU import gluLookAt, gluPerspective
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtWidgets import QWidget
+
+from examples import g_color_buffer_data, g_vertex_buffer_data
 from picogl.renderer import MeshData
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.ui.backend.qt.base import GLBase
-from PySide6.QtCore import Qt, QTimer
-from PySide6.QtWidgets import QWidget
 
 
 class LegacyQtObjectRenderer(GLBase):

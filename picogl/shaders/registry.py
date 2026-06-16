@@ -30,6 +30,7 @@ from dataclasses import dataclass, field
 from typing import Dict, Optional
 
 from decologr import Decologr as log
+
 from picogl.backend.modern.core.shader.load import load_shader
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.shaders.compile import compile_shaders

@@ -25,6 +25,7 @@ class ObjectData:
 
     The data returned by the object loader
     """
+
     vertices: List[float]
     texcoords: List[float] = field(default_factory=list)
     normals: List[float] = field(default_factory=list)

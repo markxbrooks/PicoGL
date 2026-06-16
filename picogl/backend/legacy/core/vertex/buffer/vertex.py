@@ -7,8 +7,13 @@ import ctypes
 import numpy as np
 from OpenGL.GL import glBufferData, glGenBuffers
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_FLOAT, GL_LINES, GL_UNSIGNED_INT
-from OpenGL.raw.GL.VERSION.GL_1_5 import (GL_ARRAY_BUFFER, GL_DYNAMIC_DRAW,
-                                          GL_STATIC_DRAW, glBufferSubData)
+from OpenGL.raw.GL.VERSION.GL_1_5 import (
+    GL_ARRAY_BUFFER,
+    GL_DYNAMIC_DRAW,
+    GL_STATIC_DRAW,
+    glBufferSubData,
+)
+
 from picogl.backend.modern.core.vertex.base import VertexBuffer
 
 
