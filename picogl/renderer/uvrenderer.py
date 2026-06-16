@@ -17,9 +17,10 @@ from OpenGL.raw.GL.VERSION.GL_2_0 import (glDisableVertexAttribArray,
                                           glVertexAttribPointer)
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.renderer import RendererBase
+from picogl.renderer.initializable import Initializable
 
 
-class UvRenderer(RendererBase):
+class UvRenderer(Initializable, RendererBase):
     """
     2D UV Renderer that draws a mesh using UV coordinates and indices.
     Follows the RendererBase interface.
@@ -35,22 +36,12 @@ class UvRenderer(RendererBase):
         self.uv_buffer: Optional[int] = None
         self.indices_buffer: Optional[int] = None
         self.index_count: int = 0
-        self.shader: Optional[ShaderProgram] = ShaderProgram(
+        self.shader: ShaderProgram = ShaderProgram(
             vertex_source_file=vertex_shader_file,
             fragment_source_file=fragment_shader_file,
         )
 
-    def initialize(self):
-        """
-        Initialize OpenGL resources. Overrides RendererBase.initialize().
-        """
-        if self._initialized:
-            return
-
-        # Any additional initialization logic can go here
-        self._initialized = True
-
-    def initialize(self, uv_buffer: int, indices_buffer: int, index_count: int) -> None:
+    def bind(self, uv_buffer: int, indices_buffer: int, index_count: int) -> None:
         """
         Bind the UV and index buffers to the renderer.
 
@@ -64,11 +55,13 @@ class UvRenderer(RendererBase):
             raise ValueError(
                 "uv_buffer, indices_buffer, and index_count must be integers"
             )
+        self.ensure_initialized()
+        self._setup(index_count, indices_buffer, uv_buffer)
 
+    def _setup(self, index_count: int, indices_buffer: int, uv_buffer: int):
         self.uv_buffer = uv_buffer
         self.indices_buffer = indices_buffer
         self.index_count = index_count
-        self.initialize()
 
     def _draw_model(self) -> None:
         """
