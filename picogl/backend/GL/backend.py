@@ -14,8 +14,6 @@ from typing import Any
 from OpenGL.GL import (
     GL_BLEND_DST,
     GL_BLEND_SRC,
-    GL_CLIP_DISTANCE0,
-    GL_CLIP_DISTANCE1,
     GL_CULL_FACE,
     GL_DEPTH_WRITEMASK,
     GL_LINE_WIDTH,
@@ -27,8 +25,6 @@ from OpenGL.GL import (
     glGetIntegerv,
     glViewport,
 )
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT
-from OpenGL.raw.GL.VERSION.GL_1_1 import GL_CLIP_PLANE0, GL_CLIP_PLANE1
 
 from picogl.backend.GL.driver.blend import GLBlendDriver
 from picogl.backend.GL.driver.capability import GLCapabilityDriver
@@ -48,7 +44,8 @@ from picogl.backend.state import (
 )
 from picogl.buffers.glframe import GLFramebuffer
 from picogl.renderer.readback import GLReadback
-from picogl.state.fill import GLColorMaterialMode, GLFace, GLLight
+from picogl.state.draw_mode import GLLegacyClipPlane
+from picogl.state.fill import GLColorMaterialMode, GLFace, GLLight, GLCapability
 from picogl.state.texture import TexCoord2f
 
 
@@ -135,7 +132,7 @@ class GLBackend:
             OpenGL.GL.error.GLError: If an OpenGL error occurs during the
             clearing operation.
         """
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        glClear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
 
     def load_identity(self):
         self.pipeline.load_identity()
@@ -244,26 +241,26 @@ class GLBackend:
         self.capabilities.enable_multisample()
 
     def enable_clip0(self):
-        self.enable(GL_CLIP_DISTANCE0)
+        self.enable(GLCapability.CLIP_DISTANCE0)
 
     def enable_clip1(self):
-        self.enable(GL_CLIP_DISTANCE1)
+        self.enable(GLCapability.CLIP_DISTANCE1)
 
     def set_clip_plane_enabled(self, plane, enabled: bool):
         """Enable or disable a legacy clipping plane."""
         self.capabilities.set_clip_plane_enabled(plane, enabled)
 
     def enable_clip_plane0(self):
-        self.set_clip_plane_enabled(GL_CLIP_PLANE0, True)
+        self.set_clip_plane_enabled(GLLegacyClipPlane.CLIP_PLANE0, True)
 
     def disable_clip_plane0(self):
-        self.set_clip_plane_enabled(GL_CLIP_PLANE0, False)
+        self.set_clip_plane_enabled(GLLegacyClipPlane.CLIP_PLANE0, False)
 
     def enable_clip_plane1(self):
-        self.set_clip_plane_enabled(GL_CLIP_PLANE1, True)
+        self.set_clip_plane_enabled(GLLegacyClipPlane.CLIP_PLANE1, True)
 
     def disable_clip_plane1(self):
-        self.set_clip_plane_enabled(GL_CLIP_PLANE1, False)
+        self.set_clip_plane_enabled(GLLegacyClipPlane.CLIP_PLANE1, False)
 
     def enable_vertex_array(self):
         self.attributes.enable_vertex_array()

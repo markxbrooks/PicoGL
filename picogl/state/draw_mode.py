@@ -35,6 +35,7 @@ from OpenGL.GL import (
     GL_UNSIGNED_INT,
     GL_UNSIGNED_SHORT,
 )
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_CLIP_PLANE0, GL_CLIP_PLANE1
 
 
 class GLLegacyMatrixMode(IntEnum):
@@ -42,6 +43,12 @@ class GLLegacyMatrixMode(IntEnum):
 
     PROJECTION = GL_PROJECTION
     MODELVIEW = GL_MODELVIEW
+
+
+class GLLegacyClipPlane(IntEnum):
+    """Clipping Mode"""
+    CLIP_PLANE0 = GL_CLIP_PLANE0
+    CLIP_PLANE1 = GL_CLIP_PLANE1
 
 
 class GLBitMask(IntFlag):
