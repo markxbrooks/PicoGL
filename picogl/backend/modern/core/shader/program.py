@@ -2,11 +2,10 @@ from pathlib import Path
 
 from decologr import Decologr as log
 from OpenGL import GL as gl
+
 from picogl.backend.modern.core.shader.compile import compile_shader
-from picogl.backend.modern.core.shader.helpers import (log_gl_error,
-                                                       read_shader_source)
-from picogl.backend.modern.core.uniform.location_value import \
-    set_uniform_location_value
+from picogl.backend.modern.core.shader.helpers import log_gl_error, read_shader_source
+from picogl.backend.modern.core.uniform.location_value import set_uniform_location_value
 from picogl.shaders.uniform import get_uniform_location
 
 
@@ -169,8 +168,7 @@ class ShaderProgram:
             return self.uniforms[uniform_name]
 
         loc = get_uniform_location(
-            shader_program=self.program,
-            uniform_name=uniform_name
+            shader_program=self.program, uniform_name=uniform_name
         )
 
         self.uniforms[uniform_name] = loc

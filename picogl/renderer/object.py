@@ -6,8 +6,10 @@ from pathlib import Path
 
 from decologr import Decologr as log
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES
+
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.renderer import GLResourceRegistry, MeshData, RendererBase
+from picogl.state.draw_mode import GLDrawMode
 from picogl.utils.loader.texture import TextureLoader
 from picogl.utils.texture import bind_texture_array
 
@@ -95,4 +97,6 @@ class ObjectRenderer(RendererBase):
                 bind_texture_array(self.context.texture_id)
                 shader.uniform("texture0", 0)
 
-            model_vao.draw(mode=GL_TRIANGLES, index_count=self.data.vertex_count)
+            model_vao.draw(
+                mode=GLDrawMode.TRIANGLES, index_count=self.data.vertex_count
+            )

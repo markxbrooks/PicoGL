@@ -10,15 +10,20 @@ Classes and Functions:
   or providing step callbacks.
 """
 
+from dataclasses import dataclass
+from typing import Callable, Optional
+
 from decologr import Decologr as log
 
 from picogl.backend.GL.backend import GLBackend
 from picogl.backend.legacy.core.camera.lighting import setup_lighting_mode_zero
-from picogl.backend.legacy.core.camera.setup import (enable_blending, enable_smoothing,
-                                                     setup_materials)
+from picogl.backend.legacy.core.camera.setup import (
+    enable_blending,
+    enable_smoothing,
+    setup_materials,
+)
 from picogl.info import get_gl_info
-from dataclasses import dataclass
-from typing import Callable, Optional
+
 
 @dataclass(frozen=True)
 class GLTask:
@@ -59,6 +64,7 @@ def execute_gl_tasks(
             except Exception:
                 pass
 
+
 legacy_init_gl_list = [
     GLTask("✅ Initializing OpenGL context...", lambda b: None),
     GLTask("✅ Setting clear colour", lambda b: b.clear_grey()),
@@ -79,8 +85,8 @@ modern_init_gl_list = [
     GLTask("✅ Enabling smoothing", lambda b: enable_smoothing(b)),
     GLTask("✅ Setting up materials", lambda b: setup_materials(b)),
     GLTask("✅ Setting up lighting", lambda b: setup_lighting_mode_zero(b)),
-    GLTask(None, lambda b: log.header_message(
-        title="OpenGL Information",
-        message=get_gl_info()
-    )),
+    GLTask(
+        None,
+        lambda b: log.header_message(title="OpenGL Information", message=get_gl_info()),
+    ),
 ]

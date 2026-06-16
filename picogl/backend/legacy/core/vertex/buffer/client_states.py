@@ -4,8 +4,13 @@ Legacy Client States context manager
 
 from contextlib import contextmanager
 
-from OpenGL.GL import (GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER, glBindBuffer,
-                       glDisableClientState, glEnableClientState)
+from OpenGL.GL import (
+    GL_ARRAY_BUFFER,
+    GL_ELEMENT_ARRAY_BUFFER,
+    glBindBuffer,
+    glDisableClientState,
+    glEnableClientState,
+)
 
 
 @contextmanager

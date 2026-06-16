@@ -2,7 +2,7 @@ from OpenGL.GL import glDeleteTextures
 from OpenGL.raw.GL.ARB.internalformat_query2 import GL_TEXTURE_2D
 from OpenGL.raw.GL.VERSION.GL_1_1 import glBindTexture
 
-from picogl.texture.gltexture import GLTextureDriver, TextureSpec, Texture2D
+from picogl.texture.gltexture import GLTextureDriver, Texture2D, TextureSpec
 
 
 class GLTextureSystem:

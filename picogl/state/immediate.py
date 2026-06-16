@@ -1,9 +1,11 @@
 from contextlib import contextmanager
 
 from OpenGL.GL import glBegin, glEnd
+
 from picogl.state.draw_mode import GLDrawMode
 
 _immediate_active = False
+
 
 @contextmanager
 def immediate_drawing(draw_mode: GLDrawMode = GLDrawMode.LINE_STRIP):

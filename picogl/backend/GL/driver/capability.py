@@ -1,4 +1,4 @@
-from OpenGL.raw.GL.VERSION.GL_1_0 import glEnable, glDisable, glIsEnabled
+from OpenGL.raw.GL.VERSION.GL_1_0 import glDisable, glEnable, glIsEnabled
 from OpenGL.raw.GL.VERSION.GL_1_3 import GL_MULTISAMPLE
 
 from picogl.backend.state import gl_value

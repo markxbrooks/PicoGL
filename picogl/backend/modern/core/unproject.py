@@ -5,10 +5,13 @@ Modern OpenGL Unproject Function
 from typing import Any, Tuple
 
 import numpy as np
-from picogl.backend.modern.core.mvp import (convert_to_world_coordinates,
-                                            create_normalized_device_vector,
-                                            invert_mvp_matrix,
-                                            normalize_device_coordinates)
+
+from picogl.backend.modern.core.mvp import (
+    convert_to_world_coordinates,
+    create_normalized_device_vector,
+    invert_mvp_matrix,
+    normalize_device_coordinates,
+)
 
 
 def unproject(x, y, depth, inv_mvp, viewport):
@@ -16,12 +19,10 @@ def unproject(x, y, depth, inv_mvp, viewport):
 
     y = vh - y
 
-    ndc = np.array([
-        (x - vx) / vw * 2.0 - 1.0,
-        (y - vy) / vh * 2.0 - 1.0,
-        depth * 2.0 - 1.0,
-        1.0
-    ], dtype=np.float32)
+    ndc = np.array(
+        [(x - vx) / vw * 2.0 - 1.0, (y - vy) / vh * 2.0 - 1.0, depth * 2.0 - 1.0, 1.0],
+        dtype=np.float32,
+    )
 
     world = np.asarray(inv_mvp @ ndc, dtype=np.float32)
 
@@ -39,27 +40,24 @@ def unproject_test3(x, y, depth, inv_mvp, viewport):
     # flip Y
     y = vh - y
 
-    ndc = np.array([
-        (x - vx) / vw * 2.0 - 1.0,
-        (y - vy) / vh * 2.0 - 1.0,
-        depth * 2.0 - 1.0,
-        1.0
-    ], dtype=np.float32)
+    ndc = np.array(
+        [(x - vx) / vw * 2.0 - 1.0, (y - vy) / vh * 2.0 - 1.0, depth * 2.0 - 1.0, 1.0],
+        dtype=np.float32,
+    )
     world = np.asarray(inv_mvp @ ndc, dtype=np.float32)
     world = world / world[3]
     return world[:3]
+
 
 def unproject_test(x, y, depth, inv_mvp, viewport, already_inverted=False):
     vx, vy, vw, vh = viewport
 
     y = vh - y
 
-    ndc = np.array([
-        (x - vx) / vw * 2.0 - 1.0,
-        (y - vy) / vh * 2.0 - 1.0,
-        depth * 2.0 - 1.0,
-        1.0
-    ], dtype=np.float32)
+    ndc = np.array(
+        [(x - vx) / vw * 2.0 - 1.0, (y - vy) / vh * 2.0 - 1.0, depth * 2.0 - 1.0, 1.0],
+        dtype=np.float32,
+    )
 
     world = inv_mvp @ ndc
 
@@ -68,6 +66,7 @@ def unproject_test(x, y, depth, inv_mvp, viewport, already_inverted=False):
 
     world /= world[3]
     return world[:3]
+
 
 def unproject_new(x, y, depth, model_view, projection, viewport):
     if depth >= 0.9999:
@@ -95,6 +94,7 @@ def unproject_new(x, y, depth, model_view, projection, viewport):
 
     world /= world[3]
     return world[:3]
+
 
 def unproject_old(
     x: int,

@@ -1,28 +1,35 @@
 """
 Base Renderer Class
 """
-from typing import Optional
+
+from typing import Callable, Optional
 
 import numpy as np
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_DEPTH_TEST, GL_LINE_SMOOTH,
-                                          glDisable, glEnable, glFlush,
-                                          glLineWidth)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (
+    GL_DEPTH_TEST,
+    GL_LINE_SMOOTH,
+    glDisable,
+    glEnable,
+    glFlush,
+    glLineWidth,
+)
+
 from picogl.renderer.abstract import AbstractRenderer
 
 
 class RendererBase(AbstractRenderer):
     """Base Renderer Class"""
 
-    def __init__(self, parent = None):
+    def __init__(self, parent=None):
         """
         Initialize the renderer.
 
         :param state: Application state object for accessing shared data.
         """
+        super().__init__()
         self.line_width = 2.0
         self.show_model = False
         self.parent = parent
-        self._initialized = False
 
     def _set_gl_state(self):
         """Set the line width and disable depth test."""
@@ -37,19 +44,16 @@ class RendererBase(AbstractRenderer):
     @property
     def dispatch_list(self):
         dispatch_list: list[tuple[bool, Callable]] = [
-            (self.show_model, self._draw_model()),
+            (self.show_model, self._draw_model),
             # Add more conditions and corresponding draw functions as needed
         ]
         return dispatch_list
 
-    def initialize(self) -> None:
+    def _do_initialize(self) -> None:
         """
         Initialize OpenGL resources (shaders, atoms_buffers, etc.).
         """
-        if self._initialized:
-            return
-
-        self._initialized = True
+        pass
 
     @property
     def initialized(self) -> bool:

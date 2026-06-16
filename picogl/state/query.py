@@ -17,4 +17,4 @@ class GLStateQuery:
         if spec.length == 1:
             return raw
 
-        return tuple(raw[:spec.length])
+        return tuple(raw[: spec.length])

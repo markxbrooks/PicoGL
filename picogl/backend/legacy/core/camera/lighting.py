@@ -2,20 +2,41 @@
 Setup lighting
 """
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_AMBIENT, GL_DIFFUSE, GL_FOG,
-                                          GL_FOG_COLOR, GL_FOG_END,
-                                          GL_FOG_MODE, GL_FOG_START,
-                                          GL_FRONT_AND_BACK, GL_LIGHT0,
-                                          GL_LIGHT1, GL_LIGHT2, GL_LIGHT3,
-                                          GL_LIGHT4, GL_LIGHTING, GL_LINEAR,
-                                          GL_MODELVIEW, GL_POSITION,
-                                          GL_SHININESS, GL_SPECULAR,
-                                          GL_UNPACK_ALIGNMENT, glDisable,
-                                          glEnable, glFogf, glFogfv, glFogi,
-                                          glLightfv, glLoadIdentity,
-                                          glMaterialf, glMatrixMode,
-                                          glPixelStorei, glPopMatrix,
-                                          glPushMatrix)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (
+    GL_AMBIENT,
+    GL_DIFFUSE,
+    GL_FOG,
+    GL_FOG_COLOR,
+    GL_FOG_END,
+    GL_FOG_MODE,
+    GL_FOG_START,
+    GL_FRONT_AND_BACK,
+    GL_LIGHT0,
+    GL_LIGHT1,
+    GL_LIGHT2,
+    GL_LIGHT3,
+    GL_LIGHT4,
+    GL_LIGHTING,
+    GL_LINEAR,
+    GL_MODELVIEW,
+    GL_POSITION,
+    GL_SHININESS,
+    GL_SPECULAR,
+    GL_UNPACK_ALIGNMENT,
+    glDisable,
+    glEnable,
+    glFogf,
+    glFogfv,
+    glFogi,
+    glLightfv,
+    glLoadIdentity,
+    glMaterialf,
+    glMatrixMode,
+    glPixelStorei,
+    glPopMatrix,
+    glPushMatrix,
+)
+
 from picogl.buffers.glframe import GLFramebuffer
 
 
@@ -94,11 +115,12 @@ def set_background_color(show_white_background: bool) -> None:
     Choose bg color_array
     """
     if show_white_background:
-        color = (1.0, 1.0, 1.0, 1.0) # White background
+        color = (1.0, 1.0, 1.0, 1.0)  # White background
     else:
         color = (0.0, 0.0, 0.0, 1.0)
     buffer = GLFramebuffer()
     buffer.clear(color=color)
+
 
 def setup_lighting(mode: int = 0) -> None:
     """
@@ -165,6 +187,7 @@ def setup_lighting(mode: int = 0) -> None:
             1.0,
         ]  # Positional light, relative to object/world
         glLightfv(GL_LIGHT0, GL_POSITION, light_pos)
+
 
 def setup_lighting_mode_zero(backend: "GLBackend"):
     setup_lighting(mode=0)

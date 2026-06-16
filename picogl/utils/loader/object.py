@@ -6,6 +6,7 @@ Loader of object data from an .loader file.
 import os
 
 from decologr import Decologr as log
+
 from picogl.utils.loader.helpers import log_properties
 from picogl.utils.loader.object_data import ObjectData
 
@@ -14,6 +15,7 @@ class ObjectLoader:
     """
     Object Loader Class
     """
+
     def __init__(self, path: str):
         # Resolve the path relative to the current working directory
         if not os.path.isabs(path):
@@ -122,7 +124,7 @@ class ObjectLoader:
         combinations = {}
 
         for i in range(0, len(self.indices), 3):
-            v_idx, t_idx, n_idx = self.indices[i: i + 3]
+            v_idx, t_idx, n_idx = self.indices[i : i + 3]
             key = (v_idx, t_idx, n_idx)
 
             if key not in combinations:
@@ -145,7 +147,7 @@ class ObjectLoader:
                 # Get normal (1-based to 0-based)
                 if n_idx > 0 and self.normals:
                     n_start = 3 * (n_idx - 1)
-                    normals.extend(self.normals[n_start: n_start + 3])
+                    normals.extend(self.normals[n_start : n_start + 3])
                 else:
                     normals.extend([0.0, 0.0, 1.0])  # Default normal
 

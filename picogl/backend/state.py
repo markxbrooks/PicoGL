@@ -15,12 +15,8 @@ from OpenGL.GL import (
     GL_CLIP_DISTANCE0,
     GL_CLIP_DISTANCE1,
     GL_DEPTH_TEST,
-    GL_FLOAT,
-    GL_FRONT_AND_BACK,
     GL_ONE_MINUS_SRC_ALPHA,
     GL_SRC_ALPHA,
-    GL_TRIANGLES,
-    GL_UNSIGNED_INT,
     glBlendFunc,
     glColorPointer,
     glDrawElements,
@@ -37,6 +33,8 @@ from OpenGL.raw.GL.VERSION.GL_1_1 import (
 
 from picogl.backend.capability import BLEND_FACTOR_MAP, CAP_MAP, FACE_MAP
 from picogl.polygon.mode import PolygonMode
+from picogl.state.draw_mode import GLDataType, GLDrawMode, GLIndexType
+from picogl.state.fill import GLFace
 from picogl.texture.gltexture import GLTextureDriver
 
 
@@ -70,7 +68,7 @@ class RasterState:
     line_width: float = 1.0
 
     def apply(self, backend: CapabilityDriver):
-        backend.set_polygon_mode(GL_FRONT_AND_BACK, gl_value(self.polygon_mode))
+        backend.set_polygon_mode(GLFace.FRONT_AND_BACK, gl_value(self.polygon_mode))
         backend.set_line_width(self.line_width)
 
 
@@ -169,9 +167,7 @@ class RenderState:
     ):
         if raster is not None:
             line_width = raster.line_width if line_width is None else line_width
-            polygon_mode = (
-                raster.polygon_mode if polygon_mode is None else polygon_mode
-            )
+            polygon_mode = raster.polygon_mode if polygon_mode is None else polygon_mode
 
         if depth is not None:
             depth_test = depth.test if depth_test is None else depth_test
@@ -248,7 +244,7 @@ class RenderStateApplier:
             self.backend.set_line_width(state.line_width)
 
         if prev is None or prev.polygon_mode != state.polygon_mode:
-            self.backend.set_polygon_mode(GL_FRONT_AND_BACK, state.polygon_mode)
+            self.backend.set_polygon_mode(GLFace.FRONT_AND_BACK, state.polygon_mode)
 
         if prev is None or prev.depth_test != state.depth_test:
             self.backend.set_depth_test(state.depth_test)
@@ -294,11 +290,11 @@ class GLAttributeArray:
     def enable_legacy(self, kind):
         glEnableClientState(kind)
         if kind == GL_VERTEX_ARRAY:
-            glVertexPointer(self.size, GL_FLOAT, self.stride, self.pointer)
+            glVertexPointer(self.size, GLDataType.FLOAT, self.stride, self.pointer)
         elif kind == GL_NORMAL_ARRAY:
-            glNormalPointer(GL_FLOAT, self.stride, self.pointer)
+            glNormalPointer(GLDataType.FLOAT, self.stride, self.pointer)
         elif kind == GL_COLOR_ARRAY:
-            glColorPointer(self.size, GL_FLOAT, self.stride, self.pointer)
+            glColorPointer(self.size, GLDataType.FLOAT, self.stride, self.pointer)
 
 
 @dataclass
@@ -328,7 +324,12 @@ class TestGLMesh:
             attr.enable_legacy(GL_VERTEX_ARRAY)  # refine mapping
 
         if self.indices is not None:
-            glDrawElements(GL_TRIANGLES, len(self.indices), GL_UNSIGNED_INT, self.indices)
+            glDrawElements(
+                GLDrawMode.TRIANGLES,
+                len(self.indices),
+                GLIndexType.UNSIGNED_INT,
+                self.indices,
+            )
 
 
 @dataclass
@@ -358,7 +359,9 @@ class DrawCommand:
         elif hasattr(self.mesh, "draw"):
             self.mesh.draw()
         else:
-            raise TypeError("DrawCommand requires a mode/backend draw_mesh or a drawable mesh.")
+            raise TypeError(
+                "DrawCommand requires a mode/backend draw_mesh or a drawable mesh."
+            )
 
 
 @dataclass

@@ -1,6 +1,11 @@
 from typing import Any
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_BLEND, glBlendFunc, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA
+from OpenGL.raw.GL.VERSION.GL_1_0 import (
+    GL_BLEND,
+    GL_ONE_MINUS_SRC_ALPHA,
+    GL_SRC_ALPHA,
+    glBlendFunc,
+)
 
 from picogl.backend.GL.driver.capability import GLCapabilityDriver
 from picogl.backend.state import gl_value

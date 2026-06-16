@@ -1,4 +1,5 @@
 import numpy as np
+
 from examples.utils.shader_loader import Shader
 
 

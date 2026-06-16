@@ -1,17 +1,93 @@
 """
 GL Draw Mode
 """
-from enum import IntEnum
 
-from OpenGL.GL import (GL_LINE_LOOP, GL_LINE_STRIP, GL_LINE_STRIP_ADJACENCY,
-                       GL_LINES, GL_LINES_ADJACENCY, GL_PATCHES, GL_POINTS,
-                       GL_POLYGON, GL_QUAD_STRIP, GL_QUADS, GL_TRIANGLE_STRIP,
-                       GL_TRIANGLE_STRIP_ADJACENCY, GL_TRIANGLES,
-                       GL_TRIANGLES_ADJACENCY)
+from enum import IntEnum, IntFlag
+
+from OpenGL.GL import (
+    GL_ARRAY_BUFFER,
+    GL_COLOR_BUFFER_BIT,
+    GL_DEPTH_BUFFER_BIT,
+    GL_DYNAMIC_DRAW,
+    GL_ELEMENT_ARRAY_BUFFER,
+    GL_FLOAT,
+    GL_INT,
+    GL_LINE_BIT,
+    GL_LINE_LOOP,
+    GL_LINE_STRIP,
+    GL_LINE_STRIP_ADJACENCY,
+    GL_LINES,
+    GL_LINES_ADJACENCY,
+    GL_MODELVIEW,
+    GL_PATCHES,
+    GL_POINTS,
+    GL_POLYGON,
+    GL_PROJECTION,
+    GL_QUAD_STRIP,
+    GL_QUADS,
+    GL_SHADER_STORAGE_BUFFER,
+    GL_STATIC_DRAW,
+    GL_TRIANGLE_STRIP,
+    GL_TRIANGLE_STRIP_ADJACENCY,
+    GL_TRIANGLES,
+    GL_TRIANGLES_ADJACENCY,
+    GL_UNIFORM_BUFFER,
+    GL_UNSIGNED_INT,
+    GL_UNSIGNED_SHORT,
+)
+
+
+class GLLegacyMatrixMode(IntEnum):
+    """GL Matrix Mode"""
+
+    PROJECTION = GL_PROJECTION
+    MODELVIEW = GL_MODELVIEW
+
+
+class GLBitMask(IntFlag):
+    """GL Bit Mask"""
+
+    LINE = GL_LINE_BIT
+    DEPTH_BUFFER = GL_DEPTH_BUFFER_BIT
+    COLOR_BUFFER = GL_COLOR_BUFFER_BIT
+
+
+class GLDataType(IntEnum):
+    FLOAT = GL_FLOAT
+    INT = GL_INT
+
+
+class GLIndexType(IntEnum):
+    UNSIGNED_INT = GL_UNSIGNED_INT
+    UNSIGNED_SHORT = GL_UNSIGNED_SHORT
+
+
+class GLUsageHint(IntEnum):
+    """Usage Hint"""
+
+    STATIC_DRAW = GL_STATIC_DRAW
+    DYNAMIC_DRAW = GL_DYNAMIC_DRAW
+
+
+class GLBufferTarget(IntEnum):
+    """GL Buffer Target"""
+
+    ARRAY = GL_ARRAY_BUFFER
+    ELEMENT_ARRAY_BUFFER = GL_ELEMENT_ARRAY_BUFFER
+    UNIFORM_BUFFER = GL_UNIFORM_BUFFER
+    SHADER_STORAGE_BUFFER = GL_SHADER_STORAGE_BUFFER
+
+
+class GLLegacyPrimitive(IntEnum):
+    """Deprecate the GLDramMode versions"""
+
+    QUADS = GL_QUADS
+    POLYGON = GL_POLYGON
 
 
 class GLDrawMode(IntEnum):
     """GL Draw Mode"""
+
     QUAD_STRIP = GL_QUAD_STRIP
     TRIANGLE_STRIP = GL_TRIANGLE_STRIP
     TRIANGLES = GL_TRIANGLES

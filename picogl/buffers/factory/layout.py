@@ -2,8 +2,8 @@
 Create layouts for VOAs and VBGs
 """
 
-from OpenGL.raw.GL._types import GL_FLOAT
 from picogl.buffers.attributes import AttributeSpec, LayoutDescriptor
+from picogl.state.draw_mode import GLDataType
 
 
 def create_layout(attributes):
@@ -16,7 +16,7 @@ def create_element_attributes():
             name="positions",
             index=0,
             size=3,
-            type=GL_FLOAT,
+            type=GLDataType.FLOAT,
             normalized=False,
             stride=0,
             offset=0,
@@ -30,7 +30,7 @@ def create_common_attributes():
             name="positions",
             index=0,
             size=3,
-            type=GL_FLOAT,
+            type=GLDataType.FLOAT,
             normalized=False,
             stride=0,
             offset=0,
@@ -39,11 +39,9 @@ def create_common_attributes():
             name="colors",
             index=1,
             size=3,
-            type=GL_FLOAT,
+            type=GLDataType.FLOAT,
             normalized=False,
             stride=0,
             offset=0,
         ),
     ]
-
-

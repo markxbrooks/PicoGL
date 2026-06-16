@@ -9,8 +9,11 @@ from typing import Optional, Union
 import numpy as np
 from decologr import Decologr as log
 from OpenGL import GL
+
 from picogl.attrs.vertex import CanonicalVertexAttrs
 from picogl.buffers.vertex.vbo.vbo_class import VBOType
+from picogl.state.draw_mode import GLDataType, GLDrawMode, GLIndexType
+from picogl.state.fill import GLFace, GLFillMode
 
 
 class MeshData:
@@ -88,33 +91,34 @@ class MeshData:
         if vertices is not None:
             vertices = np.asarray(vertices, dtype=np.float32)
             self.vertices = (
-                vertices if self.vertices is None
+                vertices
+                if self.vertices is None
                 else np.vstack([self.vertices, vertices])
             )
 
         if normals is not None:
             normals = np.asarray(normals, dtype=np.float32)
             self.normals = (
-                normals if self.normals is None
-                else np.vstack([self.normals, normals])
+                normals if self.normals is None else np.vstack([self.normals, normals])
             )
 
         if colors is not None:
             colors = np.asarray(colors, dtype=np.float32)
             self.colors = (
-                colors if self.colors is None
-                else np.vstack([self.colors, colors])
+                colors if self.colors is None else np.vstack([self.colors, colors])
             )
 
         if uvs is not None:
             uvs = np.asarray(uvs, dtype=np.float32)
-            self.uvs = (
-                uvs if self.uvs is None
-                else np.vstack([self.uvs, uvs])
-            )
+            self.uvs = uvs if self.uvs is None else np.vstack([self.uvs, uvs])
 
     def extend_from_mesh(self, other: "MeshData"):
-        self.extend(vertices=other.vertices, normals=other.normals, colors=other.colors, uvs=other.uvs)
+        self.extend(
+            vertices=other.vertices,
+            normals=other.normals,
+            colors=other.colors,
+            uvs=other.uvs,
+        )
 
     # VBO → vertices
     @property
@@ -220,16 +224,16 @@ class MeshData:
     def bind(self):
         if self.vertices is not None:
             GL.glEnableClientState(GL.GL_VERTEX_ARRAY)
-            GL.glVertexPointer(3, GL.GL_FLOAT, 0, self.vertices)
+            GL.glVertexPointer(3, GLDataType.FLOAT, 0, self.vertices)
         if self.normals is not None:
             GL.glEnableClientState(GL.GL_NORMAL_ARRAY)
-            GL.glNormalPointer(GL.GL_FLOAT, 0, self.normals)
+            GL.glNormalPointer(GLDataType.FLOAT, 0, self.normals)
         if self.colors is not None:
             GL.glEnableClientState(GL.GL_COLOR_ARRAY)
-            GL.glColorPointer(3, GL.GL_FLOAT, 0, self.colors)
+            GL.glColorPointer(3, GLDataType.FLOAT, 0, self.colors)
         if self.texcoords is not None:
             GL.glEnableClientState(GL.GL_TEXTURE_COORD_ARRAY)
-            GL.glTexCoordPointer(2, GL.GL_FLOAT, 0, self.texcoords)
+            GL.glTexCoordPointer(2, GLDataType.FLOAT, 0, self.texcoords)
 
     def unbind(self):
         if self.texcoords is not None:
@@ -243,13 +247,13 @@ class MeshData:
 
     @classmethod
     def from_raw(
-            cls,
-            vertices: Union[np.ndarray, list[float]],
-            normals: Optional[Union[np.ndarray, list[float]]] = None,
-            uvs: Optional[Union[np.ndarray, list[float]]] = None,
-            colors: Optional[Union[np.ndarray, list[float]]] = None,
-            indices: Optional[Union[np.ndarray, list[float]]] = None,
-            color_per_vertex: Optional[Union[np.ndarray, list[float]]] = None,
+        cls,
+        vertices: Union[np.ndarray, list[float]],
+        normals: Optional[Union[np.ndarray, list[float]]] = None,
+        uvs: Optional[Union[np.ndarray, list[float]]] = None,
+        colors: Optional[Union[np.ndarray, list[float]]] = None,
+        indices: Optional[Union[np.ndarray, list[float]]] = None,
+        color_per_vertex: Optional[Union[np.ndarray, list[float]]] = None,
     ):
         """
         Build a MeshData from raw/python inputs.
@@ -304,13 +308,19 @@ class MeshData:
         # Indices (optional)
         indices_arr = cls._to_int32_flat(indices, "indices", required=False)
 
-        return cls(vertices=vbo, normals=nbo, texcoords=uvs_arr, colors=cbo_arr, indices=indices_arr)
+        return cls(
+            vertices=vbo,
+            normals=nbo,
+            texcoords=uvs_arr,
+            colors=cbo_arr,
+            indices=indices_arr,
+        )
 
     def draw(
         self,
         color: tuple = None,
         line_width: float = 1.0,
-        mode: int = GL.GL_TRIANGLES,
+        mode: int = GLDrawMode.TRIANGLES,
         fill: bool = False,
         alpha: float = 1.0,
     ):
@@ -328,36 +338,38 @@ class MeshData:
         if self.vertices is None:
             print("Warning: Cannot draw mesh - no vertex data (vertices)")
             return
-        
+
         if self.indices is None:
             print("Warning: Cannot draw mesh - no element data (ebo)")
             return
-            
+
         if len(self.indices) == 0:
             print("Warning: Cannot draw mesh - empty element buffer")
             return
-            
+
         # Validate ebo data to prevent segfaults
         if self.indices.dtype != np.uint32 and self.indices.dtype != np.int32:
-            print(f"Warning: Invalid ebo dtype {self.indices.dtype}, converting to uint32")
+            print(
+                f"Warning: Invalid ebo dtype {self.indices.dtype}, converting to uint32"
+            )
             self.indices = self.indices.astype(np.uint32)
-            
+
         # Check for invalid indices that could cause segfaults
         max_vertex_index = len(self.vertices) // 3 - 1
         if np.any(self.indices > max_vertex_index):
             print(f"Warning: Invalid vertex indices in ebo (max: {max_vertex_index})")
             # Clamp indices to valid range
             self.indices = np.clip(self.indices, 0, max_vertex_index)
-            
+
         if np.any(self.indices < 0):
             print("Warning: Negative vertex indices in ebo")
             # Set negative indices to 0
             self.indices = np.maximum(self.indices, 0)
 
         if fill:
-            fill_mode = GL.GL_FILL
+            fill_mode = GLFillMode.FILL
         else:
-            fill_mode = GL.GL_LINE
+            fill_mode = GLFillMode.LINE
 
         # Set material properties for the isosurface
         GL.glLineWidth(line_width)
@@ -373,7 +385,7 @@ class MeshData:
         if color is None and self.colors is not None:
             # Use vertex colors (for fo-fc maps)
             GL.glEnableClientState(GL.GL_COLOR_ARRAY)
-            GL.glColorPointer(3, GL.GL_FLOAT, 0, self.colors)
+            GL.glColorPointer(3, GLDataType.FLOAT, 0, self.colors)
             # Note: Alpha blending for vertex colors would require 4-component colors
             # For now, we'll use the alpha value for the overall transparency
         else:
@@ -384,22 +396,26 @@ class MeshData:
             GL.glColor4f(color[0], color[1], color[2], 1.0 - alpha)
 
         # Draw as wireframe for better visibility
-        GL.glPolygonMode(GL.GL_FRONT_AND_BACK, fill_mode)
+        GL.glPolygonMode(GLFace.FRONT_AND_BACK, fill_mode)
 
         try:
             # Draw the mesh with additional safety checks
             element_count = len(self.indices)
             if element_count > 0:
-                GL.glDrawElements(mode, element_count, GL.GL_UNSIGNED_INT, self.indices)
+                GL.glDrawElements(
+                    mode, element_count, GLIndexType.UNSIGNED_INT, self.indices
+                )
         except Exception as e:
             log.error(f"Error in glDrawElements: {e}")
             log.error(f"Element count: {element_count}")
             log.error(f"EBO dtype: {self.indices.dtype}")
             log.error(f"EBO shape: {self.indices.shape}")
-            log.error(f"VBO length: {len(self.vertices) if self.vertices is not None else 'None'}")
+            log.error(
+                f"VBO length: {len(self.vertices) if self.vertices is not None else 'None'}"
+            )
 
         # Restore fill mode
-        GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL)
+        GL.glPolygonMode(GLFace.FRONT_AND_BACK, GLFillMode.FILL)
 
         # Clean up colour array state if we used it
         if color is None and self.colors is not None:

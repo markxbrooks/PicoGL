@@ -9,18 +9,21 @@ from typing import Any, Optional
 
 import numpy as np
 from decologr import Decologr as log
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_FLOAT, GL_LINE_STRIP, GL_POINTS,
-                                          GL_TRIANGLES, GL_UNSIGNED_INT)
-from OpenGL.raw.GL.VERSION.GL_1_1 import (GL_COLOR_ARRAY, GL_NORMAL_ARRAY,
-                                          GL_VERTEX_ARRAY, glColorPointer,
-                                          glDrawArrays, glDrawElements,
-                                          glEnableClientState, glNormalPointer,
-                                          glVertexPointer)
-from OpenGL.raw.GL.VERSION.GL_1_5 import (GL_ARRAY_BUFFER,
-                                          GL_ELEMENT_ARRAY_BUFFER,
-                                          glBindBuffer)
-from picogl.backend.legacy.core.vertex.buffer.client_states import \
-    legacy_client_states
+from elmo.gl.backend.legacy.primitives.ribbon.model import RibbonAttrs
+from OpenGL.raw.GL.VERSION.GL_1_1 import (
+    GL_COLOR_ARRAY,
+    GL_NORMAL_ARRAY,
+    GL_VERTEX_ARRAY,
+    glColorPointer,
+    glDrawArrays,
+    glDrawElements,
+    glEnableClientState,
+    glNormalPointer,
+    glVertexPointer,
+)
+from OpenGL.raw.GL.VERSION.GL_1_5 import glBindBuffer
+
+from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
 from picogl.backend.legacy.core.vertex.buffer.color import LegacyColorVBO
 from picogl.backend.legacy.core.vertex.buffer.element import LegacyEBO
 from picogl.backend.legacy.core.vertex.buffer.normal import LegacyNormalVBO
@@ -29,17 +32,19 @@ from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
 from picogl.buffers.attributes import LayoutDescriptor
 from picogl.buffers.base import VertexBase
 from picogl.buffers.glcleanup import delete_buffer_object
-from picogl.buffers.vertex.aliases import (NAME_ALIASES, VertexArrayRole,
-                                           VertexBufferRole)
+from picogl.buffers.vertex.aliases import (
+    NAME_ALIASES,
+    VertexArrayRole,
+    VertexBufferRole,
+)
 from picogl.buffers.vertex.vbo.vbo_class import VBOType
-
-from elmo.gl.backend.legacy.primitives.ribbon.model import RibbonAttrs
+from picogl.state.draw_mode import GLBufferTarget, GLDataType, GLDrawMode, GLIndexType
 
 
 class VertexBufferGroup(VertexBase):
     """Container for legacy VBOs, mimicking VAO interface."""
 
-    def __init__(self, draw_mode: int = GL_LINE_STRIP):
+    def __init__(self, draw_mode: int = GLDrawMode.LINE_STRIP):
         super().__init__()
         # self.index_count = 0
         self._index_count = None
@@ -113,7 +118,7 @@ class VertexBufferGroup(VertexBase):
             raise ValueError("index_count must be non-negative")
         self._index_count = value
 
-    def draw(self, index_count: int = 0, mode: int = GL_POINTS):
+    def draw(self, index_count: int = 0, mode: int = GLDrawMode.POINTS):
         """
         draw
 
@@ -127,7 +132,7 @@ class VertexBufferGroup(VertexBase):
             index_count = self.index_count
         if not mode:
             mode = self.draw_mode
-        
+
         # Use the layout-based binding approach
         with self:
             with legacy_client_states(GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_NORMAL_ARRAY):
@@ -135,12 +140,12 @@ class VertexBufferGroup(VertexBase):
                 glDrawArrays(mode, 0, index_count)
 
     def add_vbo(
-            self,
-            name: str,
-            data: np.ndarray,
-            size: int = 3,
-            dtype: int = GL_FLOAT,
-            handle: int | None = None,
+        self,
+        name: str,
+        data: np.ndarray,
+        size: int = 3,
+        dtype: int = GLDataType.FLOAT,
+        handle: int | None = None,
     ) -> Any:
         """Create and register a VBO with explicit parameters."""
         vbo_class = self.get_buffer_class(name)
@@ -171,11 +176,11 @@ class VertexBufferGroup(VertexBase):
         self.add_vbo_object(name, ebo_class(data=data))
 
     def draw_elements(
-            self,
-            count: int = 0,
-            mode: int = GL_TRIANGLES,
-            dtype: int = GL_UNSIGNED_INT,
-            offset: int = 0,
+        self,
+        count: int = 0,
+        mode: int = GLDrawMode.TRIANGLES,
+        dtype: int = GLIndexType.UNSIGNED_INT,
+        offset: int = 0,
     ):
         """
         Draw using an element buffer (EBO) with legacy client states.
@@ -205,10 +210,10 @@ class VertexBufferGroup(VertexBase):
                     ebo_id = getattr(self.ebo, "_id", None)
                 if ebo_id is None:
                     raise RuntimeError("EBO has no GL buffer name (handle/_id)")
-                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_id)
+                glBindBuffer(GLBufferTarget.ELEMENT_ARRAY_BUFFER, ebo_id)
                 glDrawElements(mode, count, dtype, ctypes.c_void_p(offset))
                 # Unbind EBO afterwards to prevent accidental reuse
-                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0)
+                glBindBuffer(GLBufferTarget.ELEMENT_ARRAY_BUFFER, 0)
 
     def set_layout(self, layout: LayoutDescriptor) -> None:
         self.layout = layout
@@ -227,7 +232,7 @@ class VertexBufferGroup(VertexBase):
                     continue
 
                 buffer_handle = getattr(vbo, VertexArrayRole.VAO, vbo)
-                glBindBuffer(GL_ARRAY_BUFFER, buffer_handle)
+                glBindBuffer(GLBufferTarget.ARRAY, buffer_handle)
 
                 if canonical == VertexBufferRole.VBO:
                     glEnableClientState(GL_VERTEX_ARRAY)
@@ -257,7 +262,7 @@ class VertexBufferGroup(VertexBase):
             return
         # For legacy rendering, we don't need to disable vertex attrib arrays
         # since we're using the old glVertexPointer approach
-        glBindBuffer(GL_ARRAY_BUFFER, 0)
+        glBindBuffer(GLBufferTarget.ARRAY, 0)
 
     def __enter__(self):
         """Context manager entry - bind the VBO."""

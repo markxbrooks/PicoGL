@@ -1,23 +1,38 @@
 """
 Texture Loader
 """
+
 import os
 import struct
 from pathlib import Path
 from typing import Optional
 
-from OpenGL.GL import (glCompressedTexImage2D, glDeleteTextures, glGenTextures,
-                       glTexImage2D)
+from OpenGL.GL import (
+    glCompressedTexImage2D,
+    glDeleteTextures,
+    glGenTextures,
+    glTexImage2D,
+)
 from OpenGL.GL.framebufferobjects import glGenerateMipmap
 from OpenGL.raw.GL.EXT.texture_compression_s3tc import (
-    GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, GL_COMPRESSED_RGBA_S3TC_DXT3_EXT,
-    GL_COMPRESSED_RGBA_S3TC_DXT5_EXT)
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR,
-                                          GL_REPEAT, GL_RGB, GL_RGBA,
-                                          GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
-                                          GL_TEXTURE_MIN_FILTER,
-                                          GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T,
-                                          GL_UNSIGNED_BYTE, glTexParameteri)
+    GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,
+    GL_COMPRESSED_RGBA_S3TC_DXT3_EXT,
+    GL_COMPRESSED_RGBA_S3TC_DXT5_EXT,
+)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (
+    GL_LINEAR,
+    GL_LINEAR_MIPMAP_LINEAR,
+    GL_REPEAT,
+    GL_RGB,
+    GL_RGBA,
+    GL_TEXTURE_2D,
+    GL_TEXTURE_MAG_FILTER,
+    GL_TEXTURE_MIN_FILTER,
+    GL_TEXTURE_WRAP_S,
+    GL_TEXTURE_WRAP_T,
+    GL_UNSIGNED_BYTE,
+    glTexParameteri,
+)
 from OpenGL.raw.GL.VERSION.GL_1_1 import glBindTexture
 from PIL import Image
 
@@ -98,13 +113,16 @@ class TextureLoader:
                         h,
                         0,
                         size,
-                        dds_buffer[offset: offset + size],
+                        dds_buffer[offset : offset + size],
                     )
                 except Exception as e:
                     # Fallback: try with explicit byte array conversion
                     try:
                         import array
-                        byte_array = array.array('B', dds_buffer[offset: offset + size])
+
+                        byte_array = array.array(
+                            "B", dds_buffer[offset : offset + size]
+                        )
                         glCompressedTexImage2D(
                             GL_TEXTURE_2D,
                             level,
@@ -116,8 +134,10 @@ class TextureLoader:
                             byte_array,
                         )
                     except Exception as e2:
-                        raise RuntimeError(f"Failed to load DDS compressed texture: {e2}")
-                
+                        raise RuntimeError(
+                            f"Failed to load DDS compressed texture: {e2}"
+                        )
+
                 offset += size
                 w //= 2
                 h //= 2
@@ -128,10 +148,12 @@ class TextureLoader:
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR)
+            glTexParameteri(
+                GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR
+            )
 
             self.inversed_v_coords = True
-            
+
         except Exception as e:
             # Fallback: try to load as regular image with PIL
             print(f"⚠️  DDS compressed loading failed: {e}")
@@ -139,7 +161,9 @@ class TextureLoader:
             try:
                 self.load_by_pil(file_name, "RGBA")
             except Exception as e2:
-                raise RuntimeError(f"Failed to load DDS file with both compressed and PIL methods: {e2}")
+                raise RuntimeError(
+                    f"Failed to load DDS file with both compressed and PIL methods: {e2}"
+                )
 
     def load_by_pil(self, file_name: str, mode: str) -> None:
         """

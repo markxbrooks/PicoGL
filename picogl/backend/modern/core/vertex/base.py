@@ -36,14 +36,19 @@ import ctypes
 
 import numpy as np
 from OpenGL import error as _gl_err
-from OpenGL.raw.GL._types import GL_FLOAT, GL_UNSIGNED_INT
-from OpenGL.raw.GL.VERSION.GL_1_5 import (GL_ARRAY_BUFFER, GL_DYNAMIC_DRAW,
-                                          GL_STATIC_DRAW, glBindBuffer,
-                                          glBufferData, glBufferSubData,
-                                          glIsBuffer)
-from OpenGL.raw.GL.VERSION.GL_2_0 import (glEnableVertexAttribArray,
-                                          glVertexAttribPointer)
+from OpenGL.raw.GL.VERSION.GL_1_5 import (
+    glBindBuffer,
+    glBufferData,
+    glBufferSubData,
+    glIsBuffer,
+)
+from OpenGL.raw.GL.VERSION.GL_2_0 import (
+    glEnableVertexAttribArray,
+    glVertexAttribPointer,
+)
+
 from picogl.buffers.base import VertexBase
+from picogl.state.draw_mode import GLBufferTarget, GLDataType, GLIndexType, GLUsageHint
 
 
 class VertexBuffer(VertexBase):
@@ -60,18 +65,18 @@ class VertexBuffer(VertexBase):
     """
 
     _GL_TYPE_MAP = {
-        np.float32: GL_FLOAT,
-        np.uint32: GL_UNSIGNED_INT,
+        np.float32: GLDataType.FLOAT,
+        np.uint32: GLIndexType.UNSIGNED_INT,
     }
 
     def __init__(
         self,
         handle: int = None,
         data: np.ndarray = None,
-        target: int = GL_ARRAY_BUFFER,
+        target: int = GLBufferTarget.ARRAY,
         size: int = 3,
         stride: int = 0,
-        dtype: int = GL_FLOAT,
+        dtype: int = GLDataType.FLOAT,
         index: int = None,
         pointer: ctypes.c_void_p = ctypes.c_void_p(0),
     ):
@@ -108,7 +113,7 @@ class VertexBuffer(VertexBase):
     # ----------------------------
     # Data upload
     # ----------------------------
-    def set_data(self, data: np.ndarray, usage: int = GL_STATIC_DRAW) -> None:
+    def set_data(self, data: np.ndarray, usage: int = GLUsageHint.STATIC_DRAW) -> None:
         """
         Upload data to the GPU.
 
@@ -182,7 +187,7 @@ class VertexBuffer(VertexBase):
     @classmethod
     def _map_dtype_to_gl(cls, dtype) -> int:
         """Map a NumPy dtype to the corresponding GL constant."""
-        return cls._GL_TYPE_MAP.get(dtype, GL_FLOAT)
+        return cls._GL_TYPE_MAP.get(dtype, GLDataType.FLOAT)
 
     # ----------------------------
     # Debug
@@ -198,7 +203,7 @@ class VertexBuffer(VertexBase):
             f"dtype={self.dtype}, normalized={self.normalized}, data={data_preview})"
         )
 
-    def allocate(self, data: np.ndarray, usage: int = GL_STATIC_DRAW):
+    def allocate(self, data: np.ndarray, usage: int = GLUsageHint.STATIC_DRAW):
         """Initial allocation (glBufferData)"""
         self.bind()
         self.buffer_size = data.nbytes
@@ -217,11 +222,11 @@ class VertexBuffer(VertexBase):
 
         if data.nbytes > self.buffer_size:
             # Fallback: reallocate only if absolutely required
-            glBufferData(self.target, data.nbytes, data, GL_DYNAMIC_DRAW)
+            glBufferData(self.target, data.nbytes, data, GLUsageHint.DYNAMIC_DRAW)
             self.buffer_size = data.nbytes
         else:
             try:
                 glBufferSubData(self.target, offset, data.nbytes, data)
             except _gl_err.GLError:
-                glBufferData(self.target, data.nbytes, data, GL_DYNAMIC_DRAW)
+                glBufferData(self.target, data.nbytes, data, GLUsageHint.DYNAMIC_DRAW)
                 self.buffer_size = data.nbytes

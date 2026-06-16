@@ -16,7 +16,6 @@ from picogl.backend.state import (
     gl_value,
 )
 
-
 __all__ = [
     "BlendState",
     "DepthState",

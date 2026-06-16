@@ -11,7 +11,9 @@ from picogl.globals import PICOGL_SHADER_SRC_DIRECTORY
 # from picoui.resources import resource_path
 
 
-def load_shader_source_string(file_name: str | Path, directory: Optional[str] = None) -> str:
+def load_shader_source_string(
+    file_name: str | Path, directory: Optional[str] = None
+) -> str:
     """
     Loads a shader_manager.current_shader_program source file as a string.
 
@@ -45,8 +47,10 @@ DEFAULT_FRAGMENT_SHADER_SRC = load_shader_source_string(
     # resource_path(os.path.join(SHADER_SRC_DIRECTORY, "default_fragment.glsl"))
 )
 
+
 class ShaderSourceType:
     """Shader Source Types"""
+
     vertex = "vertex"
     fragment = "fragment"
 
@@ -61,7 +65,9 @@ def load_fragment_and_vertex_for_shader_type(
     :param shader_type_value: ShaderType
     :return: None
     """
-    base_dir = Path(shader_directory) if shader_directory else PICOGL_SHADER_SRC_DIRECTORY
+    base_dir = (
+        Path(shader_directory) if shader_directory else PICOGL_SHADER_SRC_DIRECTORY
+    )
     # Support both bases:
     # - <base>/src/<shader_type>/<stage>.glsl
     # - <base>/<shader_type>/<stage>.glsl
@@ -77,6 +83,9 @@ def load_fragment_and_vertex_for_shader_type(
     fragment_src = load_shader_source_string(str(frag_path))
     return vertex_src, fragment_src
 
-def get_shader_path(shader_type_value: str, shader_source_type = ShaderSourceType.vertex) -> Path:
+
+def get_shader_path(
+    shader_type_value: str, shader_source_type=ShaderSourceType.vertex
+) -> Path:
     """get shader path"""
     return Path(shader_type_value) / f"{shader_source_type}.glsl"

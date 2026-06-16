@@ -11,12 +11,14 @@ from dataclasses import dataclass
 from typing import List
 
 import numpy as np
+
 from picogl.buffers.vertex.vbo.vbo_class import VBOType
 
 
 @dataclass
 class AttributeSpec:
     """Attribute specification."""
+
     name: str  # semantic name ("positions", "colors", "normals", etc.)
     index: int  # attribute location
     size: int  # number of components (e.g., 3 for vec3)
@@ -30,6 +32,7 @@ class AttributeSpec:
 @dataclass
 class LayoutDescriptor:
     """Layout descriptor."""
+
     attributes: List[AttributeSpec]
     _cache: dict[VBOType, AttributeSpec] | None = None
 

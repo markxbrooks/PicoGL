@@ -39,20 +39,21 @@ from typing import Callable, Dict, Iterable, Optional, Tuple, Union
 
 import numpy as np
 from decologr import Decologr as log
+from pyglm import glm
+
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.backend.modern.core.uniform.location import get_uniform_location
-from picogl.backend.modern.core.uniform.location_value import \
-    set_uniform_location_value
+from picogl.backend.modern.core.uniform.location_value import set_uniform_location_value
 from picogl.backend.modern.core.uniform.mvp import shader_uniform_set_mvp
-from picogl.backend.modern.core.uniform.set_location import \
-    set_uniform_name_value
+from picogl.backend.modern.core.uniform.set_location import set_uniform_name_value
 from picogl.globals import PICOGL_SHADER_SRC_DIRECTORY, SHADER_SRC_DIRECTORY
 from picogl.shaders.compile import compile_shaders
 from picogl.shaders.generate import generate_shader_programs
-from picogl.shaders.load import (load_fragment_and_vertex_for_shader_type,
-                                 load_shader_source_string)
+from picogl.shaders.load import (
+    load_fragment_and_vertex_for_shader_type,
+    load_shader_source_string,
+)
 from picogl.shaders.type import ShaderType
-from pyglm import glm
 
 
 def _progress_iter(
@@ -105,14 +106,18 @@ class ShaderManager:
         if not self._initialized:
             self.initialize_shaders()
         if not shader_program:
-            log.error("❌ Cannot bind: shader_program is None or invalid", scope="load_shader")
+            log.error(
+                "❌ Cannot bind: shader_program is None or invalid", scope="load_shader"
+            )
             return
         try:
             shader_program.bind()
             self.current_shader = shader_program
             self.current_shader_program = shader_program.program_id()
         except Exception as ex:
-            log.error(f"❌ Failed to bind shader shader_program: {ex}", scope="load_shader")
+            log.error(
+                f"❌ Failed to bind shader shader_program: {ex}", scope="load_shader"
+            )
 
     def bind(self, shader_program: ShaderProgram) -> None:
         """
@@ -132,6 +137,7 @@ class ShaderManager:
         :return: None
         """
         from OpenGL.GL import glUseProgram
+
         glUseProgram(0)
         self.current_shader = None
         self.current_shader_program = None
@@ -182,7 +188,10 @@ class ShaderManager:
                     if loc != -1:
                         set_uniform_location_value(loc, zoom_scale)
         else:
-            log.error(f"❌ Shader type {shader_type} could not be loaded or bound.", scope=self.__class__.__name__)
+            log.error(
+                f"❌ Shader type {shader_type} could not be loaded or bound.",
+                scope=self.__class__.__name__,
+            )
 
     def update_mvp_uniform(self, mvp_matrix: np.ndarray | glm.mat4) -> None:
         """
@@ -290,7 +299,11 @@ class ShaderManager:
         :return: None
         """
         try:
-            log.message(f"Loading shaders from {self.shader_directory}", silent=True, scope="load_shader")
+            log.message(
+                f"Loading shaders from {self.shader_directory}",
+                silent=True,
+                scope="load_shader",
+            )
             vertex_src, fragment_src = load_fragment_and_vertex_for_shader_type(
                 shader_type.value, self.shader_directory
             )
@@ -309,7 +322,9 @@ class ShaderManager:
                 self._ensure_fallback()
                 self.shaders[shader_type] = self.fallback_shader
         except Exception as ex:
-            log.warning(f"⚠️ Shader load failed for {shader_type}: {ex}", scope="load_shader")
+            log.warning(
+                f"⚠️ Shader load failed for {shader_type}: {ex}", scope="load_shader"
+            )
             self._ensure_fallback()
             self.shaders[shader_type] = self.fallback_shader
 

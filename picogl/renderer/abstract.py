@@ -1,10 +1,15 @@
 from abc import ABC, abstractmethod
 
+from picogl.renderer.initializable import Initializable
 
-class AbstractRenderer(ABC):
+
+class AbstractRenderer(Initializable, ABC):
+    def __init__(self):
+        super().__init__()
+
     @abstractmethod
-    def initialize(self) -> None:
-        """Subclasses must implement buffer setup."""
+    def _do_initialize(self) -> None:
+        """Subclasses must implement actual setup."""
 
     def set_visibility(self, visible: bool) -> None:
         """Set the visibility of the object."""

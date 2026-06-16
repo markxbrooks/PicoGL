@@ -31,6 +31,7 @@ ATTRIBUTE_LAYOUT = {
     VBOType.CBO: None,  # dynamic
 }
 
+
 def get_stride(attr, data):
     if ATTRIBUTE_LAYOUT[attr] is not None:
         return ATTRIBUTE_LAYOUT[attr]

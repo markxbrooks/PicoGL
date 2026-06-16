@@ -1,12 +1,13 @@
 """
 draw legacy bond vao
 """
+
 from contextlib import contextmanager
 
 from decologr import Decologr as log
 from OpenGL.GL import glDrawArrays
-from picogl.backend.legacy.core.vertex.buffer.client_states import \
-    legacy_client_states
+
+from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
 from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
 from picogl.buffers.vertex.legacy import VertexBufferGroup
 from picogl.numerical import GLNumeric
@@ -37,6 +38,8 @@ def draw_arrays(mode: GLDrawMode, first: int, count: int):
 
 @contextmanager
 def bound_legacy_buffers(vbo: LegacyVBO, cbo: LegacyVBO, nbo: LegacyVBO):
-    with legacy_client_states(GLClientState.VERTEX, GLClientState.COLOR,GLClientState.NORMAL):
+    with legacy_client_states(
+        GLClientState.VERTEX, GLClientState.COLOR, GLClientState.NORMAL
+    ):
         with vbo, cbo, nbo:
             yield

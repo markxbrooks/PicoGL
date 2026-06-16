@@ -9,26 +9,42 @@ over low-level OpenGL calls using the pyOpenGL library.
 """
 
 from OpenGL.GL import glGetBooleanv
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_AMBIENT, GL_DEPTH_WRITEMASK,
-                                          GL_DIFFUSE, GL_SHININESS,
-                                          GL_SPECULAR, glBlendFunc, glDisable,
-                                          glEnable, glIsEnabled, glMaterialf,
-                                          glMaterialfv)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (
+    GL_AMBIENT,
+    GL_DEPTH_WRITEMASK,
+    GL_DIFFUSE,
+    GL_SHININESS,
+    GL_SPECULAR,
+    glBlendFunc,
+    glDisable,
+    glEnable,
+    glIsEnabled,
+    glMaterialf,
+    glMaterialfv,
+)
+
 from picogl.backend.capability import FACE_MAP, GLMaterialFace, PhongMaterial
 from picogl.renderer.backend import RenderBackend
 
 
 class LegacyOpenGLBackend(RenderBackend):
     """Legacy OpenGL Backend"""
-    def enable(self, cap): glEnable(cap)
-    def disable(self, cap): glDisable(cap)
-    def is_enabled(self, cap): return glIsEnabled(cap)
+
+    def enable(self, cap):
+        glEnable(cap)
+
+    def disable(self, cap):
+        glDisable(cap)
+
+    def is_enabled(self, cap):
+        return glIsEnabled(cap)
 
     def set_blend_func(self, src, dst):
         glBlendFunc(src, dst)
 
     def set_depth_mask(self, flag):
         from OpenGL.GL import GL_FALSE, GL_TRUE, glDepthMask
+
         glDepthMask(GL_TRUE if flag else GL_FALSE)
 
     def get_depth_mask(self):

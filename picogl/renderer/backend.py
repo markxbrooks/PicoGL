@@ -9,10 +9,12 @@ but requires a concrete implementation to define specific behavior.
 """
 
 from abc import ABC
+from typing import Any
 
 
 class RenderBackend(ABC):
     """Render Backend"""
+
     def enable(self, cap): ...
     def disable(self, cap): ...
     def is_enabled(self, cap): ...

@@ -1,9 +1,16 @@
 from contextlib import contextmanager
 
 from OpenGL.GL import glGetIntegerv, glIsEnabled
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_BLEND, GL_BLEND_DST, GL_BLEND_SRC,
-                                          GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA,
-                                          glBlendFunc, glDisable, glEnable)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (
+    GL_BLEND,
+    GL_BLEND_DST,
+    GL_BLEND_SRC,
+    GL_ONE_MINUS_SRC_ALPHA,
+    GL_SRC_ALPHA,
+    glBlendFunc,
+    glDisable,
+    glEnable,
+)
 
 
 @contextmanager

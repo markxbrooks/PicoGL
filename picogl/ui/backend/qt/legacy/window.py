@@ -25,11 +25,11 @@ Usage:
 import sys
 from typing import Optional
 
-from picogl.mode import GLMode
+from elmo.ui.widgets.gl.mol.base import GLMolBase
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget
 
-from elmo.ui.widgets.gl.mol.base import GLMolBase
+from picogl.mode import GLMode
 
 
 class LegacyQtObjectWindow(QMainWindow):
@@ -88,7 +88,3 @@ class LegacyQtObjectWindow(QMainWindow):
             self.close()
         else:
             super().keyPressEvent(event)
-
-
-
-

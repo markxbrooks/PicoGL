@@ -1,12 +1,20 @@
 import numpy as np
-from OpenGL.GL import GL_FLOAT, glColorPointer
+from OpenGL.GL import glColorPointer
+
 from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
+from picogl.state.draw_mode import GLDataType
 
 
 class LegacyColorVBO(LegacyVBO):
     """Specialized VBO class for colour attributes."""
 
-    def __init__(self, handle: int = None, data: np.ndarray = None, size: int = 3, dtype: int = GL_FLOAT):
+    def __init__(
+        self,
+        handle: int = None,
+        data: np.ndarray = None,
+        size: int = 3,
+        dtype: int = GLDataType.FLOAT,
+    ):
         """
         Initialize a colour VBO.
 
