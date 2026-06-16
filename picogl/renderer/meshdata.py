@@ -12,6 +12,7 @@ from OpenGL import GL
 
 from picogl.attrs.vertex import CanonicalVertexAttrs
 from picogl.buffers.vertex.vbo.vbo_class import VBOType
+from picogl.state.draw_mode import GLDataType, GLDrawMode, GLIndexType
 
 
 class MeshData:
@@ -222,16 +223,16 @@ class MeshData:
     def bind(self):
         if self.vertices is not None:
             GL.glEnableClientState(GL.GL_VERTEX_ARRAY)
-            GL.glVertexPointer(3, GL.GL_FLOAT, 0, self.vertices)
+            GL.glVertexPointer(3, GLDataType.FLOAT, 0, self.vertices)
         if self.normals is not None:
             GL.glEnableClientState(GL.GL_NORMAL_ARRAY)
-            GL.glNormalPointer(GL.GL_FLOAT, 0, self.normals)
+            GL.glNormalPointer(GLDataType.FLOAT, 0, self.normals)
         if self.colors is not None:
             GL.glEnableClientState(GL.GL_COLOR_ARRAY)
-            GL.glColorPointer(3, GL.GL_FLOAT, 0, self.colors)
+            GL.glColorPointer(3, GLDataType.FLOAT, 0, self.colors)
         if self.texcoords is not None:
             GL.glEnableClientState(GL.GL_TEXTURE_COORD_ARRAY)
-            GL.glTexCoordPointer(2, GL.GL_FLOAT, 0, self.texcoords)
+            GL.glTexCoordPointer(2, GLDataType.FLOAT, 0, self.texcoords)
 
     def unbind(self):
         if self.texcoords is not None:
@@ -318,7 +319,7 @@ class MeshData:
         self,
         color: tuple = None,
         line_width: float = 1.0,
-        mode: int = GL.GL_TRIANGLES,
+        mode: int = GLDrawMode.TRIANGLES,
         fill: bool = False,
         alpha: float = 1.0,
     ):
@@ -383,7 +384,7 @@ class MeshData:
         if color is None and self.colors is not None:
             # Use vertex colors (for fo-fc maps)
             GL.glEnableClientState(GL.GL_COLOR_ARRAY)
-            GL.glColorPointer(3, GL.GL_FLOAT, 0, self.colors)
+            GL.glColorPointer(3, GLDataType.FLOAT, 0, self.colors)
             # Note: Alpha blending for vertex colors would require 4-component colors
             # For now, we'll use the alpha value for the overall transparency
         else:
@@ -400,7 +401,7 @@ class MeshData:
             # Draw the mesh with additional safety checks
             element_count = len(self.indices)
             if element_count > 0:
-                GL.glDrawElements(mode, element_count, GL.GL_UNSIGNED_INT, self.indices)
+                GL.glDrawElements(mode, element_count, GLIndexType.UNSIGNED_INT, self.indices)
         except Exception as e:
             log.error(f"Error in glDrawElements: {e}")
             log.error(f"Element count: {element_count}")
