@@ -27,7 +27,6 @@ from typing import Any
 from numpy import ndarray
 from OpenGL.GL import glGenTextures, glTexImage2D
 from OpenGL.GL.framebufferobjects import glGenerateMipmap
-from OpenGL.raw.GL._types import GL_UNSIGNED_BYTE
 from OpenGL.raw.GL.ARB.internalformat_query2 import GL_TEXTURE_2D
 from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_LINEAR,
@@ -48,6 +47,7 @@ from OpenGL.raw.GL.VERSION.GL_4_5 import GL_TEXTURE_BINDING_2D
 
 from picogl.state.param import GLParam
 from picogl.state.query import GLStateQuery
+from picogl.numerical import GLNumeric
 
 FORMAT_MAP = {
     "rgb": GL_RGB,
@@ -136,7 +136,7 @@ class GLTextureDriver:
             spec.height,
             0,
             internal_format,
-            GL_UNSIGNED_BYTE,
+            GLNumeric.UNSIGNED_BYTE,
             tex.data,
         )
 
