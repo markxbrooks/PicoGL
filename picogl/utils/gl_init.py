@@ -72,7 +72,7 @@ legacy_init_gl_list = [
         "✅ Setting clear colour",
         lambda b: b.set_clear_background_and_color(color=(0.2, 0.2, 0.2, 0.0)),
     ),
-    GLTask("✅ Setting depth function", lambda b: b.set_depth_func_gl_less()),
+    GLTask("✅ Setting depth function", lambda b: b.depth.set_depth_func_gl_less()),
     GLTask("✅ Enabling depth test", lambda b: b.depth.set_depth_test(True)),
     GLTask(
         "✅ Enabling face culling",

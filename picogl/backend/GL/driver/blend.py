@@ -4,7 +4,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_BLEND,
     GL_ONE_MINUS_SRC_ALPHA,
     GL_SRC_ALPHA,
-    glBlendFunc,
+    glBlendFunc, glGetIntegerv, GL_BLEND_SRC, GL_BLEND_DST
 )
 
 from picogl.backend.GL.driver.capability import GLCapabilityDriver
@@ -26,3 +26,7 @@ class GLBlendDriver:
 
     def setup_blending(self):
         self.set_blend_func(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+
+    @staticmethod
+    def get_blend_func() -> tuple[int, int]:
+        return int(glGetIntegerv(GL_BLEND_SRC)), int(glGetIntegerv(GL_BLEND_DST))

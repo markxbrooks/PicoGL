@@ -601,9 +601,9 @@ class TestDrawCommand(unittest.TestCase):
             backend.draw_bound_elements(GL_LINE, 4, GL_UNSIGNED_INT, None)
             backend.draw_arrays(GL_LINE, 1, 6)
             backend.draw_arrays_bound_vao(9, GL_LINE, 2, 7)
-            self.assertEqual(backend.create_texture(4, 5, None), 9)
-            backend.bind_texture(7)
-            backend.delete_texture(7)
+            self.assertEqual(backend.textures.create_texture(4, 5, None), 9)
+            backend.textures.bind_texture(7)
+            backend.textures.delete_texture(7)
             backend.attributes.enable_vertex_array()
             backend.attributes.set_vertex_pointer(data)
             backend.attributes.enable_normal_array()
@@ -641,8 +641,8 @@ class TestDrawCommand(unittest.TestCase):
             patch("picogl.backend.GL.backend.glClearColor") as clear_color,
         ):
             backend.viewport(1, 2, 3, 4)
-            backend.load_identity()
-            backend.translate(1, 2, 3)
+            backend.pipeline.load_identity()
+            backend.pipeline.translate(1, 2, 3)
             backend.legacy.set_light([0.0, 0.0, 10.0, 1.0])
             backend.set_clear_color((0.1, 0.2, 0.3, 1.0))
 

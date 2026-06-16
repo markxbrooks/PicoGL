@@ -351,7 +351,7 @@ class DrawCommand:
 
         if self.texture:
             if isinstance(self.texture, int) and hasattr(backend, "bind_texture"):
-                backend.bind_texture(self.texture)
+                backend.textures.bind_texture(self.texture)
             elif hasattr(self.texture, "bind"):
                 self.texture.bind()
 

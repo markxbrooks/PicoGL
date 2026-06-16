@@ -94,13 +94,13 @@ class TextureManager:
 
         # Delete old GPU texture (critical)
         if name in self._textures:
-            self.backend.delete_texture(self._textures[name])
+            self.backend.textures.delete_texture(self._textures[name])
 
         with Image.open(path) as image:
             image = image.convert("RGB")
             image = image.transpose(Image.FLIP_TOP_BOTTOM)
 
-            texture_id = self.backend.create_texture(
+            texture_id = self.backend.textures.create_texture(
                 width=image.width,
                 height=image.height,
                 data=image.tobytes(),
@@ -113,7 +113,7 @@ class TextureManager:
         if "__fallback__" not in self._textures:
             data = create_checkerboard_array(64)
 
-            tex = self.backend.create_texture(
+            tex = self.backend.textures.create_texture(
                 width=64,
                 height=64,
                 data=data.tobytes(),
