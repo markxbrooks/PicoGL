@@ -1,3 +1,7 @@
+"""
+GLRaster Driver
+"""
+
 from OpenGL.GL import (GL_POINT_SIZE_RANGE, glGetFloatv,
                        glLineWidth, glPointSize,
                        glPolygonMode)
