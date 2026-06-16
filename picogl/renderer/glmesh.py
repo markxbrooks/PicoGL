@@ -11,9 +11,7 @@ import ctypes
 from typing import TYPE_CHECKING, Literal, Optional, Union
 
 import numpy as np
-from OpenGL.GL import glDrawElements
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT
-from OpenGL.raw.GL.VERSION.GL_1_1 import glDrawArrays
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.buffers.glcleanup import delete_buffer_object
 from picogl.buffers.helper import as_vec3_array
@@ -21,6 +19,7 @@ from picogl.buffers.vertex.vbo.vbo_class import MeshDataAttrs, VBOType
 from picogl.shaders.type import ShaderType
 
 from elmo.glsl.layouts import build_shader_layouts
+from picogl.state.draw_mode import GLDrawMode
 
 if TYPE_CHECKING:
     from picogl.renderer.meshdata import MeshData
@@ -273,18 +272,18 @@ class GLMesh:
     def __exit__(self, exc_type, exc, tb):
         self.unbind()
 
-    def draw(self) -> None:
+    def draw(self, mode=GLDrawMode.TRIANGLES) -> None:
         """Draw the mesh."""
         try:
             if not self.vao:
                 raise RuntimeError("GLMesh not uploaded. Call upload() first.")
             with self.vao:
-                if self.use_indices and self.index_count > 0:
-                    glDrawElements(
-                        GL_TRIANGLES, self.index_count, GL_UNSIGNED_INT, ctypes.c_void_p(0)
-                    )
-                else:
-                    glDrawArrays(GL_TRIANGLES, 0, self.index_count)
+                self.vao.draw(
+                    index_count=self.index_count,
+                    mode=mode,
+                    dtype=GL_UNSIGNED_INT,
+                    pointer=ctypes.c_void_p(0),
+                )
         except Exception as e:
             # You might want to log e or re-raise
             raise

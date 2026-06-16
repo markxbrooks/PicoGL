@@ -1,4 +1,8 @@
-from OpenGL.raw.GL.VERSION.GL_1_0 import glLineWidth, GL_FRONT_AND_BACK, glPolygonMode
+from OpenGL.GL import (GL_FRONT_AND_BACK,
+                                          GL_POINT_SIZE_RANGE, glGetFloatv,
+                                          glLineWidth, glPointSize,
+                                          glPolygonMode)
+from OpenGL.raw.GL.VERSION.GL_1_1 import glPolygonOffset
 
 from picogl.backend.state import gl_value
 
@@ -9,6 +13,24 @@ class GLRasterDriver:
     @staticmethod
     def set_line_width(width):
         glLineWidth(width)
+
+    @staticmethod
+    def set_point_size(size):
+        glPointSize(float(size))
+
+    @staticmethod
+    def get_point_size_range() -> tuple[float, float]:
+        min_size, max_size = glGetFloatv(GL_POINT_SIZE_RANGE)
+        return float(min_size), float(max_size)
+
+    @classmethod
+    def set_clamped_point_size(cls, size):
+        min_size, max_size = cls.get_point_size_range()
+        cls.set_point_size(max(min_size, min(max_size, float(size))))
+
+    @staticmethod
+    def set_polygon_offset(factor, units):
+        glPolygonOffset(float(factor), float(units))
 
     @staticmethod
     def set_polygon_mode(*args):

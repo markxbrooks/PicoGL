@@ -32,7 +32,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_LINEAR, GL_RGB,
                                           GL_TEXTURE_MAG_FILTER,
                                           GL_TEXTURE_MIN_FILTER,
                                           GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T,
-                                          glTexParameteri)
+                                          glTexParameteri, glIsEnabled, glDisable, glEnable)
 from OpenGL.raw.GL.VERSION.GL_1_1 import glBindTexture, glDeleteTextures
 from OpenGL.raw.GL.VERSION.GL_1_2 import GL_CLAMP_TO_EDGE
 from OpenGL.raw.GL.VERSION.GL_1_3 import (GL_ACTIVE_TEXTURE, GL_TEXTURE0,

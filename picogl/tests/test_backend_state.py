@@ -227,14 +227,26 @@ class TestDrawCommand(unittest.TestCase):
         raster = GLRasterDriver()
 
         with (
-            patch("picogl.backend.GL.backend.glLineWidth") as line_width,
-            patch("picogl.backend.GL.backend.glPolygonMode") as polygon_mode,
+            patch("picogl.backend.GL.driver.raster.glLineWidth") as line_width,
+            patch("picogl.backend.GL.driver.raster.glPolygonMode") as polygon_mode,
+            patch("picogl.backend.GL.driver.raster.glPointSize") as point_size,
+            patch(
+                "picogl.backend.GL.driver.raster.glGetFloatv",
+                return_value=(1.0, 10.0),
+            ) as get_float,
+            patch("picogl.backend.GL.driver.raster.glPolygonOffset") as polygon_offset,
         ):
             raster.set_line_width(2.0)
             raster.set_polygon_mode(GL_FRONT_AND_BACK, GL_LINE)
+            raster.set_point_size(3.0)
+            raster.set_clamped_point_size(12.0)
+            raster.set_polygon_offset(-1.0, -1.0)
 
         line_width.assert_called_once_with(2.0)
         polygon_mode.assert_called_once_with(GL_FRONT_AND_BACK, GL_LINE)
+        self.assertEqual(point_size.call_args_list, [call(3.0), call(10.0)])
+        get_float.assert_called_once()
+        polygon_offset.assert_called_once_with(-1.0, -1.0)
 
     def test_state_subsystem_drivers_delegate_to_opengl(self):
         capabilities = GLCapabilityDriver()
@@ -315,12 +327,24 @@ class TestDrawCommand(unittest.TestCase):
         with (
             patch.object(backend.raster, "set_line_width") as set_line_width,
             patch.object(backend.raster, "set_polygon_mode") as set_polygon_mode,
+            patch.object(backend.raster, "set_point_size") as set_point_size,
+            patch.object(
+                backend.raster,
+                "set_clamped_point_size",
+            ) as set_clamped_point_size,
+            patch.object(backend.raster, "set_polygon_offset") as set_polygon_offset,
         ):
             backend.set_line_width(2.0)
             backend.set_polygon_mode(GL_FRONT_AND_BACK, GL_LINE)
+            backend.set_point_size(3.0)
+            backend.set_clamped_point_size(4.0)
+            backend.set_polygon_offset(-1.0, -1.0)
 
         set_line_width.assert_called_once_with(2.0)
         set_polygon_mode.assert_called_once_with(GL_FRONT_AND_BACK, GL_LINE)
+        set_point_size.assert_called_once_with(3.0)
+        set_clamped_point_size.assert_called_once_with(4.0)
+        set_polygon_offset.assert_called_once_with(-1.0, -1.0)
 
     def test_legacy_pipeline_delegates_to_opengl(self):
         legacy = GLLegacyPipeline()
@@ -397,12 +421,30 @@ class TestDrawCommand(unittest.TestCase):
         geometry = GLGeometryDriver(binding)
         mesh = object()
 
-        with patch("picogl.backend.GL.backend.glDrawElements") as draw_elements:
+        with (
+            patch("picogl.backend.GL.driver.geometry.glDrawElements") as draw_elements,
+            patch("picogl.backend.GL.driver.geometry.glDrawArrays") as draw_arrays,
+            patch("picogl.backend.GL.driver.geometry.glBindVertexArray") as bind_vao,
+        ):
             geometry.draw_mesh(mesh, GL_LINE)
             geometry.draw_elements(GL_LINE, [0, 1, 2])
+            geometry.draw_bound_elements(GL_LINE, 4, GL_UNSIGNED_INT, None)
+            geometry.draw_arrays(GL_LINE, 2, 5)
+            geometry.draw_arrays_bound_vao(9, GL_LINE, 1, 6)
 
         self.assertEqual(binding.calls, [("bind_mesh", mesh), ("draw", mesh, GL_LINE)])
-        draw_elements.assert_called_once_with(GL_LINE, 3, GL_UNSIGNED_INT, [0, 1, 2])
+        self.assertEqual(
+            draw_elements.call_args_list,
+            [
+                call(GL_LINE, 3, GL_UNSIGNED_INT, [0, 1, 2]),
+                call(GL_LINE, 4, GL_UNSIGNED_INT, None),
+            ],
+        )
+        self.assertEqual(
+            draw_arrays.call_args_list,
+            [call(GL_LINE, 2, 5), call(GL_LINE, 1, 6)],
+        )
+        self.assertEqual(bind_vao.call_args_list, [call(9), call(0)])
 
     def test_texture_system_owns_texture_lifecycle(self):
         driver = FakeTextureDriver()
@@ -465,6 +507,12 @@ class TestDrawCommand(unittest.TestCase):
         with (
             patch.object(backend.geometry, "draw_mesh") as draw_mesh,
             patch.object(backend.geometry, "draw_elements") as draw_elements,
+            patch.object(backend.geometry, "draw_bound_elements") as draw_bound_elements,
+            patch.object(backend.geometry, "draw_arrays") as draw_arrays,
+            patch.object(
+                backend.geometry,
+                "draw_arrays_bound_vao",
+            ) as draw_arrays_bound_vao,
             patch.object(backend.textures, "create_texture", return_value=9) as create_texture,
             patch.object(backend.textures, "bind_texture") as bind_texture,
             patch.object(backend.textures, "delete_texture") as delete_texture,
@@ -479,6 +527,9 @@ class TestDrawCommand(unittest.TestCase):
         ):
             backend.draw_mesh(mesh, GL_LINE)
             backend.draw_elements(GL_LINE, [0, 1, 2])
+            backend.draw_bound_elements(GL_LINE, 4, GL_UNSIGNED_INT, None)
+            backend.draw_arrays(GL_LINE, 1, 6)
+            backend.draw_arrays_bound_vao(9, GL_LINE, 2, 7)
             self.assertEqual(backend.create_texture(4, 5, None), 9)
             backend.bind_texture(7)
             backend.delete_texture(7)
@@ -493,6 +544,9 @@ class TestDrawCommand(unittest.TestCase):
 
         draw_mesh.assert_called_once_with(mesh, GL_LINE)
         draw_elements.assert_called_once_with(GL_LINE, [0, 1, 2])
+        draw_bound_elements.assert_called_once_with(GL_LINE, 4, GL_UNSIGNED_INT, None)
+        draw_arrays.assert_called_once_with(GL_LINE, 1, 6)
+        draw_arrays_bound_vao.assert_called_once_with(9, GL_LINE, 2, 7)
         create_texture.assert_called_once_with(4, 5, None)
         bind_texture.assert_called_once_with(7)
         delete_texture.assert_called_once_with(7)

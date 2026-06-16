@@ -9,7 +9,7 @@ from contextlib import contextmanager
 
 from OpenGL.GL import (glBindFramebuffer, GL_FRAMEBUFFER, glFramebufferTexture2D,
                        GL_COLOR_ATTACHMENT0, glCheckFramebufferStatus, GL_FRAMEBUFFER_COMPLETE,
-                       glGenFramebuffers, GL_DEPTH_ATTACHMENT)
+                       glGenFramebuffers, GL_DEPTH_ATTACHMENT, glGetIntegerv)
 from OpenGL.raw.GL.VERSION.GL_3_0 import GL_FRAMEBUFFER_BINDING
 
 from picogl.renderer.initializable import Initializable

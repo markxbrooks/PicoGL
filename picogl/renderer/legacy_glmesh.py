@@ -3,10 +3,6 @@ from typing import Optional
 
 import numpy as np
 from OpenGL.GL import glDrawElements
-from OpenGL.raw.GL._types import GL_FLOAT
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT
-from OpenGL.raw.GL.VERSION.GL_1_1 import (GL_COLOR_ARRAY, GL_VERTEX_ARRAY,
-                                          glDrawArrays)
 from picogl.attrs.vertex import CanonicalVertexAttrs
 from picogl.backend.legacy.core.vertex.buffer.client_states import \
     legacy_client_states
@@ -16,6 +12,9 @@ from picogl.buffers.glcleanup import delete_buffer_object
 from picogl.buffers.helper import as_vec3_array
 from picogl.buffers.vertex.legacy import VertexBufferGroup
 from picogl.buffers.vertex.vbo.vbo_class import MeshDataAttrs, VBOType
+from picogl.numerical import GLNumeric
+from picogl.state.client import GLClientState
+from picogl.state.draw_mode import GLDrawMode
 
 
 class LegacyGLMesh:
@@ -117,7 +116,7 @@ class LegacyGLMesh:
                 name=CanonicalVertexAttrs.POSITIONS,
                 index=0,
                 size=3,
-                type=GL_FLOAT,
+                type=GLNumeric.FLOAT,
                 normalized=False,
                 stride=0,
                 offset=0,
@@ -126,7 +125,7 @@ class LegacyGLMesh:
                 name=CanonicalVertexAttrs.COLORS,
                 index=1,
                 size=3,
-                type=GL_FLOAT,
+                type=GLNumeric.FLOAT,
                 normalized=False,
                 stride=0,
                 offset=0,
@@ -135,7 +134,7 @@ class LegacyGLMesh:
                 name=CanonicalVertexAttrs.NORMALS,
                 index=2,
                 size=3,
-                type=GL_FLOAT,
+                type=GLNumeric.FLOAT,
                 normalized=False,
                 stride=0,
                 offset=0,
@@ -148,7 +147,7 @@ class LegacyGLMesh:
                     name=VBOType.UVS,
                     index=3,
                     size=2,
-                    type=GL_FLOAT,
+                    type=GLNumeric.FLOAT,
                     normalized=False,
                     stride=0,
                     offset=0,
@@ -181,17 +180,17 @@ class LegacyGLMesh:
     def __exit__(self, exc_type, exc, tb):
         self.unbind()
 
-    def draw(self, mode=GL_TRIANGLES) -> None:
+    def draw(self, mode=GLDrawMode.TRIANGLES) -> None:
         """Draw the mesh."""
         try:
             if not self.vao:
                 raise RuntimeError("GLMesh not uploaded. Call upload() first.")
 
             # Use legacy client states and individual VBOs to bypass the problematic bind() method
-            with legacy_client_states(GL_VERTEX_ARRAY, GL_COLOR_ARRAY):
+            with legacy_client_states(GLClientState.VERTEX, GLClientState.COLOR):
                 with self.vao.vbo, self.vao.cbo, self.vao.ebo:
                     glDrawElements(
-                        mode, int(self.index_count), GL_UNSIGNED_INT, ctypes.c_void_p(0)
+                        mode, int(self.index_count), GLNumeric.UNSIGNED_INT, ctypes.c_void_p(0)
                     )
         except Exception as ex:
             print(f"Error drawing mesh: {ex}")

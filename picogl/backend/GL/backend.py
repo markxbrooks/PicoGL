@@ -156,6 +156,15 @@ class GLBackend:
     def set_line_width(self, width):
         self.raster.set_line_width(width)
 
+    def set_point_size(self, size):
+        self.raster.set_point_size(size)
+
+    def set_clamped_point_size(self, size):
+        self.raster.set_clamped_point_size(size)
+
+    def set_polygon_offset(self, factor, units):
+        self.raster.set_polygon_offset(factor, units)
+
     def set_color(self, rgba):
         self.pipeline.set_color(rgba)
 
@@ -275,6 +284,21 @@ class GLBackend:
     def draw_elements(self, mode, indices):
         """draw elements"""
         self.geometry.draw_elements(mode, indices)
+
+    def draw_bound_elements(self, mode, index_count: int, index_type=None, pointer=None):
+        """Draw using the currently bound element buffer."""
+        if index_type is None:
+            self.geometry.draw_bound_elements(mode, index_count, pointer=pointer)
+        else:
+            self.geometry.draw_bound_elements(mode, index_count, index_type, pointer)
+
+    def draw_arrays(self, mode, first: int, count: int):
+        """Draw non-indexed vertex arrays."""
+        self.geometry.draw_arrays(mode, first, count)
+
+    def draw_arrays_bound_vao(self, vao: int, mode, first: int, count: int):
+        """Borrow a VAO handle for a non-indexed draw, then unbind it."""
+        self.geometry.draw_arrays_bound_vao(vao, mode, first, count)
 
     def bind_texture(self, texture_id):
         """bind texture"""

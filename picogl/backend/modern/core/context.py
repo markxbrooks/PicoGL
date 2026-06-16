@@ -1,6 +1,8 @@
 from OpenGL.GL import *  # pylint: disable=W0614
 from pyglm import glm
 
+from examples.utils.test_window import GLWindow
+
 
 class GLContext(GObject):
     def __init__(self):

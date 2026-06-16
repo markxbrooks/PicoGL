@@ -1,7 +1,7 @@
 """
 Base Renderer Class
 """
-from typing import Optional
+from typing import Optional, Callable
 
 import numpy as np
 from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_DEPTH_TEST, GL_LINE_SMOOTH,

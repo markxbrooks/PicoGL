@@ -44,6 +44,7 @@ from picogl.buffers.attributes import AttributeSpec, LayoutDescriptor
 from picogl.buffers.vertex.legacy import VertexBufferGroup
 
 from elmo.gl.buffers.molecule.bond import VBOType
+from picogl.state.draw_mode import GLDrawMode
 
 
 class TestVertexBufferGroup(unittest.TestCase):
@@ -337,7 +338,7 @@ class TestVertexBufferGroup(unittest.TestCase):
             mock_client_states.return_value.__enter__ = MagicMock()
             mock_client_states.return_value.__exit__ = MagicMock()
             
-            vbg.draw_elements(count=5, mode=GL_TRIANGLES)
+            vbg.draw_elements(count=5, mode=GLDrawMode.TRIANGLES)
             
             # Verify VBOs were bound
             mock_vbo.bind.assert_called_once()

@@ -251,18 +251,28 @@ class VertexArrayObject(VertexBase, GLResource):
         canonical = NAME_ALIASES.get(name, name)
         return self.named_vbos.get(canonical)
 
-    def add_vbo_data(self, data: np.ndarray):
+    def add_vbo_data(
+        self,
+        data: np.ndarray,
+        index: int = 0,
+        size: int = 3,
+        dtype: int = GL_FLOAT,
+        name: str = None,
+        handle: int = None,
+    ) -> ModernVBO:
         """
-        add VBO data
+        Add VBO data to this VAO.
+
+        Compatibility wrapper for older callers that only supplied vertex data.
         """
-        vbo = ModernVBO(handle=handle)
-        vbo.bind()
-        vbo.set_data(data)
-        with self.bound():
-            vbo.bind()
-            glEnableVertexAttribArray(index)
-            glVertexAttribPointer(index, size, dtype, False, 0, ctypes.c_void_p(0))
-        self.vbos.append(vbo)
+        return self.add_vbo(
+            index=index,
+            data=data,
+            size=size,
+            dtype=dtype,
+            name=name,
+            handle=handle,
+        )
 
     def add_vbo(
         self,
@@ -382,6 +392,7 @@ class VertexArrayObject(VertexBase, GLResource):
         dtype: int = GL_UNSIGNED_INT,
         mode: int = GL_POINTS,
         pointer: int = ctypes.c_void_p(0),
+        first: int = 0,
     ):
         """
         draw
@@ -390,6 +401,7 @@ class VertexArrayObject(VertexBase, GLResource):
         :param dtype: GL_UNSIGNED_INT
         :param index_count: int Number of vertices to draw.
         :param mode: int e.g. GL_POINT
+        :param first: First vertex for non-indexed draws.
         :return: None
         """
         atom_count = index_count or self.index_count
@@ -398,7 +410,7 @@ class VertexArrayObject(VertexBase, GLResource):
         if self.ebo:
             glDrawElements(mode, atom_count, dtype, pointer)
         else:
-            glDrawArrays(mode, 0, atom_count)
+            glDrawArrays(mode, int(first), atom_count)
 
     def _modern_vbo_for_attrib(self, attrib_index: int) -> Optional[ModernVBO]:
         """Return the :class:`ModernVBO` created for ``add_vbo(index=attrib_index, ...)``."""

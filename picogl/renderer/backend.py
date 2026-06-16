@@ -9,6 +9,7 @@ but requires a concrete implementation to define specific behavior.
 """
 
 from abc import ABC
+from typing import Any
 
 
 class RenderBackend(ABC):
