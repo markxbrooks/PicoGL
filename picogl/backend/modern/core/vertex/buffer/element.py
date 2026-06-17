@@ -40,7 +40,7 @@ class ModernEBO(VertexBuffer):
         handle: Optional[int] = None,
         data: Optional[np.ndarray] = None,
         size: int = 3,
-        target: int = GLBufferTarget.ELEMENT_ARRAY_BUFFER,
+        target: int = GLBufferTarget.ELEMENT,
     ):
         """ """
         if handle is None:
@@ -69,5 +69,5 @@ class ModernEBO(VertexBuffer):
         :return: None
         """
         glBufferData(
-            GLBufferTarget.ELEMENT_ARRAY_BUFFER, self.size, self.data, self.dtype
+            GLBufferTarget.ELEMENT, self.size, self.data, self.dtype
         )

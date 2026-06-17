@@ -14,7 +14,7 @@ class LegacyEBO(LegacyVBO):
         self,
         handle: int = None,
         data: np.ndarray = None,
-        target: int = GLBufferTarget.ELEMENT_ARRAY_BUFFER,
+        target: int = GLBufferTarget.ELEMENT,
         size: int = 3,
         dtype: int = GLDataType.FLOAT,
     ):

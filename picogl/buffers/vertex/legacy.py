@@ -38,6 +38,7 @@ from picogl.buffers.vertex.aliases import (
     VertexBufferRole,
 )
 from picogl.buffers.vertex.vbo.vbo_class import VBOType
+from picogl.state.client import GLClientState
 from picogl.state.draw_mode import GLBufferTarget, GLDataType, GLDrawMode, GLIndexType
 
 
@@ -135,7 +136,7 @@ class VertexBufferGroup(VertexBase):
 
         # Use the layout-based binding approach
         with self:
-            with legacy_client_states(GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_NORMAL_ARRAY):
+            with legacy_client_states(GLClientState.VERTEX, GLClientState.COLOR, GLClientState.NORMAL):
                 # Issue draw call
                 glDrawArrays(mode, 0, index_count)
 
@@ -199,7 +200,7 @@ class VertexBufferGroup(VertexBase):
         # Bind buffers and set up attribute pointers
         with self:
             # Legacy client states still required
-            with legacy_client_states(GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_NORMAL_ARRAY):
+            with legacy_client_states(GLClientState.VERTEX, GLClientState.COLOR, GLClientState.NORMAL):
                 # Bind each VBO (legacy-style)
                 for vbo in self.named_vbos.values():
                     vbo.bind()
@@ -210,10 +211,10 @@ class VertexBufferGroup(VertexBase):
                     ebo_id = getattr(self.ebo, "_id", None)
                 if ebo_id is None:
                     raise RuntimeError("EBO has no GL buffer name (handle/_id)")
-                glBindBuffer(GLBufferTarget.ELEMENT_ARRAY_BUFFER, ebo_id)
+                glBindBuffer(GLBufferTarget.ELEMENT, ebo_id)
                 glDrawElements(mode, count, dtype, ctypes.c_void_p(offset))
                 # Unbind EBO afterwards to prevent accidental reuse
-                glBindBuffer(GLBufferTarget.ELEMENT_ARRAY_BUFFER, 0)
+                glBindBuffer(GLBufferTarget.ELEMENT, 0)
 
     def set_layout(self, layout: LayoutDescriptor) -> None:
         self.layout = layout
@@ -235,15 +236,15 @@ class VertexBufferGroup(VertexBase):
                 glBindBuffer(GLBufferTarget.ARRAY, buffer_handle)
 
                 if canonical == VertexBufferRole.VBO:
-                    glEnableClientState(GL_VERTEX_ARRAY)
+                    glEnableClientState(GLClientState.VERTEX)
                     glVertexPointer(attr.size, attr.type, attr.stride, None)
 
                 elif canonical == VertexBufferRole.NBO:
-                    glEnableClientState(GL_NORMAL_ARRAY)
+                    glEnableClientState(GLClientState.NORMAL)
                     glNormalPointer(attr.type, attr.stride, None)
 
                 elif canonical == VertexBufferRole.CBO:
-                    glEnableClientState(GL_COLOR_ARRAY)
+                    glEnableClientState(GLClientState.COLOR)
                     glColorPointer(attr.size, attr.type, attr.stride, None)
 
         except Exception as ex:
