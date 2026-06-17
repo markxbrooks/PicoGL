@@ -20,6 +20,7 @@ from picogl.backend.legacy.core.attribute_binder import LegacyAttributeBinder
 from picogl.backend.legacy.core.pipeline import GLLegacyPipeline
 from picogl.backend.opengl import GLBindingStrategy, GLPipeline
 from picogl.backend.state import (
+    DrawCommand,
     GLClipPlaneState,
     GLStateManager,
     RenderStateApplier,
@@ -48,3 +49,7 @@ class GLBackend:
         self.attributes = LegacyAttributeBinder()
         self.state_manager = GLStateManager(self.capabilities)
         self.state_applier = RenderStateApplier(self)
+
+    def draw_command(self, command: DrawCommand):
+        """Apply command state/resources and draw through this backend."""
+        command.execute(self)
