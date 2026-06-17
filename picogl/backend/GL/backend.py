@@ -23,7 +23,6 @@ from picogl.backend.state import (
     DrawCommand,
     GLClipPlaneState,
     GLStateManager,
-    RenderState,
     RenderStateApplier,
 )
 from picogl.buffers.glframe import GLFramebuffer
