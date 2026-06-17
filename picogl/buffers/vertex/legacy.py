@@ -147,7 +147,7 @@ class VertexBufferGroup(VertexBase):
         """
         draw
 
-        :param count: int
+        :param index_count: int
         :param mode: int
         Enable legacy client states, bind VBOs, draw, and clean up.
         """
