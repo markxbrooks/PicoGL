@@ -181,7 +181,7 @@ class VertexArrayObject(VertexBase, GLResource):
             self.layout = layout
 
             if self.ebo:
-                glBindBuffer(GLBufferTarget.ELEMENT_ARRAY_BUFFER, self.ebo.handle)
+                glBindBuffer(GLBufferTarget.ELEMENT, self.ebo.handle)
 
             # Configure attributes
             for attr in layout.attributes:

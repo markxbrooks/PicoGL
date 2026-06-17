@@ -33,9 +33,8 @@ from picogl.backend.capability import (
     GLFixedFunctionCapability,
     GLPipelineCapability,
 )
-from picogl.polygon.mode import PolygonMode
 from picogl.state.draw_mode import GLDataType, GLDrawMode, GLIndexType
-from picogl.state.fill import GLFace, GLCapability
+from picogl.state.fill import GLFace, GLCapability, GLFillMode
 from picogl.texture.gltexture import GLTextureDriver
 
 
@@ -65,12 +64,18 @@ class CapabilityDriver(Protocol):
 class RasterState:
     """Raster State"""
 
-    polygon_mode: Any = PolygonMode.FILL
+    polygon_mode: Any = GLFillMode.FILL
     line_width: float = 1.0
+    polygon_offset: tuple[float, float] = (0.0, 0.0)
+    point_size: float | None = None
 
-    def apply(self, backend: CapabilityDriver):
-        backend.set_polygon_mode(GLFace.FRONT_AND_BACK, gl_value(self.polygon_mode))
-        backend.set_line_width(self.line_width)
+    def apply(self, backend: Any) -> None:
+        if hasattr(backend, "raster"):
+            backend.raster.apply(self)
+            return
+        if hasattr(backend, "set_line_width"):
+            backend.set_polygon_mode(GLFace.FRONT_AND_BACK, gl_value(self.polygon_mode))
+            backend.set_line_width(self.line_width)
 
 
 class GLStateManager:
@@ -105,6 +110,10 @@ class BlendState:
     dst: Any = GLBlendFactor.ONE_MINUS_SRC_ALPHA
 
     def apply(self, state: GLStateManager):
+        backend = state.backend
+        if hasattr(backend, "blend"):
+            backend.blend.apply(self)
+            return
         state.set_enabled(GLPipelineCapability.BLEND, self.enabled)
         if self.enabled:
             glBlendFunc(gl_value(self.src), gl_value(self.dst))
@@ -133,6 +142,10 @@ class DepthState:
         return self.test
 
     def apply(self, state: GLStateManager):
+        backend = state.backend
+        if hasattr(backend, "depth"):
+            backend.depth.apply(self)
+            return
         state.set_enabled(GLPipelineCapability.DEPTH_TEST, self.test)
         state.backend.set_depth_write(self.write)
 
@@ -147,7 +160,10 @@ class RenderState:
     depth_test: bool = True
     depth_write: bool = True
     line_width: float = 1.0
-    polygon_mode: Any = PolygonMode.FILL
+    polygon_mode: Any = GLFillMode.FILL
+    polygon_offset: tuple[float, float] = (0.0, 0.0)
+    point_size: float | None = None
+    program_point_size: bool = False
     cull_face: bool = False
     lighting: bool = False
 
@@ -163,12 +179,19 @@ class RenderState:
         depth_write: bool | None = None,
         line_width: float | None = None,
         polygon_mode: Any | None = None,
+        polygon_offset: tuple[float, float] | None = None,
+        point_size: float | None = None,
+        program_point_size: bool = False,
         cull_face: bool = False,
         lighting: bool = False,
     ):
         if raster is not None:
             line_width = raster.line_width if line_width is None else line_width
             polygon_mode = raster.polygon_mode if polygon_mode is None else polygon_mode
+            polygon_offset = (
+                raster.polygon_offset if polygon_offset is None else polygon_offset
+            )
+            point_size = raster.point_size if point_size is None else point_size
 
         if depth is not None:
             depth_test = depth.test if depth_test is None else depth_test
@@ -202,8 +225,15 @@ class RenderState:
         object.__setattr__(
             self,
             "polygon_mode",
-            PolygonMode.FILL if polygon_mode is None else polygon_mode,
+            GLFillMode.FILL if polygon_mode is None else polygon_mode,
         )
+        object.__setattr__(
+            self,
+            "polygon_offset",
+            (0.0, 0.0) if polygon_offset is None else tuple(polygon_offset),
+        )
+        object.__setattr__(self, "point_size", point_size)
+        object.__setattr__(self, "program_point_size", bool(program_point_size))
         object.__setattr__(self, "cull_face", bool(cull_face))
         object.__setattr__(self, "lighting", bool(lighting))
 
@@ -212,6 +242,8 @@ class RenderState:
         return RasterState(
             polygon_mode=self.polygon_mode,
             line_width=self.line_width,
+            polygon_offset=self.polygon_offset,
+            point_size=self.point_size,
         )
 
     @property
@@ -241,33 +273,14 @@ class RenderStateApplier:
         prev = self.current
         self.current = state
 
-        if prev is None or prev.line_width != state.line_width:
-            self.backend.raster.set_line_width(state.line_width)
+        if prev is None or prev.raster != state.raster:
+            self.backend.raster.apply(state.raster)
 
-        if prev is None or prev.polygon_mode != state.polygon_mode:
-            self.backend.raster.set_polygon_mode(
-                GLFace.FRONT_AND_BACK,
-                gl_value(state.polygon_mode),
-            )
+        if prev is None or prev.depth != state.depth:
+            self.backend.depth.apply(state.depth)
 
-        if prev is None or prev.depth_test != state.depth_test:
-            self.backend.depth.set_depth_test(state.depth_test)
-
-        if prev is None or prev.depth_write != state.depth_write:
-            self.backend.depth.set_depth_write(state.depth_write)
-
-        if prev is None or prev.blend != state.blend:
-            self.backend.blend.set_blend(state.blend)
-
-        if state.blend and (
-            prev is None
-            or prev.blend_src != state.blend_src
-            or prev.blend_dst != state.blend_dst
-        ):
-            self.backend.blend.set_blend_func(
-                gl_value(state.blend_src),
-                gl_value(state.blend_dst),
-            )
+        if prev is None or prev.blend_state != state.blend_state:
+            self.backend.blend.apply(state.blend_state)
 
         if prev is None or prev.cull_face != state.cull_face:
             self.backend.capabilities.set_enabled(
@@ -280,6 +293,17 @@ class RenderStateApplier:
                 GLFixedFunctionCapability.LIGHTING,
                 state.lighting,
             )
+
+        if state.program_point_size and (
+            prev is None or not prev.program_point_size
+        ):
+            from OpenGL.GL import GL_PROGRAM_POINT_SIZE
+
+            self.backend.capabilities.enable(GL_PROGRAM_POINT_SIZE)
+        elif prev is not None and prev.program_point_size and not state.program_point_size:
+            from OpenGL.GL import GL_PROGRAM_POINT_SIZE
+
+            self.backend.capabilities.disable(GL_PROGRAM_POINT_SIZE)
 
 
 class GLVertexBuffer:
@@ -357,7 +381,7 @@ class DrawCommand:
     def execute(self, backend: Any):
         if self.state is not None:
             if hasattr(backend, "apply_state"):
-                backend.state_applier.apply(self.state)
+                backend.apply_state(self.state)
             else:
                 RenderStateApplier(backend).apply(self.state)
 

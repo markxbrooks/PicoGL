@@ -2,7 +2,8 @@
 Create layouts for VOAs and VBGs
 """
 
-from picogl.buffers.attributes import AttributeSpec, LayoutDescriptor
+from picogl.buffers.attributes import AttributeSpec, LayoutDescriptor, legacy_attribute_spec
+from picogl.buffers.vertex.aliases import VertexBufferRole
 from picogl.state.draw_mode import GLDataType
 
 
@@ -12,36 +13,27 @@ def create_layout(attributes):
 
 def create_element_attributes():
     return [
-        AttributeSpec(
+        legacy_attribute_spec(
+            VertexBufferRole.VBO,
+            0,
             name="positions",
-            index=0,
-            size=3,
             type=GLDataType.FLOAT,
-            normalized=False,
-            stride=0,
-            offset=0,
         )
     ]
 
 
 def create_common_attributes():
     return [
-        AttributeSpec(
+        legacy_attribute_spec(
+            VertexBufferRole.VBO,
+            0,
             name="positions",
-            index=0,
-            size=3,
             type=GLDataType.FLOAT,
-            normalized=False,
-            stride=0,
-            offset=0,
         ),
-        AttributeSpec(
+        legacy_attribute_spec(
+            VertexBufferRole.CBO,
+            1,
             name="colors",
-            index=1,
-            size=3,
             type=GLDataType.FLOAT,
-            normalized=False,
-            stride=0,
-            offset=0,
         ),
     ]

@@ -11,9 +11,6 @@ import numpy as np
 from decologr import Decologr as log
 from elmo.gl.backend.legacy.primitives.ribbon.model import RibbonAttrs
 from OpenGL.raw.GL.VERSION.GL_1_1 import (
-    GL_COLOR_ARRAY,
-    GL_NORMAL_ARRAY,
-    GL_VERTEX_ARRAY,
     glColorPointer,
     glDrawArrays,
     glDrawElements,
@@ -29,35 +26,31 @@ from picogl.backend.legacy.core.vertex.buffer.element import LegacyEBO
 from picogl.backend.legacy.core.vertex.buffer.normal import LegacyNormalVBO
 from picogl.backend.legacy.core.vertex.buffer.position import LegacyPositionVBO
 from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
-from picogl.buffers.attributes import LayoutDescriptor
+from picogl.buffers.attributes import LayoutDescriptor, AttributeSpec
 from picogl.buffers.base import VertexBase
 from picogl.buffers.glcleanup import delete_buffer_object
-from picogl.buffers.vertex.aliases import (
-    NAME_ALIASES,
-    VertexArrayRole,
-    VertexBufferRole,
-)
+from picogl.buffers.vertex.aliases import NAME_ALIASES, VertexBufferRole
 from picogl.buffers.vertex.vbo.vbo_class import VBOType
+from picogl.state.client import GLClientState
 from picogl.state.draw_mode import GLBufferTarget, GLDataType, GLDrawMode, GLIndexType
 
 
 class VertexBufferGroup(VertexBase):
     """Container for legacy VBOs, mimicking VAO interface."""
 
+    LEGACY_ATTR_BINDINGS = {
+        VertexBufferRole.VBO: (GLClientState.VERTEX, "_vertex_pointer"),
+        VertexBufferRole.NBO: (GLClientState.NORMAL, "_normal_pointer"),
+        VertexBufferRole.CBO: (GLClientState.COLOR, "_color_pointer"),
+    }
+
     def __init__(self, draw_mode: int = GLDrawMode.LINE_STRIP):
         super().__init__()
-        # self.index_count = 0
         self._index_count = None
-        self.handle = 0  # Does absolutely nothing
-        self.vao = (
-            None  # Bonds Vertex Array Object. Does absolutely nothing, but is needed
-        )
-        self.vbo: Optional[LegacyPositionVBO | int] = None  # Atom Vertex Buffer Object
-        self.cbo: Optional[LegacyColorVBO | int] = None  # Color Vertex Buffer Object
-        self.nbo: Optional[LegacyNormalVBO | int] = None  # Normal Vertex Buffer Object
-        self.ebo: Optional[LegacyEBO | int] = None  # Bond Index Buffer Object
+        self.handle = 0  # compat shim, not a real VAO handle
+        self.vao = None  # compat shim, not a real VAO
         self.layout: Optional[LayoutDescriptor] = None
-        self.named_vbos: dict[str, LegacyVBO] = {}  # store by semantic name
+        self.named_vbos: dict[VertexBufferRole | str, LegacyVBO] = {}
         self.draw_mode: int = draw_mode
         self.vbo_classes = {
             RibbonAttrs.VBO: LegacyPositionVBO,
@@ -72,18 +65,50 @@ class VertexBufferGroup(VertexBase):
         # print("VertexBufferGroup.__del__", self)
         pass
 
+    @property
+    def vbo(self) -> Optional[LegacyPositionVBO | int]:
+        return self.named_vbos.get(VertexBufferRole.VBO)
+
+    @vbo.setter
+    def vbo(self, value: Optional[LegacyPositionVBO | int]) -> None:
+        self._set_named_vbo(VertexBufferRole.VBO, value)
+
+    @property
+    def cbo(self) -> Optional[LegacyColorVBO | int]:
+        return self.named_vbos.get(VertexBufferRole.CBO)
+
+    @cbo.setter
+    def cbo(self, value: Optional[LegacyColorVBO | int]) -> None:
+        self._set_named_vbo(VertexBufferRole.CBO, value)
+
+    @property
+    def nbo(self) -> Optional[LegacyNormalVBO | int]:
+        return self.named_vbos.get(VertexBufferRole.NBO)
+
+    @nbo.setter
+    def nbo(self, value: Optional[LegacyNormalVBO | int]) -> None:
+        self._set_named_vbo(VertexBufferRole.NBO, value)
+
+    @property
+    def ebo(self) -> Optional[LegacyEBO | int]:
+        return self.named_vbos.get(VertexBufferRole.EBO)
+
+    @ebo.setter
+    def ebo(self, value: Optional[LegacyEBO | int]) -> None:
+        self._set_named_vbo(VertexBufferRole.EBO, value)
+
+    def _set_named_vbo(
+        self, role: VertexBufferRole, value: Optional[LegacyVBO | int]
+    ) -> None:
+        if value is None:
+            self.named_vbos.pop(role, None)
+        else:
+            self.named_vbos[role] = value
+
     def add_vbo_object(self, name: str, vbo: "LegacyVBO") -> "LegacyVBO":
         """Register a VBO by semantic name or shorthand alias."""
-        # normalize to canonical key
         canonical = NAME_ALIASES.get(name, name)
-
-        # store consistently
         self.named_vbos[canonical] = vbo
-
-        # and assign to attribute if it exists
-        if hasattr(self, canonical):
-            setattr(self, canonical, vbo)
-
         return vbo
 
     def get_vbo_object(self, name: str) -> "LegacyVBO":
@@ -92,10 +117,10 @@ class VertexBufferGroup(VertexBase):
         return self.named_vbos.get(canonical)
 
     def delete(self) -> None:
-        for buf in (self.nbo, self.cbo, self.vbo, self.ebo):
+        for buf in self.named_vbos.values():
             if buf:
                 delete_buffer_object(buf)
-        self.nbo = self.cbo = self.vbo = self.ebo = None
+        self.named_vbos.clear()
         self.layout = None
 
     @property
@@ -118,26 +143,22 @@ class VertexBufferGroup(VertexBase):
             raise ValueError("index_count must be non-negative")
         self._index_count = value
 
-    def draw(self, index_count: int = 0, mode: int = GLDrawMode.POINTS):
+    def draw(self, index_count: int = 0, mode: int | None = None):
         """
         draw
 
-        :param index_count:
-        :param count: int
+        :param index_count: int
         :param mode: int
         Enable legacy client states, bind VBOs, draw, and clean up.
         """
-
         if not index_count:
             index_count = self.index_count
-        if not mode:
+        if mode is None:
             mode = self.draw_mode
 
-        # Use the layout-based binding approach
         with self:
-            with legacy_client_states(GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_NORMAL_ARRAY):
-                # Issue draw call
-                glDrawArrays(mode, 0, index_count)
+            with legacy_client_states(*self._resolve_client_states()):
+                self._draw_arrays(index_count, mode)
 
     def add_vbo(
         self,
@@ -182,41 +203,84 @@ class VertexBufferGroup(VertexBase):
         dtype: int = GLIndexType.UNSIGNED_INT,
         offset: int = 0,
     ):
-        """
-        Draw using an element buffer (EBO) with legacy client states.
-
-        :param count: Number of indices to draw. Defaults to `self.index_count`.
-        :param mode: OpenGL primitive type (GL_TRIANGLES, GL_LINES, etc.).
-        :param dtype: Data type of indices (GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT, GL_UNSIGNED_INT).
-        :param offset: Byte offset into the EBO.
-        """
+        """Draw using an element buffer (EBO) with legacy client states."""
         if not self.ebo:
             raise RuntimeError("No element buffer (EBO) bound for draw_elements()")
 
         if not count:
             count = self.index_count
 
-        # Bind buffers and set up attribute pointers
         with self:
-            # Legacy client states still required
-            with legacy_client_states(GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_NORMAL_ARRAY):
-                # Bind each VBO (legacy-style)
-                for vbo in self.named_vbos.values():
-                    vbo.bind()
+            with legacy_client_states(*self._resolve_client_states()):
+                self._draw_elements(count, dtype, mode, offset)
 
-                # Bind EBO for indexed drawing (LegacyEBO uses ``handle``, not ``_id``)
-                ebo_id = getattr(self.ebo, "handle", None)
-                if ebo_id is None:
-                    ebo_id = getattr(self.ebo, "_id", None)
-                if ebo_id is None:
-                    raise RuntimeError("EBO has no GL buffer name (handle/_id)")
-                glBindBuffer(GLBufferTarget.ELEMENT_ARRAY_BUFFER, ebo_id)
-                glDrawElements(mode, count, dtype, ctypes.c_void_p(offset))
-                # Unbind EBO afterwards to prevent accidental reuse
-                glBindBuffer(GLBufferTarget.ELEMENT_ARRAY_BUFFER, 0)
+    def _bind_ebo(self):
+        # Indexed draws need an EBO; array-only geometry (ribbons, coils, etc.) does not.
+        if not self.ebo:
+            return
+        ebo_id = getattr(self.ebo, "handle", None)
+        if ebo_id is None:
+            ebo_id = getattr(self.ebo, "_id", None)
+        if ebo_id is None:
+            raise RuntimeError("EBO has no GL buffer name (handle/_id)")
+        self._bind_ebo_id(ebo_id)
+
+    def _bind_ebo_id(self, ebo_id: Any | None):
+        self._bind_buffer(GLBufferTarget.ELEMENT, ebo_id)
+
+    def _draw_arrays(self, index_count: int, mode: int):
+        glDrawArrays(mode, 0, index_count)
+
+    def _unbind_ebo(self):
+        self._bind_ebo_id(0)
+
+    def _draw_elements(self, count: int, dtype: int, mode: int, offset: int):
+        glDrawElements(mode, count, dtype, ctypes.c_void_p(offset))
+
+    def _bind_buffer(self, target, ebo_id: Any | None):
+        glBindBuffer(target, ebo_id)
 
     def set_layout(self, layout: LayoutDescriptor) -> None:
         self.layout = layout
+
+    def _resolve_client_states(self) -> tuple[GLClientState, ...]:
+        """Return legacy client states to enable for the current layout."""
+        if not self.layout:
+            return (
+                GLClientState.VERTEX,
+                GLClientState.COLOR,
+                GLClientState.NORMAL,
+            )
+
+        states: list[GLClientState] = []
+        seen: set[GLClientState] = set()
+        for attr in self.layout.attributes:
+            role = attr.role
+            binding = self.LEGACY_ATTR_BINDINGS.get(role)
+            if binding is None or self.named_vbos.get(role) is None:
+                continue
+            state = binding[0]
+            if state not in seen:
+                seen.add(state)
+                states.append(state)
+
+        if not states:
+            return (
+                GLClientState.VERTEX,
+                GLClientState.COLOR,
+                GLClientState.NORMAL,
+            )
+        return tuple(states)
+
+    def _buffer_handle(self, vbo: LegacyVBO | int) -> int:
+        if isinstance(vbo, int):
+            return vbo
+        handle = getattr(vbo, "handle", None)
+        if handle is None:
+            handle = getattr(vbo, "_id", None)
+        if handle is None:
+            raise RuntimeError(f"VBO has no GL buffer name (handle/_id): {vbo!r}")
+        return handle
 
     def bind(self) -> None:
         """Bind buffers and configure legacy OpenGL client arrays."""
@@ -225,26 +289,21 @@ class VertexBufferGroup(VertexBase):
 
         try:
             for attr in self.layout.attributes:
-                canonical = NAME_ALIASES.get(attr.name.lower(), attr.name.lower())
-                vbo = self.named_vbos.get(canonical)
-
-                if not vbo:
+                role = attr.role
+                vbo = self.named_vbos.get(role)
+                if vbo is None:
                     continue
 
-                buffer_handle = getattr(vbo, VertexArrayRole.VAO, vbo)
-                glBindBuffer(GLBufferTarget.ARRAY, buffer_handle)
+                self._bind_buffer(GLBufferTarget.ARRAY, self._buffer_handle(vbo))
 
-                if canonical == VertexBufferRole.VBO:
-                    glEnableClientState(GL_VERTEX_ARRAY)
-                    glVertexPointer(attr.size, attr.type, attr.stride, None)
+                binding = self.LEGACY_ATTR_BINDINGS.get(role)
+                if not binding:
+                    continue
 
-                elif canonical == VertexBufferRole.NBO:
-                    glEnableClientState(GL_NORMAL_ARRAY)
-                    glNormalPointer(attr.type, attr.stride, None)
-
-                elif canonical == VertexBufferRole.CBO:
-                    glEnableClientState(GL_COLOR_ARRAY)
-                    glColorPointer(attr.size, attr.type, attr.stride, None)
+                state, fn_name = binding
+                self._legacy_client_state(state)
+                getattr(self, fn_name)(attr)
+            self._bind_ebo()
 
         except Exception as ex:
             log.error(f"error {ex} occurred in VertexBufferGroup")
@@ -256,13 +315,26 @@ class VertexBufferGroup(VertexBase):
                 log.parameter("attr.normalized", attr.normalized)
                 log.parameter("attr.stride", attr.stride)
 
+    def _color_pointer(self, attr: AttributeSpec):
+        glColorPointer(attr.size, attr.type, attr.stride, ctypes.c_void_p(attr.offset))
+
+    def _normal_pointer(self, attr: AttributeSpec):
+        glNormalPointer(attr.type, attr.stride, ctypes.c_void_p(attr.offset))
+
+    def _vertex_pointer(self, attr: AttributeSpec):
+        glVertexPointer(attr.size, attr.type, attr.stride, ctypes.c_void_p(attr.offset))
+
+    def _legacy_client_state(self, state: GLClientState):
+        glEnableClientState(state)
+
     def unbind(self) -> None:
         """Disable attribute arrays and unbind the array buffer."""
         if not self.layout:
             return
         # For legacy rendering, we don't need to disable vertex attrib arrays
         # since we're using the old glVertexPointer approach
-        glBindBuffer(GLBufferTarget.ARRAY, 0)
+        self._bind_buffer(GLBufferTarget.ARRAY, 0)
+        self._unbind_ebo()
 
     def __enter__(self):
         """Context manager entry - bind the VBO."""

@@ -10,8 +10,7 @@ or processing purposes.
 from dataclasses import dataclass
 from typing import List
 
-import numpy as np
-
+from picogl.buffers.vertex.aliases import VertexBufferRole
 from picogl.buffers.vertex.vbo.vbo_class import VBOType
 
 
@@ -27,6 +26,33 @@ class AttributeSpec:
     stride: int
     offset: int  # in bytes
     vbo_type: VBOType = VBOType.VBO
+    role: VertexBufferRole = VertexBufferRole.VBO
+
+
+def legacy_attribute_spec(
+    role: VertexBufferRole,
+    index: int,
+    *,
+    size: int = 3,
+    name: str | VertexBufferRole | None = None,
+    type: int,
+    normalized: bool = False,
+    stride: int = 0,
+    offset: int = 0,
+) -> AttributeSpec:
+    """Build an AttributeSpec with aligned legacy role, vbo_type, and name."""
+    vbo_type = role.value if isinstance(role.value, VBOType) else VBOType(role.value)
+    return AttributeSpec(
+        name=name if name is not None else role,
+        index=index,
+        size=size,
+        type=type,
+        normalized=normalized,
+        stride=stride,
+        offset=offset,
+        vbo_type=vbo_type,
+        role=role,
+    )
 
 
 @dataclass

@@ -34,7 +34,7 @@ import unittest
 from unittest.mock import MagicMock, call, patch
 
 import numpy as np
-from elmo.gl.buffers.molecule.bond import VBOType
+from picogl.buffers.vertex.vbo.vbo_class import VBOType
 from OpenGL.raw.GL._types import GL_FLOAT, GL_UNSIGNED_INT
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POINTS, GL_TRIANGLES
 from OpenGL.raw.GL.VERSION.GL_1_1 import (
@@ -45,6 +45,7 @@ from OpenGL.raw.GL.VERSION.GL_1_1 import (
 from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER
 
 from picogl.buffers.attributes import AttributeSpec, LayoutDescriptor
+from picogl.buffers.vertex.aliases import VertexBufferRole
 from picogl.buffers.vertex.legacy import VertexBufferGroup
 from picogl.state.draw_mode import GLDrawMode
 
@@ -65,34 +66,14 @@ class TestVertexBufferGroup(unittest.TestCase):
             patch("picogl.buffers.vertex.legacy.glDrawArrays"),
             patch("picogl.buffers.vertex.legacy.glDrawElements"),
             patch("picogl.buffers.vertex.legacy.glBindBuffer"),
-            patch("picogl.buffers.vertex.legacy.glEnableVertexAttribArray"),
-            patch("picogl.buffers.vertex.legacy.glDisableVertexAttribArray"),
-            patch("picogl.buffers.vertex.legacy.glVertexAttribPointer"),
+            patch("picogl.buffers.vertex.legacy.glVertexPointer"),
+            patch("picogl.buffers.vertex.legacy.glColorPointer"),
+            patch("picogl.buffers.vertex.legacy.glNormalPointer"),
+            patch("picogl.buffers.vertex.legacy.glEnableClientState"),
             patch("picogl.buffers.vertex.legacy.legacy_client_states"),
             patch("picogl.buffers.vertex.legacy.delete_buffer_object"),
-            # Mock OpenGL functions that might be called during VBO creation
-            patch("picogl.backend.legacy.core.vertex.buffer.vertex.glGenBuffers"),
-            patch("picogl.backend.legacy.core.vertex.buffer.vertex.glBufferData"),
-            patch("picogl.backend.legacy.core.vertex.buffer.vertex.glBindBuffer"),
-            patch(
-                "picogl.backend.legacy.core.vertex.buffer.vertex.glEnableClientState"
-            ),
-            patch(
-                "picogl.backend.legacy.core.vertex.buffer.vertex.glDisableClientState"
-            ),
-            patch("picogl.backend.legacy.core.vertex.buffer.vertex.glVertexPointer"),
-            patch("picogl.backend.legacy.core.vertex.buffer.vertex.glColorPointer"),
-            patch("picogl.backend.legacy.core.vertex.buffer.vertex.glNormalPointer"),
-            # Mock client states module
-            patch(
-                "picogl.backend.legacy.core.vertex.buffer.client_states.glEnableClientState"
-            ),
-            patch(
-                "picogl.backend.legacy.core.vertex.buffer.client_states.glDisableClientState"
-            ),
-            patch(
-                "picogl.backend.legacy.core.vertex.buffer.client_states.glBindBuffer"
-            ),
+            patch("OpenGL.GL.glGenBuffers", return_value=1),
+            patch("OpenGL.GL.glBufferData"),
         ]
 
         # Start all patches
@@ -121,10 +102,10 @@ class TestVertexBufferGroup(unittest.TestCase):
 
         # Test VBO classes mapping
         expected_classes = [
-            VBOType.VERTICES,
-            VBOType.COLORS,
-            VBOType.INDICES,
-            VBOType.NORMALS,
+            VBOType.VBO,
+            VBOType.CBO,
+            VBOType.EBO,
+            VBOType.NBO,
         ]
         for class_name in expected_classes:
             self.assertIn(class_name, vbg.vbo_classes)
@@ -194,17 +175,17 @@ class TestVertexBufferGroup(unittest.TestCase):
 
         with patch.object(vbg, "get_buffer_class", return_value=mock_vbo_class):
             # Test adding position VBO with default parameters
-            result = vbg.add_vbo(VBOType.VERTICES, data=self.test_data)
+            result = vbg.add_vbo(VBOType.VBO, data=self.test_data)
 
             # Verify get_buffer_class was called
-            vbg.get_buffer_class.assert_called_once_with(VBOType.VERTICES)
+            vbg.get_buffer_class.assert_called_once_with(VBOType.VBO)
 
             # Verify VBO was created and added with default parameters
             mock_vbo_class.assert_called_once_with(
                 data=self.test_data, size=3, handle=None, dtype=GL_FLOAT
             )
-            self.assertEqual(result, mock_vbo)
-            self.assertEqual(vbg.named_vbos[VBOType.VERTICES], mock_vbo)
+            self.assertIs(result, vbg)
+            self.assertIs(vbg.named_vbos[VertexBufferRole.VBO], mock_vbo)
 
     def test_add_vbo_with_custom_parameters(self):
         """Test add_vbo method with custom parameters."""
@@ -222,7 +203,7 @@ class TestVertexBufferGroup(unittest.TestCase):
             custom_dtype = GL_UNSIGNED_INT
 
             result = vbg.add_vbo(
-                VBOType.VERTICES,
+                VBOType.VBO,
                 data=self.test_data,
                 size=custom_size,
                 handle=custom_handle,
@@ -230,7 +211,7 @@ class TestVertexBufferGroup(unittest.TestCase):
             )
 
             # Verify get_buffer_class was called
-            vbg.get_buffer_class.assert_called_once_with(VBOType.VERTICES)
+            vbg.get_buffer_class.assert_called_once_with(VBOType.VBO)
 
             # Verify VBO was created with custom parameters
             mock_vbo_class.assert_called_once_with(
@@ -239,8 +220,8 @@ class TestVertexBufferGroup(unittest.TestCase):
                 handle=custom_handle,
                 dtype=custom_dtype,
             )
-            self.assertEqual(result, mock_vbo)
-            self.assertEqual(vbg.named_vbos[VBOType.VERTICES], mock_vbo)
+            self.assertIs(result, vbg)
+            self.assertIs(vbg.named_vbos[VertexBufferRole.VBO], mock_vbo)
 
     def test_add_vbo_invalid_parameters(self):
         """Test add_vbo method with invalid parameters."""
@@ -248,14 +229,14 @@ class TestVertexBufferGroup(unittest.TestCase):
 
         # Test with None data
         with self.assertRaises(ValueError):
-            vbg.add_vbo(VBOType.VERTICES, data=None)
+            vbg.add_vbo(VBOType.VBO, data=None)
 
         # Test with size <= 0
         with self.assertRaises(ValueError):
-            vbg.add_vbo(VBOType.VERTICES, data=self.test_data, size=0)
+            vbg.add_vbo(VBOType.VBO, data=self.test_data, size=0)
 
         with self.assertRaises(ValueError):
-            vbg.add_vbo(VBOType.VERTICES, data=self.test_data, size=-1)
+            vbg.add_vbo(VBOType.VBO, data=self.test_data, size=-1)
 
     def test_add_ebo(self):
         """Test add_ebo method."""
@@ -267,17 +248,17 @@ class TestVertexBufferGroup(unittest.TestCase):
         mock_ebo_class.return_value = mock_ebo
 
         # Replace the EBO class in vbo_classes
-        original_ebo_class = vbg.vbo_classes[VBOType.INDICES]
-        vbg.vbo_classes[VBOType.INDICES] = mock_ebo_class
+        original_ebo_class = vbg.vbo_classes[VBOType.EBO]
+        vbg.vbo_classes[VBOType.EBO] = mock_ebo_class
 
         try:
-            vbg.add_ebo(VBOType.INDICES, data=self.test_indices)
+            vbg.add_ebo(VBOType.EBO, data=self.test_indices)
 
             mock_ebo_class.assert_called_once_with(data=self.test_indices)
-            self.assertEqual(vbg.named_vbos[VBOType.INDICES], mock_ebo)
+            self.assertEqual(vbg.named_vbos[VBOType.EBO], mock_ebo)
         finally:
             # Restore original class
-            vbg.vbo_classes[VBOType.INDICES] = original_ebo_class
+            vbg.vbo_classes[VBOType.EBO] = original_ebo_class
 
     def test_get_buffer_class(self):
         """Test get_buffer_class method."""
@@ -285,46 +266,38 @@ class TestVertexBufferGroup(unittest.TestCase):
 
         # Test known buffer types
         self.assertEqual(
-            vbg.get_buffer_class(VBOType.VERTICES), vbg.vbo_classes[VBOType.VERTICES]
+            vbg.get_buffer_class(VBOType.VBO), vbg.vbo_classes[VBOType.VBO]
         )
         self.assertEqual(
-            vbg.get_buffer_class(VBOType.COLORS), vbg.vbo_classes[VBOType.COLORS]
+            vbg.get_buffer_class(VBOType.CBO), vbg.vbo_classes[VBOType.CBO]
         )
         self.assertEqual(
-            vbg.get_buffer_class(VBOType.INDICES), vbg.vbo_classes[VBOType.INDICES]
+            vbg.get_buffer_class(VBOType.EBO), vbg.vbo_classes[VBOType.EBO]
         )
         self.assertEqual(
-            vbg.get_buffer_class(VBOType.NORMALS), vbg.vbo_classes[VBOType.NORMALS]
+            vbg.get_buffer_class(VBOType.NBO), vbg.vbo_classes[VBOType.NBO]
         )
 
         # Test unknown buffer type (should return default)
         self.assertEqual(
-            vbg.get_buffer_class("unknown"), vbg.vbo_classes[VBOType.VERTICES]
+            vbg.get_buffer_class("unknown"), vbg.vbo_classes[VBOType.VBO]
         )
 
     def test_draw_with_arrays(self):
         """Test draw method with vertex arrays."""
         vbg = VertexBufferGroup()
 
-        # Add some mock VBOs
-        mock_vbo1 = MagicMock()
-        mock_vbo2 = MagicMock()
-        vbg.named_vbos = {VBOType.VERTICES: mock_vbo1, VBOType.COLORS: mock_vbo2}
-
-        # Mock the context manager
         with patch(
             "picogl.buffers.vertex.legacy.legacy_client_states"
-        ) as mock_client_states:
+        ) as mock_client_states, patch(
+            "picogl.buffers.vertex.legacy.glDrawArrays"
+        ) as mock_draw_arrays:
             mock_client_states.return_value.__enter__ = MagicMock()
             mock_client_states.return_value.__exit__ = MagicMock()
 
-            vbg.draw(index_count=10, mode=GL_POINTS)
+            vbg.draw(index_count=10, mode=GLDrawMode.POINTS)
 
-            # Verify VBOs were bound
-            mock_vbo1.bind.assert_called_once()
-            mock_vbo2.bind.assert_called_once()
-
-            # Verify client states were used
+            mock_draw_arrays.assert_called_once_with(GLDrawMode.POINTS, 0, 10)
             mock_client_states.assert_called_once_with(
                 GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_NORMAL_ARRAY
             )
@@ -333,51 +306,44 @@ class TestVertexBufferGroup(unittest.TestCase):
         """Test draw method with automatic index count."""
         vbg = VertexBufferGroup()
 
-        # Set up EBO with data
         mock_ebo = MagicMock()
         mock_ebo.data = self.test_indices
         vbg.ebo = mock_ebo
 
-        # Add some mock VBOs
-        mock_vbo = MagicMock()
-        vbg.named_vbos = {VBOType.VERTICES: mock_vbo}
-
         with patch(
             "picogl.buffers.vertex.legacy.legacy_client_states"
-        ) as mock_client_states:
+        ) as mock_client_states, patch(
+            "picogl.buffers.vertex.legacy.glDrawArrays"
+        ) as mock_draw_arrays:
             mock_client_states.return_value.__enter__ = MagicMock()
             mock_client_states.return_value.__exit__ = MagicMock()
 
-            vbg.draw()  # No index_count provided
+            vbg.draw(mode=GLDrawMode.POINTS)
 
-            # Should use EBO data length
-            mock_vbo.bind.assert_called_once()
+            mock_draw_arrays.assert_called_once_with(
+                GLDrawMode.POINTS, 0, len(self.test_indices)
+            )
 
     def test_draw_elements(self):
         """Test draw_elements method."""
         vbg = VertexBufferGroup()
 
-        # Set up EBO
         mock_ebo = MagicMock()
         mock_ebo._id = 123
+        mock_ebo.handle = 123
         vbg.ebo = mock_ebo
-
-        # Add some mock VBOs
-        mock_vbo = MagicMock()
-        vbg.named_vbos = {VBOType.VERTICES: mock_vbo}
 
         with patch(
             "picogl.buffers.vertex.legacy.legacy_client_states"
-        ) as mock_client_states:
+        ) as mock_client_states, patch(
+            "picogl.buffers.vertex.legacy.glDrawElements"
+        ) as mock_draw_elements:
             mock_client_states.return_value.__enter__ = MagicMock()
             mock_client_states.return_value.__exit__ = MagicMock()
 
             vbg.draw_elements(count=5, mode=GLDrawMode.TRIANGLES)
 
-            # Verify VBOs were bound
-            mock_vbo.bind.assert_called_once()
-
-            # Verify client states were used
+            mock_draw_elements.assert_called_once()
             mock_client_states.assert_called_once_with(
                 GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_NORMAL_ARRAY
             )
@@ -395,26 +361,23 @@ class TestVertexBufferGroup(unittest.TestCase):
         """Test draw_elements method with automatic count."""
         vbg = VertexBufferGroup()
 
-        # Set up EBO with data
         mock_ebo = MagicMock()
         mock_ebo._id = 123
+        mock_ebo.handle = 123
         mock_ebo.data = self.test_indices
         vbg.ebo = mock_ebo
 
-        # Add some mock VBOs
-        mock_vbo = MagicMock()
-        vbg.named_vbos = {VBOType.VERTICES: mock_vbo}
-
         with patch(
             "picogl.buffers.vertex.legacy.legacy_client_states"
-        ) as mock_client_states:
+        ) as mock_client_states, patch(
+            "picogl.buffers.vertex.legacy.glDrawElements"
+        ) as mock_draw_elements:
             mock_client_states.return_value.__enter__ = MagicMock()
             mock_client_states.return_value.__exit__ = MagicMock()
 
-            vbg.draw_elements()  # No count provided
+            vbg.draw_elements()
 
-            # Should use EBO data length
-            mock_vbo.bind.assert_called_once()
+            mock_draw_elements.assert_called_once()
 
     def test_set_layout(self):
         """Test set_layout method."""
@@ -583,7 +546,7 @@ class TestVertexBufferGroup(unittest.TestCase):
         with patch.object(vbg, "get_buffer_class", return_value=mock_vbo_class):
             # The new add_vbo method should let exceptions propagate
             with self.assertRaises(Exception) as context:
-                vbg.add_vbo(VBOType.VERTICES, data=self.test_data)
+                vbg.add_vbo(VBOType.VBO, data=self.test_data)
 
             # Verify the exception message
             self.assertIn("VBO creation error", str(context.exception))
@@ -607,18 +570,207 @@ class TestVertexBufferGroup(unittest.TestCase):
 
         # Add mock VBO that will cause an error
         mock_vbo = MagicMock()
-        mock_vbo._id = 123
-        vbg.named_vbos["position"] = mock_vbo
+        mock_vbo.handle = 123
+        vbg.named_vbos[VertexBufferRole.VBO] = mock_vbo
 
-        # Mock glVertexAttribPointer to raise an exception
         with patch(
-            "picogl.buffers.vertex.legacy.glVertexAttribPointer",
+            "picogl.buffers.vertex.legacy.glVertexPointer",
             side_effect=Exception("OpenGL error"),
         ):
-            with patch("picogl.logger.Logger.error") as mock_log_error:
+            with patch("picogl.buffers.vertex.legacy.log.error") as mock_log_error:
                 vbg.bind()
                 mock_log_error.assert_called_once()
                 self.assertIn("error", mock_log_error.call_args[0][0])
+
+    def test_bind_without_ebo(self):
+        """bind() skips EBO when geometry uses glDrawArrays only."""
+        vbg = VertexBufferGroup()
+        mock_vbo = MagicMock()
+        mock_vbo.handle = 42
+        vbg.named_vbos[VertexBufferRole.VBO] = mock_vbo
+        vbg.layout = LayoutDescriptor(
+            attributes=[
+                AttributeSpec(
+                    name=VertexBufferRole.VBO,
+                    index=0,
+                    size=3,
+                    type=GL_FLOAT,
+                    normalized=False,
+                    stride=0,
+                    offset=0,
+                )
+            ]
+        )
+
+        with patch("picogl.buffers.vertex.legacy.glVertexPointer"), patch(
+            "picogl.buffers.vertex.legacy.glEnableClientState"
+        ), patch("picogl.buffers.vertex.legacy.glBindBuffer") as mock_bind_buffer:
+            vbg.bind()
+            mock_bind_buffer.assert_called()
+
+    def test_bind_legacy_buffer_roles(self):
+        """bind() resolves pointer method names and VertexBufferRole attributes."""
+        vbg = VertexBufferGroup()
+        mock_vbo = MagicMock()
+        mock_vbo.handle = 42
+        vbg.named_vbos[VertexBufferRole.VBO] = mock_vbo
+
+        attr_spec = AttributeSpec(
+            name=VertexBufferRole.VBO,
+            index=0,
+            size=3,
+            type=GL_FLOAT,
+            normalized=False,
+            stride=12,
+            offset=0,
+        )
+        vbg.layout = LayoutDescriptor(attributes=[attr_spec])
+
+        with patch("picogl.buffers.vertex.legacy.glVertexPointer") as mock_vertex_pointer, patch(
+            "picogl.buffers.vertex.legacy.glEnableClientState"
+        ) as mock_enable_state:
+            vbg.bind()
+            mock_enable_state.assert_called_once_with(GL_VERTEX_ARRAY)
+            mock_vertex_pointer.assert_called_once()
+            args = mock_vertex_pointer.call_args[0]
+            self.assertEqual(args[:3], (3, GL_FLOAT, 12))
+            self.assertIsInstance(args[3], ctypes.c_void_p)
+
+    def test_bind_uses_vbo_handle(self):
+        """bind() passes VBO handle to glBindBuffer, not the buffer object."""
+        vbg = VertexBufferGroup()
+        mock_vbo = MagicMock()
+        mock_vbo.handle = 77
+        vbg.named_vbos[VertexBufferRole.VBO] = mock_vbo
+        vbg.layout = LayoutDescriptor(
+            attributes=[
+                AttributeSpec(
+                    name=VertexBufferRole.VBO,
+                    index=0,
+                    size=3,
+                    type=GL_FLOAT,
+                    normalized=False,
+                    stride=0,
+                    offset=0,
+                )
+            ]
+        )
+
+        with patch("picogl.buffers.vertex.legacy.glVertexPointer"), patch(
+            "picogl.buffers.vertex.legacy.glEnableClientState"
+        ), patch("picogl.buffers.vertex.legacy.glBindBuffer") as mock_bind_buffer:
+            vbg.bind()
+            mock_bind_buffer.assert_any_call(GL_ARRAY_BUFFER, 77)
+
+    def test_bind_resolves_role_from_attr_role(self):
+        """bind() uses AttributeSpec.role as the canonical buffer role."""
+        vbg = VertexBufferGroup()
+        mock_cbo = MagicMock()
+        mock_cbo.handle = 55
+        vbg.named_vbos[VertexBufferRole.CBO] = mock_cbo
+        vbg.layout = LayoutDescriptor(
+            attributes=[
+                AttributeSpec(
+                    name="misleading_name",
+                    index=2,
+                    size=3,
+                    type=GL_FLOAT,
+                    normalized=False,
+                    stride=0,
+                    offset=0,
+                    role=VertexBufferRole.CBO,
+                )
+            ]
+        )
+
+        with patch("picogl.buffers.vertex.legacy.glColorPointer") as mock_color_pointer, patch(
+            "picogl.buffers.vertex.legacy.glEnableClientState"
+        ), patch("picogl.buffers.vertex.legacy.glBindBuffer"):
+            vbg.bind()
+            mock_color_pointer.assert_called_once()
+
+    def test_bind_resolves_role_from_vbo_type(self):
+        """bind() resolves buffer role from AttributeSpec.vbo_type."""
+        vbg = VertexBufferGroup()
+        mock_cbo = MagicMock()
+        mock_cbo.handle = 55
+        vbg.named_vbos[VertexBufferRole.CBO] = mock_cbo
+        vbg.layout = LayoutDescriptor(
+            attributes=[
+                AttributeSpec(
+                    name="colors",
+                    index=2,
+                    size=3,
+                    type=GL_FLOAT,
+                    normalized=False,
+                    stride=0,
+                    offset=0,
+                    vbo_type=VBOType.CBO,
+                    role=VertexBufferRole.CBO,
+                )
+            ]
+        )
+
+        with patch("picogl.buffers.vertex.legacy.glColorPointer") as mock_color_pointer, patch(
+            "picogl.buffers.vertex.legacy.glEnableClientState"
+        ), patch("picogl.buffers.vertex.legacy.glBindBuffer"):
+            vbg.bind()
+            mock_color_pointer.assert_called_once()
+
+    def test_compat_properties_sync_named_vbos(self):
+        """vbo/cbo/nbo/ebo properties read and write named_vbos."""
+        vbg = VertexBufferGroup()
+        mock_vbo = MagicMock()
+        mock_cbo = MagicMock()
+
+        vbg.add_vbo_object(VBOType.VBO, mock_vbo)
+        vbg.cbo = mock_cbo
+
+        self.assertIs(vbg.vbo, mock_vbo)
+        self.assertIs(vbg.named_vbos[VertexBufferRole.VBO], mock_vbo)
+        self.assertIs(vbg.cbo, mock_cbo)
+        self.assertIs(vbg.named_vbos[VertexBufferRole.CBO], mock_cbo)
+
+        replacement = MagicMock()
+        vbg.vbo = replacement
+        self.assertIs(vbg.named_vbos[VertexBufferRole.VBO], replacement)
+
+        vbg.vbo = None
+        self.assertIsNone(vbg.vbo)
+        self.assertNotIn(VertexBufferRole.VBO, vbg.named_vbos)
+
+    def test_draw_elements_uses_layout_bind_only(self):
+        """draw_elements() relies on layout bind(), not per-VBO bind()."""
+        vbg = VertexBufferGroup()
+        mock_ebo = MagicMock()
+        mock_ebo.handle = 99
+        vbg.ebo = mock_ebo
+        mock_vbo = MagicMock()
+        mock_vbo.handle = 42
+        vbg.named_vbos[VertexBufferRole.VBO] = mock_vbo
+        vbg.layout = LayoutDescriptor(
+            attributes=[
+                AttributeSpec(
+                    name=VertexBufferRole.VBO,
+                    index=0,
+                    size=3,
+                    type=GL_FLOAT,
+                    normalized=False,
+                    stride=0,
+                    offset=0,
+                )
+            ]
+        )
+
+        with patch(
+            "picogl.buffers.vertex.legacy.legacy_client_states"
+        ) as mock_client_states, patch("picogl.buffers.vertex.legacy.glDrawElements"):
+            mock_client_states.return_value.__enter__ = MagicMock()
+            mock_client_states.return_value.__exit__ = MagicMock()
+
+            vbg.draw_elements(count=3, mode=GLDrawMode.TRIANGLES)
+
+        mock_vbo.bind.assert_not_called()
 
     def test_type_conversion_in_bind(self):
         """Test type conversion handling in bind method."""
@@ -639,17 +791,14 @@ class TestVertexBufferGroup(unittest.TestCase):
 
         # Add mock VBO
         mock_vbo = MagicMock()
-        mock_vbo._id = 123
-        vbg.named_vbos["position"] = mock_vbo
+        mock_vbo.handle = 123
+        vbg.named_vbos[VertexBufferRole.VBO] = mock_vbo
 
-        # Test with different type scenarios
         with patch(
-            "picogl.buffers.vertex.legacy.glVertexAttribPointer"
-        ) as mock_vertex_attrib:
+            "picogl.buffers.vertex.legacy.glVertexPointer"
+        ) as mock_vertex_pointer:
             vbg.bind()
-
-            # Should call glVertexAttribPointer with converted types
-            mock_vertex_attrib.assert_called_once()
+            mock_vertex_pointer.assert_called_once()
 
     def test_repr_string(self):
         """Test string representation of VertexBufferGroup."""
@@ -666,15 +815,46 @@ class TestVertexBufferGroup(unittest.TestCase):
         vbg = VertexBufferGroup()
 
         expected_mappings = {
-            VBOType.VERTICES: "LegacyPositionVBO",
-            VBOType.COLORS: "LegacyColorVBO",
-            VBOType.INDICES: "LegacyEBO",
-            VBOType.NORMALS: "LegacyNormalVBO",
+            VBOType.VBO: "LegacyPositionVBO",
+            VBOType.CBO: "LegacyColorVBO",
+            VBOType.EBO: "LegacyEBO",
+            VBOType.NBO: "LegacyNormalVBO",
         }
 
         for key, expected_class_name in expected_mappings.items():
             vbo_class = vbg.vbo_classes[key]
             self.assertEqual(vbo_class.__name__, expected_class_name)
+
+    def test_resolve_client_states(self):
+        """_resolve_client_states() derives GL client states from layout roles."""
+        vbg = VertexBufferGroup()
+        vbg.named_vbos[VertexBufferRole.VBO] = MagicMock()
+        vbg.named_vbos[VertexBufferRole.CBO] = MagicMock()
+        vbg.layout = LayoutDescriptor(
+            attributes=[
+                AttributeSpec(
+                    name=VertexBufferRole.VBO,
+                    index=0,
+                    size=3,
+                    type=GL_FLOAT,
+                    normalized=False,
+                    stride=0,
+                    offset=0,
+                ),
+                AttributeSpec(
+                    name=VertexBufferRole.CBO,
+                    index=2,
+                    size=3,
+                    type=GL_FLOAT,
+                    normalized=False,
+                    stride=0,
+                    offset=0,
+                ),
+            ]
+        )
+
+        states = vbg._resolve_client_states()
+        self.assertEqual(states, (GL_VERTEX_ARRAY, GL_COLOR_ARRAY))
 
     def test_legacy_client_states_integration(self):
         """Test integration with legacy client states."""
@@ -682,7 +862,7 @@ class TestVertexBufferGroup(unittest.TestCase):
 
         # Add some mock VBOs
         mock_vbo = MagicMock()
-        vbg.named_vbos = {VBOType.VERTICES: mock_vbo}
+        vbg.named_vbos = {VBOType.VBO: mock_vbo}
 
         with patch(
             "picogl.buffers.vertex.legacy.legacy_client_states"

@@ -2,19 +2,16 @@
 GL Polygon Mode
 """
 
-from enum import Enum
+from OpenGL.GL import glPolygonMode
 
-from OpenGL.GL import GL_FILL, GL_FRONT_AND_BACK, glPolygonMode
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_FILL, GL_LINE
+from picogl.state.fill import GLFace, GLFillMode
+
+
+def gl_polygon_mode(face: GLFace, mode: GLFillMode):
+    """gl polygon mode"""
+    glPolygonMode(face, mode)
 
 
 def set_polygon_mode_fill() -> None:
     """Ensure secondary structure is always rendered as filled polygons"""
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
-
-
-class PolygonMode(Enum):
-    """Polygon Mode"""
-
-    FILL = GL_FILL
-    LINE = GL_LINE
+    gl_polygon_mode(GLFace.FRONT_AND_BACK, GLFillMode.FILL)

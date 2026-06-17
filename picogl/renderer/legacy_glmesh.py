@@ -6,7 +6,8 @@ from OpenGL.GL import glDrawElements
 
 from picogl.attrs.vertex import CanonicalVertexAttrs
 from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
-from picogl.buffers.attributes import AttributeSpec
+from picogl.buffers.attributes import AttributeSpec, legacy_attribute_spec
+from picogl.buffers.vertex.aliases import VertexBufferRole
 from picogl.buffers.factory.layout import create_layout
 from picogl.buffers.glcleanup import delete_buffer_object
 from picogl.buffers.helper import as_vec3_array
@@ -112,32 +113,23 @@ class LegacyGLMesh:
         Create layout that matches the VBOs being added
         """
         attributes = [
-            AttributeSpec(
+            legacy_attribute_spec(
+                VertexBufferRole.VBO,
+                0,
                 name=CanonicalVertexAttrs.POSITIONS,
-                index=0,
-                size=3,
                 type=GLNumeric.FLOAT,
-                normalized=False,
-                stride=0,
-                offset=0,
             ),
-            AttributeSpec(
+            legacy_attribute_spec(
+                VertexBufferRole.CBO,
+                1,
                 name=CanonicalVertexAttrs.COLORS,
-                index=1,
-                size=3,
                 type=GLNumeric.FLOAT,
-                normalized=False,
-                stride=0,
-                offset=0,
             ),
-            AttributeSpec(
+            legacy_attribute_spec(
+                VertexBufferRole.NBO,
+                2,
                 name=CanonicalVertexAttrs.NORMALS,
-                index=2,
-                size=3,
                 type=GLNumeric.FLOAT,
-                normalized=False,
-                stride=0,
-                offset=0,
             ),
         ]
         # Add UVs attribute if UVs are provided

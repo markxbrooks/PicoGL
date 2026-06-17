@@ -1,3 +1,5 @@
+from typing import Any, Protocol, runtime_checkable
+
 from OpenGL.GL import glLightfv, glMaterialfv
 from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_MODELVIEW,
@@ -23,6 +25,29 @@ from picogl.state.fill import (
     GLLightParameter,
 )
 from picogl.state.texture import TexCoord2f, Vertex3f
+
+
+@runtime_checkable
+class LegacyPipelineProtocol(Protocol):
+    """Fixed-function and immediate-mode pipeline operations (legacy GL only)."""
+
+    def set_matrix_mode_model_view(self): ...
+    def set_matrix_mode_projection(self): ...
+    def load_identity(self): ...
+    def set_perspective(self, fovy, aspect, znear, zfar): ...
+    def set_projection(self, fovy, aspect, znear, zfar): ...
+    def translate(self, x, y, z): ...
+    def set_light(self, position, light: Any = ...): ...
+    def set_material(self, face, material): ...
+    def set_color_material(
+        self,
+        face=...,
+        mode=...,
+    ): ...
+    def set_color(self, rgba): ...
+    def set_uniform_color(self, color, alpha): ...
+    def tex_coord2f(self, coord: TexCoord2f): ...
+    def vertex_3f(self, v1: Vertex3f): ...
 
 
 class GLLegacyPipeline:
@@ -90,3 +115,7 @@ class GLLegacyPipeline:
     @staticmethod
     def vertex_3f(v1: Vertex3f):
         glVertex3f(v1.x, v1.y, v1.z)
+
+
+# Preferred public name for fixed-function pipeline access.
+LegacyPipeline = GLLegacyPipeline
