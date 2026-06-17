@@ -11,19 +11,30 @@ Classes:
 """
 
 from abc import ABC, abstractmethod
+import warnings
 from typing import Any, Protocol, runtime_checkable
 
-from OpenGL.GL import (
-    glColorPointer,
-    glDrawElements,
-    glEnableClientState,
-    glNormalPointer,
-    glTexCoordPointer,
-    glVertexPointer,
+from picogl.backend.geometry.factory import (
+    GLBindingStrategy,
+    LegacyBinding,
+    ModernBinding,
+)
+from picogl.backend.legacy.core.pipeline import (
+    GLLegacyPipeline,
+    LegacyPipeline,
+    LegacyPipelineProtocol,
 )
 
-from picogl.numerical import GLNumeric
-from picogl.state.client import GLClientState
+__all__ = [
+    "AbstractGLBackend",
+    "GLBindingStrategy",
+    "GLPipeline",
+    "GLLegacyPipeline",
+    "LegacyBinding",
+    "LegacyPipeline",
+    "LegacyPipelineProtocol",
+    "ModernBinding",
+]
 
 
 class AbstractGLBackend(ABC):
@@ -59,73 +70,18 @@ class AbstractGLBackend(ABC):
     def draw_elements(self, mode: int, indices): ...
 
 
-class GLBindingStrategy(ABC):
-    """GL Binding Strategy"""
-
-    @abstractmethod
-    def bind_mesh(self, mesh): ...
-
-    @abstractmethod
-    def draw(self, mesh, mode): ...
-
-
 @runtime_checkable
-class GLPipeline(Protocol):
-    """Pipeline strategy for fixed-function or modern rendering operations."""
+class GLPipeline(LegacyPipelineProtocol, Protocol):
+    """
+    Deprecated alias for :class:`LegacyPipelineProtocol`.
 
-    def set_projection(self, fovy, aspect, znear, zfar): ...
-    def translate(self, x, y, z): ...
-    def set_light(self, position, light: Any = ...): ...
-    def set_material(self, face, material): ...
-    def set_uniform_color(self, color, alpha): ...
-    def vertex_3f(self, v1): ...
-    def tex_coord2f(self, coord): ...
-    def set_matrix_mode_projection(self): ...
-    def set_matrix_mode_model_view(self): ...
-    def load_identity(self): ...
-    def set_perspective(self, fovy, aspect, znear, zfar): ...
-    def set_color(self, rgba): ...
+    Do not use for new code. Modern rendering uses :class:`~picogl.backend.modern.core.pipeline.ShaderPipeline`.
+    """
 
 
-class LegacyBinding(GLBindingStrategy):
-    """Legacy Binding"""
-
-    def bind(self):
-        pass
-
-    def bind_mesh(self, mesh):
-        if mesh.vertices is not None:
-            glEnableClientState(GLClientState.VERTEX)
-            glVertexPointer(3, GLNumeric.FLOAT, 0, mesh.vertices)
-
-        if mesh.normals is not None:
-            glEnableClientState(GLClientState.NORMAL)
-            glNormalPointer(GLNumeric.FLOAT, 0, mesh.normals)
-
-        if mesh.colors is not None:
-            glEnableClientState(GLClientState.COLOR)
-            glColorPointer(4, GLNumeric.FLOAT, 0, mesh.colors)
-
-        if mesh.texcoords is not None:
-            glEnableClientState(GLClientState.COLOR)
-            glTexCoordPointer(2, GLNumeric.FLOAT, 0, mesh.texcoords)
-
-    def draw(self, mesh, mode):
-        if mesh.indices is not None:
-            glDrawElements(
-                mode, len(mesh.indices), GLNumeric.UNSIGNED_INT, mesh.indices
-            )
-
-
-class ModernBinding(GLBindingStrategy):
-    """Modern Binding"""
-
-    def bind(self):
-        pass
-
-    def bind_mesh(self, mesh):
-        self.bind()  # assumes VAO already configured
-
-    def draw(self, mesh, mode):
-        if mesh.ebo is not None:
-            glDrawElements(mode, mesh.index_count, GLNumeric.UNSIGNED_INT, None)
+def _warn_deprecated_glpipeline() -> None:
+    warnings.warn(
+        "GLPipeline is deprecated; use LegacyPipeline or ShaderPipeline explicitly",
+        DeprecationWarning,
+        stacklevel=3,
+    )

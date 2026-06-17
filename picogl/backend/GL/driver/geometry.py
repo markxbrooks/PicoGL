@@ -2,6 +2,7 @@ from OpenGL.GL import glDrawElements
 from OpenGL.raw.GL.VERSION.GL_1_1 import glDrawArrays
 from OpenGL.raw.GL.VERSION.GL_3_0 import glBindVertexArray
 
+from picogl.backend.geometry.mesh import GPUMesh
 from picogl.backend.opengl import GLBindingStrategy
 from picogl.backend.state import gl_value
 from picogl.state.draw_mode import GLIndexType
@@ -13,7 +14,16 @@ class GLGeometryDriver:
     def __init__(self, binding: GLBindingStrategy):
         self.binding = binding
 
+    def draw_gpu_mesh(self, gpu_mesh: GPUMesh, mode) -> None:
+        """Bind and draw a uploaded GPU mesh."""
+        gpu_mesh.bind()
+        try:
+            gpu_mesh.draw(gl_value(mode))
+        finally:
+            gpu_mesh.unbind()
+
     def draw_mesh(self, mesh, mode):
+        """Deprecated: bind and draw through the binding strategy shim."""
         self.binding.bind_mesh(mesh)
         self.binding.draw(mesh, gl_value(mode))
 

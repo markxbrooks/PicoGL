@@ -45,7 +45,10 @@ from picogl.backend.GL.driver.capability import GLCapabilityDriver
 from picogl.backend.GL.driver.depth import GLDepthDriver
 from picogl.backend.GL.driver.frame import GLFrameDriver
 from picogl.backend.GL.driver.geometry import GLGeometryDriver
-from picogl.backend.GL.driver.raster import GLRasterDriver
+from picogl.backend.GL.driver.raster import (
+    GLRasterDriver,
+    _resolve_polygon_mode_args,
+)
 from picogl.backend.GL.driver.texture import GLTextureSystem
 from picogl.backend.legacy.core.attribute_binder import LegacyAttributeBinder
 from picogl.backend.legacy.core.pipeline import GLLegacyPipeline
@@ -57,19 +60,28 @@ from picogl.backend.state import (
     RasterState,
     RenderState,
     RenderStateApplier,
+    gl_value,
 )
 from picogl.polygon.mode import PolygonMode
 
 
-class _RecordingBlend:
+class _RecordingRaster:
     def __init__(self, calls):
         self.calls = calls
 
-    def set_blend(self, enabled):
-        self.calls.append(("blend", enabled))
+    def set_line_width(self, width):
+        self.calls.append(("line_width", width))
 
-    def set_blend_func(self, src, dst):
-        self.calls.append(("blend_func", src, dst))
+    def set_polygon_mode(self, face, mode):
+        self.calls.append(("polygon_mode", face, mode))
+
+    def apply(self, state):
+        self.set_line_width(state.line_width)
+        self.set_polygon_mode(GLFace.FRONT_AND_BACK, gl_value(state.polygon_mode))
+        if state.polygon_offset != (0.0, 0.0):
+            self.calls.append(("polygon_offset", state.polygon_offset))
+        if state.point_size is not None:
+            self.calls.append(("point_size", state.point_size))
 
 
 class _RecordingDepth:
@@ -82,16 +94,25 @@ class _RecordingDepth:
     def set_depth_write(self, enabled):
         self.calls.append(("depth_write", enabled))
 
+    def apply(self, state):
+        self.set_depth_test(state.test)
+        self.set_depth_write(state.write)
 
-class _RecordingRaster:
+
+class _RecordingBlend:
     def __init__(self, calls):
         self.calls = calls
 
-    def set_line_width(self, width):
-        self.calls.append(("line_width", width))
+    def set_blend(self, enabled):
+        self.calls.append(("blend", enabled))
 
-    def set_polygon_mode(self, face, mode):
-        self.calls.append(("polygon_mode", face, mode))
+    def set_blend_func(self, src, dst):
+        self.calls.append(("blend_func", src, dst))
+
+    def apply(self, state):
+        self.set_blend(state.enabled)
+        if state.enabled:
+            self.set_blend_func(gl_value(state.src), gl_value(state.dst))
 
 
 class _RecordingCapabilities:
@@ -185,7 +206,7 @@ class TestRenderState(unittest.TestCase):
         self.assertTrue(state.lighting)
         self.assertEqual(state.line_width, 2.5)
         self.assertEqual(state.polygon_mode, GL_LINE)
-        self.assertEqual(state.raster, RasterState(GL_LINE, 2.5))
+        self.assertEqual(state.raster, RasterState(polygon_mode=GL_LINE, line_width=2.5))
         self.assertEqual(state.depth, DepthState(test=True, write=False))
 
     def test_default_constructor_stores_semantic_values(self):
@@ -263,7 +284,7 @@ class TestRenderStateApplier(unittest.TestCase):
         )
 
         call_names = [call[0] for call in backend.calls]
-        self.assertIn("enabled", call_names)
+        self.assertIn("depth_test", call_names)
         self.assertIn("depth_write", call_names)
         self.assertNotIn("blend", call_names)
 
@@ -318,6 +339,93 @@ class TestDrawCommand(unittest.TestCase):
         self.assertEqual(point_size.call_args_list, [call(3.0), call(10.0)])
         get_float.assert_called_once()
         polygon_offset.assert_called_once_with(-1.0, -1.0)
+
+    def test_raster_driver_caches_line_width(self):
+        raster = GLRasterDriver()
+
+        with patch("picogl.backend.GL.driver.raster.glLineWidth") as line_width:
+            raster.set_line_width(2.0)
+            raster.set_line_width(2.0)
+
+        line_width.assert_called_once_with(2.0)
+
+    def test_raster_driver_get_line_width_uses_cache(self):
+        raster = GLRasterDriver()
+
+        with (
+            patch("picogl.backend.GL.driver.raster.glLineWidth"),
+            patch("picogl.backend.GL.driver.raster.glGetFloatv") as get_float,
+        ):
+            raster.set_line_width(2.5)
+            self.assertEqual(raster.get_line_width(), 2.5)
+
+        get_float.assert_not_called()
+
+    def test_raster_driver_caches_polygon_mode(self):
+        raster = GLRasterDriver()
+
+        with patch("picogl.backend.GL.driver.raster.glPolygonMode") as polygon_mode:
+            raster.set_polygon_mode(GLFace.FRONT_AND_BACK, GL_LINE)
+            raster.set_polygon_mode(GLFace.FRONT_AND_BACK, GL_LINE)
+
+        polygon_mode.assert_called_once_with(GL_FRONT_AND_BACK, GL_LINE)
+
+    def test_raster_shared_api_uses_singleton_cache(self):
+        GLRasterDriver._shared = None
+        shared = GLRasterDriver.shared()
+
+        with patch("picogl.backend.GL.driver.raster.glLineWidth"):
+            GLRasterDriver.shared().set_line_width(4.0)
+
+        self.assertEqual(shared.get_line_width(), 4.0)
+
+    def test_glbackend_owns_per_instance_raster_driver(self):
+        GLRasterDriver._shared = None
+        backend = GLBackend(binding=FakeBinding())
+
+        with patch("picogl.backend.GL.driver.raster.glLineWidth"):
+            backend.raster.set_line_width(4.0)
+
+        self.assertIsNot(backend.raster, GLRasterDriver.shared())
+        self.assertEqual(backend.raster.get_line_width(), 4.0)
+
+    def test_raster_isolated_instance_does_not_use_shared(self):
+        GLRasterDriver._shared = None
+        shared = GLRasterDriver.shared()
+        shared.set_line_width(1.0)
+
+        isolated = GLRasterDriver()
+        with patch("picogl.backend.GL.driver.raster.glLineWidth"):
+            isolated.set_line_width(3.0)
+
+        self.assertEqual(isolated.get_line_width(), 3.0)
+        self.assertEqual(shared.get_line_width(), 1.0)
+
+    def test_resolve_polygon_mode_args(self):
+        self.assertEqual(
+            _resolve_polygon_mode_args(GL_LINE),
+            (GLFace.FRONT_AND_BACK, GL_LINE),
+        )
+        self.assertEqual(
+            _resolve_polygon_mode_args(GLFace.FRONT, GL_LINE),
+            (GLFace.FRONT, GL_LINE),
+        )
+        with self.assertRaises(TypeError):
+            _resolve_polygon_mode_args()
+
+    def test_raster_driver_apply_raster_state(self):
+        raster = GLRasterDriver()
+        state = RasterState(line_width=2.5, polygon_mode=PolygonMode.LINE)
+
+        with (
+            patch("picogl.backend.GL.driver.raster.glLineWidth") as line_width,
+            patch("picogl.backend.GL.driver.raster.glPolygonMode") as polygon_mode,
+        ):
+            raster.apply(state)
+            raster.apply(state)
+
+        line_width.assert_called_once_with(2.5)
+        polygon_mode.assert_called_once_with(GL_FRONT_AND_BACK, GL_LINE)
 
     def test_state_subsystem_drivers_delegate_to_opengl(self):
         capabilities = GLCapabilityDriver()
@@ -681,8 +789,8 @@ class TestDrawCommand(unittest.TestCase):
             patch("picogl.backend.GL.driver.frame.glClearColor") as clear_color,
         ):
             backend.frame.viewport(1, 2, 3, 4)
-            backend.pipeline.load_identity()
-            backend.pipeline.translate(1, 2, 3)
+            backend.legacy.load_identity()
+            backend.legacy.translate(1, 2, 3)
             backend.legacy.set_light([0.0, 0.0, 10.0, 1.0])
             backend.frame.set_clear_color((0.1, 0.2, 0.3, 1.0))
 

@@ -9,6 +9,8 @@ Classes:
       performing rendering operations.
 """
 
+import warnings
+
 from picogl.backend.GL.driver.blend import GLBlendDriver
 from picogl.backend.GL.driver.capability import GLCapabilityDriver
 from picogl.backend.GL.driver.depth import GLDepthDriver
@@ -17,12 +19,14 @@ from picogl.backend.GL.driver.geometry import GLGeometryDriver
 from picogl.backend.GL.driver.raster import GLRasterDriver
 from picogl.backend.GL.driver.texture import GLTextureSystem
 from picogl.backend.legacy.core.attribute_binder import LegacyAttributeBinder
-from picogl.backend.legacy.core.pipeline import GLLegacyPipeline
-from picogl.backend.opengl import GLBindingStrategy, GLPipeline
+from picogl.backend.legacy.core.pipeline import GLLegacyPipeline, LegacyPipeline
+from picogl.backend.modern.core.pipeline import ShaderPipeline
+from picogl.backend.opengl import GLBindingStrategy
 from picogl.backend.state import (
     DrawCommand,
     GLClipPlaneState,
     GLStateManager,
+    RenderState,
     RenderStateApplier,
 )
 from picogl.buffers.glframe import GLFramebuffer
@@ -42,14 +46,49 @@ class GLBackend:
         self.depth = GLDepthDriver(self.capabilities)
         self.blend = GLBlendDriver(self.capabilities)
         self.raster = GLRasterDriver()
-        self.legacy = GLLegacyPipeline()
-        self.pipeline: GLPipeline = self.legacy
+        self.legacy: LegacyPipeline = GLLegacyPipeline()
+        self.shader = ShaderPipeline()
         self.geometry = GLGeometryDriver(binding)
         self.textures = GLTextureSystem()
         self.attributes = LegacyAttributeBinder()
         self.state_manager = GLStateManager(self.capabilities)
         self.state_applier = RenderStateApplier(self)
 
+    @property
+    def pipeline(self) -> LegacyPipeline:
+        """Deprecated alias for :attr:`legacy`."""
+        warnings.warn(
+            "GLBackend.pipeline is deprecated; use GLBackend.legacy",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return self.legacy
+
+    @pipeline.setter
+    def pipeline(self, value: LegacyPipeline) -> None:
+        warnings.warn(
+            "GLBackend.pipeline is deprecated; use GLBackend.legacy",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        self.legacy = value
+
     def draw_command(self, command: DrawCommand):
         """Apply command state/resources and draw through this backend."""
         command.execute(self)
+
+    def apply_state(self, state: RenderState) -> None:
+        """Apply a render-state descriptor through cached subsystem drivers."""
+        self.state_applier.apply(state)
+
+    def apply_clip_state(self, clip: GLClipPlaneState | None = None) -> None:
+        """Apply clip-plane capability state."""
+        if clip is not None:
+            self.clip = clip
+        self.clip.apply(self.state_manager)
+
+    def create_shader_pipeline(self, program) -> ShaderPipeline:
+        """Return a shader pipeline bound to *program*."""
+        pipeline = ShaderPipeline(program)
+        self.shader = pipeline
+        return pipeline
