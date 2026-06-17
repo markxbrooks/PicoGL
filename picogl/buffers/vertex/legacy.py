@@ -5,7 +5,7 @@ Legacy backend (no real GL VAO support)
 """
 
 import ctypes
-from typing import Any, Optional, Literal, Union
+from typing import Any, Optional
 
 import numpy as np
 from decologr import Decologr as log
@@ -29,11 +29,7 @@ from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
 from picogl.buffers.attributes import LayoutDescriptor, AttributeSpec
 from picogl.buffers.base import VertexBase
 from picogl.buffers.glcleanup import delete_buffer_object
-from picogl.buffers.vertex.aliases import (
-    NAME_ALIASES,
-    VertexArrayRole,
-    VertexBufferRole,
-)
+from picogl.buffers.vertex.aliases import NAME_ALIASES, VertexBufferRole
 from picogl.buffers.vertex.vbo.vbo_class import VBOType
 from picogl.state.client import GLClientState
 from picogl.state.draw_mode import GLBufferTarget, GLDataType, GLDrawMode, GLIndexType
@@ -51,16 +47,10 @@ class VertexBufferGroup(VertexBase):
     def __init__(self, draw_mode: int = GLDrawMode.LINE_STRIP):
         super().__init__()
         self._index_count = None
-        self.handle = 0  # Does absolutely nothing
-        self.vao = (
-            None  # Bonds Vertex Array Object. Does absolutely nothing, but is needed
-        )
-        self.vbo: Optional[LegacyPositionVBO | int] = None  # Atom Vertex Buffer Object
-        self.cbo: Optional[LegacyColorVBO | int] = None  # Color Vertex Buffer Object
-        self.nbo: Optional[LegacyNormalVBO | int] = None  # Normal Vertex Buffer Object
-        self.ebo: Optional[LegacyEBO | int] = None  # Bond Index Buffer Object
+        self.handle = 0  # compat shim, not a real VAO handle
+        self.vao = None  # compat shim, not a real VAO
         self.layout: Optional[LayoutDescriptor] = None
-        self.named_vbos: dict[str, LegacyVBO] = {}  # store by semantic name
+        self.named_vbos: dict[VertexBufferRole | str, LegacyVBO] = {}
         self.draw_mode: int = draw_mode
         self.vbo_classes = {
             RibbonAttrs.VBO: LegacyPositionVBO,
@@ -75,18 +65,50 @@ class VertexBufferGroup(VertexBase):
         # print("VertexBufferGroup.__del__", self)
         pass
 
+    @property
+    def vbo(self) -> Optional[LegacyPositionVBO | int]:
+        return self.named_vbos.get(VertexBufferRole.VBO)
+
+    @vbo.setter
+    def vbo(self, value: Optional[LegacyPositionVBO | int]) -> None:
+        self._set_named_vbo(VertexBufferRole.VBO, value)
+
+    @property
+    def cbo(self) -> Optional[LegacyColorVBO | int]:
+        return self.named_vbos.get(VertexBufferRole.CBO)
+
+    @cbo.setter
+    def cbo(self, value: Optional[LegacyColorVBO | int]) -> None:
+        self._set_named_vbo(VertexBufferRole.CBO, value)
+
+    @property
+    def nbo(self) -> Optional[LegacyNormalVBO | int]:
+        return self.named_vbos.get(VertexBufferRole.NBO)
+
+    @nbo.setter
+    def nbo(self, value: Optional[LegacyNormalVBO | int]) -> None:
+        self._set_named_vbo(VertexBufferRole.NBO, value)
+
+    @property
+    def ebo(self) -> Optional[LegacyEBO | int]:
+        return self.named_vbos.get(VertexBufferRole.EBO)
+
+    @ebo.setter
+    def ebo(self, value: Optional[LegacyEBO | int]) -> None:
+        self._set_named_vbo(VertexBufferRole.EBO, value)
+
+    def _set_named_vbo(
+        self, role: VertexBufferRole, value: Optional[LegacyVBO | int]
+    ) -> None:
+        if value is None:
+            self.named_vbos.pop(role, None)
+        else:
+            self.named_vbos[role] = value
+
     def add_vbo_object(self, name: str, vbo: "LegacyVBO") -> "LegacyVBO":
         """Register a VBO by semantic name or shorthand alias."""
-        # normalize to canonical key
         canonical = NAME_ALIASES.get(name, name)
-
-        # store consistently
         self.named_vbos[canonical] = vbo
-
-        # and assign to attribute if it exists
-        if hasattr(self, canonical):
-            setattr(self, canonical, vbo)
-
         return vbo
 
     def get_vbo_object(self, name: str) -> "LegacyVBO":
@@ -95,10 +117,10 @@ class VertexBufferGroup(VertexBase):
         return self.named_vbos.get(canonical)
 
     def delete(self) -> None:
-        for buf in (self.nbo, self.cbo, self.vbo, self.ebo):
+        for buf in self.named_vbos.values():
             if buf:
                 delete_buffer_object(buf)
-        self.nbo = self.cbo = self.vbo = self.ebo = None
+        self.named_vbos.clear()
         self.layout = None
 
     @property
@@ -121,26 +143,25 @@ class VertexBufferGroup(VertexBase):
             raise ValueError("index_count must be non-negative")
         self._index_count = value
 
-    def draw(self, index_count: int = 0, mode: int = GLDrawMode.POINTS):
+    def draw(self, index_count: int = 0, mode: int | None = None):
         """
         draw
 
-        :param index_count:
         :param count: int
         :param mode: int
         Enable legacy client states, bind VBOs, draw, and clean up.
         """
-
         if not index_count:
             index_count = self.index_count
-        if not mode:
+        if mode is None:
             mode = self.draw_mode
 
-        # Use the layout-based binding approach
         with self:
-            with legacy_client_states(GLClientState.VERTEX, GLClientState.COLOR, GLClientState.NORMAL):
-                # Issue draw call
-                self._draw_arrays(index_count, mode)
+            with legacy_client_states(*self._resolve_client_states()):
+                if self.ebo:
+                    self._draw_elements(index_count, GLIndexType.UNSIGNED_INT, mode, 0)
+                else:
+                    self._draw_arrays(index_count, mode)
 
     def add_vbo(
         self,
@@ -178,36 +199,6 @@ class VertexBufferGroup(VertexBase):
         ebo_class = self.vbo_classes.get(name, LegacyEBO)
         self.add_vbo_object(name, ebo_class(data=data))
 
-    def draw_elements(
-        self,
-        count: int = 0,
-        mode: int = GLDrawMode.TRIANGLES,
-        dtype: int = GLIndexType.UNSIGNED_INT,
-        offset: int = 0,
-    ):
-        """
-        Draw using an element buffer (EBO) with legacy client states.
-
-        :param count: Number of indices to draw. Defaults to `self.index_count`.
-        :param mode: OpenGL primitive type (GL_TRIANGLES, GL_LINES, etc.).
-        :param dtype: Data type of indices (GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT, GL_UNSIGNED_INT).
-        :param offset: Byte offset into the EBO.
-        """
-        if not self.ebo:
-            raise RuntimeError("No element buffer (EBO) bound for draw_elements()")
-
-        if not count:
-            count = self.index_count
-
-        # Bind buffers and set up attribute pointers
-        with self:
-            # Legacy client states still required
-            with legacy_client_states(GLClientState.VERTEX, GLClientState.COLOR, GLClientState.NORMAL):
-                # Bind each VBO (legacy-style)
-                for vbo in self.named_vbos.values():
-                    vbo.bind()
-                self._draw_elements(count, dtype, mode, offset)
-
     def _bind_ebo(self):
         # Indexed draws need an EBO; array-only geometry (ribbons, coils, etc.) does not.
         if not self.ebo:
@@ -237,6 +228,57 @@ class VertexBufferGroup(VertexBase):
     def set_layout(self, layout: LayoutDescriptor) -> None:
         self.layout = layout
 
+    def _resolve_role(self, attr: AttributeSpec) -> VertexBufferRole | Any:
+        name = attr.name
+        if isinstance(name, VertexBufferRole):
+            return name
+        key = name.lower() if isinstance(name, str) else str(name).lower()
+        role = NAME_ALIASES.get(name, NAME_ALIASES.get(key, None))
+        if isinstance(role, VertexBufferRole):
+            return role
+
+        role = NAME_ALIASES.get(attr.vbo_type, attr.vbo_type)
+        return role
+
+    def _resolve_client_states(self) -> tuple[GLClientState, ...]:
+        """Return legacy client states to enable for the current layout."""
+        if not self.layout:
+            return (
+                GLClientState.VERTEX,
+                GLClientState.COLOR,
+                GLClientState.NORMAL,
+            )
+
+        states: list[GLClientState] = []
+        seen: set[GLClientState] = set()
+        for attr in self.layout.attributes:
+            role = self._resolve_role(attr)
+            binding = self.LEGACY_ATTR_BINDINGS.get(role)
+            if binding is None or self.named_vbos.get(role) is None:
+                continue
+            state = binding[0]
+            if state not in seen:
+                seen.add(state)
+                states.append(state)
+
+        if not states:
+            return (
+                GLClientState.VERTEX,
+                GLClientState.COLOR,
+                GLClientState.NORMAL,
+            )
+        return tuple(states)
+
+    def _buffer_handle(self, vbo: LegacyVBO | int) -> int:
+        if isinstance(vbo, int):
+            return vbo
+        handle = getattr(vbo, "handle", None)
+        if handle is None:
+            handle = getattr(vbo, "_id", None)
+        if handle is None:
+            raise RuntimeError(f"VBO has no GL buffer name (handle/_id): {vbo!r}")
+        return handle
+
     def bind(self) -> None:
         """Bind buffers and configure legacy OpenGL client arrays."""
         if not self.layout:
@@ -244,26 +286,20 @@ class VertexBufferGroup(VertexBase):
 
         try:
             for attr in self.layout.attributes:
-                name = attr.name
-                if isinstance(name, VertexBufferRole):
-                    role = name
-                else:
-                    key = name.lower() if isinstance(name, str) else str(name).lower()
-                    role = NAME_ALIASES.get(name, NAME_ALIASES.get(key, key))
+                role = self._resolve_role(attr)
                 vbo = self.named_vbos.get(role)
-
-                if not vbo:
+                if vbo is None:
                     continue
 
-                buffer_handle = getattr(vbo, VertexArrayRole.VAO, vbo)
-                self._bind_buffer(GLBufferTarget.ARRAY, buffer_handle)
+                self._bind_buffer(GLBufferTarget.ARRAY, self._buffer_handle(vbo))
 
                 binding = self.LEGACY_ATTR_BINDINGS.get(role)
+                if not binding:
+                    continue
 
-                if binding:
-                    state, pointer_method = binding
-                    self._legacy_client_state(state)
-                    getattr(self, pointer_method)(attr)
+                state, fn_name = binding
+                self._legacy_client_state(state)
+                getattr(self, fn_name)(attr)
             self._bind_ebo()
 
         except Exception as ex:
