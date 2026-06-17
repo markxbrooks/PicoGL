@@ -158,10 +158,7 @@ class VertexBufferGroup(VertexBase):
 
         with self:
             with legacy_client_states(*self._resolve_client_states()):
-                if self.ebo:
-                    self._draw_elements(index_count, GLIndexType.UNSIGNED_INT, mode, 0)
-                else:
-                    self._draw_arrays(index_count, mode)
+                self._draw_arrays(index_count, mode)
 
     def add_vbo(
         self,
@@ -199,6 +196,24 @@ class VertexBufferGroup(VertexBase):
         ebo_class = self.vbo_classes.get(name, LegacyEBO)
         self.add_vbo_object(name, ebo_class(data=data))
 
+    def draw_elements(
+        self,
+        count: int = 0,
+        mode: int = GLDrawMode.TRIANGLES,
+        dtype: int = GLIndexType.UNSIGNED_INT,
+        offset: int = 0,
+    ):
+        """Draw using an element buffer (EBO) with legacy client states."""
+        if not self.ebo:
+            raise RuntimeError("No element buffer (EBO) bound for draw_elements()")
+
+        if not count:
+            count = self.index_count
+
+        with self:
+            with legacy_client_states(*self._resolve_client_states()):
+                self._draw_elements(count, dtype, mode, offset)
+
     def _bind_ebo(self):
         # Indexed draws need an EBO; array-only geometry (ribbons, coils, etc.) does not.
         if not self.ebo:
@@ -228,18 +243,6 @@ class VertexBufferGroup(VertexBase):
     def set_layout(self, layout: LayoutDescriptor) -> None:
         self.layout = layout
 
-    def _resolve_role(self, attr: AttributeSpec) -> VertexBufferRole | Any:
-        name = attr.name
-        if isinstance(name, VertexBufferRole):
-            return name
-        key = name.lower() if isinstance(name, str) else str(name).lower()
-        role = NAME_ALIASES.get(name, NAME_ALIASES.get(key, None))
-        if isinstance(role, VertexBufferRole):
-            return role
-
-        role = NAME_ALIASES.get(attr.vbo_type, attr.vbo_type)
-        return role
-
     def _resolve_client_states(self) -> tuple[GLClientState, ...]:
         """Return legacy client states to enable for the current layout."""
         if not self.layout:
@@ -252,7 +255,7 @@ class VertexBufferGroup(VertexBase):
         states: list[GLClientState] = []
         seen: set[GLClientState] = set()
         for attr in self.layout.attributes:
-            role = self._resolve_role(attr)
+            role = attr.role
             binding = self.LEGACY_ATTR_BINDINGS.get(role)
             if binding is None or self.named_vbos.get(role) is None:
                 continue
@@ -286,7 +289,7 @@ class VertexBufferGroup(VertexBase):
 
         try:
             for attr in self.layout.attributes:
-                role = self._resolve_role(attr)
+                role = attr.role
                 vbo = self.named_vbos.get(role)
                 if vbo is None:
                     continue

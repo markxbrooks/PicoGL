@@ -662,6 +662,33 @@ class TestVertexBufferGroup(unittest.TestCase):
             vbg.bind()
             mock_bind_buffer.assert_any_call(GL_ARRAY_BUFFER, 77)
 
+    def test_bind_resolves_role_from_attr_role(self):
+        """bind() uses AttributeSpec.role as the canonical buffer role."""
+        vbg = VertexBufferGroup()
+        mock_cbo = MagicMock()
+        mock_cbo.handle = 55
+        vbg.named_vbos[VertexBufferRole.CBO] = mock_cbo
+        vbg.layout = LayoutDescriptor(
+            attributes=[
+                AttributeSpec(
+                    name="misleading_name",
+                    index=2,
+                    size=3,
+                    type=GL_FLOAT,
+                    normalized=False,
+                    stride=0,
+                    offset=0,
+                    role=VertexBufferRole.CBO,
+                )
+            ]
+        )
+
+        with patch("picogl.buffers.vertex.legacy.glColorPointer") as mock_color_pointer, patch(
+            "picogl.buffers.vertex.legacy.glEnableClientState"
+        ), patch("picogl.buffers.vertex.legacy.glBindBuffer"):
+            vbg.bind()
+            mock_color_pointer.assert_called_once()
+
     def test_bind_resolves_role_from_vbo_type(self):
         """bind() resolves buffer role from AttributeSpec.vbo_type."""
         vbg = VertexBufferGroup()
@@ -679,6 +706,7 @@ class TestVertexBufferGroup(unittest.TestCase):
                     stride=0,
                     offset=0,
                     vbo_type=VBOType.CBO,
+                    role=VertexBufferRole.CBO,
                 )
             ]
         )
