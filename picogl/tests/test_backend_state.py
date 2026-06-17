@@ -47,7 +47,7 @@ from picogl.backend.GL.driver.frame import GLFrameDriver
 from picogl.backend.GL.driver.geometry import GLGeometryDriver
 from picogl.backend.GL.driver.raster import (
     GLRasterDriver,
-    _resolve_polygon_mode_args,
+    resolve_polygon_mode_args,
 )
 from picogl.backend.GL.driver.texture import GLTextureSystem
 from picogl.backend.legacy.core.attribute_binder import LegacyAttributeBinder
@@ -214,7 +214,7 @@ class TestRenderState(unittest.TestCase):
 
         self.assertEqual(state.blend_src, GLBlendFactor.SRC_ALPHA)
         self.assertEqual(state.blend_dst, GLBlendFactor.ONE_MINUS_SRC_ALPHA)
-        self.assertEqual(state.polygon_mode, PolygonMode.FILL)
+        self.assertEqual(state.polygon_mode, GLFillMode.FILL)
 
     def test_nested_constructor_inputs_are_flattened(self):
         state = RenderState(
@@ -248,7 +248,7 @@ class TestRenderStateApplier(unittest.TestCase):
             blend_dst=GLBlendFactor.ZERO,
             depth_write=False,
             line_width=2.0,
-            polygon_mode=PolygonMode.LINE,
+            polygon_mode=GLFillMode.LINE,
             lighting=True,
         )
 
@@ -403,19 +403,19 @@ class TestDrawCommand(unittest.TestCase):
 
     def test_resolve_polygon_mode_args(self):
         self.assertEqual(
-            _resolve_polygon_mode_args(GL_LINE),
+            resolve_polygon_mode_args(GL_LINE),
             (GLFace.FRONT_AND_BACK, GL_LINE),
         )
         self.assertEqual(
-            _resolve_polygon_mode_args(GLFace.FRONT, GL_LINE),
+            resolve_polygon_mode_args(GLFace.FRONT, GL_LINE),
             (GLFace.FRONT, GL_LINE),
         )
         with self.assertRaises(TypeError):
-            _resolve_polygon_mode_args()
+            resolve_polygon_mode_args()
 
     def test_raster_driver_apply_raster_state(self):
         raster = GLRasterDriver()
-        state = RasterState(line_width=2.5, polygon_mode=PolygonMode.LINE)
+        state = RasterState(line_width=2.5, polygon_mode=GLFillMode.LINE)
 
         with (
             patch("picogl.backend.GL.driver.raster.glLineWidth") as line_width,

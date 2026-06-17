@@ -35,7 +35,7 @@ from picogl.backend.capability import (
 )
 from picogl.polygon.mode import PolygonMode
 from picogl.state.draw_mode import GLDataType, GLDrawMode, GLIndexType
-from picogl.state.fill import GLFace, GLCapability
+from picogl.state.fill import GLFace, GLCapability, GLFillMode
 from picogl.texture.gltexture import GLTextureDriver
 
 
@@ -65,7 +65,7 @@ class CapabilityDriver(Protocol):
 class RasterState:
     """Raster State"""
 
-    polygon_mode: Any = PolygonMode.FILL
+    polygon_mode: Any = GLFillMode.FILL
     line_width: float = 1.0
     polygon_offset: tuple[float, float] = (0.0, 0.0)
     point_size: float | None = None
@@ -161,7 +161,7 @@ class RenderState:
     depth_test: bool = True
     depth_write: bool = True
     line_width: float = 1.0
-    polygon_mode: Any = PolygonMode.FILL
+    polygon_mode: Any = GLFillMode.FILL
     polygon_offset: tuple[float, float] = (0.0, 0.0)
     point_size: float | None = None
     program_point_size: bool = False
@@ -226,7 +226,7 @@ class RenderState:
         object.__setattr__(
             self,
             "polygon_mode",
-            PolygonMode.FILL if polygon_mode is None else polygon_mode,
+            GLFillMode.FILL if polygon_mode is None else polygon_mode,
         )
         object.__setattr__(
             self,

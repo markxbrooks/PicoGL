@@ -15,17 +15,16 @@ from OpenGL.GL import (
     glPointSize,
     glPolygonMode,
 )
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_FILL
 from OpenGL.raw.GL.VERSION.GL_1_1 import glPolygonOffset
 
 from picogl.backend.state import gl_value
-from picogl.state.fill import GLFace
+from picogl.state.fill import GLFace, GLFillMode
 
 if TYPE_CHECKING:
     from picogl.backend.state import RasterState
 
 
-def _resolve_polygon_mode_args(*args: Any) -> tuple[Any, Any]:
+def resolve_polygon_mode_args(*args: Any) -> tuple[Any, Any]:
     """Normalize set_polygon_mode overloads to (face, mode)."""
     if len(args) == 1:
         return GLFace.FRONT_AND_BACK, args[0]
@@ -53,7 +52,7 @@ class GLRasterDriver:
 
     def __init__(self):
         self._line_width: float = 1.0
-        self._polygon_mode: tuple[int, int] = (GL_FILL, GL_FILL)
+        self._polygon_mode: tuple[int, int] = (GLFillMode.FILL, GLFillMode.FILL)
         self._point_size: Optional[float] = None
         self._polygon_offset: tuple[float, float] = (0.0, 0.0)
         self._point_size_range: Optional[tuple[float, float]] = None
@@ -100,7 +99,7 @@ class GLRasterDriver:
         self._polygon_offset = offset
 
     def set_polygon_mode(self, *args) -> None:
-        face, mode = _resolve_polygon_mode_args(*args)
+        face, mode = resolve_polygon_mode_args(*args)
         face_val = gl_value(face)
         mode_val = int(gl_value(mode))
         front_mode, back_mode = self._polygon_mode
