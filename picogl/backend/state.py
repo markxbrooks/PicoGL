@@ -33,7 +33,6 @@ from picogl.backend.capability import (
     GLFixedFunctionCapability,
     GLPipelineCapability,
 )
-from picogl.polygon.mode import PolygonMode
 from picogl.state.draw_mode import GLDataType, GLDrawMode, GLIndexType
 from picogl.state.fill import GLFace, GLCapability, GLFillMode
 from picogl.texture.gltexture import GLTextureDriver
