@@ -45,6 +45,7 @@ from OpenGL.raw.GL.VERSION.GL_1_1 import (
 from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER
 
 from picogl.buffers.attributes import AttributeSpec, LayoutDescriptor
+from picogl.buffers.vertex.aliases import VertexBufferRole
 from picogl.buffers.vertex.legacy import VertexBufferGroup
 from picogl.state.draw_mode import GLDrawMode
 
@@ -619,6 +620,59 @@ class TestVertexBufferGroup(unittest.TestCase):
                 vbg.bind()
                 mock_log_error.assert_called_once()
                 self.assertIn("error", mock_log_error.call_args[0][0])
+
+    def test_bind_without_ebo(self):
+        """bind() skips EBO when geometry uses glDrawArrays only."""
+        vbg = VertexBufferGroup()
+        mock_vbo = MagicMock()
+        mock_vbo.handle = 42
+        vbg.named_vbos[VertexBufferRole.VBO] = mock_vbo
+        vbg.layout = LayoutDescriptor(
+            attributes=[
+                AttributeSpec(
+                    name=VertexBufferRole.VBO,
+                    index=0,
+                    size=3,
+                    type=GL_FLOAT,
+                    normalized=False,
+                    stride=0,
+                    offset=0,
+                )
+            ]
+        )
+
+        with patch("picogl.buffers.vertex.legacy.glVertexPointer"), patch(
+            "picogl.buffers.vertex.legacy.glEnableClientState"
+        ), patch("picogl.buffers.vertex.legacy.glBindBuffer") as mock_bind_buffer:
+            vbg.bind()
+            mock_bind_buffer.assert_called()
+
+    def test_bind_legacy_buffer_roles(self):
+        """bind() resolves pointer method names and VertexBufferRole attributes."""
+        vbg = VertexBufferGroup()
+        mock_vbo = MagicMock()
+        mock_vbo.handle = 42
+        vbg.named_vbos[VertexBufferRole.VBO] = mock_vbo
+
+        attr_spec = AttributeSpec(
+            name=VertexBufferRole.VBO,
+            index=0,
+            size=3,
+            type=GL_FLOAT,
+            normalized=False,
+            stride=12,
+            offset=0,
+        )
+        vbg.layout = LayoutDescriptor(attributes=[attr_spec])
+
+        with patch("picogl.buffers.vertex.legacy.glVertexPointer") as mock_vertex_pointer, patch(
+            "picogl.buffers.vertex.legacy.glEnableClientState"
+        ) as mock_enable_state:
+            vbg.bind()
+            mock_enable_state.assert_called_once_with(GL_VERTEX_ARRAY)
+            mock_vertex_pointer.assert_called_once_with(
+                3, GL_FLOAT, 12, ctypes.c_void_p(0)
+            )
 
     def test_type_conversion_in_bind(self):
         """Test type conversion handling in bind method."""

@@ -31,4 +31,4 @@ NAME_ALIASES = {
     "elements": VertexBufferRole.EBO,
 }
 
-__all__ = ["VertexBufferRole", "NAME_ALIASES"]
+__all__ = ["VertexBufferRole", "NAME_ALIASES", "VertexArrayRole"]
