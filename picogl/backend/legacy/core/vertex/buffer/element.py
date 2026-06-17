@@ -23,18 +23,6 @@ class LegacyEBO(LegacyVBO):
             handle=handle, data=data, target=target, size=size, dtype=dtype
         )
 
-    def draw(
-        self,
-        index_count: int,
-        index_type: int = GLIndexType.UNSIGNED_INT,
-        mode: int = GLDrawMode.LINES,
-    ):
-        if index_count <= 0:
-            return
-
-        # MUST already be bound externally
-        glDrawElements(mode, index_count, index_type, None)
-
     def configure(self):
         """
         configure

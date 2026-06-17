@@ -12,8 +12,6 @@ from picogl.backend.modern.core.vertex.base import VertexBuffer
 from picogl.state.draw_mode import (
     GLBufferTarget,
     GLDataType,
-    GLDrawMode,
-    GLIndexType,
     GLUsageHint,
 )
 
@@ -110,11 +108,3 @@ class LegacyVBO(VertexBuffer):
         """Configure the buffer (default implementation does nothing)."""
         pass
 
-    def draw(
-        self,
-        index_count: int,
-        index_type: int = GLIndexType.UNSIGNED_INT,
-        mode: int = GLDrawMode.LINES,
-    ):
-        """Draw call (must be implemented in subclasses)."""
-        raise NotImplementedError("Subclasses must implement draw()!")

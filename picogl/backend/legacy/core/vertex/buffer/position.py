@@ -1,15 +1,19 @@
+"""
+Legacy Position VBO
+
+"""
+import ctypes
+
 import numpy as np
-from OpenGL.GL import glDrawElements, glVertexPointer
+from OpenGL.GL import glVertexPointer
 from OpenGL.raw.GL.VERSION.GL_1_1 import (
-    GL_VERTEX_ARRAY,
-    glDrawArrays,
     glEnableClientState,
 )
 
-from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
 from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
 from picogl.numerical import GLNumeric
-from picogl.state.draw_mode import GLBufferTarget, GLDataType, GLDrawMode, GLIndexType
+from picogl.state.client import GLClientState
+from picogl.state.draw_mode import GLBufferTarget, GLDataType
 
 
 class LegacyPositionVBO(LegacyVBO):
@@ -40,36 +44,6 @@ class LegacyPositionVBO(LegacyVBO):
         if data is not None:
             self.set_data(data)
 
-    def draw_arrays(
-        self,
-        count: int = None,
-        mode: int | GLDrawMode = GLDrawMode.TRIANGLES,
-    ):
-        if count is None:
-            count = len(self.data) // self.size
-        mode_value = mode.value if isinstance(mode, GLDrawMode) else mode
-        with legacy_client_states(GL_VERTEX_ARRAY):
-            glDrawArrays(mode_value, 0, count)
-
-    def draw(
-        self,
-        index_count: int = None,
-        index_type: int = GLIndexType.UNSIGNED_INT,
-        mode: int | GLDrawMode = GLDrawMode.TRIANGLES,
-    ):
-        """
-        Draw the buffer.
-
-        :param index_count: Number of indices to draw (default: self.index_count).
-        :param index_type: Data type of indices (e.g., GL_UNSIGNED_INT).
-        :param mode: OpenGL drawing mode (e.g., GL_TRIANGLES).
-        """
-        if index_count is None:
-            index_count = self.index_count
-        mode_value = mode.value if isinstance(mode, GLDrawMode) else mode
-        with legacy_client_states(GL_VERTEX_ARRAY):
-            glDrawElements(mode_value, index_count, index_type, self.pointer)
-
     def configure(self):
         """Configure the vertex pointer for the position buffer.
 
@@ -78,5 +52,5 @@ class LegacyPositionVBO(LegacyVBO):
         """
         if self.dtype not in self.SUPPORTED_GL_TYPES:
             raise ValueError(f"Unsupported GL data type: {self.dtype}")
-        glEnableClientState(GL_VERTEX_ARRAY)
-        glVertexPointer(self.components, self.dtype, self.stride, self.pointer)
+        glEnableClientState(GLClientState.VERTEX)
+        glVertexPointer(self.components, self.dtype, self.stride, ctypes.c_void_p(0))
