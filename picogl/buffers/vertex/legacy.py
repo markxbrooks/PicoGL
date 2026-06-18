@@ -48,7 +48,7 @@ class VertexBufferGroup(VertexBase):
         super().__init__()
         self._index_count = None
         self.handle = 0  # compat shim, not a real VAO handle
-        self.vao = None  # compat shim, not a real VAO
+        # self.vao = None  # compat shim, not a real VAO
         self.layout: Optional[LayoutDescriptor] = None
         self.named_vbos: dict[VertexBufferRole | str, LegacyVBO] = {}
         self.draw_mode: int = draw_mode
