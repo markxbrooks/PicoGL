@@ -17,7 +17,8 @@ from OpenGL.GL import (
 )
 from OpenGL.raw.GL.VERSION.GL_1_1 import glPolygonOffset
 
-from picogl.backend.state import gl_value
+from picogl.backend.GL.driver.applyable import Applyable
+from picogl.backend.state import gl_value, RasterState
 from picogl.state.fill import GLFace, GLFillMode
 
 if TYPE_CHECKING:
@@ -38,7 +39,7 @@ def _gl_set_polygon_mode(face_val: int, mode_val: int) -> None:
     glPolygonMode(face_val, mode_val)
 
 
-class GLRasterDriver:
+class GLRasterDriver(Applyable):
     """Fixed-function raster state with write-only GL and cached current values."""
 
     _shared: Optional["GLRasterDriver"] = None
@@ -50,7 +51,16 @@ class GLRasterDriver:
             cls._shared = cls()
         return cls._shared
 
+    def _is_same(self, old, new) -> bool:
+        return (
+                old.line_width == new.line_width and
+                old.polygon_mode == new.polygon_mode and
+                old.polygon_offset == new.polygon_offset and
+                old.point_size == new.point_size
+        )
+
     def __init__(self):
+        super().__init__()
         self._line_width: float = 1.0
         self._polygon_mode: tuple[int, int] = (GLFillMode.FILL, GLFillMode.FILL)
         self._point_size: Optional[float] = None
@@ -75,7 +85,7 @@ class GLRasterDriver:
         glPointSize(size)
         self._point_size = size
 
-    def get_point_size_range(self) -> tuple[float, float]:
+    def get_point_size_range(self) -> tuple[float, float] | None:
         if self._point_size_range is None:
             min_size, max_size = glGetFloatv(GL_POINT_SIZE_RANGE)
             self._point_size_range = (float(min_size), float(max_size))
@@ -127,14 +137,7 @@ class GLRasterDriver:
 
         _gl_set_polygon_mode(face_val, mode_val)
 
-    def apply(self, state: "RasterState") -> None:
-        """Apply a RasterState descriptor, skipping GL when unchanged."""
-        if self._current == state:
-            return
-
-        prev = self._current
-        self._current = state
-
+    def _do_apply(self, state: RasterState):
         if prev is None or prev.line_width != state.line_width:
             self.set_line_width(state.line_width)
 
@@ -145,7 +148,7 @@ class GLRasterDriver:
             self.set_polygon_offset(*state.polygon_offset)
 
         if state.point_size is not None and (
-            prev is None or prev.point_size != state.point_size
+                prev is None or prev.point_size != state.point_size
         ):
             self.set_point_size(state.point_size)
 
