@@ -45,8 +45,10 @@ Usage Example:
 """
 
 import ctypes
-from typing import Optional
+
 import numpy as np
+from OpenGL.GL import glVertexAttribPointer
+from OpenGL.raw.GL.VERSION.GL_2_0 import glEnableVertexAttribArray
 
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.boolean import GLBoolean
@@ -54,11 +56,9 @@ from picogl.numerical import GLNumeric
 from picogl.state.draw_mode import GLBufferTarget, GLUsageHint
 from picogl.wrappers.buffer import gl_bind_buffer
 from picogl.wrappers.data import gl_buffer_data
-from picogl.wrappers.enable_vertex_array import gl_enable_vertex_array
 from picogl.wrappers.generate_buffers import gl_generate_buffers
 from picogl.wrappers.generate_vertex_array import gl_generate_vertex_array
 from picogl.wrappers.vertex_array import gl_bind_vertex_array
-from picogl.wrappers.vertex_attrib_pointer import gl_vertex_attrib_pointer
 
 
 def upload_geometry_buffers(
@@ -68,8 +68,8 @@ def upload_geometry_buffers(
     vertex_data: np.ndarray,
     attributes: list[tuple[int, int, int]],  # (location, size, offset)
     *,
-    element_data: Optional[np.ndarray] = None,
-    ebo_target: Optional[str] = None,
+    element_data: np.ndarray = None,
+    ebo_target: str = None,
     usage: GLUsageHint = GLUsageHint.STATIC_DRAW,
 ) -> None:
     """
@@ -102,8 +102,8 @@ def upload_geometry_buffers(
     stride = vertex_data.shape[1] * 4  # float32 = 4 bytes
 
     for location, size, offset in attributes:
-        gl_enable_vertex_array(location)
-        gl_vertex_attrib_pointer(
+        glEnableVertexAttribArray(location)
+        glVertexAttribPointer(
             location, size, GLNumeric.FLOAT, GLBoolean.FALSE, stride, ctypes.c_void_p(offset)
         )
 
@@ -138,6 +138,6 @@ def upload_vertex_buffer(vao: int, vbo: int, points: np.ndarray):
         data=points,
         usage_hint=GLUsageHint.STATIC_DRAW,
     )
-    gl_enable_vertex_array(0)
-    gl_vertex_attrib_pointer(index=0, size=3, num_type=GLNumeric.FLOAT, normalized=GLBoolean.FALSE, stride=0, offset=None)
+    glEnableVertexAttribArray(0)
+    glVertexAttribPointer(0, 3, GLNumeric.FLOAT, GLBoolean.FALSE, 0, None)
     gl_bind_vertex_array(0)

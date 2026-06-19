@@ -10,25 +10,36 @@ The class handles:
 - Creation and deletion of the EBO on the GPU.
 - Binding and unbinding of the buffer.
 - Storage of element/index data along with configuration parameters.
-- Uploading the data to the GPU with `glBufferData`.
+- Uploading the data to the GPU with :func:`picogl.wrappers.data.gl_buffer_data`.
 
 Example usage:
-==============
->>>ebo = ModernEBO(data=data)
-...bind()
-...ebo.set_element_attributes(indices, indices.nbytes)
-...ebo.configure()
-...ebo.unbind()
+
+.. code-block:: python
+
+    import numpy as np
+
+    from picogl.backend.modern.core.vertex.buffer.element import ModernEBO
+    from picogl.state.draw_mode import GLUsageHint
+
+    indices = np.array([0, 1, 2], dtype=np.uint32)
+    ebo = ModernEBO(data=indices)
+    with ebo:
+        ebo.set_element_attributes(
+            data=indices,
+            size=indices.nbytes,
+            dtype=GLUsageHint.STATIC_DRAW,
+        )
+        ebo.configure()
 """
 
 from typing import Optional
 
 import numpy as np
-from OpenGL.raw.GL.VERSION.GL_1_5 import glGenBuffers
 
 from picogl.backend.modern.core.vertex.base import VertexBuffer
 from picogl.state.draw_mode import GLBufferTarget, GLUsageHint
 from picogl.wrappers.data import gl_buffer_data
+from picogl.wrappers.generate_buffers import gl_generate_buffers
 
 
 class ModernEBO(VertexBuffer):
@@ -45,8 +56,10 @@ class ModernEBO(VertexBuffer):
     ):
         """ """
         if handle is None:
-            handle = glGenBuffers(1)
+            handle = gl_generate_buffers(1)
         super().__init__(handle=handle, size=size, data=data, target=target)
+        if data is not None:
+            self.size = data.nbytes
 
     def set_element_attributes(
         self, data: np.ndarray, size: int, dtype: int = GLUsageHint.STATIC_DRAW
@@ -69,9 +82,12 @@ class ModernEBO(VertexBuffer):
 
         :return: None
         """
+        if self.data is None:
+            raise ValueError("ModernEBO has no element data to upload")
+        byte_size = getattr(self, "size", None) or self.data.nbytes
         gl_buffer_data(
             target=GLBufferTarget.ELEMENT,
-            size=self.size,
+            size=byte_size,
             data=self.data,
             usage_hint=self.dtype,
         )
