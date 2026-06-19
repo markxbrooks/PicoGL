@@ -20,7 +20,9 @@ from picogl.buffers.attributes import LayoutDescriptor
 from picogl.buffers.base import VertexBase
 from picogl.buffers.glcleanup import delete_buffer_object
 from picogl.buffers.vertex.aliases import NAME_ALIASES, VertexBufferRole
-from picogl.buffers.vertex.helper import gl_draw_elements, gl_draw_arrays, gl_bind_buffer, gl_legacy_client_state
+from picogl.wrappers.draw import gl_draw_elements, gl_draw_arrays
+from picogl.wrappers.buffer import gl_bind_buffer
+from picogl.wrappers.client_state import gl_enable_legacy_client_state
 from picogl.buffers.vertex.vbo.vbo_class import VBOType
 from picogl.state.client import GLClientState
 from picogl.state.draw_mode import GLBufferTarget, GLDataType, GLDrawMode
@@ -35,14 +37,14 @@ class VertexBufferGroup(VertexBase):
         VertexBufferRole.CBO: (GLClientState.COLOR, "_color_pointer"),
     }
 
-    def __init__(self, draw_mode: int = GLDrawMode.LINE_STRIP):
+    def __init__(self, draw_mode: GLDrawMode = GLDrawMode.LINE_STRIP):
         super().__init__()
         self._index_count = None
         self.handle = 0  # compat shim, not a real VAO handle
         # self.vao = None  # compat shim, not a real VAO
         self.layout: Optional[LayoutDescriptor] = None
         self.named_vbos: dict[VertexBufferRole | str, LegacyVBO] = {}
-        self.draw_mode: int = draw_mode
+        self.draw_mode: GLDrawMode = draw_mode
         self.vbo_classes = {
             VBOAttrs.VBO: LegacyPositionVBO,
             VBOAttrs.CBO: LegacyColorVBO,
@@ -271,7 +273,7 @@ class VertexBufferGroup(VertexBase):
                     continue
 
                 state, fn_name = binding
-                gl_legacy_client_state(state)
+                gl_enable_legacy_client_state(state)
                 getattr(self, fn_name)(attr)
             self._bind_ebo()
 

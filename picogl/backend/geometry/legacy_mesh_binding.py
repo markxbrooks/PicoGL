@@ -1,21 +1,16 @@
-"""Sticky client-array binding for legacy immediate-mode meshes."""
+"""
+Sticky client-array binding for legacy immediate-mode meshes.
+"""
 
 from __future__ import annotations
 
 from typing import Any
 
-from OpenGL.GL import (
-    glColorPointer,
-    glDisableClientState,
-    glEnableClientState,
-    glNormalPointer,
-    glTexCoordPointer,
-    glVertexPointer,
-)
-
-from picogl.numerical import GLNumeric
 from picogl.renderer.initializable import Bindable
+from picogl.renderer.meshdata import MeshData
 from picogl.state.client import GLClientState
+from picogl.wrappers.client_state import gl_disable_legacy_client_state, gl_enable_legacy_client_state
+from picogl.wrappers.pointer import gl_vertex_pointer, gl_normal_pointer, gl_color_pointer, gl_texcoord_pointer
 
 
 class LegacyClientMeshBinding(Bindable):
@@ -23,33 +18,36 @@ class LegacyClientMeshBinding(Bindable):
 
     def __init__(self, mesh: Any) -> None:
         super().__init__()
-        self._mesh = mesh
+        self._mesh: MeshData = mesh
 
     def _do_binding(self) -> None:
-        mesh = self._mesh
-        if mesh.vertices is not None:
-            glEnableClientState(GLClientState.VERTEX)
-            glVertexPointer(3, GLNumeric.FLOAT, 0, mesh.vertices)
+        m = self._mesh
+        if m.vertices is not None:
+            gl_enable_legacy_client_state(client_state=GLClientState.VERTEX)
+            gl_vertex_pointer(pointer=m.vertices)
 
-        if mesh.normals is not None:
-            glEnableClientState(GLClientState.NORMAL)
-            glNormalPointer(GLNumeric.FLOAT, 0, mesh.normals)
+        if m.normals is not None:
+            gl_enable_legacy_client_state(client_state=GLClientState.NORMAL)
+            gl_normal_pointer(m.normals)
 
-        if mesh.colors is not None:
-            glEnableClientState(GLClientState.COLOR)
-            glColorPointer(4, GLNumeric.FLOAT, 0, mesh.colors)
+        if m.colors is not None:
+            gl_enable_legacy_client_state(client_state=GLClientState.COLOR)
+            gl_color_pointer(pointer=m.colors)
 
-        if getattr(mesh, "texcoords", None) is not None:
-            glEnableClientState(GLClientState.TEXCOORD)
-            glTexCoordPointer(2, GLNumeric.FLOAT, 0, mesh.texcoords)
+        if getattr(m, "texcoords", None) is not None:
+            gl_enable_legacy_client_state(client_state=GLClientState.TEXCOORD)
+            gl_texcoord_pointer(pointer=m.texcoords)
 
     def _do_unbinding(self) -> None:
+        """do unbinding if mesh is unbinded."""
         mesh = self._mesh
         if getattr(mesh, "texcoords", None) is not None:
-            glDisableClientState(GLClientState.TEXCOORD)
+            gl_disable_legacy_client_state(GLClientState.TEXCOORD)
         if mesh.colors is not None:
-            glDisableClientState(GLClientState.COLOR)
+            gl_disable_legacy_client_state(GLClientState.COLOR)
         if mesh.normals is not None:
-            glDisableClientState(GLClientState.NORMAL)
+            gl_disable_legacy_client_state(GLClientState.NORMAL)
         if mesh.vertices is not None:
-            glDisableClientState(GLClientState.VERTEX)
+            gl_disable_legacy_client_state(GLClientState.VERTEX)
+
+
