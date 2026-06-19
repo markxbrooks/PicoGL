@@ -3,8 +3,7 @@ GL Draw Mode
 """
 
 from enum import IntEnum, IntFlag
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POINTS
-from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ARRAY_BUFFER
+
 from OpenGL.GL import (
     GL_COLOR_BUFFER_BIT,
     GL_DEPTH_BUFFER_BIT,
@@ -34,7 +33,8 @@ from OpenGL.GL import (
     GL_UNSIGNED_INT,
     GL_UNSIGNED_SHORT,
 )
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_CLIP_PLANE0, GL_CLIP_PLANE1
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_CLIP_PLANE0, GL_CLIP_PLANE1, GL_POINTS
+from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ARRAY_BUFFER
 
 
 class GLLegacyMatrixMode(IntEnum):
@@ -46,6 +46,7 @@ class GLLegacyMatrixMode(IntEnum):
 
 class GLLegacyClipPlane(IntEnum):
     """Clipping Mode"""
+
     CLIP_PLANE0 = GL_CLIP_PLANE0
     CLIP_PLANE1 = GL_CLIP_PLANE1
 

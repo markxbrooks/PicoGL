@@ -389,12 +389,8 @@ class ShaderManager:
                     load_shader_source_string(str(frag_path)),
                 )
         return (
-            load_shader_source_string(
-                "fallback_vertex.glsl", SHADER_SRC_DIRECTORY
-            ),
-            load_shader_source_string(
-                "fallback_fragment.glsl", SHADER_SRC_DIRECTORY
-            ),
+            load_shader_source_string("fallback_vertex.glsl", SHADER_SRC_DIRECTORY),
+            load_shader_source_string("fallback_fragment.glsl", SHADER_SRC_DIRECTORY),
         )
 
     def _ensure_fallback(self):

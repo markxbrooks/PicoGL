@@ -46,6 +46,7 @@ Usage Example:
 
 import ctypes
 from typing import Optional
+
 import numpy as np
 
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
@@ -97,14 +98,24 @@ def upload_geometry_buffers(
 
     gl_bind_vertex_array(vao)
     gl_bind_buffer(GLBufferTarget.ARRAY, vbo)
-    gl_buffer_data(target=GLBufferTarget.ARRAY, size=vertex_data.nbytes, data=vertex_data, usage_hint=usage)
+    gl_buffer_data(
+        target=GLBufferTarget.ARRAY,
+        size=vertex_data.nbytes,
+        data=vertex_data,
+        usage_hint=usage,
+    )
 
     stride = vertex_data.shape[1] * 4  # float32 = 4 bytes
 
     for location, size, offset in attributes:
         gl_enable_vertex_array(location)
         gl_vertex_attrib_pointer(
-            location, size, GLNumeric.FLOAT, GLBoolean.FALSE, stride, ctypes.c_void_p(offset)
+            location,
+            size,
+            GLNumeric.FLOAT,
+            GLBoolean.FALSE,
+            stride,
+            ctypes.c_void_p(offset),
         )
 
     if element_data is not None and ebo_target is not None:
@@ -139,5 +150,12 @@ def upload_vertex_buffer(vao: int, vbo: int, points: np.ndarray):
         usage_hint=GLUsageHint.STATIC_DRAW,
     )
     gl_enable_vertex_array(0)
-    gl_vertex_attrib_pointer(index=0, size=3, num_type=GLNumeric.FLOAT, normalized=GLBoolean.FALSE, stride=0, offset=None)
+    gl_vertex_attrib_pointer(
+        index=0,
+        size=3,
+        num_type=GLNumeric.FLOAT,
+        normalized=GLBoolean.FALSE,
+        stride=0,
+        offset=None,
+    )
     gl_bind_vertex_array(0)

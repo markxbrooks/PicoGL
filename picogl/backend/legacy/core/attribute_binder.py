@@ -1,5 +1,5 @@
-from picogl.state.draw_mode import GLDataType
 from picogl.state.client import GLClientState
+from picogl.state.draw_mode import GLDataType
 from picogl.wrappers.client_state import (
     gl_disable_legacy_client_state,
     gl_enable_legacy_client_state,

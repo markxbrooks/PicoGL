@@ -24,4 +24,3 @@ class GLCapabilityDriver:
 
     def enable_multisample(self):
         self.enable(GL_MULTISAMPLE)
-

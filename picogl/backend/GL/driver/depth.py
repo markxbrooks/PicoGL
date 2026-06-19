@@ -1,16 +1,16 @@
 from typing import TYPE_CHECKING, Any
 
 from OpenGL.GL import (
+    GL_DEPTH_WRITEMASK,
     GL_LESS,
     glDepthFunc,
     glDepthMask,
     glGetBooleanv,
-    GL_DEPTH_WRITEMASK,
 )
 
+from picogl.backend.capability import GLPipelineCapability
 from picogl.backend.GL.driver.applyable import Applyable
 from picogl.backend.GL.driver.capability import GLCapabilityDriver
-from picogl.backend.capability import GLPipelineCapability
 
 if TYPE_CHECKING:
     from picogl.backend.state import DepthState

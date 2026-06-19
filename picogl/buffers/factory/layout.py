@@ -2,7 +2,11 @@
 Create layouts for VOAs and VBGs
 """
 
-from picogl.buffers.attributes import AttributeSpec, LayoutDescriptor, legacy_attribute_spec
+from picogl.buffers.attributes import (
+    AttributeSpec,
+    LayoutDescriptor,
+    legacy_attribute_spec,
+)
 from picogl.buffers.vertex.aliases import VertexBufferRole
 from picogl.state.draw_mode import GLDataType
 

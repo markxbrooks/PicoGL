@@ -109,13 +109,23 @@ class Tu01Win(GLWindow):
         gl_enable_vertex_array(0)
         gl_bind_buffer(GLBufferTarget.ARRAY, self.context.vertexbuffer)
         gl_vertex_attrib_pointer(
-            index=0, size=3, num_type=GLNumeric.FLOAT, normalized=GLBoolean.FALSE, stride=0, offset=None
+            index=0,
+            size=3,
+            num_type=GLNumeric.FLOAT,
+            normalized=GLBoolean.FALSE,
+            stride=0,
+            offset=None,
         )
 
         gl_enable_vertex_array(1)
         gl_bind_buffer(GLBufferTarget.ARRAY, self.context.colorbuffer)
         gl_vertex_attrib_pointer(
-            index=1, size=3, num_type=GLNumeric.FLOAT, normalized=GLBoolean.FALSE, stride=0, offset=None
+            index=1,
+            size=3,
+            num_type=GLNumeric.FLOAT,
+            normalized=GLBoolean.FALSE,
+            stride=0,
+            offset=None,
         )
 
         gl_draw_arrays(12 * 3, GL_TRIANGLES, first=0)

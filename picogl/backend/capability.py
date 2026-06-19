@@ -5,6 +5,8 @@ from typing import Sequence
 from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_BACK,
     GL_BLEND,
+    GL_BLEND_DST,
+    GL_BLEND_SRC,
     GL_CULL_FACE,
     GL_DEPTH_TEST,
     GL_FRONT,
@@ -14,7 +16,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_ONE,
     GL_ONE_MINUS_SRC_ALPHA,
     GL_SRC_ALPHA,
-    GL_ZERO, GL_BLEND_SRC, GL_BLEND_DST
+    GL_ZERO,
 )
 
 
@@ -35,6 +37,7 @@ class GLFixedFunctionCapability(IntEnum):
 
 class GLBlendTarget(IntEnum):
     """GL Blend Dest"""
+
     BLEND_SRC = GL_BLEND_SRC
     BLEND_DST = GL_BLEND_DST
 

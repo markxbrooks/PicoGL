@@ -236,16 +236,22 @@ class MeshData:
     def bind(self):
         if self.vertices is not None:
             gl_enable_legacy_client_state(GLClientState.VERTEX)
-            gl_vertex_array_pointer(pointer=self.vertices, size=3, num_type=GLDataType.FLOAT)
+            gl_vertex_array_pointer(
+                pointer=self.vertices, size=3, num_type=GLDataType.FLOAT
+            )
         if self.normals is not None:
             gl_enable_legacy_client_state(GLClientState.NORMAL)
             gl_normal_array_pointer(pointer=self.normals, num_type=GLDataType.FLOAT)
         if self.colors is not None:
             gl_enable_legacy_client_state(GLClientState.COLOR)
-            gl_color_array_pointer(pointer=self.colors, size=3, num_type=GLDataType.FLOAT)
+            gl_color_array_pointer(
+                pointer=self.colors, size=3, num_type=GLDataType.FLOAT
+            )
         if self.texcoords is not None:
             gl_enable_legacy_client_state(GLClientState.TEXCOORD)
-            gl_texcoord_array_pointer(pointer=self.texcoords, size=2, num_type=GLDataType.FLOAT)
+            gl_texcoord_array_pointer(
+                pointer=self.texcoords, size=2, num_type=GLDataType.FLOAT
+            )
 
     def unbind(self):
         if self.texcoords is not None:
@@ -397,7 +403,9 @@ class MeshData:
         if color is None and self.colors is not None:
             # Use vertex colors (for fo-fc maps)
             gl_enable_legacy_client_state(GLClientState.COLOR)
-            gl_color_array_pointer(pointer=self.colors, size=3, num_type=GLDataType.FLOAT)
+            gl_color_array_pointer(
+                pointer=self.colors, size=3, num_type=GLDataType.FLOAT
+            )
             # Note: Alpha blending for vertex colors would require 4-component colors
             # For now, we'll use the alpha value for the overall transparency
         else:

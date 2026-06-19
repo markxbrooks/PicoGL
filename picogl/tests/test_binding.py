@@ -27,9 +27,15 @@ class TestLegacyBinding(unittest.TestCase):
             patch(
                 "picogl.backend.geometry.legacy_mesh_binding.gl_enable_legacy_client_state"
             ) as enable,
-            patch("picogl.backend.geometry.legacy_mesh_binding.gl_vertex_array_pointer"),
-            patch("picogl.backend.geometry.legacy_mesh_binding.gl_texcoord_array_pointer") as texcoord_pointer,
-            patch("picogl.backend.geometry.legacy_mesh_binding.gl_color_array_pointer") as color_pointer,
+            patch(
+                "picogl.backend.geometry.legacy_mesh_binding.gl_vertex_array_pointer"
+            ),
+            patch(
+                "picogl.backend.geometry.legacy_mesh_binding.gl_texcoord_array_pointer"
+            ) as texcoord_pointer,
+            patch(
+                "picogl.backend.geometry.legacy_mesh_binding.gl_color_array_pointer"
+            ) as color_pointer,
         ):
             binding.bind_mesh(mesh)
 
@@ -56,10 +62,16 @@ class TestLegacyBinding(unittest.TestCase):
             patch(
                 "picogl.backend.geometry.legacy_mesh_binding.gl_enable_legacy_client_state"
             ) as enable,
-            patch("picogl.backend.geometry.legacy_mesh_binding.gl_vertex_array_pointer"),
-            patch("picogl.backend.geometry.legacy_mesh_binding.gl_normal_array_pointer"),
+            patch(
+                "picogl.backend.geometry.legacy_mesh_binding.gl_vertex_array_pointer"
+            ),
+            patch(
+                "picogl.backend.geometry.legacy_mesh_binding.gl_normal_array_pointer"
+            ),
             patch("picogl.backend.geometry.legacy_mesh_binding.gl_color_array_pointer"),
-            patch("picogl.backend.geometry.legacy_mesh_binding.gl_texcoord_array_pointer"),
+            patch(
+                "picogl.backend.geometry.legacy_mesh_binding.gl_texcoord_array_pointer"
+            ),
         ):
             binding.bind_mesh(mesh)
 
@@ -78,7 +90,9 @@ class TestLegacyBinding(unittest.TestCase):
         mesh = SimpleNamespace(indices=[0, 1, 2])
         binding._last_gpu_mesh = LegacyMesh(mesh)
 
-        with patch("picogl.backend.geometry.legacy_mesh.gl_draw_elements") as draw_elements:
+        with patch(
+            "picogl.backend.geometry.legacy_mesh.gl_draw_elements"
+        ) as draw_elements:
             binding.draw(mesh, GL_TRIANGLES)
 
         draw_elements.assert_called_once_with(
@@ -91,7 +105,9 @@ class TestModernBinding(unittest.TestCase):
         binding = ModernBinding()
         mesh = SimpleNamespace(ebo=42, index_count=9)
 
-        with patch("picogl.backend.geometry.modern_mesh.gl_draw_elements") as draw_elements:
+        with patch(
+            "picogl.backend.geometry.modern_mesh.gl_draw_elements"
+        ) as draw_elements:
             binding.bind_mesh(mesh)
             binding.draw(mesh, GL_TRIANGLES)
 

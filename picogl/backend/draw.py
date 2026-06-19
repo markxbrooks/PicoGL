@@ -5,6 +5,7 @@ draw legacy bond vao
 from contextlib import contextmanager
 
 from decologr import Decologr as log
+
 from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
 from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
 from picogl.buffers.vertex.legacy import VertexBufferGroup

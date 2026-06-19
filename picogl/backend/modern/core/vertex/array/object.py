@@ -42,11 +42,6 @@ from decologr import Decologr as log
 from elmo.log.silence import SILENT_VAO
 from OpenGL.GL import glBufferSubData, glDeleteVertexArrays, glGenVertexArrays
 from OpenGL.raw.GL.VERSION.GL_3_0 import glIsVertexArray
-from picogl.wrappers.draw import gl_draw_arrays, gl_draw_elements
-from picogl.wrappers.buffer import gl_bind_buffer
-from picogl.wrappers.enable_vertex_array import gl_enable_vertex_array
-from picogl.wrappers.vertex_array import gl_bind_vertex_array
-from picogl.wrappers.vertex_attrib_pointer import gl_vertex_attrib_pointer
 from PySide6.QtGui import QOpenGLContext
 
 from picogl.backend.modern.core.vertex.array.helpers import (
@@ -68,6 +63,11 @@ from picogl.state.draw_mode import (
     GLIndexType,
     GLUsageHint,
 )
+from picogl.wrappers.buffer import gl_bind_buffer
+from picogl.wrappers.draw import gl_draw_arrays, gl_draw_elements
+from picogl.wrappers.enable_vertex_array import gl_enable_vertex_array
+from picogl.wrappers.vertex_array import gl_bind_vertex_array
+from picogl.wrappers.vertex_attrib_pointer import gl_vertex_attrib_pointer
 
 
 def current_gl_context() -> int:

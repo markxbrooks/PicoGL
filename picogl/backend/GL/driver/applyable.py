@@ -2,6 +2,7 @@
 Applyable State
 """
 
+
 class Applyable:
     """Applyable State"""
 

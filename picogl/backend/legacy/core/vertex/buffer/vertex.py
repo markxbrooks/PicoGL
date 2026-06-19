@@ -8,11 +8,7 @@ import numpy as np
 from OpenGL.raw.GL.VERSION.GL_1_5 import glBufferSubData
 
 from picogl.backend.modern.core.vertex.base import VertexBuffer
-from picogl.state.draw_mode import (
-    GLBufferTarget,
-    GLDataType,
-    GLUsageHint,
-)
+from picogl.state.draw_mode import GLBufferTarget, GLDataType, GLUsageHint
 from picogl.wrappers.data import gl_buffer_data
 from picogl.wrappers.generate_buffers import gl_generate_buffers
 
@@ -128,4 +124,3 @@ class LegacyVBO(VertexBuffer):
     def configure(self):
         """Configure the buffer (default implementation does nothing)."""
         pass
-

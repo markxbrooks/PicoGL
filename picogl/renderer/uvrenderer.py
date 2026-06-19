@@ -14,17 +14,18 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_UNSIGNED_SHORT,
     glPolygonMode,
 )
+from OpenGL.raw.GL.VERSION.GL_2_0 import glDisableVertexAttribArray
+
+from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.boolean import GLBoolean
 from picogl.numerical import GLNumeric
-from picogl.state.draw_mode import GLBufferTarget
-from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.renderer import RendererBase
 from picogl.renderer.initializable import Initializable
+from picogl.state.draw_mode import GLBufferTarget
 from picogl.wrappers.buffer import gl_bind_buffer
 from picogl.wrappers.draw import gl_draw_elements
 from picogl.wrappers.enable_vertex_array import gl_enable_vertex_array
 from picogl.wrappers.vertex_attrib_pointer import gl_vertex_attrib_pointer
-from OpenGL.raw.GL.VERSION.GL_2_0 import glDisableVertexAttribArray
 
 
 class UvRenderer(Initializable, RendererBase):

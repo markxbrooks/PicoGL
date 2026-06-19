@@ -6,10 +6,10 @@ from typing import TYPE_CHECKING
 
 from OpenGL.GL import glBlendFunc, glGetIntegerv
 
+from picogl.backend.capability import GLBlendFactor, GLBlendTarget, GLPipelineCapability
 from picogl.backend.GL.driver.applyable import Applyable
 from picogl.backend.GL.driver.capability import GLCapabilityDriver
-from picogl.backend.capability import GLBlendTarget, GLBlendFactor, GLPipelineCapability
-from picogl.backend.state import gl_value, BlendState
+from picogl.backend.state import BlendState, gl_value
 
 if TYPE_CHECKING:
     from picogl.backend.state import BlendState

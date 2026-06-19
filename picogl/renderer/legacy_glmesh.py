@@ -6,10 +6,10 @@ import numpy as np
 from picogl.attrs.vertex import CanonicalVertexAttrs
 from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
 from picogl.buffers.attributes import AttributeSpec, legacy_attribute_spec
-from picogl.buffers.vertex.aliases import VertexBufferRole
 from picogl.buffers.factory.layout import create_layout
 from picogl.buffers.glcleanup import delete_buffer_object
 from picogl.buffers.helper import as_vec3_array
+from picogl.buffers.vertex.aliases import VertexBufferRole
 from picogl.buffers.vertex.legacy import VertexBufferGroup
 from picogl.buffers.vertex.vbo.vbo_class import MeshDataAttrs, VBOType
 from picogl.numerical import GLNumeric

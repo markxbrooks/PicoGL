@@ -97,14 +97,24 @@ def upload_geometry_buffers(
 
     gl_bind_vertex_array(vao)
     gl_bind_buffer(GLBufferTarget.ARRAY, vbo)
-    gl_buffer_data(target=GLBufferTarget.ARRAY, size=vertex_data.nbytes, data=vertex_data, usage_hint=usage)
+    gl_buffer_data(
+        target=GLBufferTarget.ARRAY,
+        size=vertex_data.nbytes,
+        data=vertex_data,
+        usage_hint=usage,
+    )
 
     stride = vertex_data.shape[1] * 4  # float32 = 4 bytes
 
     for location, size, offset in attributes:
         glEnableVertexAttribArray(location)
         glVertexAttribPointer(
-            location, size, GLNumeric.FLOAT, GLBoolean.FALSE, stride, ctypes.c_void_p(offset)
+            location,
+            size,
+            GLNumeric.FLOAT,
+            GLBoolean.FALSE,
+            stride,
+            ctypes.c_void_p(offset),
         )
 
     if element_data is not None and ebo_target is not None:

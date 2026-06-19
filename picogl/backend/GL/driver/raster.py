@@ -4,6 +4,7 @@ GLRaster Driver
 Cached write-only raster state. Imperative setters implement GL calls;
 `apply(RasterState)` diffs frozen snapshots and is the preferred API.
 """
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Optional
@@ -18,7 +19,7 @@ from OpenGL.GL import (
 from OpenGL.raw.GL.VERSION.GL_1_1 import glPolygonOffset
 
 from picogl.backend.GL.driver.applyable import Applyable
-from picogl.backend.state import gl_value, RasterState
+from picogl.backend.state import RasterState, gl_value
 from picogl.state.fill import GLFace, GLFillMode
 
 if TYPE_CHECKING:
@@ -53,10 +54,10 @@ class GLRasterDriver(Applyable):
 
     def _is_same(self, old, new) -> bool:
         return (
-                old.line_width == new.line_width and
-                old.polygon_mode == new.polygon_mode and
-                old.polygon_offset == new.polygon_offset and
-                old.point_size == new.point_size
+            old.line_width == new.line_width
+            and old.polygon_mode == new.polygon_mode
+            and old.polygon_offset == new.polygon_offset
+            and old.point_size == new.point_size
         )
 
     def __init__(self):
@@ -148,7 +149,7 @@ class GLRasterDriver(Applyable):
             self.set_polygon_offset(*state.polygon_offset)
 
         if state.point_size is not None and (
-                prev is None or prev.point_size != state.point_size
+            prev is None or prev.point_size != state.point_size
         ):
             self.set_point_size(state.point_size)
 

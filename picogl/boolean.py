@@ -5,6 +5,7 @@ Numerical GL Values
 from enum import IntEnum
 
 from OpenGL.raw.GL._types import GL_FALSE, GL_TRUE
+
 _SUPPORTED_BOOLEAN_TYPES = {
     GL_FALSE,
     GL_TRUE,

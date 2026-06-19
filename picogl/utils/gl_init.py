@@ -37,7 +37,9 @@ def set_clear_color_only(
     backend.frame.set_clear_color(color)
 
 
-def clear_to_color(backend: GLBackend, color: tuple[float, float, float, float]) -> None:
+def clear_to_color(
+    backend: GLBackend, color: tuple[float, float, float, float]
+) -> None:
     """Apply a clear color and clear the color/depth buffers."""
     bind_default_framebuffer()
     backend.frame.set_clear_color(color)

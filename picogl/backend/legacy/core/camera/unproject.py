@@ -18,6 +18,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     glIsEnabled,
     glReadPixels,
 )
+
 from picogl.backend.capability import GLPipelineCapability
 
 

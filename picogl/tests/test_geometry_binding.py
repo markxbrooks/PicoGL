@@ -7,11 +7,11 @@ from unittest.mock import MagicMock, patch
 import numpy as np
 from OpenGL.raw.GL.VERSION.GL_1_1 import GL_TRIANGLES
 
-from picogl.backend.GL.driver.geometry import GLGeometryDriver
 from picogl.backend.geometry.adapter import DrawableBufferAdapter
 from picogl.backend.geometry.factory import LegacyBinding, ModernBinding
 from picogl.backend.geometry.legacy_mesh import LegacyMesh
 from picogl.backend.geometry.modern_mesh import ModernMesh
+from picogl.backend.GL.driver.geometry import GLGeometryDriver
 from picogl.renderer.meshdata import MeshData
 
 
@@ -39,7 +39,9 @@ class TestLegacyMesh(unittest.TestCase):
             patch(
                 "picogl.backend.geometry.legacy_mesh_binding.gl_enable_legacy_client_state"
             ) as enable,
-            patch("picogl.backend.geometry.legacy_mesh_binding.gl_vertex_array_pointer"),
+            patch(
+                "picogl.backend.geometry.legacy_mesh_binding.gl_vertex_array_pointer"
+            ),
         ):
             gpu.bind()
 

@@ -2,6 +2,7 @@
 Legacy Position VBO
 
 """
+
 import ctypes
 
 import numpy as np

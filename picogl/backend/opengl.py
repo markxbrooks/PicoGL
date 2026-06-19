@@ -10,8 +10,8 @@ Classes:
                various methods for rendering and managing rendering states.
 """
 
-from abc import ABC, abstractmethod
 import warnings
+from abc import ABC, abstractmethod
 from typing import Any, Protocol, runtime_checkable
 
 from picogl.backend.geometry.factory import (

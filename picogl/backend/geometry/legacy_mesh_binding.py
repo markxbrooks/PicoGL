@@ -9,8 +9,16 @@ from typing import Any
 from picogl.renderer.initializable import Bindable
 from picogl.renderer.meshdata import MeshData
 from picogl.state.client import GLClientState
-from picogl.wrappers.client_state import gl_disable_legacy_client_state, gl_enable_legacy_client_state
-from picogl.wrappers.pointer import gl_vertex_array_pointer, gl_normal_array_pointer, gl_color_array_pointer, gl_texcoord_array_pointer
+from picogl.wrappers.client_state import (
+    gl_disable_legacy_client_state,
+    gl_enable_legacy_client_state,
+)
+from picogl.wrappers.pointer import (
+    gl_color_array_pointer,
+    gl_normal_array_pointer,
+    gl_texcoord_array_pointer,
+    gl_vertex_array_pointer,
+)
 
 
 class LegacyClientMeshBinding(Bindable):
@@ -49,5 +57,3 @@ class LegacyClientMeshBinding(Bindable):
             gl_disable_legacy_client_state(GLClientState.NORMAL)
         if mesh.vertices is not None:
             gl_disable_legacy_client_state(GLClientState.VERTEX)
-
-

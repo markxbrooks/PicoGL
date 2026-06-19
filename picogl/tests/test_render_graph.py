@@ -64,7 +64,9 @@ class TestRenderGraph(unittest.TestCase):
             RenderPass("first", RenderState(), execute_fn=lambda: calls.append("first"))
         )
         pipeline.add(
-            RenderPass("second", RenderState(), execute_fn=lambda: calls.append("second"))
+            RenderPass(
+                "second", RenderState(), execute_fn=lambda: calls.append("second")
+            )
         )
         pipeline.execute(backend)
 
@@ -77,7 +79,11 @@ class TestRenderGraph(unittest.TestCase):
 
         graph = RenderGraph()
         graph.add(
-            RenderPass("draw", RenderState(depth_test=True), execute_fn=lambda: calls.append("draw"))
+            RenderPass(
+                "draw",
+                RenderState(depth_test=True),
+                execute_fn=lambda: calls.append("draw"),
+            )
         )
 
         RenderGraphExecutor(backend).execute(graph)

@@ -7,8 +7,8 @@ Legacy backend (no real GL VAO support)
 from typing import Any, Optional
 
 import numpy as np
-
 from decologr import Decologr as log
+
 from picogl.attrs.model import VBOAttrs
 from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
 from picogl.backend.legacy.core.vertex.buffer.color import LegacyColorVBO
@@ -20,12 +20,12 @@ from picogl.buffers.attributes import LayoutDescriptor
 from picogl.buffers.base import VertexBase
 from picogl.buffers.glcleanup import delete_buffer_object
 from picogl.buffers.vertex.aliases import NAME_ALIASES, VertexBufferRole
-from picogl.wrappers.draw import gl_draw_elements, gl_draw_arrays
-from picogl.wrappers.buffer import gl_bind_buffer
-from picogl.wrappers.client_state import gl_enable_legacy_client_state
 from picogl.buffers.vertex.vbo.vbo_class import VBOType
 from picogl.state.client import GLClientState
 from picogl.state.draw_mode import GLBufferTarget, GLDataType, GLDrawMode
+from picogl.wrappers.buffer import gl_bind_buffer
+from picogl.wrappers.client_state import gl_enable_legacy_client_state
+from picogl.wrappers.draw import gl_draw_arrays, gl_draw_elements
 
 
 class VertexBufferGroup(VertexBase):
@@ -91,7 +91,7 @@ class VertexBufferGroup(VertexBase):
         self._set_named_vbo(VertexBufferRole.EBO, value)
 
     def _set_named_vbo(
-            self, role: VertexBufferRole, value: Optional[LegacyVBO | int]
+        self, role: VertexBufferRole, value: Optional[LegacyVBO | int]
     ) -> None:
         if value is None:
             self.named_vbos.pop(role, None)
@@ -157,12 +157,12 @@ class VertexBufferGroup(VertexBase):
                 gl_draw_arrays(index_count=index_count, mode=mode)
 
     def add_vbo(
-            self,
-            name: str,
-            data: np.ndarray,
-            size: int = 3,
-            dtype: int = GLDataType.FLOAT,
-            handle: int | None = None,
+        self,
+        name: str,
+        data: np.ndarray,
+        size: int = 3,
+        dtype: int = GLDataType.FLOAT,
+        handle: int | None = None,
     ) -> Any:
         """Create and register a VBO with explicit parameters."""
         vbo_class = self.get_buffer_class(name)

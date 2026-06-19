@@ -1,9 +1,5 @@
-from OpenGL.raw.GL.VERSION.GL_1_0 import (
-    GL_LESS,
-    glClearColor,
-    glDepthFunc,
-    glEnable,
-)
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_LESS, glClearColor, glDepthFunc, glEnable
+
 from picogl.backend.capability import GLPipelineCapability
 
 

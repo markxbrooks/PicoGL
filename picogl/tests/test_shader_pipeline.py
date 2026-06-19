@@ -4,8 +4,8 @@ import unittest
 import warnings
 from unittest.mock import MagicMock, patch
 
-from picogl.backend.GL.backend import GLBackend
 from picogl.backend.geometry.factory import LegacyBinding
+from picogl.backend.GL.backend import GLBackend
 from picogl.backend.legacy.core.pipeline import GLLegacyPipeline, LegacyPipeline
 from picogl.backend.modern.core.pipeline import ShaderPipeline
 
@@ -29,7 +29,9 @@ class TestShaderPipeline(unittest.TestCase):
         program.bind.assert_called_once()
 
     def test_unbind_calls_gl_use_program_zero(self):
-        with patch("picogl.backend.modern.core.pipeline.shader_pipeline.glUseProgram") as use:
+        with patch(
+            "picogl.backend.modern.core.pipeline.shader_pipeline.glUseProgram"
+        ) as use:
             pipeline = ShaderPipeline(MagicMock())
             pipeline.bind()
             pipeline.unbind()
@@ -37,7 +39,9 @@ class TestShaderPipeline(unittest.TestCase):
         use.assert_called_once_with(0)
 
     def test_unbind_without_bind_is_no_op(self):
-        with patch("picogl.backend.modern.core.pipeline.shader_pipeline.glUseProgram") as use:
+        with patch(
+            "picogl.backend.modern.core.pipeline.shader_pipeline.glUseProgram"
+        ) as use:
             ShaderPipeline(MagicMock()).unbind()
 
         use.assert_not_called()

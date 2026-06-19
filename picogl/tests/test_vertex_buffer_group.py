@@ -34,7 +34,6 @@ import unittest
 from unittest.mock import MagicMock, call, patch
 
 import numpy as np
-from picogl.buffers.vertex.vbo.vbo_class import VBOType
 from OpenGL.raw.GL._types import GL_FLOAT, GL_UNSIGNED_INT
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POINTS, GL_TRIANGLES
 from OpenGL.raw.GL.VERSION.GL_1_1 import (
@@ -47,6 +46,7 @@ from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFE
 from picogl.buffers.attributes import AttributeSpec, LayoutDescriptor
 from picogl.buffers.vertex.aliases import VertexBufferRole
 from picogl.buffers.vertex.legacy import VertexBufferGroup
+from picogl.buffers.vertex.vbo.vbo_class import VBOType
 from picogl.state.draw_mode import GLDrawMode
 
 
@@ -279,9 +279,7 @@ class TestVertexBufferGroup(unittest.TestCase):
         )
 
         # Test unknown buffer type (should return default)
-        self.assertEqual(
-            vbg.get_buffer_class("unknown"), vbg.vbo_classes[VBOType.VBO]
-        )
+        self.assertEqual(vbg.get_buffer_class("unknown"), vbg.vbo_classes[VBOType.VBO])
 
     def test_draw_with_arrays(self):
         """Test draw method with vertex arrays."""
@@ -626,7 +624,9 @@ class TestVertexBufferGroup(unittest.TestCase):
         )
         vbg.layout = LayoutDescriptor(attributes=[attr_spec])
 
-        with patch("picogl.buffers.vertex.legacy.glVertexPointer") as mock_vertex_pointer, patch(
+        with patch(
+            "picogl.buffers.vertex.legacy.glVertexPointer"
+        ) as mock_vertex_pointer, patch(
             "picogl.buffers.vertex.legacy.glEnableClientState"
         ) as mock_enable_state:
             vbg.bind()
@@ -683,9 +683,13 @@ class TestVertexBufferGroup(unittest.TestCase):
             ]
         )
 
-        with patch("picogl.buffers.vertex.legacy.glColorPointer") as mock_color_pointer, patch(
+        with patch(
+            "picogl.buffers.vertex.legacy.glColorPointer"
+        ) as mock_color_pointer, patch(
             "picogl.buffers.vertex.legacy.glEnableClientState"
-        ), patch("picogl.buffers.vertex.legacy.glBindBuffer"):
+        ), patch(
+            "picogl.buffers.vertex.legacy.glBindBuffer"
+        ):
             vbg.bind()
             mock_color_pointer.assert_called_once()
 
@@ -711,9 +715,13 @@ class TestVertexBufferGroup(unittest.TestCase):
             ]
         )
 
-        with patch("picogl.buffers.vertex.legacy.glColorPointer") as mock_color_pointer, patch(
+        with patch(
+            "picogl.buffers.vertex.legacy.glColorPointer"
+        ) as mock_color_pointer, patch(
             "picogl.buffers.vertex.legacy.glEnableClientState"
-        ), patch("picogl.buffers.vertex.legacy.glBindBuffer"):
+        ), patch(
+            "picogl.buffers.vertex.legacy.glBindBuffer"
+        ):
             vbg.bind()
             mock_color_pointer.assert_called_once()
 

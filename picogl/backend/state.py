@@ -10,10 +10,7 @@ from enum import Enum
 from typing import Any, Protocol
 
 from numpy import ndarray
-from OpenGL.GL import (
-    glBlendFunc,
-    glViewport,
-)
+from OpenGL.GL import glBlendFunc, glViewport
 from OpenGL.raw.GL.VERSION.GL_1_1 import (
     GL_COLOR_ARRAY,
     GL_NORMAL_ARRAY,
@@ -29,7 +26,7 @@ from picogl.backend.capability import (
     GLPipelineCapability,
 )
 from picogl.state.draw_mode import GLDataType, GLDrawMode, GLIndexType
-from picogl.state.fill import GLFace, GLCapability, GLFillMode
+from picogl.state.fill import GLCapability, GLFace, GLFillMode
 from picogl.texture.gltexture import GLTextureDriver
 from picogl.wrappers.client_state import gl_enable_legacy_client_state
 from picogl.wrappers.draw import gl_draw_elements
@@ -297,13 +294,15 @@ class RenderStateApplier:
                 True,
             )
 
-        if state.program_point_size and (
-            prev is None or not prev.program_point_size
-        ):
+        if state.program_point_size and (prev is None or not prev.program_point_size):
             from OpenGL.GL import GL_PROGRAM_POINT_SIZE
 
             self.backend.capabilities.enable(GL_PROGRAM_POINT_SIZE)
-        elif prev is not None and prev.program_point_size and not state.program_point_size:
+        elif (
+            prev is not None
+            and prev.program_point_size
+            and not state.program_point_size
+        ):
             from OpenGL.GL import GL_PROGRAM_POINT_SIZE
 
             self.backend.capabilities.disable(GL_PROGRAM_POINT_SIZE)

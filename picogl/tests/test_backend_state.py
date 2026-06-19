@@ -22,9 +22,6 @@ from OpenGL.GL import (
     GL_VERTEX_ARRAY,
     GL_ZERO,
 )
-
-from picogl.state.client import GLClientState
-from picogl.state.fill import GLFace, GLLightParameter
 from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_AMBIENT,
     GL_DIFFUSE,
@@ -33,6 +30,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_SHININESS,
     GL_SPECULAR,
 )
+
 from picogl.backend.capability import (
     GLBlendFactor,
     GLFixedFunctionCapability,
@@ -46,10 +44,7 @@ from picogl.backend.GL.driver.capability import GLCapabilityDriver
 from picogl.backend.GL.driver.depth import GLDepthDriver
 from picogl.backend.GL.driver.frame import GLFrameDriver
 from picogl.backend.GL.driver.geometry import GLGeometryDriver
-from picogl.backend.GL.driver.raster import (
-    GLRasterDriver,
-    resolve_polygon_mode_args,
-)
+from picogl.backend.GL.driver.raster import GLRasterDriver, resolve_polygon_mode_args
 from picogl.backend.GL.driver.texture import GLTextureSystem
 from picogl.backend.legacy.core.attribute_binder import LegacyAttributeBinder
 from picogl.backend.legacy.core.pipeline import GLLegacyPipeline
@@ -64,6 +59,8 @@ from picogl.backend.state import (
     gl_value,
 )
 from picogl.polygon.mode import PolygonMode
+from picogl.state.client import GLClientState
+from picogl.state.fill import GLFace, GLLightParameter
 
 
 class _RecordingRaster:
@@ -207,7 +204,9 @@ class TestRenderState(unittest.TestCase):
         self.assertTrue(state.lighting)
         self.assertEqual(state.line_width, 2.5)
         self.assertEqual(state.polygon_mode, GL_LINE)
-        self.assertEqual(state.raster, RasterState(polygon_mode=GL_LINE, line_width=2.5))
+        self.assertEqual(
+            state.raster, RasterState(polygon_mode=GL_LINE, line_width=2.5)
+        )
         self.assertEqual(state.depth, DepthState(test=True, write=False))
 
     def test_default_constructor_stores_semantic_values(self):
@@ -550,7 +549,9 @@ class TestDrawCommand(unittest.TestCase):
 
         with (
             patch("picogl.backend.legacy.core.pipeline.glMatrixMode") as matrix_mode,
-            patch("picogl.backend.legacy.core.pipeline.glLoadIdentity") as load_identity,
+            patch(
+                "picogl.backend.legacy.core.pipeline.glLoadIdentity"
+            ) as load_identity,
             patch("picogl.backend.legacy.core.pipeline.gluPerspective") as perspective,
             patch("picogl.backend.legacy.core.pipeline.glTranslatef") as translate,
             patch("picogl.backend.legacy.core.pipeline.glLightfv") as lightfv,
@@ -574,7 +575,9 @@ class TestDrawCommand(unittest.TestCase):
             [
                 call(GLFace.FRONT_AND_BACK, GLLightParameter.AMBIENT, material.ambient),
                 call(GLFace.FRONT_AND_BACK, GLLightParameter.DIFFUSE, material.diffuse),
-                call(GLFace.FRONT_AND_BACK, GLLightParameter.SPECULAR, material.specular),
+                call(
+                    GLFace.FRONT_AND_BACK, GLLightParameter.SPECULAR, material.specular
+                ),
             ],
         )
         materialf.assert_called_once_with(
@@ -616,7 +619,9 @@ class TestDrawCommand(unittest.TestCase):
         mesh = object()
 
         with (
-            patch("picogl.backend.GL.driver.geometry.gl_draw_elements") as draw_elements,
+            patch(
+                "picogl.backend.GL.driver.geometry.gl_draw_elements"
+            ) as draw_elements,
             patch("picogl.backend.GL.driver.geometry.gl_draw_arrays") as draw_arrays,
             patch("picogl.backend.GL.driver.geometry.glBindVertexArray") as bind_vao,
         ):
@@ -671,15 +676,9 @@ class TestDrawCommand(unittest.TestCase):
             patch(
                 "picogl.wrappers.client_state.gl_enable_legacy_client_state"
             ) as enable_client,
-            patch(
-                "picogl.wrappers.pointer.gl_vertex_array_pointer"
-            ) as vertex_pointer,
-            patch(
-                "picogl.wrappers.pointer.gl_normal_array_pointer"
-            ) as normal_pointer,
-            patch(
-                "picogl.wrappers.pointer.gl_color_array_pointer"
-            ) as color_pointer,
+            patch("picogl.wrappers.pointer.gl_vertex_array_pointer") as vertex_pointer,
+            patch("picogl.wrappers.pointer.gl_normal_array_pointer") as normal_pointer,
+            patch("picogl.wrappers.pointer.gl_color_array_pointer") as color_pointer,
             patch(
                 "picogl.wrappers.pointer.gl_texcoord_array_pointer"
             ) as texcoord_pointer,
@@ -705,7 +704,9 @@ class TestDrawCommand(unittest.TestCase):
         vertex_pointer.assert_called_once_with(
             pointer=data, size=3, num_type=GL_FLOAT, stride=0
         )
-        normal_pointer.assert_called_once_with(pointer=data, num_type=GL_FLOAT, stride=0)
+        normal_pointer.assert_called_once_with(
+            pointer=data, num_type=GL_FLOAT, stride=0
+        )
         color_pointer.assert_called_once_with(
             pointer=data, size=4, num_type=GL_FLOAT, stride=0
         )
@@ -796,7 +797,9 @@ class TestDrawCommand(unittest.TestCase):
 
         with (
             patch("picogl.backend.GL.driver.frame.glViewport") as viewport,
-            patch("picogl.backend.legacy.core.pipeline.glLoadIdentity") as load_identity,
+            patch(
+                "picogl.backend.legacy.core.pipeline.glLoadIdentity"
+            ) as load_identity,
             patch("picogl.backend.legacy.core.pipeline.glTranslatef") as translate,
             patch("picogl.backend.legacy.core.pipeline.glLightfv") as lightfv,
             patch("picogl.backend.GL.driver.frame.glClearColor") as clear_color,
@@ -836,7 +839,9 @@ class TestDrawCommand(unittest.TestCase):
 
         with (
             patch("picogl.backend.legacy.core.pipeline.glMatrixMode") as matrix_mode,
-            patch("picogl.backend.legacy.core.pipeline.glLoadIdentity") as load_identity,
+            patch(
+                "picogl.backend.legacy.core.pipeline.glLoadIdentity"
+            ) as load_identity,
             patch("picogl.backend.legacy.core.pipeline.gluPerspective") as perspective,
         ):
             backend.legacy.set_projection(45.0, 1.5, 0.1, 1000.0)

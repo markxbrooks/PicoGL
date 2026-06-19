@@ -38,8 +38,8 @@ import numpy as np
 from OpenGL import error as _gl_err
 from OpenGL.raw.GL.VERSION.GL_1_5 import glBufferSubData, glIsBuffer
 
-from picogl.buffers.base import VertexBase
 from picogl.boolean import GLBoolean
+from picogl.buffers.base import VertexBase
 from picogl.state.draw_mode import GLBufferTarget, GLDataType, GLIndexType, GLUsageHint
 from picogl.wrappers.buffer import gl_bind_buffer
 from picogl.wrappers.data import gl_buffer_data
@@ -242,9 +242,9 @@ class VertexBuffer(VertexBase):
                 glBufferSubData(self.target, offset, data.nbytes, data)
             except _gl_err.GLError:
                 gl_buffer_data(
-                target=self.target,
-                size=data.nbytes,
-                data=data,
-                usage_hint=GLUsageHint.DYNAMIC_DRAW,
-            )
+                    target=self.target,
+                    size=data.nbytes,
+                    data=data,
+                    usage_hint=GLUsageHint.DYNAMIC_DRAW,
+                )
                 self.buffer_size = data.nbytes
