@@ -53,6 +53,24 @@ class TestShaderContext(unittest.TestCase):
         result = manager.use_shader_type(ShaderType.DEFAULT)
         self.assertFalse(result)
 
+    @patch("picogl.shaders.manager.gl_context_available", return_value=True)
+    def test_initialize_shaders_does_not_recurse_when_bind_fails(self, _avail):
+        manager = ShaderManager()
+
+        def _fake_load(shader_type, shader_number):
+            manager.shaders[shader_type] = ShaderProgram(shader_name=shader_type.value)
+
+        with patch.object(manager, "load_shader", side_effect=_fake_load):
+            with patch.object(
+                ShaderProgram,
+                "bind",
+                side_effect=RuntimeError("bind failed"),
+            ):
+                manager.initialize_shaders(shader_dir="/tmp")
+
+        self.assertFalse(manager._initialized)
+        self.assertFalse(manager._initializing)
+
 
 if __name__ == "__main__":
     unittest.main()

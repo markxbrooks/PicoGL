@@ -94,6 +94,7 @@ class ShaderManager:
     current_shader: Optional[ShaderProgram] = None
     current_shader_program: Optional[int] = None
     _initialized: bool = False
+    _initializing: bool = False
     shader_directory: str = ""
     fallback_shader_directory: str = ""
 
@@ -105,7 +106,7 @@ class ShaderManager:
         :return: None
         Bind the given shader shader_program and update current_shader/shader_program ID
         """
-        if not self._initialized:
+        if not self._initialized and not self._initializing:
             self.initialize_shaders()
         if not shader_program:
             log.error(
@@ -175,7 +176,7 @@ class ShaderManager:
 
         Returns True when the program is bound in the current GL context.
         """
-        if not self._initialized:
+        if not self._initialized and not self._initializing:
             self.initialize_shaders()
         shader = self.get_shader_type(shader_type)
         if not shader:
@@ -240,7 +241,7 @@ class ShaderManager:
         :return:
         Bind the default shader type.
         """
-        if not self._initialized:
+        if not self._initialized and not self._initializing:
             self.initialize_shaders()
         self.use_shader_type(
             shader_type=self.default_shader_type, mvp_matrix=mvp_matrix
@@ -276,48 +277,60 @@ class ShaderManager:
             )
             return
 
-        self.shader_directory = target_dir
-
-        failed = []
-        shader_pairs = list(enumerate(ShaderType))
-        n = len(shader_pairs)
-        for shader_number, shader_type in _progress_iter(
-            shader_pairs, desc="Shader programs", total=n
-        ):
-            log.message(
-                f"Loading shader type: '{shader_type.value} from {self.shader_directory}'",
-                silent=True,
-                scope="load_shader",
-            )
-            self.load_shader(shader_type, shader_number)
-            if on_shader_loaded is not None:
-                try:
-                    on_shader_loaded(shader_number, n, shader_type)
-                except Exception:
-                    pass
-            if self.shaders[shader_type] is self.fallback_shader:
-                failed.append(shader_type)
-
-        if failed:
-            log.warning(
-                f"⚠️ Shader fallback used for: {', '.join(st.value for st in failed)}",
-                scope="load_shader",
-            )
-
-        log.message(
-            "✅ Shader sources loaded (including fallback where needed).",
-            scope="load_shader",
-            silent=True,
-        )
-        self.use_default_shader()
-        if self.current_shader is None:
-            log.error(
-                "ShaderManager: default shader could not be bound; "
-                "modern rendering will stay disabled until GL init succeeds.",
-                scope="load_shader",
-            )
+        if self._initializing:
             return
-        self._initialized = True
+
+        self._initializing = True
+        try:
+            self.shader_directory = target_dir
+
+            failed = []
+            shader_pairs = list(enumerate(ShaderType))
+            n = len(shader_pairs)
+            for shader_number, shader_type in _progress_iter(
+                shader_pairs, desc="Shader programs", total=n
+            ):
+                log.message(
+                    f"Loading shader type: '{shader_type.value} from {self.shader_directory}'",
+                    silent=True,
+                    scope="load_shader",
+                )
+                self.load_shader(shader_type, shader_number)
+                if on_shader_loaded is not None:
+                    try:
+                        on_shader_loaded(shader_number, n, shader_type)
+                    except Exception:
+                        pass
+                if self.shaders[shader_type] is self.fallback_shader:
+                    failed.append(shader_type)
+
+            if failed:
+                log.warning(
+                    f"⚠️ Shader fallback used for: {', '.join(st.value for st in failed)}",
+                    scope="load_shader",
+                )
+
+            log.message(
+                "✅ Shader sources loaded (including fallback where needed).",
+                scope="load_shader",
+                silent=True,
+            )
+            default_shader = self.shaders.get(self.default_shader_type)
+            if default_shader is None:
+                default_shader = self.get_shader_type(self.default_shader_type)
+            if default_shader:
+                self.use_shader_program(default_shader)
+                if self.current_shader is default_shader:
+                    self.current_shader_type = self.default_shader_type
+                    self._initialized = True
+            if not self._initialized:
+                log.error(
+                    "ShaderManager: default shader could not be bound; "
+                    "modern rendering will stay disabled until GL init succeeds.",
+                    scope="load_shader",
+                )
+        finally:
+            self._initializing = False
 
     def load_shader(self, shader_type: str, shader_number: int) -> None:
         """
