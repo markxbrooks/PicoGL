@@ -27,10 +27,39 @@ from picogl.info import get_gl_info
 from picogl.state.draw_mode import GLBitMask
 
 
+def bind_default_framebuffer() -> None:
+    """Bind the window-system default framebuffer (required on some Qt/macOS paths)."""
+    from OpenGL.GL import GL_FRAMEBUFFER, glBindFramebuffer
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0)
+
+
+def set_clear_color_only(
+    backend: GLBackend, color: tuple[float, float, float, float]
+) -> None:
+    """Set the clear color without clearing (safe before the default FBO is ready)."""
+    bind_default_framebuffer()
+    backend.frame.set_clear_color(color)
+
+
 def clear_to_color(backend: GLBackend, color: tuple[float, float, float, float]) -> None:
     """Apply a clear color and clear the color/depth buffers."""
+    bind_default_framebuffer()
     backend.frame.set_clear_color(color)
-    backend.frame.clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
+    try:
+        backend.frame.clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
+    except Exception as ex:
+        # Qt/macOS may not have a drawable default framebuffer during initializeGL
+        # (especially after multisample). paintGL clears each frame once the surface is ready.
+        err = getattr(ex, "err", None)
+        if err == 1286:
+            log.warning(
+                "Skipping framebuffer clear (default FBO not ready yet); "
+                "will clear on first paintGL",
+                silent=True,
+            )
+            return
+        raise
 
 
 @dataclass(frozen=True)
@@ -98,8 +127,8 @@ modern_init_gl_list = [
     GLTask("✅ Enabling multisampling", lambda b: b.capabilities.enable_multisample()),
     GLTask("✅ Enabling depth test", lambda b: b.depth.set_depth_test(True)),
     GLTask(
-        "✅ Clearing background",
-        lambda b: b.frame.clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER),
+        "✅ Setting clear colour",
+        lambda b: set_clear_color_only(b, (0.0, 0.0, 0.0, 1.0)),
     ),
     GLTask("✅ Enabling blending", lambda b: enable_blending(b)),
     GLTask("✅ Enabling smoothing", lambda b: enable_smoothing(b)),

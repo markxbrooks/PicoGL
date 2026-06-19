@@ -35,6 +35,7 @@ bonds_frag.glsl
 
 import os
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Callable, Dict, Iterable, Optional, Tuple, Union
 
 import numpy as np
@@ -200,6 +201,8 @@ class ShaderManager:
         :param mvp_matrix: np.ndarray | glm.mat4:
         :return: None
         """
+        if self.current_shader is None:
+            return
         shader_uniform_set_mvp(
             shader_program=self.current_shader.program_id(), mvp_matrix=mvp_matrix
         )
@@ -246,13 +249,21 @@ class ShaderManager:
     ):
         """Initialize src and mark GL state as ready."""
         # Load src into the manager. If caller does not provide a directory,
-        # default to PicoGL's packaged shader root (<...>/picogl/shaders).
-        if self._initialized:
-            return
+        # keep an existing shader_directory or default to PicoGL's packaged src root.
         if shader_dir:
-            self.shader_directory = shader_dir
+            target_dir = str(shader_dir)
+        elif self.shader_directory:
+            target_dir = str(self.shader_directory)
         else:
-            self.shader_directory = os.path.dirname(str(PICOGL_SHADER_SRC_DIRECTORY))
+            target_dir = str(PICOGL_SHADER_SRC_DIRECTORY)
+
+        if self._initialized:
+            if target_dir == str(self.shader_directory):
+                return
+            self.release_shaders()
+            self._initialized = False
+
+        self.shader_directory = target_dir
 
         failed = []
         shader_pairs = list(enumerate(ShaderType))
@@ -328,6 +339,28 @@ class ShaderManager:
             self._ensure_fallback()
             self.shaders[shader_type] = self.fallback_shader
 
+    def _fallback_shader_sources(self) -> tuple[str, str]:
+        """Resolve fallback GLSL from the active shader root, then PicoGL defaults."""
+        if self.shader_directory:
+            base = Path(self.shader_directory)
+            root = base / "src" if (base / "src").is_dir() else base
+            fallback_dir = root / "fallback"
+            vert_path = fallback_dir / "vertex.glsl"
+            frag_path = fallback_dir / "fragment.glsl"
+            if vert_path.is_file() and frag_path.is_file():
+                return (
+                    load_shader_source_string(str(vert_path)),
+                    load_shader_source_string(str(frag_path)),
+                )
+        return (
+            load_shader_source_string(
+                "fallback_vertex.glsl", SHADER_SRC_DIRECTORY
+            ),
+            load_shader_source_string(
+                "fallback_fragment.glsl", SHADER_SRC_DIRECTORY
+            ),
+        )
+
     def _ensure_fallback(self):
         """
         _ensure_fallback
@@ -336,12 +369,7 @@ class ShaderManager:
         """
         if self.fallback_shader is None:
             try:
-                vert = load_shader_source_string(
-                    "fallback_vertex.glsl", SHADER_SRC_DIRECTORY
-                )
-                frag = load_shader_source_string(
-                    "fallback_fragment.glsl", SHADER_SRC_DIRECTORY
-                )
+                vert, frag = self._fallback_shader_sources()
                 self.fallback_shader = compile_shaders(vert, frag, "fallback")
                 log.message(
                     "✅ Fallback shader_manager.current_shader_program compiled",
