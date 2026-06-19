@@ -8,6 +8,7 @@ from OpenGL.GL import (
     GL_DEPTH_WRITEMASK,
 )
 
+from picogl.backend.GL.driver.applyable import Applyable
 from picogl.backend.GL.driver.capability import GLCapabilityDriver
 from picogl.backend.capability import GLPipelineCapability
 
@@ -15,10 +16,11 @@ if TYPE_CHECKING:
     from picogl.backend.state import DepthState
 
 
-class GLDepthDriver:
+class GLDepthDriver(Applyable):
     """Depth test, write mask, and depth-function operations."""
 
     def __init__(self, capabilities: GLCapabilityDriver):
+        super().__init__()
         self.capabilities = capabilities
         self._current: "DepthState | None" = None
 
@@ -37,16 +39,14 @@ class GLDepthDriver:
     def set_depth_func_gl_less() -> Any:
         return glDepthFunc(GL_LESS)
 
-    def apply(self, state: "DepthState") -> None:
-        """Apply a DepthState descriptor, skipping GL when unchanged."""
-        if self._current == state:
-            return
-
-        prev = self._current
-        self._current = state
-
+    def _do_apply(self, state: "DepthState", prev: "DepthState | None"):
         if prev is None or prev.test != state.test:
             self.set_depth_test(state.test)
 
         if prev is None or prev.write != state.write:
             self.set_depth_write(state.write)
+
+    def _is_same(self, prev: "DepthState", state: "DepthState"):
+        if prev == state:
+            return True
+        return False
