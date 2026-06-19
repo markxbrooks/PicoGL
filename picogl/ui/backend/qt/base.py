@@ -7,7 +7,6 @@ from typing import Optional
 
 import numpy as np
 from decologr import Decologr as log
-from OpenGL.GL import glGetIntegerv
 from OpenGL.raw.GL.ARB.viewport_array import GL_VIEWPORT
 from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_MODELVIEW,
@@ -27,6 +26,7 @@ from picogl.error import gl_check_errors
 from picogl.frame import prepare_viewport
 from picogl.mode import GLMode
 from picogl.utils.gl_init import execute_gl_tasks, modern_init_gl_list
+from picogl.wrappers.get_integerv import gl_get_integerv
 
 
 @dataclass
@@ -241,7 +241,7 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
         Retrieve the current OpenGL viewport dimensions.
         """
         viewport = np.zeros(4, dtype=np.int32)
-        glGetIntegerv(GL_VIEWPORT, viewport)
+        gl_get_integerv(GL_VIEWPORT)
         return viewport
 
     def _apply_camera_rotation(self, dx: float, dy: float) -> None:

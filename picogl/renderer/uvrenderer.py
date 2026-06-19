@@ -4,27 +4,24 @@ UV render
 
 from typing import Optional
 
-from OpenGL.GL import glGetIntegerv
 from OpenGL.raw.GL.VERSION.GL_1_0 import (
-    GL_BACK,
-    GL_FRONT,
-    GL_LINE,
-    GL_POLYGON_MODE,
-    GL_TRIANGLES,
-    GL_UNSIGNED_SHORT,
-    glPolygonMode,
+    GL_POLYGON_MODE
 )
-from OpenGL.raw.GL.VERSION.GL_2_0 import glDisableVertexAttribArray
 
+from picogl.backend.capability import GLMaterialFace
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.boolean import GLBoolean
 from picogl.numerical import GLNumeric
 from picogl.renderer import RendererBase
 from picogl.renderer.initializable import Initializable
-from picogl.state.draw_mode import GLBufferTarget
+from picogl.state.draw_mode import GLBufferTarget, GLDrawMode
+from picogl.state.fill import GLFillMode
 from picogl.wrappers.buffer import gl_bind_buffer
+from picogl.wrappers.disable_vertex_array import gl_disable_vertex_array
 from picogl.wrappers.draw import gl_draw_elements
 from picogl.wrappers.enable_vertex_array import gl_enable_vertex_array
+from picogl.wrappers.get_integerv import gl_get_integerv
+from picogl.wrappers.polygon_mode import gl_polygon_mode
 from picogl.wrappers.vertex_attrib_pointer import gl_vertex_attrib_pointer
 
 
@@ -84,7 +81,7 @@ class UvRenderer(Initializable, RendererBase):
             return
 
         # Save previous polygon mode
-        prev_mode = glGetIntegerv(GL_POLYGON_MODE)
+        prev_mode = gl_get_integerv(GL_POLYGON_MODE)
         prev_front_mode, prev_back_mode = prev_mode[0], prev_mode[1]
 
         with self.shader:
@@ -104,18 +101,18 @@ class UvRenderer(Initializable, RendererBase):
             gl_bind_buffer(GLBufferTarget.ELEMENT, self.indices_buffer)
 
             # Wireframe rendering
-            glPolygonMode(GL_FRONT, GL_LINE)
-            glPolygonMode(GL_BACK, GL_LINE)
+            gl_polygon_mode(GLMaterialFace.FRONT, GLFillMode.LINE)
+            gl_polygon_mode(GLMaterialFace.BACK, GLFillMode.LINE)
 
             gl_draw_elements(
                 self.index_count,
-                GL_UNSIGNED_SHORT,
-                GL_TRIANGLES,
+                GLNumeric.UNSIGNED_SHORT,
+                GLDrawMode.TRIANGLES,
                 pointer=None,
             )
 
-            glDisableVertexAttribArray(uv_loc)
+            gl_disable_vertex_array(uv_loc)
 
         # Restore previous polygon mode
-        glPolygonMode(GL_FRONT, prev_front_mode)
-        glPolygonMode(GL_BACK, prev_back_mode)
+        gl_polygon_mode(GLMaterialFace.FRONT, prev_front_mode)
+        gl_polygon_mode(GLMaterialFace.BACK, prev_back_mode)

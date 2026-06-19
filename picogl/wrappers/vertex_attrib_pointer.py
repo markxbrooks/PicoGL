@@ -1,15 +1,23 @@
 """
-gl bind buffer wrapper
-
+glVertexAttribPointer wrapper.
 """
 
 import ctypes
-from typing import Optional
+from typing import Any, Optional
 
 from OpenGL.GL import glVertexAttribPointer
 
 from picogl.boolean import GLBoolean
 from picogl.numerical import GLNumeric
+
+
+def _resolve_attrib_pointer(offset: Any) -> Any:
+    """Accept ``None``, byte offset ints, or an existing ``c_void_p``."""
+    if offset is None:
+        return None
+    if isinstance(offset, ctypes.c_void_p):
+        return offset
+    return ctypes.c_void_p(offset)
 
 
 def gl_vertex_attrib_pointer(
@@ -18,18 +26,19 @@ def gl_vertex_attrib_pointer(
     num_type: GLNumeric = GLNumeric.FLOAT,
     normalized: GLBoolean = GLBoolean.FALSE,
     stride: int = 0,
-    offset: Optional[int] = None,
+    offset: Optional[Any] = None,
 ) -> None:
     """
-    gl_bind_vertex_array
+    Issue ``glVertexAttribPointer``.
 
-    :param index: int
-    :param size: int
-    :param num_type: int
-    :param normalized: int
-    :param stride: int
-    :param offset: int
+    *offset* may be a byte offset (``int``), ``None``, or a ``ctypes.c_void_p``.
     """
     assert index >= 0
-    pointer = None if offset is None else ctypes.c_void_p(offset)
-    glVertexAttribPointer(index, size, num_type, normalized, stride, pointer)
+    glVertexAttribPointer(
+        index,
+        size,
+        num_type,
+        normalized,
+        stride,
+        _resolve_attrib_pointer(offset),
+    )
