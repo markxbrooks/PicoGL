@@ -7,6 +7,18 @@ Specializes the abstract façade into a slightly more concrete base (manages a G
 Leaves rendering-specific logic to subclasses like ModernVertexArrayGroup.
 
 Follows the "abstract base + partial implementation" pattern.
+
+Binding model
+-------------
+
+``bind()`` / ``unbind()`` and ``with self`` issue real GL bind/unbind on **each**
+entry and exit (stack-based). This is intentionally **not** sticky/idempotent.
+
+Do **not** inherit from :class:`~picogl.renderer.initializable.Bindable` here or on
+``VertexBufferGroup`` / ``VertexArrayObject`` / per-buffer VBOs — nested ``with``
+scopes and sibling buffer binds require re-binding after unbind. Pass-scoped sticky
+binding belongs in small wrappers (e.g. ``ShaderPipeline``, ``LegacyClientMeshBinding``);
+an optional ``StickyVAOBinding`` wrapper may be added later without changing this base.
 """
 
 from picogl.buffers.abstract import AbstractVertexGroup
@@ -17,7 +29,8 @@ class VertexBase(AbstractVertexGroup):
     """
     Generic OpenGL object interface with binding lifecycle.
 
-    Provides handle + context manager, leaves binding to subclasses.
+    Provides handle + context manager; subclasses implement stack-based
+    ``bind()`` / ``unbind()`` (not :class:`~picogl.renderer.initializable.Bindable`).
     """
 
     def __init__(self, handle: int = None):

@@ -12,6 +12,15 @@ and :class:`~picogl.backend.geometry.legacy_mesh_binding.LegacyClientMeshBinding
 Do **not** mix ``Bindable`` into types that rely on nested context managers
 or state restore (``ShaderProgram.__enter__``, VAO ``with``, ``GLFramebuffer.bound()``).
 Those need stack/restore semantics, not a single sticky flag.
+
+Also do **not** subclass ``Bindable`` from :class:`~picogl.buffers.base.VertexBase`,
+:class:`~picogl.buffers.vertex.legacy.VertexBufferGroup`, VAO/VBO types, or
+:class:`~picogl.protocols.drawable_buffer.DrawableBuffer` implementations.
+They use stack-based bind/unbind (every ``with`` calls bind then unbind); sticky
+``_bound`` would disagree with actual GL state after nested ``with vbo`` scopes.
+For pass-scoped VAO binding without ``with`` churn, use a separate wrapper
+(``StickyVAOBinding``) only if profiling warrants it — not inheritance on
+``VertexBase``.
 """
 
 
@@ -45,7 +54,10 @@ class Initializable:
 
 
 class Bindable:
-    """Enforces one-time binding with optional lazy semantics."""
+    """Enforces one-time binding with optional lazy semantics.
+
+    Not for VAO/VBO/``VertexBase`` types; see module docstring.
+    """
 
     __slots__ = ("_bound",)
 
