@@ -10,8 +10,6 @@ from picogl.wrappers.draw import gl_draw_arrays, gl_draw_elements
 from picogl.wrappers.enable_vertex_array import gl_enable_vertex_array
 from picogl.wrappers.generate_buffers import gl_generate_buffers
 from picogl.wrappers.generate_vertex_array import gl_generate_vertex_array
-from picogl.wrappers.vertex_array import gl_bind_vertex_array
-from picogl.wrappers.vertex_attrib_pointer import gl_vertex_attrib_pointer
 from picogl.wrappers.pointer import (
     gl_color_array_pointer,
     gl_color_pointer_from_spec,
@@ -21,6 +19,8 @@ from picogl.wrappers.pointer import (
     gl_vertex_array_pointer,
     gl_vertex_pointer_from_spec,
 )
+from picogl.wrappers.vertex_array import gl_bind_vertex_array
+from picogl.wrappers.vertex_attrib_pointer import gl_vertex_attrib_pointer
 
 __all__ = [
     "gl_bind_buffer",
