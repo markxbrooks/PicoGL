@@ -21,6 +21,7 @@ class VertexBase(AbstractVertexGroup):
     """
 
     def __init__(self, handle: int = None):
+        super().__init__()
         self.handle = handle
 
     def bind(self):
