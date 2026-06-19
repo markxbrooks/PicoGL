@@ -23,19 +23,19 @@ class LegacyClientMeshBinding(Bindable):
     def _do_binding(self) -> None:
         m = self._mesh
         if m.vertices is not None:
-            gl_enable_legacy_client_state(client_state=GLClientState.VERTEX)
+            gl_enable_legacy_client_state(GLClientState.VERTEX)
             gl_vertex_array_pointer(pointer=m.vertices)
 
         if m.normals is not None:
-            gl_enable_legacy_client_state(client_state=GLClientState.NORMAL)
-            gl_normal_array_pointer(m.normals)
+            gl_enable_legacy_client_state(GLClientState.NORMAL)
+            gl_normal_array_pointer(pointer=m.normals)
 
         if m.colors is not None:
-            gl_enable_legacy_client_state(client_state=GLClientState.COLOR)
+            gl_enable_legacy_client_state(GLClientState.COLOR)
             gl_color_array_pointer(pointer=m.colors)
 
         if getattr(m, "texcoords", None) is not None:
-            gl_enable_legacy_client_state(client_state=GLClientState.TEXCOORD)
+            gl_enable_legacy_client_state(GLClientState.TEXCOORD)
             gl_texcoord_array_pointer(pointer=m.texcoords)
 
     def _do_unbinding(self) -> None:

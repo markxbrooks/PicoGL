@@ -24,10 +24,11 @@ Example usage:
 from typing import Optional
 
 import numpy as np
-from OpenGL.GL import glBufferData, glGenBuffers
+from OpenGL.raw.GL.VERSION.GL_1_5 import glGenBuffers
 
 from picogl.backend.modern.core.vertex.base import VertexBuffer
 from picogl.state.draw_mode import GLBufferTarget, GLUsageHint
+from picogl.wrappers.data import gl_buffer_data
 
 
 class ModernEBO(VertexBuffer):
@@ -68,6 +69,9 @@ class ModernEBO(VertexBuffer):
 
         :return: None
         """
-        glBufferData(
-            GLBufferTarget.ELEMENT, self.size, self.data, self.dtype
+        gl_buffer_data(
+            target=GLBufferTarget.ELEMENT,
+            size=self.size,
+            data=self.data,
+            usage_hint=self.dtype,
         )

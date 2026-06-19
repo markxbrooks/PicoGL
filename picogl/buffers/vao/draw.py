@@ -3,9 +3,9 @@ Draw a VAO with attributes
 """
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POINTS
-from OpenGL.raw.GL.VERSION.GL_1_1 import glDrawArrays
 
 from picogl.buffers.vao.configure import vao_configure_attributes
+from picogl.wrappers.draw import gl_draw_arrays
 
 
 def vao_draw_with_attributes(attributes: list, atom_count: int, mode: int = GL_POINTS):
@@ -19,4 +19,4 @@ def vao_draw_with_attributes(attributes: list, atom_count: int, mode: int = GL_P
     Draw the VAO with the specified gl_mode and atom count.
     """
     vao_configure_attributes(attributes)
-    glDrawArrays(mode, 0, atom_count)
+    gl_draw_arrays(atom_count, mode, first=0)

@@ -5,19 +5,17 @@ draw legacy bond vao
 from contextlib import contextmanager
 
 from decologr import Decologr as log
-from OpenGL.GL import glDrawArrays
-
 from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
 from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
 from picogl.buffers.vertex.legacy import VertexBufferGroup
-from picogl.numerical import GLNumeric
 from picogl.state.client import GLClientState
 from picogl.state.draw_mode import GLDrawMode
+from picogl.wrappers.draw import gl_draw_arrays
 
 
-def gl_draw_arrays(index_count: int, mode: int):
-    """gl draw arrays"""
-    glDrawArrays(mode, 0, index_count)
+def gl_draw_arrays_legacy(index_count: int, mode: int):
+    """Legacy bond/atom VBG draw helper."""
+    gl_draw_arrays(index_count, mode, first=0)
 
 
 @contextmanager
@@ -31,7 +29,7 @@ def draw_arrays(mode: GLDrawMode, first: int, count: int):
     :return: None
     """
     try:
-        yield lambda: gl_draw_arrays(mode, count)
+        yield lambda: gl_draw_arrays_legacy(mode, count)
     finally:
         pass
 

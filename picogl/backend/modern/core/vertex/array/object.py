@@ -42,8 +42,8 @@ from decologr import Decologr as log
 from elmo.log.silence import SILENT_VAO
 from OpenGL.GL import glBufferSubData, glDeleteVertexArrays, glGenVertexArrays
 from OpenGL.raw.GL.ARB.vertex_array_object import glBindVertexArray
-from OpenGL.raw.GL.VERSION.GL_1_1 import glDrawArrays, glDrawElements
-from OpenGL.raw.GL.VERSION.GL_1_5 import glBindBuffer
+from picogl.wrappers.draw import gl_draw_arrays, gl_draw_elements
+from picogl.wrappers.buffer import gl_bind_buffer
 from OpenGL.raw.GL.VERSION.GL_2_0 import (
     glEnableVertexAttribArray,
     glVertexAttribPointer,
@@ -181,7 +181,7 @@ class VertexArrayObject(VertexBase, GLResource):
             self.layout = layout
 
             if self.ebo:
-                glBindBuffer(GLBufferTarget.ELEMENT, self.ebo.handle)
+                gl_bind_buffer(GLBufferTarget.ELEMENT, self.ebo.handle)
 
             # Configure attributes
             for attr in layout.attributes:
@@ -423,9 +423,9 @@ class VertexArrayObject(VertexBase, GLResource):
         if mode == GLDrawMode.POINTS:
             enable_points_rendering_state()
         if self.ebo:
-            glDrawElements(mode, atom_count, dtype, pointer)
+            gl_draw_elements(atom_count, dtype, mode, pointer=pointer)
         else:
-            glDrawArrays(mode, int(first), atom_count)
+            gl_draw_arrays(atom_count, mode, first=int(first))
 
     def _modern_vbo_for_attrib(self, attrib_index: int) -> Optional[ModernVBO]:
         """Return the :class:`ModernVBO` created for ``add_vbo(index=attrib_index, ...)``."""
@@ -483,5 +483,5 @@ class VertexArrayObject(VertexBase, GLResource):
             else:
                 vbo.set_data(arr)
         finally:
-            glBindBuffer(GLBufferTarget.ARRAY, 0)
+            gl_bind_buffer(GLBufferTarget.ARRAY, 0)
             self.unbind()

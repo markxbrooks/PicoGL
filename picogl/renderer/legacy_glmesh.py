@@ -2,7 +2,6 @@ import ctypes
 from typing import Optional
 
 import numpy as np
-from OpenGL.GL import glDrawElements
 
 from picogl.attrs.vertex import CanonicalVertexAttrs
 from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
@@ -16,6 +15,7 @@ from picogl.buffers.vertex.vbo.vbo_class import MeshDataAttrs, VBOType
 from picogl.numerical import GLNumeric
 from picogl.state.client import GLClientState
 from picogl.state.draw_mode import GLDrawMode
+from picogl.wrappers.draw import gl_draw_elements
 
 
 class LegacyGLMesh:
@@ -181,11 +181,12 @@ class LegacyGLMesh:
             # Use legacy client states and individual VBOs to bypass the problematic bind() method
             with legacy_client_states(GLClientState.VERTEX, GLClientState.COLOR):
                 with self.vao.vbo, self.vao.cbo, self.vao.ebo:
-                    glDrawElements(
-                        mode,
+                    gl_draw_elements(
                         int(self.index_count),
                         GLNumeric.UNSIGNED_INT,
-                        ctypes.c_void_p(0),
+                        mode,
+                        pointer=None,
+                        offset=0,
                     )
         except Exception as ex:
             print(f"Error drawing mesh: {ex}")

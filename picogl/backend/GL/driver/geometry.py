@@ -1,11 +1,10 @@
-from OpenGL.GL import glDrawElements
-from OpenGL.raw.GL.VERSION.GL_1_1 import glDrawArrays
 from OpenGL.raw.GL.VERSION.GL_3_0 import glBindVertexArray
 
 from picogl.backend.geometry.mesh import GPUMesh
 from picogl.backend.opengl import GLBindingStrategy
 from picogl.backend.state import gl_value
 from picogl.state.draw_mode import GLIndexType
+from picogl.wrappers.draw import gl_draw_arrays, gl_draw_elements
 
 
 class GLGeometryDriver:
@@ -29,17 +28,22 @@ class GLGeometryDriver:
 
     @staticmethod
     def draw_elements(mode, indices):
-        glDrawElements(gl_value(mode), len(indices), GLIndexType.UNSIGNED_INT, indices)
+        gl_draw_elements(
+            len(indices),
+            GLIndexType.UNSIGNED_INT,
+            mode,
+            pointer=indices,
+        )
 
     @staticmethod
     def draw_bound_elements(
         mode, index_count: int, index_type=GLIndexType.UNSIGNED_INT, pointer=None
     ):
-        glDrawElements(gl_value(mode), int(index_count), gl_value(index_type), pointer)
+        gl_draw_elements(int(index_count), index_type, mode, pointer=pointer)
 
     @staticmethod
     def draw_arrays(mode, first: int, count: int):
-        glDrawArrays(gl_value(mode), int(first), int(count))
+        gl_draw_arrays(int(count), mode, first=int(first))
 
     @classmethod
     def draw_arrays_bound_vao(cls, vao: int, mode, first: int, count: int):

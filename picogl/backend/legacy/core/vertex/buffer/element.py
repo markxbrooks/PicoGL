@@ -1,7 +1,6 @@
 import ctypes
 
 import numpy as np
-from OpenGL.GL import glDrawElements
 
 from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
 from picogl.state.draw_mode import GLBufferTarget, GLDataType, GLDrawMode, GLIndexType

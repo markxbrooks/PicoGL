@@ -23,6 +23,7 @@ from OpenGL.GL import (
     GL_ZERO,
 )
 
+from picogl.state.client import GLClientState
 from picogl.state.fill import GLFace, GLLightParameter
 from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_AMBIENT,
@@ -615,8 +616,8 @@ class TestDrawCommand(unittest.TestCase):
         mesh = object()
 
         with (
-            patch("picogl.backend.GL.driver.geometry.glDrawElements") as draw_elements,
-            patch("picogl.backend.GL.driver.geometry.glDrawArrays") as draw_arrays,
+            patch("picogl.backend.GL.driver.geometry.gl_draw_elements") as draw_elements,
+            patch("picogl.backend.GL.driver.geometry.gl_draw_arrays") as draw_arrays,
             patch("picogl.backend.GL.driver.geometry.glBindVertexArray") as bind_vao,
         ):
             geometry.draw_mesh(mesh, GL_LINE)
@@ -668,19 +669,19 @@ class TestDrawCommand(unittest.TestCase):
 
         with (
             patch(
-                "picogl.backend.legacy.core.attribute_binder.glEnableClientState"
+                "picogl.wrappers.client_state.gl_enable_legacy_client_state"
             ) as enable_client,
             patch(
-                "picogl.backend.legacy.core.attribute_binder.glVertexPointer"
+                "picogl.wrappers.pointer.gl_vertex_array_pointer"
             ) as vertex_pointer,
             patch(
-                "picogl.backend.legacy.core.attribute_binder.glNormalPointer"
+                "picogl.wrappers.pointer.gl_normal_array_pointer"
             ) as normal_pointer,
             patch(
-                "picogl.backend.legacy.core.attribute_binder.glColorPointer"
+                "picogl.wrappers.pointer.gl_color_array_pointer"
             ) as color_pointer,
             patch(
-                "picogl.backend.legacy.core.attribute_binder.glTexCoordPointer"
+                "picogl.wrappers.pointer.gl_texcoord_array_pointer"
             ) as texcoord_pointer,
         ):
             binder.enable_vertex_array()
@@ -695,16 +696,22 @@ class TestDrawCommand(unittest.TestCase):
         self.assertEqual(
             enable_client.call_args_list,
             [
-                call(GL_VERTEX_ARRAY),
-                call(GL_NORMAL_ARRAY),
-                call(GL_COLOR_ARRAY),
-                call(GL_TEXTURE_COORD_ARRAY),
+                call(GLClientState.VERTEX),
+                call(GLClientState.NORMAL),
+                call(GLClientState.COLOR),
+                call(GLClientState.TEXCOORD),
             ],
         )
-        vertex_pointer.assert_called_once_with(3, GL_FLOAT, 0, data)
-        normal_pointer.assert_called_once_with(GL_FLOAT, 0, data)
-        color_pointer.assert_called_once_with(4, GL_FLOAT, 0, data)
-        texcoord_pointer.assert_called_once_with(2, GL_FLOAT, 0, data)
+        vertex_pointer.assert_called_once_with(
+            pointer=data, size=3, num_type=GL_FLOAT, stride=0
+        )
+        normal_pointer.assert_called_once_with(pointer=data, num_type=GL_FLOAT, stride=0)
+        color_pointer.assert_called_once_with(
+            pointer=data, size=4, num_type=GL_FLOAT, stride=0
+        )
+        texcoord_pointer.assert_called_once_with(
+            pointer=data, size=2, num_type=GL_FLOAT, stride=0
+        )
 
     def test_glbackend_geometry_texture_facades_and_attribute_subsystem(self):
         backend = GLBackend(binding=FakeBinding())

@@ -1,19 +1,15 @@
-from OpenGL.GL import (
-    glColorPointer,
-    glNormalPointer,
-    glTexCoordPointer,
-    glVertexPointer,
-)
-from OpenGL.raw.GL.KHR.debug import GL_VERTEX_ARRAY
-from OpenGL.raw.GL.VERSION.GL_1_1 import (
-    GL_COLOR_ARRAY,
-    GL_NORMAL_ARRAY,
-    GL_TEXTURE_COORD_ARRAY,
-    glDisableClientState,
-    glEnableClientState,
-)
-
 from picogl.state.draw_mode import GLDataType
+from picogl.state.client import GLClientState
+from picogl.wrappers.client_state import (
+    gl_disable_legacy_client_state,
+    gl_enable_legacy_client_state,
+)
+from picogl.wrappers.pointer import (
+    gl_color_array_pointer,
+    gl_normal_array_pointer,
+    gl_texcoord_array_pointer,
+    gl_vertex_array_pointer,
+)
 
 
 class LegacyAttributeBinder:
@@ -21,48 +17,48 @@ class LegacyAttributeBinder:
 
     @staticmethod
     def enable_vertex_array():
-        glEnableClientState(GL_VERTEX_ARRAY)
+        gl_enable_legacy_client_state(GLClientState.VERTEX)
 
     @staticmethod
     def disable_vertex_array():
-        glDisableClientState(GL_VERTEX_ARRAY)
+        gl_disable_legacy_client_state(GLClientState.VERTEX)
 
     @staticmethod
     def set_vertex_pointer(data):
-        glVertexPointer(3, GLDataType.FLOAT, 0, data)
+        gl_vertex_array_pointer(pointer=data, size=3, num_type=GLDataType.FLOAT)
 
     @staticmethod
     def enable_normal_array():
-        glEnableClientState(GL_NORMAL_ARRAY)
+        gl_enable_legacy_client_state(GLClientState.NORMAL)
 
     @staticmethod
     def disable_normal_array():
-        glDisableClientState(GL_NORMAL_ARRAY)
+        gl_disable_legacy_client_state(GLClientState.NORMAL)
 
     @staticmethod
     def set_normal_pointer(data):
-        glNormalPointer(GLDataType.FLOAT, 0, data)
+        gl_normal_array_pointer(pointer=data, num_type=GLDataType.FLOAT)
 
     @staticmethod
     def enable_color_array():
-        glEnableClientState(GL_COLOR_ARRAY)
+        gl_enable_legacy_client_state(GLClientState.COLOR)
 
     @staticmethod
     def disable_color_array():
-        glDisableClientState(GL_COLOR_ARRAY)
+        gl_disable_legacy_client_state(GLClientState.COLOR)
 
     @staticmethod
     def set_color_pointer(data, size):
-        glColorPointer(size, GLDataType.FLOAT, 0, data)
+        gl_color_array_pointer(pointer=data, size=size, num_type=GLDataType.FLOAT)
 
     @staticmethod
     def enable_texcoord_array():
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY)
+        gl_enable_legacy_client_state(GLClientState.TEXCOORD)
 
     @staticmethod
     def disable_texcoord_array():
-        glDisableClientState(GL_TEXTURE_COORD_ARRAY)
+        gl_disable_legacy_client_state(GLClientState.TEXCOORD)
 
     @staticmethod
     def set_texcoord_pointer(data):
-        glTexCoordPointer(2, GLDataType.FLOAT, 0, data)
+        gl_texcoord_array_pointer(pointer=data, size=2, num_type=GLDataType.FLOAT)

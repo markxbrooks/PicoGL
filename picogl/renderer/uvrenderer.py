@@ -4,7 +4,7 @@ UV render
 
 from typing import Optional
 
-from OpenGL.GL import glDrawElements, glGetIntegerv
+from OpenGL.GL import glGetIntegerv
 from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_BACK,
     GL_FALSE,
@@ -16,11 +16,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_UNSIGNED_SHORT,
     glPolygonMode,
 )
-from OpenGL.raw.GL.VERSION.GL_1_5 import (
-    GL_ARRAY_BUFFER,
-    GL_ELEMENT_ARRAY_BUFFER,
-    glBindBuffer,
-)
+from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER
 from OpenGL.raw.GL.VERSION.GL_2_0 import (
     glDisableVertexAttribArray,
     glEnableVertexAttribArray,
@@ -30,6 +26,8 @@ from OpenGL.raw.GL.VERSION.GL_2_0 import (
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.renderer import RendererBase
 from picogl.renderer.initializable import Initializable
+from picogl.wrappers.buffer import gl_bind_buffer
+from picogl.wrappers.draw import gl_draw_elements
 
 
 class UvRenderer(Initializable, RendererBase):
@@ -95,16 +93,21 @@ class UvRenderer(Initializable, RendererBase):
             # Assume shader attribute location 0 for UVs
             uv_loc = 0  # Alternatively, query dynamically with glGetAttribLocation
             glEnableVertexAttribArray(uv_loc)
-            glBindBuffer(GL_ARRAY_BUFFER, self.uv_buffer)
+            gl_bind_buffer(GL_ARRAY_BUFFER, self.uv_buffer)
             glVertexAttribPointer(uv_loc, 2, GL_FLOAT, GL_FALSE, 0, None)
 
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.indices_buffer)
+            gl_bind_buffer(GL_ELEMENT_ARRAY_BUFFER, self.indices_buffer)
 
             # Wireframe rendering
             glPolygonMode(GL_FRONT, GL_LINE)
             glPolygonMode(GL_BACK, GL_LINE)
 
-            glDrawElements(GL_TRIANGLES, self.index_count, GL_UNSIGNED_SHORT, None)
+            gl_draw_elements(
+                self.index_count,
+                GL_UNSIGNED_SHORT,
+                GL_TRIANGLES,
+                pointer=None,
+            )
 
             glDisableVertexAttribArray(uv_loc)
 

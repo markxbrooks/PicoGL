@@ -1,8 +1,8 @@
 import numpy as np
-from OpenGL.GL import glColorPointer
 
 from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
 from picogl.state.draw_mode import GLDataType
+from picogl.wrappers.pointer import gl_color_array_pointer
 
 
 class LegacyColorVBO(LegacyVBO):
@@ -29,4 +29,9 @@ class LegacyColorVBO(LegacyVBO):
     def configure(self):
         """Configure vertex attribute pointer for colors."""
         # assert self.components in (3, 4), f"Invalid color component count: {self.components}"
-        glColorPointer(self.components, self.dtype, self.stride, self.pointer)
+        gl_color_array_pointer(
+            pointer=self.pointer,
+            size=self.components,
+            num_type=self.dtype,
+            stride=self.stride,
+        )

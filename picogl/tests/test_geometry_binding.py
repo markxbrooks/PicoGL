@@ -37,9 +37,9 @@ class TestLegacyMesh(unittest.TestCase):
 
         with (
             patch(
-                "picogl.backend.geometry.legacy_mesh.glEnableClientState"
+                "picogl.backend.geometry.legacy_mesh_binding.gl_enable_legacy_client_state"
             ) as enable,
-            patch("picogl.backend.geometry.legacy_mesh.glVertexPointer"),
+            patch("picogl.backend.geometry.legacy_mesh_binding.gl_vertex_array_pointer"),
         ):
             gpu.bind()
 
@@ -65,19 +65,12 @@ class TestModernMesh(unittest.TestCase):
 
 
 class TestModernBindingUpload(unittest.TestCase):
-    def test_upload_builds_gl_mesh(self):
-        mesh = MeshData(
-            vertices=np.array(
-                [[0, 0, 0], [1, 0, 0], [0, 1, 0]], dtype=np.float32
-            ),
-            indices=np.array([0, 1, 2], dtype=np.uint32),
-        )
-
-        with patch("picogl.renderer.glmesh.VertexArrayObject"):
-            gpu = ModernBinding().upload(mesh)
+    def test_upload_gpu_object_wraps_ebo_mesh(self):
+        mesh = SimpleNamespace(ebo=1, index_count=3)
+        gpu = ModernBinding().upload_gpu_object(mesh)
 
         self.assertIsInstance(gpu, ModernMesh)
-        self.assertIsNotNone(gpu._gl_mesh)
+        self.assertEqual(gpu._index_count, 3)
 
 
 class TestDrawableBufferAdapter(unittest.TestCase):

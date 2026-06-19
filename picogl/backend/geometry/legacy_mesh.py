@@ -4,11 +4,10 @@ from __future__ import annotations
 
 from typing import Any
 
-from OpenGL.GL import glDrawElements
-
 from picogl.backend.geometry.legacy_mesh_binding import LegacyClientMeshBinding
 from picogl.backend.geometry.mesh import GPUMesh
 from picogl.numerical import GLNumeric
+from picogl.wrappers.draw import gl_draw_elements
 
 
 class LegacyMesh(GPUMesh):
@@ -26,9 +25,9 @@ class LegacyMesh(GPUMesh):
 
     def draw(self, mode: int) -> None:
         if self.mesh.indices is not None:
-            glDrawElements(
-                mode,
+            gl_draw_elements(
                 len(self.mesh.indices),
                 GLNumeric.UNSIGNED_INT,
-                self.mesh.indices,
+                mode,
+                pointer=self.mesh.indices,
             )

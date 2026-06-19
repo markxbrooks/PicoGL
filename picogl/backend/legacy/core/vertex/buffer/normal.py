@@ -1,8 +1,8 @@
 import numpy as np
-from OpenGL.GL import glNormalPointer
 
 from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
 from picogl.state.draw_mode import GLDataType
+from picogl.wrappers.pointer import gl_normal_array_pointer
 
 
 class LegacyNormalVBO(LegacyVBO):
@@ -24,4 +24,4 @@ class LegacyNormalVBO(LegacyVBO):
 
     def configure(self):
         """Configure attributes specific to position atoms_buffers"""
-        glNormalPointer(self.dtype, 0, None)
+        gl_normal_array_pointer(pointer=None, num_type=self.dtype, stride=0)

@@ -12,8 +12,20 @@ from OpenGL import GL
 
 from picogl.attrs.vertex import CanonicalVertexAttrs
 from picogl.buffers.vertex.vbo.vbo_class import VBOType
+from picogl.state.client import GLClientState
 from picogl.state.draw_mode import GLDataType, GLDrawMode, GLIndexType
 from picogl.state.fill import GLFace, GLFillMode
+from picogl.wrappers.client_state import (
+    gl_disable_legacy_client_state,
+    gl_enable_legacy_client_state,
+)
+from picogl.wrappers.draw import gl_draw_elements
+from picogl.wrappers.pointer import (
+    gl_color_array_pointer,
+    gl_normal_array_pointer,
+    gl_texcoord_array_pointer,
+    gl_vertex_array_pointer,
+)
 
 
 class MeshData:
@@ -223,27 +235,27 @@ class MeshData:
 
     def bind(self):
         if self.vertices is not None:
-            GL.glEnableClientState(GL.GL_VERTEX_ARRAY)
-            GL.glVertexPointer(3, GLDataType.FLOAT, 0, self.vertices)
+            gl_enable_legacy_client_state(GLClientState.VERTEX)
+            gl_vertex_array_pointer(pointer=self.vertices, size=3, num_type=GLDataType.FLOAT)
         if self.normals is not None:
-            GL.glEnableClientState(GL.GL_NORMAL_ARRAY)
-            GL.glNormalPointer(GLDataType.FLOAT, 0, self.normals)
+            gl_enable_legacy_client_state(GLClientState.NORMAL)
+            gl_normal_array_pointer(pointer=self.normals, num_type=GLDataType.FLOAT)
         if self.colors is not None:
-            GL.glEnableClientState(GL.GL_COLOR_ARRAY)
-            GL.glColorPointer(3, GLDataType.FLOAT, 0, self.colors)
+            gl_enable_legacy_client_state(GLClientState.COLOR)
+            gl_color_array_pointer(pointer=self.colors, size=3, num_type=GLDataType.FLOAT)
         if self.texcoords is not None:
-            GL.glEnableClientState(GL.GL_TEXTURE_COORD_ARRAY)
-            GL.glTexCoordPointer(2, GLDataType.FLOAT, 0, self.texcoords)
+            gl_enable_legacy_client_state(GLClientState.TEXCOORD)
+            gl_texcoord_array_pointer(pointer=self.texcoords, size=2, num_type=GLDataType.FLOAT)
 
     def unbind(self):
         if self.texcoords is not None:
-            GL.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY)
+            gl_disable_legacy_client_state(GLClientState.TEXCOORD)
         if self.colors is not None:
-            GL.glDisableClientState(GL.GL_COLOR_ARRAY)
+            gl_disable_legacy_client_state(GLClientState.COLOR)
         if self.normals is not None:
-            GL.glDisableClientState(GL.GL_NORMAL_ARRAY)
+            gl_disable_legacy_client_state(GLClientState.NORMAL)
         if self.vertices is not None:
-            GL.glDisableClientState(GL.GL_VERTEX_ARRAY)
+            gl_disable_legacy_client_state(GLClientState.VERTEX)
 
     @classmethod
     def from_raw(
@@ -384,8 +396,8 @@ class MeshData:
         # Check if we should use vertex colors or override colour
         if color is None and self.colors is not None:
             # Use vertex colors (for fo-fc maps)
-            GL.glEnableClientState(GL.GL_COLOR_ARRAY)
-            GL.glColorPointer(3, GLDataType.FLOAT, 0, self.colors)
+            gl_enable_legacy_client_state(GLClientState.COLOR)
+            gl_color_array_pointer(pointer=self.colors, size=3, num_type=GLDataType.FLOAT)
             # Note: Alpha blending for vertex colors would require 4-component colors
             # For now, we'll use the alpha value for the overall transparency
         else:
@@ -402,8 +414,11 @@ class MeshData:
             # Draw the mesh with additional safety checks
             element_count = len(self.indices)
             if element_count > 0:
-                GL.glDrawElements(
-                    mode, element_count, GLIndexType.UNSIGNED_INT, self.indices
+                gl_draw_elements(
+                    element_count,
+                    GLIndexType.UNSIGNED_INT,
+                    mode,
+                    pointer=self.indices,
                 )
         except Exception as e:
             log.error(f"Error in glDrawElements: {e}")
@@ -419,7 +434,7 @@ class MeshData:
 
         # Clean up colour array state if we used it
         if color is None and self.colors is not None:
-            GL.glDisableClientState(GL.GL_COLOR_ARRAY)
+            gl_disable_legacy_client_state(GLClientState.COLOR)
 
     def delete(self):
         """Drop CPU references to mesh arrays (no GL objects on this type)."""

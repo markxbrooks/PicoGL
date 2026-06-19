@@ -69,8 +69,8 @@ class TestVertexArrayObject(unittest.TestCase):
             patch(
                 "picogl.backend.modern.core.vertex.array.object.glVertexAttribPointer"
             ),
-            patch("picogl.backend.modern.core.vertex.array.object.glDrawArrays"),
-            patch("picogl.backend.modern.core.vertex.array.object.glDrawElements"),
+            patch("picogl.backend.modern.core.vertex.array.object.gl_draw_arrays"),
+            patch("picogl.backend.modern.core.vertex.array.object.gl_draw_elements"),
             patch(
                 "picogl.backend.modern.core.vertex.array.object.enable_points_rendering_state"
             ),

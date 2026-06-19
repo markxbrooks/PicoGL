@@ -4,10 +4,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Optional
 
-from OpenGL.GL import glDrawElements
-
 from picogl.backend.geometry.mesh import GPUMesh
 from picogl.numerical import GLNumeric
+from picogl.wrappers.draw import gl_draw_elements
 
 if TYPE_CHECKING:
     from picogl.renderer.glmesh import GLMesh
@@ -48,7 +47,12 @@ class ModernMesh(GPUMesh):
             self._gl_mesh.draw(mode=mode)
             return
         if getattr(self._vao, "ebo", None) is not None:
-            glDrawElements(mode, self._index_count, GLNumeric.UNSIGNED_INT, None)
+            gl_draw_elements(
+                self._index_count,
+                GLNumeric.UNSIGNED_INT,
+                mode,
+                pointer=None,
+            )
         elif hasattr(self._vao, "draw"):
             self._vao.draw(index_count=self._index_count, mode=mode)
 

@@ -37,8 +37,6 @@ import ctypes
 import numpy as np
 from OpenGL import error as _gl_err
 from OpenGL.raw.GL.VERSION.GL_1_5 import (
-    glBindBuffer,
-    glBufferData,
     glBufferSubData,
     glIsBuffer,
 )
@@ -49,6 +47,8 @@ from OpenGL.raw.GL.VERSION.GL_2_0 import (
 
 from picogl.buffers.base import VertexBase
 from picogl.state.draw_mode import GLBufferTarget, GLDataType, GLIndexType, GLUsageHint
+from picogl.wrappers.buffer import gl_bind_buffer
+from picogl.wrappers.data import gl_buffer_data
 
 
 class VertexBuffer(VertexBase):
@@ -97,13 +97,13 @@ class VertexBuffer(VertexBase):
     # ----------------------------
     def bind(self) -> None:
         """Bind this buffer."""
-        glBindBuffer(self.target, self.handle)
+        gl_bind_buffer(self.target, self.handle)
 
     def unbind(self) -> None:
         """Unbind this buffer, ensuring the handle is valid."""
         if not glIsBuffer(self.handle):
             raise RuntimeError(f"Invalid buffer handle: {self.handle}")
-        glBindBuffer(self.target, 0)
+        gl_bind_buffer(self.target, 0)
 
     def update(self, data: np.ndarray):
         self.data = data
@@ -124,7 +124,12 @@ class VertexBuffer(VertexBase):
             raise TypeError(f"Expected np.ndarray, got {type(data).__name__}")
         self.data = data
         self.dtype = self._map_dtype_to_gl(data.dtype.type)
-        glBufferData(self.target, data.nbytes, data, usage)
+        gl_buffer_data(
+            target=self.target,
+            size=data.nbytes,
+            data=data,
+            usage_hint=usage,
+        )
 
     # ----------------------------
     # Vertex attribute state
@@ -207,7 +212,12 @@ class VertexBuffer(VertexBase):
         """Initial allocation (glBufferData)"""
         self.bind()
         self.buffer_size = data.nbytes
-        glBufferData(self.target, data.nbytes, data, usage)
+        gl_buffer_data(
+            target=self.target,
+            size=data.nbytes,
+            data=data,
+            usage_hint=usage,
+        )
 
     def update_data(self, data: np.ndarray, offset: int = 0):
         """Upload buffer contents; prefer SubData, fall back to full Data if needed.
@@ -222,11 +232,21 @@ class VertexBuffer(VertexBase):
 
         if data.nbytes > self.buffer_size:
             # Fallback: reallocate only if absolutely required
-            glBufferData(self.target, data.nbytes, data, GLUsageHint.DYNAMIC_DRAW)
+            gl_buffer_data(
+                target=self.target,
+                size=data.nbytes,
+                data=data,
+                usage_hint=GLUsageHint.DYNAMIC_DRAW,
+            )
             self.buffer_size = data.nbytes
         else:
             try:
                 glBufferSubData(self.target, offset, data.nbytes, data)
             except _gl_err.GLError:
-                glBufferData(self.target, data.nbytes, data, GLUsageHint.DYNAMIC_DRAW)
+                gl_buffer_data(
+                target=self.target,
+                size=data.nbytes,
+                data=data,
+                usage_hint=GLUsageHint.DYNAMIC_DRAW,
+            )
                 self.buffer_size = data.nbytes

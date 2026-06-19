@@ -47,19 +47,20 @@ Usage Example:
 import ctypes
 
 import numpy as np
-from OpenGL.GL import glBufferData, glVertexAttribPointer
+from OpenGL.GL import glVertexAttribPointer
 from OpenGL.raw.GL._types import GL_FALSE, GL_FLOAT
 from OpenGL.raw.GL.VERSION.GL_1_5 import (
     GL_ARRAY_BUFFER,
-    GL_ELEMENT_ARRAY_BUFFER,
-    GL_STATIC_DRAW,
-    glBindBuffer,
-    glGenBuffers,
 )
 from OpenGL.raw.GL.VERSION.GL_2_0 import glEnableVertexAttribArray
-from OpenGL.raw.GL.VERSION.GL_3_0 import glBindVertexArray, glGenVertexArrays
 
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
+from picogl.state.draw_mode import GLBufferTarget, GLUsageHint
+from picogl.wrappers.buffer import gl_bind_buffer
+from picogl.wrappers.data import gl_buffer_data
+from picogl.wrappers.generate_buffers import gl_generate_buffers
+from picogl.wrappers.generate_vertex_array import gl_generate_vertex_array
+from picogl.wrappers.vertex_array import gl_bind_vertex_array
 
 
 def upload_geometry_buffers(
@@ -71,7 +72,7 @@ def upload_geometry_buffers(
     *,
     element_data: np.ndarray = None,
     ebo_target: str = None,
-    usage: int = GL_STATIC_DRAW,
+    usage: GLUsageHint = GLUsageHint.STATIC_DRAW,
 ) -> None:
     """
     upload_geometry_buffers
@@ -88,17 +89,17 @@ def upload_geometry_buffers(
     General-purpose VAO/VBO upload function for vertex meshdata.
     """
 
-    vao = glGenVertexArrays(1)
+    vao = gl_generate_vertex_array(1)
     vao_object = VertexArrayObject()
-    vbo = glGenBuffers(1)
+    vbo = gl_generate_buffers(1)
     vao_object.add_vbo(index=0, data=vertex_data, size=3, name=vbo_target)
 
     setattr(render_buffers, vao_target, vao)
     setattr(render_buffers, vbo_target, vbo)
 
-    glBindVertexArray(vao)
-    glBindBuffer(GL_ARRAY_BUFFER, vbo)
-    glBufferData(GL_ARRAY_BUFFER, vertex_data.nbytes, vertex_data, usage)
+    gl_bind_vertex_array(vao)
+    gl_bind_buffer(GLBufferTarget.ARRAY, vbo)
+    gl_buffer_data(target=GLBufferTarget.ARRAY, size=vertex_data.nbytes, data=vertex_data, usage_hint=usage)
 
     stride = vertex_data.shape[1] * 4  # float32 = 4 bytes
 
@@ -109,12 +110,17 @@ def upload_geometry_buffers(
         )
 
     if element_data is not None and ebo_target is not None:
-        ebo = glGenBuffers(1)
+        ebo = gl_generate_buffers(1)
         setattr(render_buffers, ebo_target, ebo)
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo)
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, element_data.nbytes, element_data, usage)
+        gl_bind_buffer(GLBufferTarget.ELEMENT, ebo)
+        gl_buffer_data(
+            target=GLBufferTarget.ELEMENT,
+            size=element_data.nbytes,
+            data=element_data,
+            usage_hint=usage,
+        )
 
-    glBindVertexArray(0)
+    gl_bind_vertex_array(0)
 
 
 def upload_vertex_buffer(vao: int, vbo: int, points: np.ndarray):
@@ -126,9 +132,14 @@ def upload_vertex_buffer(vao: int, vbo: int, points: np.ndarray):
     :param points: np.ndarray
     :return: list indices
     """
-    glBindVertexArray(vao)
-    glBindBuffer(GL_ARRAY_BUFFER, vbo)
-    glBufferData(GL_ARRAY_BUFFER, points.nbytes, points, GL_STATIC_DRAW)
+    gl_bind_vertex_array(vao)
+    gl_bind_buffer(GLBufferTarget.ARRAY, vbo)
+    gl_buffer_data(
+        target=GLBufferTarget.ARRAY,
+        size=points.nbytes,
+        data=points,
+        usage_hint=GLUsageHint.STATIC_DRAW,
+    )
     glEnableVertexAttribArray(0)
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, None)
-    glBindVertexArray(0)
+    gl_bind_vertex_array(0)

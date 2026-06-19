@@ -12,11 +12,6 @@ from typing import Any, Protocol
 from numpy import ndarray
 from OpenGL.GL import (
     glBlendFunc,
-    glColorPointer,
-    glDrawElements,
-    glEnableClientState,
-    glNormalPointer,
-    glVertexPointer,
     glViewport,
 )
 from OpenGL.raw.GL.VERSION.GL_1_1 import (
@@ -36,6 +31,13 @@ from picogl.backend.capability import (
 from picogl.state.draw_mode import GLDataType, GLDrawMode, GLIndexType
 from picogl.state.fill import GLFace, GLCapability, GLFillMode
 from picogl.texture.gltexture import GLTextureDriver
+from picogl.wrappers.client_state import gl_enable_legacy_client_state
+from picogl.wrappers.draw import gl_draw_elements
+from picogl.wrappers.pointer import (
+    gl_color_array_pointer,
+    gl_normal_array_pointer,
+    gl_vertex_array_pointer,
+)
 
 
 def gl_value(value: Any) -> Any:
@@ -326,13 +328,27 @@ class GLAttributeArray:
     pointer: Any
 
     def enable_legacy(self, kind):
-        glEnableClientState(kind)
+        gl_enable_legacy_client_state(kind)
         if kind == GL_VERTEX_ARRAY:
-            glVertexPointer(self.size, GLDataType.FLOAT, self.stride, self.pointer)
+            gl_vertex_array_pointer(
+                pointer=self.pointer,
+                size=self.size,
+                num_type=GLDataType.FLOAT,
+                stride=self.stride,
+            )
         elif kind == GL_NORMAL_ARRAY:
-            glNormalPointer(GLDataType.FLOAT, self.stride, self.pointer)
+            gl_normal_array_pointer(
+                pointer=self.pointer,
+                num_type=GLDataType.FLOAT,
+                stride=self.stride,
+            )
         elif kind == GL_COLOR_ARRAY:
-            glColorPointer(self.size, GLDataType.FLOAT, self.stride, self.pointer)
+            gl_color_array_pointer(
+                pointer=self.pointer,
+                size=self.size,
+                num_type=GLDataType.FLOAT,
+                stride=self.stride,
+            )
 
 
 @dataclass
@@ -362,11 +378,11 @@ class TestGLMesh:
             attr.enable_legacy(GL_VERTEX_ARRAY)  # refine mapping
 
         if self.indices is not None:
-            glDrawElements(
-                GLDrawMode.TRIANGLES,
+            gl_draw_elements(
                 len(self.indices),
                 GLIndexType.UNSIGNED_INT,
-                self.indices,
+                GLDrawMode.TRIANGLES,
+                pointer=self.indices,
             )
 
 

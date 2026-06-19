@@ -5,6 +5,9 @@ from examples.utils.shader_loader import Shader
 from examples.utils.test_window import GLWindow
 from picogl.backend.capability import GLPipelineCapability
 from picogl.state.draw_mode import GLBufferTarget, GLUsageHint
+from picogl.wrappers.buffer import gl_bind_buffer
+from picogl.wrappers.data import gl_buffer_data
+from picogl.wrappers.draw import gl_draw_arrays
 
 
 class GObject:
@@ -30,22 +33,22 @@ class GLContext(GObject):
 
         # Vertex Buffer
         self.vertexbuffer = glGenBuffers(1)
-        glBindBuffer(GLBufferTarget.ARRAY, self.vertexbuffer)
-        glBufferData(
-            GLBufferTarget.ARRAY,
-            len(vertex_data) * 4,
-            (GLfloat * len(vertex_data))(*vertex_data),
-            GLUsageHint.STATIC_DRAW,
+        gl_bind_buffer(GLBufferTarget.ARRAY, self.vertexbuffer)
+        gl_buffer_data(
+            target=GLBufferTarget.ARRAY,
+            size=len(vertex_data) * 4,
+            data=(GLfloat * len(vertex_data))(*vertex_data),
+            usage_hint=GLUsageHint.STATIC_DRAW,
         )
 
         # Color Buffer
         self.colorbuffer = glGenBuffers(1)
-        glBindBuffer(GLBufferTarget.ARRAY, self.colorbuffer)
-        glBufferData(
-            GLBufferTarget.ARRAY,
-            len(color_data) * 4,
-            (GLfloat * len(color_data))(*color_data),
-            GLUsageHint.STATIC_DRAW,
+        gl_bind_buffer(GLBufferTarget.ARRAY, self.colorbuffer)
+        gl_buffer_data(
+            target=GLBufferTarget.ARRAY,
+            size=len(color_data) * 4,
+            data=(GLfloat * len(color_data))(*color_data),
+            usage_hint=GLUsageHint.STATIC_DRAW,
         )
 
     def calculate_mvp(self, width=1920, height=1080):
@@ -99,16 +102,14 @@ class Tu01Win(GLWindow):
         )
 
         glEnableVertexAttribArray(0)
-        glBindBuffer(GLBufferTarget.ARRAY, self.context.vertexbuffer)
+        gl_bind_buffer(GLBufferTarget.ARRAY, self.context.vertexbuffer)
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, None)
 
         glEnableVertexAttribArray(1)
-        glBindBuffer(GLBufferTarget.ARRAY, self.context.colorbuffer)
+        gl_bind_buffer(GLBufferTarget.ARRAY, self.context.colorbuffer)
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, None)
 
-        glDrawArrays(
-            GL_TRIANGLES, 0, 12 * 3
-        )  # 12*3 indices starting at 0 -> 12 triangles
+        gl_draw_arrays(12 * 3, GL_TRIANGLES, first=0)
 
         glDisableVertexAttribArray(0)
         glDisableVertexAttribArray(1)

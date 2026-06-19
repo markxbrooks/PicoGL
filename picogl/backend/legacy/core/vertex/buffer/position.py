@@ -5,15 +5,13 @@ Legacy Position VBO
 import ctypes
 
 import numpy as np
-from OpenGL.GL import glVertexPointer
-from OpenGL.raw.GL.VERSION.GL_1_1 import (
-    glEnableClientState,
-)
 
 from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
 from picogl.numerical import GLNumeric
 from picogl.state.client import GLClientState
 from picogl.state.draw_mode import GLBufferTarget, GLDataType
+from picogl.wrappers.client_state import gl_enable_legacy_client_state
+from picogl.wrappers.pointer import gl_vertex_array_pointer
 
 
 class LegacyPositionVBO(LegacyVBO):
@@ -52,5 +50,10 @@ class LegacyPositionVBO(LegacyVBO):
         """
         if self.dtype not in self.SUPPORTED_GL_TYPES:
             raise ValueError(f"Unsupported GL data type: {self.dtype}")
-        glEnableClientState(GLClientState.VERTEX)
-        glVertexPointer(self.components, self.dtype, self.stride, ctypes.c_void_p(0))
+        gl_enable_legacy_client_state(GLClientState.VERTEX)
+        gl_vertex_array_pointer(
+            pointer=ctypes.c_void_p(0),
+            size=self.components,
+            num_type=self.dtype,
+            stride=self.stride,
+        )

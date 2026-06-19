@@ -5,8 +5,7 @@ Legacy VBO
 import ctypes
 
 import numpy as np
-from OpenGL.GL import glBufferData, glGenBuffers
-from OpenGL.raw.GL.VERSION.GL_1_5 import glBufferSubData
+from OpenGL.raw.GL.VERSION.GL_1_5 import glGenBuffers, glBufferSubData
 
 from picogl.backend.modern.core.vertex.base import VertexBuffer
 from picogl.state.draw_mode import (
@@ -14,6 +13,7 @@ from picogl.state.draw_mode import (
     GLDataType,
     GLUsageHint,
 )
+from picogl.wrappers.data import gl_buffer_data
 
 
 class LegacyVBO(VertexBuffer):
@@ -78,7 +78,12 @@ class LegacyVBO(VertexBuffer):
         self.dtype = self._map_dtype_to_gl(data.dtype.type)
         self.bind()
         try:
-            glBufferData(self.target, data.nbytes, data, usage)
+            gl_buffer_data(
+                target=self.target,
+                size=data.nbytes,
+                data=data,
+                usage_hint=usage,
+            )
             self.nbytes = data.nbytes
         finally:
             self.unbind()
@@ -87,19 +92,34 @@ class LegacyVBO(VertexBuffer):
         """Initial allocation (glBufferData)"""
         self.bind()
         self.nbytes = data.nbytes
-        glBufferData(self.target, data.nbytes, data, usage)
+        gl_buffer_data(
+            target=self.target,
+            size=data.nbytes,
+            data=data,
+            usage_hint=usage,
+        )
 
     def update_data(self, data: np.ndarray, offset: int = 0):
         self.bind()
 
         # First-time allocation case
         if self.nbytes is None:
-            glBufferData(self.target, data.nbytes, data, GLUsageHint.DYNAMIC_DRAW)
+            gl_buffer_data(
+                target=self.target,
+                size=data.nbytes,
+                data=data,
+                usage_hint=GLUsageHint.DYNAMIC_DRAW,
+            )
             self.nbytes = data.nbytes
             return
 
         if data.nbytes > self.nbytes:
-            glBufferData(self.target, data.nbytes, data, GLUsageHint.DYNAMIC_DRAW)
+            gl_buffer_data(
+                target=self.target,
+                size=data.nbytes,
+                data=data,
+                usage_hint=GLUsageHint.DYNAMIC_DRAW,
+            )
             self.nbytes = data.nbytes
         else:
             glBufferSubData(self.target, offset, data.nbytes, data)
