@@ -5,6 +5,12 @@ from decologr import Decologr as log
 from OpenGL import GL as gl
 
 from picogl.backend.modern.core.shader.compile import compile_shader
+from picogl.backend.modern.core.shader.context import (
+    clear_gl_errors,
+    gl_context_available,
+    program_is_valid,
+    require_gl_context,
+)
 from picogl.backend.modern.core.shader.helpers import log_gl_error, read_shader_source
 from picogl.backend.modern.core.uniform.location_value import set_uniform_location_value
 from picogl.shaders.uniform import get_uniform_location
@@ -192,11 +198,23 @@ class ShaderProgram:
         gl.glUseProgram(0)
 
     def bind(self):
-        """begin"""
+        """Bind this program for uniform uploads and draws."""
+        require_gl_context("ShaderProgram.bind")
+        if self.program is None:
+            raise RuntimeError(f"ShaderProgram {self.shader_name!r} has no GL program")
+        clear_gl_errors()
+        if not program_is_valid(self.program):
+            raise RuntimeError(
+                f"ShaderProgram {self.shader_name!r}: program id {self.program} "
+                "is not valid in the current OpenGL context"
+            )
         gl.glUseProgram(self.program)
         log_gl_error()
 
     def unbind(self):
+        if not gl_context_available():
+            return
+        clear_gl_errors()
         gl.glUseProgram(0)
 
     def release(self):

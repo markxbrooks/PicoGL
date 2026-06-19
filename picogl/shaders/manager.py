@@ -42,6 +42,7 @@ import numpy as np
 from decologr import Decologr as log
 from pyglm import glm
 
+from picogl.backend.modern.core.shader.context import gl_context_available
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.backend.modern.core.uniform.location import get_uniform_location
 from picogl.backend.modern.core.uniform.location_value import set_uniform_location_value
@@ -115,6 +116,11 @@ class ShaderManager:
             shader_program.bind()
             self.current_shader = shader_program
             self.current_shader_program = shader_program.program_id()
+        except RuntimeError as ex:
+            log.warning(
+                f"Shader bind skipped: {ex}",
+                scope="load_shader",
+            )
         except Exception as ex:
             log.error(
                 f"❌ Failed to bind shader shader_program: {ex}", scope="load_shader"
@@ -163,36 +169,35 @@ class ShaderManager:
         shader_type: ShaderType,
         mvp_matrix: np.ndarray | glm.mat4 = None,
         zoom_scale: int | float = None,
-    ) -> None:
+    ) -> bool:
         """
-        use_shader_type
+        Load (if needed) and bind the shader of the given type.
 
-        :param zoom_scale: int | float
-        :param shader_type: ShaderType
-        :param mvp_matrix: np.ndarray | glm.mat4 = None
-        :return: None
-        Load (if needed) and bind the shader of the given type
+        Returns True when the program is bound in the current GL context.
         """
         if not self._initialized:
             self.initialize_shaders()
-        self.current_shader = self.get_shader_type(shader_type)
-        if self.current_shader:
-            self.current_shader_type = shader_type
-            self.use_shader_program(self.current_shader)
-            if mvp_matrix is not None:
-                self.update_mvp_uniform(mvp_matrix=mvp_matrix)
-            if zoom_scale is not None:
-                if self.current_shader_type == ShaderType.ATOMS:
-                    loc = get_uniform_location(
-                        self.current_shader.program_id(), "zoom_scale"
-                    )
-                    if loc != -1:
-                        set_uniform_location_value(loc, zoom_scale)
-        else:
+        shader = self.get_shader_type(shader_type)
+        if not shader:
             log.error(
                 f"❌ Shader type {shader_type} could not be loaded or bound.",
                 scope=self.__class__.__name__,
             )
+            return False
+        self.use_shader_program(shader)
+        if self.current_shader is not shader:
+            return False
+        self.current_shader_type = shader_type
+        if mvp_matrix is not None:
+            self.update_mvp_uniform(mvp_matrix=mvp_matrix)
+        if zoom_scale is not None:
+            if self.current_shader_type == ShaderType.ATOMS:
+                loc = get_uniform_location(
+                    self.current_shader.program_id(), "zoom_scale"
+                )
+                if loc != -1:
+                    set_uniform_location_value(loc, zoom_scale)
+        return True
 
     def update_mvp_uniform(self, mvp_matrix: np.ndarray | glm.mat4) -> None:
         """
@@ -263,6 +268,14 @@ class ShaderManager:
             self.release_shaders()
             self._initialized = False
 
+        if not gl_context_available():
+            log.warning(
+                "ShaderManager.initialize_shaders deferred: no current OpenGL context. "
+                "Load shaders from initializeGL / paintGL after the GL widget context is current.",
+                scope="load_shader",
+            )
+            return
+
         self.shader_directory = target_dir
 
         failed = []
@@ -291,15 +304,19 @@ class ShaderManager:
                 scope="load_shader",
             )
 
-        self._initialized = True
         log.message(
-            "✅ GLState _initialized and src loaded (including fallback).",
+            "✅ Shader sources loaded (including fallback where needed).",
             scope="load_shader",
             silent=True,
         )
         self.use_default_shader()
-        self.current_shader_program = self.current_shader.program_id()
-        self.current_shader.bind()
+        if self.current_shader is None:
+            log.error(
+                "ShaderManager: default shader could not be bound; "
+                "modern rendering will stay disabled until GL init succeeds.",
+                scope="load_shader",
+            )
+            return
         self._initialized = True
 
     def load_shader(self, shader_type: str, shader_number: int) -> None:
@@ -309,6 +326,12 @@ class ShaderManager:
         :param shader_type: ShaderType
         :return: None
         """
+        if not gl_context_available():
+            log.warning(
+                f"Cannot compile shader {shader_type}: no current OpenGL context",
+                scope="load_shader",
+            )
+            return
         try:
             log.message(
                 f"Loading shaders from {self.shader_directory}",
