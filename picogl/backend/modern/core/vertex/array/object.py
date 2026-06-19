@@ -24,10 +24,10 @@ Dependencies:
 
 Example usage:
 ==============
->>>vao = VertexArrayObject()
-...vao.add_attribute(index=0, vertices=vertices, size=3)
-...vao.add_attribute(index=1, vertices=colors, size=3)
-...vao.update(index_count=100)
+>>> vao = VertexArrayObject()
+>>> vao.add_attribute(index=0, vertices=vertices, size=3)
+>>> vao.add_attribute(index=1, vertices=colors, size=3)
+>>> vao.update(index_count=100)
 
 Intended for OpenGL 3.0+ with VAO support.
 
@@ -40,7 +40,7 @@ from typing import Optional, Union
 import numpy as np
 from decologr import Decologr as log
 from elmo.log.silence import SILENT_VAO
-from OpenGL.GL import glBufferSubData, glDeleteVertexArrays, glGenVertexArrays
+from OpenGL.GL import glBufferSubData, glGenVertexArrays
 from OpenGL.raw.GL.VERSION.GL_3_0 import glIsVertexArray
 from PySide6.QtGui import QOpenGLContext
 
@@ -52,9 +52,8 @@ from picogl.backend.modern.core.vertex.buffer.element import ModernEBO
 from picogl.backend.modern.core.vertex.buffer.object import ModernVBO
 from picogl.buffers.attributes import LayoutDescriptor
 from picogl.buffers.base import VertexBase
-from picogl.buffers.glcleanup import delete_buffer
+from picogl.buffers.glcleanup import gl_delete_buffers, gl_delete_vertex_arrays
 from picogl.buffers.vertex.aliases import NAME_ALIASES
-from picogl.buffers.vertex.registry import store_in_gl_registry
 from picogl.safe import gl_gen_safe
 from picogl.state.draw_mode import (
     GLBufferTarget,
@@ -235,7 +234,7 @@ class VertexArrayObject(VertexBase, GLResource):
         """
         Delete the VAO from GPU memory.
         """
-        glDeleteVertexArrays(1, [self.handle])
+        gl_delete_vertex_arrays(1, [self.handle])
 
     def configure(self):
         """set layout"""
@@ -323,11 +322,11 @@ class VertexArrayObject(VertexBase, GLResource):
         :return: None
         """
         for vbo in self.vbos:
-            delete_buffer(vbo)
+            gl_delete_buffers(vbo)
         self.vbos.clear()
 
         if self.ebo:
-            delete_buffer(self.ebo)
+            gl_delete_buffers(self.ebo)
             self.ebo = None
 
         self.named_vbos.clear()
