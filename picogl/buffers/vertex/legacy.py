@@ -284,9 +284,12 @@ class VertexBufferGroup(VertexBase):
 
     def bind(self) -> None:
         """Bind buffers and configure legacy OpenGL client arrays."""
+        self._do_binding()
+
+    def _do_binding(self):
+        """do binding"""
         if not self.layout:
             return
-
         try:
             for attr in self.layout.attributes:
                 role = attr.role
@@ -331,6 +334,9 @@ class VertexBufferGroup(VertexBase):
         """Disable attribute arrays and unbind the array buffer."""
         if not self.layout:
             return
+        self._do_unbinding()
+
+    def _do_unbinding(self):
         # For legacy rendering, we don't need to disable vertex attrib arrays
         # since we're using the old glVertexPointer approach
         self._bind_buffer(GLBufferTarget.ARRAY, 0)

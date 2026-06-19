@@ -5,9 +5,10 @@ Abstract render atoms_buffers class
 from abc import ABC, abstractmethod
 
 from picogl.buffers.attributes import LayoutDescriptor
+from picogl.renderer.initializable import Bindable
 
 
-class AbstractVertexGroup(ABC):
+class AbstractVertexGroup(Bindable, ABC):
     """Public façade"""
 
     @abstractmethod
