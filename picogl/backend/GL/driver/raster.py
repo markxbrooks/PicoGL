@@ -45,7 +45,7 @@ class GLRasterDriver(Applyable):
     _shared: Optional["GLRasterDriver"] = None
 
     @classmethod
-    def shared(cls) -> "GLRasterDriver":
+    def shared(cls) -> GLRasterDriver | None:
         """Process-wide raster driver for legacy class-level call sites."""
         if cls._shared is None:
             cls._shared = cls()
@@ -137,7 +137,7 @@ class GLRasterDriver(Applyable):
 
         _gl_set_polygon_mode(face_val, mode_val)
 
-    def _do_apply(self, state: RasterState):
+    def _do_apply(self, state: RasterState, prev: RasterState):
         if prev is None or prev.line_width != state.line_width:
             self.set_line_width(state.line_width)
 
@@ -153,6 +153,6 @@ class GLRasterDriver(Applyable):
             self.set_point_size(state.point_size)
 
 
-def shared_raster_driver() -> GLRasterDriver:
+def shared_raster_driver() -> GLRasterDriver | None:
     """Backward-compatible alias for :meth:`GLRasterDriver.shared`."""
     return GLRasterDriver.shared()

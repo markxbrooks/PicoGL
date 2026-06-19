@@ -3,18 +3,20 @@ Applyable State
 """
 
 class Applyable:
-    """Applyable state"""
+    """Applyable State"""
+
     def __init__(self):
         self._current = None
 
     def apply(self, state):
-        if self._current is not None and self._is_same(self._current, state):
+        prev = self._current
+        if prev is not None and self._is_same(prev, state):
             return
-        self._do_apply(state)
+        self._do_apply(state, prev)
         self._current = state
 
-    def _is_same(self, old, new) -> bool:
-        return old == new
+    def _do_apply(self, state, prev):
+        raise NotImplementedError
 
-    def _do_apply(self, state):
+    def _is_same(self, old, new) -> bool:
         raise NotImplementedError
