@@ -7,9 +7,9 @@ Legacy backend (no real GL VAO support)
 from typing import Any, Optional
 
 import numpy as np
-from decologr import Decologr as log
-from elmo.gl.backend.legacy.primitives.ribbon.model import RibbonAttrs
 
+from decologr import Decologr as log
+from picogl.attrs.model import VBOAttrs
 from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
 from picogl.backend.legacy.core.vertex.buffer.color import LegacyColorVBO
 from picogl.backend.legacy.core.vertex.buffer.element import LegacyEBO
@@ -44,10 +44,10 @@ class VertexBufferGroup(VertexBase):
         self.named_vbos: dict[VertexBufferRole | str, LegacyVBO] = {}
         self.draw_mode: int = draw_mode
         self.vbo_classes = {
-            RibbonAttrs.VBO: LegacyPositionVBO,
-            RibbonAttrs.CBO: LegacyColorVBO,
-            RibbonAttrs.EBO: LegacyEBO,
-            RibbonAttrs.NBO: LegacyNormalVBO,
+            VBOAttrs.VBO: LegacyPositionVBO,
+            VBOAttrs.CBO: LegacyColorVBO,
+            VBOAttrs.EBO: LegacyEBO,
+            VBOAttrs.NBO: LegacyNormalVBO,
         }
 
     def __del__(self):
