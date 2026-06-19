@@ -3,8 +3,7 @@ Numerical GL Values
 """
 
 from enum import IntEnum
-
-from OpenGL.GL import (
+from OpenGL.raw.GL._types import (
     GL_BYTE,
     GL_DOUBLE,
     GL_FLOAT,
