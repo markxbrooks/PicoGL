@@ -4,7 +4,7 @@ management, texture handling, and other graphics-related operations. It wraps
 OpenGL functionality with a higher-level interface for easier usage in 3D
 graphics applications.
 
-Classes:
+Classes:Ï
     - GLBackend: Encapsulates functions for managing OpenGL state and
       performing rendering operations.
 """
