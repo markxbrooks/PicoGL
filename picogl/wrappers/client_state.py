@@ -8,9 +8,9 @@ from OpenGL.raw.GL.VERSION.GL_1_1 import glDisableClientState, glEnableClientSta
 from picogl.state.client import GLClientState
 
 
-def gl_disable_legacy_client_state(client_state: GLClientState):
+def gl_disable_legacy_client_state(state: GLClientState):
     """gl disable client state"""
-    glDisableClientState(client_state)
+    glDisableClientState(state)
 
 
 def gl_enable_legacy_client_state(state: GLClientState):

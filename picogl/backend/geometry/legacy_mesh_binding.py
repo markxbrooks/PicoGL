@@ -10,7 +10,7 @@ from picogl.renderer.initializable import Bindable
 from picogl.renderer.meshdata import MeshData
 from picogl.state.client import GLClientState
 from picogl.wrappers.client_state import gl_disable_legacy_client_state, gl_enable_legacy_client_state
-from picogl.wrappers.pointer import gl_vertex_pointer, gl_normal_pointer, gl_color_pointer, gl_texcoord_pointer
+from picogl.wrappers.pointer import gl_vertex_array_pointer, gl_normal_array_pointer, gl_color_array_pointer, gl_texcoord_array_pointer
 
 
 class LegacyClientMeshBinding(Bindable):
@@ -24,19 +24,19 @@ class LegacyClientMeshBinding(Bindable):
         m = self._mesh
         if m.vertices is not None:
             gl_enable_legacy_client_state(client_state=GLClientState.VERTEX)
-            gl_vertex_pointer(pointer=m.vertices)
+            gl_vertex_array_pointer(pointer=m.vertices)
 
         if m.normals is not None:
             gl_enable_legacy_client_state(client_state=GLClientState.NORMAL)
-            gl_normal_pointer(m.normals)
+            gl_normal_array_pointer(m.normals)
 
         if m.colors is not None:
             gl_enable_legacy_client_state(client_state=GLClientState.COLOR)
-            gl_color_pointer(pointer=m.colors)
+            gl_color_array_pointer(pointer=m.colors)
 
         if getattr(m, "texcoords", None) is not None:
             gl_enable_legacy_client_state(client_state=GLClientState.TEXCOORD)
-            gl_texcoord_pointer(pointer=m.texcoords)
+            gl_texcoord_array_pointer(pointer=m.texcoords)
 
     def _do_unbinding(self) -> None:
         """do unbinding if mesh is unbinded."""

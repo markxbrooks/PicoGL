@@ -12,6 +12,7 @@ from typing import List
 
 from picogl.buffers.vertex.aliases import VertexBufferRole
 from picogl.buffers.vertex.vbo.vbo_class import VBOType
+from picogl.numerical import GLNumeric
 
 
 @dataclass
@@ -21,7 +22,7 @@ class AttributeSpec:
     name: str  # semantic name ("positions", "colors", "normals", etc.)
     index: int  # attribute location
     size: int  # number of components (e.g., 3 for vec3)
-    type: int  # GL_FLOAT, GL_INT, etc.
+    type: GLNumeric  # GL_FLOAT, GL_INT, etc.
     normalized: bool
     stride: int
     offset: int  # in bytes
@@ -35,7 +36,7 @@ def legacy_attribute_spec(
     *,
     size: int = 3,
     name: str | VertexBufferRole | None = None,
-    type: int,
+    type: GLNumeric,
     normalized: bool = False,
     stride: int = 0,
     offset: int = 0,
