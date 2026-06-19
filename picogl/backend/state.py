@@ -288,10 +288,11 @@ class RenderStateApplier:
                 state.cull_face,
             )
 
-        if prev is None or prev.lighting != state.lighting:
+        # Core-profile contexts reject GL_LIGHTING; modern draws use shader lighting.
+        if state.lighting and (prev is None or not prev.lighting):
             self.backend.capabilities.set_enabled(
                 GLFixedFunctionCapability.LIGHTING,
-                state.lighting,
+                True,
             )
 
         if state.program_point_size and (

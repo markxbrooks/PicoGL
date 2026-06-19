@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import numpy as np
 from decologr import Decologr as log
 from OpenGL import GL as gl
 

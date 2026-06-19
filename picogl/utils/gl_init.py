@@ -17,12 +17,7 @@ from decologr import Decologr as log
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_CULL_FACE
 
 from picogl.backend.GL.backend import GLBackend
-from picogl.backend.legacy.core.camera.lighting import setup_lighting_mode_zero
-from picogl.backend.legacy.core.camera.setup import (
-    enable_blending,
-    enable_smoothing,
-    setup_materials,
-)
+from picogl.backend.legacy.core.camera.setup import enable_blending
 from picogl.info import get_gl_info
 from picogl.state.draw_mode import GLBitMask
 
@@ -131,9 +126,7 @@ modern_init_gl_list = [
         lambda b: set_clear_color_only(b, (0.0, 0.0, 0.0, 1.0)),
     ),
     GLTask("✅ Enabling blending", lambda b: enable_blending(b)),
-    GLTask("✅ Enabling smoothing", lambda b: enable_smoothing(b)),
-    GLTask("✅ Setting up materials", lambda b: setup_materials(b)),
-    GLTask("✅ Setting up lighting", lambda b: setup_lighting_mode_zero(b)),
+    # glMaterial* / GL_LIGHTING are invalid in Core Profile; modern shaders own lighting.
     GLTask(
         None,
         lambda b: log.header_message(title="OpenGL Information", message=get_gl_info()),

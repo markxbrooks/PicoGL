@@ -266,6 +266,12 @@ class TestRenderStateApplier(unittest.TestCase):
             backend.calls,
         )
 
+        applier.apply(RenderState(lighting=False))
+        self.assertNotIn(
+            ("enabled", GLFixedFunctionCapability.LIGHTING, False),
+            backend.calls,
+        )
+
     def test_depth_state_applies_depth_not_blend(self):
         backend = RecordingBackend()
         depth = DepthState(test=False, write=False)
