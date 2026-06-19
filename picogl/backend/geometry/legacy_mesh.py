@@ -4,18 +4,11 @@ from __future__ import annotations
 
 from typing import Any
 
-from OpenGL.GL import (
-    glColorPointer,
-    glDrawElements,
-    glEnableClientState,
-    glNormalPointer,
-    glTexCoordPointer,
-    glVertexPointer,
-)
+from OpenGL.GL import glDrawElements
 
+from picogl.backend.geometry.legacy_mesh_binding import LegacyClientMeshBinding
 from picogl.backend.geometry.mesh import GPUMesh
 from picogl.numerical import GLNumeric
-from picogl.state.client import GLClientState
 
 
 class LegacyMesh(GPUMesh):
@@ -23,24 +16,13 @@ class LegacyMesh(GPUMesh):
 
     def __init__(self, mesh: Any):
         self.mesh = mesh
+        self._binding = LegacyClientMeshBinding(mesh)
 
     def bind(self) -> None:
-        mesh = self.mesh
-        if mesh.vertices is not None:
-            glEnableClientState(GLClientState.VERTEX)
-            glVertexPointer(3, GLNumeric.FLOAT, 0, mesh.vertices)
+        self._binding.ensure_bound()
 
-        if mesh.normals is not None:
-            glEnableClientState(GLClientState.NORMAL)
-            glNormalPointer(GLNumeric.FLOAT, 0, mesh.normals)
-
-        if mesh.colors is not None:
-            glEnableClientState(GLClientState.COLOR)
-            glColorPointer(4, GLNumeric.FLOAT, 0, mesh.colors)
-
-        if mesh.texcoords is not None:
-            glEnableClientState(GLClientState.TEXCOORD)
-            glTexCoordPointer(2, GLNumeric.FLOAT, 0, mesh.texcoords)
+    def unbind(self) -> None:
+        self._binding.unbind()
 
     def draw(self, mode: int) -> None:
         if self.mesh.indices is not None:

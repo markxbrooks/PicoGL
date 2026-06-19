@@ -1,5 +1,17 @@
 """
-Initializable class
+One-shot lifecycle helpers for renderer resources.
+
+``Initializable`` — GPU/setup work runs once until the object is discarded
+(e.g. framebuffer creation, renderer ``_do_initialize``).
+
+``Bindable`` — OpenGL *binding* is sticky within a pass: repeated ``bind()``
+is a no-op until ``unbind()``. Use for pass-scoped helpers such as
+:class:`~picogl.backend.modern.core.pipeline.shader_pipeline.ShaderPipeline`
+and :class:`~picogl.backend.geometry.legacy_mesh_binding.LegacyClientMeshBinding`.
+
+Do **not** mix ``Bindable`` into types that rely on nested context managers
+or state restore (``ShaderProgram.__enter__``, VAO ``with``, ``GLFramebuffer.bound()``).
+Those need stack/restore semantics, not a single sticky flag.
 """
 
 

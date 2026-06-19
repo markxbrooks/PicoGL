@@ -19,11 +19,36 @@ class TestShaderPipeline(unittest.TestCase):
 
         program.bind.assert_called_once()
 
+    def test_bind_is_idempotent_until_unbind(self):
+        program = MagicMock()
+        pipeline = ShaderPipeline(program)
+
+        pipeline.bind()
+        pipeline.bind()
+
+        program.bind.assert_called_once()
+
     def test_unbind_calls_gl_use_program_zero(self):
+        with patch("picogl.backend.modern.core.pipeline.shader_pipeline.glUseProgram") as use:
+            pipeline = ShaderPipeline(MagicMock())
+            pipeline.bind()
+            pipeline.unbind()
+
+        use.assert_called_once_with(0)
+
+    def test_unbind_without_bind_is_no_op(self):
         with patch("picogl.backend.modern.core.pipeline.shader_pipeline.glUseProgram") as use:
             ShaderPipeline(MagicMock()).unbind()
 
-        use.assert_called_once_with(0)
+        use.assert_not_called()
+
+    def test_set_uniforms_ensures_bound(self):
+        program = MagicMock()
+        pipeline = ShaderPipeline(program)
+
+        pipeline.set_uniforms({"uMVP": object()})
+
+        program.bind.assert_called_once()
 
     def test_set_uniforms_delegates_to_program(self):
         program = MagicMock()

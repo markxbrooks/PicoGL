@@ -4,7 +4,14 @@ Exports are loaded lazily so lightweight modules such as
 ``picogl.renderer.readback`` do not import the full renderer stack.
 """
 
-__all__ = ["GLMesh", "GLResourceRegistry", "MeshData", "RendererBase"]
+__all__ = [
+    "Bindable",
+    "GLMesh",
+    "GLResourceRegistry",
+    "Initializable",
+    "MeshData",
+    "RendererBase",
+]
 
 
 def __getattr__(name):
@@ -24,4 +31,12 @@ def __getattr__(name):
         from .meshdata import MeshData
 
         return MeshData
+    if name == "Initializable":
+        from .initializable import Initializable
+
+        return Initializable
+    if name == "Bindable":
+        from .initializable import Bindable
+
+        return Bindable
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
