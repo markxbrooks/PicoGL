@@ -4,10 +4,15 @@ from pyglm import glm
 from examples.utils.shader_loader import Shader
 from examples.utils.test_window import GLWindow
 from picogl.backend.capability import GLPipelineCapability
+from picogl.boolean import GLBoolean
+from picogl.numerical import GLNumeric
 from picogl.state.draw_mode import GLBufferTarget, GLUsageHint
 from picogl.wrappers.buffer import gl_bind_buffer
 from picogl.wrappers.data import gl_buffer_data
 from picogl.wrappers.draw import gl_draw_arrays
+from picogl.wrappers.enable_vertex_array import gl_enable_vertex_array
+from picogl.wrappers.generate_buffers import gl_generate_buffers
+from picogl.wrappers.vertex_attrib_pointer import gl_vertex_attrib_pointer
 
 
 class GObject:
@@ -32,7 +37,7 @@ class GLContext(GObject):
         self.MVP_ID = glGetUniformLocation(shader.program, "MVP")
 
         # Vertex Buffer
-        self.vertexbuffer = glGenBuffers(1)
+        self.vertexbuffer = gl_generate_buffers(1)
         gl_bind_buffer(GLBufferTarget.ARRAY, self.vertexbuffer)
         gl_buffer_data(
             target=GLBufferTarget.ARRAY,
@@ -42,7 +47,7 @@ class GLContext(GObject):
         )
 
         # Color Buffer
-        self.colorbuffer = glGenBuffers(1)
+        self.colorbuffer = gl_generate_buffers(1)
         gl_bind_buffer(GLBufferTarget.ARRAY, self.colorbuffer)
         gl_buffer_data(
             target=GLBufferTarget.ARRAY,
@@ -101,13 +106,17 @@ class Tu01Win(GLWindow):
             self.context.MVP_ID, 1, GL_FALSE, glm.value_ptr(self.context.MVP)
         )
 
-        glEnableVertexAttribArray(0)
+        gl_enable_vertex_array(0)
         gl_bind_buffer(GLBufferTarget.ARRAY, self.context.vertexbuffer)
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, None)
+        gl_vertex_attrib_pointer(
+            index=0, size=3, num_type=GLNumeric.FLOAT, normalized=GLBoolean.FALSE, stride=0, offset=None
+        )
 
-        glEnableVertexAttribArray(1)
+        gl_enable_vertex_array(1)
         gl_bind_buffer(GLBufferTarget.ARRAY, self.context.colorbuffer)
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, None)
+        gl_vertex_attrib_pointer(
+            index=1, size=3, num_type=GLNumeric.FLOAT, normalized=GLBoolean.FALSE, stride=0, offset=None
+        )
 
         gl_draw_arrays(12 * 3, GL_TRIANGLES, first=0)
 

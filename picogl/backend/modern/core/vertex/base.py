@@ -36,19 +36,15 @@ import ctypes
 
 import numpy as np
 from OpenGL import error as _gl_err
-from OpenGL.raw.GL.VERSION.GL_1_5 import (
-    glBufferSubData,
-    glIsBuffer,
-)
-from OpenGL.raw.GL.VERSION.GL_2_0 import (
-    glEnableVertexAttribArray,
-    glVertexAttribPointer,
-)
+from OpenGL.raw.GL.VERSION.GL_1_5 import glBufferSubData, glIsBuffer
 
 from picogl.buffers.base import VertexBase
+from picogl.boolean import GLBoolean
 from picogl.state.draw_mode import GLBufferTarget, GLDataType, GLIndexType, GLUsageHint
 from picogl.wrappers.buffer import gl_bind_buffer
 from picogl.wrappers.data import gl_buffer_data
+from picogl.wrappers.enable_vertex_array import gl_enable_vertex_array
+from picogl.wrappers.vertex_attrib_pointer import gl_vertex_attrib_pointer
 
 
 class VertexBuffer(VertexBase):
@@ -171,14 +167,16 @@ class VertexBuffer(VertexBase):
         """Enable and configure the vertex attribute array."""
         if self.index is None:
             raise ValueError("Vertex attribute index is not set.")
-        glEnableVertexAttribArray(self.index)
-        glVertexAttribPointer(
-            self.index,
-            self.components,
-            self.dtype,
-            self.normalized,
-            self.stride,
-            self.pointer,
+        gl_enable_vertex_array(self.index)
+        normalized = GLBoolean.TRUE if self.normalized else GLBoolean.FALSE
+        offset = self.pointer.value if self.pointer is not None else 0
+        gl_vertex_attrib_pointer(
+            index=self.index,
+            size=self.components,
+            num_type=self.dtype,
+            normalized=normalized,
+            stride=self.stride,
+            offset=offset,
         )
 
     # ----------------------------

@@ -2,7 +2,9 @@ from functools import wraps
 
 from OpenGL.GL import glGetIntegerv
 from OpenGL.raw.GL.VERSION.GL_2_0 import GL_CURRENT_PROGRAM, glUseProgram
-from OpenGL.raw.GL.VERSION.GL_3_0 import GL_VERTEX_ARRAY_BINDING, glBindVertexArray
+from OpenGL.raw.GL.VERSION.GL_3_0 import GL_VERTEX_ARRAY_BINDING
+
+from picogl.wrappers.vertex_array import gl_bind_vertex_array
 
 
 def preserve_gl_state(func):
@@ -13,7 +15,7 @@ def preserve_gl_state(func):
         try:
             return func(*args, **kwargs)
         finally:
-            glBindVertexArray(prev_vao)
+            gl_bind_vertex_array(prev_vao)
             glUseProgram(prev_program)
 
     return wrapper

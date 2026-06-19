@@ -41,14 +41,12 @@ import numpy as np
 from decologr import Decologr as log
 from elmo.log.silence import SILENT_VAO
 from OpenGL.GL import glBufferSubData, glDeleteVertexArrays, glGenVertexArrays
-from OpenGL.raw.GL.ARB.vertex_array_object import glBindVertexArray
+from OpenGL.raw.GL.VERSION.GL_3_0 import glIsVertexArray
 from picogl.wrappers.draw import gl_draw_arrays, gl_draw_elements
 from picogl.wrappers.buffer import gl_bind_buffer
-from OpenGL.raw.GL.VERSION.GL_2_0 import (
-    glEnableVertexAttribArray,
-    glVertexAttribPointer,
-)
-from OpenGL.raw.GL.VERSION.GL_3_0 import glIsVertexArray
+from picogl.wrappers.enable_vertex_array import gl_enable_vertex_array
+from picogl.wrappers.vertex_array import gl_bind_vertex_array
+from picogl.wrappers.vertex_attrib_pointer import gl_vertex_attrib_pointer
 from PySide6.QtGui import QOpenGLContext
 
 from picogl.backend.modern.core.vertex.array.helpers import (
@@ -191,17 +189,17 @@ class VertexArrayObject(VertexBase, GLResource):
                     raise RuntimeError(f"No VBO bound for attribute '{attr.name}'")
 
                 vbo.bind()  # <-- THIS IS THE FIX
-                glEnableVertexAttribArray(attr.index)
-                glVertexAttribPointer(
-                    attr.index,
-                    attr.size,
-                    attr.type,
-                    attr.normalized,
-                    attr.stride,
-                    ctypes.c_void_p(attr.offset),
+                gl_enable_vertex_array(attr.index)
+                gl_vertex_attrib_pointer(
+                    index=attr.index,
+                    size=attr.size,
+                    num_type=attr.type,
+                    normalized=attr.normalized,
+                    stride=attr.stride,
+                    offset=attr.offset,
                 )
 
-            glBindVertexArray(0)
+            gl_bind_vertex_array(0)
             self._configured = True
 
     @contextmanager
@@ -211,7 +209,7 @@ class VertexArrayObject(VertexBase, GLResource):
         try:
             yield
         finally:
-            glBindVertexArray(0)
+            gl_bind_vertex_array(0)
 
     def bind(self) -> Union["VertexArrayObject", None]:
         """
@@ -224,14 +222,14 @@ class VertexArrayObject(VertexBase, GLResource):
                 scope=self.__class__.__name__,
             )
             return None
-        glBindVertexArray(self.handle)
+        gl_bind_vertex_array(self.handle)
         return self
 
     def unbind(self):
         """
         Unbind the VAO by binding to zero.
         """
-        glBindVertexArray(0)
+        gl_bind_vertex_array(0)
 
     def delete(self):
         """

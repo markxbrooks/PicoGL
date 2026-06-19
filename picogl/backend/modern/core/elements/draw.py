@@ -1,8 +1,7 @@
 from OpenGL.raw.GL._types import GL_UNSIGNED_INT
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_LINES
-from OpenGL.raw.GL.VERSION.GL_3_0 import glBindVertexArray
-
 from picogl.wrappers.draw import gl_draw_elements
+from picogl.wrappers.vertex_array import gl_bind_vertex_array
 
 
 def draw_elements(
@@ -16,6 +15,6 @@ def draw_elements(
     :param mode: Drawing gl_mode (e.g., GL_LINES, GL_TRIANGLES)
     :param index_type: Type of indices (e.g., GL_UNSIGNED_INT)
     """
-    glBindVertexArray(vao)
+    gl_bind_vertex_array(vao)
     gl_draw_elements(index_count, index_type, mode, pointer=None)
-    glBindVertexArray(0)
+    gl_bind_vertex_array(0)

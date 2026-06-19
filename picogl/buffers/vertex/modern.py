@@ -1,16 +1,16 @@
-import ctypes
 from typing import Optional
 
-# from buffers.glcleanup import delete_buffer
-from OpenGL.GL import glDeleteVertexArrays, glGenVertexArrays, glVertexAttribPointer
-from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER
-from OpenGL.raw.GL.VERSION.GL_2_0 import glEnableVertexAttribArray
-from OpenGL.raw.GL.VERSION.GL_3_0 import glBindVertexArray
+from OpenGL.GL import glDeleteVertexArrays
 
 from picogl.buffers.attributes import LayoutDescriptor
 from picogl.buffers.base import VertexBase
 from picogl.buffers.glcleanup import delete_buffer
+from picogl.state.draw_mode import GLBufferTarget
 from picogl.wrappers.buffer import gl_bind_buffer
+from picogl.wrappers.enable_vertex_array import gl_enable_vertex_array
+from picogl.wrappers.generate_vertex_array import gl_generate_vertex_array
+from picogl.wrappers.vertex_array import gl_bind_vertex_array
+from picogl.wrappers.vertex_attrib_pointer import gl_vertex_attrib_pointer
 
 
 class ModernVertexArrayGroup(VertexBase):
@@ -21,7 +21,7 @@ class ModernVertexArrayGroup(VertexBase):
     """
 
     def init(self):
-        self.vao = glGenVertexArrays(1)
+        self.vao = gl_generate_vertex_array(1)
         self.nbo = None
         self.cbo = None
         self.vbo = None
@@ -48,11 +48,11 @@ class ModernVertexArrayGroup(VertexBase):
         Normal Buffer Object (NBO) and Element Buffer Object (EBO) if present.
         """
         self.layout = layout
-        glBindVertexArray(self.vao.handle)
+        gl_bind_vertex_array(self.vao.handle)
 
         if self.vbo is not None:
             gl_bind_buffer(
-                GL_ARRAY_BUFFER, getattr(self.vbo.handle, "_id", self.vbo.handle)
+                GLBufferTarget.ARRAY, getattr(self.vbo.handle, "_id", self.vbo.handle)
             )
         if self.nbo is not None:
             # If you have multiple buffers, bind as needed per attribute
@@ -60,28 +60,28 @@ class ModernVertexArrayGroup(VertexBase):
 
         if self.layout:
             for attr in self.layout.attributes:
-                glEnableVertexAttribArray(attr.index)
-                glVertexAttribPointer(
-                    attr.index,
-                    attr.size,
-                    attr.type,
-                    attr.normalized,
-                    attr.stride,
-                    ctypes.c_void_p(attr.offset),
+                gl_enable_vertex_array(attr.index)
+                gl_vertex_attrib_pointer(
+                    index=attr.index,
+                    size=attr.size,
+                    num_type=attr.type,
+                    normalized=attr.normalized,
+                    stride=attr.stride,
+                    offset=attr.offset,
                 )
         if self.ebo is not None:
             gl_bind_buffer(
-                GL_ELEMENT_ARRAY_BUFFER, getattr(self.ebo.handle, "_id", self.ebo)
+                GLBufferTarget.ELEMENT, getattr(self.ebo.handle, "_id", self.ebo)
             )
 
-        glBindVertexArray(0)
+        gl_bind_vertex_array(0)
         self._configured = True
 
     def bind(self) -> None:
-        glBindVertexArray(self.vao)
+        gl_bind_vertex_array(self.vao)
 
     def unbind(self) -> None:
-        glBindVertexArray(0)
+        gl_bind_vertex_array(0)
 
     def delete(self) -> None:
         if self.vao:

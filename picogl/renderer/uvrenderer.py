@@ -7,8 +7,6 @@ from typing import Optional
 from OpenGL.GL import glGetIntegerv
 from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_BACK,
-    GL_FALSE,
-    GL_FLOAT,
     GL_FRONT,
     GL_LINE,
     GL_POLYGON_MODE,
@@ -16,18 +14,17 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_UNSIGNED_SHORT,
     glPolygonMode,
 )
-from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER
-from OpenGL.raw.GL.VERSION.GL_2_0 import (
-    glDisableVertexAttribArray,
-    glEnableVertexAttribArray,
-    glVertexAttribPointer,
-)
-
+from picogl.boolean import GLBoolean
+from picogl.numerical import GLNumeric
+from picogl.state.draw_mode import GLBufferTarget
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.renderer import RendererBase
 from picogl.renderer.initializable import Initializable
 from picogl.wrappers.buffer import gl_bind_buffer
 from picogl.wrappers.draw import gl_draw_elements
+from picogl.wrappers.enable_vertex_array import gl_enable_vertex_array
+from picogl.wrappers.vertex_attrib_pointer import gl_vertex_attrib_pointer
+from OpenGL.raw.GL.VERSION.GL_2_0 import glDisableVertexAttribArray
 
 
 class UvRenderer(Initializable, RendererBase):
@@ -92,11 +89,18 @@ class UvRenderer(Initializable, RendererBase):
         with self.shader:
             # Assume shader attribute location 0 for UVs
             uv_loc = 0  # Alternatively, query dynamically with glGetAttribLocation
-            glEnableVertexAttribArray(uv_loc)
-            gl_bind_buffer(GL_ARRAY_BUFFER, self.uv_buffer)
-            glVertexAttribPointer(uv_loc, 2, GL_FLOAT, GL_FALSE, 0, None)
+            gl_enable_vertex_array(uv_loc)
+            gl_bind_buffer(GLBufferTarget.ARRAY, self.uv_buffer)
+            gl_vertex_attrib_pointer(
+                index=uv_loc,
+                size=2,
+                num_type=GLNumeric.FLOAT,
+                normalized=GLBoolean.FALSE,
+                stride=0,
+                offset=None,
+            )
 
-            gl_bind_buffer(GL_ELEMENT_ARRAY_BUFFER, self.indices_buffer)
+            gl_bind_buffer(GLBufferTarget.ELEMENT, self.indices_buffer)
 
             # Wireframe rendering
             glPolygonMode(GL_FRONT, GL_LINE)

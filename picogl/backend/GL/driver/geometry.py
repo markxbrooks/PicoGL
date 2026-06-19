@@ -1,10 +1,9 @@
-from OpenGL.raw.GL.VERSION.GL_3_0 import glBindVertexArray
-
 from picogl.backend.geometry.mesh import GPUMesh
 from picogl.backend.opengl import GLBindingStrategy
 from picogl.backend.state import gl_value
 from picogl.state.draw_mode import GLIndexType
 from picogl.wrappers.draw import gl_draw_arrays, gl_draw_elements
+from picogl.wrappers.vertex_array import gl_bind_vertex_array
 
 
 class GLGeometryDriver:
@@ -47,8 +46,8 @@ class GLGeometryDriver:
 
     @classmethod
     def draw_arrays_bound_vao(cls, vao: int, mode, first: int, count: int):
-        glBindVertexArray(int(vao))
+        gl_bind_vertex_array(int(vao))
         try:
             cls.draw_arrays(mode, first, count)
         finally:
-            glBindVertexArray(0)
+            gl_bind_vertex_array(0)

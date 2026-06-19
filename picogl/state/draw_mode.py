@@ -3,9 +3,9 @@ GL Draw Mode
 """
 
 from enum import IntEnum, IntFlag
-
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POINTS
+from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ARRAY_BUFFER
 from OpenGL.GL import (
-    GL_ARRAY_BUFFER,
     GL_COLOR_BUFFER_BIT,
     GL_DEPTH_BUFFER_BIT,
     GL_DYNAMIC_DRAW,
@@ -20,7 +20,6 @@ from OpenGL.GL import (
     GL_LINES_ADJACENCY,
     GL_MODELVIEW,
     GL_PATCHES,
-    GL_POINTS,
     GL_POLYGON,
     GL_PROJECTION,
     GL_QUAD_STRIP,

@@ -27,7 +27,8 @@ def gl_vertex_attrib_pointer(index: int,
     :param stride: int
     :param offset: int
     """
-    assert index > 0
+    assert index >= 0
+    pointer = None if offset is None else ctypes.c_void_p(offset)
     glVertexAttribPointer(
-        index, size, num_type, normalized, stride, ctypes.c_void_p(offset)
+        index, size, num_type, normalized, stride, pointer
     )
