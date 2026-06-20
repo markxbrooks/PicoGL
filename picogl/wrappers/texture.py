@@ -13,11 +13,16 @@ from OpenGL.GL import (
     glTexParameteri,
 )
 from OpenGL.constant import Constant, FloatConstant, IntConstant, LongConstant, StringConstant
-from OpenGL.raw.GL.VERSION.GL_1_1 import glBindTexture
+from OpenGL.raw.GL.VERSION.GL_1_1 import glBindTexture, glGenTextures
 from OpenGL.raw.GL.VERSION.GL_1_2 import glTexImage3D
 
 from picogl.numerical import GLNumeric
 from picogl.texture.gltexture import GLTexture
+
+
+def gl_gen_textures(number) -> Any:
+    """gl gen textures"""
+    return glGenTextures(number)
 
 
 def gl_bind_texture(tex_id: int, target: GLTexture = GLTexture.TEXTURE_2D):
