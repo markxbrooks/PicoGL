@@ -1,5 +1,10 @@
 """
-UV render
+Module providing the UvRenderer class for rendering 2D UV meshes using OpenGL.
+
+The module implements a specific renderer for meshes defined with UV
+coordinates and indices. The UvRenderer class is designed for lightweight UV
+rendering tasks and operates using OpenGL buffers. It provides methods for
+binding buffers and rendering the defined UV mesh content.
 """
 
 from typing import Optional

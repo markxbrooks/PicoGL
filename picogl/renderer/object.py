@@ -1,11 +1,16 @@
 """
-Object renderer module.
+Renderer module for textured and untextured 3D objects.
+
+This module contains the `ObjectRenderer` class which provides
+unified functionality to render 3D objects using either textured
+or untextured data. It integrates with an OpenGL-based rendering
+pipeline and handles resources such as shaders, VAOs, VBOs, and
+texture mapping.
 """
 
 from pathlib import Path
 
 from decologr import Decologr as log
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES
 
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.renderer import GLResourceRegistry, MeshData, RendererBase
