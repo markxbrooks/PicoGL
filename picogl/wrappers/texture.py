@@ -47,7 +47,7 @@ def gl_compressed_tex_image(
 
 
 def gl_teximage2d(
-    target: int,
+    target: int | GLTexture,
     level: int,
     internalformat: FloatConstant | IntConstant | LongConstant | StringConstant | Constant,
     width: int,
@@ -72,7 +72,7 @@ def gl_teximage2d(
 
 
 def gl_teximage3d(
-    target: int,
+    target: int | GLTexture,
     level: int,
     internalformat: FloatConstant | IntConstant | LongConstant | StringConstant | Constant,
     width: int,

@@ -29,8 +29,6 @@ from picogl.texture.texture2d import Texture2D
 from picogl.wrappers.texture import gl_generate_mipmap, gl_tex_parameter, gl_teximage2d
 
 
-
-
 class GLTextureDriver:
     """GL Texture 2d"""
 
