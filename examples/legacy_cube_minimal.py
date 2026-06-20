@@ -17,7 +17,7 @@ import os
 import sys
 
 import numpy as np
-from picogl.state.draw_mode import GLDrawMode, GLBitMask
+from picogl.state.draw_mode import GLDrawMode, GLBitMask, GLLegacyMatrixMode
 from picogl.state.fill import GLColorMaterialMode, GLLightParameter, GLFace, GLFillMode, GLLight
 from picogl.state.immediate import immediate_drawing
 
@@ -418,10 +418,10 @@ class MinimalCubeRenderer:
         self.width = width
         self.height = height
         glViewport(0, 0, width, height)
-        glMatrixMode(GL_PROJECTION)
+        glMatrixMode(GLLegacyMatrixMode.PROJECTION)
         glLoadIdentity()
         gluPerspective(45.0, float(width) / float(height), 0.1, 100.0)
-        glMatrixMode(GL_MODELVIEW)
+        glMatrixMode(GLLegacyMatrixMode.MODELVIEW)
 
     def keyboard(self, key, x, y):
         """Keyboard callback."""
