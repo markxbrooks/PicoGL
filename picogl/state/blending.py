@@ -12,17 +12,15 @@ from contextlib import contextmanager
 
 from picogl.backend.GL.driver.capability import GLCapabilityDriver
 from picogl.backend.GL.driver.blend import GLBlendDriver
-from picogl.backend.capability import GLPipelineCapability, GLBlendFactor
-from picogl.wrappers.get_integerv import gl_get_integerv
+from picogl.backend.capability import GLPipelineCapability, GLBlendFactor, GLBlendTarget
 
 
 @contextmanager
 def gl_blend(src: GLBlendFactor = GLBlendFactor.SRC_ALPHA, dst: GLBlendFactor = GLBlendFactor.ONE_MINUS_SRC_ALPHA):
     """gl blend context manager"""
-    capabilities = GLCapabilityDriver()
     was_enabled = GLCapabilityDriver.is_enabled(GLPipelineCapability.BLEND)
-    prev_src = gl_get_integerv(GLBlendTarget.BLEND_SRC)
-    prev_dst = gl_get_integerv(GLBlendTarget.BLEND_DST)
+    prev_src = GLCapabilityDriver.get_integerv(GLBlendTarget.BLEND_SRC)
+    prev_dst = GLCapabilityDriver.get_integerv(GLBlendTarget.BLEND_DST)
 
     try:
         if not was_enabled:
@@ -32,4 +30,4 @@ def gl_blend(src: GLBlendFactor = GLBlendFactor.SRC_ALPHA, dst: GLBlendFactor = 
     finally:
         GLBlendDriver.set_blend_func(prev_src, prev_dst)
         if not was_enabled:
-            capabilities.disable(GLPipelineCapability.BLEND)
+            GLCapabilityDriver.disable(GLPipelineCapability.BLEND)
