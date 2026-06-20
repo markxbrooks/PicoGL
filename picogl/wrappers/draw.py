@@ -24,12 +24,14 @@ from picogl.state.draw_mode import GLDrawMode, GLIndexType
 
 
 def _gl_enum(value: Any) -> Any:
+    """gl enum"""
     if isinstance(value, Enum):
         return value.value
     return value
 
 
 def _draw_pointer(pointer: Any | None, offset: int) -> Any:
+    """draw pointer"""
     if pointer is None:
         return ctypes.c_void_p(offset)
     if isinstance(pointer, list):
