@@ -234,7 +234,11 @@ class GLMesh:
                     index=attr.index,
                     size=attr.size,
                 )
-            if self.uvs is not None:
+
+            # Legacy fallback: older layouts omitted UV from the descriptor.
+            if self.uvs is not None and not any(
+                attr.vbo_type == VBOType.UVS for attr in descriptor.attributes
+            ):
                 vao.add_vbo(data=self.uvs, index=3, size=2)
 
             if self.use_indices:
