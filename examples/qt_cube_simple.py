@@ -15,9 +15,12 @@ Usage:
 """
 
 import sys
-from typing import Optional
+from typing import Optional, Any
 
 import numpy as np
+from numpy import dtype, generic, ndarray
+
+from picogl.backend.GL.light import GLLightSource
 
 # Try different Qt imports
 try:
@@ -61,7 +64,7 @@ except ImportError:
 
 from examples.data.cube_data import g_color_buffer_data, g_vertex_buffer_data
 from picogl.backend.GL.backend import GLBackend
-from picogl.backend.capability import GLMaterialFace, PhongMaterial
+from picogl.backend.capability import GLMaterialFace, PhongMaterial, GLFixedFunctionCapability
 from picogl.backend.geometry.factory import LegacyBinding
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.state.draw_mode import GLBitMask
@@ -74,6 +77,10 @@ from picogl.state.fill import (
 )
 
 
+def _to_np_array(data) -> ndarray[Any, dtype[Any]] | ndarray[Any, dtype[generic]]:
+    return np.array(data, dtype=np.float32)
+
+
 class SimpleQtCubeWidget(QOpenGLWidget):
     """Minimal Qt cube widget using PicoGL legacy mesh + backend drivers."""
 
@@ -84,8 +91,8 @@ class SimpleQtCubeWidget(QOpenGLWidget):
         self.gl_mesh: Optional[LegacyGLMesh] = None
         self._gl_ready = False
 
-        self.vertices = np.array(g_vertex_buffer_data, dtype=np.float32)
-        self.colors = np.array(g_color_buffer_data, dtype=np.float32)
+        self.vertices = _to_np_array(data=g_vertex_buffer_data)
+        self.colors = _to_np_array(data=g_color_buffer_data)
         self.indices = np.arange(len(self.vertices) // 3, dtype=np.uint32)
 
         self.rotation_x = 0.0
@@ -106,8 +113,8 @@ class SimpleQtCubeWidget(QOpenGLWidget):
         self.backend.depth.set_depth_test(True)
         self.backend.depth.set_depth_func_gl_less()
 
-        self.backend.capabilities.enable(GLLight.LIGHTING)
-        self.backend.capabilities.enable(GLLight.LIGHT0)
+        self.backend.capabilities.enable(GLFixedFunctionCapability.LIGHTING)
+        self.backend.capabilities.enable(GLFixedFunctionCapability.LIGHT0)
         self.backend.capabilities.enable(GLCapability.COLOR_MATERIAL)
         self.backend.legacy.set_color_material(
             GLFace.FRONT_AND_BACK,
@@ -119,9 +126,9 @@ class SimpleQtCubeWidget(QOpenGLWidget):
         )
         from OpenGL.GL import glLightfv
 
-        glLightfv(GLLight.LIGHT0, GLLightParameter.AMBIENT, [0.3, 0.3, 0.3, 1.0])
-        glLightfv(GLLight.LIGHT0, GLLightParameter.DIFFUSE, [0.8, 0.8, 0.8, 1.0])
-        glLightfv(GLLight.LIGHT0, GLLightParameter.SPECULAR, [1.0, 1.0, 1.0, 1.0])
+        GLLightSource.lightf(GLFixedFunctionCapability.LIGHT0, GLLightParameter.AMBIENT, [0.3, 0.3, 0.3, 1.0])
+        GLLightSource.lightf(GLFixedFunctionCapability.LIGHT0, GLLightParameter.DIFFUSE, [0.8, 0.8, 0.8, 1.0])
+        GLLightSource.lightf(GLFixedFunctionCapability.LIGHT0, GLLightParameter.SPECULAR, [1.0, 1.0, 1.0, 1.0])
 
         material = PhongMaterial(
             ambient=(0.2, 0.2, 0.2, 1.0),

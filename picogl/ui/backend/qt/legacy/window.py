@@ -25,11 +25,11 @@ Usage:
 import sys
 from typing import Optional
 
-from elmo.ui.widgets.gl.mol.base import GLMolBase
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget
 
 from picogl.mode import GLMode
+from picogl.ui.backend.qt.base import GLBase
 
 
 class LegacyQtObjectWindow(QMainWindow):
@@ -42,7 +42,7 @@ class LegacyQtObjectWindow(QMainWindow):
         self.parent = parent
         self.gl_mode = gl_mode
         self.layout: Optional[QVBoxLayout] = None
-        self.gl_widget: Optional[GLMolBase] = None
+        self.gl_widget: Optional[GLBase] = None
         self.setWindowTitle("PicoGL Qt Object Renderer - Legacy OpenGL")
         self.setGeometry(100, 100, 800, 600)
         self.object_file_path = None

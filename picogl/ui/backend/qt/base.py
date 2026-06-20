@@ -9,7 +9,6 @@ import numpy as np
 from decologr import Decologr as log
 from OpenGL.raw.GL.ARB.viewport_array import GL_VIEWPORT
 from OpenGL.raw.GL.VERSION.GL_1_0 import (
-    GL_MODELVIEW,
     glLoadIdentity,
     glMatrixMode,
     glViewport,
@@ -24,8 +23,15 @@ from picogl.backend.legacy.core.camera.matrices.setup import setup_matrices
 from picogl.backend.legacy.core.camera.setup import calculate_aspect
 from picogl.error import gl_check_errors
 from picogl.frame import prepare_viewport
+from picogl.backend.GL.backend import GLBackend
+from picogl.backend.geometry.factory import LegacyBinding, ModernBinding
 from picogl.mode import GLMode
-from picogl.utils.gl_init import execute_gl_tasks, modern_init_gl_list
+from picogl.state.draw_mode import GLLegacyMatrixMode
+from picogl.utils.gl_init import (
+    execute_gl_tasks,
+    legacy_init_gl_list,
+    modern_init_gl_list,
+)
 from picogl.wrappers.get_integerv import gl_get_integerv
 
 
@@ -70,12 +76,22 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
         :param parent: QWidget
         """
         super().__init__(parent)
+        if gl_mode is True:
+            gl_mode = GLMode.LEGACY
+        elif gl_mode is False:
+            gl_mode = GLMode.MODERN
         self.aspect_ratio = None
         self.gl_mode = gl_mode
         self.last_mouse_pos = None
         self.zoom_value = None
         self.mvp_parameters = MvpParameters()
         self.camera_parameters = CameraParameters()
+        binding = (
+            ModernBinding()
+            if self.gl_mode == GLMode.MODERN
+            else LegacyBinding()
+        )
+        self.backend = GLBackend(binding)
 
     def initializeGL(self):
         """
@@ -94,7 +110,12 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
         """
         # Viewport setup
         glViewport(0, 0, self.width(), self.height())
-        execute_gl_tasks(modern_init_gl_list, backend=self.backend)
+        init_list = (
+            modern_init_gl_list
+            if self.gl_mode == GLMode.MODERN
+            else legacy_init_gl_list
+        )
+        execute_gl_tasks(init_list, backend=self.backend)
 
     def resizeGL(self, w: int, h: int) -> None:
         """
@@ -116,14 +137,9 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
         gluPerspective(45.0, self.aspect_ratio, 1.0, 1000.0)
         setup_matrices(self.aspect_ratio)
         # Return to modelview matrix
-        glMatrixMode(GL_MODELVIEW)
+        glMatrixMode(GLLegacyMatrixMode.MODELVIEW)
         glLoadIdentity()
         # Update camera matrix using legacy pipeline
-        """update_camera_matrix(
-            translation=self.camera_parameters.translation,
-            rotation=self.camera_parameters.rotation,
-            zoom_value=self.camera_parameters.zoom.value,
-        )"""
         log.message(
             f"✅ Resized OpenGL viewport to {w}x{h}, aspect {self.aspect_ratio:.2f}"
         )

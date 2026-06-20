@@ -32,6 +32,7 @@ from picogl.state.fill import (
     GLLight,
     GLLightParameter,
 )
+from picogl.mode import GLMode
 from picogl.ui.backend.qt.base import GLBase
 
 
@@ -45,7 +46,7 @@ class LegacyQtObjectRenderer(GLBase):
 
     def __init__(self, parent: Optional[QWidget] = None):
         """Initialize the cube renderer"""
-        super().__init__(parent, gl_mode=True)
+        super().__init__(parent, gl_mode=GLMode.LEGACY)
 
         # Cube data
         self._initialized: bool = False
