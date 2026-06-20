@@ -10,6 +10,8 @@ the original state and settings are restored.
 
 from contextlib import contextmanager
 
+from OpenGL.GL import glGetIntegerv
+
 from picogl.backend.GL.driver.capability import GLCapabilityDriver
 from picogl.backend.GL.driver.blend import GLBlendDriver
 from picogl.backend.capability import GLPipelineCapability, GLBlendFactor, GLBlendTarget
@@ -21,6 +23,8 @@ def gl_blend(src: GLBlendFactor = GLBlendFactor.SRC_ALPHA, dst: GLBlendFactor = 
     was_enabled = GLCapabilityDriver.is_enabled(GLPipelineCapability.BLEND)
     prev_src = int(GLCapabilityDriver.get_integerv(GLBlendTarget.BLEND_SRC))
     prev_dst = int(GLCapabilityDriver.get_integerv(GLBlendTarget.BLEND_DST))
+    """prev_src = glGetIntegerv(GLBlendTarget.BLEND_SRC)
+    prev_dst = glGetIntegerv(GLBlendTarget.BLEND_DST)"""
 
     try:
         if not was_enabled:
