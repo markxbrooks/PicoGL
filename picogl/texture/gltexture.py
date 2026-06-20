@@ -30,14 +30,12 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_TEXTURE_MIN_FILTER,
     GL_TEXTURE_WRAP_S,
     GL_TEXTURE_WRAP_T,
-    glDisable,
-    glEnable,
-    glIsEnabled,
 
 )
 from OpenGL.raw.GL.VERSION.GL_1_3 import GL_ACTIVE_TEXTURE, GL_TEXTURE0
 from OpenGL.raw.GL.VERSION.GL_4_5 import GL_TEXTURE_BINDING_2D
 
+from picogl.backend.GL.driver.capability import GLCapabilityDriver
 from picogl.state.param import GLParam
 from picogl.state.query import GLStateQuery
 from picogl.wrappers.texture import gl_active_texture, gl_bind_texture
@@ -82,15 +80,15 @@ class GLTexture(IntEnum):
 
     @staticmethod
     def disable_tex2d():
-        glDisable(GL_TEXTURE_2D)
+        GLCapabilityDriver.disable(GL_TEXTURE_2D)
 
     @staticmethod
     def enable_tex2d():
-        glEnable(GL_TEXTURE_2D)
+        GLCapabilityDriver.enable(GL_TEXTURE_2D)
 
     @staticmethod
     def get_enabled_tex2d(self) -> Any:
-        return glIsEnabled(GL_TEXTURE_2D)
+        return GLCapabilityDriver.is_enabled(GL_TEXTURE_2D)
 
     @staticmethod
     @contextmanager
