@@ -1,5 +1,12 @@
 """
-Base Renderer Class
+RendererBase is a base class for rendering operations, providing foundational
+methods for initializing rendering states, managing OpenGL features, and
+dispatching rendering tasks.
+
+This module implements essential rendering functionality and acts as a
+common base for custom rendering logic. It primarily revolves around
+OpenGL-based rendering pipelines and provides interfaces for model drawing
+and rendering state initialization.
 """
 
 from typing import Callable, Optional
