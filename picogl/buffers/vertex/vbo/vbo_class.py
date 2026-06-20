@@ -1,5 +1,20 @@
 """
-Vertex Attributes
+A module for defining and managing vertex buffer object (VBO) types, mesh data
+attributes, and their layout configurations.
+
+This module provides enumerations for various VBO types and mesh data
+attributes. It also includes functionality to compute the stride for attributes
+based on predefined layouts and the shape of data.
+
+Classes:
+- VBOType: Enumeration for VBO types such as VBO, CBO, NBO, etc.
+- MeshDataAttrs: Enumeration for mesh-related data attributes, e.g., vertices,
+  colors, normals.
+
+Constants:
+- ATTRIBUTE_LAYOUT: A dictionary mapping VBO types to their associated attribute
+  layouts, where predefined strides are provided or set to dynamic if specified
+  as None.
 """
 
 from picogl.utils.strenum import StrEnum

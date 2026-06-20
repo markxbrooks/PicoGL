@@ -1,5 +1,11 @@
 """
-Numerical GL Values
+Defines an enumeration for OpenGL numerical values that represent data types
+such as float, double, integers, and their supported variants. The module
+also provides functionality to fetch supported and all available choices
+for vertex pointer types.
+
+Classes:
+    GLNumeric: An enumeration of OpenGL numerical types with utility methods.
 """
 
 from enum import IntEnum

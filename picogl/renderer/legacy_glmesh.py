@@ -1,4 +1,17 @@
-import ctypes
+"""
+Module for creating and managing GPU-resident meshes in a legacy OpenGL
+compatibility profile.
+
+This module defines the LegacyGLMesh class, which represents an indexed
+triangle mesh. It provides functionality for uploading mesh data to GPU
+buffers, managing their lifecycle, and rendering the mesh.
+
+Classes
+-------
+LegacyGLMesh
+    Represents a GPU-resident mesh with VAO/VBO/EBO/CBO/NBO structures
+    for an indexed triangle mesh.
+"""
 from typing import Optional
 
 import numpy as np

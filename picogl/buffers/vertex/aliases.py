@@ -1,3 +1,11 @@
+"""
+Defines enumerations and aliases for vertex buffer and vertex array types.
+
+This module provides enumerations for vertex buffer roles and vertex array roles
+to categorize types of buffer objects and arrays used in graphics programming.
+It also includes mappings of name aliases for corresponding buffer roles for
+easier and consistent referencing.
+"""
 from enum import Enum
 
 from picogl.buffers.vertex.vbo.vbo_class import VBOType

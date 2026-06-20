@@ -1,3 +1,11 @@
+"""
+A collection of utility functions for processing and normalizing data into
+array-like structures or specific container types.
+
+This module provides functions to convert input data, such as lists or arrays,
+into standardized formats that are used in 3D rendering contexts, such as `MeshData`.
+"""
+
 from typing import Any
 
 import numpy as np

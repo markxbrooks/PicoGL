@@ -1,5 +1,8 @@
-"""
-GL Client State
+"""Enumeration for representing OpenGL client states.
+
+This module defines an enumeration for the OpenGL client states used in rendering operations.
+These states specify different types of vertex array data that can be enabled or disabled
+in an OpenGL context.
 """
 
 from enum import IntEnum

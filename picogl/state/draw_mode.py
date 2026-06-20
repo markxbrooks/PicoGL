@@ -1,5 +1,12 @@
 """
-GL Draw Mode
+This module defines enumeration classes mapping various OpenGL constants
+to more easily readable and manageable Python enumerations. These enums
+facilitate interactions with OpenGL by providing structured and semantically
+meaningful groupings for matrix modes, clip planes, bit masks, data types,
+usage hints, buffer targets, and draw primitives.
+
+Each enumeration corresponds to a specific set of OpenGL constants and can
+be directly utilized when working with OpenGL APIs.
 """
 
 from enum import IntEnum, IntFlag

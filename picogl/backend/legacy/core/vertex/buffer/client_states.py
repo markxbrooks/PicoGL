@@ -1,5 +1,10 @@
 """
-Legacy Client States context manager
+A utility for safely managing fixed-function OpenGL client states.
+
+This module provides a context manager to enable and disable OpenGL
+legacy client states in a controlled manner. It ensures that the
+client states are reset to their initial state upon exiting the
+context, even in the case of an exception.
 """
 
 from contextlib import contextmanager

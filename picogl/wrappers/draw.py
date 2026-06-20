@@ -1,4 +1,15 @@
-"""OpenGL draw wrappers."""
+"""
+A module for OpenGL draw operations using PicoGL-specific enumerations or raw GL constants.
+
+This module provides functions to issue OpenGL draw calls, including support for
+custom draw modes and index types. It simplifies the process of working with OpenGL by
+handling conversion between PicoGL enums and raw GL constants, as well as managing pointer
+data for indexed drawing.
+
+Functions:
+- gl_draw_arrays: Wrapper for glDrawArrays supporting PicoGL enums or raw GL constants.
+- gl_draw_elements: Wrapper for glDrawElements with support for custom index pointers or offsets.
+"""
 
 from __future__ import annotations
 
