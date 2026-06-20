@@ -52,7 +52,8 @@ except ImportError:
             sys.exit(1)
 
 try:
-    from OpenGL.GL import glGetError
+    from OpenGL.GL import glGetError, glRotatef
+    from OpenGL.raw.GLU import gluLookAt
 except ImportError:
     print("Error: PyOpenGL not available")
     print("Please install PyOpenGL: pip install PyOpenGL PyOpenGL_accelerate")
@@ -62,12 +63,15 @@ from examples.data.cube_data import g_color_buffer_data, g_vertex_buffer_data
 from picogl.backend.GL.backend import GLBackend
 from picogl.backend.capability import GLMaterialFace, PhongMaterial
 from picogl.backend.geometry.factory import LegacyBinding
-from picogl.backend.legacy.core.camera.lighting import setup_lighting
-from picogl.backend.legacy.core.camera.matrix import update_camera_matrix
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
-from picogl.renderer.meshdata import MeshData
 from picogl.state.draw_mode import GLBitMask
-from picogl.state.fill import GLCapability, GLColorMaterialMode, GLFace, GLLight
+from picogl.state.fill import (
+    GLCapability,
+    GLColorMaterialMode,
+    GLFace,
+    GLLight,
+    GLLightParameter,
+)
 
 
 class SimpleQtCubeWidget(QOpenGLWidget):
@@ -102,14 +106,22 @@ class SimpleQtCubeWidget(QOpenGLWidget):
         self.backend.depth.set_depth_test(True)
         self.backend.depth.set_depth_func_gl_less()
 
-        setup_lighting(mode=0)
+        self.backend.capabilities.enable(GLLight.LIGHTING)
         self.backend.capabilities.enable(GLLight.LIGHT0)
         self.backend.capabilities.enable(GLCapability.COLOR_MATERIAL)
         self.backend.legacy.set_color_material(
             GLFace.FRONT_AND_BACK,
             GLColorMaterialMode.AMBIENT_AND_DIFFUSE,
         )
-        self.backend.legacy.set_light([1.0, 1.0, 1.0, 0.0], light=GLLight.LIGHT0)
+        self.backend.legacy.set_light(
+            [1.0, 1.0, 1.0, 0.0],
+            light=GLLight.LIGHT0,
+        )
+        from OpenGL.GL import glLightfv
+
+        glLightfv(GLLight.LIGHT0, GLLightParameter.AMBIENT, [0.3, 0.3, 0.3, 1.0])
+        glLightfv(GLLight.LIGHT0, GLLightParameter.DIFFUSE, [0.8, 0.8, 0.8, 1.0])
+        glLightfv(GLLight.LIGHT0, GLLightParameter.SPECULAR, [1.0, 1.0, 1.0, 1.0])
 
         material = PhongMaterial(
             ambient=(0.2, 0.2, 0.2, 1.0),
@@ -119,12 +131,13 @@ class SimpleQtCubeWidget(QOpenGLWidget):
         )
         self.backend.legacy.set_material(GLMaterialFace.FRONT_AND_BACK, material)
 
-        mesh_data = MeshData.from_raw(
-            vertices=self.vertices,
-            colors=self.colors,
-            indices=self.indices,
+        verts = self.vertices.reshape(-1, 3)
+        cols = self.colors.reshape(-1, 3)
+        self.gl_mesh = LegacyGLMesh(
+            vertices=verts,
+            faces=self.indices,
+            colors=cols,
         )
-        self.gl_mesh = LegacyGLMesh.from_mesh_data(mesh_data)
         self.gl_mesh.upload()
         self._gl_ready = True
 
@@ -135,7 +148,19 @@ class SimpleQtCubeWidget(QOpenGLWidget):
         h = max(h, 1)
         self.backend.frame.viewport(0, 0, w, h)
         aspect = float(w) / float(h)
-        self.backend.legacy.set_projection(45.0, aspect, 0.1, 100.0)
+        self.backend.legacy.set_matrix_mode_projection()
+        self.backend.legacy.load_identity()
+        self.backend.legacy.set_perspective(45.0, aspect, 0.1, 100.0)
+        self.backend.legacy.set_matrix_mode_model_view()
+        self.backend.legacy.load_identity()
+
+    def _set_modelview(self) -> None:
+        """Match legacy Qt cube camera: eye on +Z axis, then orbit rotations."""
+        self.backend.legacy.set_matrix_mode_model_view()
+        self.backend.legacy.load_identity()
+        gluLookAt(0.0, 0.0, float(self.zoom), 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
+        glRotatef(float(self.rotation_x), 1.0, 0.0, 0.0)
+        glRotatef(float(self.rotation_y), 0.0, 1.0, 0.0)
 
     def paintGL(self):
         """Render the cube through PicoGL frame clear + legacy mesh draw."""
@@ -143,15 +168,7 @@ class SimpleQtCubeWidget(QOpenGLWidget):
             return
 
         self.backend.frame.clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
-
-        update_camera_matrix(
-            translation=np.array([0.0, 0.0], dtype=np.float32),
-            rotation=np.array(
-                [self.rotation_x, self.rotation_y, 0.0], dtype=np.float32
-            ),
-            zoom_value=float(self.zoom),
-        )
-
+        self._set_modelview()
         self.gl_mesh.draw()
 
         err = glGetError()

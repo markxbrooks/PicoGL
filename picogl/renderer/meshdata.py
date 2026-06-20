@@ -286,14 +286,12 @@ class MeshData:
         vbo = cls._to_float32_flat(vertices, "vertices", required=True)
         vertex_count = len(vbo) // 3 if vbo is not None else 0
 
-        num_vertices = len(vertices)
         if normals is None:
-            normals = np.zeros((num_vertices, 3), dtype=np.float32)
+            normals = np.zeros((vertex_count, 3), dtype=np.float32)
 
         nbo = cls._to_float32_flat_or_none(normals, "normals")
-
-        if nbo is not None:
-            expected = num_vertices * 3
+        if nbo is not None and len(nbo) // 3 != vertex_count:
+            raise ValueError("normals length must be 3 * vertex_count (if provided)")
 
         uvs_arr = cls._to_float32_flat_or_none(uvs, VBOType.UVS)
         if uvs_arr is not None and len(uvs_arr) // 2 != vertex_count:
