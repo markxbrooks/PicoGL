@@ -37,7 +37,10 @@ class GLCapabilityDriver:
 
     @staticmethod
     def get_integerv(val: int):
-        gl_get_integerv(val)
+        result = gl_get_integerv(gl_value(val))
+        if hasattr(result, "__len__") and len(result) == 1:
+            return int(result[0])
+        return result
 
     def enable_multisample(self):
         self.enable(GL_MULTISAMPLE)

@@ -28,8 +28,8 @@ class GLBlendDriver(Applyable):
         self.capabilities.set_enabled(GLPipelineCapability.BLEND, enabled)
 
     @staticmethod
-    def set_blend_func(src: GLBlendFactor, dst: GLBlendFactor):
-        glBlendFunc(gl_value(src), gl_value(dst))
+    def set_blend_func(src: GLBlendFactor | int, dst: GLBlendFactor | int):
+        glBlendFunc(int(gl_value(src)), int(gl_value(dst)))
 
     @staticmethod
     def get_blend_func() -> tuple[GLBlendFactor, GLBlendFactor]:
