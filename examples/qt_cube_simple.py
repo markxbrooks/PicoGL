@@ -1,29 +1,20 @@
 """
 Simple Qt Cube Renderer - Minimal Dependencies
 
-This is a simplified version that uses only basic Qt OpenGL widgets
-without requiring PySide6. It's designed for systems with limited
-Qt installations or when you want a minimal example.
+A minimal Qt OpenGL cube example routed through PicoGL's legacy backend,
+mesh types, and state helpers instead of raw client-state draw calls.
 
 Features:
-- Basic Qt OpenGL widget
-- Legacy OpenGL rendering
-- Simple cube with colors
-- Mouse controls
-- Minimal dependencies
-
-Requirements:
-- PyQt5 or PyQt6 (basic Qt installation)
-- PyOpenGL
-- NumPy
-- PicoGL
+- Basic Qt OpenGL widget (PySide6 / PyQt5 / PyQt6)
+- PicoGL GLBackend + LegacyGLMesh rendering
+- Mouse controls and auto-rotation
+- Minimal dependencies beyond Qt, PyOpenGL, NumPy, and PicoGL
 
 Usage:
     python examples/qt_cube_simple.py
 """
 
 import sys
-from pathlib import Path
 from typing import Optional
 
 import numpy as np
@@ -32,146 +23,142 @@ import numpy as np
 try:
     from PySide6.QtCore import Qt, QTimer
     from PySide6.QtOpenGLWidgets import QOpenGLWidget
-    from PySide6.QtWidgets import (QApplication, QLabel, QMainWindow,
-                                   QVBoxLayout, QWidget)
+    from PySide6.QtWidgets import QApplication, QLabel, QMainWindow, QVBoxLayout, QWidget
 
     QT_VERSION = "PySide6"
 except ImportError:
     try:
         from PyQt5.QtCore import Qt, QTimer
         from PyQt5.QtOpenGL import QGLWidget as QOpenGLWidget
-        from PyQt5.QtWidgets import (QApplication, QLabel, QMainWindow,
-                                     QVBoxLayout, QWidget)
+        from PyQt5.QtWidgets import QApplication, QLabel, QMainWindow, QVBoxLayout, QWidget
 
         QT_VERSION = "PyQt5"
     except ImportError:
         try:
             from PyQt6.QtCore import Qt, QTimer
             from PyQt6.QtOpenGLWidgets import QOpenGLWidget
-            from PyQt6.QtWidgets import (QApplication, QLabel, QMainWindow,
-                                         QVBoxLayout, QWidget)
+            from PyQt6.QtWidgets import (
+                QApplication,
+                QLabel,
+                QMainWindow,
+                QVBoxLayout,
+                QWidget,
+            )
 
             QT_VERSION = "PyQt6"
         except ImportError:
-            print("❌ Error: No Qt installation found")
+            print("Error: No Qt installation found")
             print("Please install one of: PySide6, PyQt5, or PyQt6")
             sys.exit(1)
 
-# OpenGL imports
 try:
-    from OpenGL.GL import *
-    from OpenGL.GLU import *
-except ImportError as e:
-    print("❌ Error: PyOpenGL not available")
+    from OpenGL.GL import glGetError
+except ImportError:
+    print("Error: PyOpenGL not available")
     print("Please install PyOpenGL: pip install PyOpenGL PyOpenGL_accelerate")
     sys.exit(1)
 
 from examples.data.cube_data import g_color_buffer_data, g_vertex_buffer_data
+from picogl.backend.GL.backend import GLBackend
+from picogl.backend.capability import GLMaterialFace, PhongMaterial
+from picogl.backend.geometry.factory import LegacyBinding
+from picogl.backend.legacy.core.camera.lighting import setup_lighting
+from picogl.backend.legacy.core.camera.matrix import update_camera_matrix
+from picogl.renderer.legacy_glmesh import LegacyGLMesh
+from picogl.renderer.meshdata import MeshData
+from picogl.state.draw_mode import GLBitMask
+from picogl.state.fill import GLCapability, GLColorMaterialMode, GLFace, GLLight
 
 
 class SimpleQtCubeWidget(QOpenGLWidget):
-    """
-    Simple Qt OpenGL widget for cube rendering
-
-    This is a minimal implementation that works with basic Qt installations
-    and provides legacy OpenGL cube rendering.
-    """
+    """Minimal Qt cube widget using PicoGL legacy mesh + backend drivers."""
 
     def __init__(self, parent: Optional[QWidget] = None):
-        """Initialize the cube widget"""
         super().__init__(parent)
 
-        # Cube data
+        self.backend = GLBackend(LegacyBinding())
+        self.gl_mesh: Optional[LegacyGLMesh] = None
+        self._gl_ready = False
+
         self.vertices = np.array(g_vertex_buffer_data, dtype=np.float32)
         self.colors = np.array(g_color_buffer_data, dtype=np.float32)
+        self.indices = np.arange(len(self.vertices) // 3, dtype=np.uint32)
 
-        # Animation and control state
         self.rotation_x = 0.0
         self.rotation_y = 0.0
         self.zoom = 5.0
         self.auto_rotate = True
         self.rotation_speed = 1.0
 
-        # Mouse state
         self.last_mouse_pos = None
 
-        # Setup animation timer
         self.timer = QTimer()
         self.timer.timeout.connect(self.animate)
-        self.timer.start(16)  # ~60 FPS
+        self.timer.start(16)
 
     def initializeGL(self):
-        """Initialize OpenGL state"""
-        # Set up OpenGL state
-        glClearColor(0.1, 0.1, 0.2, 1.0)  # Dark blue background
-        glEnable(GL_DEPTH_TEST)
-        glEnable(GL_LIGHTING)
-        glEnable(GL_LIGHT0)
-        glEnable(GL_COLOR_MATERIAL)
-        glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
+        """Initialize OpenGL through PicoGL backend helpers."""
+        self.backend.frame.set_clear_color((0.1, 0.1, 0.2, 1.0))
+        self.backend.depth.set_depth_test(True)
+        self.backend.depth.set_depth_func_gl_less()
 
-        # Set up lighting
-        glLightfv(GL_LIGHT0, GL_POSITION, [1.0, 1.0, 1.0, 0.0])
-        glLightfv(GL_LIGHT0, GL_AMBIENT, [0.3, 0.3, 0.3, 1.0])
-        glLightfv(GL_LIGHT0, GL_DIFFUSE, [0.8, 0.8, 0.8, 1.0])
-        glLightfv(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
+        setup_lighting(mode=0)
+        self.backend.capabilities.enable(GLLight.LIGHT0)
+        self.backend.capabilities.enable(GLCapability.COLOR_MATERIAL)
+        self.backend.legacy.set_color_material(
+            GLFace.FRONT_AND_BACK,
+            GLColorMaterialMode.AMBIENT_AND_DIFFUSE,
+        )
+        self.backend.legacy.set_light([1.0, 1.0, 1.0, 0.0], light=GLLight.LIGHT0)
 
-        # Set up material properties
-        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
-        glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, [0.8, 0.8, 0.8, 1.0])
-        glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
-        glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50.0)
+        material = PhongMaterial(
+            ambient=(0.2, 0.2, 0.2, 1.0),
+            diffuse=(0.8, 0.8, 0.8, 1.0),
+            specular=(1.0, 1.0, 1.0, 1.0),
+            shininess=50.0,
+        )
+        self.backend.legacy.set_material(GLMaterialFace.FRONT_AND_BACK, material)
 
-        print(f"✅ Simple Qt Cube Widget initialized (using {QT_VERSION})")
+        mesh_data = MeshData.from_raw(
+            vertices=self.vertices,
+            colors=self.colors,
+            indices=self.indices,
+        )
+        self.gl_mesh = LegacyGLMesh.from_mesh_data(mesh_data)
+        self.gl_mesh.upload()
+        self._gl_ready = True
+
+        print(f"Simple Qt Cube Widget initialized (using {QT_VERSION}, PicoGL API)")
 
     def resizeGL(self, w: int, h: int):
-        """Handle window resize"""
-        # Set up projection matrix
-        glMatrixMode(GL_PROJECTION)
-        glLoadIdentity()
-        gluPerspective(45.0, w / h, 0.1, 100.0)
-
-        # Return to modelview matrix
-        glMatrixMode(GL_MODELVIEW)
-        glLoadIdentity()
+        """Resize viewport and projection via PicoGL drivers."""
+        h = max(h, 1)
+        self.backend.frame.viewport(0, 0, w, h)
+        aspect = float(w) / float(h)
+        self.backend.legacy.set_projection(45.0, aspect, 0.1, 100.0)
 
     def paintGL(self):
-        """Render the cube scene"""
-        # Clear buffers
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        """Render the cube through PicoGL frame clear + legacy mesh draw."""
+        if not self._gl_ready or self.gl_mesh is None:
+            return
 
-        # Set up modelview matrix
-        glMatrixMode(GL_MODELVIEW)
-        glLoadIdentity()
+        self.backend.frame.clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
 
-        # Position camera
-        gluLookAt(0, 0, self.zoom, 0, 0, 0, 0, 1, 0)
+        update_camera_matrix(
+            translation=np.array([0.0, 0.0], dtype=np.float32),
+            rotation=np.array(
+                [self.rotation_x, self.rotation_y, 0.0], dtype=np.float32
+            ),
+            zoom_value=float(self.zoom),
+        )
 
-        # Apply rotations
-        glRotatef(self.rotation_x, 1, 0, 0)
-        glRotatef(self.rotation_y, 0, 1, 0)
+        self.gl_mesh.draw()
 
-        # Draw the cube using legacy OpenGL
-        self.draw_cube()
-
-    def draw_cube(self):
-        """Draw the cube using legacy OpenGL immediate mode"""
-        glEnableClientState(GL_VERTEX_ARRAY)
-        glEnableClientState(GL_COLOR_ARRAY)
-
-        # Set up vertex and colour arrays
-        glVertexPointer(3, GL_FLOAT, 0, self.vertices)
-        glColorPointer(3, GL_FLOAT, 0, self.colors)
-
-        # Draw the cube
-        glDrawArrays(GL_TRIANGLES, 0, len(self.vertices) // 3)
-
-        # Clean up
-        glDisableClientState(GL_COLOR_ARRAY)
-        glDisableClientState(GL_VERTEX_ARRAY)
+        err = glGetError()
+        if err:
+            print(f"OpenGL error after draw: {err}")
 
     def animate(self):
-        """Animation loop - called by timer"""
         if self.auto_rotate:
             self.rotation_y += self.rotation_speed
             if self.rotation_y >= 360.0:
@@ -179,75 +166,57 @@ class SimpleQtCubeWidget(QOpenGLWidget):
         self.update()
 
     def mousePressEvent(self, event):
-        """Handle mouse press"""
         self.last_mouse_pos = event.pos()
         super().mousePressEvent(event)
 
     def mouseMoveEvent(self, event):
-        """Handle mouse movement for manual rotation"""
-        if event.buttons() & Qt.LeftButton and self.last_mouse_pos:
-            # Manual rotation
+        if event.buttons() & Qt.LeftButton and self.last_mouse_pos is not None:
             self.auto_rotate = False
             delta = event.pos() - self.last_mouse_pos
             self.rotation_x += delta.y() * 0.5
             self.rotation_y += delta.x() * 0.5
-
-            # Clamp rotation
             self.rotation_x = max(-90, min(90, self.rotation_x))
 
         self.last_mouse_pos = event.pos()
         super().mouseMoveEvent(event)
 
     def wheelEvent(self, event):
-        """Handle mouse wheel for zoom"""
         delta = event.angleDelta().y()
         zoom_factor = 0.1
-
         if delta > 0:
             self.zoom = max(1.0, self.zoom - zoom_factor)
         else:
             self.zoom = min(20.0, self.zoom + zoom_factor)
-
         print(f"Zoom: {self.zoom:.1f}")
         super().wheelEvent(event)
 
     def keyPressEvent(self, event):
-        """Handle keyboard input"""
         if event.key() == Qt.Key_Space:
-            # Toggle auto-rotation
             self.auto_rotate = not self.auto_rotate
             print(f"Auto-rotation: {'ON' if self.auto_rotate else 'OFF'}")
         elif event.key() == Qt.Key_R:
-            # Reset rotation
             self.rotation_x = 0.0
             self.rotation_y = 0.0
             self.zoom = 5.0
             print("Reset view")
         elif event.key() == Qt.Key_Escape:
-            # Close application
             self.parent().close()
         else:
             super().keyPressEvent(event)
 
 
 class SimpleQtCubeWindow(QMainWindow):
-    """
-    Simple main window for the Qt cube renderer
-    """
+    """Main window hosting the simple PicoGL cube widget."""
 
     def __init__(self):
         super().__init__()
         self.setWindowTitle(f"PicoGL Simple Qt Cube - {QT_VERSION}")
         self.setGeometry(100, 100, 800, 600)
 
-        # Create central widget
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
-
-        # Create layout
         layout = QVBoxLayout(central_widget)
 
-        # Create info label
         info_text = f"""
         <h3>PicoGL Simple Qt Cube Renderer</h3>
         <p><b>Qt Version:</b> {QT_VERSION}</p>
@@ -259,22 +228,19 @@ class SimpleQtCubeWindow(QMainWindow):
         <li><b>R:</b> Reset view</li>
         <li><b>Escape:</b> Close application</li>
         </ul>
-        <p><b>Rendering:</b> Legacy OpenGL (compatible with older systems)</p>
+        <p><b>Rendering:</b> PicoGL GLBackend + LegacyGLMesh (legacy OpenGL)</p>
         """
         info_label = QLabel(info_text)
         info_label.setMaximumHeight(180)
         layout.addWidget(info_label)
 
-        # Create OpenGL widget
         self.gl_widget = SimpleQtCubeWidget()
         layout.addWidget(self.gl_widget)
 
-        # Set focus to OpenGL widget for keyboard input
         self.gl_widget.setFocusPolicy(Qt.StrongFocus)
         self.gl_widget.setFocus()
 
     def keyPressEvent(self, event):
-        """Handle keyboard input at window level"""
         if event.key() == Qt.Key_Escape:
             self.close()
         else:
@@ -282,21 +248,14 @@ class SimpleQtCubeWindow(QMainWindow):
 
 
 def main():
-    """Main function to run the simple Qt cube renderer"""
-    print("🚀 Starting PicoGL Simple Qt Cube Renderer...")
-
-    # Create and show window
+    print("Starting PicoGL Simple Qt Cube Renderer...")
     app = QApplication(sys.argv)
     window = SimpleQtCubeWindow()
     window.show()
-
-    print("✅ Simple Qt Cube Renderer started successfully!")
+    print("Simple Qt Cube Renderer started successfully!")
     print(f"   - Qt Version: {QT_VERSION}")
     print("   - Window: 800x600")
-    print("   - Rendering: Legacy OpenGL")
-    print("   - Controls: Mouse drag, wheel, keyboard")
-
-    # Run the application
+    print("   - Rendering: PicoGL legacy backend + LegacyGLMesh")
     return app.exec()
 
 
