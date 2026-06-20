@@ -6,7 +6,6 @@ desired OpenGL state and delegate the actual GL calls to a backend object.
 """
 
 from dataclasses import dataclass
-from enum import Enum
 from typing import Any, Protocol
 
 from numpy import ndarray
@@ -18,13 +17,11 @@ from OpenGL.raw.GL.VERSION.GL_1_1 import (
 )
 
 from picogl.backend.capability import (
-    BLEND_FACTOR_MAP,
-    CAP_MAP,
-    FACE_MAP,
     GLBlendFactor,
     GLFixedFunctionCapability,
     GLPipelineCapability,
 )
+from picogl.backend.value import gl_value
 from picogl.state.draw_mode import GLDataType, GLDrawMode, GLIndexType
 from picogl.state.fill import GLCapability, GLFace, GLFillMode
 from picogl.texture.gltexture_driver import GLTextureDriver
@@ -35,21 +32,6 @@ from picogl.wrappers.pointer import (
     gl_normal_array_pointer,
     gl_vertex_array_pointer,
 )
-
-
-def gl_value(value: Any) -> Any:
-    """Return a raw OpenGL value for PicoGL enums or pass raw values through."""
-    for mapping in (CAP_MAP, BLEND_FACTOR_MAP, FACE_MAP):
-        try:
-            if value in mapping:
-                return mapping[value]
-        except TypeError:
-            pass
-
-    enum_value = getattr(value, "value", value)
-    if isinstance(value, Enum):
-        return enum_value
-    return value
 
 
 class CapabilityDriver(Protocol):

@@ -23,6 +23,10 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_FRONT,
     GL_FRONT_AND_BACK,
     GL_LIGHT0,
+    GL_LIGHT1,
+    GL_LIGHT2,
+    GL_LIGHT3,
+    GL_LIGHT4,
     GL_LIGHTING,
     GL_ONE,
     GL_ONE_MINUS_SRC_ALPHA,
@@ -44,6 +48,10 @@ class GLFixedFunctionCapability(IntEnum):
 
     LIGHTING = GL_LIGHTING
     LIGHT0 = GL_LIGHT0
+    LIGHT1 = GL_LIGHT1
+    LIGHT2 = GL_LIGHT2
+    LIGHT3 = GL_LIGHT3
+    LIGHT4 = GL_LIGHT4
 
 
 class GLBlendTarget(IntEnum):

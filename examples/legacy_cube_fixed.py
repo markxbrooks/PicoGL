@@ -16,6 +16,12 @@ from pathlib import Path
 
 import numpy as np
 
+from picogl.backend.GL.driver.capability import GLCapabilityDriver
+from picogl.backend.GL.light import GLLightSource
+from picogl.backend.capability import GLFixedFunctionCapability
+from picogl.state.draw_mode import GLLegacyMatrixMode, GLBitMask
+from picogl.state.fill import GLFace, GLCapability, GLColorMaterialMode, GLLightParameter, GLFillMode
+
 # Check for display before importing OpenGL
 if os.environ.get("DISPLAY") is None and os.name != "nt":
     print("❌ No display available. This requires a graphical environment.")
@@ -308,23 +314,23 @@ class LegacyCubeRenderer:
     def init_gl(self):
         """Initialize OpenGL state."""
         glClearColor(0.1, 0.1, 0.2, 1.0)  # Dark blue background
-        glEnable(GL_DEPTH_TEST)
-        glEnable(GL_LIGHTING)
-        glEnable(GL_LIGHT0)
-        glEnable(GL_COLOR_MATERIAL)
-        glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
+        GLCapabilityDriver.enable(GL_DEPTH_TEST)
+        GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHTING)
+        GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHT0)
+        GLCapabilityDriver.enable(GLCapability.COLOR_MATERIAL)
+        glColorMaterial(GLFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE)
 
         # Set up lighting
-        glLightfv(GL_LIGHT0, GL_POSITION, [1.0, 1.0, 1.0, 0.0])
-        glLightfv(GL_LIGHT0, GL_AMBIENT, [0.3, 0.3, 0.3, 1.0])
-        glLightfv(GL_LIGHT0, GL_DIFFUSE, [0.8, 0.8, 0.8, 1.0])
-        glLightfv(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
+        GLLightSource.lightf(GL_LIGHT0, GLLightParameter.POSITION, [1.0, 1.0, 1.0, 0.0])
+        GLLightSource.lightf(GL_LIGHT0, GLLightParameter.AMBIENT, [0.3, 0.3, 0.3, 1.0])
+        GLLightSource.lightf(GL_LIGHT0, GLLightParameter.DIFFUSE, [0.8, 0.8, 0.8, 1.0])
+        GLLightSource.lightf(GL_LIGHT0, GLLightParameter.SPECULAR, [1.0, 1.0, 1.0, 1.0])
 
         # Set up material properties
-        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
-        glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, [0.8, 0.8, 0.8, 1.0])
-        glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
-        glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50.0)
+        glMaterialfv(GLFace.FRONT_AND_BACK, GLLightParameter.AMBIENT, [0.2, 0.2, 0.2, 1.0])
+        glMaterialfv(GLFace.FRONT_AND_BACK, GLLightParameter.DIFFUSE, [0.8, 0.8, 0.8, 1.0])
+        glMaterialfv(GLFace.FRONT_AND_BACK, GLLightParameter.SPECULAR, [1.0, 1.0, 1.0, 1.0])
+        glMaterialf(GLFace.FRONT_AND_BACK, GLLightParameter.SHININESS, 50.0)
 
     def load_cube_data(self):
         """Load cube data using PicoGL LegacyGLMesh."""
@@ -357,7 +363,7 @@ class LegacyCubeRenderer:
 
     def display(self):
         """Display callback - render the scene."""
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        glClear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
         glLoadIdentity()
 
         # Set up camera
@@ -371,17 +377,17 @@ class LegacyCubeRenderer:
         if self.mesh:
             try:
                 if self.wireframe_mode:
-                    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
-                    glDisable(GL_LIGHTING)
+                    glPolygonMode(GLFace.FRONT_AND_BACK, GLFillMode.LINE)
+                    glDisable(GLFixedFunctionCapability.LIGHTING)
                 else:
-                    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
-                    glEnable(GL_LIGHTING)
+                    glPolygonMode(GLFace.FRONT_AND_BACK, GLFillMode.FILL)
+                    GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHTING)
 
                 self.mesh.draw()
 
                 # Reset polygon mode
-                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
-                glEnable(GL_LIGHTING)
+                glPolygonMode(GLFace.FRONT_AND_BACK, GLFillMode.FILL)
+                GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHTING)
 
             except Exception as e:
                 print(f"Error drawing mesh: {e}")
@@ -395,22 +401,23 @@ class LegacyCubeRenderer:
 
     def draw_fallback_cube(self):
         """Draw a simple wireframe cube as fallback."""
-        glDisable(GL_LIGHTING)
-        glColor3f(1.0, 0.0, 0.0)  # Red wireframe
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+        glDisable(GLFixedFunctionCapability.LIGHTING)
+        red_rgb = (1.0, 0.0, 0.0)
+        glColor3f(*red_rgb)  # Red wireframe
+        glPolygonMode(GLFace.FRONT_AND_BACK, GLFillMode.LINE)
         glutWireCube(2.0)
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
-        glEnable(GL_LIGHTING)
+        glPolygonMode(GLFace.FRONT_AND_BACK, GLFillMode.FILL)
+        GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHTING)
 
     def reshape(self, width, height):
         """Reshape callback - handle window resize."""
         self.width = width
         self.height = height
         glViewport(0, 0, width, height)
-        glMatrixMode(GL_PROJECTION)
+        glMatrixMode(GLLegacyMatrixMode.PROJECTION)
         glLoadIdentity()
         gluPerspective(45.0, float(width) / float(height), 0.1, 100.0)
-        glMatrixMode(GL_MODELVIEW)
+        glMatrixMode(GLLegacyMatrixMode.MODELVIEW)
 
     def keyboard(self, key, x, y):
         """Keyboard callback."""

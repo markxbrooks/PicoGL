@@ -33,7 +33,7 @@ class GLBlendDriver(Applyable):
 
     @staticmethod
     def get_blend_func() -> tuple[GLBlendFactor, GLBlendFactor]:
-        c = self.capabilities
+        c = GLCapabilityDriver
         src = GLBlendFactor.from_gl(int(c.get_integerv(GLBlendTarget.BLEND_SRC)))
         dst = GLBlendFactor.from_gl(int(c.get_integerv(GLBlendTarget.BLEND_DST)))
         return src, dst

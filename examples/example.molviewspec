@@ -25,7 +25,7 @@
       "kind": "ball-and-stick",
       "props": {
         "alpha": 1.0,
-        "color": "element-symbol"
+        "colour": "element-symbol"
       },
       "data": {
         "x": [
@@ -112,7 +112,7 @@
       "kind": "line",
       "props": {
         "alpha": 1.0,
-        "color": "element-symbol"
+        "colour": "element-symbol"
       },
       "data": {
         "positionA": [

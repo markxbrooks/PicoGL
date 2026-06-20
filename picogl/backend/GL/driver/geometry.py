@@ -1,3 +1,15 @@
+"""
+Mesh binding and indexed draw operations.
+
+Handles the binding of GPU-based meshes and facilitates drawing operations
+using various strategies, including indexed draw and array draw functionalities.
+Provides both static and class methods for drawing operations.
+
+Classes:
+    GLGeometryDriver: Utility for binding, drawing, and managing GPU meshes.
+
+"""
+
 from picogl.backend.geometry.mesh import GPUMesh
 from picogl.backend.opengl import GLBindingStrategy
 from picogl.backend.state import gl_value
