@@ -60,7 +60,7 @@ from picogl.backend.state import (
 )
 from picogl.polygon.mode import PolygonMode
 from picogl.state.client import GLClientState
-from picogl.state.fill import GLFace, GLLightParameter
+from picogl.state.fill import GLFace, GLLightParameter, GLFillMode
 
 
 class _RecordingRaster:
