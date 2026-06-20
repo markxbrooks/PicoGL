@@ -13,10 +13,16 @@ from OpenGL.GL import (
     glTexParameteri,
 )
 from OpenGL.constant import Constant, FloatConstant, IntConstant, LongConstant, StringConstant
-from OpenGL.raw.GL.ARB.internalformat_query2 import GL_TEXTURE_2D
+from OpenGL.raw.GL.VERSION.GL_1_1 import glBindTexture
 from OpenGL.raw.GL.VERSION.GL_1_2 import glTexImage3D
 
 from picogl.numerical import GLNumeric
+from picogl.texture.gltexture import GLTexture
+
+
+def gl_bind_texture(tex_id: int, target: GLTexture = GLTexture.TEXTURE_2D):
+    """gl bind texture (with OpenGL)"""
+    glBindTexture(target, tex_id)
 
 
 def gl_compressed_tex_image(
@@ -29,7 +35,7 @@ def gl_compressed_tex_image(
 ) -> None:
     """Issue ``glCompressedTexImage2D`` for a 2D texture."""
     glCompressedTexImage2D(
-        GL_TEXTURE_2D,
+        GLTexture.TEXTURE_2D,
         level,
         gl_format,
         w,
@@ -97,6 +103,6 @@ def gl_tex_parameter(target: int, pname: Any, param: Any) -> None:
     glTexParameteri(target, pname, param)
 
 
-def gl_generate_mipmap(target: int = GL_TEXTURE_2D) -> None:
+def gl_generate_mipmap(target: GLTexture = GLTexture.TEXTURE_2D) -> None:
     """Generate mipmaps for the currently bound texture."""
     glGenerateMipmap(target)

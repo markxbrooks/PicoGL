@@ -103,7 +103,7 @@ class Tu01Win(GLWindow):
 
         self.shader.begin()
         glUniformMatrix4fv(
-            self.context.MVP_ID, 1, GL_FALSE, glm.value_ptr(self.context.MVP)
+            self.context.MVP_ID, 1, GLBoolean.FALSE, glm.value_ptr(self.context.MVP)
         )
 
         gl_enable_vertex_array(0)

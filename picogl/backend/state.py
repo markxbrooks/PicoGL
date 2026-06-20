@@ -27,7 +27,7 @@ from picogl.backend.capability import (
 )
 from picogl.state.draw_mode import GLDataType, GLDrawMode, GLIndexType
 from picogl.state.fill import GLCapability, GLFace, GLFillMode
-from picogl.texture.gltexture import GLTextureDriver
+from picogl.texture.gltexture_driver import GLTextureDriver
 from picogl.wrappers.client_state import gl_enable_legacy_client_state
 from picogl.wrappers.draw import gl_draw_elements
 from picogl.wrappers.pointer import (

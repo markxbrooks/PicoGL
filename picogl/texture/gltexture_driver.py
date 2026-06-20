@@ -24,7 +24,7 @@ from OpenGL.raw.GL.VERSION.GL_1_1 import glBindTexture, glDeleteTextures
 
 from picogl.numerical import GLNumeric
 from picogl.texture.gltexture import GLTexture
-from picogl.texture.mapping import FILTER_MAP, WRAP_MAP
+from picogl.texture.mapping import FILTER_MAP, WRAP_MAP, FORMAT_MAP
 from picogl.texture.texture2d import Texture2D
 from picogl.wrappers.texture import gl_generate_mipmap, gl_tex_parameter, gl_teximage2d
 

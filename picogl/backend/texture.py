@@ -1,27 +1,39 @@
+"""
+Module provides utility functions and a class for managing OpenGL textures.
+
+This module contains context managers for handling texture bindings, utility
+functions for creating procedural textures, and the TextureManager class for
+managing and reloading textures. It integrates with OpenGL through a backend
+driver, providing streamlined texture handling and fallback behavior.
+"""
+
+
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
 
 import numpy as np
 from elmo.globals import RESOURCE_DIR
-from OpenGL.raw.GL.ARB.internalformat_query2 import GL_TEXTURE_2D
-from OpenGL.raw.GL.VERSION.GL_1_0 import glDisable, glEnable
-from OpenGL.raw.GL.VERSION.GL_1_1 import glBindTexture
 
-from picogl.texture.gltexture import GLTexture, GLTextureDriver, Texture2D
+from picogl.backend.GL.driver.capability import GLCapabilityDriver
+from picogl.texture.gltexture import GLTexture
+from picogl.texture.gltexture_driver import GLTextureDriver
+from picogl.texture.texture2d import  Texture2D
+from picogl.wrappers.texture import gl_bind_texture
 
 
 @contextmanager
 def gl_texture_binding(texture_gl_id: int | None):
+    """gl texture binding"""
     try:
         if texture_gl_id is not None:
-            glEnable(GLTexture.TEXTURE_2D)
-            glBindTexture(GLTexture.TEXTURE_2D, texture_gl_id)
+            GLCapabilityDriver.enable(GLTexture.TEXTURE_2D)
+            gl_bind_texture(texture_gl_id)
         yield
     finally:
         if texture_gl_id is not None:
-            glBindTexture(GLTexture.TEXTURE_2D, 0)
-            glDisable(GLTexture.TEXTURE_2D)
+            gl_bind_texture(0)
+            GLCapabilityDriver.disable(GLTexture.TEXTURE_2D)
 
 
 @contextmanager
@@ -35,7 +47,7 @@ def bind_texture(tex: Texture2D | None):
     if driver is not None:
         try:
             if tex.handle is not None:
-                glEnable(GLTexture.TEXTURE_2D)
+                GLCapabilityDriver.enable(GLTexture.TEXTURE_2D)
                 driver.bind(tex)
                 driver.ensure_initialized(tex)
             yield
