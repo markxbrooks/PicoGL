@@ -1,13 +1,23 @@
+"""
+A context manager for managing OpenGL blend functionality.
+
+This module provides a context manager to temporarily modify and restore
+OpenGL blend settings. It handles enabling or disabling the blend capability
+as well as setting the blend function parameters. Upon exiting the context,
+the original state and settings are restored.
+"""
+
+
 from contextlib import contextmanager
 
 from picogl.backend.GL.driver.capability import GLCapabilityDriver
 from picogl.backend.GL.driver.blend import GLBlendDriver
-from picogl.backend.capability import GLPipelineCapability
+from picogl.backend.capability import GLPipelineCapability, GLBlendFactor
 from picogl.wrappers.get_integerv import gl_get_integerv
 
 
 @contextmanager
-def gl_blend(src=GLBlendFactor.SRC_ALPHA, dst=GLBlendFactor.ONE_MINUS_SRC_ALPHA):
+def gl_blend(src: GLBlendFactor = GLBlendFactor.SRC_ALPHA, dst: GLBlendFactor = GLBlendFactor.ONE_MINUS_SRC_ALPHA):
     """gl blend context manager"""
     capabilities = GLCapabilityDriver()
     was_enabled = GLCapabilityDriver.is_enabled(GLPipelineCapability.BLEND)

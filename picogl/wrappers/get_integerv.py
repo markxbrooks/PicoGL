@@ -2,6 +2,7 @@
 gl disable vertex array wrapper
 
 """
+
 from typing import Any
 
 from OpenGL.GL import glGetIntegerv
