@@ -39,6 +39,9 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     glEnable,
     glIsEnabled,
     glTexParameteri,
+    GL_REPEAT
+    GL_LINEAR_MIPMAP_LINEAR,
+
 )
 from OpenGL.raw.GL.VERSION.GL_1_1 import glBindTexture, glDeleteTextures
 from OpenGL.raw.GL.VERSION.GL_1_2 import GL_CLAMP_TO_EDGE
@@ -156,6 +159,12 @@ class GLTextureDriver:
             tex.handle = None
             tex.initialized = False
 
+
+class GLTexParam(IntEnum):
+    """GL Parameter"""
+    REPEAT = GL_REPEAT
+    LINEAR = GL_LINEAR
+    LINEAR_MIPMAP_LINEAR = GL_LINEAR_MIPMAP_LINEAR
 
 class GLTexture(IntEnum):
     """GL Texture Mode"""
