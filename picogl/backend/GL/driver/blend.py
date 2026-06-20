@@ -4,7 +4,7 @@ GL Blend Driver
 
 from typing import TYPE_CHECKING
 
-from OpenGL.GL import glBlendFunc, glGetIntegerv
+from OpenGL.GL import glBlendFunc
 
 from picogl.backend.capability import GLBlendFactor, GLBlendTarget, GLPipelineCapability
 from picogl.backend.GL.driver.applyable import Applyable
@@ -33,8 +33,9 @@ class GLBlendDriver(Applyable):
 
     @staticmethod
     def get_blend_func() -> tuple[GLBlendFactor, GLBlendFactor]:
-        src = GLBlendFactor.from_gl(int(glGetIntegerv(GLBlendTarget.BLEND_SRC)))
-        dst = GLBlendFactor.from_gl(int(glGetIntegerv(GLBlendTarget.BLEND_DST)))
+        c = self.capabilities
+        src = GLBlendFactor.from_gl(int(c.get_integerv(GLBlendTarget.BLEND_SRC)))
+        dst = GLBlendFactor.from_gl(int(c.get_integerv(GLBlendTarget.BLEND_DST)))
         return src, dst
 
     def setup_blending(self):

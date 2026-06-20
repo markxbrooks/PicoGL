@@ -52,7 +52,7 @@ def delete_dict_buffers(buffer_dict: Dict[str, int]) -> None:
     :return:
     """
     for buf in buffer_dict.values():
-        delete_buffer(buf)
+        gl_delete_buffers(buf)
     buffer_dict.clear()
 
 
@@ -67,9 +67,9 @@ def delete_buffer_object(buffer: Optional["VertexBuffer"]) -> None:
         glDeleteBuffers(1, [buffer.handle])
 
 
-def delete_buffer(buffer: Optional[int]) -> None:
+def gl_delete_buffers(buffer: Optional[int]) -> None:
     """
-    delete_buffer
+    gl_delete_buffers
 
     :param buffer: Optional[int]
     :return: None
@@ -78,12 +78,13 @@ def delete_buffer(buffer: Optional[int]) -> None:
         glDeleteBuffers(1, [buffer])
 
 
-def delete_vao(vao: Optional[int]) -> None:
+def gl_delete_vertex_arrays(vao: Optional[int], number: int = 1) -> None:
     """
     delete_vao
 
     :param vao: Optional[int]
+    :param number: Optional[int]
     :return: None
     """
     if vao is not None and vao > 0:
-        glDeleteVertexArrays(1, [vao])
+        glDeleteVertexArrays(number, [vao])

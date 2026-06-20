@@ -1,7 +1,20 @@
+"""
+A module for managing OpenGL capabilities, including enabling, disabling,
+and querying the state of various capabilities.
+
+This module provides functionality to interact with OpenGL capabilities
+through methods for toggling specific features, checking their current state,
+and managing multisampling.
+
+Classes:
+    GLCapabilityDriver: Encapsulates OpenGL capability management, allowing
+    operations such as enabling/disabling features and querying their states.
+"""
 from OpenGL.raw.GL.VERSION.GL_1_0 import glDisable, glEnable, glIsEnabled
 from OpenGL.raw.GL.VERSION.GL_1_3 import GL_MULTISAMPLE
 
 from picogl.backend.state import gl_value
+from picogl.wrappers.get_integerv import gl_get_integerv
 
 
 class GLCapabilityDriver:
@@ -21,6 +34,10 @@ class GLCapabilityDriver:
     @staticmethod
     def is_enabled(cap) -> bool:
         return bool(glIsEnabled(gl_value(cap)))
+
+    @staticmethod
+    def get_integerv(val: int):
+        gl_get_integerv(val)
 
     def enable_multisample(self):
         self.enable(GL_MULTISAMPLE)

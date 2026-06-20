@@ -6,7 +6,7 @@ from examples.utils.test_window import GLWindow
 from picogl.backend.capability import GLPipelineCapability
 from picogl.boolean import GLBoolean
 from picogl.numerical import GLNumeric
-from picogl.state.draw_mode import GLBufferTarget, GLUsageHint
+from picogl.state.draw_mode import GLBufferTarget, GLUsageHint, GLBitMask
 from picogl.wrappers.buffer import gl_bind_buffer
 from picogl.wrappers.data import gl_buffer_data
 from picogl.wrappers.draw import gl_draw_arrays
@@ -99,7 +99,7 @@ class Tu01Win(GLWindow):
 
     def paintGL(self):
         print("draw++")
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        glClear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
 
         self.shader.begin()
         glUniformMatrix4fv(

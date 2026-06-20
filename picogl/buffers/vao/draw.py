@@ -2,13 +2,12 @@
 Draw a VAO with attributes
 """
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POINTS
-
+from picogl.state.draw_mode import GLDrawMode
 from picogl.buffers.vao.configure import vao_configure_attributes
 from picogl.wrappers.draw import gl_draw_arrays
 
 
-def vao_draw_with_attributes(attributes: list, atom_count: int, mode: int = GL_POINTS):
+def vao_draw_with_attributes(attributes: list, atom_count: int, mode: int = GLDrawMode.POINTS):
     """
     vao_draw_with_attributes
 

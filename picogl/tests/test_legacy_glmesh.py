@@ -42,6 +42,7 @@ from OpenGL.raw.GL.VERSION.GL_1_1 import GL_COLOR_ARRAY, GL_VERTEX_ARRAY
 from picogl.buffers.vertex.vbo.vbo_class import VBOType
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.renderer.meshdata import MeshData
+from picogl.state.draw_mode import GLDrawMode
 
 
 class TestLegacyGLMesh(unittest.TestCase):

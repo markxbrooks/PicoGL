@@ -1,3 +1,14 @@
+"""
+Module for representing and managing OpenGL capabilities, fixed-function states, material
+properties, and blend functions.
+
+This module provides a collection of enumerations and data classes to facilitate the
+representation of OpenGL states such as pipeline capabilities, blend factors, and material
+properties. The module includes mappings between the defined enums and their OpenGL
+integer constants for easy usage in OpenGL-related operations.
+"""
+
+
 from dataclasses import dataclass
 from enum import IntEnum
 from typing import Sequence

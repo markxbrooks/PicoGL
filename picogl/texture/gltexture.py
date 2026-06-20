@@ -194,7 +194,7 @@ class GLTexture(IntEnum):
     @contextmanager
     def enabled_texture2d():
         """Texture 2D Enabled"""
-        was_enabled = self.get_enabled_tex2d()
+        was_enabled = GLTexture.get_enabled_tex2d()
         try:
             if not was_enabled:
                 GLTexture.enable_tex2d()

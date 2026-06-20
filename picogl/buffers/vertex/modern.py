@@ -4,7 +4,7 @@ from OpenGL.GL import glDeleteVertexArrays
 
 from picogl.buffers.attributes import LayoutDescriptor
 from picogl.buffers.base import VertexBase
-from picogl.buffers.glcleanup import delete_buffer
+from picogl.buffers.glcleanup import gl_delete_buffers
 from picogl.state.draw_mode import GLBufferTarget
 from picogl.wrappers.buffer import gl_bind_buffer
 from picogl.wrappers.enable_vertex_array import gl_enable_vertex_array
@@ -87,10 +87,10 @@ class ModernVertexArrayGroup(VertexBase):
         if self.vao:
             glDeleteVertexArrays([self.vao])
             self.vao = 0
-        delete_buffer(self.nbo)
-        delete_buffer(self.cbo)
-        delete_buffer(self.vbo)
-        delete_buffer(self.ebo)
+        gl_delete_buffers(self.nbo)
+        gl_delete_buffers(self.cbo)
+        gl_delete_buffers(self.vbo)
+        gl_delete_buffers(self.ebo)
         self.nbo = self.cbo = self.vbo = self.ebo = None
         self.layout = None
         self._configured = False
