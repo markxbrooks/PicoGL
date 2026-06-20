@@ -1,8 +1,8 @@
 """bind texture array"""
 
 from OpenGL.raw.GL.ARB.internalformat_query2 import GL_TEXTURE_2D
-from OpenGL.raw.GL.VERSION.GL_1_1 import glBindTexture
-from OpenGL.raw.GL.VERSION.GL_1_3 import GL_TEXTURE0, glActiveTexture
+
+from picogl.wrappers.texture import gl_bind_texture, gl_get_active_texture0
 
 
 def bind_texture_array(texture_id: int):
@@ -12,5 +12,5 @@ def bind_texture_array(texture_id: int):
     :param texture_id:
     :return: None
     """
-    glActiveTexture(GL_TEXTURE0)
-    glBindTexture(GL_TEXTURE_2D, texture_id)
+    gl_get_active_texture0()
+    gl_bind_texture(texture_id, GL_TEXTURE_2D)

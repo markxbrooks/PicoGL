@@ -9,6 +9,7 @@ from picogl.numerical import GLNumeric
 from picogl.state.draw_mode import GLBufferTarget, GLUsageHint, GLBitMask
 from picogl.wrappers.buffer import gl_bind_buffer
 from picogl.wrappers.data import gl_buffer_data
+from picogl.wrappers.disable_vertex_array import gl_disable_vertex_array
 from picogl.wrappers.draw import gl_draw_arrays
 from picogl.wrappers.enable_vertex_array import gl_enable_vertex_array
 from picogl.wrappers.generate_buffers import gl_generate_buffers
@@ -130,8 +131,8 @@ class Tu01Win(GLWindow):
 
         gl_draw_arrays(12 * 3, GL_TRIANGLES, first=0)
 
-        glDisableVertexAttribArray(0)
-        glDisableVertexAttribArray(1)
+        gl_disable_vertex_array(0)
+        gl_disable_vertex_array(1)
         self.shader.end()
 
 

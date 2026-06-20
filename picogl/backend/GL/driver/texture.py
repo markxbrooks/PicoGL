@@ -8,11 +8,11 @@ custom driver and utility classes to abstract and simplify texture management.
 
 from OpenGL.GL import glDeleteTextures
 from OpenGL.raw.GL.ARB.internalformat_query2 import GL_TEXTURE_2D
-from OpenGL.raw.GL.VERSION.GL_1_1 import glBindTexture
 
 from picogl.texture.gltexture_driver import GLTextureDriver
 from picogl.texture.texture2d import Texture2D
 from picogl.texture.texture_spec import TextureSpec
+from picogl.wrappers.texture import gl_bind_texture
 
 
 class GLTextureSystem:
@@ -31,7 +31,7 @@ class GLTextureSystem:
 
     @staticmethod
     def bind_texture(texture_id):
-        glBindTexture(GL_TEXTURE_2D, texture_id)
+        gl_bind_texture(texture_id, GL_TEXTURE_2D)
 
     @staticmethod
     def delete_texture(tex_id: int):

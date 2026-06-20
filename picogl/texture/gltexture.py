@@ -35,12 +35,12 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     glIsEnabled,
 
 )
-from OpenGL.raw.GL.VERSION.GL_1_1 import glBindTexture
-from OpenGL.raw.GL.VERSION.GL_1_3 import GL_ACTIVE_TEXTURE, GL_TEXTURE0, glActiveTexture
+from OpenGL.raw.GL.VERSION.GL_1_3 import GL_ACTIVE_TEXTURE, GL_TEXTURE0
 from OpenGL.raw.GL.VERSION.GL_4_5 import GL_TEXTURE_BINDING_2D
 
 from picogl.state.param import GLParam
 from picogl.state.query import GLStateQuery
+from picogl.wrappers.texture import gl_active_texture, gl_bind_texture
 
 class GLTexture(IntEnum):
     """GL Texture Mode"""
@@ -61,11 +61,11 @@ class GLTexture(IntEnum):
 
     @staticmethod
     def set_active(unit=TEXTURE0):
-        glActiveTexture(unit)
+        gl_active_texture(unit)
 
     @staticmethod
     def bind(target: int, texture: int):
-        glBindTexture(target, texture)
+        gl_bind_texture(texture, target)
 
     @staticmethod
     @contextmanager

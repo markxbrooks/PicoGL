@@ -650,7 +650,7 @@ class TestDrawCommand(unittest.TestCase):
         textures = GLTextureSystem(driver=driver)
 
         with (
-            patch("picogl.backend.GL.driver.texture.glBindTexture") as bind_texture,
+            patch("picogl.backend.GL.driver.texture.gl_bind_texture") as bind_texture,
             patch(
                 "picogl.backend.GL.driver.texture.glDeleteTextures"
             ) as delete_textures,

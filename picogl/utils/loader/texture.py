@@ -7,16 +7,12 @@ import struct
 from pathlib import Path
 from typing import Optional
 
-from OpenGL.GL import (
-    glDeleteTextures,
-    glGenTextures,
-)
+from OpenGL.GL import glDeleteTextures
 from OpenGL.raw.GL.EXT.texture_compression_s3tc import (
     GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,
     GL_COMPRESSED_RGBA_S3TC_DXT3_EXT,
     GL_COMPRESSED_RGBA_S3TC_DXT5_EXT,
 )
-from OpenGL.raw.GL.VERSION.GL_1_1 import glBindTexture
 from PIL import Image
 
 from picogl.core.color import GLColor
@@ -24,10 +20,12 @@ from picogl.numerical import GLNumeric
 from picogl.texture.gltexture import GLTexture
 from picogl.texture.gltexparam import GLTexParam
 from picogl.wrappers.texture import (
+    gl_bind_texture,
     gl_compressed_tex_image,
     gl_generate_mipmap,
+    gl_gen_textures,
     gl_tex_parameter,
-    gl_teximage2d, gl_bind_texture, gl_gen_textures,
+    gl_teximage2d,
 )
 
 
@@ -93,8 +91,8 @@ class TextureLoader:
                 dds_file.seek(128)  # skip DDS header
                 dds_buffer = dds_file.read(buffer_size)
 
-            self.texture_gl_id = glGenTextures(1)
-            glBindTexture(GLTexture.TEXTURE_2D, self.texture_gl_id)
+            self.texture_gl_id = gl_gen_textures(1)
+            gl_bind_texture(self.texture_gl_id, GLTexture.TEXTURE_2D)
 
             offset = 0
             w, h = self.width, self.height
@@ -158,7 +156,7 @@ class TextureLoader:
         gl_format = gl_format_map.get(mode.upper(), GLColor.RGB)
 
         self.texture_gl_id: int = gl_gen_textures(1)
-        gl_bind_texture(target=GLTexture.TEXTURE_2D, tex_id=self.texture_gl_id)
+        gl_bind_texture(self.texture_gl_id, GLTexture.TEXTURE_2D)
         gl_teximage2d(target=GLTexture.TEXTURE_2D, level=0, border=0, internalformat=gl_format, width=self.width, height=self.height, num_type=GLNumeric.UNSIGNED_BYTE, format=gl_format, data=self.buffer)
 
         # Texture parameters
