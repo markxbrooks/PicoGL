@@ -4,9 +4,8 @@ Texture Loader
 
 import os
 import struct
-from array import array
 from pathlib import Path
-from typing import Optional, Literal
+from typing import Optional
 
 from OpenGL.GL import (
     glDeleteTextures,
@@ -17,21 +16,18 @@ from OpenGL.raw.GL.EXT.texture_compression_s3tc import (
     GL_COMPRESSED_RGBA_S3TC_DXT3_EXT,
     GL_COMPRESSED_RGBA_S3TC_DXT5_EXT,
 )
-from OpenGL.raw.GL.VERSION.GL_1_0 import (
-    GL_RGB,
-    GL_RGBA,
-    GL_UNSIGNED_BYTE,
-)
 from OpenGL.raw.GL.VERSION.GL_1_1 import glBindTexture
 from PIL import Image
 
+from picogl.core.color import GLColor
 from picogl.numerical import GLNumeric
-from picogl.texture.gltexture import GLTexture, GLTexParam
+from picogl.texture.gltexture import GLTexture
+from picogl.texture.gltexparam import GLTexParam
 from picogl.wrappers.texture import (
     gl_compressed_tex_image,
     gl_generate_mipmap,
     gl_tex_parameter,
-    gl_teximage2d,
+    gl_teximage2d, gl_bind_texture, gl_gen_textures,
 )
 
 
@@ -52,6 +48,8 @@ class TextureLoader:
             file_name = os.path.abspath(
                 os.path.join(os.path.dirname(__file__), "..", file_name)
             )
+        file_name = str(file_name)
+        print(file_name)
         if file_name.lower().endswith(".dds"):
             self.load_dds(file_name)
         else:
@@ -156,11 +154,11 @@ class TextureLoader:
             self.format = mode
 
         # Map PIL mode to OpenGL format
-        gl_format_map = {"RGB": GL_RGB, "RGBA": GL_RGBA}
-        gl_format = gl_format_map.get(mode.upper(), GL_RGB)
+        gl_format_map = {"RGB": GLColor.RGB, "RGBA": GLColor.RGBA}
+        gl_format = gl_format_map.get(mode.upper(), GLColor.RGB)
 
-        self.texture_gl_id = glGenTextures(1)
-        glBindTexture(GLTexture.TEXTURE_2D, self.texture_gl_id)
+        self.texture_gl_id: int = gl_gen_textures(1)
+        gl_bind_texture(target=GLTexture.TEXTURE_2D, tex_id=self.texture_gl_id)
         gl_teximage2d(target=GLTexture.TEXTURE_2D, level=0, border=0, internalformat=gl_format, width=self.width, height=self.height, num_type=GLNumeric.UNSIGNED_BYTE, format=gl_format, data=self.buffer)
 
         # Texture parameters

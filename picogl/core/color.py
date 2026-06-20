@@ -15,5 +15,5 @@ class GLColor:
     """GL Color"""
     RED = GL_RED
     RGBA = GL_RGBA
-    GL_RGB = GL_RGB
+    RGB = GL_RGB
 

@@ -1,11 +1,15 @@
-# import os,sys
-# sys.path.append(os.path.abspath(os.path.dirname(__file__)))
-
+from pathlib import Path
 
 from OpenGL.GL import *  # pylint: disable=W0614
+
+from picogl.core.uniform import gl_uniform1i
+from picogl.globals import PROJECT_ROOT
+from picogl.state.draw_mode import GLBufferTarget, GLUsageHint
 from picogl.ui.backend.glut.window.gl import GLWindow
 from picogl.utils.loader.texture import TextureLoader
 from pyglm import glm
+
+from picogl.wrappers.texture import gl_bind_texture, gl_get_active_texture0
 from utils.shader_loader import Shader
 
 g_vertex_buffer_data = [
@@ -215,20 +219,20 @@ class Tu01Win(GLWindow):
             ["glsl/tu02/vertex.glsl"], ["glsl/tu02/fragment.glsl"]
         )
 
-        self.context.MVP_ID = glGetUniformLocation(shader.program, "MVP")
-        self.context.TextureID = glGetUniformLocation(shader.program, "texture0")
+        self.context.mvp_id = glGetUniformLocation(shader.program, "MVP")
+        self.context.texture_id = glGetUniformLocation(shader.program, "texture0")
 
-        texture = TextureLoader("resources/tu02/uvtemplate.tga")
+        texture = TextureLoader(Path(PROJECT_ROOT) / "examples" / "resources" / "tu02" / "uvtemplate.tga")
 
         self.context.textureGLID = texture.texture_gl_id
 
-        self.context.vertexbuffer = glGenBuffers(1)
-        glBindBuffer(GL_ARRAY_BUFFER, self.context.vertexbuffer)
+        self.context.vertex_buffer = glGenBuffers(1)
+        glBindBuffer(GL_ARRAY_BUFFER, self.context.vertex_buffer)
         glBufferData(
-            GL_ARRAY_BUFFER,
+            GLBufferTarget.ARRAY,
             len(g_vertex_buffer_data) * 4,
             (GLfloat * len(g_vertex_buffer_data))(*g_vertex_buffer_data),
-            GL_STATIC_DRAW,
+            GLUsageHint.STATIC_DRAW,
         )
 
         if texture.inversed_v_coords:
@@ -236,14 +240,32 @@ class Tu01Win(GLWindow):
                 if index % 2:
                     g_uv_buffer_data[index] = 1.0 - g_uv_buffer_data[index]
 
-        self.context.uvbuffer = glGenBuffers(1)
-        glBindBuffer(GL_ARRAY_BUFFER, self.context.uvbuffer)
+        self.context.uv_buffer = glGenBuffers(1)
+        glBindBuffer(GLBufferTarget.ARRAY, self.context.uv_buffer)
         glBufferData(
-            GL_ARRAY_BUFFER,
+            GLBufferTarget.ARRAY,
             len(g_uv_buffer_data) * 4,
             (GLfloat * len(g_uv_buffer_data))(*g_uv_buffer_data),
-            GL_STATIC_DRAW,
+            GLUsageHint.STATIC_DRAW,
         )
+
+    def _init_geometry(self):
+        self.vao = glGenVertexArrays(1)
+        glBindVertexArray(self.vao)
+
+        # positions
+        glBindBuffer(GL_ARRAY_BUFFER, self.context.vertex_buffer)
+        glEnableVertexAttribArray(0)
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, None)
+
+        # UVs
+        glBindBuffer(GL_ARRAY_BUFFER, self.context.uv_buffer)
+        glEnableVertexAttribArray(1)
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, None)
+
+        # glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.context.indices)
+
+        glBindVertexArray(0)
 
     def calc_MVP(self, width=1920, height=1080):
         self.context.Projection = glm.perspective(
@@ -257,13 +279,63 @@ class Tu01Win(GLWindow):
         # fixed Cube Size
         self.context.Model = glm.mat4(1.0)
         # print(self.context.Model
-        self.context.MVP = (
+        self.context.mvp_matrix = (
             self.context.Projection * self.context.View * self.context.Model
+        )
+        self.context.mvp_matrix = (
+                self.context.Projection * self.context.View * self.context.Model
         )
 
     def resize(self, Width, Height):
         glViewport(0, 0, Width, Height)
         self.calc_MVP(Width, Height)
+
+    def on_mousemove(self, x: int, y: int) -> None:
+        """Handle mouse movement."""
+        delta_x = self.lastX - x
+        delta_y = self.lastY - y
+
+        if self.mouse_mode == MouseMode.ROTATE:
+            self.lastX, self.lastY = x, y
+            self.look_upward(delta_y * 0.01)
+            self.turn(delta_x * 0.01)
+            self.update_callback()
+        elif self.mouse_mode == MouseMode.PAN:
+            self.lastX, self.lastY = x, y
+            self.move_up(-0.5 * delta_x)
+            self.update_callback()
+
+    def paintGL(self):
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+
+        self.shader.begin()
+
+        glUniformMatrix4fv(
+            self.context.mvp_id,
+            1,
+            GL_FALSE,
+            glm.value_ptr(self.context.mvp_matrix),
+        )
+
+        self._bind_texture()
+
+        glBindVertexArray(self.vao)
+
+        """glDrawElements(
+            GL_TRIANGLES,
+            self.context.indices_size,
+            GL_UNSIGNED_SHORT,
+            None
+        )"""
+        glDrawArrays(GL_TRIANGLES, 0, 12 * 3)
+        glBindVertexArray(0)
+
+        self.shader.end()
+
+    def _bind_texture(self):
+        gl_get_active_texture0()
+        gl_bind_texture(target=GL_TEXTURE_2D, tex_id=self.context.textureGLID)
+        gl_uniform1i(self.context.texture_id, 0)
 
     def ogl_draw(self):
         print("draw++")
@@ -272,12 +344,10 @@ class Tu01Win(GLWindow):
 
         self.shader.begin()
         glUniformMatrix4fv(
-            self.context.MVP_ID, 1, GL_FALSE, glm.value_ptr(self.context.MVP)
+            self.context.mvp_id, 1, GL_FALSE, glm.value_ptr(self.context.mvp_matrix)
         )
 
-        glActiveTexture(GL_TEXTURE0)
-        glBindTexture(GL_TEXTURE_2D, self.context.textureGLID)
-        glUniform1i(self.context.TextureID, 0)
+        bind_active_texture0()
 
         glEnableVertexAttribArray(0)
         glBindBuffer(GL_ARRAY_BUFFER, self.context.vertexbuffer)
@@ -300,4 +370,6 @@ if __name__ == "__main__":
     win = Tu01Win()
     win.init_opengl()
     win.init_context()
+    win._init_geometry()
+    win.calc_MVP()
     win.run()

@@ -1,17 +1,18 @@
 # import os,sys
 # sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 
-
-import numpy as np
 from decologr import Decologr as log
 from OpenGL.GL import *  # pylint: disable=W0614
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.buffers.vertex import data
+from picogl.core.uniform import gl_uniform1i
 from picogl.ui.backend.glut.window.glut import GlutRendererWindow
 from picogl.utils.loader.texture import TextureLoader
 from pyglm import glm
 from utils.objLoader import objLoader
 from utils.textureLoader import textureLoader
+
+from picogl.wrappers.texture import gl_get_active_texture0, gl_bind_texture
 
 
 class MeshUE4:
@@ -45,6 +46,11 @@ class MeshUE4:
         # 	self.texcoords.append(1.0 - float(self._texcoords[i+1]))
         return self
 
+def bind_active_texture0():
+    """bind active texture (0)"""
+    gl_get_active_texture0()
+    gl_bind_texture(target=GL_TEXTURE_2D, tex_id=self.context.texture_buffer)
+    gl_uniform1i(self.context.texture_id, 0)  # // Set  "myTextureSampler" sampler to use Texture Unit 0
 
 class Tu01Win(GlutRendererWindow):
     class GLContext(object):
@@ -131,9 +137,7 @@ class Tu01Win(GlutRendererWindow):
         self.shader.begin()
         glUniformMatrix4fv(self.context.mvp_id, 1, GL_FALSE, glm.value_ptr(self.context.mvp_matrix))
 
-        glActiveTexture(GL_TEXTURE0)
-        glBindTexture(GL_TEXTURE_2D, self.context.texture_buffer)
-        glUniform1i(self.context.texture_id, 0)  # // Set  "myTextureSampler" sampler to use Texture Unit 0
+        bind_active_texture0()
 
         glEnableVertexAttribArray(0)
         glBindBuffer(GL_ARRAY_BUFFER, self.context.vertex_buffer)
@@ -155,6 +159,8 @@ class Tu01Win(GlutRendererWindow):
         glDisableVertexAttribArray(0)
         glDisableVertexAttribArray(1)
         self.shader.end()
+
+
 
 
 if __name__ == "__main__":

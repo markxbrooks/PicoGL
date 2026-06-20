@@ -25,6 +25,25 @@ class GLWindow(AbstractGLWindow):
         self.controller = None
         self.update_if = GLUT.glutPostRedisplay
 
+    def wheelEvent(self, wheel=0, direction=0, x=0, y=0):
+        """
+        Mouse wheel zoom: adjusts distance if far, FOV if close.
+        Positive direction -> zoom in, Negative -> zoom out.
+        """
+        zoom_step = direction * 0.5
+
+        if self.zoom_distance > self.distance_threshold:
+            # Distance zoom
+            self.zoom_distance = max(1.0, self.zoom_distance - zoom_step)
+        else:
+            # FOV zoom
+            self.zoom_fov = max(10.0, min(90.0, self.zoom_fov - zoom_step))
+        print(
+            f"Zoom mode: {'distance' if self.zoom_distance > self.distance_threshold else 'fov'} "
+            f"| Distance: {self.zoom_distance:.2f} | FOV: {self.zoom_fov:.2f}"
+        )
+        self.update_mvp()
+
     def init_glut(self):
         """init_glut"""
         GLUT.glutInit(sys.argv)
