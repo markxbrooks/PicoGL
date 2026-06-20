@@ -10,8 +10,7 @@ state restoration after operations.
 from contextlib import contextmanager
 from dataclasses import dataclass
 
-from OpenGL.GL import glDisable, glEnable, glIsEnabled
-
+from picogl.backend.GL.driver.capability import GLCapabilityDriver
 from picogl.texture.gltexture import GLTexture
 
 
@@ -35,11 +34,12 @@ class Vertex3f:
 @contextmanager
 def texture2d_enabled():
     """Texture 2D Enabled"""
-    was_enabled = glIsEnabled(GLTexture.TEXTURE_2D)
+    capabilities = GLCapabilityDriver()
+    was_enabled = capabilities.is_enabled(GLTexture.TEXTURE_2D)
     try:
         if not was_enabled:
-            glEnable(GLTexture.TEXTURE_2D)
+            capabilities.enable(GLTexture.TEXTURE_2D)
         yield
     finally:
         if not was_enabled:
-            glDisable(GLTexture.TEXTURE_2D)
+            capabilities.disable(GLTexture.TEXTURE_2D)
