@@ -9,13 +9,9 @@ from pathlib import Path
 from typing import Optional, Literal
 
 from OpenGL.GL import (
-    glCompressedTexImage2D,
     glDeleteTextures,
     glGenTextures,
-    glTexImage2D,
 )
-from OpenGL.GL.framebufferobjects import glGenerateMipmap
-from OpenGL.constant import Constant, FloatConstant, IntConstant, LongConstant, StringConstant
 from OpenGL.raw.GL.EXT.texture_compression_s3tc import (
     GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,
     GL_COMPRESSED_RGBA_S3TC_DXT3_EXT,
@@ -25,12 +21,18 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_RGB,
     GL_RGBA,
     GL_UNSIGNED_BYTE,
-    glTexParameteri,
 )
 from OpenGL.raw.GL.VERSION.GL_1_1 import glBindTexture
 from PIL import Image
 
+from picogl.numerical import GLNumeric
 from picogl.texture.gltexture import GLTexture, GLTexParam
+from picogl.wrappers.texture import (
+    gl_compressed_tex_image,
+    gl_generate_mipmap,
+    gl_tex_parameter,
+    gl_teximage2d,
+)
 
 
 class TextureLoader:
@@ -123,11 +125,11 @@ class TextureLoader:
                     break
 
             # Set texture parameters for DDS
-            glTexParameteri(GLTexture.TEXTURE_2D, GLTexture.TEXTURE_WRAP_S, GLTexParam.REPEAT)
-            glTexParameteri(GLTexture.TEXTURE_2D, GLTexture.TEXTURE_WRAP_T, GLTexParam.REPEAT)
-            glTexParameteri(GLTexture.TEXTURE_2D, GLTexture.TEXTURE_MAG_FILTER, GLTexParam.LINEAR)
-            glTexParameteri(
-                GLTexture.TEXTURE_2D, GLTexture.TEXTURE_MIN_FILTER, GLTexParam.LINEAR_MIPMAP_LINEAR
+            target = GLTexture.TEXTURE_2D
+            gl_tex_parameter(target=target, pname=GLTexture.TEXTURE_WRAP_S, param=GLTexParam.REPEAT)
+            gl_tex_parameter(target=target, pname=GLTexture.TEXTURE_WRAP_T, param=GLTexParam.REPEAT)
+            gl_tex_parameter(target=target, pname=GLTexture.TEXTURE_MAG_FILTER, param=GLTexParam.LINEAR)
+            gl_tex_parameter(target=target, pname=GLTexture.TEXTURE_MIN_FILTER, param=GLTexParam.LINEAR_MIPMAP_LINEAR
             )
 
             self.inversed_v_coords = True
@@ -159,14 +161,15 @@ class TextureLoader:
 
         self.texture_gl_id = glGenTextures(1)
         glBindTexture(GLTexture.TEXTURE_2D, self.texture_gl_id)
-        gl_teximage2d(target=GLTexture.TEXTURE_2D, level=0, border=0, internalformat=gl_format, width=self.width, height=self.height, num_type=GL_UNSIGNED_BYTE, format=gl_format, data=self.buffer)
+        gl_teximage2d(target=GLTexture.TEXTURE_2D, level=0, border=0, internalformat=gl_format, width=self.width, height=self.height, num_type=GLNumeric.UNSIGNED_BYTE, format=gl_format, data=self.buffer)
 
         # Texture parameters
-        glTexParameteri(GLTexture.TEXTURE_2D, GLTexture.TEXTURE_WRAP_S, GLTexParam.REPEAT)
-        glTexParameteri(GLTexture.TEXTURE_2D, GLTexture.TEXTURE_WRAP_T, GLTexParam.REPEAT)
-        glTexParameteri(GLTexture.TEXTURE_2D, GLTexture.TEXTURE_MAG_FILTER, GLTexParam.LINEAR)
-        glTexParameteri(GLTexture.TEXTURE_2D, GLTexture.TEXTURE_MIN_FILTER, GLTexParam.LINEAR_MIPMAP_LINEAR)
-        glGenerateMipmap(GLTexture.TEXTURE_2D)
+        target = GLTexture.TEXTURE_2D
+        gl_tex_parameter(target=target, pname=GLTexture.TEXTURE_WRAP_S, param=GLTexParam.REPEAT)
+        gl_tex_parameter(target=target, pname=GLTexture.TEXTURE_WRAP_T, param=GLTexParam.REPEAT)
+        gl_tex_parameter(target=target, pname=GLTexture.TEXTURE_MAG_FILTER, param=GLTexParam.LINEAR)
+        gl_tex_parameter(target=target, pname=GLTexture.TEXTURE_MIN_FILTER, param=GLTexParam.LINEAR_MIPMAP_LINEAR)
+        gl_generate_mipmap()
 
     def delete(self) -> None:
         """

@@ -19,6 +19,13 @@ from picogl.wrappers.pointer import (
     gl_vertex_array_pointer,
     gl_vertex_pointer_from_spec,
 )
+from picogl.wrappers.texture import (
+    gl_compressed_tex_image,
+    gl_generate_mipmap,
+    gl_tex_parameter,
+    gl_teximage2d,
+    gl_teximage3d,
+)
 from picogl.wrappers.vertex_array import gl_bind_vertex_array
 from picogl.wrappers.vertex_attrib_pointer import gl_vertex_attrib_pointer
 
@@ -31,8 +38,13 @@ __all__ = [
     "gl_draw_arrays",
     "gl_draw_elements",
     "gl_generate_buffers",
+    "gl_generate_mipmap",
     "gl_generate_vertex_array",
     "gl_bind_vertex_array",
+    "gl_compressed_tex_image",
+    "gl_teximage2d",
+    "gl_teximage3d",
+    "gl_tex_parameter",
     "gl_color_array_pointer",
     "gl_color_pointer_from_spec",
     "gl_normal_array_pointer",
