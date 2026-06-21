@@ -10,10 +10,10 @@ from picogl.state.client import GLClientState
 
 
 def gl_disable_legacy_client_state(state: GLClientState):
-    """gl disable client state"""
+    """GL disable client state"""
     glDisableClientState(state)
 
 
 def gl_enable_legacy_client_state(state: GLClientState):
-    """gl legacy client state"""
+    """GL legacy client state"""
     glEnableClientState(state)

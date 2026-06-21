@@ -17,7 +17,7 @@ from picogl.backend.capability import GLPipelineCapability, GLBlendFactor, GLBle
 
 @contextmanager
 def gl_blend(src: GLBlendFactor = GLBlendFactor.SRC_ALPHA, dst: GLBlendFactor = GLBlendFactor.ONE_MINUS_SRC_ALPHA):
-    """gl blend context manager"""
+    """GL blend context manager"""
     was_enabled = GLCapabilityDriver.is_enabled(GLPipelineCapability.BLEND)
     prev_src = int(GLCapabilityDriver.get_integerv(GLBlendTarget.BLEND_SRC))
     prev_dst = int(GLCapabilityDriver.get_integerv(GLBlendTarget.BLEND_DST))

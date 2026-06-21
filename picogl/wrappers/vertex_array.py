@@ -1,5 +1,5 @@
 """
-gl bind buffer wrapper
+GL bind buffer wrapper
 
 """
 

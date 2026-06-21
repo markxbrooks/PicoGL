@@ -109,7 +109,7 @@ def dump_gl_registry(verbose: Optional[bool] = None) -> None:
 def store_in_gl_registry(
     handle: int, label: str, ctx_id: int, buffer_type: str = "VAO"
 ):
-    """store in gl registry"""
+    """store in GL registry"""
     GL_REGISTRY[handle] = GLObjectInfo(
         handle=handle, type=buffer_type, label=label, context_id=ctx_id
     )

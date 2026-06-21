@@ -24,7 +24,7 @@ from picogl.state.draw_mode import GLDrawMode, GLIndexType
 
 
 def _gl_enum(value: Any) -> Any:
-    """gl enum"""
+    """GL enum"""
     if isinstance(value, Enum):
         return value.value
     return value

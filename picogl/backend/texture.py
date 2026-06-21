@@ -24,7 +24,7 @@ from picogl.wrappers.texture import gl_bind_texture
 
 @contextmanager
 def gl_texture_binding(texture_gl_id: int | None):
-    """gl texture binding"""
+    """GL texture binding"""
     try:
         if texture_gl_id is not None:
             GLCapabilityDriver.enable(GLTexture.TEXTURE_2D)

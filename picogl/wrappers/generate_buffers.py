@@ -1,5 +1,5 @@
 """
-gl generate buffer wrapper
+GL generate buffer wrapper
 
 """
 

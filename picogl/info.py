@@ -1,4 +1,4 @@
-"""get gl information for printing"""
+"""get GL information for printing"""
 
 from OpenGL.GL import glGetString
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_RENDERER, GL_VENDOR, GL_VERSION

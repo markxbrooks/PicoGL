@@ -8,7 +8,7 @@ from picogl.state.fill import GLFace, GLFillMode
 
 
 def gl_polygon_mode(face: GLFace, mode: GLFillMode):
-    """gl polygon mode"""
+    """GL polygon mode"""
     glPolygonMode(face, mode)
 
 

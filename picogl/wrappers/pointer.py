@@ -15,7 +15,7 @@ from picogl.numerical import GLNumeric
 
 
 def gl_color_pointer_from_spec(attr: AttributeSpec):
-    """gl color pointer"""
+    """GL color pointer"""
     gl_color_array_pointer(
         size=attr.size,
         num_type=attr.type,
@@ -25,7 +25,7 @@ def gl_color_pointer_from_spec(attr: AttributeSpec):
 
 
 def gl_normal_pointer_from_spec(attr: AttributeSpec):
-    """gl normal pointer"""
+    """GL normal pointer"""
     gl_normal_array_pointer(
         num_type=attr.type,
         stride=attr.stride,
@@ -34,7 +34,7 @@ def gl_normal_pointer_from_spec(attr: AttributeSpec):
 
 
 def gl_vertex_pointer_from_spec(attr: AttributeSpec):
-    """gl legacy client state"""
+    """GL legacy client state"""
     gl_vertex_array_pointer(
         size=attr.size,
         num_type=attr.type,
@@ -49,7 +49,7 @@ def gl_vertex_array_pointer(
     num_type: GLNumeric = GLNumeric.FLOAT,
     stride: int = 0,
 ):
-    """gl vertex pointer for mesh binding."""
+    """GL vertex pointer for mesh binding."""
     glVertexPointer(size, num_type, stride, pointer)
 
 
@@ -58,7 +58,7 @@ def gl_normal_array_pointer(
     stride: int = 0,
     num_type: GLNumeric = GLNumeric.FLOAT,
 ):
-    """gl normal pointer for mesh binding."""
+    """GL normal pointer for mesh binding."""
     glNormalPointer(num_type, stride, pointer)
 
 
@@ -68,7 +68,7 @@ def gl_color_array_pointer(
     num_type: GLNumeric = GLNumeric.FLOAT,
     stride: int = 0,
 ):
-    """gl color pointer for mesh binding."""
+    """GL color pointer for mesh binding."""
     glColorPointer(size, num_type, stride, pointer)
 
 
@@ -78,5 +78,5 @@ def gl_texcoord_array_pointer(
     stride: int = 0,
     num_type: GLNumeric = GLNumeric.FLOAT,
 ):
-    """gl texcoord pointer for mesh binding."""
+    """GL texcoord pointer for mesh binding."""
     glTexCoordPointer(size, num_type, stride, pointer)
