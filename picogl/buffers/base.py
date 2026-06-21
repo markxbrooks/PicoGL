@@ -2,7 +2,7 @@
 VertexBase
 ================
 
-Specializes the abstract façade into a slightly more concrete base (manages a GL handle, context manager behavior, common boilerplate).
+Specializes the abstract façade into a slightly more concrete base (manages a gl handle, context manager behavior, common boilerplate).
 
 Leaves rendering-specific logic to subclasses like ModernVertexArrayGroup.
 

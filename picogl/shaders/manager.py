@@ -160,7 +160,7 @@ class ShaderManager:
         )
 
     def initialize_shaders(self, shader_dir: str = None):
-        """Initialize src and mark GL state as ready."""
+        """Initialize src and mark gl state as ready."""
         # Load src into the manager
         self.shader_directory = shader_dir
 

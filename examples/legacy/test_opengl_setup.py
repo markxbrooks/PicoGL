@@ -14,9 +14,9 @@ def test_opengl_imports():
     
     try:
         import OpenGL.GL as GL
-        print("  ✅ OpenGL.GL imported successfully")
+        print("  ✅ OpenGL.gl imported successfully")
     except ImportError as e:
-        print(f"  ❌ Failed to import OpenGL.GL: {e}")
+        print(f"  ❌ Failed to import OpenGL.gl: {e}")
         return False
     
     try:

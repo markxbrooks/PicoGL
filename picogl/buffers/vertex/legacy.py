@@ -1,7 +1,7 @@
 """
 VertexArrayGroup
 
-Legacy backend (no real GL VAO support)
+Legacy backend (no real gl VAO support)
 """
 
 import ctypes

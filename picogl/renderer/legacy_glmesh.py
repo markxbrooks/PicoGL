@@ -16,7 +16,7 @@ from picogl.buffers.vertex.legacy import VertexBufferGroup
 
 class LegacyGLMesh:
     """
-    GL Mesh fir Compatibility Profile
+    gl Mesh fir Compatibility Profile
 
     GPU‐resident mesh: owns VAO/VBO/EBO/CBO/NBO for an indexed triangle mesh.
     It does not know anything about shaders or matrices.

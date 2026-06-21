@@ -89,7 +89,7 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
         - Setting the viewport to match widget size
         - Clearing any legacy buffer state
 
-        Called automatically by Qt when the GL context is first created.
+        Called automatically by Qt when the gl context is first created.
         """
         # Viewport setup
         glViewport(0, 0, self.width(), self.height())

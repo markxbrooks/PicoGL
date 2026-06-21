@@ -75,19 +75,19 @@ class TestMeshData(unittest.TestCase):
         
         # Mock OpenGL functions to avoid context issues
         self.gl_patches = [
-            patch('picogl.renderer.meshdata.GL.glEnableClientState'),
-            patch('picogl.renderer.meshdata.GL.glDisableClientState'),
-            patch('picogl.renderer.meshdata.GL.glVertexPointer'),
-            patch('picogl.renderer.meshdata.GL.glNormalPointer'),
-            patch('picogl.renderer.meshdata.GL.glColorPointer'),
-            patch('picogl.renderer.meshdata.GL.glTexCoordPointer'),
-            patch('picogl.renderer.meshdata.GL.glDrawElements'),
-            patch('picogl.renderer.meshdata.GL.glLineWidth'),
-            patch('picogl.renderer.meshdata.GL.glEnable'),
-            patch('picogl.renderer.meshdata.GL.glDisable'),
-            patch('picogl.renderer.meshdata.GL.glBlendFunc'),
-            patch('picogl.renderer.meshdata.GL.glColor4f'),
-            patch('picogl.renderer.meshdata.GL.glPolygonMode'),
+            patch('picogl.renderer.meshdata.gl.glEnableClientState'),
+            patch('picogl.renderer.meshdata.gl.glDisableClientState'),
+            patch('picogl.renderer.meshdata.gl.glVertexPointer'),
+            patch('picogl.renderer.meshdata.gl.glNormalPointer'),
+            patch('picogl.renderer.meshdata.gl.glColorPointer'),
+            patch('picogl.renderer.meshdata.gl.glTexCoordPointer'),
+            patch('picogl.renderer.meshdata.gl.glDrawElements'),
+            patch('picogl.renderer.meshdata.gl.glLineWidth'),
+            patch('picogl.renderer.meshdata.gl.glEnable'),
+            patch('picogl.renderer.meshdata.gl.glDisable'),
+            patch('picogl.renderer.meshdata.gl.glBlendFunc'),
+            patch('picogl.renderer.meshdata.gl.glColor4f'),
+            patch('picogl.renderer.meshdata.gl.glPolygonMode'),
         ]
         
         # Start all patches

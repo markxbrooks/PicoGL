@@ -112,7 +112,7 @@ autodoc_default_options = {
 
 autodoc_mock_imports = [
     'OpenGL',
-    'OpenGL.GL',
+    'OpenGL.gl',
     'OpenGL.GLU',
     'OpenGL.GLUT',
     'pyglm',

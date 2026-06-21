@@ -1,5 +1,5 @@
 """
-GL Context Class
+gl Context Class
 """
 
 from dataclasses import dataclass, field
