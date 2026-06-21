@@ -2,8 +2,10 @@
 gl bind buffer wrapper
 
 """
+from typing import Any, Callable
 
-from OpenGL.raw.GL.VERSION.GL_3_0 import glBindVertexArray
+from OpenGL.GL import glGenVertexArrays
+from OpenGL.raw.GL.VERSION.GL_3_0 import glBindVertexArray, glIsVertexArray
 
 
 def gl_bind_vertex_array(vao: int):
@@ -14,3 +16,11 @@ def gl_bind_vertex_array(vao: int):
     """
     assert vao is not None and vao >= 0
     glBindVertexArray(vao)
+
+
+def gl_is_vertex_array(handle: Any | None) -> bool:
+    return bool(glIsVertexArray(handle))
+
+
+def gl_gen_vertex_arrays() -> Callable:
+    return glGenVertexArrays

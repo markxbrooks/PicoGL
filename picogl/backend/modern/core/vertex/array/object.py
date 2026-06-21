@@ -40,8 +40,6 @@ from typing import Optional, Union
 import numpy as np
 from decologr import Decologr as log
 from elmo.log.silence import SILENT_VAO
-from OpenGL.GL import glBufferSubData, glGenVertexArrays
-from OpenGL.raw.GL.VERSION.GL_3_0 import glIsVertexArray
 from PySide6.QtGui import QOpenGLContext
 
 from picogl.backend.modern.core.vertex.array.helpers import (
@@ -62,21 +60,11 @@ from picogl.state.draw_mode import (
     GLIndexType,
     GLUsageHint,
 )
-from picogl.wrappers.buffer import gl_bind_buffer
+from picogl.wrappers.buffer import gl_bind_buffer, gl_buffer_subdata
 from picogl.wrappers.draw import gl_draw_arrays, gl_draw_elements
 from picogl.wrappers.enable_vertex_array import gl_enable_vertex_array
-from picogl.wrappers.vertex_array import gl_bind_vertex_array
+from picogl.wrappers.vertex_array import gl_bind_vertex_array, gl_is_vertex_array, gl_gen_vertex_arrays
 from picogl.wrappers.vertex_attrib_pointer import gl_vertex_attrib_pointer
-
-
-def current_gl_context() -> int:
-    try:
-        from PySide6.QtGui import QOpenGLContext
-
-        # return QOpenGLContext.currentContext()
-        return id(QOpenGLContext.currentContext())
-    except Exception:
-        return None
 
 
 class GLResource:
@@ -128,8 +116,8 @@ class VertexArrayObject(VertexBase, GLResource):
         self._registry_label = registry_label
         self._configured: bool = False
         if not handle or handle is None:
-            if glGenVertexArrays:
-                handle = gl_gen_safe(glGenVertexArrays)
+            if gl_gen_vertex_arrays():
+                handle = gl_gen_safe(gl_gen_vertex_arrays())
             else:
                 raise RuntimeError(
                     "glGenVertexArrays not available — OpenGL context not ready"
@@ -159,7 +147,7 @@ class VertexArrayObject(VertexBase, GLResource):
         try:
             handle = getattr(self, "handle", None)
             if handle:
-                return bool(glIsVertexArray(handle))
+                return gl_is_vertex_array(handle)
         except Exception:
             return False
 
@@ -476,9 +464,11 @@ class VertexArrayObject(VertexBase, GLResource):
                 and old.dtype == arr.dtype
                 and old.nbytes == arr.nbytes
             ):
-                glBufferSubData(GLBufferTarget.ARRAY, 0, arr.nbytes, arr)
+                gl_buffer_subdata(target=GLBufferTarget.ARRAY, offset=0, size=arr.nbytes, data=arr)
             else:
                 vbo.set_data(arr)
         finally:
             gl_bind_buffer(GLBufferTarget.ARRAY, 0)
             self.unbind()
+
+
