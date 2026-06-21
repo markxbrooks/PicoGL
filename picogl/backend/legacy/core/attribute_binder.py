@@ -1,5 +1,5 @@
 from picogl.state.client import GLClientState
-from picogl.state.draw_mode import GLDataType
+from picogl.numerical import GLNumeric
 from picogl.wrappers.client_state import (
     gl_disable_legacy_client_state,
     gl_enable_legacy_client_state,
@@ -25,7 +25,7 @@ class LegacyAttributeBinder:
 
     @staticmethod
     def set_vertex_pointer(data):
-        gl_vertex_array_pointer(pointer=data, size=3, num_type=GLDataType.FLOAT)
+        gl_vertex_array_pointer(pointer=data, size=3, num_type=GLNumeric.FLOAT)
 
     @staticmethod
     def enable_normal_array():
@@ -37,7 +37,7 @@ class LegacyAttributeBinder:
 
     @staticmethod
     def set_normal_pointer(data):
-        gl_normal_array_pointer(pointer=data, num_type=GLDataType.FLOAT)
+        gl_normal_array_pointer(pointer=data, num_type=GLNumeric.FLOAT)
 
     @staticmethod
     def enable_color_array():
@@ -49,7 +49,7 @@ class LegacyAttributeBinder:
 
     @staticmethod
     def set_color_pointer(data, size):
-        gl_color_array_pointer(pointer=data, size=size, num_type=GLDataType.FLOAT)
+        gl_color_array_pointer(pointer=data, size=size, num_type=GLNumeric.FLOAT)
 
     @staticmethod
     def enable_texcoord_array():
@@ -61,4 +61,4 @@ class LegacyAttributeBinder:
 
     @staticmethod
     def set_texcoord_pointer(data):
-        gl_texcoord_array_pointer(pointer=data, size=2, num_type=GLDataType.FLOAT)
+        gl_texcoord_array_pointer(pointer=data, size=2, num_type=GLNumeric.FLOAT)

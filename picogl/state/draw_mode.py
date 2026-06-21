@@ -16,8 +16,6 @@ from OpenGL.GL import (
     GL_DEPTH_BUFFER_BIT,
     GL_DYNAMIC_DRAW,
     GL_ELEMENT_ARRAY_BUFFER,
-    GL_FLOAT,
-    GL_INT,
     GL_LINE_BIT,
     GL_LINE_LOOP,
     GL_LINE_STRIP,
@@ -40,6 +38,7 @@ from OpenGL.GL import (
     GL_UNSIGNED_INT,
     GL_UNSIGNED_SHORT,
 )
+
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_CLIP_PLANE0, GL_CLIP_PLANE1, GL_POINTS
 from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ARRAY_BUFFER
 
@@ -64,11 +63,6 @@ class GLBitMask(IntFlag):
     LINE = GL_LINE_BIT
     DEPTH_BUFFER = GL_DEPTH_BUFFER_BIT
     COLOR_BUFFER = GL_COLOR_BUFFER_BIT
-
-
-class GLDataType(IntEnum):
-    FLOAT = GL_FLOAT
-    INT = GL_INT
 
 
 class GLIndexType(IntEnum):

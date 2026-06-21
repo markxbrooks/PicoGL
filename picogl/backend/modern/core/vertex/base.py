@@ -40,7 +40,8 @@ from OpenGL.raw.GL.VERSION.GL_1_5 import glBufferSubData, glIsBuffer
 
 from picogl.boolean import GLBoolean
 from picogl.buffers.base import VertexBase
-from picogl.state.draw_mode import GLBufferTarget, GLDataType, GLIndexType, GLUsageHint
+from picogl.numerical import GLNumeric
+from picogl.state.draw_mode import GLBufferTarget, GLIndexType, GLUsageHint
 from picogl.wrappers.buffer import gl_bind_buffer
 from picogl.wrappers.data import gl_buffer_data
 from picogl.wrappers.enable_vertex_array import gl_enable_vertex_array
@@ -61,7 +62,7 @@ class VertexBuffer(VertexBase):
     """
 
     _GL_TYPE_MAP = {
-        np.float32: GLDataType.FLOAT,
+        np.float32: GLNumeric.FLOAT,
         np.uint32: GLIndexType.UNSIGNED_INT,
     }
 
@@ -72,7 +73,7 @@ class VertexBuffer(VertexBase):
         target: int = GLBufferTarget.ARRAY,
         size: int = 3,
         stride: int = 0,
-        dtype: int = GLDataType.FLOAT,
+        dtype: int = GLNumeric.FLOAT,
         index: int = None,
         pointer: ctypes.c_void_p = ctypes.c_void_p(0),
     ):
@@ -190,7 +191,7 @@ class VertexBuffer(VertexBase):
     @classmethod
     def _map_dtype_to_gl(cls, dtype) -> int:
         """Map a NumPy dtype to the corresponding gl constant."""
-        return cls._GL_TYPE_MAP.get(dtype, GLDataType.FLOAT)
+        return cls._GL_TYPE_MAP.get(dtype, GLNumeric.FLOAT)
 
     # ----------------------------
     # Debug

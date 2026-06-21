@@ -55,9 +55,9 @@ from picogl.buffers.base import VertexBase
 from picogl.buffers.glcleanup import gl_delete_buffers, gl_delete_vertex_arrays
 from picogl.buffers.vertex.aliases import NAME_ALIASES
 from picogl.safe import gl_gen_safe
+from picogl.numerical import GLNumeric
 from picogl.state.draw_mode import (
     GLBufferTarget,
-    GLDataType,
     GLDrawMode,
     GLIndexType,
     GLUsageHint,
@@ -266,7 +266,7 @@ class VertexArrayObject(VertexBase, GLResource):
         data: np.ndarray,
         index: int = 0,
         size: int = 3,
-        dtype: int = GLDataType.FLOAT,
+        dtype: int = GLNumeric.FLOAT,
         name: str = None,
         handle: int = None,
     ) -> ModernVBO:
@@ -289,7 +289,7 @@ class VertexArrayObject(VertexBase, GLResource):
         index: int,
         data: np.ndarray,
         size: int,
-        dtype: int = GLDataType.FLOAT,
+        dtype: int = GLNumeric.FLOAT,
         name: str = None,
         handle: int = None,
     ) -> ModernVBO:
@@ -336,7 +336,7 @@ class VertexArrayObject(VertexBase, GLResource):
         index: int,
         vbo: int,
         size: int = 3,
-        dtype: int = GLDataType.FLOAT,
+        dtype: int = GLNumeric.FLOAT,
         normalized: bool = False,
         stride: int = 0,
         offset: int = 0,

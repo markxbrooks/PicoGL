@@ -13,7 +13,8 @@ from OpenGL import GL
 from picogl.attrs.vertex import CanonicalVertexAttrs
 from picogl.gpu.buffers.vbo_types import VBOType
 from picogl.state.client import GLClientState
-from picogl.state.draw_mode import GLDataType, GLDrawMode, GLIndexType
+from picogl.state.draw_mode import GLDrawMode, GLIndexType
+from picogl.numerical import GLNumeric
 from picogl.state.fill import GLFace, GLFillMode
 from picogl.wrappers.client_state import (
     gl_disable_legacy_client_state,
@@ -237,20 +238,20 @@ class MeshData:
         if self.vertices is not None:
             gl_enable_legacy_client_state(GLClientState.VERTEX)
             gl_vertex_array_pointer(
-                pointer=self.vertices, size=3, num_type=GLDataType.FLOAT
+                pointer=self.vertices, size=3, num_type=GLNumeric.FLOAT
             )
         if self.normals is not None:
             gl_enable_legacy_client_state(GLClientState.NORMAL)
-            gl_normal_array_pointer(pointer=self.normals, num_type=GLDataType.FLOAT)
+            gl_normal_array_pointer(pointer=self.normals, num_type=GLNumeric.FLOAT)
         if self.colors is not None:
             gl_enable_legacy_client_state(GLClientState.COLOR)
             gl_color_array_pointer(
-                pointer=self.colors, size=3, num_type=GLDataType.FLOAT
+                pointer=self.colors, size=3, num_type=GLNumeric.FLOAT
             )
         if self.texcoords is not None:
             gl_enable_legacy_client_state(GLClientState.TEXCOORD)
             gl_texcoord_array_pointer(
-                pointer=self.texcoords, size=2, num_type=GLDataType.FLOAT
+                pointer=self.texcoords, size=2, num_type=GLNumeric.FLOAT
             )
 
     def unbind(self):
@@ -402,7 +403,7 @@ class MeshData:
             # Use vertex colors (for fo-fc maps)
             gl_enable_legacy_client_state(GLClientState.COLOR)
             gl_color_array_pointer(
-                pointer=self.colors, size=3, num_type=GLDataType.FLOAT
+                pointer=self.colors, size=3, num_type=GLNumeric.FLOAT
             )
             # Note: Alpha blending for vertex colors would require 4-component colors
             # For now, we'll use the alpha value for the overall transparency

@@ -94,7 +94,7 @@ from picogl.buffers.vertex.aliases import NAME_ALIASES
 from picogl.safe import gl_gen_safe
 from picogl.state.draw_mode import (
     GLBufferTarget,
-    GLDataType,
+    GLNumeric,
     GLDrawMode,
     GLIndexType,
     GLUsageHint,

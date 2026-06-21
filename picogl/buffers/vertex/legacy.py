@@ -26,7 +26,8 @@ from picogl.buffers.glcleanup import delete_buffer_object
 from picogl.buffers.vertex.aliases import NAME_ALIASES, VertexBufferRole
 from picogl.gpu.buffers.vbo_types import VBOType
 from picogl.state.client import GLClientState
-from picogl.state.draw_mode import GLBufferTarget, GLDataType, GLDrawMode
+from picogl.numerical import GLNumeric
+from picogl.state.draw_mode import GLBufferTarget, GLDrawMode
 from picogl.wrappers.buffer import gl_bind_buffer
 from picogl.wrappers.client_state import gl_enable_legacy_client_state
 from picogl.wrappers.draw import gl_draw_arrays, gl_draw_elements
@@ -165,7 +166,7 @@ class VertexBufferGroup(VertexBase):
         name: str,
         data: np.ndarray,
         size: int = 3,
-        dtype: int = GLDataType.FLOAT,
+        dtype: int = GLNumeric.FLOAT,
         handle: int | None = None,
     ) -> Any:
         """Create and register a VBO with explicit parameters."""

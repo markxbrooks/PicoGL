@@ -33,6 +33,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_SRC_ALPHA,
     GL_ZERO,
 )
+from OpenGL.raw.GL.VERSION.GL_3_2 import GL_PROGRAM_POINT_SIZE
 
 
 class GLPipelineCapability(IntEnum):
@@ -41,7 +42,7 @@ class GLPipelineCapability(IntEnum):
     BLEND = GL_BLEND
     DEPTH_TEST = GL_DEPTH_TEST
     CULL_FACE = GL_CULL_FACE
-
+    PROGRAM_POINT_SIZE = GL_PROGRAM_POINT_SIZE
 
 class GLFixedFunctionCapability(IntEnum):
     """gl Fixed Function Capabilities"""
