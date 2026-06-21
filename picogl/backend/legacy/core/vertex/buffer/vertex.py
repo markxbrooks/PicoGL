@@ -5,11 +5,11 @@ Legacy VBO
 import ctypes
 
 import numpy as np
-from OpenGL.raw.GL.VERSION.GL_1_5 import glBufferSubData
 
 from picogl.backend.modern.core.vertex.base import VertexBuffer
 from picogl.numerical import GLNumeric
 from picogl.state.draw_mode import GLBufferTarget, GLUsageHint
+from picogl.wrappers.buffer import gl_buffer_subdata
 from picogl.wrappers.data import gl_buffer_data
 from picogl.wrappers.generate_buffers import gl_generate_buffers
 
@@ -120,7 +120,7 @@ class LegacyVBO(VertexBuffer):
             )
             self.nbytes = data.nbytes
         else:
-            glBufferSubData(self.target, offset, data.nbytes, data)
+            gl_buffer_subdata(self.target, offset, data.nbytes, data)
 
     def configure(self):
         """Configure the buffer (default implementation does nothing)."""
