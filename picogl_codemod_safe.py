@@ -7,7 +7,7 @@ import libcst as cst
 
 STAGE_MAPS = {
     "backend": {
-        "picogl.backend.GL": "picogl.backend.gl",
+        "picogl.backend.gl": "picogl.backend.gl",
         "picogl.wrappers": "picogl.backend.gl.wrappers",
     },
     "enums": {

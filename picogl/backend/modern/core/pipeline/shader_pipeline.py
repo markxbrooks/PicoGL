@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 
 class ShaderPipeline(Bindable):
-    """Shader program binding and uniform upload for modern GL draws."""
+    """Shader program binding and uniform upload for modern gl draws."""
 
     def __init__(self, program: "ShaderProgram | None" = None):
         super().__init__()

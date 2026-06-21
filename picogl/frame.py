@@ -6,7 +6,7 @@ import platform
 
 from OpenGL.raw.GL.VERSION.GL_3_2 import GL_PROGRAM_POINT_SIZE
 
-from picogl.backend.GL.backend import GLBackend
+from picogl.backend.gl.backend import GLBackend
 from picogl.state.draw_mode import GLBitMask
 
 

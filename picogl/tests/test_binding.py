@@ -1,4 +1,4 @@
-"""Tests for GL binding strategies."""
+"""Tests for gl binding strategies."""
 
 import unittest
 from types import SimpleNamespace

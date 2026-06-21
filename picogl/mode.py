@@ -1,5 +1,5 @@
 """
-GL Mode
+gl Mode
 """
 
 from enum import Enum

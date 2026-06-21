@@ -18,7 +18,7 @@ from OpenGL.raw.GL.VERSION.GL_4_5 import GL_TEXTURE_BINDING_2D
 
 @dataclass(frozen=True)
 class GLParamSpec:
-    """Specification for a GL state parameter."""
+    """Specification for a gl state parameter."""
 
     pname: int
     getter: Callable

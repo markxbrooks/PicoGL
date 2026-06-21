@@ -10,8 +10,8 @@ the original state and settings are restored.
 
 from contextlib import contextmanager
 
-from picogl.backend.GL.driver.capability import GLCapabilityDriver
-from picogl.backend.GL.driver.blend import GLBlendDriver
+from picogl.backend.gl.driver.capability import GLCapabilityDriver
+from picogl.backend.gl.driver.blend import GLBlendDriver
 from picogl.backend.capability import GLPipelineCapability, GLBlendFactor, GLBlendTarget
 
 

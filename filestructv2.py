@@ -23,14 +23,14 @@ MOVE_MAP = {
 
 "error.py": "core/errors/gl_errors.py",
 
-# --- GL BACKEND ---
-"backend/GL/driver/blend.py": "backend/gl/driver/blend.py",
-"backend/GL/driver/capability.py": "backend/gl/driver/capability.py",
-"backend/GL/driver/depth.py": "backend/gl/driver/depth.py",
-"backend/GL/driver/frame.py": "backend/gl/driver/frame.py",
-"backend/GL/driver/geometry.py": "backend/gl/driver/geometry.py",
-"backend/GL/driver/raster.py": "backend/gl/driver/raster.py",
-"backend/GL/driver/texture.py": "backend/gl/driver/texture.py",
+# --- gl BACKEND ---
+"backend/gl/driver/blend.py": "backend/gl/driver/blend.py",
+"backend/gl/driver/capability.py": "backend/gl/driver/capability.py",
+"backend/gl/driver/depth.py": "backend/gl/driver/depth.py",
+"backend/gl/driver/frame.py": "backend/gl/driver/frame.py",
+"backend/gl/driver/geometry.py": "backend/gl/driver/geometry.py",
+"backend/gl/driver/raster.py": "backend/gl/driver/raster.py",
+"backend/gl/driver/texture.py": "backend/gl/driver/texture.py",
 
 # --- WRAPPERS ---
 "wrappers/buffer.py": "backend/gl/wrappers/buffer.py",
@@ -77,7 +77,7 @@ MOVE_MAP = {
 # -----------------------------
 
 REWRITE_RULES = [
-(r"picogl.backend.GL.", "picogl.backend.gl."),
+(r"picogl.backend.gl.", "picogl.backend.gl."),
 (r"picogl.mode", "picogl.core.enums.mode"),
 (r"picogl.error", "picogl.core.errors.gl_errors"),
 (r"picogl.state.draw_mode", "picogl.core.enums.draw_mode"),

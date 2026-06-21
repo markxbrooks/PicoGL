@@ -53,13 +53,13 @@ from picogl.mode import GLMode
 from picogl.renderer import MeshData
 from picogl.state.param import GLParam
 from picogl.state.query import GLStateQuery
-from picogl.backend.GL.driver.blend import GLBlendDriver
-from picogl.backend.GL.driver.capability import GLCapabilityDriver
-from picogl.backend.GL.driver.depth import GLDepthDriver
-from picogl.backend.GL.driver.frame import GLFrameDriver
-from picogl.backend.GL.driver.geometry import GLGeometryDriver
-from picogl.backend.GL.driver.raster import GLRasterDriver
-from picogl.backend.GL.driver.texture import GLTextureSystem
+from picogl.backend.gl.driver.blend import GLBlendDriver
+from picogl.backend.gl.driver.capability import GLCapabilityDriver
+from picogl.backend.gl.driver.depth import GLDepthDriver
+from picogl.backend.gl.driver.frame import GLFrameDriver
+from picogl.backend.gl.driver.geometry import GLGeometryDriver
+from picogl.backend.gl.driver.raster import GLRasterDriver
+from picogl.backend.gl.driver.texture import GLTextureSystem
 from picogl.backend.legacy.core.attribute_binder import LegacyAttributeBinder
 from picogl.backend.legacy.core.pipeline import GLLegacyPipeline, LegacyPipeline
 from picogl.backend.modern.core.pipeline import ShaderPipeline

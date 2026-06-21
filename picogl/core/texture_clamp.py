@@ -11,7 +11,7 @@ from OpenGL.raw.GL.VERSION.GL_1_2 import GL_CLAMP_TO_EDGE, GL_CLAMP_TO_BORDER
 
 
 class GLTextureClamp:
-    """GL Texture Clamping Constants."""
+    """gl Texture Clamping Constants."""
     CLAMP_TO_EDGE = GL_CLAMP_TO_EDGE
     CLAMP_TO_BORDER = GL_CLAMP_TO_BORDER
 

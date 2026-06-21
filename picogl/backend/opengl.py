@@ -1,12 +1,12 @@
 """
-GL Backend Interface.
+gl Backend Interface.
 
-This module provides an interface for a GL backend implementation, which
+This module provides an interface for a gl backend implementation, which
 offers functionalities for managing OpenGL state, drawing meshes, managing
 materials, handling client-side arrays, and interacting with textures.
 
 Classes:
-    GLBackend: A class defining the interface for the GL backend with
+    GLBackend: A class defining the interface for the gl backend with
                various methods for rendering and managing rendering states.
 """
 

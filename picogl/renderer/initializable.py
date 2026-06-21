@@ -17,7 +17,7 @@ Also do **not** subclass ``Bindable`` from :class:`~picogl.buffers.base.VertexBa
 :class:`~picogl.buffers.vertex.legacy.VertexBufferGroup`, VAO/VBO types, or
 :class:`~picogl.protocols.drawable_buffer.DrawableBuffer` implementations.
 They use stack-based bind/unbind (every ``with`` calls bind then unbind); sticky
-``_bound`` would disagree with actual GL state after nested ``with vbo`` scopes.
+``_bound`` would disagree with actual gl state after nested ``with vbo`` scopes.
 For pass-scoped VAO binding without ``with`` churn, use a separate wrapper
 (``StickyVAOBinding``) only if profiling warrants it — not inheritance on
 ``VertexBase``.

@@ -1,7 +1,7 @@
 """
 GLRaster Driver
 
-Cached write-only raster state. Imperative setters implement GL calls;
+Cached write-only raster state. Imperative setters implement gl calls;
 `apply(RasterState)` diffs frozen snapshots and is the preferred API.
 """
 
@@ -18,7 +18,7 @@ from OpenGL.GL import (
 )
 from OpenGL.raw.GL.VERSION.GL_1_1 import glPolygonOffset
 
-from picogl.backend.GL.driver.applyable import Applyable
+from picogl.backend.gl.driver.applyable import Applyable
 from picogl.backend.state import RasterState, gl_value
 from picogl.state.fill import GLFace, GLFillMode
 
@@ -41,7 +41,7 @@ def _gl_set_polygon_mode(face_val: int, mode_val: int) -> None:
 
 
 class GLRasterDriver(Applyable):
-    """Fixed-function raster state with write-only GL and cached current values."""
+    """Fixed-function raster state with write-only gl and cached current values."""
 
     _shared: Optional["GLRasterDriver"] = None
 

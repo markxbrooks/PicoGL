@@ -39,7 +39,7 @@ from OpenGL.raw.GL._types import GL_FLOAT
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT
 from OpenGL.raw.GL.VERSION.GL_1_1 import GL_COLOR_ARRAY, GL_VERTEX_ARRAY
 
-from picogl.buffers.vertex.vbo.vbo_class import VBOType
+from picogl.gpu.buffers.vbo_types import VBOType
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.renderer.meshdata import MeshData
 from picogl.state.draw_mode import GLDrawMode

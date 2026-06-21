@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, Callable
 from picogl.backend.state import RenderState
 
 if TYPE_CHECKING:
-    from picogl.backend.GL.backend import GLBackend
+    from picogl.backend.gl.backend import GLBackend
     from picogl.backend.render.resources import Texture
 
 

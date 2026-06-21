@@ -1,5 +1,5 @@
 """
-GL Polygon Mode
+gl Polygon Mode
 """
 
 from OpenGL.GL import glPolygonMode

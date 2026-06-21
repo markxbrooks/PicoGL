@@ -30,7 +30,7 @@ from picogl.wrappers.texture import gl_generate_mipmap, gl_tex_parameter, gl_tex
 
 
 class GLTextureDriver:
-    """GL Texture 2d"""
+    """gl Texture 2d"""
 
     @staticmethod
     def create(tex: Texture2D):

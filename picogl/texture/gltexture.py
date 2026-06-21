@@ -40,7 +40,7 @@ from picogl.state.query import GLStateQuery
 from picogl.wrappers.texture import gl_active_texture, gl_bind_texture
 
 class GLTexture(IntEnum):
-    """GL Texture Mode"""
+    """gl Texture Mode"""
 
     TEXTURE_2D = GL_TEXTURE_2D
     TEXTURE_3D = GL_TEXTURE_3D
@@ -79,17 +79,17 @@ class GLTexture(IntEnum):
 
     @staticmethod
     def disable_tex2d():
-        from picogl.backend.GL.driver.capability import GLCapabilityDriver
+        from picogl.backend.gl.driver.capability import GLCapabilityDriver
         GLCapabilityDriver.disable(GL_TEXTURE_2D)
 
     @staticmethod
     def enable_tex2d():
-        from picogl.backend.GL.driver.capability import GLCapabilityDriver
+        from picogl.backend.gl.driver.capability import GLCapabilityDriver
         GLCapabilityDriver.enable(GL_TEXTURE_2D)
 
     @staticmethod
     def get_enabled_tex2d(self) -> Any:
-        from picogl.backend.GL.driver.capability import GLCapabilityDriver
+        from picogl.backend.gl.driver.capability import GLCapabilityDriver
         return GLCapabilityDriver.is_enabled(GL_TEXTURE_2D)
 
     @staticmethod

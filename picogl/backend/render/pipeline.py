@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 from picogl.backend.render.pass_ import RenderPass
 
 if TYPE_CHECKING:
-    from picogl.backend.GL.backend import GLBackend
+    from picogl.backend.gl.backend import GLBackend
 
 
 class RenderPipeline:

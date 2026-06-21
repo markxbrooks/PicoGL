@@ -5,7 +5,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import glViewport
 from pyglm import glm
 
 from examples.legacy import legacy_teapot
-from picogl.backend.GL.backend import GLBackend
+from picogl.backend.gl.backend import GLBackend
 from picogl.backend.opengl import LegacyBinding
 from picogl.renderer import GLResourceRegistry
 from picogl.ui.backend.glut.window.gl import GLWindow

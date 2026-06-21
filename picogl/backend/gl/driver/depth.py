@@ -9,8 +9,8 @@ from OpenGL.GL import (
 )
 
 from picogl.backend.capability import GLPipelineCapability
-from picogl.backend.GL.driver.applyable import Applyable
-from picogl.backend.GL.driver.capability import GLCapabilityDriver
+from picogl.backend.gl.driver.applyable import Applyable
+from picogl.backend.gl.driver.capability import GLCapabilityDriver
 
 if TYPE_CHECKING:
     from picogl.backend.state import DepthState

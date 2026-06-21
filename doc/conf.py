@@ -124,12 +124,12 @@ suppress_warnings = ['autodoc.import_object']
 
 autodoc_mock_imports = [
     'OpenGL',
-    'OpenGL.GL',
+    'OpenGL.gl',
     'OpenGL.GLU',
     'OpenGL.GLUT',
     'OpenGL.raw',
-    'OpenGL.raw.GL',
-    'OpenGL.raw.GL.VERSION',
+    'OpenGL.raw.gl',
+    'OpenGL.raw.gl.VERSION',
     'pyglm',
     'glm',
     'PIL',

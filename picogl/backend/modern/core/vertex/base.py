@@ -57,7 +57,7 @@ class VertexBuffer(VertexBase):
         - Buffer binding/unbinding
         - Data upload (glBufferData)
         - Vertex attribute configuration
-        - Type mapping from NumPy dtype to GL constants
+        - Type mapping from NumPy dtype to gl constants
     """
 
     _GL_TYPE_MAP = {
@@ -114,7 +114,7 @@ class VertexBuffer(VertexBase):
         Upload data to the GPU.
 
         :param data: NumPy array containing buffer data.
-        :param usage: GL usage hint (e.g., GL_STATIC_DRAW, GL_DYNAMIC_DRAW).
+        :param usage: gl usage hint (e.g., GL_STATIC_DRAW, GL_DYNAMIC_DRAW).
         """
         if not isinstance(data, np.ndarray):
             raise TypeError(f"Expected np.ndarray, got {type(data).__name__}")
@@ -150,7 +150,7 @@ class VertexBuffer(VertexBase):
         :param normalized: Whether values should be normalized.
         :param stride: Byte offset between consecutive attributes.
         :param offset: Byte offset of the first attribute.
-        :param dtype: GL data type (e.g., GL_FLOAT).
+        :param dtype: gl data type (e.g., GL_FLOAT).
         :param pointer: Offset pointer for glVertexAttribPointer.
         """
         self.index = index
@@ -189,7 +189,7 @@ class VertexBuffer(VertexBase):
 
     @classmethod
     def _map_dtype_to_gl(cls, dtype) -> int:
-        """Map a NumPy dtype to the corresponding GL constant."""
+        """Map a NumPy dtype to the corresponding gl constant."""
         return cls._GL_TYPE_MAP.get(dtype, GLDataType.FLOAT)
 
     # ----------------------------

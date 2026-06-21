@@ -36,7 +36,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
 
 
 class GLPipelineCapability(IntEnum):
-    """GL Capabilities"""
+    """gl Capabilities"""
 
     BLEND = GL_BLEND
     DEPTH_TEST = GL_DEPTH_TEST
@@ -44,7 +44,7 @@ class GLPipelineCapability(IntEnum):
 
 
 class GLFixedFunctionCapability(IntEnum):
-    """GL Fixed Function Capabilities"""
+    """gl Fixed Function Capabilities"""
 
     LIGHTING = GL_LIGHTING
     LIGHT0 = GL_LIGHT0
@@ -55,14 +55,14 @@ class GLFixedFunctionCapability(IntEnum):
 
 
 class GLBlendTarget(IntEnum):
-    """GL Blend Dest"""
+    """gl Blend Dest"""
 
     BLEND_SRC = GL_BLEND_SRC
     BLEND_DST = GL_BLEND_DST
 
 
 class GLBlendFactor(IntEnum):
-    """GL Blend Factor"""
+    """gl Blend Factor"""
 
     SRC_ALPHA = GL_SRC_ALPHA
     ONE_MINUS_SRC_ALPHA = GL_ONE_MINUS_SRC_ALPHA
@@ -74,19 +74,19 @@ class GLBlendFactor(IntEnum):
         try:
             return cls(param)
         except ValueError:
-            raise ValueError(f"Unknown GL blend factor: {param}")
+            raise ValueError(f"Unknown gl blend factor: {param}")
 
 
 @dataclass(frozen=True)
 class GLBlendFunc:
-    """GL Blend Function"""
+    """gl Blend Function"""
 
     src: GLBlendFactor
     dst: GLBlendFactor
 
 
 class GLMaterialFace(IntEnum):
-    """GL Material Face"""
+    """gl Material Face"""
 
     FRONT = GL_FRONT
     BACK = GL_BACK

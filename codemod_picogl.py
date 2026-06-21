@@ -7,7 +7,7 @@ import difflib
 import libcst as cst
 
 MODULE_MAP = {
-    "picogl.backend.GL": "picogl.backend.gl",
+    "picogl.backend.gl": "picogl.backend.gl",
     "picogl.mode": "picogl.core.enums.mode",
     "picogl.error": "picogl.core.errors.gl_errors",
     "picogl.state.draw_mode": "picogl.core.enums.draw_mode",

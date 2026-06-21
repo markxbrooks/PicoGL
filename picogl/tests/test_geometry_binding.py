@@ -11,7 +11,7 @@ from picogl.backend.geometry.adapter import DrawableBufferAdapter
 from picogl.backend.geometry.factory import LegacyBinding, ModernBinding
 from picogl.backend.geometry.legacy_mesh import LegacyMesh
 from picogl.backend.geometry.modern_mesh import ModernMesh
-from picogl.backend.GL.driver.geometry import GLGeometryDriver
+from picogl.backend.gl.driver.geometry import GLGeometryDriver
 from picogl.renderer.meshdata import MeshData
 
 

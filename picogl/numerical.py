@@ -31,7 +31,7 @@ _SUPPORTED_VERTEX_POINTER_TYPES = {
 
 
 class GLNumeric(IntEnum):
-    """GL Numerical Values"""
+    """gl Numerical Values"""
 
     FLOAT = GL_FLOAT
     DOUBLE = GL_DOUBLE

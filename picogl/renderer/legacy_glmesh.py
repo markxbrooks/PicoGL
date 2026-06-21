@@ -24,7 +24,7 @@ from picogl.buffers.glcleanup import delete_buffer_object
 from picogl.buffers.helper import as_vec3_array
 from picogl.buffers.vertex.aliases import VertexBufferRole
 from picogl.buffers.vertex.legacy import VertexBufferGroup
-from picogl.buffers.vertex.vbo.vbo_class import MeshDataAttrs, VBOType
+from picogl.gpu.buffers.vbo_types import MeshDataAttrs, VBOType
 from picogl.numerical import GLNumeric
 from picogl.state.client import GLClientState
 from picogl.state.draw_mode import GLDrawMode
@@ -33,7 +33,7 @@ from picogl.wrappers.draw import gl_draw_elements
 
 class LegacyGLMesh:
     """
-    GL Mesh fir Compatibility Profile
+    gl Mesh fir Compatibility Profile
 
     GPU‐resident mesh: owns VAO/VBO/EBO/CBO/NBO for an indexed triangle mesh.
     It does not know anything about shaders or matrices.

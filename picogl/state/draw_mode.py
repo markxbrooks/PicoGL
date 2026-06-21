@@ -45,7 +45,7 @@ from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ARRAY_BUFFER
 
 
 class GLLegacyMatrixMode(IntEnum):
-    """GL Matrix Mode"""
+    """gl Matrix Mode"""
 
     PROJECTION = GL_PROJECTION
     MODELVIEW = GL_MODELVIEW
@@ -59,7 +59,7 @@ class GLLegacyClipPlane(IntEnum):
 
 
 class GLBitMask(IntFlag):
-    """GL Bit Mask"""
+    """gl Bit Mask"""
 
     LINE = GL_LINE_BIT
     DEPTH_BUFFER = GL_DEPTH_BUFFER_BIT
@@ -84,7 +84,7 @@ class GLUsageHint(IntEnum):
 
 
 class GLBufferTarget(IntEnum):
-    """GL Buffer Target"""
+    """gl Buffer Target"""
 
     ARRAY = GL_ARRAY_BUFFER
     ELEMENT = GL_ELEMENT_ARRAY_BUFFER
@@ -100,7 +100,7 @@ class GLLegacyPrimitive(IntEnum):
 
 
 class GLDrawMode(IntEnum):
-    """GL Draw Mode"""
+    """gl Draw Mode"""
 
     QUAD_STRIP = GL_QUAD_STRIP
     TRIANGLE_STRIP = GL_TRIANGLE_STRIP

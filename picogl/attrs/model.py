@@ -2,7 +2,7 @@
 Ribbon Attributes
 """
 
-from picogl.buffers.vertex.vbo.vbo_class import VBOType
+from picogl.gpu.buffers.vbo_types import VBOType
 
 
 class VBOAttrs:

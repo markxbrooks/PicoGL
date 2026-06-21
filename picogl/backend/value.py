@@ -2,7 +2,7 @@
 Render-state descriptors and command helpers for PicoGL backends.
 
 The classes in this module are intentionally backend-neutral: they describe
-desired OpenGL state and delegate the actual GL calls to a backend object.
+desired OpenGL state and delegate the actual gl calls to a backend object.
 """
 from enum import Enum
 from typing import Any

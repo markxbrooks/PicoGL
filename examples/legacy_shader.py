@@ -227,7 +227,7 @@ def main():
         glutInit(sys.argv)
         glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH)
         glutInitWindowSize(800, 600)
-        glutCreateWindow(b"Quad with mouse rotation - PyOpenGL + GLUT (legacy GL)")
+        glutCreateWindow(b"Quad with mouse rotation - PyOpenGL + GLUT (legacy gl)")
 
         init_gl()
         glutDisplayFunc(display)

@@ -1,13 +1,13 @@
 """
-A module for OpenGL draw operations using PicoGL-specific enumerations or raw GL constants.
+A module for OpenGL draw operations using PicoGL-specific enumerations or raw gl constants.
 
 This module provides functions to issue OpenGL draw calls, including support for
 custom draw modes and index types. It simplifies the process of working with OpenGL by
-handling conversion between PicoGL enums and raw GL constants, as well as managing pointer
+handling conversion between PicoGL enums and raw gl constants, as well as managing pointer
 data for indexed drawing.
 
 Functions:
-- gl_draw_arrays: Wrapper for glDrawArrays supporting PicoGL enums or raw GL constants.
+- gl_draw_arrays: Wrapper for glDrawArrays supporting PicoGL enums or raw gl constants.
 - gl_draw_elements: Wrapper for glDrawElements with support for custom index pointers or offsets.
 """
 
@@ -44,7 +44,7 @@ def gl_draw_arrays(
     mode: GLDrawMode | int,
     first: int = 0,
 ) -> None:
-    """Issue ``glDrawArrays`` with PicoGL draw-mode enums or raw GL constants."""
+    """Issue ``glDrawArrays`` with PicoGL draw-mode enums or raw gl constants."""
     assert mode is not None
     glDrawArrays(_gl_enum(mode), int(first), int(index_count))
 

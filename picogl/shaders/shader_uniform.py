@@ -72,13 +72,13 @@ class ShaderUniform:
 
     def upload(self, gl_module=None) -> None:
         """
-        Upload the current value to the bound GL program using PyOpenGL-like calls.
-        If location < 0 (GL returns -1 when not found/used), this is a no-op.
+        Upload the current value to the bound gl program using PyOpenGL-like calls.
+        If location < 0 (gl returns -1 when not found/used), this is a no-op.
 
-        - gl_module: optional OpenGL.GL-like module. If None, will try to import PyOpenGL
-          (from OpenGL import GL as GL) at call time.
+        - gl_module: optional OpenGL.gl-like module. If None, will try to import PyOpenGL
+          (from OpenGL import gl as gl) at call time.
         """
-        # Resolve GL module (PyOpenGL)
+        # Resolve gl module (PyOpenGL)
         if gl_module is None:
             try:
                 from OpenGL import GL as gl

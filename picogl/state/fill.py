@@ -1,5 +1,5 @@
 """
-GL Fill Mode
+gl Fill Mode
 """
 
 from enum import IntEnum
@@ -37,7 +37,7 @@ class Selectable:
 
 
 class GLLight(Selectable, IntEnum):
-    """GL Lighting"""
+    """gl Lighting"""
 
     LIGHTING = GL_LIGHTING
     LIGHT0 = GL_LIGHT0
@@ -45,7 +45,7 @@ class GLLight(Selectable, IntEnum):
 
 
 class GLCapability(IntEnum):
-    """GL Capability"""
+    """gl Capability"""
 
     COLOR_MATERIAL = GL_COLOR_MATERIAL
     CLIP_DISTANCE0 = GL_CLIP_DISTANCE0
@@ -53,13 +53,13 @@ class GLCapability(IntEnum):
 
 
 class GLColorMaterialMode(IntEnum):
-    """GL Color Material Mode"""
+    """gl Color Material Mode"""
 
     AMBIENT_AND_DIFFUSE = GL_AMBIENT_AND_DIFFUSE
 
 
 class GLLightParameter(IntEnum):
-    """GL Light Parameter"""
+    """gl Light Parameter"""
 
     POSITION = GL_POSITION
     AMBIENT = GL_AMBIENT
@@ -69,7 +69,7 @@ class GLLightParameter(IntEnum):
 
 
 class GLFace(Selectable, IntEnum):
-    """GL Face"""
+    """gl Face"""
 
     FRONT = GL_FRONT
     BACK = GL_BACK
@@ -77,7 +77,7 @@ class GLFace(Selectable, IntEnum):
 
 
 class GLFillMode(Selectable, IntEnum):
-    """GL Fill Mode"""
+    """gl Fill Mode"""
 
     FILL = GL_FILL
     LINE = GL_LINE
