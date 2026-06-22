@@ -29,9 +29,9 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
 from OpenGL.raw.GL.VERSION.GL_1_2 import GL_TEXTURE_3D
 from OpenGL.raw.GL.VERSION.GL_1_3 import GL_ACTIVE_TEXTURE, GL_TEXTURE0
 from OpenGL.raw.GL.VERSION.GL_4_5 import GL_TEXTURE_BINDING_2D
+from picogl.backend.gl.wrappers import gl_active_texture, gl_bind_texture
 from picogl.state.param import GLParam
 from picogl.state.query import GLStateQuery
-from picogl.backend.gl.wrappers import gl_active_texture, gl_bind_texture
 
 
 class GLTexture(IntEnum):

@@ -6,15 +6,15 @@ from __future__ import annotations
 
 from typing import Any
 
-from picogl.renderer.initializable import Bindable
-from picogl.renderer.meshdata import MeshData
-from picogl.state.client import GLClientState
 from picogl.backend.gl.wrappers import (gl_disable_legacy_client_state,
                                         gl_enable_legacy_client_state)
 from picogl.backend.gl.wrappers.pointer import (gl_color_array_pointer,
                                                 gl_normal_array_pointer,
                                                 gl_texcoord_array_pointer,
                                                 gl_vertex_array_pointer)
+from picogl.renderer.initializable import Bindable
+from picogl.renderer.meshdata import MeshData
+from picogl.state.client import GLClientState
 
 
 class LegacyClientMeshBinding(Bindable):

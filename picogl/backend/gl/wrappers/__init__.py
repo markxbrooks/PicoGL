@@ -1,13 +1,15 @@
 """Thin OpenGL call wrappers (legacy client state, pointers, buffers, draws)."""
 
 from picogl.backend.gl.wrappers.buffer import gl_bind_buffer
-from picogl.backend.gl.wrappers.client_state import (gl_disable_legacy_client_state,
-                                                     gl_enable_legacy_client_state)
 from picogl.backend.gl.wrappers.buffer_data import gl_buffer_data
+from picogl.backend.gl.wrappers.client_state import (
+    gl_disable_legacy_client_state, gl_enable_legacy_client_state)
 from picogl.backend.gl.wrappers.draw import gl_draw_arrays, gl_draw_elements
-from picogl.backend.gl.wrappers.enable_vertex_array import gl_enable_vertex_array
+from picogl.backend.gl.wrappers.enable_vertex_array import \
+    gl_enable_vertex_array
 from picogl.backend.gl.wrappers.generate_buffers import gl_generate_buffers
-from picogl.backend.gl.wrappers.generate_vertex_array import gl_generate_vertex_array
+from picogl.backend.gl.wrappers.generate_vertex_array import \
+    gl_generate_vertex_array
 from picogl.backend.gl.wrappers.pointer import (gl_color_array_pointer,
                                                 gl_color_pointer_from_spec,
                                                 gl_normal_array_pointer,
@@ -15,14 +17,19 @@ from picogl.backend.gl.wrappers.pointer import (gl_color_array_pointer,
                                                 gl_texcoord_array_pointer,
                                                 gl_vertex_array_pointer,
                                                 gl_vertex_pointer_from_spec)
-from picogl.backend.gl.wrappers.texture import (gl_active_texture, gl_bind_texture,
-                                                gl_compressed_tex_image, gl_gen_textures,
+from picogl.backend.gl.wrappers.texture import (gl_active_texture,
+                                                gl_bind_texture,
+                                                gl_compressed_tex_image,
+                                                gl_gen_textures,
                                                 gl_generate_mipmap,
-                                                gl_get_active_texture0, gl_tex_parameter,
+                                                gl_get_active_texture0,
+                                                gl_tex_parameter,
                                                 gl_teximage2d, gl_teximage3d)
 from picogl.backend.gl.wrappers.vertex_array import gl_bind_vertex_array
+from picogl.backend.gl.wrappers.vertex_attrib_pointer import \
+    gl_vertex_attrib_pointer
+
 from .get_integerv import gl_get_integerv
-from picogl.backend.gl.wrappers.vertex_attrib_pointer import gl_vertex_attrib_pointer
 
 __all__ = [
     "gl_bind_buffer",

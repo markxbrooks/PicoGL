@@ -1,7 +1,7 @@
 import numpy as np
+from picogl.backend.gl.wrappers.pointer import gl_color_array_pointer
 from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
 from picogl.core.enums.numerical import GLNumeric
-from picogl.backend.gl.wrappers.pointer import gl_color_array_pointer
 
 
 class LegacyColorVBO(LegacyVBO):

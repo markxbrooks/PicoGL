@@ -10,19 +10,19 @@ import numpy as np
 from decologr import Decologr as log
 from OpenGL import GL
 from picogl.attrs.vertex import CanonicalVertexAttrs
+from picogl.backend.gl.wrappers import (gl_disable_legacy_client_state,
+                                        gl_draw_elements,
+                                        gl_enable_legacy_client_state)
+from picogl.backend.gl.wrappers.pointer import (gl_color_array_pointer,
+                                                gl_normal_array_pointer,
+                                                gl_texcoord_array_pointer,
+                                                gl_vertex_array_pointer)
 from picogl.core.enums.draw_mode import GLDrawMode
 from picogl.core.enums.index_type import GLIndexType
 from picogl.core.enums.numerical import GLNumeric
 from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
 from picogl.state.client import GLClientState
 from picogl.state.fill import GLFace, GLFillMode
-from picogl.backend.gl.wrappers import (gl_disable_legacy_client_state,
-                                        gl_enable_legacy_client_state)
-from picogl.backend.gl.wrappers import gl_draw_elements
-from picogl.backend.gl.wrappers.pointer import (gl_color_array_pointer,
-                                                gl_normal_array_pointer,
-                                                gl_texcoord_array_pointer,
-                                                gl_vertex_array_pointer)
 
 
 class MeshData:

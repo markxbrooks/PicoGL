@@ -11,11 +11,11 @@ Classes:
 """
 
 from picogl.backend.geometry.mesh import GPUMesh
+from picogl.backend.gl.wrappers import gl_draw_arrays, gl_draw_elements
+from picogl.backend.gl.wrappers.vertex_array import gl_bind_vertex_array
 from picogl.backend.opengl import GLBindingStrategy
 from picogl.backend.state import gl_value
 from picogl.core.enums.index_type import GLIndexType
-from picogl.backend.gl.wrappers import gl_draw_arrays, gl_draw_elements
-from picogl.backend.gl.wrappers.vertex_array import gl_bind_vertex_array
 
 
 class GLGeometryDriver:

@@ -15,17 +15,17 @@ from OpenGL.raw.GL.VERSION.GL_1_1 import (GL_COLOR_ARRAY, GL_NORMAL_ARRAY,
 from picogl.backend.gl.capability import (GLBlendFactor,
                                           GLFixedFunctionCapability,
                                           GLPipelineCapability)
+from picogl.backend.gl.wrappers import (gl_draw_elements,
+                                        gl_enable_legacy_client_state)
+from picogl.backend.gl.wrappers.pointer import (gl_color_array_pointer,
+                                                gl_normal_array_pointer,
+                                                gl_vertex_array_pointer)
 from picogl.backend.value import gl_value
 from picogl.core.enums.draw_mode import GLDrawMode
 from picogl.core.enums.index_type import GLIndexType
 from picogl.core.enums.numerical import GLNumeric
 from picogl.state.fill import GLCapability, GLFace, GLFillMode
 from picogl.texture.gltexture_driver import GLTextureDriver
-from picogl.backend.gl.wrappers import gl_enable_legacy_client_state
-from picogl.backend.gl.wrappers import gl_draw_elements
-from picogl.backend.gl.wrappers.pointer import (gl_color_array_pointer,
-                                                gl_normal_array_pointer,
-                                                gl_vertex_array_pointer)
 
 
 class CapabilityDriver(Protocol):

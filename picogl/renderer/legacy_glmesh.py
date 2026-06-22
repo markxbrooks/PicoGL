@@ -17,6 +17,7 @@ from typing import Optional
 
 import numpy as np
 from picogl.attrs.vertex import CanonicalVertexAttrs
+from picogl.backend.gl.wrappers import gl_draw_elements
 from picogl.backend.legacy.core.vertex.buffer.client_states import \
     legacy_client_states
 from picogl.buffers.attributes import AttributeSpec, legacy_attribute_spec
@@ -29,7 +30,6 @@ from picogl.gpu.buffers.vertex.aliases import VertexBufferRole
 from picogl.gpu.buffers.vertex.legacy import VertexBufferGroup
 from picogl.gpu.buffers.vertex.vbo.vbo_class import MeshDataAttrs, VBOType
 from picogl.state.client import GLClientState
-from picogl.backend.gl.wrappers import gl_draw_elements
 
 
 class LegacyGLMesh:
