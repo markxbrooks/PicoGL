@@ -12,7 +12,7 @@ from picogl.backend.gl.capability import FACE_MAP
 from picogl.backend.state import gl_value
 from picogl.backend.gl.state.fill import (GLColorMaterialMode, GLFace, GLLight,
                                           GLLightParameter)
-from picogl.state.texture import TexCoord2f, Vertex3f
+from picogl.backend.gl.state.texture import TexCoord2f, Vertex3f
 
 
 @runtime_checkable
