@@ -18,7 +18,8 @@ from picogl.buffers.glcleanup import delete_buffer_object
 from picogl.gpu.buffers.helper import as_vec3_array
 from picogl.gpu.buffers.vertex.vbo.vbo_class import MeshDataAttrs, VBOType
 from picogl.shaders.type import ShaderType
-from picogl.state.draw_mode import GLDrawMode, GLIndexType
+from picogl.core.enums.draw_mode import GLDrawMode
+from picogl.core.enums.index_type import GLIndexType
 
 if TYPE_CHECKING:
     from picogl.renderer.meshdata import MeshData

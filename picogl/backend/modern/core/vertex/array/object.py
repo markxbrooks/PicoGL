@@ -55,12 +55,12 @@ from picogl.buffers.base import VertexBase
 from picogl.buffers.glcleanup import gl_delete_buffers, gl_delete_vertex_arrays
 from picogl.gpu.buffers.vertex.aliases import NAME_ALIASES
 from picogl.safe import gl_gen_safe
-from picogl.state.draw_mode import (
-    GLBufferTarget,
+from picogl.core.enums.draw_mode import (
     GLDrawMode,
-    GLIndexType,
-    GLUsageHint,
 )
+from picogl.core.enums.buffer_target import GLBufferTarget
+from picogl.core.enums.usage_hint import GLUsageHint
+from picogl.core.enums.index_type import GLIndexType
 from picogl.core.enums.numerical import GLNumeric
 from picogl.wrappers.buffer import gl_bind_buffer
 from picogl.wrappers.draw import gl_draw_arrays, gl_draw_elements

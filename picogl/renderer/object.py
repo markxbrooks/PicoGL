@@ -9,7 +9,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES
 
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.renderer import GLResourceRegistry, MeshData, RendererBase
-from picogl.state.draw_mode import GLDrawMode
+from picogl.core.enums.draw_mode import GLDrawMode
 from picogl.utils.loader.texture import TextureLoader
 from picogl.utils.texture import bind_texture_array
 

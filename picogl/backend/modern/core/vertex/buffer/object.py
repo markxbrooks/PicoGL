@@ -3,7 +3,7 @@
 import numpy as np
 
 from picogl.backend.modern.core.vertex.base import VertexBuffer
-from picogl.state.draw_mode import GLBufferTarget
+from picogl.core.enums.buffer_target import GLBufferTarget
 from picogl.wrappers.generate_buffers import gl_generate_buffers
 
 

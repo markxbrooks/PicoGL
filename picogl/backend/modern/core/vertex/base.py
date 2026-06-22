@@ -40,7 +40,9 @@ from OpenGL.raw.GL.VERSION.GL_1_5 import glBufferSubData, glIsBuffer
 
 from picogl.boolean import GLBoolean
 from picogl.buffers.base import VertexBase
-from picogl.state.draw_mode import GLBufferTarget, GLIndexType, GLUsageHint
+from picogl.core.enums.buffer_target import GLBufferTarget
+from picogl.core.enums.usage_hint import GLUsageHint
+from picogl.core.enums.index_type import GLIndexType
 from picogl.core.enums.numerical import GLNumeric
 from picogl.wrappers.buffer import gl_bind_buffer
 from picogl.wrappers.data import gl_buffer_data

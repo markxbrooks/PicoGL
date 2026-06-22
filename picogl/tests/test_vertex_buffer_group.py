@@ -47,7 +47,7 @@ from picogl.buffers.attributes import AttributeSpec, LayoutDescriptor
 from picogl.gpu.buffers.vertex.aliases import VertexBufferRole
 from picogl.gpu.buffers.vertex.legacy import VertexBufferGroup
 from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
-from picogl.state.draw_mode import GLDrawMode
+from picogl.core.enums.draw_mode import GLDrawMode
 
 
 class TestVertexBufferGroup(unittest.TestCase):

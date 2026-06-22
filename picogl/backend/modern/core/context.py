@@ -6,7 +6,8 @@ from examples.utils.test_window import GLWindow
 from picogl.backend.gl.capability import GLPipelineCapability
 from picogl.boolean import GLBoolean
 from picogl.core.enums.numerical import GLNumeric
-from picogl.state.draw_mode import GLBufferTarget, GLUsageHint
+from picogl.core.enums.buffer_target import GLBufferTarget
+from picogl.core.enums.usage_hint import GLUsageHint
 from picogl.core.enums.bitmask import GLBitMask
 from picogl.wrappers.buffer import gl_bind_buffer
 from picogl.wrappers.data import gl_buffer_data

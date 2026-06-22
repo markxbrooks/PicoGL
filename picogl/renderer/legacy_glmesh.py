@@ -27,7 +27,7 @@ from picogl.gpu.buffers.vertex.legacy import VertexBufferGroup
 from picogl.gpu.buffers.vertex.vbo.vbo_class import MeshDataAttrs, VBOType
 from picogl.core.enums.numerical import GLNumeric
 from picogl.state.client import GLClientState
-from picogl.state.draw_mode import GLDrawMode
+from picogl.core.enums.draw_mode import GLDrawMode
 from picogl.wrappers.draw import gl_draw_elements
 
 

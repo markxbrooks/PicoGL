@@ -14,7 +14,8 @@ from picogl.boolean import GLBoolean
 from picogl.core.enums.numerical import GLNumeric
 from picogl.renderer import RendererBase
 from picogl.renderer.initializable import Initializable
-from picogl.state.draw_mode import GLBufferTarget, GLDrawMode
+from picogl.core.enums.draw_mode import GLDrawMode
+from picogl.core.enums.buffer_target import GLBufferTarget
 from picogl.state.fill import GLFillMode
 from picogl.wrappers.buffer import gl_bind_buffer
 from picogl.wrappers.disable_vertex_array import gl_disable_vertex_array

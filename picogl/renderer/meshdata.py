@@ -13,7 +13,8 @@ from OpenGL import GL
 from picogl.attrs.vertex import CanonicalVertexAttrs
 from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
 from picogl.state.client import GLClientState
-from picogl.state.draw_mode import GLDrawMode, GLIndexType
+from picogl.core.enums.draw_mode import GLDrawMode
+from picogl.core.enums.index_type import GLIndexType
 from picogl.core.enums.numerical import GLNumeric
 from picogl.state.fill import GLFace, GLFillMode
 from picogl.wrappers.client_state import (

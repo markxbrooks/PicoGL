@@ -26,7 +26,8 @@ from picogl.buffers.glcleanup import delete_buffer_object
 from picogl.gpu.buffers.vertex.aliases import NAME_ALIASES, VertexBufferRole
 from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
 from picogl.state.client import GLClientState
-from picogl.state.draw_mode import GLBufferTarget, GLDrawMode
+from picogl.core.enums.draw_mode import GLDrawMode
+from picogl.core.enums.buffer_target import GLBufferTarget
 from picogl.core.enums.numerical import GLNumeric
 from picogl.wrappers.buffer import gl_bind_buffer
 from picogl.wrappers.client_state import gl_enable_legacy_client_state

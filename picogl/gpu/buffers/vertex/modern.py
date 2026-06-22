@@ -5,7 +5,7 @@ from OpenGL.GL import glDeleteVertexArrays
 from picogl.buffers.attributes import LayoutDescriptor
 from picogl.buffers.base import VertexBase
 from picogl.buffers.glcleanup import gl_delete_buffers
-from picogl.state.draw_mode import GLBufferTarget
+from picogl.core.enums.buffer_target import GLBufferTarget
 from picogl.wrappers.buffer import gl_bind_buffer
 from picogl.wrappers.enable_vertex_array import gl_enable_vertex_array
 from picogl.wrappers.generate_vertex_array import gl_generate_vertex_array

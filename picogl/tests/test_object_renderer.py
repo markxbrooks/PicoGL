@@ -37,7 +37,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES
 
 from picogl.renderer.meshdata import MeshData
 from picogl.renderer.object import ObjectRenderer
-from picogl.state.draw_mode import GLDrawMode
+from picogl.core.enums.draw_mode import GLDrawMode
 
 
 class TestObjectRenderer(unittest.TestCase):

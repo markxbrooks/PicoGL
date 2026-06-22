@@ -10,7 +10,7 @@ from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client
 from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
 from picogl.gpu.buffers.vertex.legacy import VertexBufferGroup
 from picogl.state.client import GLClientState
-from picogl.state.draw_mode import GLDrawMode
+from picogl.core.enums.draw_mode import GLDrawMode
 from picogl.wrappers.draw import gl_draw_arrays
 
 

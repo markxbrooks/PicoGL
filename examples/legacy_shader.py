@@ -4,7 +4,7 @@ import sys
 from math import cos, sin
 
 import numpy as np
-from picogl.state.draw_mode import GLDrawMode
+from picogl.core.enums.draw_mode import GLDrawMode
 from picogl.state.immediate import immediate_drawing
 # Check for display before importing OpenGL
 if os.environ.get("DISPLAY") is None and os.name != "nt":

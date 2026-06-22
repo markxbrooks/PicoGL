@@ -5,7 +5,8 @@ gl buffer data wrapper
 
 from OpenGL.GL import glBufferData
 
-from picogl.state.draw_mode import GLBufferTarget, GLUsageHint
+from picogl.core.enums.buffer_target import GLBufferTarget
+from picogl.core.enums.usage_hint import GLUsageHint
 
 
 def gl_buffer_data(
