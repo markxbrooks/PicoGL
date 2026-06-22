@@ -4,12 +4,13 @@ from OpenGL.GL import *  # pylint: disable=W0614
 
 from picogl.core.uniform import gl_uniform1i
 from picogl.globals import PROJECT_ROOT
-from picogl.state.draw_mode import GLBufferTarget, GLUsageHint
+from picogl.backend.gl.enums import GLBufferTarget
+from picogl.backend.gl.enums import GLUsageHint
 from picogl.ui.backend.glut.window.gl import GLWindow
 from picogl.utils.loader.texture import TextureLoader
 from pyglm import glm
 
-from picogl.wrappers.texture import gl_bind_texture, gl_get_active_texture0
+from picogl.backend.gl.wrappers import gl_bind_texture, gl_get_active_texture0
 from utils.shader_loader import Shader
 
 g_vertex_buffer_data = [

@@ -5,11 +5,11 @@ gl Blend Driver
 from typing import TYPE_CHECKING
 
 from OpenGL.GL import glBlendFunc
-
-from picogl.backend.capability import GLBlendFactor, GLBlendTarget, GLPipelineCapability
+from picogl.backend.gl.capability import (GLBlendFactor, GLBlendTarget,
+                                          GLPipelineCapability)
 from picogl.backend.gl.driver.applyable import Applyable
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
-from picogl.backend.state import BlendState, gl_value
+from picogl.backend.state import gl_value
 
 if TYPE_CHECKING:
     from picogl.backend.state import BlendState
@@ -41,7 +41,7 @@ class GLBlendDriver(Applyable):
     def setup_blending(self):
         self.set_blend_func(GLBlendFactor.SRC_ALPHA, GLBlendFactor.ONE_MINUS_SRC_ALPHA)
 
-    def _do_apply(self, state: BlendState | None, prev: BlendState | None):
+    def _do_apply(self, state: "BlendState | None", prev: "BlendState | None"):
         if state is None:
             return
         if prev is None or prev.enabled != state.enabled:
@@ -52,7 +52,7 @@ class GLBlendDriver(Applyable):
         ):
             self.set_blend_func(state.src, state.dst)
 
-    def _is_same(self, prev: BlendState, state: BlendState) -> bool:
+    def _is_same(self, prev: "BlendState", state: "BlendState") -> bool:
         if prev == state:
             return True
         return False

@@ -12,23 +12,23 @@ LegacyGLMesh
     Represents a GPU-resident mesh with VAO/VBO/EBO/CBO/NBO structures
     for an indexed triangle mesh.
 """
+
 from typing import Optional
 
 import numpy as np
-
-from picogl.attrs.vertex import CanonicalVertexAttrs
-from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
-from picogl.buffers.attributes import AttributeSpec, legacy_attribute_spec
-from picogl.buffers.factory.layout import create_layout
-from picogl.buffers.glcleanup import delete_buffer_object
-from picogl.buffers.helper import as_vec3_array
-from picogl.buffers.vertex.aliases import VertexBufferRole
-from picogl.buffers.vertex.legacy import VertexBufferGroup
-from picogl.gpu.buffers.vbo_types import MeshDataAttrs, VBOType
-from picogl.numerical import GLNumeric
-from picogl.state.client import GLClientState
-from picogl.state.draw_mode import GLDrawMode
-from picogl.wrappers.draw import gl_draw_elements
+from picogl.backend.gl.enums import GLDrawMode, GLNumeric
+from picogl.backend.gl.wrappers import gl_draw_elements
+from picogl.backend.gl.wrappers.glcleanup import gl_delete_buffer_object
+from picogl.backend.legacy.core.vertex.buffer.client_states import \
+    legacy_client_states
+from picogl.gpu.buffers.attributes import (AttributeSpec, CanonicalVertexAttrs,
+                                           legacy_attribute_spec)
+from picogl.gpu.buffers.factory import create_layout
+from picogl.gpu.buffers.helper import as_vec3_array
+from picogl.gpu.buffers.vertex.aliases import VertexBufferRole
+from picogl.gpu.buffers.vertex.legacy import VertexBufferGroup
+from picogl.gpu.buffers.vertex.vbo.vbo_class import MeshDataAttrs, VBOType
+from picogl.backend.gl.state.client import GLClientState
 
 
 class LegacyGLMesh:
@@ -174,7 +174,7 @@ class LegacyGLMesh:
     def delete(self):
         """Free GPU resources."""
         if self.vao:
-            delete_buffer_object(self.vao)
+            gl_delete_buffer_object(self.vao)
             self.vao = None
             self.index_count = 0
 

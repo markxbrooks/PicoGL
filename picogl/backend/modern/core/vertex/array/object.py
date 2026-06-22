@@ -39,32 +39,39 @@ from typing import Optional, Union
 
 import numpy as np
 from decologr import Decologr as log
-from elmo.log.silence import SILENT_VAO
-from PySide6.QtGui import QOpenGLContext
-
-from picogl.backend.modern.core.vertex.array.helpers import (
-    enable_points_rendering_state,
-)
+from picogl.backend.gl.enums import (GLBufferTarget, GLDrawMode, GLIndexType,
+                                     GLNumeric, GLUsageHint)
+from picogl.backend.gl.wrappers import gl_draw_arrays, gl_draw_elements
+from picogl.backend.gl.wrappers.buffer import gl_bind_buffer, gl_buffer_subdata
+from picogl.backend.gl.wrappers.enable_vertex_array import \
+    gl_enable_vertex_array
+from picogl.backend.gl.wrappers.glcleanup import (gl_delete_buffers,
+                                                  gl_delete_vertex_arrays)
+from picogl.backend.gl.wrappers.vertex_array import gl_bind_vertex_array, gl_gen_vertex_arrays, gl_is_vertex_array
+from picogl.backend.gl.wrappers.vertex_attrib_pointer import \
+    gl_vertex_attrib_pointer
+from picogl.backend.modern.core.vertex.array.helpers import \
+    enable_points_rendering_state
 from picogl.backend.modern.core.vertex.base import VertexBuffer
 from picogl.backend.modern.core.vertex.buffer.element import ModernEBO
 from picogl.backend.modern.core.vertex.buffer.object import ModernVBO
-from picogl.buffers.attributes import LayoutDescriptor
-from picogl.buffers.base import VertexBase
-from picogl.buffers.glcleanup import gl_delete_buffers, gl_delete_vertex_arrays
-from picogl.buffers.vertex.aliases import NAME_ALIASES
+from picogl.gpu.buffers.attributes import LayoutDescriptor
+from picogl.gpu.buffers.base import VertexBase
+from picogl.gpu.buffers.vertex.aliases import NAME_ALIASES
 from picogl.safe import gl_gen_safe
-from picogl.numerical import GLNumeric
-from picogl.state.draw_mode import (
-    GLBufferTarget,
-    GLDrawMode,
-    GLIndexType,
-    GLUsageHint,
-)
-from picogl.wrappers.buffer import gl_bind_buffer, gl_buffer_subdata
-from picogl.wrappers.draw import gl_draw_arrays, gl_draw_elements
-from picogl.wrappers.enable_vertex_array import gl_enable_vertex_array
-from picogl.wrappers.vertex_array import gl_bind_vertex_array, gl_is_vertex_array, gl_gen_vertex_arrays
-from picogl.wrappers.vertex_attrib_pointer import gl_vertex_attrib_pointer
+from PySide6.QtGui import QOpenGLContext
+
+from elmo.log.silence import SILENT_VAO
+
+
+def current_gl_context() -> int:
+    try:
+        from PySide6.QtGui import QOpenGLContext
+
+        # return QOpenGLContext.currentContext()
+        return id(QOpenGLContext.currentContext())
+    except Exception:
+        return None
 
 
 class GLResource:
@@ -147,7 +154,7 @@ class VertexArrayObject(VertexBase, GLResource):
         try:
             handle = getattr(self, "handle", None)
             if handle:
-                return gl_is_vertex_array(handle)
+                return bool(gl_is_vertex_array(handle))
         except Exception:
             return False
 
@@ -464,11 +471,9 @@ class VertexArrayObject(VertexBase, GLResource):
                 and old.dtype == arr.dtype
                 and old.nbytes == arr.nbytes
             ):
-                gl_buffer_subdata(target=GLBufferTarget.ARRAY, offset=0, size=arr.nbytes, data=arr)
+                gl_buffer_subdata(GLBufferTarget.ARRAY, 0, arr.nbytes, arr)
             else:
                 vbo.set_data(arr)
         finally:
             gl_bind_buffer(GLBufferTarget.ARRAY, 0)
             self.unbind()
-
-

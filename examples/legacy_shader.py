@@ -1,11 +1,10 @@
 
 import os
 import sys
-from math import cos, sin
 
 import numpy as np
-from picogl.state.draw_mode import GLDrawMode
-from picogl.state.immediate import immediate_drawing
+from picogl.backend.gl.enums import GLDrawMode
+from picogl.backend.gl.state.immediate import immediate_drawing
 # Check for display before importing OpenGL
 if os.environ.get("DISPLAY") is None and os.name != "nt":
     print("❌ No display available. This requires a graphical environment.")

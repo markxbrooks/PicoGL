@@ -1,6 +1,6 @@
 # Geometry / Binding / Pipeline — draw call inventory
 
-Phase 0 inventory for the binding/pipeline refactor ([`raster.md`](../GL/driver/raster.md)).
+Phase 0 inventory for the binding/pipeline refactor ([`raster.md`](../gl/driver/raster.md)).
 Documents **where drawing actually happens today** before introducing `GPUMesh` and split pipelines.
 
 ## Three layers (target)
@@ -34,7 +34,7 @@ Phase 1 added [`picogl/backend/geometry/`](.) — see `mesh.py`, `legacy_mesh.py
 |------|----------|------|
 | `LegacyPipeline` (`GLLegacyPipeline`) | [`legacy/core/pipeline.py`](../legacy/core/pipeline.py) | Fixed-function matrices, lights, materials, immediate-mode helpers |
 | `ShaderPipeline` | [`modern/core/pipeline/shader_pipeline.py`](../modern/core/pipeline/shader_pipeline.py) | `glUseProgram` + uniform upload |
-| `GLBackend.legacy` | [`GL/backend.py`](../GL/backend.py) | Fixed-function pipeline entry |
+| `GLBackend.legacy` | [`GL/backend.py`](../gl/backend.py) | Fixed-function pipeline entry |
 | `GLBackend.shader` | same | Default modern pipeline slot |
 | `GLBackend.pipeline` | same | **Deprecated** alias for `.legacy` |
 

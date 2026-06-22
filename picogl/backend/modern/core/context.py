@@ -1,19 +1,20 @@
-from OpenGL.GL import *  # pylint: disable=W0614
-from pyglm import glm
-
 from examples.utils.shader_loader import Shader
 from examples.utils.test_window import GLWindow
-from picogl.backend.capability import GLPipelineCapability
+from OpenGL.GL import *  # pylint: disable=W0614
+from picogl.backend.gl.capability import GLPipelineCapability
+from picogl.backend.gl.enums import (GLBitMask, GLBufferTarget, GLNumeric,
+                                     GLUsageHint)
+from picogl.backend.gl.wrappers import (gl_buffer_data,
+                                        gl_disable_vertex_array,
+                                        gl_draw_arrays)
+from picogl.backend.gl.wrappers.buffer import gl_bind_buffer
+from picogl.backend.gl.wrappers.enable_vertex_array import \
+    gl_enable_vertex_array
+from picogl.backend.gl.wrappers.generate_buffers import gl_generate_buffers
+from picogl.backend.gl.wrappers.vertex_attrib_pointer import \
+    gl_vertex_attrib_pointer
 from picogl.boolean import GLBoolean
-from picogl.numerical import GLNumeric
-from picogl.state.draw_mode import GLBufferTarget, GLUsageHint, GLBitMask
-from picogl.wrappers.buffer import gl_bind_buffer
-from picogl.wrappers.data import gl_buffer_data
-from picogl.wrappers.disable_vertex_array import gl_disable_vertex_array
-from picogl.wrappers.draw import gl_draw_arrays
-from picogl.wrappers.enable_vertex_array import gl_enable_vertex_array
-from picogl.wrappers.generate_buffers import gl_generate_buffers
-from picogl.wrappers.vertex_attrib_pointer import gl_vertex_attrib_pointer
+from pyglm import glm
 
 
 class GObject:

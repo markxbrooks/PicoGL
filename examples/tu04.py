@@ -4,7 +4,7 @@
 from decologr import Decologr as log
 from OpenGL.GL import *  # pylint: disable=W0614
 from picogl.backend.modern.core.shader.program import ShaderProgram
-from picogl.buffers.vertex import data
+from picogl.gpu.buffers.vertex import data
 from picogl.core.uniform import gl_uniform1i
 from picogl.ui.backend.glut.window.glut import GlutRendererWindow
 from picogl.utils.loader.texture import TextureLoader
@@ -12,7 +12,7 @@ from pyglm import glm
 from utils.objLoader import objLoader
 from utils.textureLoader import textureLoader
 
-from picogl.wrappers.texture import gl_get_active_texture0, gl_bind_texture
+from picogl.backend.gl.wrappers import gl_get_active_texture0, gl_bind_texture
 
 
 class MeshUE4:
@@ -35,7 +35,7 @@ class MeshUE4:
 
     def getMesh(self):
         ue4LOD = self.load_mesh()
-        self.vertices = data.VertexData.to_array()
+        self.vertices = vertex_data.VertexData.to_array()
         self.indices = ue4LOD.IndexBuffer.to_array()
         self.texcoords = ue4LOD.VertexBuffers.StaticMeshVertexBuffer.TexcoordData.to_array()
         self.tangent_xz = ue4LOD.VertexBuffers.StaticMeshVertexBuffer.TangentsData.to_array()

@@ -10,26 +10,20 @@ from typing import Any, Protocol
 
 from numpy import ndarray
 from OpenGL.GL import glBlendFunc, glViewport
-
-from picogl.backend.capability import (
-    GLBlendFactor,
-    GLFixedFunctionCapability,
-    GLPipelineCapability,
-)
+from OpenGL.raw.GL.VERSION.GL_1_1 import (GL_COLOR_ARRAY, GL_NORMAL_ARRAY,
+                                          GL_VERTEX_ARRAY)
+from picogl.backend.gl.capability import (GLBlendFactor,
+                                          GLFixedFunctionCapability,
+                                          GLPipelineCapability)
+from picogl.backend.gl.enums import GLDrawMode, GLIndexType, GLNumeric
+from picogl.backend.gl.wrappers import (gl_draw_elements,
+                                        gl_enable_legacy_client_state)
+from picogl.backend.gl.wrappers.pointer import (gl_color_array_pointer,
+                                                gl_normal_array_pointer,
+                                                gl_vertex_array_pointer)
 from picogl.backend.value import gl_value
-from picogl.numerical import GLNumeric
-from picogl.state.client import GLClientState
-from picogl.numerical import GLNumeric
-from picogl.state.draw_mode import GLDrawMode, GLIndexType
-from picogl.state.fill import GLCapability, GLFace, GLFillMode
+from picogl.backend.gl.state.fill import GLCapability, GLFace, GLFillMode
 from picogl.texture.gltexture_driver import GLTextureDriver
-from picogl.wrappers.client_state import gl_enable_legacy_client_state
-from picogl.wrappers.draw import gl_draw_elements
-from picogl.wrappers.pointer import (
-    gl_color_array_pointer,
-    gl_normal_array_pointer,
-    gl_vertex_array_pointer,
-)
 
 
 class CapabilityDriver(Protocol):
@@ -275,14 +269,17 @@ class RenderStateApplier:
             )
 
         if state.program_point_size and (prev is None or not prev.program_point_size):
+            from OpenGL.GL import GL_PROGRAM_POINT_SIZE
 
-            self.backend.capabilities.enable(GLPipelineCapability.PROGRAM_POINT_SIZE)
+            self.backend.capabilities.enable(GL_PROGRAM_POINT_SIZE)
         elif (
             prev is not None
             and prev.program_point_size
             and not state.program_point_size
         ):
-            self.backend.capabilities.disable(GLPipelineCapability.PROGRAM_POINT_SIZE)
+            from OpenGL.GL import GL_PROGRAM_POINT_SIZE
+
+            self.backend.capabilities.disable(GL_PROGRAM_POINT_SIZE)
 
 
 class GLVertexBuffer:
@@ -305,14 +302,21 @@ class GLAttributeArray:
 
     def enable_legacy(self, kind):
         gl_enable_legacy_client_state(kind)
-        vertex_handlers = {
-            GLClientState.VERTEX: gl_vertex_array_pointer,
-            GLClientState.NORMAL: gl_normal_array_pointer,
-            GLClientState.COLOR: gl_color_array_pointer
-        }
-        handler = vertex_handlers.get(kind, None)
-        if handler is not None:
-            handler(
+        if kind == GL_VERTEX_ARRAY:
+            gl_vertex_array_pointer(
+                pointer=self.pointer,
+                size=self.size,
+                num_type=GLNumeric.FLOAT,
+                stride=self.stride,
+            )
+        elif kind == GL_NORMAL_ARRAY:
+            gl_normal_array_pointer(
+                pointer=self.pointer,
+                num_type=GLNumeric.FLOAT,
+                stride=self.stride,
+            )
+        elif kind == GL_COLOR_ARRAY:
+            gl_color_array_pointer(
                 pointer=self.pointer,
                 size=self.size,
                 num_type=GLNumeric.FLOAT,
@@ -344,7 +348,7 @@ class TestGLMesh:
 
     def draw(self):
         for attr in self.attributes:
-            attr.enable_legacy(GLClientState.VERTEX)  # refine mapping
+            attr.enable_legacy(GL_VERTEX_ARRAY)  # refine mapping
 
         if self.indices is not None:
             gl_draw_elements(

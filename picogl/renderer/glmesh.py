@@ -11,14 +11,14 @@ import ctypes
 from typing import TYPE_CHECKING, Literal, Optional, Union
 
 import numpy as np
-from elmo.glsl.layouts import build_shader_layouts
-
+from picogl.backend.gl.enums import GLDrawMode, GLIndexType
+from picogl.backend.gl.wrappers.glcleanup import gl_delete_buffer_object
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
-from picogl.buffers.glcleanup import delete_buffer_object
-from picogl.buffers.helper import as_vec3_array
-from picogl.gpu.buffers.vbo_types import MeshDataAttrs, VBOType
+from picogl.gpu.buffers.helper import as_vec3_array
+from picogl.gpu.buffers.vertex.vbo.vbo_class import MeshDataAttrs, VBOType
 from picogl.shaders.type import ShaderType
-from picogl.state.draw_mode import GLDrawMode, GLIndexType
+
+from elmo.glsl.layouts import build_shader_layouts
 
 if TYPE_CHECKING:
     from picogl.renderer.meshdata import MeshData
@@ -254,7 +254,7 @@ class GLMesh:
             # If add_vbo/add_ebo failed after VAO gen, drop orphan VAO so the next
             # upload() retry does not accumulate registry leaks.
             if vao is not None:
-                delete_buffer_object(vao)
+                gl_delete_buffer_object(vao)
 
     def bind(self):
         self.upload()
@@ -269,7 +269,7 @@ class GLMesh:
     def delete(self):
         """Free GPU resources."""
         if self.vao:
-            delete_buffer_object(self.vao)
+            gl_delete_buffer_object(self.vao)
             self.vao = None
             self.index_count = 0
 

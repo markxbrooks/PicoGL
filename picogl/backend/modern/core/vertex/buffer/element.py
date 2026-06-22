@@ -35,11 +35,10 @@ Example usage:
 from typing import Optional
 
 import numpy as np
-
+from picogl.backend.gl.enums import GLBufferTarget, GLUsageHint
+from picogl.backend.gl.wrappers import gl_buffer_data
+from picogl.backend.gl.wrappers.generate_buffers import gl_generate_buffers
 from picogl.backend.modern.core.vertex.base import VertexBuffer
-from picogl.state.draw_mode import GLBufferTarget, GLUsageHint
-from picogl.wrappers.data import gl_buffer_data
-from picogl.wrappers.generate_buffers import gl_generate_buffers
 
 
 class ModernEBO(VertexBuffer):

@@ -35,17 +35,18 @@ This base class is abstract and cannot be used directly;
 import ctypes
 
 import numpy as np
-# from OpenGL import error as gl_error
-
+from OpenGL import error as _gl_err
+from OpenGL.raw.GL.VERSION.GL_1_5 import glBufferSubData, glIsBuffer
+from picogl.backend.gl.enums import (GLBufferTarget, GLIndexType, GLNumeric,
+                                     GLUsageHint)
+from picogl.backend.gl.wrappers import gl_buffer_data
+from picogl.backend.gl.wrappers.buffer import gl_bind_buffer
+from picogl.backend.gl.wrappers.enable_vertex_array import \
+    gl_enable_vertex_array
+from picogl.backend.gl.wrappers.vertex_attrib_pointer import \
+    gl_vertex_attrib_pointer
 from picogl.boolean import GLBoolean
-from picogl.buffers.base import VertexBase
-from picogl.numerical import GLNumeric
-from picogl.state.draw_mode import GLBufferTarget, GLIndexType, GLUsageHint
-from picogl.wrappers.buffer import gl_bind_buffer, gl_buffer_subdata, gl_is_buffer
-from picogl.wrappers.data import gl_buffer_data
-from picogl.wrappers.enable_vertex_array import gl_enable_vertex_array
-from picogl.wrappers.error import gl_error
-from picogl.wrappers.vertex_attrib_pointer import gl_vertex_attrib_pointer
+from picogl.gpu.buffers.base import VertexBase
 
 
 class VertexBuffer(VertexBase):
@@ -98,7 +99,7 @@ class VertexBuffer(VertexBase):
 
     def unbind(self) -> None:
         """Unbind this buffer, ensuring the handle is valid."""
-        if not gl_is_buffer(handle=self.handle):
+        if not glIsBuffer(self.handle):
             raise RuntimeError(f"Invalid buffer handle: {self.handle}")
         gl_bind_buffer(self.target, 0)
 
@@ -240,8 +241,8 @@ class VertexBuffer(VertexBase):
             self.buffer_size = data.nbytes
         else:
             try:
-                gl_buffer_subdata(self.target, offset, data.nbytes, data)
-            except gl_error.GLError:
+                glBufferSubData(self.target, offset, data.nbytes, data)
+            except _gl_err.GLError:
                 gl_buffer_data(
                     target=self.target,
                     size=data.nbytes,

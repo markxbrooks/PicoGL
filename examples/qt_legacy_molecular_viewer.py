@@ -21,8 +21,8 @@ from PySide6.QtOpenGLWidgets import QOpenGLWidget
 from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel,
                                QMessageBox, QPushButton, QSplitter,
                                QVBoxLayout, QWidget)
-from picogl.state.draw_mode import GLDrawMode
-from picogl.state.immediate import immediate_drawing
+from picogl.backend.gl.enums import GLDrawMode
+from picogl.backend.gl.state.immediate import immediate_drawing
 
 # Add the examples directory to the path so we can import the PDB loader
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'utils'))

@@ -1,5 +1,4 @@
 from OpenGL import GL as gl
-
 from picogl.backend.modern.core.shader.helpers import log_gl_error
 
 

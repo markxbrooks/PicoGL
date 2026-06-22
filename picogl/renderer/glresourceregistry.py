@@ -1,14 +1,5 @@
 """
-A module for managing OpenGL resources in a context-aware manner.
-
-This module contains the GLResourceRegistry class, which provides a centralized
-registry for managing GPU resources such as Vertex Array Objects (VAOs), textures,
-and shaders. It ensures that resources are tied to a specific OpenGL context and
-provides utilities for resource retrieval, validation, and context management.
-
-Classes:
-    GLResourceRegistry: A class for managing and organizing OpenGL resources
-    across contexts.
+gl Context Class
 """
 
 import threading
@@ -18,10 +9,9 @@ from weakref import WeakKeyDictionary
 
 import numpy as np
 from decologr import Decologr as log
-from PySide6.QtGui import QOpenGLContext
-
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.shaders import ShaderType
+from PySide6.QtGui import QOpenGLContext
 
 T = TypeVar("T")
 

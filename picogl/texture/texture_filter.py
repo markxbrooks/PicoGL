@@ -2,6 +2,7 @@
 TextureFilter
 """
 
+
 class TextureFilter:
     """Texture Filter"""
 

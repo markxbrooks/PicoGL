@@ -4,14 +4,12 @@ draw legacy bond vao
 
 from contextlib import contextmanager
 
-from decologr import Decologr as log
-
-from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
+from picogl.backend.gl.enums import GLDrawMode
+from picogl.backend.gl.wrappers import gl_draw_arrays
+from picogl.backend.legacy.core.vertex.buffer.client_states import \
+    legacy_client_states
 from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
-from picogl.buffers.vertex.legacy import VertexBufferGroup
-from picogl.state.client import GLClientState
-from picogl.state.draw_mode import GLDrawMode
-from picogl.wrappers.draw import gl_draw_arrays
+from picogl.backend.gl.state.client import GLClientState
 
 
 def gl_draw_arrays_legacy(index_count: int, mode: int):

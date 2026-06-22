@@ -22,7 +22,7 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-from picogl.mode import GLMode
+from picogl.backend.gl.mode import GLMode
 from picogl.ui.backend.qt.legacy.renderer import LegacyQtObjectRenderer
 from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
 from PySide6.QtCore import Qt, QTimer

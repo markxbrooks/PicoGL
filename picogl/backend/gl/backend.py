@@ -19,17 +19,14 @@ from picogl.backend.gl.driver.geometry import GLGeometryDriver
 from picogl.backend.gl.driver.raster import GLRasterDriver
 from picogl.backend.gl.driver.texture import GLTextureSystem
 from picogl.backend.legacy.core.attribute_binder import LegacyAttributeBinder
-from picogl.backend.legacy.core.pipeline import GLLegacyPipeline, LegacyPipeline
+from picogl.backend.legacy.core.pipeline import (GLLegacyPipeline,
+                                                 LegacyPipeline)
 from picogl.backend.modern.core.pipeline import ShaderPipeline
 from picogl.backend.opengl import GLBindingStrategy
-from picogl.backend.state import (
-    DrawCommand,
-    GLClipPlaneState,
-    GLStateManager,
-    RenderState,
-    RenderStateApplier,
-)
-from picogl.buffers.glframe import GLFramebuffer
+from picogl.backend.state import (DrawCommand, GLClipPlaneState,
+                                  GLStateManager, RenderState,
+                                  RenderStateApplier)
+from picogl.gpu.buffers.glframe import GLFramebuffer
 from picogl.renderer.readback import GLReadback
 
 

@@ -7,7 +7,6 @@ import sys
 import OpenGL.GL as GL
 import OpenGL.GLU as GLU
 import OpenGL.GLUT as GLUT
-
 from picogl.ui.abc_window import AbstractGLWindow
 
 

@@ -13,9 +13,7 @@ Classes:
 """
 
 from picogl.backend.modern.core.shader.mvp.control import (
-    MVPControl,
-    dummy_update_handler,
-)
+    MVPControl, dummy_update_handler)
 from picogl.backend.modern.core.shader.mvp.mouse import MouseMode
 
 

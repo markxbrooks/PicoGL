@@ -30,14 +30,12 @@ To run the tests::
 
 import unittest
 from pathlib import Path
-from unittest.mock import MagicMock, call, patch
+from unittest.mock import MagicMock, patch
 
 import numpy as np
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES
-
+from picogl.backend.gl.enums import GLDrawMode
 from picogl.renderer.meshdata import MeshData
 from picogl.renderer.object import ObjectRenderer
-from picogl.state.draw_mode import GLDrawMode
 
 
 class TestObjectRenderer(unittest.TestCase):

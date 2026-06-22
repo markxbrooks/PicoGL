@@ -2,7 +2,7 @@
 Unit tests for the VertexBufferGroup class in the PicoGL OpenGL backend.
 
 This module contains a comprehensive suite of unit tests for verifying the correctness,
-robustness, and interface of the :class:`picogl.buffers.vertex.legacy.VertexBufferGroup`
+robustness, and interface of the :class:`picogl.gpu.buffers.vertex.legacy.VertexBufferGroup`
 class, which manages legacy OpenGL vertex buffer objects and mimics VAO functionality.
 
 The tests cover:
@@ -20,7 +20,7 @@ Dependencies:
     - unittest (standard library)
     - unittest.mock.MagicMock for OpenGL function mocking
     - numpy for test data
-    - picogl.buffers.vertex.legacy.VertexBufferGroup
+    - picogl.gpu.buffers.vertex.legacy.VertexBufferGroup
     - picogl.buffers.attributes.LayoutDescriptor
 
 To run the tests::
@@ -36,18 +36,15 @@ from unittest.mock import MagicMock, call, patch
 import numpy as np
 from OpenGL.raw.GL._types import GL_FLOAT, GL_UNSIGNED_INT
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POINTS, GL_TRIANGLES
-from OpenGL.raw.GL.VERSION.GL_1_1 import (
-    GL_COLOR_ARRAY,
-    GL_NORMAL_ARRAY,
-    GL_VERTEX_ARRAY,
-)
-from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER
-
-from picogl.buffers.attributes import AttributeSpec, LayoutDescriptor
-from picogl.buffers.vertex.aliases import VertexBufferRole
-from picogl.buffers.vertex.legacy import VertexBufferGroup
-from picogl.gpu.buffers.vbo_types import VBOType
-from picogl.state.draw_mode import GLDrawMode
+from OpenGL.raw.GL.VERSION.GL_1_1 import (GL_COLOR_ARRAY, GL_NORMAL_ARRAY,
+                                          GL_VERTEX_ARRAY)
+from OpenGL.raw.GL.VERSION.GL_1_5 import (GL_ARRAY_BUFFER,
+                                          GL_ELEMENT_ARRAY_BUFFER)
+from picogl.backend.gl.enums import GLDrawMode
+from picogl.gpu.buffers.attributes import AttributeSpec, LayoutDescriptor
+from picogl.gpu.buffers.vertex.aliases import VertexBufferRole
+from picogl.gpu.buffers.vertex.legacy import VertexBufferGroup
+from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
 
 
 class TestVertexBufferGroup(unittest.TestCase):
@@ -63,15 +60,15 @@ class TestVertexBufferGroup(unittest.TestCase):
 
         # Mock OpenGL functions to avoid context issues
         self.gl_patches = [
-            patch("picogl.buffers.vertex.legacy.glDrawArrays"),
-            patch("picogl.buffers.vertex.legacy.glDrawElements"),
-            patch("picogl.buffers.vertex.legacy.glBindBuffer"),
-            patch("picogl.buffers.vertex.legacy.glVertexPointer"),
-            patch("picogl.buffers.vertex.legacy.glColorPointer"),
-            patch("picogl.buffers.vertex.legacy.glNormalPointer"),
-            patch("picogl.buffers.vertex.legacy.glEnableClientState"),
-            patch("picogl.buffers.vertex.legacy.legacy_client_states"),
-            patch("picogl.buffers.vertex.legacy.delete_buffer_object"),
+            patch("picogl.gpu.buffers.vertex.legacy.glDrawArrays"),
+            patch("picogl.gpu.buffers.vertex.legacy.glDrawElements"),
+            patch("picogl.gpu.buffers.vertex.legacy.glBindBuffer"),
+            patch("picogl.gpu.buffers.vertex.legacy.glVertexPointer"),
+            patch("picogl.gpu.buffers.vertex.legacy.glColorPointer"),
+            patch("picogl.gpu.buffers.vertex.legacy.glNormalPointer"),
+            patch("picogl.gpu.buffers.vertex.legacy.glEnableClientState"),
+            patch("picogl.gpu.buffers.vertex.legacy.legacy_client_states"),
+            patch("picogl.gpu.buffers.vertex.legacy.delete_buffer_object"),
             patch("OpenGL.gl.glGenBuffers", return_value=1),
             patch("OpenGL.gl.glBufferData"),
         ]
@@ -286,9 +283,9 @@ class TestVertexBufferGroup(unittest.TestCase):
         vbg = VertexBufferGroup()
 
         with patch(
-            "picogl.buffers.vertex.legacy.legacy_client_states"
+            "picogl.gpu.buffers.vertex.legacy.legacy_client_states"
         ) as mock_client_states, patch(
-            "picogl.buffers.vertex.legacy.glDrawArrays"
+            "picogl.gpu.buffers.vertex.legacy.glDrawArrays"
         ) as mock_draw_arrays:
             mock_client_states.return_value.__enter__ = MagicMock()
             mock_client_states.return_value.__exit__ = MagicMock()
@@ -309,9 +306,9 @@ class TestVertexBufferGroup(unittest.TestCase):
         vbg.ebo = mock_ebo
 
         with patch(
-            "picogl.buffers.vertex.legacy.legacy_client_states"
+            "picogl.gpu.buffers.vertex.legacy.legacy_client_states"
         ) as mock_client_states, patch(
-            "picogl.buffers.vertex.legacy.glDrawArrays"
+            "picogl.gpu.buffers.vertex.legacy.glDrawArrays"
         ) as mock_draw_arrays:
             mock_client_states.return_value.__enter__ = MagicMock()
             mock_client_states.return_value.__exit__ = MagicMock()
@@ -332,9 +329,9 @@ class TestVertexBufferGroup(unittest.TestCase):
         vbg.ebo = mock_ebo
 
         with patch(
-            "picogl.buffers.vertex.legacy.legacy_client_states"
+            "picogl.gpu.buffers.vertex.legacy.legacy_client_states"
         ) as mock_client_states, patch(
-            "picogl.buffers.vertex.legacy.glDrawElements"
+            "picogl.gpu.buffers.vertex.legacy.glDrawElements"
         ) as mock_draw_elements:
             mock_client_states.return_value.__enter__ = MagicMock()
             mock_client_states.return_value.__exit__ = MagicMock()
@@ -366,9 +363,9 @@ class TestVertexBufferGroup(unittest.TestCase):
         vbg.ebo = mock_ebo
 
         with patch(
-            "picogl.buffers.vertex.legacy.legacy_client_states"
+            "picogl.gpu.buffers.vertex.legacy.legacy_client_states"
         ) as mock_client_states, patch(
-            "picogl.buffers.vertex.legacy.glDrawElements"
+            "picogl.gpu.buffers.vertex.legacy.glDrawElements"
         ) as mock_draw_elements:
             mock_client_states.return_value.__enter__ = MagicMock()
             mock_client_states.return_value.__exit__ = MagicMock()
@@ -572,10 +569,10 @@ class TestVertexBufferGroup(unittest.TestCase):
         vbg.named_vbos[VertexBufferRole.VBO] = mock_vbo
 
         with patch(
-            "picogl.buffers.vertex.legacy.glVertexPointer",
+            "picogl.gpu.buffers.vertex.legacy.glVertexPointer",
             side_effect=Exception("OpenGL error"),
         ):
-            with patch("picogl.buffers.vertex.legacy.log.error") as mock_log_error:
+            with patch("picogl.gpu.buffers.vertex.legacy.log.error") as mock_log_error:
                 vbg.bind()
                 mock_log_error.assert_called_once()
                 self.assertIn("error", mock_log_error.call_args[0][0])
@@ -600,9 +597,9 @@ class TestVertexBufferGroup(unittest.TestCase):
             ]
         )
 
-        with patch("picogl.buffers.vertex.legacy.glVertexPointer"), patch(
-            "picogl.buffers.vertex.legacy.glEnableClientState"
-        ), patch("picogl.buffers.vertex.legacy.glBindBuffer") as mock_bind_buffer:
+        with patch("picogl.gpu.buffers.vertex.legacy.glVertexPointer"), patch(
+            "picogl.gpu.buffers.vertex.legacy.glEnableClientState"
+        ), patch("picogl.gpu.buffers.vertex.legacy.glBindBuffer") as mock_bind_buffer:
             vbg.bind()
             mock_bind_buffer.assert_called()
 
@@ -625,9 +622,9 @@ class TestVertexBufferGroup(unittest.TestCase):
         vbg.layout = LayoutDescriptor(attributes=[attr_spec])
 
         with patch(
-            "picogl.buffers.vertex.legacy.glVertexPointer"
+            "picogl.gpu.buffers.vertex.legacy.glVertexPointer"
         ) as mock_vertex_pointer, patch(
-            "picogl.buffers.vertex.legacy.glEnableClientState"
+            "picogl.gpu.buffers.vertex.legacy.glEnableClientState"
         ) as mock_enable_state:
             vbg.bind()
             mock_enable_state.assert_called_once_with(GL_VERTEX_ARRAY)
@@ -656,9 +653,9 @@ class TestVertexBufferGroup(unittest.TestCase):
             ]
         )
 
-        with patch("picogl.buffers.vertex.legacy.glVertexPointer"), patch(
-            "picogl.buffers.vertex.legacy.glEnableClientState"
-        ), patch("picogl.buffers.vertex.legacy.glBindBuffer") as mock_bind_buffer:
+        with patch("picogl.gpu.buffers.vertex.legacy.glVertexPointer"), patch(
+            "picogl.gpu.buffers.vertex.legacy.glEnableClientState"
+        ), patch("picogl.gpu.buffers.vertex.legacy.glBindBuffer") as mock_bind_buffer:
             vbg.bind()
             mock_bind_buffer.assert_any_call(GL_ARRAY_BUFFER, 77)
 
@@ -684,11 +681,11 @@ class TestVertexBufferGroup(unittest.TestCase):
         )
 
         with patch(
-            "picogl.buffers.vertex.legacy.glColorPointer"
+            "picogl.gpu.buffers.vertex.legacy.glColorPointer"
         ) as mock_color_pointer, patch(
-            "picogl.buffers.vertex.legacy.glEnableClientState"
+            "picogl.gpu.buffers.vertex.legacy.glEnableClientState"
         ), patch(
-            "picogl.buffers.vertex.legacy.glBindBuffer"
+            "picogl.gpu.buffers.vertex.legacy.glBindBuffer"
         ):
             vbg.bind()
             mock_color_pointer.assert_called_once()
@@ -716,11 +713,11 @@ class TestVertexBufferGroup(unittest.TestCase):
         )
 
         with patch(
-            "picogl.buffers.vertex.legacy.glColorPointer"
+            "picogl.gpu.buffers.vertex.legacy.glColorPointer"
         ) as mock_color_pointer, patch(
-            "picogl.buffers.vertex.legacy.glEnableClientState"
+            "picogl.gpu.buffers.vertex.legacy.glEnableClientState"
         ), patch(
-            "picogl.buffers.vertex.legacy.glBindBuffer"
+            "picogl.gpu.buffers.vertex.legacy.glBindBuffer"
         ):
             vbg.bind()
             mock_color_pointer.assert_called_once()
@@ -771,8 +768,10 @@ class TestVertexBufferGroup(unittest.TestCase):
         )
 
         with patch(
-            "picogl.buffers.vertex.legacy.legacy_client_states"
-        ) as mock_client_states, patch("picogl.buffers.vertex.legacy.glDrawElements"):
+            "picogl.gpu.buffers.vertex.legacy.legacy_client_states"
+        ) as mock_client_states, patch(
+            "picogl.gpu.buffers.vertex.legacy.glDrawElements"
+        ):
             mock_client_states.return_value.__enter__ = MagicMock()
             mock_client_states.return_value.__exit__ = MagicMock()
 
@@ -803,7 +802,7 @@ class TestVertexBufferGroup(unittest.TestCase):
         vbg.named_vbos[VertexBufferRole.VBO] = mock_vbo
 
         with patch(
-            "picogl.buffers.vertex.legacy.glVertexPointer"
+            "picogl.gpu.buffers.vertex.legacy.glVertexPointer"
         ) as mock_vertex_pointer:
             vbg.bind()
             mock_vertex_pointer.assert_called_once()
@@ -873,7 +872,7 @@ class TestVertexBufferGroup(unittest.TestCase):
         vbg.named_vbos = {VBOType.VBO: mock_vbo}
 
         with patch(
-            "picogl.buffers.vertex.legacy.legacy_client_states"
+            "picogl.gpu.buffers.vertex.legacy.legacy_client_states"
         ) as mock_client_states:
             mock_client_states.return_value.__enter__ = MagicMock()
             mock_client_states.return_value.__exit__ = MagicMock()

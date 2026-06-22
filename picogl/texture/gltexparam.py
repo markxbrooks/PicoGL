@@ -20,14 +20,14 @@ Example Usage:
 """
 
 from enum import IntEnum
-from OpenGL.raw.GL.VERSION.GL_1_0 import (
-    GL_LINEAR,
-    GL_REPEAT,
-    GL_LINEAR_MIPMAP_LINEAR,
-)
+
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR,
+                                          GL_REPEAT)
+
 
 class GLTexParam(IntEnum):
     """gl Parameter"""
+
     REPEAT = GL_REPEAT
     LINEAR = GL_LINEAR
     LINEAR_MIPMAP_LINEAR = GL_LINEAR_MIPMAP_LINEAR
