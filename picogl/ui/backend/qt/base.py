@@ -64,16 +64,16 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
     OpenGL Qt Widget
     """
 
-    def __init__(self, parent: QWidget = None, gl_mode: GLMode = GLMode.LEGACY):
+    def __init__(self, parent: Optional[QWidget] = None, gl_mode: GLMode = GLMode.LEGACY):
         """
         constructor
 
         :param parent: QWidget
         """
         super().__init__(parent)
-        if gl_mode is True:
+        if gl_mode:
             gl_mode = GLMode.LEGACY
-        elif gl_mode is False:
+        elif not gl_mode:
             gl_mode = GLMode.MODERN
         self.aspect_ratio = None
         self.gl_mode = gl_mode
@@ -100,7 +100,7 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
         Called automatically by Qt when the gl context is first created.
         """
         # Viewport setup
-        glViewport(0, 0, self.width(), self.height())
+        self.backend.frame.viewport(0, 0, self.width(), self.height())
         init_list = (
             modern_init_gl_list
             if self.gl_mode == GLMode.MODERN
@@ -123,11 +123,11 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
         # Prevent division by zero
         h = max(h, 1)
         # Update viewport
-        glViewport(0, 0, w, h)
+        self.backend.frame.viewport(0, 0, w, h)
         self.aspect_ratio = calculate_aspect(h, w)
         gluPerspective(45.0, self.aspect_ratio, 1.0, 1000.0)
         setup_matrices(self.aspect_ratio)
-        # Return to modelview matrix
+        # Return to model view matrix
         glMatrixMode(GLLegacyMatrixMode.MODELVIEW)
         glLoadIdentity()
         # Update camera matrix using legacy pipeline
@@ -148,7 +148,7 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
         """
         gl_check_errors()
         width, height = self.width(), self.height()
-        prepare_viewport(width, height, self.backend)
+        self.backend.prepare_viewport(width, height)
         set_background_color(show_white_background=False)  # Then set visuals
         gl_check_errors()
 
