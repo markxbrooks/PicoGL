@@ -23,7 +23,7 @@ from picogl.backend.legacy.core.vertex.buffer.element import LegacyEBO
 from picogl.backend.legacy.core.vertex.buffer.normal import LegacyNormalVBO
 from picogl.backend.legacy.core.vertex.buffer.position import LegacyPositionVBO
 from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
-from picogl.buffers.attributes import LayoutDescriptor, VBOAttrs
+from picogl.gpu.buffers.attributes import LayoutDescriptor, VBOAttrs
 from picogl.buffers.base import VertexBase
 from picogl.backend.gl.wrappers.glcleanup import gl_delete_buffer_object
 from picogl.core.enums.buffer_target import GLBufferTarget

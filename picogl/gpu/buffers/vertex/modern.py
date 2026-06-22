@@ -9,7 +9,7 @@ from picogl.backend.gl.wrappers.generate_vertex_array import \
 from picogl.backend.gl.wrappers.vertex_array import gl_bind_vertex_array
 from picogl.backend.gl.wrappers.vertex_attrib_pointer import \
     gl_vertex_attrib_pointer
-from picogl.buffers.attributes import LayoutDescriptor
+from picogl.gpu.buffers.attributes import LayoutDescriptor
 from picogl.buffers.base import VertexBase
 from picogl.backend.gl.wrappers.glcleanup import gl_delete_buffers
 from picogl.core.enums.buffer_target import GLBufferTarget

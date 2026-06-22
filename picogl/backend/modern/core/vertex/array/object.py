@@ -53,7 +53,7 @@ from picogl.backend.modern.core.vertex.array.helpers import \
 from picogl.backend.modern.core.vertex.base import VertexBuffer
 from picogl.backend.modern.core.vertex.buffer.element import ModernEBO
 from picogl.backend.modern.core.vertex.buffer.object import ModernVBO
-from picogl.buffers.attributes import LayoutDescriptor
+from picogl.gpu.buffers.attributes import LayoutDescriptor
 from picogl.buffers.base import VertexBase
 from picogl.backend.gl.wrappers.glcleanup import gl_delete_buffers, gl_delete_vertex_arrays
 from picogl.core.enums.buffer_target import GLBufferTarget

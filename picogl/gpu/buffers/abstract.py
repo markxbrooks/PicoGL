@@ -4,7 +4,7 @@ Abstract render atoms_buffers class
 
 from abc import ABC, abstractmethod
 
-from picogl.buffers.attributes import LayoutDescriptor
+from picogl.gpu.buffers.attributes import LayoutDescriptor
 from picogl.renderer.initializable import Bindable
 
 

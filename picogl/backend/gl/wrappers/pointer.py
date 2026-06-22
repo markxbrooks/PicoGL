@@ -5,7 +5,7 @@ import ctypes
 import numpy as np
 from OpenGL.raw.GL.VERSION.GL_1_1 import (glColorPointer, glNormalPointer,
                                           glTexCoordPointer, glVertexPointer)
-from picogl.buffers.attributes import AttributeSpec
+from picogl.gpu.buffers.attributes import AttributeSpec
 from picogl.core.enums.numerical import GLNumeric
 
 

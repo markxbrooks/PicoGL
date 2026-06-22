@@ -21,8 +21,8 @@ binding belongs in small wrappers (e.g. ``ShaderPipeline``, ``LegacyClientMeshBi
 an optional ``StickyVAOBinding`` wrapper may be added later without changing this base.
 """
 
-from picogl.buffers.abstract import AbstractVertexGroup
-from picogl.buffers.attributes import LayoutDescriptor
+from picogl.gpu.buffers.abstract import AbstractVertexGroup
+from picogl.gpu.buffers.attributes import LayoutDescriptor
 
 
 class VertexBase(AbstractVertexGroup):
