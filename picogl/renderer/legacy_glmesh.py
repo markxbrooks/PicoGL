@@ -22,9 +22,9 @@ from picogl.buffers.attributes import AttributeSpec, legacy_attribute_spec
 from picogl.gpu.buffers.factory import create_layout
 from picogl.buffers.glcleanup import delete_buffer_object
 from picogl.gpu.buffers.helper import as_vec3_array
-from picogl.buffers.vertex.aliases import VertexBufferRole
-from picogl.buffers.vertex.legacy import VertexBufferGroup
-from picogl.buffers.vertex.vbo.vbo_class import MeshDataAttrs, VBOType
+from picogl.gpu.buffers.vertex.aliases import VertexBufferRole
+from picogl.gpu.buffers.vertex.legacy import VertexBufferGroup
+from picogl.gpu.buffers.vertex.vbo.vbo_class import MeshDataAttrs, VBOType
 from picogl.core.enums.numerical import GLNumeric
 from picogl.state.client import GLClientState
 from picogl.state.draw_mode import GLDrawMode

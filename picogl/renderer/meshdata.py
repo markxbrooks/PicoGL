@@ -11,7 +11,7 @@ from decologr import Decologr as log
 from OpenGL import GL
 
 from picogl.attrs.vertex import CanonicalVertexAttrs
-from picogl.buffers.vertex.vbo.vbo_class import VBOType
+from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
 from picogl.state.client import GLClientState
 from picogl.state.draw_mode import GLDrawMode, GLIndexType
 from picogl.core.enums.numerical import GLNumeric

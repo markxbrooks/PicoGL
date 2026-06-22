@@ -14,7 +14,7 @@ or state restore (``ShaderProgram.__enter__``, VAO ``with``, ``GLFramebuffer.bou
 Those need stack/restore semantics, not a single sticky flag.
 
 Also do **not** subclass ``Bindable`` from :class:`~picogl.buffers.base.VertexBase`,
-:class:`~picogl.buffers.vertex.legacy.VertexBufferGroup`, VAO/VBO types, or
+:class:`~picogl.gpu.buffers.vertex.legacy.VertexBufferGroup`, VAO/VBO types, or
 :class:`~picogl.protocols.drawable_buffer.DrawableBuffer` implementations.
 They use stack-based bind/unbind (every ``with`` calls bind then unbind); sticky
 ``_bound`` would disagree with actual gl state after nested ``with vbo`` scopes.

@@ -23,8 +23,8 @@ from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
 from picogl.buffers.attributes import LayoutDescriptor
 from picogl.buffers.base import VertexBase
 from picogl.buffers.glcleanup import delete_buffer_object
-from picogl.buffers.vertex.aliases import NAME_ALIASES, VertexBufferRole
-from picogl.buffers.vertex.vbo.vbo_class import VBOType
+from picogl.gpu.buffers.vertex.aliases import NAME_ALIASES, VertexBufferRole
+from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
 from picogl.state.client import GLClientState
 from picogl.state.draw_mode import GLBufferTarget, GLDrawMode
 from picogl.core.enums.numerical import GLNumeric

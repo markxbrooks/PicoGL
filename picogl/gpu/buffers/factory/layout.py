@@ -16,11 +16,10 @@ Functions:
 """
 
 from picogl.buffers.attributes import (
-    AttributeSpec,
     LayoutDescriptor,
     legacy_attribute_spec,
 )
-from picogl.buffers.vertex.aliases import VertexBufferRole
+from picogl.gpu.buffers.vertex.aliases import VertexBufferRole
 from picogl.core.enums.numerical import GLNumeric
 
 

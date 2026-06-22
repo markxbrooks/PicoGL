@@ -53,7 +53,7 @@ from picogl.backend.modern.core.vertex.buffer.object import ModernVBO
 from picogl.buffers.attributes import LayoutDescriptor
 from picogl.buffers.base import VertexBase
 from picogl.buffers.glcleanup import gl_delete_buffers, gl_delete_vertex_arrays
-from picogl.buffers.vertex.aliases import NAME_ALIASES
+from picogl.gpu.buffers.vertex.aliases import NAME_ALIASES
 from picogl.safe import gl_gen_safe
 from picogl.state.draw_mode import (
     GLBufferTarget,

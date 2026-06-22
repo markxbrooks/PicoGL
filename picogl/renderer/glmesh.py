@@ -16,7 +16,7 @@ from elmo.glsl.layouts import build_shader_layouts
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.buffers.glcleanup import delete_buffer_object
 from picogl.gpu.buffers.helper import as_vec3_array
-from picogl.buffers.vertex.vbo.vbo_class import MeshDataAttrs, VBOType
+from picogl.gpu.buffers.vertex.vbo.vbo_class import MeshDataAttrs, VBOType
 from picogl.shaders.type import ShaderType
 from picogl.state.draw_mode import GLDrawMode, GLIndexType
 

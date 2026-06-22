@@ -3,7 +3,7 @@
 from typing import Optional, Union
 
 from picogl.buffers.geometry import GeometryData
-from picogl.buffers.vertex.meta_data import VertexMetadata
+from picogl.gpu.buffers.vertex.meta_data import VertexMetadata
 from picogl.renderer import MeshData
 
 

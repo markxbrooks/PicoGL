@@ -8,7 +8,7 @@ easier and consistent referencing.
 """
 from enum import Enum
 
-from picogl.buffers.vertex.vbo.vbo_class import VBOType
+from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
 
 
 class VertexBufferRole(str, Enum):
