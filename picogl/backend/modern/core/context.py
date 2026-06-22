@@ -3,7 +3,7 @@ from pyglm import glm
 
 from examples.utils.shader_loader import Shader
 from examples.utils.test_window import GLWindow
-from picogl.backend.capability import GLPipelineCapability
+from picogl.backend.gl.capability import GLPipelineCapability
 from picogl.boolean import GLBoolean
 from picogl.numerical import GLNumeric
 from picogl.state.draw_mode import GLBufferTarget, GLUsageHint, GLBitMask

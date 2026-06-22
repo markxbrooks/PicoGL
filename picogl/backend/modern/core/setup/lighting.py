@@ -1,6 +1,6 @@
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_LESS, glClearColor, glDepthFunc, glEnable
 
-from picogl.backend.capability import GLPipelineCapability
+from picogl.backend.gl.capability import GLPipelineCapability
 
 
 def initialize_background() -> None:

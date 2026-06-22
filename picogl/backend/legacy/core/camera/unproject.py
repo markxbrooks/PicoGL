@@ -19,7 +19,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     glReadPixels,
 )
 
-from picogl.backend.capability import GLPipelineCapability
+from picogl.backend.gl.capability import GLPipelineCapability
 
 
 def unproject(x: int, y: int) -> Optional[Tuple[float, float, float]]:

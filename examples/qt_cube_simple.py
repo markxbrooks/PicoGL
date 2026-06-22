@@ -64,7 +64,7 @@ except ImportError:
 
 from examples.data.cube_data import g_color_buffer_data, g_vertex_buffer_data
 from picogl.backend.gl.backend import GLBackend
-from picogl.backend.capability import GLMaterialFace, PhongMaterial, GLFixedFunctionCapability
+from picogl.backend.gl.capability import GLMaterialFace, PhongMaterial, GLFixedFunctionCapability
 from picogl.backend.geometry.factory import LegacyBinding
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.state.draw_mode import GLBitMask
@@ -124,7 +124,6 @@ class SimpleQtCubeWidget(QOpenGLWidget):
             [1.0, 1.0, 1.0, 0.0],
             light=GLLight.LIGHT0,
         )
-        from OpenGL.GL import glLightfv
 
         GLLightSource.lightf(GLFixedFunctionCapability.LIGHT0, GLLightParameter.AMBIENT, [0.3, 0.3, 0.3, 1.0])
         GLLightSource.lightf(GLFixedFunctionCapability.LIGHT0, GLLightParameter.DIFFUSE, [0.8, 0.8, 0.8, 1.0])

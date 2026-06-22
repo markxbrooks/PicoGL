@@ -5,7 +5,6 @@ from unittest.mock import call, patch
 
 from OpenGL.GL import (
     GL_BLEND,
-    GL_COLOR_ARRAY,
     GL_CULL_FACE,
     GL_DEPTH_TEST,
     GL_FLOAT,
@@ -13,13 +12,10 @@ from OpenGL.GL import (
     GL_LIGHTING,
     GL_LINE,
     GL_MODELVIEW,
-    GL_NORMAL_ARRAY,
     GL_ONE,
     GL_POSITION,
     GL_TEXTURE_2D,
-    GL_TEXTURE_COORD_ARRAY,
     GL_UNSIGNED_INT,
-    GL_VERTEX_ARRAY,
     GL_ZERO,
 )
 from OpenGL.raw.GL.VERSION.GL_1_0 import (
@@ -31,7 +27,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_SPECULAR,
 )
 
-from picogl.backend.capability import (
+from picogl.backend.gl.capability import (
     GLBlendFactor,
     GLFixedFunctionCapability,
     GLMaterialFace,

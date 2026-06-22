@@ -12,13 +12,12 @@ and uses legacy client states and immediate mode rendering.
 
 import os
 import sys
-from pathlib import Path
 
 import numpy as np
 
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.gl.light import GLLightSource
-from picogl.backend.capability import GLFixedFunctionCapability
+from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.state.draw_mode import GLLegacyMatrixMode, GLBitMask
 from picogl.state.fill import GLFace, GLCapability, GLColorMaterialMode, GLLightParameter, GLFillMode
 

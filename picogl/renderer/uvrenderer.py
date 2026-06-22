@@ -8,7 +8,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_POLYGON_MODE
 )
 
-from picogl.backend.capability import GLMaterialFace
+from picogl.backend.gl.capability import GLMaterialFace
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.boolean import GLBoolean
 from picogl.numerical import GLNumeric

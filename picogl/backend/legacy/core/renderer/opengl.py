@@ -23,7 +23,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     glMaterialfv,
 )
 
-from picogl.backend.capability import FACE_MAP, GLMaterialFace, PhongMaterial
+from picogl.backend.gl.capability import FACE_MAP, GLMaterialFace, PhongMaterial
 from picogl.renderer.backend import RenderBackend
 
 

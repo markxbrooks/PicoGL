@@ -14,7 +14,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
 
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.gl.light import GLLightSource
-from picogl.backend.capability import GLFixedFunctionCapability
+from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.buffers.glframe import GLFramebuffer
 from picogl.state.fill import GLLightParameter, GLFace
 

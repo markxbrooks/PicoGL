@@ -16,7 +16,7 @@ from OpenGL.raw.GL.VERSION.GL_1_1 import (
     GL_VERTEX_ARRAY,
 )
 
-from picogl.backend.capability import (
+from picogl.backend.gl.capability import (
     GLBlendFactor,
     GLFixedFunctionCapability,
     GLPipelineCapability,

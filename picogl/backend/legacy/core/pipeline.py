@@ -16,7 +16,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
 )
 from OpenGL.raw.GLU import gluPerspective
 
-from picogl.backend.capability import FACE_MAP
+from picogl.backend.gl.capability import FACE_MAP
 from picogl.backend.state import gl_value
 from picogl.state.fill import GLColorMaterialMode, GLFace, GLLight, GLLightParameter
 from picogl.state.texture import TexCoord2f, Vertex3f

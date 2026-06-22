@@ -8,7 +8,7 @@ from enum import Enum
 from typing import Any
 
 
-from picogl.backend.capability import (
+from picogl.backend.gl.capability import (
     BLEND_FACTOR_MAP,
     CAP_MAP,
     FACE_MAP,
