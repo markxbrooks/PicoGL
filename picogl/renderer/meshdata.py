@@ -19,8 +19,8 @@ from picogl.backend.gl.wrappers.pointer import (gl_color_array_pointer,
                                                 gl_vertex_array_pointer)
 from picogl.gpu.buffers.attributes import CanonicalVertexAttrs
 from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
-from picogl.state.client import GLClientState
-from picogl.state.fill import GLFace, GLFillMode
+from picogl.backend.gl.state.client import GLClientState
+from picogl.backend.gl.state.fill import GLFace, GLFillMode
 
 
 class MeshData:

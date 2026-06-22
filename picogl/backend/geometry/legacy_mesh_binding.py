@@ -14,7 +14,7 @@ from picogl.backend.gl.wrappers.pointer import (gl_color_array_pointer,
                                                 gl_vertex_array_pointer)
 from picogl.renderer.initializable import Bindable
 from picogl.renderer.meshdata import MeshData
-from picogl.state.client import GLClientState
+from picogl.backend.gl.state.client import GLClientState
 
 
 class LegacyClientMeshBinding(Bindable):

@@ -19,7 +19,7 @@ from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.boolean import GLBoolean
 from picogl.renderer import RendererBase
 from picogl.renderer.initializable import Initializable
-from picogl.state.fill import GLFillMode
+from picogl.backend.gl.state.fill import GLFillMode
 
 
 class UvRenderer(Initializable, RendererBase):

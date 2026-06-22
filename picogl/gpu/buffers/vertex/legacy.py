@@ -29,7 +29,7 @@ from picogl.gpu.buffers.attributes import LayoutDescriptor, VBOAttrs
 from picogl.gpu.buffers.base import VertexBase
 from picogl.gpu.buffers.vertex.aliases import NAME_ALIASES, VertexBufferRole
 from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
-from picogl.state.client import GLClientState
+from picogl.backend.gl.state.client import GLClientState
 
 
 class VertexBufferGroup(VertexBase):

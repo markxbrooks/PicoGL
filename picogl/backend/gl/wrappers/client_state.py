@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from OpenGL.raw.GL.VERSION.GL_1_1 import (glDisableClientState,
                                           glEnableClientState)
-from picogl.state.client import GLClientState
+from picogl.backend.gl.state.client import GLClientState
 
 
 def gl_disable_legacy_client_state(state: GLClientState):

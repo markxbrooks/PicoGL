@@ -10,7 +10,7 @@ from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.gl.light import GLLightSource
 from picogl.gpu.buffers.glframe import GLFramebuffer
-from picogl.state.fill import GLFace, GLLightParameter
+from picogl.backend.gl.state.fill import GLFace, GLLightParameter
 
 
 def set_second_light_state(second_light_state: bool) -> None:

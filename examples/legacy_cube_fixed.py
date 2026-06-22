@@ -20,7 +20,7 @@ from picogl.backend.gl.light import GLLightSource
 from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums import GLLegacyMatrixMode
-from picogl.state.fill import GLFace, GLCapability, GLColorMaterialMode, GLLightParameter, GLFillMode
+from picogl.backend.gl.state.fill import GLFace, GLCapability, GLColorMaterialMode, GLLightParameter, GLFillMode
 
 # Check for display before importing OpenGL
 if os.environ.get("DISPLAY") is None and os.name != "nt":

@@ -8,7 +8,7 @@ from OpenGL.raw.GL.VERSION.GL_1_1 import GL_TRIANGLES
 from picogl.backend.geometry.factory import LegacyBinding, ModernBinding
 from picogl.backend.geometry.legacy_mesh import LegacyMesh
 from picogl.backend.gl.enums import GLNumeric
-from picogl.state.client import GLClientState
+from picogl.backend.gl.state.client import GLClientState
 
 
 class TestLegacyBinding(unittest.TestCase):

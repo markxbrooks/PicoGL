@@ -1,6 +1,6 @@
 from typing import Tuple, Union
 
-from picogl.state.param import GLParam
+from picogl.backend.gl.state.param import GLParam
 
 
 class GLStateQuery:

@@ -15,7 +15,7 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
 from picogl.backend.gl.enums import GLDrawMode
-from picogl.state.immediate import immediate_drawing
+from picogl.backend.gl.state.immediate import immediate_drawing
 
 class SimpleTeapotRenderer:
     """Simple teapot renderer using only built-in OpenGL primitives."""

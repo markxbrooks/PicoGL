@@ -28,8 +28,8 @@ from picogl.backend.state import (BlendState, DepthState, DrawCommand,
                                   GLClipPlaneState, RasterState, RenderState,
                                   RenderStateApplier, gl_value)
 from picogl.core.polygon.mode import PolygonMode
-from picogl.state.client import GLClientState
-from picogl.state.fill import GLFace, GLFillMode, GLLightParameter
+from picogl.backend.gl.state.client import GLClientState
+from picogl.backend.gl.state.fill import GLFace, GLFillMode, GLLightParameter
 
 
 class _RecordingRaster:

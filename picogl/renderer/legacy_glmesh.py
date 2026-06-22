@@ -28,7 +28,7 @@ from picogl.gpu.buffers.helper import as_vec3_array
 from picogl.gpu.buffers.vertex.aliases import VertexBufferRole
 from picogl.gpu.buffers.vertex.legacy import VertexBufferGroup
 from picogl.gpu.buffers.vertex.vbo.vbo_class import MeshDataAttrs, VBOType
-from picogl.state.client import GLClientState
+from picogl.backend.gl.state.client import GLClientState
 
 
 class LegacyGLMesh:

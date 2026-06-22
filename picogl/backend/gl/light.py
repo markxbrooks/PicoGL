@@ -1,6 +1,6 @@
 from OpenGL.raw.GL.VERSION.GL_1_0 import glLightfv
 from picogl.backend.gl.capability import GLFixedFunctionCapability
-from picogl.state.fill import GLLightParameter
+from picogl.backend.gl.state.fill import GLLightParameter
 
 
 class GLLightSource:

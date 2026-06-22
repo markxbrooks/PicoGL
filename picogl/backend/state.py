@@ -22,7 +22,7 @@ from picogl.backend.gl.wrappers.pointer import (gl_color_array_pointer,
                                                 gl_normal_array_pointer,
                                                 gl_vertex_array_pointer)
 from picogl.backend.value import gl_value
-from picogl.state.fill import GLCapability, GLFace, GLFillMode
+from picogl.backend.gl.state.fill import GLCapability, GLFace, GLFillMode
 from picogl.texture.gltexture_driver import GLTextureDriver
 
 

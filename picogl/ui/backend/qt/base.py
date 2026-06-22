@@ -18,11 +18,11 @@ from picogl.backend.gl.wrappers import gl_get_integerv
 from picogl.backend.legacy.core.camera.lighting import set_background_color
 from picogl.backend.legacy.core.camera.matrices.setup import setup_matrices
 from picogl.backend.legacy.core.camera.setup import calculate_aspect
-from picogl.error import gl_check_errors
-from picogl.frame import prepare_viewport
+from picogl.backend.gl.wrappers.error import gl_check_errors
+from picogl.backend.gl.wrappers.frame import prepare_viewport
 from picogl.backend.gl.mode import GLMode
-from picogl.utils.gl_init import (execute_gl_tasks, legacy_init_gl_list,
-                                  modern_init_gl_list)
+from picogl.backend.gl.task.gl_init import (execute_gl_tasks, legacy_init_gl_list,
+                                            modern_init_gl_list)
 from PySide6.QtGui import QMouseEvent, QOpenGLFunctions, Qt, QWheelEvent
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
 from PySide6.QtWidgets import QWidget
