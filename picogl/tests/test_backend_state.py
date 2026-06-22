@@ -54,7 +54,7 @@ from picogl.backend.state import (
     RenderStateApplier,
     gl_value,
 )
-from picogl.polygon.mode import PolygonMode
+from picogl.core.polygon.mode import PolygonMode
 from picogl.state.client import GLClientState
 from picogl.state.fill import GLFace, GLLightParameter, GLFillMode
 

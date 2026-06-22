@@ -3,7 +3,7 @@ Draw a VAO with attributes
 """
 
 from picogl.state.draw_mode import GLDrawMode
-from picogl.buffers.vao.configure import vao_configure_attributes
+from picogl.gpu.buffers.vao.configure import vao_configure_attributes
 from picogl.wrappers.draw import gl_draw_arrays
 
 

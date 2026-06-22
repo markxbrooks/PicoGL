@@ -16,7 +16,7 @@ import numpy as np
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
-from picogl.polygon.mode import set_polygon_mode_fill
+from picogl.core.polygon.mode import set_polygon_mode_fill
 from picogl.renderer import MeshData
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.utils.loader.object import ObjectLoader
