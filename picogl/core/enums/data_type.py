@@ -10,5 +10,5 @@ GLDataType is still referenced.
 
 from picogl.core.enums.numerical import GLNumeric
 
-"""Compatibility shum"""
+"""Compatibility shim"""
 GLDataType = GLNumeric # Deprecated
