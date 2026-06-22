@@ -1,7 +1,7 @@
 from contextlib import contextmanager
 
 from OpenGL.GL import glBegin, glEnd
-from picogl.core.enums.draw_mode import GLDrawMode
+from picogl.backend.gl.enums import GLDrawMode
 
 _immediate_active = False
 

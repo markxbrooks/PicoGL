@@ -11,12 +11,12 @@ from OpenGL.GL import glDeleteTextures
 from OpenGL.raw.GL.EXT.texture_compression_s3tc import (
     GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, GL_COMPRESSED_RGBA_S3TC_DXT3_EXT,
     GL_COMPRESSED_RGBA_S3TC_DXT5_EXT)
+from picogl.backend.gl.enums import GLNumeric
 from picogl.backend.gl.wrappers import (gl_bind_texture,
                                         gl_compressed_tex_image,
                                         gl_gen_textures, gl_generate_mipmap,
                                         gl_tex_parameter, gl_teximage2d)
 from picogl.core.color import GLColor
-from picogl.core.enums.numerical import GLNumeric
 from picogl.texture.gltexparam import GLTexParam
 from picogl.texture.gltexture import GLTexture
 from PIL import Image

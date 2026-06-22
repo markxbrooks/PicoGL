@@ -6,6 +6,7 @@ from typing import Optional
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POLYGON_MODE
 from picogl.backend.gl.capability import GLMaterialFace
+from picogl.backend.gl.enums import GLBufferTarget, GLDrawMode, GLNumeric
 from picogl.backend.gl.wrappers import (gl_disable_vertex_array,
                                         gl_draw_elements, gl_get_integerv)
 from picogl.backend.gl.wrappers.buffer import gl_bind_buffer
@@ -16,9 +17,6 @@ from picogl.backend.gl.wrappers.vertex_attrib_pointer import \
     gl_vertex_attrib_pointer
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.boolean import GLBoolean
-from picogl.core.enums.buffer_target import GLBufferTarget
-from picogl.core.enums.draw_mode import GLDrawMode
-from picogl.core.enums.numerical import GLNumeric
 from picogl.renderer import RendererBase
 from picogl.renderer.initializable import Initializable
 from picogl.state.fill import GLFillMode

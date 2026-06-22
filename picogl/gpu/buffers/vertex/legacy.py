@@ -12,10 +12,12 @@ from typing import Any, Optional
 
 import numpy as np
 from decologr import Decologr as log
+from picogl.backend.gl.enums import GLBufferTarget, GLDrawMode, GLNumeric
 from picogl.backend.gl.wrappers.buffer import gl_bind_buffer
 from picogl.backend.gl.wrappers.client_state import \
     gl_enable_legacy_client_state
 from picogl.backend.gl.wrappers.draw import gl_draw_arrays, gl_draw_elements
+from picogl.backend.gl.wrappers.glcleanup import gl_delete_buffer_object
 from picogl.backend.legacy.core.vertex.buffer.client_states import \
     legacy_client_states
 from picogl.backend.legacy.core.vertex.buffer.color import LegacyColorVBO
@@ -24,11 +26,7 @@ from picogl.backend.legacy.core.vertex.buffer.normal import LegacyNormalVBO
 from picogl.backend.legacy.core.vertex.buffer.position import LegacyPositionVBO
 from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
 from picogl.gpu.buffers.attributes import LayoutDescriptor, VBOAttrs
-from picogl.buffers.base import VertexBase
-from picogl.backend.gl.wrappers.glcleanup import gl_delete_buffer_object
-from picogl.core.enums.buffer_target import GLBufferTarget
-from picogl.core.enums.draw_mode import GLDrawMode
-from picogl.core.enums.numerical import GLNumeric
+from picogl.gpu.buffers.base import VertexBase
 from picogl.gpu.buffers.vertex.aliases import NAME_ALIASES, VertexBufferRole
 from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
 from picogl.state.client import GLClientState

@@ -10,8 +10,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_DEPTH_TEST, GL_MODELVIEW,
                                           glEnable, glLoadIdentity,
                                           glMaterialf, glMatrixMode, glRotatef)
 from OpenGL.raw.GLU import gluLookAt, gluPerspective
-from picogl.core.enums.bitmask import GLBitMask
-from picogl.core.enums.legacy.matrix_mode import GLLegacyMatrixMode
+from picogl.backend.gl.enums import GLBitMask, GLLegacyMatrixMode
 from picogl.mode import GLMode
 from picogl.renderer import MeshData
 from picogl.renderer.legacy_glmesh import LegacyGLMesh

@@ -6,8 +6,8 @@ import ctypes
 from typing import Any, Optional
 
 from OpenGL.GL import glVertexAttribPointer
+from picogl.backend.gl.enums import GLNumeric
 from picogl.boolean import GLBoolean
-from picogl.core.enums.numerical import GLNumeric
 
 
 def _resolve_attrib_pointer(offset: Any) -> Any:

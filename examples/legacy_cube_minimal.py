@@ -17,9 +17,9 @@ import os
 import sys
 
 import numpy as np
-from picogl.core.enums.draw_mode import GLDrawMode
-from picogl.core.enums.bitmask import GLBitMask
-from picogl.core.enums.legacy.matrix_mode import GLLegacyMatrixMode
+from picogl.backend.gl.enums import GLDrawMode
+from picogl.backend.gl.enums import GLBitMask
+from picogl.backend.gl.enums import GLLegacyMatrixMode
 from picogl.state.fill import GLColorMaterialMode, GLLightParameter, GLFace, GLFillMode, GLLight
 from picogl.state.immediate import immediate_drawing
 

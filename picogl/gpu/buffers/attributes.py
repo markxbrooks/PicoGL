@@ -10,7 +10,7 @@ or processing purposes.
 from dataclasses import dataclass
 from typing import List
 
-from picogl.core.enums.numerical import GLNumeric
+from picogl.backend.gl.enums import GLNumeric
 from picogl.gpu.buffers.vertex.aliases import VertexBufferRole
 from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
 from picogl.utils.strenum import StrEnum

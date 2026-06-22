@@ -26,7 +26,7 @@ from picogl.backend.opengl import GLBindingStrategy
 from picogl.backend.state import (DrawCommand, GLClipPlaneState,
                                   GLStateManager, RenderState,
                                   RenderStateApplier)
-from picogl.buffers.glframe import GLFramebuffer
+from picogl.gpu.buffers.glframe import GLFramebuffer
 from picogl.renderer.readback import GLReadback
 
 

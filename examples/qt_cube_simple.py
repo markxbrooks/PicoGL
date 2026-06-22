@@ -67,7 +67,7 @@ from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.capability import GLMaterialFace, PhongMaterial, GLFixedFunctionCapability
 from picogl.backend.geometry.factory import LegacyBinding
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
-from picogl.core.enums.bitmask import GLBitMask
+from picogl.backend.gl.enums import GLBitMask
 from picogl.state.fill import (
     GLCapability,
     GLColorMaterialMode,

@@ -19,8 +19,7 @@ from typing import Any
 
 import numpy as np
 from OpenGL.raw.GL.VERSION.GL_1_1 import glDrawArrays, glDrawElements
-from picogl.core.enums.draw_mode import GLDrawMode
-from picogl.core.enums.index_type import GLIndexType
+from picogl.backend.gl.enums import GLDrawMode, GLIndexType
 
 
 def _gl_enum(value: Any) -> Any:

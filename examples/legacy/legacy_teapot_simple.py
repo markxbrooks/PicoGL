@@ -14,7 +14,7 @@ Features:
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
-from picogl.core.enums.draw_mode import GLDrawMode
+from picogl.backend.gl.enums import GLDrawMode
 from picogl.state.immediate import immediate_drawing
 
 class SimpleTeapotRenderer:

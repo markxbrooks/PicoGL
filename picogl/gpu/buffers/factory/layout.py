@@ -15,8 +15,9 @@ Functions:
   with both position and color data.
 """
 
-from picogl.gpu.buffers.attributes import LayoutDescriptor, legacy_attribute_spec
-from picogl.core.enums.numerical import GLNumeric
+from picogl.backend.gl.enums import GLNumeric
+from picogl.gpu.buffers.attributes import (LayoutDescriptor,
+                                           legacy_attribute_spec)
 from picogl.gpu.buffers.vertex.aliases import VertexBufferRole
 
 

@@ -16,8 +16,8 @@ from typing import Callable, Optional
 from decologr import Decologr as log
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_CULL_FACE
 from picogl.backend.gl.backend import GLBackend
+from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.legacy.core.camera.setup import enable_blending
-from picogl.core.enums.bitmask import GLBitMask
 from picogl.info import get_gl_info
 
 

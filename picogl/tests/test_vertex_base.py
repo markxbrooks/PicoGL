@@ -26,7 +26,7 @@ To run the tests::
 import unittest
 from unittest.mock import MagicMock
 
-from picogl.buffers.base import VertexBase
+from picogl.gpu.buffers.base import VertexBase
 
 
 class TestVertexBase(unittest.TestCase):

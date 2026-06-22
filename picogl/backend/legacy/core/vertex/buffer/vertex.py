@@ -6,12 +6,10 @@ import ctypes
 
 import numpy as np
 from OpenGL.raw.GL.VERSION.GL_1_5 import glBufferSubData
+from picogl.backend.gl.enums import GLBufferTarget, GLNumeric, GLUsageHint
 from picogl.backend.gl.wrappers import gl_buffer_data
 from picogl.backend.gl.wrappers.generate_buffers import gl_generate_buffers
 from picogl.backend.modern.core.vertex.base import VertexBuffer
-from picogl.core.enums.buffer_target import GLBufferTarget
-from picogl.core.enums.numerical import GLNumeric
-from picogl.core.enums.usage_hint import GLUsageHint
 
 
 class LegacyVBO(VertexBuffer):

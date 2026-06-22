@@ -1,11 +1,9 @@
 import ctypes
 
 import numpy as np
+from picogl.backend.gl.enums import (GLBufferTarget, GLDrawMode, GLIndexType,
+                                     GLNumeric)
 from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
-from picogl.core.enums.buffer_target import GLBufferTarget
-from picogl.core.enums.draw_mode import GLDrawMode
-from picogl.core.enums.index_type import GLIndexType
-from picogl.core.enums.numerical import GLNumeric
 
 
 class LegacyEBO(LegacyVBO):

@@ -11,10 +11,9 @@ import ctypes
 from typing import TYPE_CHECKING, Literal, Optional, Union
 
 import numpy as np
-from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
+from picogl.backend.gl.enums import GLDrawMode, GLIndexType
 from picogl.backend.gl.wrappers.glcleanup import gl_delete_buffer_object
-from picogl.core.enums.draw_mode import GLDrawMode
-from picogl.core.enums.index_type import GLIndexType
+from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.gpu.buffers.helper import as_vec3_array
 from picogl.gpu.buffers.vertex.vbo.vbo_class import MeshDataAttrs, VBOType
 from picogl.shaders.type import ShaderType

@@ -2,8 +2,8 @@
 Draw a VAO with attributes
 """
 
+from picogl.backend.gl.enums import GLDrawMode
 from picogl.backend.gl.wrappers import gl_draw_arrays
-from picogl.core.enums.draw_mode import GLDrawMode
 from picogl.gpu.buffers.vao.configure import vao_configure_attributes
 
 

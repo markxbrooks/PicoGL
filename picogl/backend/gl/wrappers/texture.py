@@ -13,7 +13,7 @@ from OpenGL.GL import (GL_TEXTURE0, glActiveTexture, glBindTexture,
                        glTexImage2D, glTexParameteri)
 from OpenGL.raw.GL.ARB.internalformat_query2 import GL_TEXTURE_2D
 from OpenGL.raw.GL.VERSION.GL_1_2 import glTexImage3D
-from picogl.core.enums.numerical import GLNumeric
+from picogl.backend.gl.enums import GLNumeric
 
 
 def gl_active_texture(unit: int) -> None:

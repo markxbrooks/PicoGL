@@ -2,6 +2,8 @@ from examples.utils.shader_loader import Shader
 from examples.utils.test_window import GLWindow
 from OpenGL.GL import *  # pylint: disable=W0614
 from picogl.backend.gl.capability import GLPipelineCapability
+from picogl.backend.gl.enums import (GLBitMask, GLBufferTarget, GLNumeric,
+                                     GLUsageHint)
 from picogl.backend.gl.wrappers import (gl_buffer_data,
                                         gl_disable_vertex_array,
                                         gl_draw_arrays)
@@ -12,10 +14,6 @@ from picogl.backend.gl.wrappers.generate_buffers import gl_generate_buffers
 from picogl.backend.gl.wrappers.vertex_attrib_pointer import \
     gl_vertex_attrib_pointer
 from picogl.boolean import GLBoolean
-from picogl.core.enums.bitmask import GLBitMask
-from picogl.core.enums.buffer_target import GLBufferTarget
-from picogl.core.enums.numerical import GLNumeric
-from picogl.core.enums.usage_hint import GLUsageHint
 from pyglm import glm
 
 

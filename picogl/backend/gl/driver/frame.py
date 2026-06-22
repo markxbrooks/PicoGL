@@ -8,8 +8,8 @@ for rendering.
 """
 
 from OpenGL.GL import glClear, glClearColor, glViewport
+from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.state import gl_value
-from picogl.core.enums.bitmask import GLBitMask
 
 
 class GLFrameDriver:

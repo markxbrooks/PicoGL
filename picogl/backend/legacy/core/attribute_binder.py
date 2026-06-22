@@ -1,10 +1,10 @@
+from picogl.backend.gl.enums import GLNumeric
 from picogl.backend.gl.wrappers import (gl_disable_legacy_client_state,
                                         gl_enable_legacy_client_state)
 from picogl.backend.gl.wrappers.pointer import (gl_color_array_pointer,
                                                 gl_normal_array_pointer,
                                                 gl_texcoord_array_pointer,
                                                 gl_vertex_array_pointer)
-from picogl.core.enums.numerical import GLNumeric
 from picogl.state.client import GLClientState
 
 
