@@ -13,14 +13,14 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (glLoadIdentity, glMatrixMode,
 from OpenGL.raw.GLU import gluPerspective
 from picogl.backend.geometry.factory import LegacyBinding, ModernBinding
 from picogl.backend.gl.backend import GLBackend
-from picogl.backend.gl.enums import GLLegacyMatrixMode
+from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.wrappers import gl_get_integerv
 from picogl.backend.legacy.core.camera.lighting import set_background_color
 from picogl.backend.legacy.core.camera.matrices.setup import setup_matrices
 from picogl.backend.legacy.core.camera.setup import calculate_aspect
 from picogl.error import gl_check_errors
 from picogl.frame import prepare_viewport
-from picogl.mode import GLMode
+from picogl.backend.gl.mode import GLMode
 from picogl.utils.gl_init import (execute_gl_tasks, legacy_init_gl_list,
                                   modern_init_gl_list)
 from PySide6.QtGui import QMouseEvent, QOpenGLFunctions, Qt, QWheelEvent

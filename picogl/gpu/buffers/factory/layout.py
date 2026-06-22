@@ -14,7 +14,6 @@ Functions:
 - create_common_attributes: Returns a predefined set of vertex attribute specifications
   with both position and color data.
 """
-
 from picogl.backend.gl.enums import GLNumeric
 from picogl.gpu.buffers.attributes import (LayoutDescriptor,
                                            legacy_attribute_spec)
