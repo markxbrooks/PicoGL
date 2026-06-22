@@ -12,7 +12,6 @@ from typing import Any, Optional
 
 import numpy as np
 from decologr import Decologr as log
-from picogl.attrs.model import VBOAttrs
 from picogl.backend.gl.wrappers.buffer import gl_bind_buffer
 from picogl.backend.gl.wrappers.client_state import \
     gl_enable_legacy_client_state
@@ -24,7 +23,7 @@ from picogl.backend.legacy.core.vertex.buffer.element import LegacyEBO
 from picogl.backend.legacy.core.vertex.buffer.normal import LegacyNormalVBO
 from picogl.backend.legacy.core.vertex.buffer.position import LegacyPositionVBO
 from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
-from picogl.buffers.attributes import LayoutDescriptor
+from picogl.buffers.attributes import LayoutDescriptor, VBOAttrs
 from picogl.buffers.base import VertexBase
 from picogl.buffers.glcleanup import delete_buffer_object
 from picogl.core.enums.buffer_target import GLBufferTarget

@@ -16,11 +16,10 @@ LegacyGLMesh
 from typing import Optional
 
 import numpy as np
-from picogl.attrs.vertex import CanonicalVertexAttrs
 from picogl.backend.gl.wrappers import gl_draw_elements
 from picogl.backend.legacy.core.vertex.buffer.client_states import \
     legacy_client_states
-from picogl.buffers.attributes import AttributeSpec, legacy_attribute_spec
+from picogl.buffers.attributes import AttributeSpec, legacy_attribute_spec, CanonicalVertexAttrs
 from picogl.buffers.glcleanup import delete_buffer_object
 from picogl.core.enums.draw_mode import GLDrawMode
 from picogl.core.enums.numerical import GLNumeric

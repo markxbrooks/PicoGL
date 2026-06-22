@@ -9,7 +9,7 @@ from typing import Optional, Union
 import numpy as np
 from decologr import Decologr as log
 from OpenGL import GL
-from picogl.attrs.vertex import CanonicalVertexAttrs
+from picogl.buffers.attributes import CanonicalVertexAttrs
 from picogl.backend.gl.wrappers import (gl_disable_legacy_client_state,
                                         gl_draw_elements,
                                         gl_enable_legacy_client_state)

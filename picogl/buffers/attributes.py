@@ -13,6 +13,7 @@ from typing import List
 from picogl.core.enums.numerical import GLNumeric
 from picogl.gpu.buffers.vertex.aliases import VertexBufferRole
 from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
+from picogl.utils.strenum import StrEnum
 
 
 @dataclass
@@ -87,3 +88,22 @@ class LayoutDescriptor:
     def attr_dict(self) -> dict[VBOType, AttributeSpec]:
         """dict"""
         return self.as_dict()
+
+
+class CanonicalVertexAttrs(StrEnum):
+    """Canonical Vertex Attrs"""
+
+    POSITIONS = "positions"
+    COLORS = "colors"
+    NORMALS = "normals"
+    INDICES = "indices"
+
+
+class VBOAttrs:
+    """VBO Attrs"""
+
+    VBO = VBOType.VBO
+    NBO = VBOType.NBO
+    CBO = VBOType.CBO
+    EBO = VBOType.EBO
+    ALL = [VBOType.VBO, VBOType.NBO, VBOType.CBO, VBOType.EBO]
