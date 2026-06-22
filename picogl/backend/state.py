@@ -10,19 +10,25 @@ from typing import Any, Protocol
 
 from numpy import ndarray
 from OpenGL.GL import glBlendFunc, glViewport
-from OpenGL.raw.GL.VERSION.GL_1_1 import (GL_COLOR_ARRAY, GL_NORMAL_ARRAY,
-                                          GL_VERTEX_ARRAY)
-from picogl.backend.gl.capability import (GLBlendFactor,
-                                          GLFixedFunctionCapability,
-                                          GLPipelineCapability)
+from OpenGL.raw.GL.VERSION.GL_1_1 import (
+    GL_COLOR_ARRAY,
+    GL_NORMAL_ARRAY,
+    GL_VERTEX_ARRAY,
+)
+from picogl.backend.gl.capability import (
+    GLBlendFactor,
+    GLFixedFunctionCapability,
+    GLPipelineCapability,
+)
 from picogl.backend.gl.enums import GLDrawMode, GLIndexType, GLNumeric
-from picogl.backend.gl.wrappers import (gl_draw_elements,
-                                        gl_enable_legacy_client_state)
-from picogl.backend.gl.wrappers.pointer import (gl_color_array_pointer,
-                                                gl_normal_array_pointer,
-                                                gl_vertex_array_pointer)
-from picogl.backend.value import gl_value
 from picogl.backend.gl.state.fill import GLCapability, GLFace, GLFillMode
+from picogl.backend.gl.wrappers import gl_draw_elements, gl_enable_legacy_client_state
+from picogl.backend.gl.wrappers.pointer import (
+    gl_color_array_pointer,
+    gl_normal_array_pointer,
+    gl_vertex_array_pointer,
+)
+from picogl.backend.value import gl_value
 from picogl.texture.gltexture_driver import GLTextureDriver
 
 

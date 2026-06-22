@@ -37,9 +37,13 @@ Usage Example:
 """
 
 import numpy as np
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_MODELVIEW, glLoadIdentity,
-                                          glMatrixMode, glRotatef,
-                                          glTranslatef)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (
+    GL_MODELVIEW,
+    glLoadIdentity,
+    glMatrixMode,
+    glRotatef,
+    glTranslatef,
+)
 
 
 def update_camera_matrix(

@@ -8,11 +8,17 @@ buffers with support for color and depth attachments.
 
 from contextlib import contextmanager
 
-from OpenGL.GL import (GL_COLOR_ATTACHMENT0, GL_DEPTH_ATTACHMENT,
-                       GL_FRAMEBUFFER, GL_FRAMEBUFFER_COMPLETE,
-                       glBindFramebuffer, glCheckFramebufferStatus,
-                       glFramebufferTexture2D, glGenFramebuffers,
-                       glGetIntegerv)
+from OpenGL.GL import (
+    GL_COLOR_ATTACHMENT0,
+    GL_DEPTH_ATTACHMENT,
+    GL_FRAMEBUFFER,
+    GL_FRAMEBUFFER_COMPLETE,
+    glBindFramebuffer,
+    glCheckFramebufferStatus,
+    glFramebufferTexture2D,
+    glGenFramebuffers,
+    glGetIntegerv,
+)
 from OpenGL.raw.GL.VERSION.GL_3_0 import GL_FRAMEBUFFER_BINDING
 from picogl.renderer.initializable import Initializable
 from picogl.texture.gltexture import GLTexture

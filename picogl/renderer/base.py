@@ -5,9 +5,14 @@ Base Renderer Class
 from typing import Callable, Optional
 
 import numpy as np
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_DEPTH_TEST, GL_LINE_SMOOTH,
-                                          glDisable, glEnable, glFlush,
-                                          glLineWidth)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (
+    GL_DEPTH_TEST,
+    GL_LINE_SMOOTH,
+    glDisable,
+    glEnable,
+    glFlush,
+    glLineWidth,
+)
 from picogl.renderer.abstract import AbstractRenderer
 
 
