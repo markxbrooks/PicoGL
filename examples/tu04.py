@@ -35,7 +35,7 @@ class MeshUE4:
 
     def getMesh(self):
         ue4LOD = self.load_mesh()
-        self.vertices = data.VertexData.to_array()
+        self.vertices = vertex_data.VertexData.to_array()
         self.indices = ue4LOD.IndexBuffer.to_array()
         self.texcoords = ue4LOD.VertexBuffers.StaticMeshVertexBuffer.TexcoordData.to_array()
         self.tangent_xz = ue4LOD.VertexBuffers.StaticMeshVertexBuffer.TangentsData.to_array()
