@@ -1,7 +1,12 @@
 from typing import TYPE_CHECKING, Any
 
-from OpenGL.GL import (GL_DEPTH_WRITEMASK, GL_LESS, glDepthFunc, glDepthMask,
-                       glGetBooleanv)
+from OpenGL.GL import (
+    GL_DEPTH_WRITEMASK,
+    GL_LESS,
+    glDepthFunc,
+    glDepthMask,
+    glGetBooleanv,
+)
 from picogl.backend.gl.capability import GLPipelineCapability
 from picogl.backend.gl.driver.applyable import Applyable
 from picogl.backend.gl.driver.capability import GLCapabilityDriver

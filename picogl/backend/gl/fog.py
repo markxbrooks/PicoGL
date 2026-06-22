@@ -7,10 +7,18 @@ to configure fog parameters, including fog color, start and end
 distances, and fog mode.
 """
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_FOG, GL_FOG_COLOR, GL_FOG_END,
-                                          GL_FOG_INDEX, GL_FOG_MODE,
-                                          GL_FOG_START, GL_LINEAR, glFogf,
-                                          glFogfv, glFogi)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (
+    GL_FOG,
+    GL_FOG_COLOR,
+    GL_FOG_END,
+    GL_FOG_INDEX,
+    GL_FOG_MODE,
+    GL_FOG_START,
+    GL_LINEAR,
+    glFogf,
+    glFogfv,
+    glFogi,
+)
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 
 

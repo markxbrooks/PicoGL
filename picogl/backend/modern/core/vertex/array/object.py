@@ -39,19 +39,30 @@ from typing import Optional, Union
 
 import numpy as np
 from decologr import Decologr as log
-from picogl.backend.gl.enums import (GLBufferTarget, GLDrawMode, GLIndexType,
-                                     GLNumeric, GLUsageHint)
+from picogl.backend.gl.enums import (
+    GLBufferTarget,
+    GLDrawMode,
+    GLIndexType,
+    GLNumeric,
+    GLUsageHint,
+)
+from picogl.backend.gl.resource import GLResource
 from picogl.backend.gl.wrappers import gl_draw_arrays, gl_draw_elements
 from picogl.backend.gl.wrappers.buffer import gl_bind_buffer, gl_buffer_subdata
-from picogl.backend.gl.wrappers.enable_vertex_array import \
-    gl_enable_vertex_array
-from picogl.backend.gl.wrappers.glcleanup import (gl_delete_buffers,
-                                                  gl_delete_vertex_arrays)
-from picogl.backend.gl.wrappers.vertex_array import gl_bind_vertex_array, gl_gen_vertex_arrays, gl_is_vertex_array
-from picogl.backend.gl.wrappers.vertex_attrib_pointer import \
-    gl_vertex_attrib_pointer
-from picogl.backend.modern.core.vertex.array.helpers import \
-    enable_points_rendering_state
+from picogl.backend.gl.wrappers.enable_vertex_array import gl_enable_vertex_array
+from picogl.backend.gl.wrappers.glcleanup import (
+    gl_delete_buffers,
+    gl_delete_vertex_arrays,
+)
+from picogl.backend.gl.wrappers.vertex_array import (
+    gl_bind_vertex_array,
+    gl_gen_vertex_arrays,
+    gl_is_vertex_array,
+)
+from picogl.backend.gl.wrappers.vertex_attrib_pointer import gl_vertex_attrib_pointer
+from picogl.backend.modern.core.vertex.array.helpers import (
+    enable_points_rendering_state,
+)
 from picogl.backend.modern.core.vertex.base import VertexBuffer
 from picogl.backend.modern.core.vertex.buffer.element import ModernEBO
 from picogl.backend.modern.core.vertex.buffer.object import ModernVBO
@@ -62,43 +73,6 @@ from picogl.safe import gl_gen_safe
 from PySide6.QtGui import QOpenGLContext
 
 from elmo.log.silence import SILENT_VAO
-
-
-def current_gl_context() -> int:
-    try:
-        from PySide6.QtGui import QOpenGLContext
-
-        # return QOpenGLContext.currentContext()
-        return id(QOpenGLContext.currentContext())
-    except Exception:
-        return None
-
-
-class GLResource:
-    """Base class for all gl-owned objects."""
-
-    def __init__(self, handle):
-        self._creation_context = QOpenGLContext.currentContext()
-        self._deleted = False
-        self._handle = None
-
-    @property
-    def context(self):
-        return self._creation_context
-
-    def validate_context(self):
-        ctx = QOpenGLContext.currentContext()
-
-        if ctx is None:
-            raise RuntimeError("No current gl context")
-
-        if self._creation_context is None:
-            raise RuntimeError("Resource has no creation context")
-
-        if ctx is not self._creation_context:
-            raise RuntimeError(
-                f"Context mismatch: created in {self._creation_context}, current {ctx}"
-            )
 
 
 class VertexArrayObject(VertexBase, GLResource):

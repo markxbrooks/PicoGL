@@ -5,8 +5,11 @@ gl Blend Driver
 from typing import TYPE_CHECKING
 
 from OpenGL.GL import glBlendFunc
-from picogl.backend.gl.capability import (GLBlendFactor, GLBlendTarget,
-                                          GLPipelineCapability)
+from picogl.backend.gl.capability import (
+    GLBlendFactor,
+    GLBlendTarget,
+    GLPipelineCapability,
+)
 from picogl.backend.gl.driver.applyable import Applyable
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.state import gl_value

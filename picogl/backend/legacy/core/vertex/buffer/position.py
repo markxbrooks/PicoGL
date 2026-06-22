@@ -7,10 +7,10 @@ import ctypes
 
 import numpy as np
 from picogl.backend.gl.enums import GLBufferTarget, GLNumeric
+from picogl.backend.gl.state.client import GLClientState
 from picogl.backend.gl.wrappers import gl_enable_legacy_client_state
 from picogl.backend.gl.wrappers.pointer import gl_vertex_array_pointer
 from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
-from picogl.backend.gl.state.client import GLClientState
 
 
 class LegacyPositionVBO(LegacyVBO):

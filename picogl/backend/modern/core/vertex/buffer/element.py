@@ -19,7 +19,7 @@ Example usage:
     import numpy as np
 
     from picogl.backend.modern.core.vertex.buffer.element import ModernEBO
-    from picogl.state.draw_mode import GLUsageHint
+    from picogl.backend.gl.state.draw_mode import GLUsageHint
 
     indices = np.array([0, 1, 2], dtype=np.uint32)
     ebo = ModernEBO(data=indices)

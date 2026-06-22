@@ -3,8 +3,7 @@ from typing import Union
 import numpy as np
 from decologr import Decologr as log
 from picogl.backend.modern.core.uniform.location import get_uniform_location
-from picogl.backend.modern.core.uniform.location_value import \
-    set_uniform_location_value
+from picogl.backend.modern.core.uniform.location_value import set_uniform_location_value
 from pyglm import glm
 
 
