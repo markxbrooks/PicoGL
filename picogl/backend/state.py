@@ -21,11 +21,11 @@ from picogl.core.enums.index_type import GLIndexType
 from picogl.core.enums.numerical import GLNumeric
 from picogl.state.fill import GLCapability, GLFace, GLFillMode
 from picogl.texture.gltexture_driver import GLTextureDriver
-from picogl.wrappers.client_state import gl_enable_legacy_client_state
-from picogl.wrappers.draw import gl_draw_elements
-from picogl.wrappers.pointer import (gl_color_array_pointer,
-                                     gl_normal_array_pointer,
-                                     gl_vertex_array_pointer)
+from picogl.backend.gl.wrappers import gl_enable_legacy_client_state
+from picogl.backend.gl.wrappers import gl_draw_elements
+from picogl.backend.gl.wrappers.pointer import (gl_color_array_pointer,
+                                                gl_normal_array_pointer,
+                                                gl_vertex_array_pointer)
 
 
 class CapabilityDriver(Protocol):

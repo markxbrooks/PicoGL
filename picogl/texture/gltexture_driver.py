@@ -25,8 +25,8 @@ from picogl.core.enums.numerical import GLNumeric
 from picogl.texture.gltexture import GLTexture
 from picogl.texture.mapping import FILTER_MAP, FORMAT_MAP, WRAP_MAP
 from picogl.texture.texture2d import Texture2D
-from picogl.wrappers.texture import (gl_generate_mipmap, gl_tex_parameter,
-                                     gl_teximage2d)
+from picogl.backend.gl.wrappers import (gl_generate_mipmap, gl_tex_parameter,
+                                        gl_teximage2d)
 
 
 class GLTextureDriver:

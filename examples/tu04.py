@@ -12,7 +12,7 @@ from pyglm import glm
 from utils.objLoader import objLoader
 from utils.textureLoader import textureLoader
 
-from picogl.wrappers.texture import gl_get_active_texture0, gl_bind_texture
+from picogl.backend.gl.wrappers import gl_get_active_texture0, gl_bind_texture
 
 
 class MeshUE4:

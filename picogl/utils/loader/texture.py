@@ -15,9 +15,9 @@ from picogl.core.color import GLColor
 from picogl.core.enums.numerical import GLNumeric
 from picogl.texture.gltexparam import GLTexParam
 from picogl.texture.gltexture import GLTexture
-from picogl.wrappers.texture import (gl_bind_texture, gl_compressed_tex_image,
-                                     gl_gen_textures, gl_generate_mipmap,
-                                     gl_tex_parameter, gl_teximage2d)
+from picogl.backend.gl.wrappers import (gl_bind_texture, gl_compressed_tex_image,
+                                        gl_gen_textures, gl_generate_mipmap,
+                                        gl_tex_parameter, gl_teximage2d)
 from PIL import Image
 
 

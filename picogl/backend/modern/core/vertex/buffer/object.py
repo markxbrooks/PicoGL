@@ -3,7 +3,7 @@
 import numpy as np
 from picogl.backend.modern.core.vertex.base import VertexBuffer
 from picogl.core.enums.buffer_target import GLBufferTarget
-from picogl.wrappers.generate_buffers import gl_generate_buffers
+from picogl.backend.gl.wrappers.generate_buffers import gl_generate_buffers
 
 
 class ModernVBO(VertexBuffer):

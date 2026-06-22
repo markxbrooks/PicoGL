@@ -5,11 +5,11 @@ from picogl.buffers.attributes import LayoutDescriptor
 from picogl.buffers.base import VertexBase
 from picogl.buffers.glcleanup import gl_delete_buffers
 from picogl.core.enums.buffer_target import GLBufferTarget
-from picogl.wrappers.buffer import gl_bind_buffer
-from picogl.wrappers.enable_vertex_array import gl_enable_vertex_array
-from picogl.wrappers.generate_vertex_array import gl_generate_vertex_array
-from picogl.wrappers.vertex_array import gl_bind_vertex_array
-from picogl.wrappers.vertex_attrib_pointer import gl_vertex_attrib_pointer
+from picogl.backend.gl.wrappers.buffer import gl_bind_buffer
+from picogl.backend.gl.wrappers.enable_vertex_array import gl_enable_vertex_array
+from picogl.backend.gl.wrappers.generate_vertex_array import gl_generate_vertex_array
+from picogl.backend.gl.wrappers.vertex_array import gl_bind_vertex_array
+from picogl.backend.gl.wrappers.vertex_attrib_pointer import gl_vertex_attrib_pointer
 
 
 class ModernVertexArrayGroup(VertexBase):

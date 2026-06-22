@@ -22,7 +22,7 @@ from picogl.frame import prepare_viewport
 from picogl.mode import GLMode
 from picogl.utils.gl_init import (execute_gl_tasks, legacy_init_gl_list,
                                   modern_init_gl_list)
-from picogl.wrappers.get_integerv import gl_get_integerv
+from picogl.backend.gl.wrappers import gl_get_integerv
 from PySide6.QtGui import QMouseEvent, QOpenGLFunctions, Qt, QWheelEvent
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
 from PySide6.QtWidgets import QWidget

@@ -29,9 +29,9 @@ from picogl.core.enums.numerical import GLNumeric
 from picogl.gpu.buffers.vertex.aliases import NAME_ALIASES, VertexBufferRole
 from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
 from picogl.state.client import GLClientState
-from picogl.wrappers.buffer import gl_bind_buffer
-from picogl.wrappers.client_state import gl_enable_legacy_client_state
-from picogl.wrappers.draw import gl_draw_arrays, gl_draw_elements
+from picogl.backend.gl.wrappers.buffer import gl_bind_buffer
+from picogl.backend.gl.wrappers.client_state import gl_enable_legacy_client_state
+from picogl.backend.gl.wrappers.draw import gl_draw_arrays, gl_draw_elements
 
 
 class VertexBufferGroup(VertexBase):

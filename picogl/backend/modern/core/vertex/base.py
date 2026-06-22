@@ -43,10 +43,10 @@ from picogl.core.enums.buffer_target import GLBufferTarget
 from picogl.core.enums.index_type import GLIndexType
 from picogl.core.enums.numerical import GLNumeric
 from picogl.core.enums.usage_hint import GLUsageHint
-from picogl.wrappers.buffer import gl_bind_buffer
-from picogl.wrappers.data import gl_buffer_data
-from picogl.wrappers.enable_vertex_array import gl_enable_vertex_array
-from picogl.wrappers.vertex_attrib_pointer import gl_vertex_attrib_pointer
+from picogl.backend.gl.wrappers.buffer import gl_bind_buffer
+from picogl.backend.gl.wrappers import gl_buffer_data
+from picogl.backend.gl.wrappers.enable_vertex_array import gl_enable_vertex_array
+from picogl.backend.gl.wrappers.vertex_attrib_pointer import gl_vertex_attrib_pointer
 
 
 class VertexBuffer(VertexBase):

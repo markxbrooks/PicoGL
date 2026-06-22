@@ -10,7 +10,7 @@ from picogl.ui.backend.glut.window.gl import GLWindow
 from picogl.utils.loader.texture import TextureLoader
 from pyglm import glm
 
-from picogl.wrappers.texture import gl_bind_texture, gl_get_active_texture0
+from picogl.backend.gl.wrappers import gl_bind_texture, gl_get_active_texture0
 from utils.shader_loader import Shader
 
 g_vertex_buffer_data = [

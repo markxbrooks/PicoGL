@@ -10,8 +10,8 @@ from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
 from picogl.core.enums.buffer_target import GLBufferTarget
 from picogl.core.enums.numerical import GLNumeric
 from picogl.state.client import GLClientState
-from picogl.wrappers.client_state import gl_enable_legacy_client_state
-from picogl.wrappers.pointer import gl_vertex_array_pointer
+from picogl.backend.gl.wrappers import gl_enable_legacy_client_state
+from picogl.backend.gl.wrappers.pointer import gl_vertex_array_pointer
 
 
 class LegacyPositionVBO(LegacyVBO):

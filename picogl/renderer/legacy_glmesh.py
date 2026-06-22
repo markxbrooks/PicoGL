@@ -29,7 +29,7 @@ from picogl.gpu.buffers.vertex.aliases import VertexBufferRole
 from picogl.gpu.buffers.vertex.legacy import VertexBufferGroup
 from picogl.gpu.buffers.vertex.vbo.vbo_class import MeshDataAttrs, VBOType
 from picogl.state.client import GLClientState
-from picogl.wrappers.draw import gl_draw_elements
+from picogl.backend.gl.wrappers import gl_draw_elements
 
 
 class LegacyGLMesh:

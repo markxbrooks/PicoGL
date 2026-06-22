@@ -7,7 +7,7 @@ from typing import Any
 from picogl.backend.geometry.legacy_mesh_binding import LegacyClientMeshBinding
 from picogl.backend.geometry.mesh import GPUMesh
 from picogl.core.enums.numerical import GLNumeric
-from picogl.wrappers.draw import gl_draw_elements
+from picogl.backend.gl.wrappers import gl_draw_elements
 
 
 class LegacyMesh(GPUMesh):
