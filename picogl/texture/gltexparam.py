@@ -27,7 +27,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
 )
 
 class GLTexParam(IntEnum):
-    """GL Parameter"""
+    """gl Parameter"""
     REPEAT = GL_REPEAT
     LINEAR = GL_LINEAR
     LINEAR_MIPMAP_LINEAR = GL_LINEAR_MIPMAP_LINEAR

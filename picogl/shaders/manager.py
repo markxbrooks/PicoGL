@@ -64,7 +64,7 @@ def _progress_iter(
     """Optional tqdm in real terminals only; GUI apps use plain iteration (no monitor thread)."""
     import sys
 
-    # tqdm spawns a background monitor thread; mixing that with Qt + GL init has
+    # tqdm spawns a background monitor thread; mixing that with Qt + gl init has
     # caused segfaults when stderr is not a TTY (IDE / GUI runs).
     if not sys.stderr.isatty():
         return pairs
@@ -174,7 +174,7 @@ class ShaderManager:
         """
         Load (if needed) and bind the shader of the given type.
 
-        Returns True when the program is bound in the current GL context.
+        Returns True when the program is bound in the current gl context.
         """
         if not self._initialized and not self._initializing:
             self.initialize_shaders()
@@ -253,7 +253,7 @@ class ShaderManager:
         *,
         on_shader_loaded: Optional[Callable[[int, int, ShaderType], None]] = None,
     ):
-        """Initialize src and mark GL state as ready."""
+        """Initialize src and mark gl state as ready."""
         # Load src into the manager. If caller does not provide a directory,
         # keep an existing shader_directory or default to PicoGL's packaged src root.
         if shader_dir:
@@ -272,7 +272,7 @@ class ShaderManager:
         if not gl_context_available():
             log.warning(
                 "ShaderManager.initialize_shaders deferred: no current OpenGL context. "
-                "Load shaders from initializeGL / paintGL after the GL widget context is current.",
+                "Load shaders from initializeGL / paintGL after the gl widget context is current.",
                 scope="load_shader",
             )
             return
@@ -326,7 +326,7 @@ class ShaderManager:
             if not self._initialized:
                 log.error(
                     "ShaderManager: default shader could not be bound; "
-                    "modern rendering will stay disabled until GL init succeeds.",
+                    "modern rendering will stay disabled until gl init succeeds.",
                     scope="load_shader",
                 )
         finally:

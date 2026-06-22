@@ -72,8 +72,8 @@ class TestVertexBufferGroup(unittest.TestCase):
             patch("picogl.buffers.vertex.legacy.glEnableClientState"),
             patch("picogl.buffers.vertex.legacy.legacy_client_states"),
             patch("picogl.buffers.vertex.legacy.delete_buffer_object"),
-            patch("OpenGL.GL.glGenBuffers", return_value=1),
-            patch("OpenGL.GL.glBufferData"),
+            patch("OpenGL.gl.glGenBuffers", return_value=1),
+            patch("OpenGL.gl.glBufferData"),
         ]
 
         # Start all patches
@@ -834,7 +834,7 @@ class TestVertexBufferGroup(unittest.TestCase):
             self.assertEqual(vbo_class.__name__, expected_class_name)
 
     def test_resolve_client_states(self):
-        """_resolve_client_states() derives GL client states from layout roles."""
+        """_resolve_client_states() derives gl client states from layout roles."""
         vbg = VertexBufferGroup()
         vbg.named_vbos[VertexBufferRole.VBO] = MagicMock()
         vbg.named_vbos[VertexBufferRole.CBO] = MagicMock()

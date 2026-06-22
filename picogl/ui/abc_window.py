@@ -23,7 +23,7 @@ class AbstractGLWindow(ABC):
     """
 
     def __init__(
-        self, width: int = 800, height: int = 480, title: bytes = b"GL Window"
+        self, width: int = 800, height: int = 480, title: bytes = b"gl Window"
     ):
         self.controller: Optional[object] = None
         self.width = width

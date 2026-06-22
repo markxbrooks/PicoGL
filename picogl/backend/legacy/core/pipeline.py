@@ -24,7 +24,7 @@ from picogl.state.texture import TexCoord2f, Vertex3f
 
 @runtime_checkable
 class LegacyPipelineProtocol(Protocol):
-    """Fixed-function and immediate-mode pipeline operations (legacy GL only)."""
+    """Fixed-function and immediate-mode pipeline operations (legacy gl only)."""
 
     def set_matrix_mode_model_view(self): ...
     def set_matrix_mode_projection(self): ...

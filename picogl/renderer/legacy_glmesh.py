@@ -33,7 +33,7 @@ from picogl.wrappers.draw import gl_draw_elements
 
 class LegacyGLMesh:
     """
-    GL Mesh fir Compatibility Profile
+    gl Mesh fir Compatibility Profile
 
     GPU‐resident mesh: owns VAO/VBO/EBO/CBO/NBO for an indexed triangle mesh.
     It does not know anything about shaders or matrices.

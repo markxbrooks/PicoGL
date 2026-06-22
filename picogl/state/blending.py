@@ -10,14 +10,14 @@ the original state and settings are restored.
 
 from contextlib import contextmanager
 
-from picogl.backend.GL.driver.capability import GLCapabilityDriver
-from picogl.backend.GL.driver.blend import GLBlendDriver
+from picogl.backend.gl.driver.capability import GLCapabilityDriver
+from picogl.backend.gl.driver.blend import GLBlendDriver
 from picogl.backend.capability import GLPipelineCapability, GLBlendFactor, GLBlendTarget
 
 
 @contextmanager
 def gl_blend(src: GLBlendFactor = GLBlendFactor.SRC_ALPHA, dst: GLBlendFactor = GLBlendFactor.ONE_MINUS_SRC_ALPHA):
-    """GL blend context manager"""
+    """gl blend context manager"""
     was_enabled = GLCapabilityDriver.is_enabled(GLPipelineCapability.BLEND)
     prev_src = int(GLCapabilityDriver.get_integerv(GLBlendTarget.BLEND_SRC))
     prev_dst = int(GLCapabilityDriver.get_integerv(GLBlendTarget.BLEND_DST))

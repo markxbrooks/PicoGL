@@ -10,7 +10,7 @@ state restoration after operations.
 from contextlib import contextmanager
 from dataclasses import dataclass
 
-from picogl.backend.GL.driver.capability import GLCapabilityDriver
+from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.texture.gltexture import GLTexture
 
 

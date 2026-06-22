@@ -1,5 +1,5 @@
 """
-GL buffer data wrapper
+gl buffer data wrapper
 
 """
 
@@ -14,7 +14,7 @@ def gl_buffer_data(
     data=None,
     usage_hint: GLUsageHint = GLUsageHint.STATIC_DRAW,
 ):
-    """GL bind buffer"""
+    """gl bind buffer"""
     assert data is not None
     assert size > 0
     glBufferData(target, size, data, usage_hint)

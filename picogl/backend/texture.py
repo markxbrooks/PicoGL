@@ -15,7 +15,7 @@ from typing import Any
 import numpy as np
 from elmo.globals import RESOURCE_DIR
 
-from picogl.backend.GL.driver.capability import GLCapabilityDriver
+from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.texture.gltexture import GLTexture
 from picogl.texture.gltexture_driver import GLTextureDriver
 from picogl.texture.texture2d import  Texture2D
@@ -24,7 +24,7 @@ from picogl.wrappers.texture import gl_bind_texture
 
 @contextmanager
 def gl_texture_binding(texture_gl_id: int | None):
-    """GL texture binding"""
+    """gl texture binding"""
     try:
         if texture_gl_id is not None:
             GLCapabilityDriver.enable(GLTexture.TEXTURE_2D)

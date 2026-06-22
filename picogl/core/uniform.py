@@ -10,6 +10,6 @@ from OpenGL.raw.GL.VERSION.GL_2_0 import glUniform1i
 
 
 def gl_uniform1i(id, v0):
-    """GL uniform"""
+    """gl uniform"""
     glUniform1i(id, v0)
 

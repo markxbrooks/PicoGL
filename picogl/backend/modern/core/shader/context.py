@@ -6,7 +6,7 @@ from OpenGL import GL as gl
 
 
 def clear_gl_errors(max_clear: int = 8) -> None:
-    """Drain pending GL errors so the next call's status is meaningful."""
+    """Drain pending gl errors so the next call's status is meaningful."""
     for _ in range(max_clear):
         err = gl.glGetError()
         if err == gl.GL_NO_ERROR:
@@ -14,7 +14,7 @@ def clear_gl_errors(max_clear: int = 8) -> None:
 
 
 def gl_context_available() -> bool:
-    """True when a GL context is current and ``glGetString(GL_VERSION)`` works."""
+    """True when a gl context is current and ``glGetString(GL_VERSION)`` works."""
     try:
         from PySide6.QtGui import QOpenGLContext
 

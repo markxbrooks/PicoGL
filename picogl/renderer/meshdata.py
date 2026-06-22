@@ -443,7 +443,7 @@ class MeshData:
             gl_disable_legacy_client_state(GLClientState.COLOR)
 
     def delete(self):
-        """Drop CPU references to mesh arrays (no GL objects on this type)."""
+        """Drop CPU references to mesh arrays (no gl objects on this type)."""
         # Use ``is not None`` — nbo/cbo/ebo are often numpy arrays; ``if arr:`` is ambiguous.
         if self.normals is not None:
             self.normals = None

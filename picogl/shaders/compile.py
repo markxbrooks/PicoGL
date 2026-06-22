@@ -1,5 +1,5 @@
 """
-Open GL shader_manager.current_shader_program compilation
+Open gl shader_manager.current_shader_program compilation
 
 """
 

@@ -1,5 +1,5 @@
 """
-GL Cull Face
+gl Cull Face
 """
 
 from contextlib import contextmanager

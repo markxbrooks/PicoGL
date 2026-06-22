@@ -20,7 +20,7 @@ Features:
 
 Dependencies:
 - numpy
-- PyOpenGL (OpenGL.GL and OpenGL.raw.GL)
+- PyOpenGL (OpenGL.gl and OpenGL.raw.gl)
 
 Example usage:
 ==============
@@ -80,7 +80,7 @@ def current_gl_context() -> int:
 
 
 class GLResource:
-    """Base class for all GL-owned objects."""
+    """Base class for all gl-owned objects."""
 
     def __init__(self, handle):
         self._creation_context = QOpenGLContext.currentContext()
@@ -95,7 +95,7 @@ class GLResource:
         ctx = QOpenGLContext.currentContext()
 
         if ctx is None:
-            raise RuntimeError("No current GL context")
+            raise RuntimeError("No current gl context")
 
         if self._creation_context is None:
             raise RuntimeError("Resource has no creation context")
@@ -155,7 +155,7 @@ class VertexArrayObject(VertexBase, GLResource):
         if ctx is self.context:
             return True
 
-        # Optional fallback: GL-level validation (ONLY if sharing contexts exist)
+        # Optional fallback: gl-level validation (ONLY if sharing contexts exist)
         try:
             handle = getattr(self, "handle", None)
             if handle:
@@ -217,7 +217,7 @@ class VertexArrayObject(VertexBase, GLResource):
         """
         if not self.is_valid_in_current_context():
             log.error(
-                "VAO created in different GL context; skipping bind to avoid invalid operation",
+                "VAO created in different gl context; skipping bind to avoid invalid operation",
                 scope=self.__class__.__name__,
             )
             return None

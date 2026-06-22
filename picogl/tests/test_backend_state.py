@@ -38,14 +38,14 @@ from picogl.backend.capability import (
     GLPipelineCapability,
     PhongMaterial,
 )
-from picogl.backend.GL.backend import GLBackend
-from picogl.backend.GL.driver.blend import GLBlendDriver
-from picogl.backend.GL.driver.capability import GLCapabilityDriver
-from picogl.backend.GL.driver.depth import GLDepthDriver
-from picogl.backend.GL.driver.frame import GLFrameDriver
-from picogl.backend.GL.driver.geometry import GLGeometryDriver
-from picogl.backend.GL.driver.raster import GLRasterDriver, resolve_polygon_mode_args
-from picogl.backend.GL.driver.texture import GLTextureSystem
+from picogl.backend.gl.backend import GLBackend
+from picogl.backend.gl.driver.blend import GLBlendDriver
+from picogl.backend.gl.driver.capability import GLCapabilityDriver
+from picogl.backend.gl.driver.depth import GLDepthDriver
+from picogl.backend.gl.driver.frame import GLFrameDriver
+from picogl.backend.gl.driver.geometry import GLGeometryDriver
+from picogl.backend.gl.driver.raster import GLRasterDriver, resolve_polygon_mode_args
+from picogl.backend.gl.driver.texture import GLTextureSystem
 from picogl.backend.legacy.core.attribute_binder import LegacyAttributeBinder
 from picogl.backend.legacy.core.pipeline import GLLegacyPipeline
 from picogl.backend.state import (
@@ -325,14 +325,14 @@ class TestDrawCommand(unittest.TestCase):
         raster = GLRasterDriver()
 
         with (
-            patch("picogl.backend.GL.driver.raster.glLineWidth") as line_width,
-            patch("picogl.backend.GL.driver.raster.glPolygonMode") as polygon_mode,
-            patch("picogl.backend.GL.driver.raster.glPointSize") as point_size,
+            patch("picogl.backend.gl.driver.raster.glLineWidth") as line_width,
+            patch("picogl.backend.gl.driver.raster.glPolygonMode") as polygon_mode,
+            patch("picogl.backend.gl.driver.raster.glPointSize") as point_size,
             patch(
-                "picogl.backend.GL.driver.raster.glGetFloatv",
+                "picogl.backend.gl.driver.raster.glGetFloatv",
                 return_value=(1.0, 10.0),
             ) as get_float,
-            patch("picogl.backend.GL.driver.raster.glPolygonOffset") as polygon_offset,
+            patch("picogl.backend.gl.driver.raster.glPolygonOffset") as polygon_offset,
         ):
             raster.set_line_width(2.0)
             raster.set_polygon_mode(GLFace.FRONT_AND_BACK, GL_LINE)
@@ -349,7 +349,7 @@ class TestDrawCommand(unittest.TestCase):
     def test_raster_driver_caches_line_width(self):
         raster = GLRasterDriver()
 
-        with patch("picogl.backend.GL.driver.raster.glLineWidth") as line_width:
+        with patch("picogl.backend.gl.driver.raster.glLineWidth") as line_width:
             raster.set_line_width(2.0)
             raster.set_line_width(2.0)
 
@@ -359,8 +359,8 @@ class TestDrawCommand(unittest.TestCase):
         raster = GLRasterDriver()
 
         with (
-            patch("picogl.backend.GL.driver.raster.glLineWidth"),
-            patch("picogl.backend.GL.driver.raster.glGetFloatv") as get_float,
+            patch("picogl.backend.gl.driver.raster.glLineWidth"),
+            patch("picogl.backend.gl.driver.raster.glGetFloatv") as get_float,
         ):
             raster.set_line_width(2.5)
             self.assertEqual(raster.get_line_width(), 2.5)
@@ -370,7 +370,7 @@ class TestDrawCommand(unittest.TestCase):
     def test_raster_driver_caches_polygon_mode(self):
         raster = GLRasterDriver()
 
-        with patch("picogl.backend.GL.driver.raster.glPolygonMode") as polygon_mode:
+        with patch("picogl.backend.gl.driver.raster.glPolygonMode") as polygon_mode:
             raster.set_polygon_mode(GLFace.FRONT_AND_BACK, GL_LINE)
             raster.set_polygon_mode(GLFace.FRONT_AND_BACK, GL_LINE)
 
@@ -380,7 +380,7 @@ class TestDrawCommand(unittest.TestCase):
         GLRasterDriver._shared = None
         shared = GLRasterDriver.shared()
 
-        with patch("picogl.backend.GL.driver.raster.glLineWidth"):
+        with patch("picogl.backend.gl.driver.raster.glLineWidth"):
             GLRasterDriver.shared().set_line_width(4.0)
 
         self.assertEqual(shared.get_line_width(), 4.0)
@@ -389,7 +389,7 @@ class TestDrawCommand(unittest.TestCase):
         GLRasterDriver._shared = None
         backend = GLBackend(binding=FakeBinding())
 
-        with patch("picogl.backend.GL.driver.raster.glLineWidth"):
+        with patch("picogl.backend.gl.driver.raster.glLineWidth"):
             backend.raster.set_line_width(4.0)
 
         self.assertIsNot(backend.raster, GLRasterDriver.shared())
@@ -401,7 +401,7 @@ class TestDrawCommand(unittest.TestCase):
         shared.set_line_width(1.0)
 
         isolated = GLRasterDriver()
-        with patch("picogl.backend.GL.driver.raster.glLineWidth"):
+        with patch("picogl.backend.gl.driver.raster.glLineWidth"):
             isolated.set_line_width(3.0)
 
         self.assertEqual(isolated.get_line_width(), 3.0)
@@ -424,8 +424,8 @@ class TestDrawCommand(unittest.TestCase):
         state = RasterState(line_width=2.5, polygon_mode=GLFillMode.LINE)
 
         with (
-            patch("picogl.backend.GL.driver.raster.glLineWidth") as line_width,
-            patch("picogl.backend.GL.driver.raster.glPolygonMode") as polygon_mode,
+            patch("picogl.backend.gl.driver.raster.glLineWidth") as line_width,
+            patch("picogl.backend.gl.driver.raster.glPolygonMode") as polygon_mode,
         ):
             raster.apply(state)
             raster.apply(state)
@@ -439,14 +439,14 @@ class TestDrawCommand(unittest.TestCase):
         blend = GLBlendDriver(capabilities)
 
         with (
-            patch("picogl.backend.GL.driver.capability.glEnable") as enable,
-            patch("picogl.backend.GL.driver.capability.glDisable") as disable,
+            patch("picogl.backend.gl.driver.capability.glEnable") as enable,
+            patch("picogl.backend.gl.driver.capability.glDisable") as disable,
             patch(
-                "picogl.backend.GL.driver.capability.glIsEnabled", return_value=True
+                "picogl.backend.gl.driver.capability.glIsEnabled", return_value=True
             ) as is_enabled,
-            patch("picogl.backend.GL.driver.depth.glDepthMask") as depth_mask,
-            patch("picogl.backend.GL.driver.depth.glDepthFunc") as depth_func,
-            patch("picogl.backend.GL.driver.blend.glBlendFunc") as blend_func,
+            patch("picogl.backend.gl.driver.depth.glDepthMask") as depth_mask,
+            patch("picogl.backend.gl.driver.depth.glDepthFunc") as depth_func,
+            patch("picogl.backend.gl.driver.blend.glBlendFunc") as blend_func,
         ):
             capabilities.enable(GL_CULL_FACE)
             capabilities.disable(GL_LIGHTING)
@@ -620,10 +620,10 @@ class TestDrawCommand(unittest.TestCase):
 
         with (
             patch(
-                "picogl.backend.GL.driver.geometry.gl_draw_elements"
+                "picogl.backend.gl.driver.geometry.gl_draw_elements"
             ) as draw_elements,
-            patch("picogl.backend.GL.driver.geometry.gl_draw_arrays") as draw_arrays,
-            patch("picogl.backend.GL.driver.geometry.glBindVertexArray") as bind_vao,
+            patch("picogl.backend.gl.driver.geometry.gl_draw_arrays") as draw_arrays,
+            patch("picogl.backend.gl.driver.geometry.glBindVertexArray") as bind_vao,
         ):
             geometry.draw_mesh(mesh, GL_LINE)
             geometry.draw_elements(GL_LINE, [0, 1, 2])
@@ -650,9 +650,9 @@ class TestDrawCommand(unittest.TestCase):
         textures = GLTextureSystem(driver=driver)
 
         with (
-            patch("picogl.backend.GL.driver.texture.gl_bind_texture") as bind_texture,
+            patch("picogl.backend.gl.driver.texture.gl_bind_texture") as bind_texture,
             patch(
-                "picogl.backend.GL.driver.texture.glDeleteTextures"
+                "picogl.backend.gl.driver.texture.glDeleteTextures"
             ) as delete_textures,
         ):
             handle = textures.create_texture(4, 5, data=None)
@@ -796,13 +796,13 @@ class TestDrawCommand(unittest.TestCase):
         backend = GLBackend(binding=FakeBinding())
 
         with (
-            patch("picogl.backend.GL.driver.frame.glViewport") as viewport,
+            patch("picogl.backend.gl.driver.frame.glViewport") as viewport,
             patch(
                 "picogl.backend.legacy.core.pipeline.glLoadIdentity"
             ) as load_identity,
             patch("picogl.backend.legacy.core.pipeline.glTranslatef") as translate,
             patch("picogl.backend.legacy.core.pipeline.glLightfv") as lightfv,
-            patch("picogl.backend.GL.driver.frame.glClearColor") as clear_color,
+            patch("picogl.backend.gl.driver.frame.glClearColor") as clear_color,
         ):
             backend.frame.viewport(1, 2, 3, 4)
             backend.legacy.load_identity()

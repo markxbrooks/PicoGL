@@ -1,5 +1,5 @@
 """
-GL Polygon Mode
+gl Polygon Mode
 """
 
 from OpenGL.GL import glPolygonMode
@@ -8,7 +8,7 @@ from picogl.state.fill import GLFace, GLFillMode
 
 
 def gl_polygon_mode(face: GLFace, mode: GLFillMode):
-    """GL polygon mode"""
+    """gl polygon mode"""
     glPolygonMode(face, mode)
 
 

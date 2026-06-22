@@ -20,7 +20,7 @@ from typing import Optional, Any
 import numpy as np
 from numpy import dtype, generic, ndarray
 
-from picogl.backend.GL.light import GLLightSource
+from picogl.backend.gl.light import GLLightSource
 
 # Try different Qt imports
 try:
@@ -63,7 +63,7 @@ except ImportError:
     sys.exit(1)
 
 from examples.data.cube_data import g_color_buffer_data, g_vertex_buffer_data
-from picogl.backend.GL.backend import GLBackend
+from picogl.backend.gl.backend import GLBackend
 from picogl.backend.capability import GLMaterialFace, PhongMaterial, GLFixedFunctionCapability
 from picogl.backend.geometry.factory import LegacyBinding
 from picogl.renderer.legacy_glmesh import LegacyGLMesh

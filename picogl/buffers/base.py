@@ -2,7 +2,7 @@
 VertexBase
 ================
 
-Specializes the abstract façade into a slightly more concrete base (manages a GL handle, context manager behavior, common boilerplate).
+Specializes the abstract façade into a slightly more concrete base (manages a gl handle, context manager behavior, common boilerplate).
 
 Leaves rendering-specific logic to subclasses like ModernVertexArrayGroup.
 
@@ -11,7 +11,7 @@ Follows the "abstract base + partial implementation" pattern.
 Binding model
 -------------
 
-``bind()`` / ``unbind()`` and ``with self`` issue real GL bind/unbind on **each**
+``bind()`` / ``unbind()`` and ``with self`` issue real gl bind/unbind on **each**
 entry and exit (stack-based). This is intentionally **not** sticky/idempotent.
 
 Do **not** inherit from :class:`~picogl.renderer.initializable.Bindable` here or on

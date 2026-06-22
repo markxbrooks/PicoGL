@@ -18,7 +18,7 @@ from PySide6 import QtGui
 
 
 class GLObjectAttrs:
-    """GL Object Attributes"""
+    """gl Object Attributes"""
 
     handle = "handle"
     label = "label"
@@ -79,7 +79,7 @@ def dump_gl_registry(verbose: Optional[bool] = None) -> None:
         verbose = not quiet
 
     if not GL_REGISTRY:
-        msg = "GL registry: empty"
+        msg = "gl registry: empty"
         log.info(msg, scope="dump_gl_registry")
         print(f"[dump_gl_registry] {msg}", flush=True)
         return
@@ -91,7 +91,7 @@ def dump_gl_registry(verbose: Optional[bool] = None) -> None:
         for label, n in sorted(by_label.items(), key=lambda x: (-x[1], x[0]))
     )
     summary = (
-        f"GL registry: {len(GL_REGISTRY)} VAO(s), {len(ctx_ids)} context id(s). "
+        f"gl registry: {len(GL_REGISTRY)} VAO(s), {len(ctx_ids)} context id(s). "
         f"By label: {breakdown}"
     )
     log.info(summary, scope="dump_gl_registry")
@@ -109,7 +109,7 @@ def dump_gl_registry(verbose: Optional[bool] = None) -> None:
 def store_in_gl_registry(
     handle: int, label: str, ctx_id: int, buffer_type: str = "VAO"
 ):
-    """store in GL registry"""
+    """store in gl registry"""
     GL_REGISTRY[handle] = GLObjectInfo(
         handle=handle, type=buffer_type, label=label, context_id=ctx_id
     )

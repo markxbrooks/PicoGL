@@ -57,7 +57,7 @@ class VertexBufferGroup(VertexBase):
         }
 
     def __del__(self):
-        # Don't auto-delete OpenGL resources here unless you are certain the GL context is current.
+        # Don't auto-delete OpenGL resources here unless you are certain the gl context is current.
         # Logging here can help detect premature GC.
         # print("VertexBufferGroup.__del__", self)
         pass
@@ -204,7 +204,7 @@ class VertexBufferGroup(VertexBase):
         if ebo_id is None:
             ebo_id = getattr(self.ebo, "_id", None)
         if ebo_id is None:
-            raise RuntimeError("EBO has no GL buffer name (handle/_id)")
+            raise RuntimeError("EBO has no gl buffer name (handle/_id)")
         self._bind_ebo_id(ebo_id)
 
     def _bind_ebo_id(self, ebo_id: Any | None):
@@ -252,7 +252,7 @@ class VertexBufferGroup(VertexBase):
         if handle is None:
             handle = getattr(vbo, "_id", None)
         if handle is None:
-            raise RuntimeError(f"VBO has no GL buffer name (handle/_id): {vbo!r}")
+            raise RuntimeError(f"VBO has no gl buffer name (handle/_id): {vbo!r}")
         return handle
 
     def bind(self) -> None:

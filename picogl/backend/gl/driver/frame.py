@@ -52,7 +52,7 @@ class GLFrameDriver:
         it for rendering the next frame.
 
         Raises:
-            OpenGL.GL.error.GLError: If an OpenGL error occurs during the
+            OpenGL.gl.error.GLError: If an OpenGL error occurs during the
             clearing operation.
         """
         self.clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)

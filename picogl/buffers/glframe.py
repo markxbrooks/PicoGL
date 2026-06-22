@@ -27,7 +27,7 @@ from picogl.texture.texture2d import Texture2D
 
 
 class GLFramebuffer(Initializable):
-    """GL Framebuffer"""
+    """gl Framebuffer"""
 
     def __init__(self):
         super().__init__()

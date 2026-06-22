@@ -1,4 +1,4 @@
-"""Tests for shader GL context guards."""
+"""Tests for shader gl context guards."""
 
 import unittest
 from unittest.mock import patch

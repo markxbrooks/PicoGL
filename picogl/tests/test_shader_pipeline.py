@@ -5,7 +5,7 @@ import warnings
 from unittest.mock import MagicMock, patch
 
 from picogl.backend.geometry.factory import LegacyBinding
-from picogl.backend.GL.backend import GLBackend
+from picogl.backend.gl.backend import GLBackend
 from picogl.backend.legacy.core.pipeline import GLLegacyPipeline, LegacyPipeline
 from picogl.backend.modern.core.pipeline import ShaderPipeline
 

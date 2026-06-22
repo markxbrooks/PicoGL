@@ -1,5 +1,5 @@
 """
-Numerical GL Values
+Numerical gl Values
 """
 
 from enum import IntEnum
@@ -13,7 +13,7 @@ _SUPPORTED_BOOLEAN_TYPES = {
 
 
 class GLBoolean(IntEnum):
-    """GL Boolean Values"""
+    """gl Boolean Values"""
 
     FALSE = GL_FALSE
     TRUE = GL_TRUE

@@ -16,8 +16,8 @@ from pathlib import Path
 
 import numpy as np
 
-from picogl.backend.GL.driver.capability import GLCapabilityDriver
-from picogl.backend.GL.light import GLLightSource
+from picogl.backend.gl.driver.capability import GLCapabilityDriver
+from picogl.backend.gl.light import GLLightSource
 from picogl.backend.capability import GLFixedFunctionCapability
 from picogl.state.draw_mode import GLLegacyMatrixMode, GLBitMask
 from picogl.state.fill import GLFace, GLCapability, GLColorMaterialMode, GLLightParameter, GLFillMode

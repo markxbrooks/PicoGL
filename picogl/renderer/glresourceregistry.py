@@ -1,5 +1,5 @@
 """
-GL Context Class
+gl Context Class
 """
 
 import threading
@@ -18,12 +18,12 @@ T = TypeVar("T")
 
 
 class GLResourceRegistry:
-    """GL Resource Registry"""
+    """gl Resource Registry"""
 
     def __init__(self):
         self._creation_context = QOpenGLContext.currentContext()
         log.message(
-            f"GL context :{id(self._creation_context)}", scope="GLResourceRegistry"
+            f"gl context :{id(self._creation_context)}", scope="GLResourceRegistry"
         )
         self._contexts = WeakKeyDictionary()
         self._cache: dict[object, object] = {}
@@ -92,7 +92,7 @@ class GLResourceRegistry:
         return ctx  # simple version
 
     def get_or_create(self, key: object, factory: Callable[[], T]) -> T:
-        """Return a cached GL resource, creating it with *factory* if needed."""
+        """Return a cached gl resource, creating it with *factory* if needed."""
         if key not in self._cache:
             self._cache[key] = factory()
         return self._cache[key]

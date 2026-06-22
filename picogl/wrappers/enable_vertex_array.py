@@ -1,5 +1,5 @@
 """
-GL enable vertex array wrapper
+gl enable vertex array wrapper
 
 """
 

@@ -10,11 +10,11 @@ distances, and fog mode.
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_FOG, GL_FOG_COLOR, GL_FOG_END, GL_FOG_MODE, GL_FOG_START, GL_FOG_INDEX, \
     glFogfv, glFogi, GL_LINEAR, glFogf
 
-from picogl.backend.GL.driver.capability import GLCapabilityDriver
+from picogl.backend.gl.driver.capability import GLCapabilityDriver
 
 
 class GLFog:
-    """GL Fog"""
+    """gl Fog"""
     FOG = GL_FOG
     FOG_COLOR = GL_FOG_COLOR
     FOG_END = GL_FOG_END

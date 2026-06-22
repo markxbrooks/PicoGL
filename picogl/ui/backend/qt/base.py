@@ -23,7 +23,7 @@ from picogl.backend.legacy.core.camera.matrices.setup import setup_matrices
 from picogl.backend.legacy.core.camera.setup import calculate_aspect
 from picogl.error import gl_check_errors
 from picogl.frame import prepare_viewport
-from picogl.backend.GL.backend import GLBackend
+from picogl.backend.gl.backend import GLBackend
 from picogl.backend.geometry.factory import LegacyBinding, ModernBinding
 from picogl.mode import GLMode
 from picogl.state.draw_mode import GLLegacyMatrixMode
@@ -106,7 +106,7 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
         - Setting the viewport to match widget size
         - Clearing any legacy buffer state
 
-        Called automatically by Qt when the GL context is first created.
+        Called automatically by Qt when the gl context is first created.
         """
         # Viewport setup
         glViewport(0, 0, self.width(), self.height())

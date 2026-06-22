@@ -2,7 +2,7 @@
 Render-state descriptors and command helpers for PicoGL backends.
 
 The classes in this module are intentionally backend-neutral: they describe
-desired OpenGL state and delegate the actual GL calls to a backend object.
+desired OpenGL state and delegate the actual gl calls to a backend object.
 """
 
 from dataclasses import dataclass
@@ -241,7 +241,7 @@ class RenderState:
 
 
 class RenderStateApplier:
-    """Applies render-state deltas through a GL backend."""
+    """Applies render-state deltas through a gl backend."""
 
     def __init__(self, backend: Any):
         self.backend = backend
@@ -301,7 +301,7 @@ class GLVertexBuffer:
 
 @dataclass
 class GLAttributeArray:
-    """GL Attribute Array"""
+    """gl Attribute Array"""
 
     size: int
     dtype: Any
@@ -344,7 +344,7 @@ class GLViewport:
 
 
 class TestGLMesh:
-    """Test GL Mesh"""
+    """Test gl Mesh"""
 
     def __init__(self, vertices, indices=None):
         self.vertices = vertices
@@ -405,7 +405,7 @@ class DrawCommand:
 
 @dataclass
 class GLClipPlaneState:
-    """GL Clipping Plane State"""
+    """gl Clipping Plane State"""
 
     enabled0: bool = False
     enabled1: bool = False
