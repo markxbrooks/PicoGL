@@ -55,7 +55,7 @@ from picogl.backend.modern.core.vertex.buffer.element import ModernEBO
 from picogl.backend.modern.core.vertex.buffer.object import ModernVBO
 from picogl.buffers.attributes import LayoutDescriptor
 from picogl.buffers.base import VertexBase
-from picogl.buffers.glcleanup import gl_delete_buffers, gl_delete_vertex_arrays
+from picogl.backend.gl.wrappers.glcleanup import gl_delete_buffers, gl_delete_vertex_arrays
 from picogl.core.enums.buffer_target import GLBufferTarget
 from picogl.core.enums.draw_mode import GLDrawMode
 from picogl.core.enums.index_type import GLIndexType

@@ -44,7 +44,7 @@ from OpenGL.GL import glDeleteBuffers, glDeleteVertexArrays
 # from picogl.backend.modern.core.vertex.base import VertexBuffer
 
 
-def delete_dict_buffers(buffer_dict: Dict[str, int]) -> None:
+def gl_delete_dict_buffers(buffer_dict: Dict[str, int]) -> None:
     """
     delete_dict_buffers
 
@@ -56,7 +56,7 @@ def delete_dict_buffers(buffer_dict: Dict[str, int]) -> None:
     buffer_dict.clear()
 
 
-def delete_buffer_object(buffer: Optional["VertexBuffer"]) -> None:
+def gl_delete_buffer_object(buffer: Optional["VertexBuffer"]) -> None:
     """
     delete_buffer_object
 

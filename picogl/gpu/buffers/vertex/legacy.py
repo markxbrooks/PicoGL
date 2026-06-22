@@ -25,7 +25,7 @@ from picogl.backend.legacy.core.vertex.buffer.position import LegacyPositionVBO
 from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
 from picogl.buffers.attributes import LayoutDescriptor, VBOAttrs
 from picogl.buffers.base import VertexBase
-from picogl.buffers.glcleanup import delete_buffer_object
+from picogl.backend.gl.wrappers.glcleanup import gl_delete_buffer_object
 from picogl.core.enums.buffer_target import GLBufferTarget
 from picogl.core.enums.draw_mode import GLDrawMode
 from picogl.core.enums.numerical import GLNumeric
@@ -118,7 +118,7 @@ class VertexBufferGroup(VertexBase):
     def delete(self) -> None:
         for buf in self.named_vbos.values():
             if buf:
-                delete_buffer_object(buf)
+                gl_delete_buffer_object(buf)
         self.named_vbos.clear()
         self.layout = None
 
