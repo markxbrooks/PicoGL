@@ -3,7 +3,8 @@ import ctypes
 import numpy as np
 
 from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
-from picogl.state.draw_mode import GLBufferTarget, GLDataType, GLDrawMode, GLIndexType
+from picogl.state.draw_mode import GLBufferTarget, GLDrawMode, GLIndexType
+from picogl.core.enums.numerical import GLNumeric
 
 
 class LegacyEBO(LegacyVBO):
@@ -15,7 +16,7 @@ class LegacyEBO(LegacyVBO):
         data: np.ndarray = None,
         target: int = GLBufferTarget.ELEMENT,
         size: int = 3,
-        dtype: int = GLDataType.FLOAT,
+        dtype: int = GLNumeric.FLOAT,
     ):
         """constructor"""
         super().__init__(

@@ -16,7 +16,7 @@ from OpenGL.raw.GL.EXT.texture_compression_s3tc import (
 from PIL import Image
 
 from picogl.core.color import GLColor
-from picogl.numerical import GLNumeric
+from picogl.core.enums.numerical import GLNumeric
 from picogl.texture.gltexture import GLTexture
 from picogl.texture.gltexparam import GLTexParam
 from picogl.wrappers.texture import (

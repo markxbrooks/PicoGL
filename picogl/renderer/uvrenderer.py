@@ -11,7 +11,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
 from picogl.backend.gl.capability import GLMaterialFace
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.boolean import GLBoolean
-from picogl.numerical import GLNumeric
+from picogl.core.enums.numerical import GLNumeric
 from picogl.renderer import RendererBase
 from picogl.renderer.initializable import Initializable
 from picogl.state.draw_mode import GLBufferTarget, GLDrawMode

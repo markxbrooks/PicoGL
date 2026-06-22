@@ -2,13 +2,13 @@
 
 import unittest
 from types import SimpleNamespace
-from unittest.mock import MagicMock, call, patch
+from unittest.mock import call, patch
 
 from OpenGL.raw.GL.VERSION.GL_1_1 import GL_TRIANGLES
 
 from picogl.backend.geometry.factory import LegacyBinding, ModernBinding
 from picogl.backend.geometry.legacy_mesh import LegacyMesh
-from picogl.numerical import GLNumeric
+from picogl.core.enums.numerical import GLNumeric
 from picogl.state.client import GLClientState
 
 

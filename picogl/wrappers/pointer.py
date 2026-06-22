@@ -11,7 +11,7 @@ from OpenGL.raw.GL.VERSION.GL_1_1 import (
 )
 
 from picogl.buffers.attributes import AttributeSpec
-from picogl.numerical import GLNumeric
+from picogl.core.enums.numerical import GLNumeric
 
 
 def gl_color_pointer_from_spec(attr: AttributeSpec):

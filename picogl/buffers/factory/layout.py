@@ -21,7 +21,7 @@ from picogl.buffers.attributes import (
     legacy_attribute_spec,
 )
 from picogl.buffers.vertex.aliases import VertexBufferRole
-from picogl.state.draw_mode import GLDataType
+from picogl.core.enums.numerical import GLNumeric
 
 
 def create_layout(attributes):
@@ -34,7 +34,7 @@ def create_element_attributes():
             VertexBufferRole.VBO,
             0,
             name="positions",
-            type=GLDataType.FLOAT,
+            type=GLNumeric.FLOAT,
         )
     ]
 
@@ -45,12 +45,12 @@ def create_common_attributes():
             VertexBufferRole.VBO,
             0,
             name="positions",
-            type=GLDataType.FLOAT,
+            type=GLNumeric.FLOAT,
         ),
         legacy_attribute_spec(
             VertexBufferRole.CBO,
             1,
             name="colors",
-            type=GLDataType.FLOAT,
+            type=GLNumeric.FLOAT,
         ),
     ]

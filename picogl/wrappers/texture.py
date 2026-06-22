@@ -20,7 +20,7 @@ from OpenGL.constant import Constant, FloatConstant, IntConstant, LongConstant, 
 from OpenGL.raw.GL.ARB.internalformat_query2 import GL_TEXTURE_2D
 from OpenGL.raw.GL.VERSION.GL_1_2 import glTexImage3D
 
-from picogl.numerical import GLNumeric
+from picogl.core.enums.numerical import GLNumeric
 
 
 def gl_active_texture(unit: int) -> None:

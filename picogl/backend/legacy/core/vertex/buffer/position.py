@@ -8,9 +8,10 @@ import ctypes
 import numpy as np
 
 from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
-from picogl.numerical import GLNumeric
+from picogl.core.enums.numerical import GLNumeric
 from picogl.state.client import GLClientState
-from picogl.state.draw_mode import GLBufferTarget, GLDataType
+from picogl.state.draw_mode import GLBufferTarget
+from picogl.core.enums.numerical import GLNumeric
 from picogl.wrappers.client_state import gl_enable_legacy_client_state
 from picogl.wrappers.pointer import gl_vertex_array_pointer
 
@@ -32,7 +33,7 @@ class LegacyPositionVBO(LegacyVBO):
         data: np.ndarray = None,
         size: int = 3,
         target: int = GLBufferTarget.ARRAY,
-        dtype: int = GLDataType.FLOAT,
+        dtype: int = GLNumeric.FLOAT,
     ):
         """Initialize the position VBO."""
         super().__init__(

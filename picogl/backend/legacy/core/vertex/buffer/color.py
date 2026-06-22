@@ -1,7 +1,7 @@
 import numpy as np
 
 from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
-from picogl.state.draw_mode import GLDataType
+from picogl.core.enums.numerical import GLNumeric
 from picogl.wrappers.pointer import gl_color_array_pointer
 
 
@@ -13,7 +13,7 @@ class LegacyColorVBO(LegacyVBO):
         handle: int = None,
         data: np.ndarray = None,
         size: int = 3,
-        dtype: int = GLDataType.FLOAT,
+        dtype: int = GLNumeric.FLOAT,
     ):
         """
         Initialize a colour VBO.

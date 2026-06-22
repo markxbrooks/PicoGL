@@ -51,7 +51,7 @@ import numpy as np
 
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.boolean import GLBoolean
-from picogl.numerical import GLNumeric
+from picogl.core.enums.numerical import GLNumeric
 from picogl.state.draw_mode import GLBufferTarget, GLUsageHint
 from picogl.wrappers.buffer import gl_bind_buffer
 from picogl.wrappers.data import gl_buffer_data

@@ -22,7 +22,8 @@ from picogl.backend.gl.capability import (
     GLPipelineCapability,
 )
 from picogl.backend.value import gl_value
-from picogl.state.draw_mode import GLDataType, GLDrawMode, GLIndexType
+from picogl.state.draw_mode import GLDrawMode, GLIndexType
+from picogl.core.enums.numerical import GLNumeric
 from picogl.state.fill import GLCapability, GLFace, GLFillMode
 from picogl.texture.gltexture_driver import GLTextureDriver
 from picogl.wrappers.client_state import gl_enable_legacy_client_state
@@ -314,20 +315,20 @@ class GLAttributeArray:
             gl_vertex_array_pointer(
                 pointer=self.pointer,
                 size=self.size,
-                num_type=GLDataType.FLOAT,
+                num_type=GLNumeric.FLOAT,
                 stride=self.stride,
             )
         elif kind == GL_NORMAL_ARRAY:
             gl_normal_array_pointer(
                 pointer=self.pointer,
-                num_type=GLDataType.FLOAT,
+                num_type=GLNumeric.FLOAT,
                 stride=self.stride,
             )
         elif kind == GL_COLOR_ARRAY:
             gl_color_array_pointer(
                 pointer=self.pointer,
                 size=self.size,
-                num_type=GLDataType.FLOAT,
+                num_type=GLNumeric.FLOAT,
                 stride=self.stride,
             )
 

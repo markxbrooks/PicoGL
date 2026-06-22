@@ -14,8 +14,6 @@ from enum import IntEnum
 from OpenGL.GL import (
     GL_DYNAMIC_DRAW,
     GL_ELEMENT_ARRAY_BUFFER,
-    GL_FLOAT,
-    GL_INT,
     GL_LINE_LOOP,
     GL_LINE_STRIP,
     GL_LINE_STRIP_ADJACENCY,
@@ -37,11 +35,6 @@ from OpenGL.GL import (
 )
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POINTS
 from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ARRAY_BUFFER
-
-
-class GLDataType(IntEnum):
-    FLOAT = GL_FLOAT
-    INT = GL_INT
 
 
 class GLIndexType(IntEnum):

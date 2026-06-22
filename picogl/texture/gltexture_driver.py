@@ -22,7 +22,7 @@ Example Usage:
 from OpenGL.GL import glGenTextures
 from OpenGL.raw.GL.VERSION.GL_1_1 import glBindTexture, glDeleteTextures
 
-from picogl.numerical import GLNumeric
+from picogl.core.enums.numerical import GLNumeric
 from picogl.texture.gltexture import GLTexture
 from picogl.texture.mapping import FILTER_MAP, WRAP_MAP, FORMAT_MAP
 from picogl.texture.texture2d import Texture2D

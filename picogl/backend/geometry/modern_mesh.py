@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any, Optional
 
 from picogl.backend.geometry.mesh import GPUMesh
-from picogl.numerical import GLNumeric
+from picogl.core.enums.numerical import GLNumeric
 from picogl.wrappers.draw import gl_draw_elements
 
 if TYPE_CHECKING:
