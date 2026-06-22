@@ -7,7 +7,9 @@ from picogl.gpu.buffers.vao.configure import vao_configure_attributes
 from picogl.wrappers.draw import gl_draw_arrays
 
 
-def vao_draw_with_attributes(attributes: list, atom_count: int, mode: int = GLDrawMode.POINTS):
+def vao_draw_with_attributes(
+    attributes: list, atom_count: int, mode: int = GLDrawMode.POINTS
+):
     """
     vao_draw_with_attributes
 

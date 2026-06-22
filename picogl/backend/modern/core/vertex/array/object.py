@@ -39,34 +39,31 @@ from typing import Optional, Union
 
 import numpy as np
 from decologr import Decologr as log
-from elmo.log.silence import SILENT_VAO
 from OpenGL.GL import glBufferSubData, glGenVertexArrays
 from OpenGL.raw.GL.VERSION.GL_3_0 import glIsVertexArray
-from PySide6.QtGui import QOpenGLContext
-
-from picogl.backend.modern.core.vertex.array.helpers import (
-    enable_points_rendering_state,
-)
+from picogl.backend.modern.core.vertex.array.helpers import \
+    enable_points_rendering_state
 from picogl.backend.modern.core.vertex.base import VertexBuffer
 from picogl.backend.modern.core.vertex.buffer.element import ModernEBO
 from picogl.backend.modern.core.vertex.buffer.object import ModernVBO
 from picogl.buffers.attributes import LayoutDescriptor
 from picogl.buffers.base import VertexBase
 from picogl.buffers.glcleanup import gl_delete_buffers, gl_delete_vertex_arrays
-from picogl.gpu.buffers.vertex.aliases import NAME_ALIASES
-from picogl.safe import gl_gen_safe
-from picogl.core.enums.draw_mode import (
-    GLDrawMode,
-)
 from picogl.core.enums.buffer_target import GLBufferTarget
-from picogl.core.enums.usage_hint import GLUsageHint
+from picogl.core.enums.draw_mode import GLDrawMode
 from picogl.core.enums.index_type import GLIndexType
 from picogl.core.enums.numerical import GLNumeric
+from picogl.core.enums.usage_hint import GLUsageHint
+from picogl.gpu.buffers.vertex.aliases import NAME_ALIASES
+from picogl.safe import gl_gen_safe
 from picogl.wrappers.buffer import gl_bind_buffer
 from picogl.wrappers.draw import gl_draw_arrays, gl_draw_elements
 from picogl.wrappers.enable_vertex_array import gl_enable_vertex_array
 from picogl.wrappers.vertex_array import gl_bind_vertex_array
 from picogl.wrappers.vertex_attrib_pointer import gl_vertex_attrib_pointer
+from PySide6.QtGui import QOpenGLContext
+
+from elmo.log.silence import SILENT_VAO
 
 
 def current_gl_context() -> int:

@@ -4,6 +4,7 @@ TextureSpec
 
 from dataclasses import dataclass
 
+
 @dataclass(frozen=True)
 class TextureSpec:
     """Texture Spec"""
@@ -15,4 +16,3 @@ class TextureSpec:
     mag_filter: str = "linear"
     wrap_s: str = "clamp"
     wrap_t: str = "clamp"
-

@@ -1,14 +1,12 @@
-from OpenGL.GL import *  # pylint: disable=W0614
-from pyglm import glm
-
 from examples.utils.shader_loader import Shader
 from examples.utils.test_window import GLWindow
+from OpenGL.GL import *  # pylint: disable=W0614
 from picogl.backend.gl.capability import GLPipelineCapability
 from picogl.boolean import GLBoolean
-from picogl.core.enums.numerical import GLNumeric
-from picogl.core.enums.buffer_target import GLBufferTarget
-from picogl.core.enums.usage_hint import GLUsageHint
 from picogl.core.enums.bitmask import GLBitMask
+from picogl.core.enums.buffer_target import GLBufferTarget
+from picogl.core.enums.numerical import GLNumeric
+from picogl.core.enums.usage_hint import GLUsageHint
 from picogl.wrappers.buffer import gl_bind_buffer
 from picogl.wrappers.data import gl_buffer_data
 from picogl.wrappers.disable_vertex_array import gl_disable_vertex_array
@@ -16,6 +14,7 @@ from picogl.wrappers.draw import gl_draw_arrays
 from picogl.wrappers.enable_vertex_array import gl_enable_vertex_array
 from picogl.wrappers.generate_buffers import gl_generate_buffers
 from picogl.wrappers.vertex_attrib_pointer import gl_vertex_attrib_pointer
+from pyglm import glm
 
 
 class GObject:

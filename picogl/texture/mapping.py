@@ -19,10 +19,7 @@ Example Usage:
 
 """
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import (
-    GL_LINEAR,
-    GL_RGB,
-)
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_LINEAR, GL_RGB
 from OpenGL.raw.GL.VERSION.GL_1_2 import GL_CLAMP_TO_EDGE
 
 FORMAT_MAP = {
@@ -36,4 +33,3 @@ FILTER_MAP = {
 WRAP_MAP = {
     "clamp": GL_CLAMP_TO_EDGE,
 }
-

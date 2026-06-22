@@ -25,11 +25,10 @@ Usage:
 import sys
 from typing import Optional
 
-from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget
-
 from picogl.mode import GLMode
 from picogl.ui.backend.qt.base import GLBase
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget
 
 
 class LegacyQtObjectWindow(QMainWindow):

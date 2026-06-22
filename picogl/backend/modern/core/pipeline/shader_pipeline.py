@@ -5,7 +5,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from OpenGL.GL import glUseProgram
-
 from picogl.renderer.initializable import Bindable
 
 if TYPE_CHECKING:

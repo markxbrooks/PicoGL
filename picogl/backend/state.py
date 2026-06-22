@@ -10,17 +10,11 @@ from typing import Any, Protocol
 
 from numpy import ndarray
 from OpenGL.GL import glBlendFunc, glViewport
-from OpenGL.raw.GL.VERSION.GL_1_1 import (
-    GL_COLOR_ARRAY,
-    GL_NORMAL_ARRAY,
-    GL_VERTEX_ARRAY,
-)
-
-from picogl.backend.gl.capability import (
-    GLBlendFactor,
-    GLFixedFunctionCapability,
-    GLPipelineCapability,
-)
+from OpenGL.raw.GL.VERSION.GL_1_1 import (GL_COLOR_ARRAY, GL_NORMAL_ARRAY,
+                                          GL_VERTEX_ARRAY)
+from picogl.backend.gl.capability import (GLBlendFactor,
+                                          GLFixedFunctionCapability,
+                                          GLPipelineCapability)
 from picogl.backend.value import gl_value
 from picogl.core.enums.draw_mode import GLDrawMode
 from picogl.core.enums.index_type import GLIndexType
@@ -29,11 +23,9 @@ from picogl.state.fill import GLCapability, GLFace, GLFillMode
 from picogl.texture.gltexture_driver import GLTextureDriver
 from picogl.wrappers.client_state import gl_enable_legacy_client_state
 from picogl.wrappers.draw import gl_draw_elements
-from picogl.wrappers.pointer import (
-    gl_color_array_pointer,
-    gl_normal_array_pointer,
-    gl_vertex_array_pointer,
-)
+from picogl.wrappers.pointer import (gl_color_array_pointer,
+                                     gl_normal_array_pointer,
+                                     gl_vertex_array_pointer)
 
 
 class CapabilityDriver(Protocol):

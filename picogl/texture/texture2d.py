@@ -20,7 +20,6 @@ Example Usage:
 """
 
 from numpy import ndarray
-
 from picogl.texture.texture_spec import TextureSpec
 
 
@@ -32,4 +31,3 @@ class Texture2D:
         self.data = data
         self.handle = None  # assigned by backend
         self.initialized = False
-

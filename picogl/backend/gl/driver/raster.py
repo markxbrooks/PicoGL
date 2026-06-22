@@ -9,15 +9,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Optional
 
-from OpenGL.GL import (
-    GL_POINT_SIZE_RANGE,
-    glGetFloatv,
-    glLineWidth,
-    glPointSize,
-    glPolygonMode,
-)
+from OpenGL.GL import (GL_POINT_SIZE_RANGE, glGetFloatv, glLineWidth,
+                       glPointSize, glPolygonMode)
 from OpenGL.raw.GL.VERSION.GL_1_1 import glPolygonOffset
-
 from picogl.backend.gl.driver.applyable import Applyable
 from picogl.backend.state import RasterState, gl_value
 from picogl.state.fill import GLFace, GLFillMode

@@ -6,20 +6,13 @@ from array import array
 from typing import Any
 
 import numpy as np
-from OpenGL.GL import (
-    GL_TEXTURE0,
-    glActiveTexture,
-    glBindTexture,
-    glCompressedTexImage2D,
-    glGenerateMipmap,
-    glGenTextures,
-    glTexImage2D,
-    glTexParameteri,
-)
-from OpenGL.constant import Constant, FloatConstant, IntConstant, LongConstant, StringConstant
+from OpenGL.constant import (Constant, FloatConstant, IntConstant,
+                             LongConstant, StringConstant)
+from OpenGL.GL import (GL_TEXTURE0, glActiveTexture, glBindTexture,
+                       glCompressedTexImage2D, glGenerateMipmap, glGenTextures,
+                       glTexImage2D, glTexParameteri)
 from OpenGL.raw.GL.ARB.internalformat_query2 import GL_TEXTURE_2D
 from OpenGL.raw.GL.VERSION.GL_1_2 import glTexImage3D
-
 from picogl.core.enums.numerical import GLNumeric
 
 
@@ -67,7 +60,9 @@ def gl_compressed_tex_image(
 def gl_teximage2d(
     target: int,
     level: int,
-    internalformat: FloatConstant | IntConstant | LongConstant | StringConstant | Constant,
+    internalformat: (
+        FloatConstant | IntConstant | LongConstant | StringConstant | Constant
+    ),
     width: int,
     height: int,
     border: int,
@@ -92,7 +87,9 @@ def gl_teximage2d(
 def gl_teximage3d(
     target: int,
     level: int,
-    internalformat: FloatConstant | IntConstant | LongConstant | StringConstant | Constant,
+    internalformat: (
+        FloatConstant | IntConstant | LongConstant | StringConstant | Constant
+    ),
     width: int,
     height: int,
     depth: int,

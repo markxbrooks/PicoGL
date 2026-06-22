@@ -17,6 +17,7 @@ from picogl.texture.gltexture import GLTexture
 @dataclass(frozen=True)
 class TexCoord2f:
     """Tex Coord 2F"""
+
     u: float
     v: float
 
@@ -24,6 +25,7 @@ class TexCoord2f:
 @dataclass(frozen=True)
 class Vertex3f:
     """Vertex 3F"""
+
     x: float
     y: float
     z: float

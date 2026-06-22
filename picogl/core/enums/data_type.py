@@ -7,8 +7,7 @@ solution for maintaining backward compatibility in scenarios where
 GLDataType is still referenced.
 """
 
-
 from picogl.core.enums.numerical import GLNumeric
 
 """Compatibility shim"""
-GLDataType = GLNumeric # Deprecated
+GLDataType = GLNumeric  # Deprecated

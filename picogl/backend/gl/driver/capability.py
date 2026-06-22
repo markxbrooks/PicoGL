@@ -10,9 +10,9 @@ Classes:
     GLCapabilityDriver: Encapsulates OpenGL capability management, allowing
     operations such as enabling/disabling features and querying their states.
 """
+
 from OpenGL.raw.GL.VERSION.GL_1_0 import glDisable, glEnable, glIsEnabled
 from OpenGL.raw.GL.VERSION.GL_1_3 import GL_MULTISAMPLE
-
 from picogl.backend.state import gl_value
 from picogl.wrappers.get_integerv import gl_get_integerv
 

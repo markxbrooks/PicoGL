@@ -1,5 +1,4 @@
 import numpy as np
-
 from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
 from picogl.core.enums.numerical import GLNumeric
 from picogl.wrappers.pointer import gl_normal_array_pointer

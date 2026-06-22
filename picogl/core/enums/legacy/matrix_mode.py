@@ -1,6 +1,6 @@
 from enum import IntEnum
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_PROJECTION, GL_MODELVIEW
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_MODELVIEW, GL_PROJECTION
 
 
 class GLLegacyMatrixMode(IntEnum):

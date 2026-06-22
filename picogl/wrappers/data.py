@@ -4,7 +4,6 @@ gl buffer data wrapper
 """
 
 from OpenGL.GL import glBufferData
-
 from picogl.core.enums.buffer_target import GLBufferTarget
 from picogl.core.enums.usage_hint import GLUsageHint
 

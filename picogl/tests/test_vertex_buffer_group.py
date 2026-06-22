@@ -36,18 +36,15 @@ from unittest.mock import MagicMock, call, patch
 import numpy as np
 from OpenGL.raw.GL._types import GL_FLOAT, GL_UNSIGNED_INT
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POINTS, GL_TRIANGLES
-from OpenGL.raw.GL.VERSION.GL_1_1 import (
-    GL_COLOR_ARRAY,
-    GL_NORMAL_ARRAY,
-    GL_VERTEX_ARRAY,
-)
-from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER
-
+from OpenGL.raw.GL.VERSION.GL_1_1 import (GL_COLOR_ARRAY, GL_NORMAL_ARRAY,
+                                          GL_VERTEX_ARRAY)
+from OpenGL.raw.GL.VERSION.GL_1_5 import (GL_ARRAY_BUFFER,
+                                          GL_ELEMENT_ARRAY_BUFFER)
 from picogl.buffers.attributes import AttributeSpec, LayoutDescriptor
+from picogl.core.enums.draw_mode import GLDrawMode
 from picogl.gpu.buffers.vertex.aliases import VertexBufferRole
 from picogl.gpu.buffers.vertex.legacy import VertexBufferGroup
 from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
-from picogl.core.enums.draw_mode import GLDrawMode
 
 
 class TestVertexBufferGroup(unittest.TestCase):
@@ -772,7 +769,9 @@ class TestVertexBufferGroup(unittest.TestCase):
 
         with patch(
             "picogl.gpu.buffers.vertex.legacy.legacy_client_states"
-        ) as mock_client_states, patch("picogl.gpu.buffers.vertex.legacy.glDrawElements"):
+        ) as mock_client_states, patch(
+            "picogl.gpu.buffers.vertex.legacy.glDrawElements"
+        ):
             mock_client_states.return_value.__enter__ = MagicMock()
             mock_client_states.return_value.__exit__ = MagicMock()
 

@@ -9,24 +9,16 @@ from typing import Optional
 
 from OpenGL.GL import glDeleteTextures
 from OpenGL.raw.GL.EXT.texture_compression_s3tc import (
-    GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,
-    GL_COMPRESSED_RGBA_S3TC_DXT3_EXT,
-    GL_COMPRESSED_RGBA_S3TC_DXT5_EXT,
-)
-from PIL import Image
-
+    GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, GL_COMPRESSED_RGBA_S3TC_DXT3_EXT,
+    GL_COMPRESSED_RGBA_S3TC_DXT5_EXT)
 from picogl.core.color import GLColor
 from picogl.core.enums.numerical import GLNumeric
-from picogl.texture.gltexture import GLTexture
 from picogl.texture.gltexparam import GLTexParam
-from picogl.wrappers.texture import (
-    gl_bind_texture,
-    gl_compressed_tex_image,
-    gl_generate_mipmap,
-    gl_gen_textures,
-    gl_tex_parameter,
-    gl_teximage2d,
-)
+from picogl.texture.gltexture import GLTexture
+from picogl.wrappers.texture import (gl_bind_texture, gl_compressed_tex_image,
+                                     gl_gen_textures, gl_generate_mipmap,
+                                     gl_tex_parameter, gl_teximage2d)
+from PIL import Image
 
 
 class TextureLoader:
@@ -99,7 +91,9 @@ class TextureLoader:
             for level in range(mip_map_count):
                 size = ((w + 3) // 4) * ((h + 3) // 4) * block_size
                 try:
-                    gl_compressed_tex_image(dds_buffer[offset: offset + size], gl_format, h, level, size, w)
+                    gl_compressed_tex_image(
+                        dds_buffer[offset : offset + size], gl_format, h, level, size, w
+                    )
                 except Exception as e:
                     # Fallback: try with explicit byte array conversion
                     try:
@@ -108,7 +102,9 @@ class TextureLoader:
                         byte_array = array.array(
                             "B", dds_buffer[offset : offset + size]
                         )
-                        gl_compressed_tex_image(byte_array, gl_format, h, level, size, w)
+                        gl_compressed_tex_image(
+                            byte_array, gl_format, h, level, size, w
+                        )
                     except Exception as e2:
                         raise RuntimeError(
                             f"Failed to load DDS compressed texture: {e2}"
@@ -122,10 +118,21 @@ class TextureLoader:
 
             # Set texture parameters for DDS
             target = GLTexture.TEXTURE_2D
-            gl_tex_parameter(target=target, pname=GLTexture.TEXTURE_WRAP_S, param=GLTexParam.REPEAT)
-            gl_tex_parameter(target=target, pname=GLTexture.TEXTURE_WRAP_T, param=GLTexParam.REPEAT)
-            gl_tex_parameter(target=target, pname=GLTexture.TEXTURE_MAG_FILTER, param=GLTexParam.LINEAR)
-            gl_tex_parameter(target=target, pname=GLTexture.TEXTURE_MIN_FILTER, param=GLTexParam.LINEAR_MIPMAP_LINEAR
+            gl_tex_parameter(
+                target=target, pname=GLTexture.TEXTURE_WRAP_S, param=GLTexParam.REPEAT
+            )
+            gl_tex_parameter(
+                target=target, pname=GLTexture.TEXTURE_WRAP_T, param=GLTexParam.REPEAT
+            )
+            gl_tex_parameter(
+                target=target,
+                pname=GLTexture.TEXTURE_MAG_FILTER,
+                param=GLTexParam.LINEAR,
+            )
+            gl_tex_parameter(
+                target=target,
+                pname=GLTexture.TEXTURE_MIN_FILTER,
+                param=GLTexParam.LINEAR_MIPMAP_LINEAR,
             )
 
             self.inversed_v_coords = True
@@ -157,14 +164,34 @@ class TextureLoader:
 
         self.texture_gl_id: int = gl_gen_textures(1)
         gl_bind_texture(self.texture_gl_id, GLTexture.TEXTURE_2D)
-        gl_teximage2d(target=GLTexture.TEXTURE_2D, level=0, border=0, internalformat=gl_format, width=self.width, height=self.height, num_type=GLNumeric.UNSIGNED_BYTE, format=gl_format, data=self.buffer)
+        gl_teximage2d(
+            target=GLTexture.TEXTURE_2D,
+            level=0,
+            border=0,
+            internalformat=gl_format,
+            width=self.width,
+            height=self.height,
+            num_type=GLNumeric.UNSIGNED_BYTE,
+            format=gl_format,
+            data=self.buffer,
+        )
 
         # Texture parameters
         target = GLTexture.TEXTURE_2D
-        gl_tex_parameter(target=target, pname=GLTexture.TEXTURE_WRAP_S, param=GLTexParam.REPEAT)
-        gl_tex_parameter(target=target, pname=GLTexture.TEXTURE_WRAP_T, param=GLTexParam.REPEAT)
-        gl_tex_parameter(target=target, pname=GLTexture.TEXTURE_MAG_FILTER, param=GLTexParam.LINEAR)
-        gl_tex_parameter(target=target, pname=GLTexture.TEXTURE_MIN_FILTER, param=GLTexParam.LINEAR_MIPMAP_LINEAR)
+        gl_tex_parameter(
+            target=target, pname=GLTexture.TEXTURE_WRAP_S, param=GLTexParam.REPEAT
+        )
+        gl_tex_parameter(
+            target=target, pname=GLTexture.TEXTURE_WRAP_T, param=GLTexParam.REPEAT
+        )
+        gl_tex_parameter(
+            target=target, pname=GLTexture.TEXTURE_MAG_FILTER, param=GLTexParam.LINEAR
+        )
+        gl_tex_parameter(
+            target=target,
+            pname=GLTexture.TEXTURE_MIN_FILTER,
+            param=GLTexParam.LINEAR_MIPMAP_LINEAR,
+        )
         gl_generate_mipmap()
 
     def delete(self) -> None:

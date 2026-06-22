@@ -11,21 +11,11 @@ be directly utilized when working with OpenGL APIs.
 
 from enum import IntEnum
 
-from OpenGL.GL import (
-    GL_LINE_LOOP,
-    GL_LINE_STRIP,
-    GL_LINE_STRIP_ADJACENCY,
-    GL_LINES,
-    GL_LINES_ADJACENCY,
-    GL_PATCHES,
-    GL_POLYGON,
-    GL_QUAD_STRIP,
-    GL_QUADS,
-    GL_TRIANGLE_STRIP,
-    GL_TRIANGLE_STRIP_ADJACENCY,
-    GL_TRIANGLES,
-    GL_TRIANGLES_ADJACENCY,
-)
+from OpenGL.GL import (GL_LINE_LOOP, GL_LINE_STRIP, GL_LINE_STRIP_ADJACENCY,
+                       GL_LINES, GL_LINES_ADJACENCY, GL_PATCHES, GL_POLYGON,
+                       GL_QUAD_STRIP, GL_QUADS, GL_TRIANGLE_STRIP,
+                       GL_TRIANGLE_STRIP_ADJACENCY, GL_TRIANGLES,
+                       GL_TRIANGLES_ADJACENCY)
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POINTS
 
 

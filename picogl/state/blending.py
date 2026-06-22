@@ -7,16 +7,19 @@ as well as setting the blend function parameters. Upon exiting the context,
 the original state and settings are restored.
 """
 
-
 from contextlib import contextmanager
 
-from picogl.backend.gl.driver.capability import GLCapabilityDriver
+from picogl.backend.gl.capability import (GLBlendFactor, GLBlendTarget,
+                                          GLPipelineCapability)
 from picogl.backend.gl.driver.blend import GLBlendDriver
-from picogl.backend.gl.capability import GLPipelineCapability, GLBlendFactor, GLBlendTarget
+from picogl.backend.gl.driver.capability import GLCapabilityDriver
 
 
 @contextmanager
-def gl_blend(src: GLBlendFactor = GLBlendFactor.SRC_ALPHA, dst: GLBlendFactor = GLBlendFactor.ONE_MINUS_SRC_ALPHA):
+def gl_blend(
+    src: GLBlendFactor = GLBlendFactor.SRC_ALPHA,
+    dst: GLBlendFactor = GLBlendFactor.ONE_MINUS_SRC_ALPHA,
+):
     """gl blend context manager"""
     was_enabled = GLCapabilityDriver.is_enabled(GLPipelineCapability.BLEND)
     prev_src = int(GLCapabilityDriver.get_integerv(GLBlendTarget.BLEND_SRC))

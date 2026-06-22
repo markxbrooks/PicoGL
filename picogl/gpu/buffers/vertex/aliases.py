@@ -6,6 +6,7 @@ to categorize types of buffer objects and arrays used in graphics programming.
 It also includes mappings of name aliases for corresponding buffer roles for
 easier and consistent referencing.
 """
+
 from enum import Enum
 
 from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType

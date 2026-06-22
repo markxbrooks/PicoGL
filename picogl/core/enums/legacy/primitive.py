@@ -6,6 +6,7 @@ specific primitive types, which were deprecated in later versions of OpenGL.
 It can help when working with older OpenGL code or transitioning legacy
 implementations to newer OpenGL versions.
 """
+
 from enum import IntEnum
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POLYGON

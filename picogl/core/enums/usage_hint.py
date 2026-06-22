@@ -7,9 +7,10 @@ The module exports the GLUsageHint Enum which includes static and dynamic draw h
 used in OpenGL for defining usage patterns.
 
 """
+
 from enum import IntEnum
 
-from OpenGL.raw.GL.VERSION.GL_1_5 import GL_STATIC_DRAW, GL_DYNAMIC_DRAW
+from OpenGL.raw.GL.VERSION.GL_1_5 import GL_DYNAMIC_DRAW, GL_STATIC_DRAW
 
 
 class GLUsageHint(IntEnum):

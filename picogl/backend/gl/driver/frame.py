@@ -6,8 +6,8 @@ This module utilizes OpenGL commands to perform operations like clearing
 the framebuffer with specified colors and configuring the viewport
 for rendering.
 """
-from OpenGL.GL import glClear, glClearColor, glViewport
 
+from OpenGL.GL import glClear, glClearColor, glViewport
 from picogl.backend.state import gl_value
 from picogl.core.enums.bitmask import GLBitMask
 

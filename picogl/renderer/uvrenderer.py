@@ -4,18 +4,15 @@ UV render
 
 from typing import Optional
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import (
-    GL_POLYGON_MODE
-)
-
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POLYGON_MODE
 from picogl.backend.gl.capability import GLMaterialFace
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.boolean import GLBoolean
+from picogl.core.enums.buffer_target import GLBufferTarget
+from picogl.core.enums.draw_mode import GLDrawMode
 from picogl.core.enums.numerical import GLNumeric
 from picogl.renderer import RendererBase
 from picogl.renderer.initializable import Initializable
-from picogl.core.enums.draw_mode import GLDrawMode
-from picogl.core.enums.buffer_target import GLBufferTarget
 from picogl.state.fill import GLFillMode
 from picogl.wrappers.buffer import gl_bind_buffer
 from picogl.wrappers.disable_vertex_array import gl_disable_vertex_array

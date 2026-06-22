@@ -35,7 +35,6 @@ Example usage:
 from typing import Optional
 
 import numpy as np
-
 from picogl.backend.modern.core.vertex.base import VertexBuffer
 from picogl.core.enums.buffer_target import GLBufferTarget
 from picogl.core.enums.usage_hint import GLUsageHint

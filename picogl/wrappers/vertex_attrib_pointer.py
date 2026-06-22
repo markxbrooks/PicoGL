@@ -6,7 +6,6 @@ import ctypes
 from typing import Any, Optional
 
 from OpenGL.GL import glVertexAttribPointer
-
 from picogl.boolean import GLBoolean
 from picogl.core.enums.numerical import GLNumeric
 
