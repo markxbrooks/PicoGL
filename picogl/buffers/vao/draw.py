@@ -17,5 +17,5 @@ def vao_draw_with_attributes(attributes: list, atom_count: int, mode: int = GLDr
 
     Draw the VAO with the specified gl_mode and atom count.
     """
-    vao_configure_attributes(attributes)
-    gl_draw_arrays(atom_count, mode, first=0)
+    vao_configure_attributes(attributes=attributes)
+    gl_draw_arrays(index_count=atom_count, mode=mode, first=0)

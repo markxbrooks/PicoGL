@@ -19,7 +19,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import GL_CULL_FACE
 from picogl.backend.gl.backend import GLBackend
 from picogl.backend.legacy.core.camera.setup import enable_blending
 from picogl.info import get_gl_info
-from picogl.state.draw_mode import GLBitMask
+from picogl.core.enums.bitmask import GLBitMask
 
 
 def bind_default_framebuffer() -> None:

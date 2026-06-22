@@ -9,7 +9,7 @@ for rendering.
 from OpenGL.GL import glClear, glClearColor, glViewport
 
 from picogl.backend.state import gl_value
-from picogl.state.draw_mode import GLBitMask
+from picogl.core.enums.bitmask import GLBitMask
 
 
 class GLFrameDriver:

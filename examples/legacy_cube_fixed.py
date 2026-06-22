@@ -18,7 +18,8 @@ import numpy as np
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.gl.light import GLLightSource
 from picogl.backend.gl.capability import GLFixedFunctionCapability
-from picogl.state.draw_mode import GLLegacyMatrixMode, GLBitMask
+from picogl.core.enums.bitmask import GLBitMask
+from picogl.core.enums.legacy.matrix_mode import GLLegacyMatrixMode
 from picogl.state.fill import GLFace, GLCapability, GLColorMaterialMode, GLLightParameter, GLFillMode
 
 # Check for display before importing OpenGL

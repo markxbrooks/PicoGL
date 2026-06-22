@@ -6,7 +6,7 @@ from unittest.mock import patch
 from OpenGL.raw.GL.VERSION.GL_3_2 import GL_PROGRAM_POINT_SIZE
 
 from picogl.frame import prepare_viewport
-from picogl.state.draw_mode import GLBitMask
+from picogl.core.enums.bitmask import GLBitMask
 
 
 class RecordingFrame:

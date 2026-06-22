@@ -26,7 +26,7 @@ from picogl.frame import prepare_viewport
 from picogl.backend.gl.backend import GLBackend
 from picogl.backend.geometry.factory import LegacyBinding, ModernBinding
 from picogl.mode import GLMode
-from picogl.state.draw_mode import GLLegacyMatrixMode
+from picogl.core.enums.legacy.matrix_mode import GLLegacyMatrixMode
 from picogl.utils.gl_init import (
     execute_gl_tasks,
     legacy_init_gl_list,

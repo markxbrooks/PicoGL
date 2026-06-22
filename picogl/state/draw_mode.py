@@ -9,25 +9,20 @@ Each enumeration corresponds to a specific set of OpenGL constants and can
 be directly utilized when working with OpenGL APIs.
 """
 
-from enum import IntEnum, IntFlag
+from enum import IntEnum
 
 from OpenGL.GL import (
-    GL_COLOR_BUFFER_BIT,
-    GL_DEPTH_BUFFER_BIT,
     GL_DYNAMIC_DRAW,
     GL_ELEMENT_ARRAY_BUFFER,
     GL_FLOAT,
     GL_INT,
-    GL_LINE_BIT,
     GL_LINE_LOOP,
     GL_LINE_STRIP,
     GL_LINE_STRIP_ADJACENCY,
     GL_LINES,
     GL_LINES_ADJACENCY,
-    GL_MODELVIEW,
     GL_PATCHES,
     GL_POLYGON,
-    GL_PROJECTION,
     GL_QUAD_STRIP,
     GL_QUADS,
     GL_SHADER_STORAGE_BUFFER,
@@ -40,30 +35,8 @@ from OpenGL.GL import (
     GL_UNSIGNED_INT,
     GL_UNSIGNED_SHORT,
 )
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_CLIP_PLANE0, GL_CLIP_PLANE1, GL_POINTS
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POINTS
 from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ARRAY_BUFFER
-
-
-class GLLegacyMatrixMode(IntEnum):
-    """gl Matrix Mode"""
-
-    PROJECTION = GL_PROJECTION
-    MODELVIEW = GL_MODELVIEW
-
-
-class GLLegacyClipPlane(IntEnum):
-    """Clipping Mode"""
-
-    CLIP_PLANE0 = GL_CLIP_PLANE0
-    CLIP_PLANE1 = GL_CLIP_PLANE1
-
-
-class GLBitMask(IntFlag):
-    """gl Bit Mask"""
-
-    LINE = GL_LINE_BIT
-    DEPTH_BUFFER = GL_DEPTH_BUFFER_BIT
-    COLOR_BUFFER = GL_COLOR_BUFFER_BIT
 
 
 class GLDataType(IntEnum):
