@@ -16,13 +16,14 @@ Features:
 import os
 import sys
 
+from examples.glut_renderer import GlutRenderer, set_up_legacy_lighting
 from picogl.backend.gl.capability import GLMaterialFace, GLPipelineCapability, GLFixedFunctionCapability
 from picogl.backend.gl.enums import GLBitMask
-from picogl.backend.gl.light import GLLightSource
-from picogl.backend.gl.state.fill import GLColorMaterialMode, GLCapability, GLLightParameter, GLFillMode
+from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
+from picogl.backend.gl.state.fill import GLColorMaterialMode, GLCapability, GLFillMode
 from picogl.backend.gl.wrappers.clear import gl_clear_color, gl_clear
+from picogl.backend.gl.wrappers.color import gl_color_material
 from picogl.backend.gl.wrappers.enable import gl_enable, toggle_capability
-from picogl.backend.gl.wrappers.material import gl_material_fv, gl_material_f
 from picogl.backend.gl.wrappers.polygon_mode import gl_polygon_mode
 
 # Check for display before importing OpenGL
@@ -41,10 +42,11 @@ except ImportError as e:
     sys.exit(1)
 
 
-class MinimalTeapotRenderer:
+class MinimalTeapotRenderer(GlutRenderer):
     """Minimal teapot renderer using only built-in OpenGL primitives."""
 
     def __init__(self, width=800, height=600, title="Minimal Legacy Teapot"):
+        super().__init__(width, height, title)
         self.width = width
         self.height = height
         self.title = title
@@ -55,20 +57,6 @@ class MinimalTeapotRenderer:
         self.zoom_distance = 5.0
         self.wireframe_mode = False
 
-    def init_glut(self):
-        """Initialize GLUT window."""
-        glutInit(sys.argv)
-        glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH)
-        glutInitWindowSize(self.width, self.height)
-        glutCreateWindow(self.title.encode("utf-8"))
-
-        # Set callbacks
-        glutDisplayFunc(self.display)
-        glutReshapeFunc(self.reshape)
-        glutKeyboardFunc(self.keyboard)
-        glutMouseFunc(self.mouse)
-        glutMotionFunc(self.motion)
-
     def init_gl(self):
         """Initialize OpenGL state."""
         gl_clear_color(color=(0.1, 0.1, 0.2, 1.0))  # Dark blue background
@@ -76,19 +64,8 @@ class MinimalTeapotRenderer:
         gl_enable(GLFixedFunctionCapability.LIGHTING)
         gl_enable(GLFixedFunctionCapability.LIGHT0)
         gl_enable(GLCapability.COLOR_MATERIAL)
-        glColorMaterial(GLMaterialFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE)
-
-        # Set up lighting
-        GLLightSource.lightf(GLFixedFunctionCapability.LIGHT0, GLLightParameter.POSITION, [1.0, 1.0, 1.0, 0.0])
-        GLLightSource.lightf(GLFixedFunctionCapability.LIGHT0, GLLightParameter.AMBIENT, [0.3, 0.3, 0.3, 1.0])
-        GLLightSource.lightf(GLFixedFunctionCapability.LIGHT0, GLLightParameter.DIFFUSE, [0.8, 0.8, 0.8, 1.0])
-        GLLightSource.lightf(GLFixedFunctionCapability.LIGHT0, GLLightParameter.SPECULAR, [1.0, 1.0, 1.0, 1.0])
-
-        # Set up material properties
-        gl_material_fv(GLMaterialFace.FRONT_AND_BACK, GLLightParameter.AMBIENT, [0.2, 0.2, 0.2, 1.0])
-        gl_material_fv(GLMaterialFace.FRONT_AND_BACK, GLLightParameter.DIFFUSE, [0.8, 0.8, 0.8, 1.0])
-        gl_material_fv(GLMaterialFace.FRONT_AND_BACK, GLLightParameter.SPECULAR, [1.0, 1.0, 1.0, 1.0])
-        gl_material_f(GLMaterialFace.FRONT_AND_BACK, GLLightParameter.SHININESS, 50.0)
+        gl_color_material(GLMaterialFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE)
+        set_up_legacy_lighting()
 
     def display(self):
         """Display callback - render the scene."""
@@ -133,10 +110,10 @@ class MinimalTeapotRenderer:
         self.width = width
         self.height = height
         glViewport(0, 0, width, height)
-        glMatrixMode(GL_PROJECTION)
+        glMatrixMode(GLLegacyMatrixMode.PROJECTION)
         glLoadIdentity()
         gluPerspective(45.0, float(width) / float(height), 0.1, 100.0)
-        glMatrixMode(GL_MODELVIEW)
+        glMatrixMode(GLLegacyMatrixMode.MODELVIEW)
 
     def keyboard(self, key, x, y):
         """Keyboard callback."""
@@ -156,40 +133,9 @@ class MinimalTeapotRenderer:
 
         glutPostRedisplay()
 
-    def mouse(self, button, state, x, y):
-        """Mouse callback."""
-        if button == GLUT_LEFT_BUTTON:
-            if state == GLUT_DOWN:
-                self.last_mouse_x = x
-                self.last_mouse_y = y
-            else:
-                self.last_mouse_x = None
-                self.last_mouse_y = None
-        elif button == 3:  # Mouse wheel up
-            self.zoom_distance = max(1.0, self.zoom_distance - 0.5)
-        elif button == 4:  # Mouse wheel down
-            self.zoom_distance = min(20.0, self.zoom_distance + 0.5)
-        glutPostRedisplay()
-
-    def motion(self, x, y):
-        """Mouse motion callback."""
-        if self.last_mouse_x is not None and self.last_mouse_y is not None:
-            dx = x - self.last_mouse_x
-            dy = y - self.last_mouse_y
-
-            self.rotation_y += dx * 0.5
-            self.rotation_x += dy * 0.5
-
-            # Clamp rotation
-            self.rotation_x = max(-90, min(90, self.rotation_x))
-
-            self.last_mouse_x = x
-            self.last_mouse_y = y
-            glutPostRedisplay()
-
     def run(self):
         """Run the application."""
-        self.init_glut()
+        self.initialize_glut()
         self.init_gl()
 
         print("\n🎮 Controls:")

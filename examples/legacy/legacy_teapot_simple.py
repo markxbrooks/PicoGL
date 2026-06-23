@@ -15,21 +15,22 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
 
-from examples.legacy_cube_fixed import set_up_legacy_lighting
+from examples.glut_renderer import GlutRenderer, set_up_legacy_lighting
 from picogl.backend.gl.capability import GLMaterialFace, GLFixedFunctionCapability, GLPipelineCapability
 from picogl.backend.gl.enums import GLDrawMode, GLBitMask
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
-from picogl.backend.gl.state.fill import GLCapability, GLColorMaterialMode
+from picogl.backend.gl.state.fill import GLCapability, GLColorMaterialMode, GLFillMode
 from picogl.backend.gl.state.immediate import immediate_drawing
 from picogl.backend.gl.wrappers.clear import gl_clear, gl_clear_color
 from picogl.backend.gl.wrappers.enable import gl_enable, gl_disable
 from picogl.backend.gl.wrappers.polygon_mode import gl_polygon_mode
 
 
-class SimpleTeapotRenderer:
+class SimpleTeapotRenderer(GlutRenderer):
     """Simple teapot renderer using only built-in OpenGL primitives."""
 
     def __init__(self, width=800, height=600, title="Simple Legacy Teapot"):
+        super().__init__(width, height, title)
         self.width = width
         self.height = height
         self.title = title
@@ -43,17 +44,7 @@ class SimpleTeapotRenderer:
 
     def init_glut(self):
         """Initialize GLUT window."""
-        glutInit(sys.argv)
-        glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH)
-        glutInitWindowSize(self.width, self.height)
-        glutCreateWindow(self.title.encode("utf-8"))
-
-        # Set callbacks
-        glutDisplayFunc(self.display)
-        glutReshapeFunc(self.reshape)
-        glutKeyboardFunc(self.keyboard)
-        glutMouseFunc(self.mouse)
-        glutMotionFunc(self.motion)
+        self.initialize_glut()
         glutIdleFunc(self.idle)
 
     def init_gl(self):
@@ -166,37 +157,6 @@ class SimpleTeapotRenderer:
             self.auto_rotate = not getattr(self, "auto_rotate", False)
 
         glutPostRedisplay()
-
-    def mouse(self, button, state, x, y):
-        """Mouse callback."""
-        if button == GLUT_LEFT_BUTTON:
-            if state == GLUT_DOWN:
-                self.last_mouse_x = x
-                self.last_mouse_y = y
-            else:
-                self.last_mouse_x = None
-                self.last_mouse_y = None
-        elif button == 3:  # Mouse wheel up
-            self.zoom_distance = max(1.0, self.zoom_distance - 0.5)
-        elif button == 4:  # Mouse wheel down
-            self.zoom_distance = min(20.0, self.zoom_distance + 0.5)
-        glutPostRedisplay()
-
-    def motion(self, x, y):
-        """Mouse motion callback."""
-        if self.last_mouse_x is not None and self.last_mouse_y is not None:
-            dx = x - self.last_mouse_x
-            dy = y - self.last_mouse_y
-
-            self.rotation_y += dx * 0.5
-            self.rotation_x += dy * 0.5
-
-            # Clamp rotation
-            self.rotation_x = max(-90, min(90, self.rotation_x))
-
-            self.last_mouse_x = x
-            self.last_mouse_y = y
-            glutPostRedisplay()
 
     def idle(self):
         """Idle callback for animation."""

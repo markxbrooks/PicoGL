@@ -15,13 +15,14 @@ import sys
 
 import numpy as np
 
-from examples.glut_renderer import GlutRenderer, set_up_legacy_lighting
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
+from picogl.backend.gl.light import GLLightSource
 from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.enums import GLBitMask
-from picogl.backend.gl.state.fill import GLFace, GLCapability, GLColorMaterialMode, GLFillMode
+from picogl.backend.gl.state.fill import GLFace, GLCapability, GLColorMaterialMode, GLLightParameter, GLFillMode
 from picogl.backend.gl.wrappers.clear import gl_clear
+from picogl.backend.gl.wrappers.material import gl_material_fv, gl_material_f
 from picogl.backend.gl.wrappers.polygon_mode import gl_polygon_mode
 
 # Check for display before importing OpenGL
@@ -49,11 +50,24 @@ except ImportError as e:
     sys.exit(1)
 
 
-class LegacyCubeRenderer(GlutRenderer):
+def set_up_legacy_lighting():
+    # Set up lighting
+    GLLightSource.lightf(GLFixedFunctionCapability.LIGHT0, GLLightParameter.POSITION, [1.0, 1.0, 1.0, 0.0])
+    GLLightSource.lightf(GLFixedFunctionCapability.LIGHT0, GLLightParameter.AMBIENT, [0.3, 0.3, 0.3, 1.0])
+    GLLightSource.lightf(GLFixedFunctionCapability.LIGHT0, GLLightParameter.DIFFUSE, [0.8, 0.8, 0.8, 1.0])
+    GLLightSource.lightf(GLFixedFunctionCapability.LIGHT0, GLLightParameter.SPECULAR, [1.0, 1.0, 1.0, 1.0])
+
+    # Set up material properties
+    gl_material_fv(GLFace.FRONT_AND_BACK, GLLightParameter.AMBIENT, [0.2, 0.2, 0.2, 1.0])
+    gl_material_fv(GLFace.FRONT_AND_BACK, GLLightParameter.DIFFUSE, [0.8, 0.8, 0.8, 1.0])
+    gl_material_fv(GLFace.FRONT_AND_BACK, GLLightParameter.SPECULAR, [1.0, 1.0, 1.0, 1.0])
+    gl_material_f(GLFace.FRONT_AND_BACK, GLLightParameter.SHININESS, 50.0)
+
+
+class GlutRenderer:
     """Legacy cube renderer using PicoGL LegacyGLMesh."""
 
-    def __init__(self, width=800, height=600, title="Legacy PicoGL Cube"):
-        super().__init__(width, height, title)
+    def __init__(self, width=800, height=600, title="Legacy Glut Renderer"):
         self.width = width
         self.height = height
         self.title = title
@@ -304,6 +318,19 @@ class LegacyCubeRenderer(GlutRenderer):
         self.initialize_glut()
         glutIdleFunc(self.idle)
 
+    def initialize_glut(self):
+        glutInit(sys.argv)
+        glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH)
+        glutInitWindowSize(self.width, self.height)
+        glutCreateWindow(self.title.encode("utf-8"))
+
+        # Set callbacks
+        glutDisplayFunc(self.display)
+        glutReshapeFunc(self.reshape)
+        glutKeyboardFunc(self.keyboard)
+        glutMouseFunc(self.mouse)
+        glutMotionFunc(self.motion)
+
     def init_gl(self):
         """Initialize OpenGL state."""
         glClearColor(0.1, 0.1, 0.2, 1.0)  # Dark blue background
@@ -421,6 +448,37 @@ class LegacyCubeRenderer(GlutRenderer):
             self.auto_rotate = not self.auto_rotate
 
         glutPostRedisplay()
+
+    def mouse(self, button, state, x, y):
+        """Mouse callback."""
+        if button == GLUT_LEFT_BUTTON:
+            if state == GLUT_DOWN:
+                self.last_mouse_x = x
+                self.last_mouse_y = y
+            else:
+                self.last_mouse_x = None
+                self.last_mouse_y = None
+        elif button == 3:  # Mouse wheel up
+            self.zoom_distance = max(1.0, self.zoom_distance - 0.5)
+        elif button == 4:  # Mouse wheel down
+            self.zoom_distance = min(20.0, self.zoom_distance + 0.5)
+        glutPostRedisplay()
+
+    def motion(self, x, y):
+        """Mouse motion callback."""
+        if self.last_mouse_x is not None and self.last_mouse_y is not None:
+            dx = x - self.last_mouse_x
+            dy = y - self.last_mouse_y
+
+            self.rotation_y += dx * 0.5
+            self.rotation_x += dy * 0.5
+
+            # Clamp rotation
+            self.rotation_x = max(-90, min(90, self.rotation_x))
+
+            self.last_mouse_x = x
+            self.last_mouse_y = y
+            glutPostRedisplay()
 
     def idle(self):
         """Idle callback for animation."""
