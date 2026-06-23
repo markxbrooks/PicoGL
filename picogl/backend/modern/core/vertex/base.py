@@ -37,6 +37,7 @@ import ctypes
 import numpy as np
 from OpenGL import error as _gl_err
 from OpenGL.raw.GL.VERSION.GL_1_5 import glBufferSubData, glIsBuffer
+
 from picogl.backend.gl.enums import GLBufferTarget, GLIndexType, GLNumeric, GLUsageHint
 from picogl.backend.gl.wrappers import gl_buffer_data
 from picogl.backend.gl.wrappers.buffer import gl_bind_buffer

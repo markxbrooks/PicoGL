@@ -10,6 +10,7 @@ context, even in the case of an exception.
 from contextlib import contextmanager
 
 from OpenGL.GL import GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER
+
 from picogl.backend.gl.wrappers import (
     gl_disable_legacy_client_state,
     gl_enable_legacy_client_state,

@@ -4,6 +4,7 @@ import unittest
 from unittest.mock import patch
 
 from OpenGL.raw.GL.VERSION.GL_3_2 import GL_PROGRAM_POINT_SIZE
+
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.wrappers.frame import prepare_viewport
 

@@ -13,6 +13,7 @@ Classes:
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import glDisable, glEnable, glIsEnabled
 from OpenGL.raw.GL.VERSION.GL_1_3 import GL_MULTISAMPLE
+
 from picogl.backend.gl.wrappers.get_integerv import gl_get_integerv
 from picogl.backend.state import gl_value
 

@@ -4,6 +4,7 @@ gl disable vertex array wrapper
 """
 
 from OpenGL.GL import glPolygonMode
+
 from picogl.backend.gl.capability import GLMaterialFace
 from picogl.backend.gl.state.fill import GLFillMode
 

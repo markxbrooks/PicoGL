@@ -13,6 +13,8 @@ from OpenGL.raw.GL.EXT.texture_compression_s3tc import (
     GL_COMPRESSED_RGBA_S3TC_DXT3_EXT,
     GL_COMPRESSED_RGBA_S3TC_DXT5_EXT,
 )
+from PIL import Image
+
 from picogl.backend.gl.enums import GLNumeric
 from picogl.backend.gl.wrappers import (
     gl_bind_texture,
@@ -25,7 +27,6 @@ from picogl.backend.gl.wrappers import (
 from picogl.core.color import GLColor
 from picogl.texture.gltexparam import GLTexParam
 from picogl.texture.gltexture import GLTexture
-from PIL import Image
 
 
 class TextureLoader:

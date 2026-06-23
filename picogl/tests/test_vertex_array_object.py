@@ -36,6 +36,7 @@ import numpy as np
 from OpenGL.raw.GL._types import GL_FLOAT
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POINTS
 from OpenGL.raw.GL.VERSION.GL_1_5 import GL_STATIC_DRAW
+
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.gpu.buffers.attributes import AttributeSpec, LayoutDescriptor
 

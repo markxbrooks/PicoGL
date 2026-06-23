@@ -7,6 +7,7 @@ from OpenGL.GL import (
     glDepthMask,
     glGetBooleanv,
 )
+
 from picogl.backend.gl.capability import GLPipelineCapability
 from picogl.backend.gl.driver.applyable import Applyable
 from picogl.backend.gl.driver.capability import GLCapabilityDriver

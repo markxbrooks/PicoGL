@@ -10,6 +10,7 @@ binding buffers and rendering the defined UV mesh content.
 from typing import Optional
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POLYGON_MODE
+
 from picogl.backend.gl.capability import GLMaterialFace
 from picogl.backend.gl.enums import GLBufferTarget, GLDrawMode, GLNumeric
 from picogl.backend.gl.state.fill import GLFillMode

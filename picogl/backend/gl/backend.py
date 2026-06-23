@@ -8,6 +8,7 @@ Classes:Ï
     - GLBackend: Encapsulates functions for managing OpenGL state and
       performing rendering operations.
 """
+
 import platform
 import warnings
 

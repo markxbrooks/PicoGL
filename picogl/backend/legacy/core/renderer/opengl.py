@@ -8,17 +8,13 @@ depth masks, and setting material properties. It serves as an abstraction
 over low-level OpenGL calls using the pyOpenGL library.
 """
 
-
-from picogl.backend.gl.state.fill import GLLightParameter
-from OpenGL.raw.GL.VERSION.GL_1_0 import (
-    glMaterialf,
-    glMaterialfv,
-)
 from picogl.backend.gl.capability import FACE_MAP, GLMaterialFace, PhongMaterial
-from picogl.renderer.backend import RenderBackend
-from picogl.backend.gl.wrappers.enable import gl_enable, gl_is_enabled, gl_disable
-from picogl.backend.gl.wrappers.depth import gl_get_depth_mask, gl_set_depth_mask
+from picogl.backend.gl.state.fill import GLLightParameter
 from picogl.backend.gl.wrappers.blending import gl_blend_func
+from picogl.backend.gl.wrappers.depth import gl_get_depth_mask, gl_set_depth_mask
+from picogl.backend.gl.wrappers.enable import gl_disable, gl_enable, gl_is_enabled
+from picogl.backend.gl.wrappers.material import gl_material_f, gl_material_fv
+from picogl.renderer.backend import RenderBackend
 
 
 class LegacyOpenGLBackend(RenderBackend):
@@ -45,7 +41,7 @@ class LegacyOpenGLBackend(RenderBackend):
     def set_material(self, face: GLMaterialFace, mat: PhongMaterial):
         f = FACE_MAP[face]
 
-        glMaterialfv(f, GLLightParameter.AMBIENT, mat.ambient)
-        glMaterialfv(f, GLLightParameter.DIFFUSE, mat.diffuse)
-        glMaterialfv(f, GLLightParameter.SPECULAR, mat.specular)
-        glMaterialf(f, GLLightParameter.SHININESS, mat.shininess)
+        gl_material_fv(f, GLLightParameter.AMBIENT, mat.ambient)
+        gl_material_fv(f, GLLightParameter.DIFFUSE, mat.diffuse)
+        gl_material_fv(f, GLLightParameter.SPECULAR, mat.specular)
+        gl_material_f(f, GLLightParameter.SHININESS, mat.shininess)

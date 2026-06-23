@@ -10,6 +10,10 @@ from decologr import Decologr as log
 from OpenGL.raw.GL.ARB.viewport_array import GL_VIEWPORT
 from OpenGL.raw.GL.VERSION.GL_1_0 import glLoadIdentity, glMatrixMode, glViewport
 from OpenGL.raw.GLU import gluPerspective
+from PySide6.QtGui import QMouseEvent, QOpenGLFunctions, Qt, QWheelEvent
+from PySide6.QtOpenGLWidgets import QOpenGLWidget
+from PySide6.QtWidgets import QWidget
+
 from picogl.backend.geometry.factory import LegacyBinding, ModernBinding
 from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
@@ -25,9 +29,6 @@ from picogl.backend.gl.wrappers.frame import prepare_viewport
 from picogl.backend.legacy.core.camera.lighting import set_background_color
 from picogl.backend.legacy.core.camera.matrices.setup import setup_matrices
 from picogl.backend.legacy.core.camera.setup import calculate_aspect
-from PySide6.QtGui import QMouseEvent, QOpenGLFunctions, Qt, QWheelEvent
-from PySide6.QtOpenGLWidgets import QOpenGLWidget
-from PySide6.QtWidgets import QWidget
 
 
 @dataclass
@@ -64,7 +65,9 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
     OpenGL Qt Widget
     """
 
-    def __init__(self, parent: Optional[QWidget] = None, gl_mode: GLMode = GLMode.LEGACY):
+    def __init__(
+        self, parent: Optional[QWidget] = None, gl_mode: GLMode = GLMode.LEGACY
+    ):
         """
         constructor
 

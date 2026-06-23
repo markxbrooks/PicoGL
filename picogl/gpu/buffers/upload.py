@@ -48,6 +48,7 @@ import ctypes
 from typing import Optional
 
 import numpy as np
+
 from picogl.backend.gl.enums import GLBufferTarget, GLNumeric, GLUsageHint
 from picogl.backend.gl.wrappers.buffer import gl_bind_buffer
 from picogl.backend.gl.wrappers.buffer_data import gl_buffer_data
