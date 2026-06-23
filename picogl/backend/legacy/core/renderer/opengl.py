@@ -39,6 +39,10 @@ def gl_is_enabled(self, cap):
 
 def gl_blend_func(self, src, dst):
     glBlendFunc(src, dst)
+    
+
+def gl_set_depth_mask(self, flag):
+    glDepthMask(GLBoolean.TRUE if flag else GLBoolean.FALSE)
         
 
 class LegacyOpenGLBackend(RenderBackend):
