@@ -95,7 +95,7 @@ class MinimalTeapotRenderer(GlutRenderer):
         else:
             fill_mode = GLFillMode.FILL
             color = red_teapot
-        glColor3f(*color)  # Red teapot
+        glColor3f(*color)
         toggle_capability(enabled=not self.wireframe_mode, capability=GLFixedFunctionCapability.LIGHTING)
         gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, fill_mode)
         # Draw the teapot
