@@ -7,9 +7,10 @@ the framebuffer with specified colors and configuring the viewport
 for rendering.
 """
 
-from OpenGL.GL import glClear, glClearColor, glViewport
+from OpenGL.GL import glViewport
 
 from picogl.backend.gl.enums import GLBitMask
+from picogl.backend.gl.wrappers.clear import gl_clear_color, gl_clear
 from picogl.backend.state import gl_value
 
 
@@ -18,7 +19,7 @@ class GLFrameDriver:
 
     @staticmethod
     def clear(mask):
-        glClear(gl_value(mask))
+        gl_clear(gl_value(mask))
 
     def set_clear_background_and_color(self, color=(0.0, 0.0, 0.0, 1.0)):
         """
@@ -38,7 +39,7 @@ class GLFrameDriver:
 
     @staticmethod
     def set_clear_color(color=(0.0, 0.0, 0.0, 1.0)):
-        glClearColor(*color)
+        gl_clear_color(color)
 
     @staticmethod
     def viewport(x, y, width, height):
