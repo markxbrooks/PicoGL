@@ -44,7 +44,7 @@ class LegacyOpenGLBackend(RenderBackend):
     def set_depth_mask(self, flag):
         from OpenGL.GL import GL_FALSE, GL_TRUE, glDepthMask
 
-        glDepthMask(GL_TRUE if flag else GL_FALSE)
+        glDepthMask(GLBoolean.TRUE if flag else GLBoolean.FALSE)
 
     def get_depth_mask(self):
         return glGetBooleanv(GL_DEPTH_WRITEMASK)
@@ -52,7 +52,7 @@ class LegacyOpenGLBackend(RenderBackend):
     def set_material(self, face: GLMaterialFace, mat: PhongMaterial):
         f = FACE_MAP[face]
 
-        glMaterialfv(f, GL_AMBIENT, mat.ambient)
-        glMaterialfv(f, GL_DIFFUSE, mat.diffuse)
-        glMaterialfv(f, GL_SPECULAR, mat.specular)
-        glMaterialf(f, GL_SHININESS, mat.shininess)
+        glMaterialfv(f, GLLightParameter.AMBIENT, mat.ambient)
+        glMaterialfv(f, GLLightParameter.DIFFUSE, mat.diffuse)
+        glMaterialfv(f, GLLightParameter.SPECULAR, mat.specular)
+        glMaterialf(f, GLLightParameter.SHININESS, mat.shininess)
