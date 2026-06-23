@@ -59,7 +59,7 @@ class SimpleTeapotRenderer:
         try:
             glClearColor(0.1, 0.1, 0.2, 1.0)  # Dark blue background
             gl_enable(GL_DEPTH_TEST)
-            gl_enable(GL_LIGHTING)
+            gl_enable(GLFixedFunctionCapability.LIGHTING)
             gl_enable(GL_LIGHT0)
             gl_enable(GL_COLOR_MATERIAL)
             glColorMaterial(GLMaterialFace.FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
@@ -101,11 +101,11 @@ class SimpleTeapotRenderer:
         # Set polygon mode
         if self.wireframe_mode:
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
-            glDisable(GL_LIGHTING)
+            glDisable(GLFixedFunctionCapability.LIGHTING)
             glColor3f(1.0, 0.0, 0.0)  # Red wireframe
         else:
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
-            gl_enable(GL_LIGHTING)
+            gl_enable(GLFixedFunctionCapability.LIGHTING)
             glColor3f(0.8, 0.2, 0.2)  # Red teapot
 
         # Draw the teapot
@@ -117,7 +117,7 @@ class SimpleTeapotRenderer:
 
         # Reset polygon mode
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
-        gl_enable(GL_LIGHTING)
+        gl_enable(GLFixedFunctionCapability.LIGHTING)
 
     def draw_normals(self):
         """Draw normal vectors (simplified)."""

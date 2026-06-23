@@ -21,6 +21,8 @@ from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums import GLLegacyMatrixMode
 from picogl.backend.gl.state.fill import GLFace, GLCapability, GLColorMaterialMode, GLLightParameter, GLFillMode
+from picogl.backend.gl.wrappers.clear import gl_clear
+from picogl.backend.gl.wrappers.material import gl_material_fv, gl_material_f
 from picogl.backend.gl.wrappers.polygon_mode import gl_polygon_mode
 
 # Check for display before importing OpenGL
@@ -328,10 +330,10 @@ class LegacyCubeRenderer:
         GLLightSource.lightf(GL_LIGHT0, GLLightParameter.SPECULAR, [1.0, 1.0, 1.0, 1.0])
 
         # Set up material properties
-        glMaterialfv(GLFace.FRONT_AND_BACK, GLLightParameter.AMBIENT, [0.2, 0.2, 0.2, 1.0])
-        glMaterialfv(GLFace.FRONT_AND_BACK, GLLightParameter.DIFFUSE, [0.8, 0.8, 0.8, 1.0])
-        glMaterialfv(GLFace.FRONT_AND_BACK, GLLightParameter.SPECULAR, [1.0, 1.0, 1.0, 1.0])
-        glMaterialf(GLFace.FRONT_AND_BACK, GLLightParameter.SHININESS, 50.0)
+        gl_material_fv(GLFace.FRONT_AND_BACK, GLLightParameter.AMBIENT, [0.2, 0.2, 0.2, 1.0])
+        gl_material_fv(GLFace.FRONT_AND_BACK, GLLightParameter.DIFFUSE, [0.8, 0.8, 0.8, 1.0])
+        gl_material_fv(GLFace.FRONT_AND_BACK, GLLightParameter.SPECULAR, [1.0, 1.0, 1.0, 1.0])
+        gl_material_f(GLFace.FRONT_AND_BACK, GLLightParameter.SHININESS, 50.0)
 
     def load_cube_data(self):
         """Load cube data using PicoGL LegacyGLMesh."""
@@ -364,7 +366,7 @@ class LegacyCubeRenderer:
 
     def display(self):
         """Display callback - render the scene."""
-        glClear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
+        gl_clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
         glLoadIdentity()
 
         # Set up camera
@@ -378,8 +380,8 @@ class LegacyCubeRenderer:
         if self.mesh:
             try:
                 if self.wireframe_mode:
-                    glPolygonMode(GLFace.FRONT_AND_BACK, GLFillMode.LINE)
-                    glDisable(GLFixedFunctionCapability.LIGHTING)
+                    gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.LINE)
+                    gl_disable(GLFixedFunctionCapability.LIGHTING)
                 else:
                     glPolygonMode(GLFace.FRONT_AND_BACK, GLFillMode.FILL)
                     GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHTING)
