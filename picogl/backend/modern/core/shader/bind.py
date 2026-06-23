@@ -2,8 +2,9 @@
 Bind the shader program for rendering.
 """
 
-from examples.utils.shader_loader import Shader
 from OpenGL.raw.GL.VERSION.GL_2_0 import glUseProgram
+
+from examples.utils.shader_loader import Shader
 
 
 def bind_shader(shader: Shader = None) -> None:

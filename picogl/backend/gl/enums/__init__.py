@@ -1,9 +1,6 @@
 from .bitmask import GLBitMask
-from .draw_mode import GLDrawMode
-from .numerical import GLNumeric
-
-from .data_type import GLNumeric
 from .buffer_target import GLBufferTarget
-
-from .usage_hint import GLUsageHint
+from .draw_mode import GLDrawMode
 from .index_type import GLIndexType
+from .numerical import GLNumeric
+from .usage_hint import GLUsageHint

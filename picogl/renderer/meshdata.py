@@ -9,6 +9,7 @@ from typing import Optional, Union
 import numpy as np
 from decologr import Decologr as log
 from OpenGL import GL
+
 from picogl.backend.gl.enums import GLDrawMode, GLIndexType, GLNumeric
 from picogl.backend.gl.state.client import GLClientState
 from picogl.backend.gl.state.fill import GLFace, GLFillMode

@@ -4,6 +4,7 @@ Enable points rendering state
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import glBlendFunc, glEnable
 from OpenGL.raw.GL.VERSION.GL_3_2 import GL_PROGRAM_POINT_SIZE
+
 from picogl.backend.gl.capability import GLBlendFactor, GLPipelineCapability
 
 

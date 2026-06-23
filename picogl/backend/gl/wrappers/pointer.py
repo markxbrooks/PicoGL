@@ -9,6 +9,7 @@ from OpenGL.raw.GL.VERSION.GL_1_1 import (
     glTexCoordPointer,
     glVertexPointer,
 )
+
 from picogl.backend.gl.enums import GLNumeric
 from picogl.gpu.buffers.attributes import AttributeSpec
 

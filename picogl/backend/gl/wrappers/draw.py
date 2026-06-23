@@ -19,6 +19,7 @@ from typing import Any
 
 import numpy as np
 from OpenGL.raw.GL.VERSION.GL_1_1 import glDrawArrays, glDrawElements
+
 from picogl.backend.gl.enums import GLDrawMode, GLIndexType
 
 

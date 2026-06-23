@@ -1,5 +1,6 @@
 from OpenGL.raw.GL._types import GL_UNSIGNED_INT
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_LINES
+
 from picogl.backend.gl.wrappers import gl_draw_elements
 from picogl.backend.gl.wrappers.vertex_array import gl_bind_vertex_array
 

@@ -6,6 +6,7 @@ Legacy Position VBO
 import ctypes
 
 import numpy as np
+
 from picogl.backend.gl.enums import GLBufferTarget, GLNumeric
 from picogl.backend.gl.state.client import GLClientState
 from picogl.backend.gl.wrappers import gl_enable_legacy_client_state

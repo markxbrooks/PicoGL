@@ -20,6 +20,7 @@ from OpenGL.GL import (
     glGetIntegerv,
 )
 from OpenGL.raw.GL.VERSION.GL_3_0 import GL_FRAMEBUFFER_BINDING
+
 from picogl.renderer.initializable import Initializable
 from picogl.texture.gltexture import GLTexture
 from picogl.texture.texture2d import Texture2D

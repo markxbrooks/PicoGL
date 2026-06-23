@@ -39,6 +39,9 @@ from typing import Optional, Union
 
 import numpy as np
 from decologr import Decologr as log
+from elmo.log.silence import SILENT_VAO
+from PySide6.QtGui import QOpenGLContext
+
 from picogl.backend.gl.enums import (
     GLBufferTarget,
     GLDrawMode,
@@ -70,9 +73,6 @@ from picogl.gpu.buffers.attributes import LayoutDescriptor
 from picogl.gpu.buffers.base import VertexBase
 from picogl.gpu.buffers.vertex.aliases import NAME_ALIASES
 from picogl.safe import gl_gen_safe
-from PySide6.QtGui import QOpenGLContext
-
-from elmo.log.silence import SILENT_VAO
 
 
 class VertexArrayObject(VertexBase, GLResource):

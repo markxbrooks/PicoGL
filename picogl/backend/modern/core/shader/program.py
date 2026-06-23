@@ -3,6 +3,7 @@ from pathlib import Path
 import numpy as np
 from decologr import Decologr as log
 from OpenGL import GL as gl
+
 from picogl.backend.modern.core.shader.compile import compile_shader
 from picogl.backend.modern.core.shader.context import (
     clear_gl_errors,
