@@ -1,4 +1,10 @@
-"""Texture Renderer class"""
+"""
+Provides the TextureRenderer class for rendering textured objects.
+
+This module includes the implementation for the TextureRenderer,
+which is responsible for handling rendering operations involving
+mesh data and texture loading.
+"""
 
 from pathlib import Path
 
