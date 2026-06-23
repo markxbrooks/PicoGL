@@ -17,11 +17,11 @@ import os
 import sys
 
 from picogl.backend.gl.capability import GLMaterialFace, GLPipelineCapability, GLFixedFunctionCapability
-from picogl.backend.gl.enums import GLBitMask, GLDrawMode
+from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.light import GLLightSource
 from picogl.backend.gl.state.fill import GLColorMaterialMode, GLCapability, GLLightParameter, GLFillMode
 from picogl.backend.gl.wrappers.clear import gl_clear_color, gl_clear
-from picogl.backend.gl.wrappers.enable import gl_enable
+from picogl.backend.gl.wrappers.enable import gl_enable, toggle_capability
 from picogl.backend.gl.wrappers.material import gl_material_fv, gl_material_f
 from picogl.backend.gl.wrappers.polygon_mode import gl_polygon_mode
 
@@ -39,13 +39,6 @@ except ImportError as e:
     print(f"❌ Failed to import OpenGL modules: {e}")
     print("   Install with: pip install PyOpenGL PyOpenGL_accelerate")
     sys.exit(1)
-
-
-def toggle_capability(enabled: bool, capability: int = 0):
-    if enabled:
-        gl_enable(capability)
-    else:
-        glDisable(capability)
 
 
 class MinimalTeapotRenderer:
