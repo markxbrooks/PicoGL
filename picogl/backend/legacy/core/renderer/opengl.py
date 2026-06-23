@@ -9,12 +9,9 @@ over low-level OpenGL calls using the pyOpenGL library.
 """
 
 from OpenGL.GL import glGetBooleanv
+from picogl.backend.gl.state.fill import GLLightParameter
 from OpenGL.raw.GL.VERSION.GL_1_0 import (
-    GL_AMBIENT,
     GL_DEPTH_WRITEMASK,
-    GL_DIFFUSE,
-    GL_SHININESS,
-    GL_SPECULAR,
     glBlendFunc,
     glDisable,
     glEnable,
