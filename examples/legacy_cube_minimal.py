@@ -425,59 +425,6 @@ class MinimalCubeRenderer(GlutRenderer):
         gluPerspective(45.0, float(width) / float(height), 0.1, 100.0)
         glMatrixMode(GLLegacyMatrixMode.MODELVIEW)
 
-    def keyboard(self, key, x, y):
-        """Keyboard callback."""
-        if key == b"\x1b":  # ESC key
-            sys.exit(0)
-        elif key == b"r":  # Reset rotation
-            self.rotation_x = 0.0
-            self.rotation_y = 0.0
-        elif key == b"w":  # Toggle wireframe mode
-            self.wireframe_mode = not self.wireframe_mode
-        elif key == b"n":  # Toggle normals
-            self.show_normals = not self.show_normals
-        elif key == b"f":  # Fill mode
-            self.wireframe_mode = False
-        elif key == b"+":  # Zoom in
-            self.zoom_distance = max(1.0, self.zoom_distance - 0.5)
-        elif key == b"-":  # Zoom out
-            self.zoom_distance = min(20.0, self.zoom_distance + 0.5)
-        elif key == b" ":  # Space bar - auto rotate
-            self.auto_rotate = not self.auto_rotate
-
-        glutPostRedisplay()
-
-    def mouse(self, button, state, x, y):
-        """Mouse callback."""
-        if button == GLUT_LEFT_BUTTON:
-            if state == GLUT_DOWN:
-                self.last_mouse_x = x
-                self.last_mouse_y = y
-            else:
-                self.last_mouse_x = None
-                self.last_mouse_y = None
-        elif button == 3:  # Mouse wheel up
-            self.zoom_distance = max(1.0, self.zoom_distance - 0.5)
-        elif button == 4:  # Mouse wheel down
-            self.zoom_distance = min(20.0, self.zoom_distance + 0.5)
-        glutPostRedisplay()
-
-    def motion(self, x, y):
-        """Mouse motion callback."""
-        if self.last_mouse_x is not None and self.last_mouse_y is not None:
-            dx = x - self.last_mouse_x
-            dy = y - self.last_mouse_y
-
-            self.rotation_y += dx * 0.5
-            self.rotation_x += dy * 0.5
-
-            # Clamp rotation
-            self.rotation_x = max(-90, min(90, self.rotation_x))
-
-            self.last_mouse_x = x
-            self.last_mouse_y = y
-            glutPostRedisplay()
-
     def idle(self):
         """Idle callback for animation."""
         if self.auto_rotate:
