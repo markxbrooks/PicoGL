@@ -25,11 +25,11 @@ from picogl.renderer.backend import RenderBackend
 from picogl.boolean import GLBoolean
 
 
-def gl_enable(cap):
+def gl_enable_old(cap):
     glEnable(cap)
     
     
-def gl_disable(cap):
+def gl_disable_old(cap):
     glDisable(cap)
     
     
