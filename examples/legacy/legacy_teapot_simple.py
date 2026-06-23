@@ -110,12 +110,12 @@ class SimpleTeapotRenderer:
             self.draw_normals()
 
         # Reset polygon mode
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+        gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.FILL)
         gl_enable(GLFixedFunctionCapability.LIGHTING)
 
     def draw_normals(self):
         """Draw normal vectors (simplified)."""
-        gl_disable(GL_LIGHTING)
+        gl_disable(GLFixedFunctionCapability.LIGHTING)
         glColor3f(0.0, 1.0, 0.0)  # Green normals
         with immediate_drawing(GLDrawMode.LINES):
             # Draw a few normal vectors for demonstration
