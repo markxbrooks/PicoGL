@@ -16,6 +16,12 @@ Features:
 import os
 import sys
 
+from picogl.backend.gl.capability import GLMaterialFace, GLPipelineCapability, GLFixedFunctionCapability
+from picogl.backend.gl.light import GLLightSource
+from picogl.backend.gl.state.fill import GLColorMaterialMode
+from picogl.backend.gl.wrappers.clear import gl_clear_color
+from picogl.backend.gl.wrappers.enable import gl_enable
+
 # Check for display before importing OpenGL
 if os.environ.get("DISPLAY") is None and os.name != "nt":
     print("❌ No display available. This requires a graphical environment.")
@@ -62,18 +68,18 @@ class MinimalTeapotRenderer:
 
     def init_gl(self):
         """Initialize OpenGL state."""
-        glClearColor(0.1, 0.1, 0.2, 1.0)  # Dark blue background
-        glEnable(GL_DEPTH_TEST)
-        glEnable(GL_LIGHTING)
-        glEnable(GL_LIGHT0)
-        glEnable(GL_COLOR_MATERIAL)
-        glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
+        gl_clear_color(color=(0.1, 0.1, 0.2, 1.0))  # Dark blue background
+        gl_enable(GLPipelineCapability.DEPTH_TEST)
+        gl_enable(GLFixedFunctionCapability.LIGHTING)
+        gl_enable(GLFixedFunctionCapability.LIGHT0)
+        gl_enable(GLCapability.COLOR_MATERIAL)
+        glColorMaterial(GLMaterialFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE)
 
         # Set up lighting
-        glLightfv(GL_LIGHT0, GL_POSITION, [1.0, 1.0, 1.0, 0.0])
-        glLightfv(GL_LIGHT0, GL_AMBIENT, [0.3, 0.3, 0.3, 1.0])
-        glLightfv(GL_LIGHT0, GL_DIFFUSE, [0.8, 0.8, 0.8, 1.0])
-        glLightfv(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
+        GLLightSource.lightf(GLFixedFunctionCapability.LIGHT0, GL_POSITION, [1.0, 1.0, 1.0, 0.0])
+        GLLightSource.lightf(GLFixedFunctionCapability.LIGHT0, GL_AMBIENT, [0.3, 0.3, 0.3, 1.0])
+        GLLightSource.lightf(GLFixedFunctionCapability.LIGHT0, GL_DIFFUSE, [0.8, 0.8, 0.8, 1.0])
+        GLLightSource.lightf(GLFixedFunctionCapability.LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
 
         # Set up material properties
         glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
@@ -107,7 +113,7 @@ class MinimalTeapotRenderer:
             glColor3f(1.0, 0.0, 0.0)  # Red wireframe
         else:
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
-            glEnable(GL_LIGHTING)
+            gl_enable(GL_LIGHTING)
             glColor3f(0.8, 0.2, 0.2)  # Red teapot
 
         # Draw the teapot
@@ -115,7 +121,7 @@ class MinimalTeapotRenderer:
 
         # Reset polygon mode
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
-        glEnable(GL_LIGHTING)
+        gl_enable(GL_LIGHTING)
 
     def reshape(self, width, height):
         """Reshape callback - handle window resize."""

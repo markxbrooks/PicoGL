@@ -9,7 +9,6 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     glClear,
     glClearColor,
     glColorMaterial,
-    glEnable,
     glLoadIdentity,
     glMaterialf,
     glMatrixMode,
@@ -29,6 +28,7 @@ from picogl.backend.gl.state.fill import (
     GLLight,
     GLLightParameter,
 )
+from picogl.backend.gl.wrappers.enable import gl_enable
 from picogl.renderer import MeshData
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.ui.backend.qt.base import GLBase
@@ -118,12 +118,12 @@ class LegacyQtObjectRenderer(GLBase):
     def initialize_state(self):
         # Set up OpenGL state
         glClearColor(0.1, 0.1, 0.2, 1.0)  # Dark blue background
-        glEnable(GL_DEPTH_TEST)
+        gl_enable(GL_DEPTH_TEST)
 
     def initialize_lighting(self):
-        glEnable(GLLight.LIGHTING)
-        glEnable(GLLight.LIGHT0)
-        glEnable(GLCapability.COLOR_MATERIAL)
+        gl_enable(GLLight.LIGHTING)
+        gl_enable(GLLight.LIGHT0)
+        gl_enable(GLCapability.COLOR_MATERIAL)
         glColorMaterial(GLFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE)
         # Set up lighting
         glLightfv(GLLight.LIGHT0, GLLightParameter.POSITION, [1.0, 1.0, 1.0, 0.0])

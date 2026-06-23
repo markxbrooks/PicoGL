@@ -14,8 +14,13 @@ Features:
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
-from picogl.backend.gl.enums import GLDrawMode
+
+from picogl.backend.gl.capability import GLMaterialFace
+from picogl.backend.gl.enums import GLDrawMode, GLBitMask
 from picogl.backend.gl.state.immediate import immediate_drawing
+from picogl.backend.gl.wrappers.enable import gl_enable
+from picogl.backend.gl.wrappers.material import gl_material_fv
+
 
 class SimpleTeapotRenderer:
     """Simple teapot renderer using only built-in OpenGL primitives."""
@@ -51,11 +56,11 @@ class SimpleTeapotRenderer:
         """Initialize OpenGL state."""
         try:
             glClearColor(0.1, 0.1, 0.2, 1.0)  # Dark blue background
-            glEnable(GL_DEPTH_TEST)
-            glEnable(GL_LIGHTING)
-            glEnable(GL_LIGHT0)
-            glEnable(GL_COLOR_MATERIAL)
-            glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
+            gl_enable(GL_DEPTH_TEST)
+            gl_enable(GL_LIGHTING)
+            gl_enable(GL_LIGHT0)
+            gl_enable(GL_COLOR_MATERIAL)
+            glColorMaterial(GLMaterialFace.FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
 
             # Set up lighting
             glLightfv(GL_LIGHT0, GL_POSITION, [1.0, 1.0, 1.0, 0.0])
@@ -64,17 +69,17 @@ class SimpleTeapotRenderer:
             glLightfv(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
 
             # Set up material properties
-            glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
-            glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, [0.8, 0.8, 0.8, 1.0])
-            glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
-            glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50.0)
+            gl_material_fv(GLMaterialFace.FRONT_AND_BACK, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
+            gl_material_fv(GLMaterialFace.FRONT_AND_BACK, GL_DIFFUSE, [0.8, 0.8, 0.8, 1.0])
+            gl_material_fv(GLMaterialFace.FRONT_AND_BACK, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
+            gl_material_f(GLMaterialFace.FRONT_AND_BACK, GL_SHININESS, 50.0)
         except Exception as e:
             print(f"Warning: OpenGL initialization issue: {e}")
             print("Continuing with basic rendering...")
 
     def display(self):
         """Display callback - render the scene."""
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        gl_clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
         glLoadIdentity()
 
         # Set up camera
@@ -98,7 +103,7 @@ class SimpleTeapotRenderer:
             glColor3f(1.0, 0.0, 0.0)  # Red wireframe
         else:
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
-            glEnable(GL_LIGHTING)
+            gl_enable(GL_LIGHTING)
             glColor3f(0.8, 0.2, 0.2)  # Red teapot
 
         # Draw the teapot
@@ -110,7 +115,7 @@ class SimpleTeapotRenderer:
 
         # Reset polygon mode
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
-        glEnable(GL_LIGHTING)
+        gl_enable(GL_LIGHTING)
 
     def draw_normals(self):
         """Draw normal vectors (simplified)."""
@@ -132,7 +137,7 @@ class SimpleTeapotRenderer:
                 glVertex3f(x, y, z)
                 glVertex3f(x + nx * 0.2, y + ny * 0.2, z + nz * 0.2)
 
-        glEnable(GL_LIGHTING)
+        gl_enable(GL_LIGHTING)
 
     def reshape(self, width, height):
         """Reshape callback - handle window resize."""
