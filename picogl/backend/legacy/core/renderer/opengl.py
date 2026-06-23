@@ -40,8 +40,6 @@ class LegacyOpenGLBackend(RenderBackend):
         glBlendFunc(src, dst)
 
     def set_depth_mask(self, flag):
-        from OpenGL.GL import GL_FALSE, GL_TRUE, glDepthMask
-
         glDepthMask(GLBoolean.TRUE if flag else GLBoolean.FALSE)
 
     def get_depth_mask(self):
