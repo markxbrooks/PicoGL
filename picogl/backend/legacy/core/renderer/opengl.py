@@ -12,6 +12,7 @@ from OpenGL.GL import glGetBooleanv
 from picogl.backend.gl.state.fill import GLLightParameter
 from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_DEPTH_WRITEMASK,
+    glDepthMask,
     glBlendFunc,
     glDisable,
     glEnable,
