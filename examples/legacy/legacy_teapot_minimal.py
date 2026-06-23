@@ -115,24 +115,6 @@ class MinimalTeapotRenderer(GlutRenderer):
         gluPerspective(45.0, float(width) / float(height), 0.1, 100.0)
         glMatrixMode(GLLegacyMatrixMode.MODELVIEW)
 
-    def keyboard(self, key, x, y):
-        """Keyboard callback."""
-        if key == b"\x1b":  # ESC key
-            sys.exit(0)
-        elif key == b"r":  # Reset rotation
-            self.rotation_x = 0.0
-            self.rotation_y = 0.0
-        elif key == b"w":  # Toggle wireframe mode
-            self.wireframe_mode = not self.wireframe_mode
-        elif key == b"f":  # Fill mode
-            self.wireframe_mode = False
-        elif key == b"+":  # Zoom in
-            self.zoom_distance = max(1.0, self.zoom_distance - 0.5)
-        elif key == b"-":  # Zoom out
-            self.zoom_distance = min(20.0, self.zoom_distance + 0.5)
-
-        glutPostRedisplay()
-
     def run(self):
         """Run the application."""
         self.initialize_glut()

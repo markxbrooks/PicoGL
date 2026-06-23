@@ -136,52 +136,11 @@ class SimpleTeapotRenderer(GlutRenderer):
         gluPerspective(45.0, float(width) / float(height), 0.1, 100.0)
         glMatrixMode(GLLegacyMatrixMode.MODELVIEW)
 
-    def keyboard(self, key, x, y):
-        """Keyboard callback."""
-        if key == b"\x1b":  # ESC key
-            sys.exit(0)
-        elif key == b"r":  # Reset rotation
-            self.rotation_x = 0.0
-            self.rotation_y = 0.0
-        elif key == b"w":  # Toggle wireframe mode
-            self.wireframe_mode = not self.wireframe_mode
-        elif key == b"n":  # Toggle normals
-            self.show_normals = not self.show_normals
-        elif key == b"f":  # Fill mode
-            self.wireframe_mode = False
-        elif key == b"+":  # Zoom in
-            self.zoom_distance = max(1.0, self.zoom_distance - 0.5)
-        elif key == b"-":  # Zoom out
-            self.zoom_distance = min(20.0, self.zoom_distance + 0.5)
-        elif key == b" ":  # Space bar - auto rotate
-            self.auto_rotate = not getattr(self, "auto_rotate", False)
-
-        glutPostRedisplay()
-
     def idle(self):
         """Idle callback for animation."""
         if getattr(self, "auto_rotate", False):
             self.rotation_y += 0.5
             glutPostRedisplay()
-
-    def run(self):
-        """Run the application."""
-        self.init_glut()
-        self.init_gl()
-
-        print("\n🎮 Controls:")
-        print("   Mouse: Rotate view")
-        print("   Mouse wheel: Zoom in/out")
-        print("   R: Reset rotation")
-        print("   W: Toggle wireframe mode")
-        print("   F: Fill mode")
-        print("   N: Toggle normals display")
-        print("   +/-: Zoom in/out")
-        print("   Space: Toggle auto-rotation")
-        print("   ESC: Exit")
-        print("\n🚀 Starting simple legacy teapot renderer...")
-
-        glutMainLoop()
 
 
 def main():

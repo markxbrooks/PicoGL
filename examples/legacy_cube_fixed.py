@@ -402,53 +402,11 @@ class LegacyCubeRenderer(GlutRenderer):
         gluPerspective(45.0, float(width) / float(height), 0.1, 100.0)
         glMatrixMode(GLLegacyMatrixMode.MODELVIEW)
 
-    def keyboard(self, key, x, y):
-        """Keyboard callback."""
-        if key == b"\x1b":  # ESC key
-            sys.exit(0)
-        elif key == b"r":  # Reset rotation
-            self.rotation_x = 0.0
-            self.rotation_y = 0.0
-        elif key == b"w":  # Toggle wireframe mode
-            self.wireframe_mode = not self.wireframe_mode
-        elif key == b"f":  # Fill mode
-            self.wireframe_mode = False
-        elif key == b"+":  # Zoom in
-            self.zoom_distance = max(1.0, self.zoom_distance - 0.5)
-        elif key == b"-":  # Zoom out
-            self.zoom_distance = min(20.0, self.zoom_distance + 0.5)
-        elif key == b" ":  # Space bar - auto rotate
-            self.auto_rotate = not self.auto_rotate
-
-        glutPostRedisplay()
-
     def idle(self):
         """Idle callback for animation."""
         if self.auto_rotate:
             self.rotation_y += 0.5
             glutPostRedisplay()
-
-    def run(self):
-        """Run the application."""
-        self.init_glut()
-        self.init_gl()
-
-        # Load cube data
-        if not self.load_cube_data():
-            print("   Using fallback wireframe cube instead.")
-
-        print("\n🎮 Controls:")
-        print("   Mouse: Rotate view")
-        print("   Mouse wheel: Zoom in/out")
-        print("   R: Reset rotation")
-        print("   W: Toggle wireframe mode")
-        print("   F: Fill mode")
-        print("   +/-: Zoom in/out")
-        print("   Space: Toggle auto-rotation")
-        print("   ESC: Exit")
-        print("\n🚀 Starting legacy cube renderer...")
-
-        glutMainLoop()
 
 
 def main():

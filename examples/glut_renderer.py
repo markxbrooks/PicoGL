@@ -504,7 +504,7 @@ class GlutRenderer:
         print("   +/-: Zoom in/out")
         print("   Space: Toggle auto-rotation")
         print("   ESC: Exit")
-        print("\n🚀 Starting legacy cube renderer...")
+        print("\n🚀 Starting legacy renderer...")
 
         glutMainLoop()
 
