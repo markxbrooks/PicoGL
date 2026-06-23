@@ -65,6 +65,6 @@ def set_fog_state(
         )
         glFogi(GLFog.FOG_MODE, GL_LINEAR)
         glFogf(GLFog.FOG_START, fog_start_value)
-        glFogf(GLFogFOG_END, fog_end_value)
+        glFogf(GLFog.FOG_END, fog_end_value)
     else:
         GLCapabilityDriver.disable(GLFog.FOG)

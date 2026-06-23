@@ -7,8 +7,10 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import GL_DEPTH_WRITEMASK, glDepthMask, glDept
 
 from picogl.boolean import GLBoolean
 
+from OpenGL.raw.GL.VERSION.GL_1_0 import glClearDepth
 
-def gl_depth_func(func: "GLDepthFunc") -> void:
+
+def gl_depth_func(func: "GLDepthFunc") -> None:
     glDepthFunc(func)
 
 
@@ -18,3 +20,7 @@ def gl_get_depth_mask():
 
 def gl_set_depth_mask(flag):
     glDepthMask(GLBoolean.TRUE if flag else GLBoolean.FALSE)
+
+
+def gl_clear_depth(depth):
+    glClearDepth(depth)

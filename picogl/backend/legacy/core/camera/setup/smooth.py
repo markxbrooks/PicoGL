@@ -9,9 +9,10 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_NICEST,
     GL_POINT_SMOOTH,
     GL_POINT_SMOOTH_HINT,
-    gl_enable,
     glHint,
 )
+
+from picogl.backend.gl.wrappers.enable import gl_enable
 
 
 def enable_smoothing(backend: "GLBackend") -> None:

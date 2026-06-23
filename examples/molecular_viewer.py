@@ -157,7 +157,7 @@ class MolecularRenderWindow(RenderWindow):
         glPointSize(8.0)
 
         # Enable line smoothing for bonds
-        glEnable(GL_LINE_SMOOTH)
+        gl_enable(GL_LINE_SMOOTH)
         glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
         glLineWidth(2.0)
 

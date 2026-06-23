@@ -15,12 +15,11 @@ import numpy as np
 from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_DEPTH_TEST,
     GL_LINE_SMOOTH,
-    glDisable,
-    gl_enable,
     glFlush,
     glLineWidth,
 )
 
+from picogl.backend.gl.wrappers.enable import gl_enable, gl_disable
 from picogl.renderer.abstract import AbstractRenderer
 
 
@@ -41,7 +40,7 @@ class RendererBase(AbstractRenderer):
     def _set_gl_state(self):
         """Set the line width and disable depth test."""
         glLineWidth(self.line_width)
-        glDisable(GL_DEPTH_TEST)
+        gl_disable(GL_DEPTH_TEST)
         gl_enable(GL_LINE_SMOOTH)
 
     def _restore_gl_state(self):

@@ -20,6 +20,7 @@ from picogl.backend.gl.driver.geometry import GLGeometryDriver
 from picogl.backend.gl.driver.raster import GLRasterDriver
 from picogl.backend.gl.driver.texture import GLTextureSystem
 from picogl.backend.gl.enums import GLBitMask
+from picogl.backend.gl.enums.point_size import GLPointCapability
 from picogl.backend.legacy.core.attribute_binder import LegacyAttributeBinder
 from picogl.backend.legacy.core.pipeline import GLLegacyPipeline, LegacyPipeline
 from picogl.backend.modern.core.pipeline import ShaderPipeline

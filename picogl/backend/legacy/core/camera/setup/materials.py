@@ -2,29 +2,21 @@
 Setup Materials
 """
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import (
-    GL_AMBIENT_AND_DIFFUSE,
-    GL_COLOR_MATERIAL,
-    GL_DIFFUSE,
-    GL_FRONT_AND_BACK,
-    GL_SHININESS,
-    GL_SPECULAR,
-    glColorMaterial,
-    gl_enable,
-    glMaterialf,
-    glMaterialfv,
-)
+from picogl.backend.gl.capability import GLMaterialFace
+from picogl.backend.gl.state.fill import GLLightParameter, GLCapability, GLColorMaterialMode
+from picogl.backend.gl.wrappers.color import gl_color_material
+from picogl.backend.gl.wrappers.enable import gl_enable
+from picogl.backend.gl.wrappers.material import gl_material_fv, gl_material_f
 
 
-def setup_materials(backend: "GLBackend") -> None:
+def setup_materials() -> None:
     """
     setup_materials
 
     :return: None
     """
-    # Material settings
-    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
-    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
-    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50.0)
-    gl_enable(GL_COLOR_MATERIAL)
-    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
+    gl_material_fv(GLMaterialFace.FRONT_AND_BACK, GLLightParameter.DIFFUSE, [1.0, 1.0, 1.0, 1.0])
+    gl_material_fv(GLMaterialFace.FRONT_AND_BACK, GLLightParameter.SPECULAR, [1.0, 1.0, 1.0, 1.0])
+    gl_material_f(GLMaterialFace.FRONT_AND_BACK, GLLightParameter.SHININESS, 50.0)
+    gl_enable(GLCapability.COLOR_MATERIAL)
+    gl_color_material(GLMaterialFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE)
