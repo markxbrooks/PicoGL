@@ -22,6 +22,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
 )
 from picogl.backend.gl.capability import FACE_MAP, GLMaterialFace, PhongMaterial
 from picogl.renderer.backend import RenderBackend
+from picogl.boolean import GLBoolean
 
 
 def gl_enable(self, cap):
