@@ -16,15 +16,14 @@ from OpenGL.GLU import *
 from OpenGL.GLUT import *
 
 from examples.legacy_cube_fixed import set_up_legacy_lighting
-from picogl.backend.gl.capability import GLMaterialFace, GLFixedFunctionCapability
+from picogl.backend.gl.capability import GLMaterialFace, GLFixedFunctionCapability, GLPipelineCapability
 from picogl.backend.gl.enums import GLDrawMode, GLBitMask
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
-from picogl.backend.gl.light import GLLightSource
-from picogl.backend.gl.state.fill import GLLightParameter
+from picogl.backend.gl.state.fill import GLCapability
 from picogl.backend.gl.state.immediate import immediate_drawing
 from picogl.backend.gl.wrappers.clear import gl_clear, gl_clear_color
-from picogl.backend.gl.wrappers.enable import gl_enable
-from picogl.backend.gl.wrappers.material import gl_material_fv, gl_material_f
+from picogl.backend.gl.wrappers.enable import gl_enable, gl_disable
+from picogl.backend.gl.wrappers.polygon_mode import gl_polygon_mode
 
 
 class SimpleTeapotRenderer:
@@ -61,7 +60,7 @@ class SimpleTeapotRenderer:
         """Initialize OpenGL state."""
         try:
             dark_blue_background = (0.1, 0.1, 0.2, 1.0)
-            gl_clear_color(*dark_blue_background)  # Dark blue background
+            gl_clear_color(dark_blue_background)  # Dark blue background
             gl_enable(GLPipelineCapability.DEPTH_TEST)
             gl_enable(GLFixedFunctionCapability.LIGHTING)
             gl_enable(GLFixedFunctionCapability.LIGHT0)
@@ -95,11 +94,11 @@ class SimpleTeapotRenderer:
         """Draw the teapot using built-in OpenGL primitives."""
         # Set polygon mode
         if self.wireframe_mode:
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
-            glDisable(GLFixedFunctionCapability.LIGHTING)
+            gl_polygon_mode(GL_FRONT_AND_BACK, GL_LINE)
+            gl_disable(GLFixedFunctionCapability.LIGHTING)
             glColor3f(1.0, 0.0, 0.0)  # Red wireframe
         else:
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+            gl_polygon_mode(GL_FRONT_AND_BACK, GL_FILL)
             gl_enable(GLFixedFunctionCapability.LIGHTING)
             glColor3f(0.8, 0.2, 0.2)  # Red teapot
 

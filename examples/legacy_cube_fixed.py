@@ -16,10 +16,10 @@ import sys
 import numpy as np
 
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
+from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.light import GLLightSource
 from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.enums import GLBitMask
-from picogl.backend.gl.enums import GLLegacyMatrixMode
 from picogl.backend.gl.state.fill import GLFace, GLCapability, GLColorMaterialMode, GLLightParameter, GLFillMode
 from picogl.backend.gl.wrappers.clear import gl_clear
 from picogl.backend.gl.wrappers.material import gl_material_fv, gl_material_f
