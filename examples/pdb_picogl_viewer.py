@@ -16,6 +16,7 @@ from pathlib import Path
 import numpy as np
 from examples.utils.pdb_loader import PDBLoader
 from picogl.backend.gl.enums.point_size import GLPointCapability
+from picogl.backend.gl.wrappers.enable import gl_enable
 
 # Add the current directory to the path to find pdb_loader.py
 sys.path.insert(0, os.path.dirname(__file__))
@@ -123,8 +124,8 @@ class MolecularRenderWindow(RenderWindow):
     def _setup_molecular_rendering(self):
         """Set up molecular visualization specific rendering"""
         # Enable point sprites for atoms
-        glEnable(GLLegacyPointCapability.POINT_SPRITE)
-        glEnable(GLPointCapability.PROGRAM_POINT_SIZE)
+        gl_enable(GLLegacyPointCapability.POINT_SPRITE)
+        gl_enable(GLPointCapability.PROGRAM_POINT_SIZE)
 
         # Set point size for atoms
         glPointSize(8.0)

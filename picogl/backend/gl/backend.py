@@ -12,8 +12,6 @@ Classes:Ï
 import platform
 import warnings
 
-from OpenGL.raw.GL.VERSION.GL_3_2 import GL_PROGRAM_POINT_SIZE
-
 from picogl.backend.gl.driver.blend import GLBlendDriver
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.gl.driver.depth import GLDepthDriver
@@ -114,5 +112,5 @@ class GLBackend:
         self.frame.viewport(0, 0, width * dpr, height * dpr)
         self.depth.set_depth_test(True)
         self.frame.set_clear_color((0.1, 0.1, 0.1, 1.0))
-        self.capabilities.enable(GL_PROGRAM_POINT_SIZE)
+        self.capabilities.enable(GLPointCapability.PROGRAM_POINT_SIZE)
         self.frame.clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)

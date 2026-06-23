@@ -3,9 +3,9 @@
 import unittest
 from unittest.mock import patch
 
-from OpenGL.raw.GL.VERSION.GL_3_2 import GL_PROGRAM_POINT_SIZE
 
 from picogl.backend.gl.enums import GLBitMask
+from picogl.backend.gl.enums.point_size import GLPointCapability
 from picogl.backend.gl.wrappers.frame import prepare_viewport
 
 
@@ -60,7 +60,7 @@ class TestPrepareViewport(unittest.TestCase):
                 ("viewport", 0, 0, 640, 480),
                 ("depth_test", True),
                 ("set_clear_color", (0.1, 0.1, 0.1, 1.0)),
-                ("enable", GL_PROGRAM_POINT_SIZE),
+                ("enable", GLPointCapability.PROGRAM_POINT_SIZE),
                 ("clear", GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER),
             ],
         )
