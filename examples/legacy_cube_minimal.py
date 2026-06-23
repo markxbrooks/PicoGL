@@ -345,11 +345,11 @@ class MinimalCubeRenderer(GlutRenderer):
         """Draw the cube using immediate mode OpenGL."""
         if self.wireframe_mode:
             glDisable(GLFixedFunctionCapability.LIGHTING)
-            glPolygonMode(GLMaterialFace.FRONT_AND_BACK, GL_LINE)
+            gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GL_LINE)
             glColor3f(1.0, 0.0, 0.0)  # Red wireframe
         else:
             gl_enable(GLFixedFunctionCapability.LIGHTING)
-            glPolygonMode(GLFace.FRONT_AND_BACK, GLFillMode.FILL)
+            gl_polygon_mode(GLFace.FRONT_AND_BACK, GLFillMode.FILL)
 
         # Draw the cube using immediate mode
         with immediate_drawing(GLDrawMode.TRIANGLES):
