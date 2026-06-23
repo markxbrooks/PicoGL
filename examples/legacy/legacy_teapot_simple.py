@@ -19,7 +19,7 @@ from examples.legacy_cube_fixed import set_up_legacy_lighting
 from picogl.backend.gl.capability import GLMaterialFace, GLFixedFunctionCapability, GLPipelineCapability
 from picogl.backend.gl.enums import GLDrawMode, GLBitMask
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
-from picogl.backend.gl.state.fill import GLCapability
+from picogl.backend.gl.state.fill import GLCapability, GLColorMaterialMode
 from picogl.backend.gl.state.immediate import immediate_drawing
 from picogl.backend.gl.wrappers.clear import gl_clear, gl_clear_color
 from picogl.backend.gl.wrappers.enable import gl_enable, gl_disable
@@ -65,7 +65,7 @@ class SimpleTeapotRenderer:
             gl_enable(GLFixedFunctionCapability.LIGHTING)
             gl_enable(GLFixedFunctionCapability.LIGHT0)
             gl_enable(GLCapability.COLOR_MATERIAL)
-            glColorMaterial(GLMaterialFace.FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
+            glColorMaterial(GLMaterialFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE)
 
             set_up_legacy_lighting()
 
@@ -115,7 +115,7 @@ class SimpleTeapotRenderer:
 
     def draw_normals(self):
         """Draw normal vectors (simplified)."""
-        glDisable(GL_LIGHTING)
+        gl_disable(GL_LIGHTING)
         glColor3f(0.0, 1.0, 0.0)  # Green normals
         with immediate_drawing(GLDrawMode.LINES):
             # Draw a few normal vectors for demonstration
