@@ -9,7 +9,7 @@ from OpenGL.raw.GL.ARB.vertex_shader import GL_FLOAT
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_LINES
 from OpenGL.raw.GL.VERSION.GL_1_1 import glDrawArrays
 from OpenGL.raw.GL.VERSION.GL_1_5 import glBindBuffer, GL_ARRAY_BUFFER, glBufferData, GL_STATIC_DRAW
-from OpenGL.raw.GL.VERSION.GL_2_0 import glEnableVertexAttribArray, glVertexAttribPointer, glDisableVertexAttribArray
+from OpenGL.raw.GL.VERSION.GL_2_0 import gl_enableVertexAttribArray, glVertexAttribPointer, glDisableVertexAttribArray
 from pyglm import glm
 
 from picogl.backend.modern.core.shader.program import ShaderProgram
@@ -59,7 +59,7 @@ class WorldSheet(ShaderMeshRenderer):
         self.shader.begin()
         glUniformMatrix4fv(self.mvp_id, 1, GL_FALSE, glm.value_ptr(mvp_matrix))
 
-        glEnableVertexAttribArray(0)
+        gl_enableVertexAttribArray(0)
         glBindBuffer(GL_ARRAY_BUFFER, self.line_buffer)
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, None)
 

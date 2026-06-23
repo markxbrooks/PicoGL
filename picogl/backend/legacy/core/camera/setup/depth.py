@@ -2,7 +2,7 @@
 Enable depth test
 """
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_DEPTH_TEST, glClearDepth, glEnable
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_DEPTH_TEST, glClearDepth, gl_enable
 
 
 def enable_depth_test() -> None:
@@ -11,5 +11,5 @@ def enable_depth_test() -> None:
 
     :return: None
     """
-    glEnable(GL_DEPTH_TEST)
+    gl_enable(GL_DEPTH_TEST)
     glClearDepth(1.0)

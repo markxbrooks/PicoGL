@@ -9,7 +9,7 @@ def gl_clear_buffers() -> None:
     """
     glMatrixMode(GL_MODELVIEW)  # Legacy pipeline
     glLoadIdentity()  # Reset modelview matrix
-    glEnable(GL_DEPTH_TEST)
-    glEnable(GL_MULTISAMPLE)
+    gl_enable(GL_DEPTH_TEST)
+    gl_enable(GL_MULTISAMPLE)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glColor3f(1.0, 1.0, 1.0)  # Reset color_array to white (legacy state)

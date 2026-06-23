@@ -106,19 +106,19 @@ class MolecularRenderWindow(RenderWindow):
     def _setup_molecular_rendering(self):
         """Set up molecular visualization specific rendering"""
         # Enable point sprites for atoms
-        glEnable(GL_POINT_SPRITE)
-        glEnable(GL_PROGRAM_POINT_SIZE)
+        gl_enable(GL_POINT_SPRITE)
+        gl_enable(GL_PROGRAM_POINT_SIZE)
         
         # Set point size for atoms
         glPointSize(8.0)
         
         # Enable line smoothing for bonds
-        glEnable(GL_LINE_SMOOTH)
+        gl_enable(GL_LINE_SMOOTH)
         glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
         glLineWidth(2.0)
         
         # Enable depth testing
-        glEnable(GL_DEPTH_TEST)
+        gl_enable(GL_DEPTH_TEST)
         glDepthFunc(GL_LESS)
         
         # Set background colour

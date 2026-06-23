@@ -10,7 +10,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_DEPTH_TEST,
     glClear,
     glClearColor,
-    glEnable,
+    gl_enable,
     glViewport,
 )
 from OpenGL.raw.GL.VERSION.GL_3_2 import GL_PROGRAM_POINT_SIZE
@@ -31,7 +31,7 @@ def prepare_viewport(width: int, height: int) -> None:
     else:
         dpr = 1
     glViewport(0, 0, width * dpr, height * dpr)
-    glEnable(GL_DEPTH_TEST)
+    gl_enable(GL_DEPTH_TEST)
     glClearColor(0.1, 0.1, 0.1, 1.0)
-    glEnable(GL_PROGRAM_POINT_SIZE)
+    gl_enable(GL_PROGRAM_POINT_SIZE)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)

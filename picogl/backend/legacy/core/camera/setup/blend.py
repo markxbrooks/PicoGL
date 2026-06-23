@@ -8,7 +8,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_SRC_ALPHA,
     glBlendFunc,
     glClearColor,
-    glEnable,
+    gl_enable,
 )
 
 
@@ -18,6 +18,6 @@ def enable_blending() -> None:
 
     :return: None
     """
-    glEnable(GL_BLEND)
+    gl_enable(GL_BLEND)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
     glClearColor(0.0, 0.0, 0.0, 1.0)

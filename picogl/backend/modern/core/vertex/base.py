@@ -44,7 +44,7 @@ from OpenGL.raw.GL.VERSION.GL_1_5 import (
     glIsBuffer,
 )
 from OpenGL.raw.GL.VERSION.GL_2_0 import (
-    glEnableVertexAttribArray,
+    gl_enableVertexAttribArray,
     glVertexAttribPointer,
 )
 
@@ -165,7 +165,7 @@ class VertexBuffer(VertexBase):
         """Enable and configure the vertex attribute array."""
         if self.index is None:
             raise ValueError("Vertex attribute index is not set.")
-        glEnableVertexAttribArray(self.index)
+        gl_enableVertexAttribArray(self.index)
         glVertexAttribPointer(
             self.index,
             self.size,

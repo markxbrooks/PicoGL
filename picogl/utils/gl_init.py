@@ -11,7 +11,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     glClear,
     glClearColor,
     glDepthFunc,
-    glEnable,
+    gl_enable,
 )
 from OpenGL.raw.GL.VERSION.GL_1_3 import GL_MULTISAMPLE
 
@@ -84,8 +84,8 @@ init_gl_list = [
     ("✅ Initializing OpenGL context...", lambda: None),  # Message only
     ("✅ Setting clear colour", lambda: glClearColor(0.2, 0.2, 0.2, 0.0)),
     ("✅ Setting depth function", lambda: glDepthFunc(GL_LESS)),
-    ("✅ Enabling depth test", lambda: glEnable(GL_DEPTH_TEST)),
-    ("✅ Enabling face culling", lambda: glEnable(GL_CULL_FACE)),
+    ("✅ Enabling depth test", lambda: gl_enable(GL_DEPTH_TEST)),
+    ("✅ Enabling face culling", lambda: gl_enable(GL_CULL_FACE)),
 ]
 
 paint_gl_list = [
@@ -96,7 +96,7 @@ paint_gl_list = [
 ]
 
 initialize_gl_list = [
-    ("✅ Enabling multisampling", lambda: glEnable(GL_MULTISAMPLE)),
+    ("✅ Enabling multisampling", lambda: gl_enable(GL_MULTISAMPLE)),
     ("✅ Enabling depth test", enable_depth_test),
     ("✅ Enabling blending", enable_blending),
     ("✅ Enabling smoothing", enable_smoothing),

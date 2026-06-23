@@ -77,7 +77,7 @@ class UvRenderer(RendererBase):
         with self.shader:
             # Assume shader attribute location 0 for UVs
             uv_loc = 0  # Alternatively, query dynamically with glGetAttribLocation
-            glEnableVertexAttribArray(uv_loc)
+            gl_enableVertexAttribArray(uv_loc)
             glBindBuffer(GL_ARRAY_BUFFER, self.uv_buffer)
             glVertexAttribPointer(uv_loc, 2, GL_FLOAT, GL_FALSE, 0, None)
 

@@ -24,7 +24,7 @@ from OpenGL.raw.GL.VERSION.GL_1_5 import (
 )
 from OpenGL.raw.GL.VERSION.GL_2_0 import (
     glDisableVertexAttribArray,
-    glEnableVertexAttribArray,
+    gl_enableVertexAttribArray,
 )
 
 from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
@@ -200,9 +200,9 @@ class VertexBufferGroup(VertexBase):
                 buffer_handle = getattr(vbo, "_id", vbo)
                 glBindBuffer(GL_ARRAY_BUFFER, buffer_handle)
 
-                # Debug the glEnableVertexAttribArray call
+                # Debug the gl_enableVertexAttribArray call
                 attr_index = int(attr.index)
-                glEnableVertexAttribArray(attr_index)
+                gl_enableVertexAttribArray(attr_index)
                 # Convert IntConstant to raw int for OpenGL
                 # Try multiple ways to extract the integer value from IntConstant
                 try:

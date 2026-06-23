@@ -3,7 +3,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_LESS,
     glClearColor,
     glDepthFunc,
-    glEnable,
+    gl_enable,
 )
 
 
@@ -13,6 +13,6 @@ def initialize_background() -> None:
 
     :return: None
     """
-    glEnable(GL_DEPTH_TEST)
+    gl_enable(GL_DEPTH_TEST)
     glDepthFunc(GL_LESS)
     glClearColor(0.0, 0, 0.4, 0)

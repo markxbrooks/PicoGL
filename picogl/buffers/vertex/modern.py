@@ -8,7 +8,7 @@ from OpenGL.raw.GL.VERSION.GL_1_5 import (
     GL_ELEMENT_ARRAY_BUFFER,
     glBindBuffer,
 )
-from OpenGL.raw.GL.VERSION.GL_2_0 import glEnableVertexAttribArray
+from OpenGL.raw.GL.VERSION.GL_2_0 import gl_enableVertexAttribArray
 from OpenGL.raw.GL.VERSION.GL_3_0 import glBindVertexArray
 
 from picogl.buffers.attributes import LayoutDescriptor
@@ -61,7 +61,7 @@ class ModernVertexArrayGroup(BaseVertexBuffer):
 
         if self.layout:
             for attr in self.layout.attributes:
-                glEnableVertexAttribArray(attr.index)
+                gl_enableVertexAttribArray(attr.index)
                 glVertexAttribPointer(
                     attr.index,
                     attr.size,

@@ -28,7 +28,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     glClear,
     glClearColor,
     glDisable,
-    glEnable,
+    gl_enable,
     glFogf,
     glFogfv,
     glFogi,
@@ -61,7 +61,7 @@ def set_fog_state(
         fog_start_value = fog_end_value - 1
     fog_density_value = min(0.3, fog_density_value)
     if fog_state:
-        glEnable(GL_FOG)
+        gl_enable(GL_FOG)
         glFogfv(
             GL_FOG_COLOR,
             [
@@ -88,19 +88,19 @@ def set_second_light_state(second_light_state: bool) -> None:
     Second light
     """
     if second_light_state:
-        glEnable(GL_LIGHT1)
+        gl_enable(GL_LIGHT1)
         glLightfv(GL_LIGHT1, GL_POSITION, [-10.0, -10.0, -10.0, 1.0])
         glLightfv(GL_LIGHT1, GL_DIFFUSE, [0.5, 0.5, 0.5, 1.0])
         glLightfv(GL_LIGHT1, GL_SPECULAR, [0.3, 0.3, 0.3, 1.0])
-        glEnable(GL_LIGHT2)
+        gl_enable(GL_LIGHT2)
         glLightfv(GL_LIGHT2, GL_POSITION, [90.0, 90.0, 90.0, 1.0])
         glLightfv(GL_LIGHT2, GL_DIFFUSE, [0.5, 0.5, 0.5, 1.0])
         glLightfv(GL_LIGHT2, GL_SPECULAR, [0.3, 0.3, 0.3, 1.0])
-        glEnable(GL_LIGHT3)
+        gl_enable(GL_LIGHT3)
         glLightfv(GL_LIGHT3, GL_POSITION, [-90.0, -90.0, -90.0, 1.0])
         glLightfv(GL_LIGHT3, GL_DIFFUSE, [0.5, 0.5, 0.5, 1.0])
         glLightfv(GL_LIGHT3, GL_SPECULAR, [0.3, 0.3, 0.3, 1.0])
-        glEnable(GL_LIGHT4)
+        gl_enable(GL_LIGHT4)
         glLightfv(GL_LIGHT4, GL_POSITION, [270.0, 270.0, 270.0, 1.0])
         glLightfv(GL_LIGHT4, GL_DIFFUSE, [0.5, 0.5, 0.5, 1.0])
         glLightfv(GL_LIGHT4, GL_SPECULAR, [0.3, 0.3, 0.3, 1.0])
@@ -132,9 +132,9 @@ def setup_lighting(mode: int = 0) -> None:
     """
     current_shininess = 1.0
     if mode == 0:
-        glEnable(GL_LIGHTING)
-        glEnable(GL_LIGHT0)
-        # glEnable(GL_COLOR_MATERIAL)
+        gl_enable(GL_LIGHTING)
+        gl_enable(GL_LIGHT0)
+        # gl_enable(GL_COLOR_MATERIAL)
         # Set up light position_array (in eye space)
         light_pos = [10.0, 10.0, 10.0, 1.0]  # positional black light
         glLightfv(GL_LIGHT0, GL_POSITION, light_pos)
@@ -145,8 +145,8 @@ def setup_lighting(mode: int = 0) -> None:
         glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 128.0 * current_shininess)
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1)
     if mode == 2:
-        glEnable(GL_LIGHTING)
-        glEnable(GL_LIGHT0)
+        gl_enable(GL_LIGHTING)
+        gl_enable(GL_LIGHT0)
         # Set up light position_array (in eye space)
         light_pos = [0.0, 0.0, 0.0, 1.0]  # positional light
         glLightfv(GL_LIGHT0, GL_POSITION, light_pos)
@@ -155,8 +155,8 @@ def setup_lighting(mode: int = 0) -> None:
         glLightfv(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
         glLightfv(GL_LIGHT0, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
     elif mode == 1:
-        glEnable(GL_LIGHTING)
-        glEnable(GL_LIGHT0)
+        gl_enable(GL_LIGHTING)
+        gl_enable(GL_LIGHT0)
 
         glMatrixMode(GL_MODELVIEW)
         glPushMatrix()
@@ -173,8 +173,8 @@ def setup_lighting(mode: int = 0) -> None:
         glLightfv(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
         glLightfv(GL_LIGHT0, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
     elif mode == 3:
-        glEnable(GL_LIGHTING)
-        glEnable(GL_LIGHT0)
+        gl_enable(GL_LIGHTING)
+        gl_enable(GL_LIGHT0)
         # Set light properties (independent of matrix)
         glLightfv(GL_LIGHT0, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
         glLightfv(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])

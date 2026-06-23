@@ -57,7 +57,7 @@ class TestVertexArrayObject(unittest.TestCase):
             patch('picogl.backend.modern.core.vertex.array.object.glGenVertexArrays'),
             patch('picogl.backend.modern.core.vertex.array.object.glDeleteVertexArrays'),
             patch('picogl.backend.modern.core.vertex.array.object.glBindBuffer'),
-            patch('picogl.backend.modern.core.vertex.array.object.glEnableVertexAttribArray'),
+            patch('picogl.backend.modern.core.vertex.array.object.gl_enableVertexAttribArray'),
             patch('picogl.backend.modern.core.vertex.array.object.glVertexAttribPointer'),
             patch('picogl.backend.modern.core.vertex.array.object.glDrawArrays'),
             patch('picogl.backend.modern.core.vertex.array.object.glDrawElements'),

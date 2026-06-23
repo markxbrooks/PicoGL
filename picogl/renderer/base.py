@@ -8,7 +8,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_DEPTH_TEST,
     GL_LINE_SMOOTH,
     glDisable,
-    glEnable,
+    gl_enable,
     glFlush,
     glLineWidth,
 )
@@ -34,11 +34,11 @@ class RendererBase(AbstractRenderer):
         """Set the line width and disable depth test."""
         glLineWidth(self.line_width)
         glDisable(GL_DEPTH_TEST)
-        glEnable(GL_LINE_SMOOTH)
+        gl_enable(GL_LINE_SMOOTH)
 
     def _restore_gl_state(self):
         """Restore the original line width and depth test state."""
-        glEnable(GL_DEPTH_TEST)
+        gl_enable(GL_DEPTH_TEST)
 
     @property
     def dispatch_list(self):

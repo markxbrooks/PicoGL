@@ -107,16 +107,16 @@ class MeshData:
 
     def bind(self):
         if self.vbo is not None:
-            GL.glEnableClientState(GL.GL_VERTEX_ARRAY)
+            GL.gl_enableClientState(GL.GL_VERTEX_ARRAY)
             GL.glVertexPointer(3, GL.GL_FLOAT, 0, self.vbo)
         if self.nbo is not None:
-            GL.glEnableClientState(GL.GL_NORMAL_ARRAY)
+            GL.gl_enableClientState(GL.GL_NORMAL_ARRAY)
             GL.glNormalPointer(GL.GL_FLOAT, 0, self.nbo)
         if self.cbo is not None:
-            GL.glEnableClientState(GL.GL_COLOR_ARRAY)
+            GL.gl_enableClientState(GL.GL_COLOR_ARRAY)
             GL.glColorPointer(3, GL.GL_FLOAT, 0, self.cbo)
         if self.uvs is not None:
-            GL.glEnableClientState(GL.GL_TEXTURE_COORD_ARRAY)
+            GL.gl_enableClientState(GL.GL_TEXTURE_COORD_ARRAY)
             GL.glTexCoordPointer(2, GL.GL_FLOAT, 0, self.uvs)
 
     def unbind(self):
@@ -230,7 +230,7 @@ class MeshData:
 
         # Enable alpha blending for transparency
         if alpha < 1.0:
-            GL.glEnable(GL.GL_BLEND)
+            GL.gl_enable(GL.GL_BLEND)
             GL.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
         else:
             GL.glDisable(GL.GL_BLEND)
@@ -238,7 +238,7 @@ class MeshData:
         # Check if we should use vertex colors or override colour
         if color is None and self.cbo is not None:
             # Use vertex colors (for fo-fc maps)
-            GL.glEnableClientState(GL.GL_COLOR_ARRAY)
+            GL.gl_enableClientState(GL.GL_COLOR_ARRAY)
             GL.glColorPointer(3, GL.GL_FLOAT, 0, self.cbo)
             # Note: Alpha blending for vertex colors would require 4-component colors
             # For now, we'll use the alpha value for the overall transparency

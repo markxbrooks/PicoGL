@@ -6,7 +6,7 @@ from OpenGL.raw.GL.VERSION.GL_1_1 import (
     GL_DOUBLE,
     GL_VERTEX_ARRAY,
     glDrawArrays,
-    glEnableClientState,
+    gl_enableClientState,
 )
 from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ARRAY_BUFFER
 
@@ -69,7 +69,7 @@ class LegacyPositionVBO(LegacyVBO):
         try:
             if self.dtype not in self.SUPPORTED_GL_TYPES:
                 raise ValueError(f"Unsupported GL data type: {self.dtype}")
-            glEnableClientState(GL_VERTEX_ARRAY)
+            gl_enableClientState(GL_VERTEX_ARRAY)
             glVertexPointer(self.size, self.dtype, self.stride, self.pointer)
         finally:
             self.unbind()

@@ -2,7 +2,7 @@
 Enable points rendering state
 """
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import glEnable, GL_BLEND, glBlendFunc, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA
+from OpenGL.raw.GL.VERSION.GL_1_0 import gl_enable, GL_BLEND, glBlendFunc, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA
 from OpenGL.raw.GL.VERSION.GL_2_0 import GL_POINT_SPRITE, GL_VERTEX_PROGRAM_POINT_SIZE
 from OpenGL.raw.GL.VERSION.GL_3_2 import GL_PROGRAM_POINT_SIZE
 
@@ -13,8 +13,8 @@ def enable_points_rendering_state() -> None:
 
     :return: None
     """
-    glEnable(GL_BLEND)
+    gl_enable(GL_BLEND)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-    glEnable(GL_PROGRAM_POINT_SIZE)
-    glEnable(GL_POINT_SPRITE)
-    glEnable(GL_VERTEX_PROGRAM_POINT_SIZE)
+    gl_enable(GL_PROGRAM_POINT_SIZE)
+    gl_enable(GL_POINT_SPRITE)
+    gl_enable(GL_VERTEX_PROGRAM_POINT_SIZE)

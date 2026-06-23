@@ -10,7 +10,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_SHININESS,
     GL_SPECULAR,
     glColorMaterial,
-    glEnable,
+    gl_enable,
     glMaterialf,
     glMaterialfv,
 )
@@ -26,5 +26,5 @@ def setup_materials() -> None:
     glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
     glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
     glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50.0)
-    glEnable(GL_COLOR_MATERIAL)
+    gl_enable(GL_COLOR_MATERIAL)
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)

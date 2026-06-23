@@ -49,7 +49,7 @@ from OpenGL.raw.GL.VERSION.GL_1_5 import (
     glBindBuffer,
 )
 from OpenGL.raw.GL.VERSION.GL_2_0 import (
-    glEnableVertexAttribArray,
+    gl_enableVertexAttribArray,
     glVertexAttribPointer,
 )
 
@@ -147,7 +147,7 @@ class VertexArrayObject(VertexBase):
             if self.layout:
                 for attr in self.layout.attributes:
                     log.parameter("attr", attr)
-                    glEnableVertexAttribArray(attr.index)
+                    gl_enableVertexAttribArray(attr.index)
                     glVertexAttribPointer(
                         attr.index,
                         attr.size,

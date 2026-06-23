@@ -56,7 +56,7 @@ from OpenGL.raw.GL.VERSION.GL_1_5 import (
     glBindBuffer,
     glGenBuffers,
 )
-from OpenGL.raw.GL.VERSION.GL_2_0 import glEnableVertexAttribArray
+from OpenGL.raw.GL.VERSION.GL_2_0 import gl_enableVertexAttribArray
 from OpenGL.raw.GL.VERSION.GL_3_0 import glBindVertexArray, glGenVertexArrays
 
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
@@ -103,7 +103,7 @@ def upload_geometry_buffers(
     stride = vertex_data.shape[1] * 4  # float32 = 4 bytes
 
     for location, size, offset in attributes:
-        glEnableVertexAttribArray(location)
+        gl_enableVertexAttribArray(location)
         glVertexAttribPointer(
             location, size, GL_FLOAT, GL_FALSE, stride, ctypes.c_void_p(offset)
         )
@@ -129,6 +129,6 @@ def upload_vertex_buffer(vao: int, vbo: int, points: np.ndarray):
     glBindVertexArray(vao)
     glBindBuffer(GL_ARRAY_BUFFER, vbo)
     glBufferData(GL_ARRAY_BUFFER, points.nbytes, points, GL_STATIC_DRAW)
-    glEnableVertexAttribArray(0)
+    gl_enableVertexAttribArray(0)
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, None)
     glBindVertexArray(0)
