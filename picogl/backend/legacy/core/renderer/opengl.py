@@ -24,6 +24,22 @@ from picogl.backend.gl.capability import FACE_MAP, GLMaterialFace, PhongMaterial
 from picogl.renderer.backend import RenderBackend
 
 
+def gl_enable(self, cap):
+    glEnable(cap)
+    
+    
+def gl_disable(self, cap):
+    glDisable(cap)
+    
+    
+def gl_is_enabled(self, cap):
+    return glIsEnabled(cap)
+    
+
+def gl_blend_func(self, src, dst):
+    glBlendFunc(src, dst)
+        
+
 class LegacyOpenGLBackend(RenderBackend):
     """Legacy OpenGL Backend"""
 
