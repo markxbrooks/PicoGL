@@ -44,16 +44,16 @@ class LegacyOpenGLBackend(RenderBackend):
     """Legacy OpenGL Backend"""
 
     def enable(self, cap):
-        glEnable(cap)
+        gl_enable(cap)
 
     def disable(self, cap):
-        glDisable(cap)
+        gl_disable(cap)
 
     def is_enabled(self, cap):
-        return glIsEnabled(cap)
+        return gl_is_enabled(cap)
 
     def set_blend_func(self, src, dst):
-        glBlendFunc(src, dst)
+        gl_blend_func(src, dst)
 
     def set_depth_mask(self, flag):
         glDepthMask(GLBoolean.TRUE if flag else GLBoolean.FALSE)
