@@ -8,46 +8,18 @@ depth masks, and setting material properties. It serves as an abstraction
 over low-level OpenGL calls using the pyOpenGL library.
 """
 
-from OpenGL.GL import glGetBooleanv
+
 from picogl.backend.gl.state.fill import GLLightParameter
 from OpenGL.raw.GL.VERSION.GL_1_0 import (
-    GL_DEPTH_WRITEMASK,
-    glDepthMask,
-    glBlendFunc,
-    glDisable,
-    glEnable,
-    glIsEnabled,
     glMaterialf,
     glMaterialfv,
 )
 from picogl.backend.gl.capability import FACE_MAP, GLMaterialFace, PhongMaterial
 from picogl.renderer.backend import RenderBackend
-from picogl.boolean import GLBoolean
+from picogl.backend.gl.wrappers.enable import gl_enable, gl_is_enabled, gl_disable
+from picogl.backend.gl.wrappers.depth import gl_get_depth_mask, gl_set_depth_mask
+from picogl.backend.gl.wrappers.blending import gl_blend_func
 
-
-def gl_enable_old(cap):
-    glEnable(cap)
-    
-    
-def gl_disable_old(cap):
-    glDisable(cap)
-    
-    
-def gl_is_enabled(cap):
-    return glIsEnabled(cap)
-    
-
-def gl_blend_func(src, dst):
-    glBlendFunc(src, dst)
-    
-    
-def gl_get_depth_mask():
-    return glGetBooleanv(GL_DEPTH_WRITEMASK)
-
-
-def gl_set_depth_mask(flag):
-    glDepthMask(GLBoolean.TRUE if flag else GLBoolean.FALSE)
-        
 
 class LegacyOpenGLBackend(RenderBackend):
     """Legacy OpenGL Backend"""
