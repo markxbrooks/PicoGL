@@ -15,6 +15,8 @@ from pathlib import Path
 
 import numpy as np
 from examples.utils.pdb_loader import PDBLoader
+from picogl.backend.gl.enums.point_size import GLPointCapability
+from picogl.backend.gl.wrappers.enable import gl_enable
 
 # Add the current directory to the path to find pdb_loader.py
 sys.path.insert(0, os.path.dirname(__file__))
@@ -31,6 +33,18 @@ from OpenGL.GL import *
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.renderer import MeshData
 from picogl.ui.backend.glut.window.object import RenderWindow
+
+
+def create_vao(mesh):
+    vao = VertexArrayObject()
+    atom_vertices = np.array(mesh.vertices, dtype=np.float32).reshape(
+        -1, 3
+    )
+    atom_colors = np.array(mesh.colors, dtype=np.float32).reshape(-1, 3)
+
+    vao.add_vbo(index=0, data=atom_vertices, size=3)
+    vao.add_vbo(index=1, data=atom_colors, size=3)
+    return vao
 
 
 class MolecularRenderWindow(RenderWindow):
@@ -110,19 +124,19 @@ class MolecularRenderWindow(RenderWindow):
     def _setup_molecular_rendering(self):
         """Set up molecular visualization specific rendering"""
         # Enable point sprites for atoms
-        gl_enable(GL_POINT_SPRITE)
-        gl_enable(GL_PROGRAM_POINT_SIZE)
+        gl_enable(GLLegacyPointCapability.POINT_SPRITE)
+        gl_enable(GLPointCapability.PROGRAM_POINT_SIZE)
 
         # Set point size for atoms
         glPointSize(8.0)
 
         # Enable line smoothing for bonds
-        gl_enable(GL_LINE_SMOOTH)
+        glEnable(GL_LINE_SMOOTH)
         glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
         glLineWidth(2.0)
 
         # Enable depth testing
-        gl_enable(GL_DEPTH_TEST)
+        glEnable(GL_DEPTH_TEST)
         glDepthFunc(GL_LESS)
 
         # Set background colour
@@ -131,28 +145,11 @@ class MolecularRenderWindow(RenderWindow):
     def _create_vaos(self):
         """Create Vertex Array Objects for efficient rendering"""
         # Create VAO for atoms
-        self.atom_vao = VertexArrayObject()
-        atom_vertices = np.array(self.atom_mesh.vertices, dtype=np.float32).reshape(
-            -1, 3
-        )
-        atom_colors = np.array(self.atom_mesh.colors, dtype=np.float32).reshape(-1, 3)
-
-        self.atom_vao.add_vbo(index=0, data=atom_vertices, size=3)
-        self.atom_vao.add_vbo(index=1, data=atom_colors, size=3)
+        self.atom_vao = create_vao(self.atom_mesh)
 
         # Create VAO for bonds
         if self.bond_mesh:
-            self.bond_vao = VertexArrayObject()
-            bond_vertices = np.array(self.bond_mesh.vertices, dtype=np.float32).reshape(
-                -1, 3
-            )
-            bond_colors = np.array(self.bond_mesh.colors, dtype=np.float32).reshape(
-                -1, 3
-            )
-
-            self.bond_vao.add_vbo(index=0, data=bond_vertices, size=3)
-            self.bond_vao.add_vbo(index=1, data=bond_colors, size=3)
-
+            self.bond_vao = create_vao(self.bond_mesh)
         print("✓ Created VAOs for molecular rendering")
 
     def render(self):

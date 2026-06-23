@@ -12,6 +12,9 @@ from pathlib import Path
 
 import numpy as np
 from OpenGL.GL import *
+
+from picogl.backend.gl.enums.point_size import GLPointCapability, GLLegacyPointCapability
+from picogl.backend.gl.wrappers.enable import gl_enable
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.renderer import MeshData
 from picogl.shaders.registry import ShaderRegistry
@@ -147,14 +150,14 @@ class MolecularRenderWindow(RenderWindow):
     def _setup_molecular_rendering(self):
         """Set up molecular visualization specific rendering"""
         # Enable point sprites for atoms
-        gl_enable(GL_POINT_SPRITE)
-        gl_enable(GL_PROGRAM_POINT_SIZE)
+        gl_enable(GLLegacyPointCapability.POINT_SPRITE)
+        gl_enable(GLPointCapability.PROGRAM_POINT_SIZE)
 
         # Set point size for atoms
         glPointSize(8.0)
 
         # Enable line smoothing for bonds
-        gl_enable(GL_LINE_SMOOTH)
+        glEnable(GL_LINE_SMOOTH)
         glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
         glLineWidth(2.0)
 

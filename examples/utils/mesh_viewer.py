@@ -2,6 +2,12 @@ from decologr import Decologr as log
 from examples.utils.world_sheet import WorldSheet
 from OpenGL.GL import *  # pylint: disable=W0614
 from OpenGL.GLUT import *  # pylint: disable=W0614
+
+from picogl.backend.gl.enums import GLBitMask
+from picogl.backend.gl.wrappers.clear import gl_clear_color
+from picogl.backend.gl.wrappers.depth import gl_depth_func
+from picogl.backend.gl.wrappers.enable import gl_enable
+from picogl.backend.gl.wrappers.polygon_mode import gl_polygon_mode
 from picogl.backend.modern.core.shader.mvp.controller import MVPController
 from picogl.ui.backend.glut.window.gl import GLWindow
 from pyglm import glm
@@ -17,9 +23,9 @@ class MeshViewWindow(GLWindow):
 
     def initializeGL(self):
         """initializeGL"""
-        glClearColor(0.1, 0.1, 0.1, 0.8)
-        glDepthFunc(GL_LESS)
-        gl_enable(GL_DEPTH_TEST)
+        gl_clear_color(0.1, 0.1, 0.1, 0.8)
+        gl_depth_func(GLDepthFunc.LESS)
+        gl_enable(GLPipelineCapability.DEPTH_TEST)
 
     def add_mesh(self, mesh_with_render: object):
         """add_mesh"""
@@ -45,7 +51,7 @@ class MeshViewWindow(GLWindow):
         """paintGL"""
         log.message("paintGL")
         self.calc_mvp()
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        glClear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
         for mesh in self.meshes:
             mesh.render(
                 self._mvp,
@@ -60,10 +66,10 @@ class MeshViewWindow(GLWindow):
             self.controller.reset()
             self.update_if()
         if action == 2:
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+            gl_polygon_mode(GLFace.FRONT_AND_BACK, GLDrawMode.LINE)
             self.update_if()
         if action == 4:
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+            gl_polygon_mode(GLFace.FRONT_AND_BACK, GLDrawMode.FILL)
             self.update_if()
         return 0
 

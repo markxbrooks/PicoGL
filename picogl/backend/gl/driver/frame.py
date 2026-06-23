@@ -7,9 +7,11 @@ the framebuffer with specified colors and configuring the viewport
 for rendering.
 """
 
-from OpenGL.GL import glClear, glClearColor, glViewport
+from OpenGL.GL import glViewport
+from OpenGL.GL import GL_FRAMEBUFFER, glBindFramebuffer
 
 from picogl.backend.gl.enums import GLBitMask
+from picogl.backend.gl.wrappers.clear import gl_clear_color, gl_clear
 from picogl.backend.state import gl_value
 
 
@@ -18,7 +20,7 @@ class GLFrameDriver:
 
     @staticmethod
     def clear(mask):
-        glClear(gl_value(mask))
+        gl_clear(gl_value(mask))
 
     def set_clear_background_and_color(self, color=(0.0, 0.0, 0.0, 1.0)):
         """
@@ -37,8 +39,24 @@ class GLFrameDriver:
         self.clear_background()
 
     @staticmethod
+    def bind_framebuffer(framebuffer: int) -> None:
+        """Bind the window-system default framebuffer (required on some Qt/macOS paths)."""
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer)
+
+    def bind_default_framebuffer(self) -> None:
+        """Bind the window-system default framebuffer (required on some Qt/macOS paths)."""
+        self.bind_framebuffer(framebuffer=0)
+
+    def set_clear_color_only(
+            self, color: tuple[float, float, float, float]
+    ) -> None:
+        """Set the clear color without clearing (safe before the default FBO is ready)."""
+        self.bind_default_framebuffer()
+        self.set_clear_color(color)
+
+    @staticmethod
     def set_clear_color(color=(0.0, 0.0, 0.0, 1.0)):
-        glClearColor(*color)
+        gl_clear_color(color)
 
     @staticmethod
     def viewport(x, y, width, height):

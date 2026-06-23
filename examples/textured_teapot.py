@@ -21,7 +21,6 @@ Available textures:
 from pathlib import Path
 
 from picogl.renderer import MeshData
-from picogl.renderer.texture import TextureRenderer
 from picogl.ui.backend.glut.window.object import RenderWindow
 from picogl.utils.loader.object import ObjectLoader
 

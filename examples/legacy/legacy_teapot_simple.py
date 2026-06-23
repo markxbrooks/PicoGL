@@ -14,13 +14,23 @@ Features:
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
-from picogl.backend.gl.enums import GLDrawMode
-from picogl.backend.gl.state.immediate import immediate_drawing
 
-class SimpleTeapotRenderer:
+from examples.glut_renderer import GlutRenderer, set_up_legacy_lighting
+from picogl.backend.gl.capability import GLMaterialFace, GLFixedFunctionCapability, GLPipelineCapability
+from picogl.backend.gl.enums import GLDrawMode, GLBitMask
+from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
+from picogl.backend.gl.state.fill import GLCapability, GLColorMaterialMode, GLFillMode
+from picogl.backend.gl.state.immediate import immediate_drawing
+from picogl.backend.gl.wrappers.clear import gl_clear, gl_clear_color
+from picogl.backend.gl.wrappers.enable import gl_enable, gl_disable
+from picogl.backend.gl.wrappers.polygon_mode import gl_polygon_mode
+
+
+class SimpleTeapotRenderer(GlutRenderer):
     """Simple teapot renderer using only built-in OpenGL primitives."""
 
     def __init__(self, width=800, height=600, title="Simple Legacy Teapot"):
+        super().__init__(width, height, title)
         self.width = width
         self.height = height
         self.title = title
@@ -34,47 +44,29 @@ class SimpleTeapotRenderer:
 
     def init_glut(self):
         """Initialize GLUT window."""
-        glutInit(sys.argv)
-        glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH)
-        glutInitWindowSize(self.width, self.height)
-        glutCreateWindow(self.title.encode("utf-8"))
-
-        # Set callbacks
-        glutDisplayFunc(self.display)
-        glutReshapeFunc(self.reshape)
-        glutKeyboardFunc(self.keyboard)
-        glutMouseFunc(self.mouse)
-        glutMotionFunc(self.motion)
+        self.initialize_glut()
         glutIdleFunc(self.idle)
 
     def init_gl(self):
         """Initialize OpenGL state."""
         try:
-            glClearColor(0.1, 0.1, 0.2, 1.0)  # Dark blue background
-            gl_enable(GL_DEPTH_TEST)
-            gl_enable(GL_LIGHTING)
-            gl_enable(GL_LIGHT0)
-            gl_enable(GL_COLOR_MATERIAL)
-            glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
+            dark_blue_background = (0.1, 0.1, 0.2, 1.0)
+            gl_clear_color(dark_blue_background)  # Dark blue background
+            gl_enable(GLPipelineCapability.DEPTH_TEST)
+            gl_enable(GLFixedFunctionCapability.LIGHTING)
+            gl_enable(GLFixedFunctionCapability.LIGHT0)
+            gl_enable(GLCapability.COLOR_MATERIAL)
+            glColorMaterial(GLMaterialFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE)
 
-            # Set up lighting
-            glLightfv(GL_LIGHT0, GL_POSITION, [1.0, 1.0, 1.0, 0.0])
-            glLightfv(GL_LIGHT0, GL_AMBIENT, [0.3, 0.3, 0.3, 1.0])
-            glLightfv(GL_LIGHT0, GL_DIFFUSE, [0.8, 0.8, 0.8, 1.0])
-            glLightfv(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
+            set_up_legacy_lighting()
 
-            # Set up material properties
-            glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
-            glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, [0.8, 0.8, 0.8, 1.0])
-            glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
-            glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50.0)
         except Exception as e:
             print(f"Warning: OpenGL initialization issue: {e}")
             print("Continuing with basic rendering...")
 
     def display(self):
         """Display callback - render the scene."""
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        gl_clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
         glLoadIdentity()
 
         # Set up camera
@@ -93,12 +85,12 @@ class SimpleTeapotRenderer:
         """Draw the teapot using built-in OpenGL primitives."""
         # Set polygon mode
         if self.wireframe_mode:
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
-            glDisable(GL_LIGHTING)
+            gl_polygon_mode(GL_FRONT_AND_BACK, GL_LINE)
+            gl_disable(GLFixedFunctionCapability.LIGHTING)
             glColor3f(1.0, 0.0, 0.0)  # Red wireframe
         else:
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
-            gl_enable(GL_LIGHTING)
+            gl_polygon_mode(GL_FRONT_AND_BACK, GL_FILL)
+            gl_enable(GLFixedFunctionCapability.LIGHTING)
             glColor3f(0.8, 0.2, 0.2)  # Red teapot
 
         # Draw the teapot
@@ -109,12 +101,12 @@ class SimpleTeapotRenderer:
             self.draw_normals()
 
         # Reset polygon mode
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
-        gl_enable(GL_LIGHTING)
+        gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.FILL)
+        gl_enable(GLFixedFunctionCapability.LIGHTING)
 
     def draw_normals(self):
         """Draw normal vectors (simplified)."""
-        glDisable(GL_LIGHTING)
+        gl_disable(GLFixedFunctionCapability.LIGHTING)
         glColor3f(0.0, 1.0, 0.0)  # Green normals
         with immediate_drawing(GLDrawMode.LINES):
             # Draw a few normal vectors for demonstration
@@ -139,88 +131,16 @@ class SimpleTeapotRenderer:
         self.width = width
         self.height = height
         glViewport(0, 0, width, height)
-        glMatrixMode(GL_PROJECTION)
+        glMatrixMode(GLLegacyMatrixMode.PROJECTION)
         glLoadIdentity()
         gluPerspective(45.0, float(width) / float(height), 0.1, 100.0)
-        glMatrixMode(GL_MODELVIEW)
-
-    def keyboard(self, key, x, y):
-        """Keyboard callback."""
-        if key == b"\x1b":  # ESC key
-            sys.exit(0)
-        elif key == b"r":  # Reset rotation
-            self.rotation_x = 0.0
-            self.rotation_y = 0.0
-        elif key == b"w":  # Toggle wireframe mode
-            self.wireframe_mode = not self.wireframe_mode
-        elif key == b"n":  # Toggle normals
-            self.show_normals = not self.show_normals
-        elif key == b"f":  # Fill mode
-            self.wireframe_mode = False
-        elif key == b"+":  # Zoom in
-            self.zoom_distance = max(1.0, self.zoom_distance - 0.5)
-        elif key == b"-":  # Zoom out
-            self.zoom_distance = min(20.0, self.zoom_distance + 0.5)
-        elif key == b" ":  # Space bar - auto rotate
-            self.auto_rotate = not getattr(self, "auto_rotate", False)
-
-        glutPostRedisplay()
-
-    def mouse(self, button, state, x, y):
-        """Mouse callback."""
-        if button == GLUT_LEFT_BUTTON:
-            if state == GLUT_DOWN:
-                self.last_mouse_x = x
-                self.last_mouse_y = y
-            else:
-                self.last_mouse_x = None
-                self.last_mouse_y = None
-        elif button == 3:  # Mouse wheel up
-            self.zoom_distance = max(1.0, self.zoom_distance - 0.5)
-        elif button == 4:  # Mouse wheel down
-            self.zoom_distance = min(20.0, self.zoom_distance + 0.5)
-        glutPostRedisplay()
-
-    def motion(self, x, y):
-        """Mouse motion callback."""
-        if self.last_mouse_x is not None and self.last_mouse_y is not None:
-            dx = x - self.last_mouse_x
-            dy = y - self.last_mouse_y
-
-            self.rotation_y += dx * 0.5
-            self.rotation_x += dy * 0.5
-
-            # Clamp rotation
-            self.rotation_x = max(-90, min(90, self.rotation_x))
-
-            self.last_mouse_x = x
-            self.last_mouse_y = y
-            glutPostRedisplay()
+        glMatrixMode(GLLegacyMatrixMode.MODELVIEW)
 
     def idle(self):
         """Idle callback for animation."""
         if getattr(self, "auto_rotate", False):
             self.rotation_y += 0.5
             glutPostRedisplay()
-
-    def run(self):
-        """Run the application."""
-        self.init_glut()
-        self.init_gl()
-
-        print("\n🎮 Controls:")
-        print("   Mouse: Rotate view")
-        print("   Mouse wheel: Zoom in/out")
-        print("   R: Reset rotation")
-        print("   W: Toggle wireframe mode")
-        print("   F: Fill mode")
-        print("   N: Toggle normals display")
-        print("   +/-: Zoom in/out")
-        print("   Space: Toggle auto-rotation")
-        print("   ESC: Exit")
-        print("\n🚀 Starting simple legacy teapot renderer...")
-
-        glutMainLoop()
 
 
 def main():

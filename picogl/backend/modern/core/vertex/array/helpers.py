@@ -2,14 +2,15 @@
 Enable points rendering state
 """
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import glBlendFunc, gl_enable
-from OpenGL.raw.GL.VERSION.GL_3_2 import GL_PROGRAM_POINT_SIZE
 
 from picogl.backend.gl.capability import GLBlendFactor, GLPipelineCapability
+from picogl.backend.gl.enums.point_size import GLPointCapability
+from picogl.backend.gl.wrappers.blending import gl_blend_func
+from picogl.backend.gl.wrappers.enable import gl_enable
 
 
 def enable_points_rendering_state() -> None:
     """Blend + shader point size for GL_POINTS (Core Profile; no GL_POINT_SPRITE)."""
     gl_enable(GLPipelineCapability.BLEND)
-    glBlendFunc(GLBlendFactor.SRC_ALPHA, GLBlendFactor.ONE_MINUS_SRC_ALPHA)
-    gl_enable(GL_PROGRAM_POINT_SIZE)
+    gl_blend_func(GLBlendFactor.SRC_ALPHA, GLBlendFactor.ONE_MINUS_SRC_ALPHA)
+    gl_enable(GLPointCapability.PROGRAM_POINT_SIZE)

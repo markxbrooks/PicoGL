@@ -22,6 +22,7 @@ from picogl.backend.gl.capability import (
     GLPipelineCapability,
 )
 from picogl.backend.gl.enums import GLDrawMode, GLIndexType, GLNumeric
+from picogl.backend.gl.enums.point_size import GLPointCapability
 from picogl.backend.gl.state.fill import GLCapability, GLFace, GLFillMode
 from picogl.backend.gl.wrappers import gl_draw_elements, gl_enable_legacy_client_state
 from picogl.backend.gl.wrappers.pointer import (
@@ -276,17 +277,15 @@ class RenderStateApplier:
             )
 
         if state.program_point_size and (prev is None or not prev.program_point_size):
-            from OpenGL.GL import GL_PROGRAM_POINT_SIZE
 
-            self.backend.capabilities.enable(GL_PROGRAM_POINT_SIZE)
+            self.backend.capabilities.enable(GLPointCapability.PROGRAM_POINT_SIZE)
         elif (
             prev is not None
             and prev.program_point_size
             and not state.program_point_size
         ):
-            from OpenGL.GL import GL_PROGRAM_POINT_SIZE
 
-            self.backend.capabilities.disable(GL_PROGRAM_POINT_SIZE)
+            self.backend.capabilities.disable(GLPointCapability.PROGRAM_POINT_SIZE)
 
 
 class GLVertexBuffer:

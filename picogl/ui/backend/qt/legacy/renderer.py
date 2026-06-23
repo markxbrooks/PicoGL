@@ -9,7 +9,6 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     glClear,
     glClearColor,
     glColorMaterial,
-    gl_enable,
     glLoadIdentity,
     glMaterialf,
     glMatrixMode,
@@ -29,6 +28,7 @@ from picogl.backend.gl.state.fill import (
     GLLight,
     GLLightParameter,
 )
+from picogl.backend.gl.wrappers.enable import gl_enable
 from picogl.renderer import MeshData
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.ui.backend.qt.base import GLBase

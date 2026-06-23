@@ -17,11 +17,18 @@ import os
 import sys
 
 import numpy as np
+
+from examples.glut_renderer import GlutRenderer, set_up_legacy_lighting
+from picogl.backend.gl.capability import GLFixedFunctionCapability, GLMaterialFace, GLPipelineCapability
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.backend.gl.enums import GLBitMask
-from picogl.backend.gl.enums import GLLegacyMatrixMode
-from picogl.backend.gl.state.fill import GLColorMaterialMode, GLLightParameter, GLFace, GLFillMode, GLLight
+from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
+from picogl.backend.gl.state.fill import GLColorMaterialMode, GLLightParameter, GLFace, GLFillMode, GLLight, \
+    GLCapability
 from picogl.backend.gl.state.immediate import immediate_drawing
+from picogl.backend.gl.wrappers.clear import gl_clear_color
+from picogl.backend.gl.wrappers.enable import gl_enable
+from picogl.backend.gl.wrappers.polygon_mode import gl_polygon_mode
 
 # Check for display before importing OpenGL
 if os.environ.get("DISPLAY") is None and os.name != "nt":
@@ -39,10 +46,11 @@ except ImportError as e:
     sys.exit(1)
 
 
-class MinimalCubeRenderer:
+class MinimalCubeRenderer(GlutRenderer):
     """Minimal cube renderer using only built-in OpenGL primitives."""
 
     def __init__(self, width=800, height=600, title="Minimal Legacy Cube"):
+        super().__init__(width, height, title)
         self.width = width
         self.height = height
         self.title = title
@@ -305,24 +313,16 @@ class MinimalCubeRenderer:
 
     def init_gl(self):
         """Initialize OpenGL state."""
-        glClearColor(0.1, 0.1, 0.2, 1.0)  # Dark blue background
-        gl_enable(GL_DEPTH_TEST)
-        gl_enable(GLLight.LIGHTING)
-        gl_enable(GL_LIGHT0)
-        gl_enable(GL_COLOR_MATERIAL)
-        glColorMaterial(GL_FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE)
+        dark_blue = (0.1, 0.1, 0.2, 1.0)
+        gl_clear_color(dark_blue)  # Dark blue background
+        gl_enable(GLPipelineCapability.DEPTH_TEST)
+        gl_enable(GLFixedFunctionCapability.LIGHTING)
+        gl_enable(GLFixedFunctionCapability.LIGHT0)
+        gl_enable(GLCapability.COLOR_MATERIAL)
+        glColorMaterial(GLMaterialFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE)
 
         # Set up lighting
-        glLightfv(GL_LIGHT0, GLLightParameter.POSITION, [1.0, 1.0, 1.0, 0.0])
-        glLightfv(GL_LIGHT0, GLLightParameter.AMBIENT, [0.3, 0.3, 0.3, 1.0])
-        glLightfv(GL_LIGHT0, GLLightParameter.DIFFUSE, [0.8, 0.8, 0.8, 1.0])
-        glLightfv(GL_LIGHT0, GLLightParameter.SPECULAR, [1.0, 1.0, 1.0, 1.0])
-
-        # Set up material properties
-        glMaterialfv(GL_FRONT_AND_BACK, GLLightParameter.AMBIENT, [0.2, 0.2, 0.2, 1.0])
-        glMaterialfv(GL_FRONT_AND_BACK, GLLightParameter.DIFFUSE, [0.8, 0.8, 0.8, 1.0])
-        glMaterialfv(GL_FRONT_AND_BACK, GLLightParameter.SPECULAR, [1.0, 1.0, 1.0, 1.0])
-        glMaterialf(GL_FRONT_AND_BACK, GLLightParameter.SHININESS, 50.0)
+        set_up_legacy_lighting()
 
     def display(self):
         """Display callback - render the scene."""
@@ -344,12 +344,12 @@ class MinimalCubeRenderer:
     def draw_cube(self):
         """Draw the cube using immediate mode OpenGL."""
         if self.wireframe_mode:
-            glDisable(GLLight.LIGHTING)
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+            glDisable(GLFixedFunctionCapability.LIGHTING)
+            gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GL_LINE)
             glColor3f(1.0, 0.0, 0.0)  # Red wireframe
         else:
-            gl_enable(GLLight.LIGHTING)
-            glPolygonMode(GLFace.FRONT_AND_BACK, GLFillMode.FILL)
+            gl_enable(GLFixedFunctionCapability.LIGHTING)
+            gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.FILL)
 
         # Draw the cube using immediate mode
         with immediate_drawing(GLDrawMode.TRIANGLES):
@@ -378,12 +378,12 @@ class MinimalCubeRenderer:
             self.draw_normals()
 
         # Reset polygon mode
-        glPolygonMode(GLFace.FRONT_AND_BACK, GLFillMode.FILL)
-        gl_enable(GLLight.LIGHTING)
+        gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.FILL)
+        gl_enable(GLFixedFunctionCapability.LIGHTING)
 
     def draw_normals(self):
         """Draw normal vectors (simplified)."""
-        glDisable(GLLight.LIGHTING)
+        gl_disable(GLFixedFunctionCapability.LIGHTING)
         glColor3f(0.0, 1.0, 0.0)  # Green normals
         with immediate_drawing(GLDrawMode.LINES):
 
@@ -413,7 +413,7 @@ class MinimalCubeRenderer:
                         center[1] + normal[1] * 0.5,
                         center[2] + normal[2] * 0.5,
                     )
-        gl_enable(GLLight.LIGHTING)
+        gl_enable(GLFixedFunctionCapability.LIGHTING)
 
     def reshape(self, width, height):
         """Reshape callback - handle window resize."""
@@ -424,59 +424,6 @@ class MinimalCubeRenderer:
         glLoadIdentity()
         gluPerspective(45.0, float(width) / float(height), 0.1, 100.0)
         glMatrixMode(GLLegacyMatrixMode.MODELVIEW)
-
-    def keyboard(self, key, x, y):
-        """Keyboard callback."""
-        if key == b"\x1b":  # ESC key
-            sys.exit(0)
-        elif key == b"r":  # Reset rotation
-            self.rotation_x = 0.0
-            self.rotation_y = 0.0
-        elif key == b"w":  # Toggle wireframe mode
-            self.wireframe_mode = not self.wireframe_mode
-        elif key == b"n":  # Toggle normals
-            self.show_normals = not self.show_normals
-        elif key == b"f":  # Fill mode
-            self.wireframe_mode = False
-        elif key == b"+":  # Zoom in
-            self.zoom_distance = max(1.0, self.zoom_distance - 0.5)
-        elif key == b"-":  # Zoom out
-            self.zoom_distance = min(20.0, self.zoom_distance + 0.5)
-        elif key == b" ":  # Space bar - auto rotate
-            self.auto_rotate = not self.auto_rotate
-
-        glutPostRedisplay()
-
-    def mouse(self, button, state, x, y):
-        """Mouse callback."""
-        if button == GLUT_LEFT_BUTTON:
-            if state == GLUT_DOWN:
-                self.last_mouse_x = x
-                self.last_mouse_y = y
-            else:
-                self.last_mouse_x = None
-                self.last_mouse_y = None
-        elif button == 3:  # Mouse wheel up
-            self.zoom_distance = max(1.0, self.zoom_distance - 0.5)
-        elif button == 4:  # Mouse wheel down
-            self.zoom_distance = min(20.0, self.zoom_distance + 0.5)
-        glutPostRedisplay()
-
-    def motion(self, x, y):
-        """Mouse motion callback."""
-        if self.last_mouse_x is not None and self.last_mouse_y is not None:
-            dx = x - self.last_mouse_x
-            dy = y - self.last_mouse_y
-
-            self.rotation_y += dx * 0.5
-            self.rotation_x += dy * 0.5
-
-            # Clamp rotation
-            self.rotation_x = max(-90, min(90, self.rotation_x))
-
-            self.last_mouse_x = x
-            self.last_mouse_y = y
-            glutPostRedisplay()
 
     def idle(self):
         """Idle callback for animation."""
