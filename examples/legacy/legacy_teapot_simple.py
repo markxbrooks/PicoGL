@@ -17,9 +17,11 @@ from OpenGL.GLUT import *
 
 from picogl.backend.gl.capability import GLMaterialFace
 from picogl.backend.gl.enums import GLDrawMode, GLBitMask
+from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.state.immediate import immediate_drawing
+from picogl.backend.gl.wrappers.clear import gl_clear
 from picogl.backend.gl.wrappers.enable import gl_enable
-from picogl.backend.gl.wrappers.material import gl_material_fv
+from picogl.backend.gl.wrappers.material import gl_material_fv, gl_material_f
 
 
 class SimpleTeapotRenderer:
@@ -144,10 +146,10 @@ class SimpleTeapotRenderer:
         self.width = width
         self.height = height
         glViewport(0, 0, width, height)
-        glMatrixMode(GL_PROJECTION)
+        glMatrixMode(GLLegacyMatrixMode.PROJECTION)
         glLoadIdentity()
         gluPerspective(45.0, float(width) / float(height), 0.1, 100.0)
-        glMatrixMode(GL_MODELVIEW)
+        glMatrixMode(GLLegacyMatrixMode.MODELVIEW)
 
     def keyboard(self, key, x, y):
         """Keyboard callback."""

@@ -21,6 +21,7 @@ from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums import GLLegacyMatrixMode
 from picogl.backend.gl.state.fill import GLFace, GLCapability, GLColorMaterialMode, GLLightParameter, GLFillMode
+from picogl.backend.gl.wrappers.polygon_mode import gl_polygon_mode
 
 # Check for display before importing OpenGL
 if os.environ.get("DISPLAY") is None and os.name != "nt":
@@ -401,12 +402,12 @@ class LegacyCubeRenderer:
 
     def draw_fallback_cube(self):
         """Draw a simple wireframe cube as fallback."""
-        glDisable(GLFixedFunctionCapability.LIGHTING)
+        gl_disable(GLFixedFunctionCapability.LIGHTING)
         red_rgb = (1.0, 0.0, 0.0)
         glColor3f(*red_rgb)  # Red wireframe
-        glPolygonMode(GLFace.FRONT_AND_BACK, GLFillMode.LINE)
+        gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.LINE)
         glutWireCube(2.0)
-        glPolygonMode(GLFace.FRONT_AND_BACK, GLFillMode.FILL)
+        gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.FILL)
         GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHTING)
 
     def reshape(self, width, height):
