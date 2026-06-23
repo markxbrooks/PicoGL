@@ -69,7 +69,7 @@ class TestVertexBufferGroup(unittest.TestCase):
             patch("picogl.gpu.buffers.vertex.legacy.glVertexPointer"),
             patch("picogl.gpu.buffers.vertex.legacy.glColorPointer"),
             patch("picogl.gpu.buffers.vertex.legacy.glNormalPointer"),
-            patch("picogl.gpu.buffers.vertex.legacy.glEnableClientState"),
+            patch("picogl.gpu.buffers.vertex.legacy.gl_enableClientState"),
             patch("picogl.gpu.buffers.vertex.legacy.legacy_client_states"),
             patch("picogl.gpu.buffers.vertex.legacy.delete_buffer_object"),
             patch("OpenGL.gl.glGenBuffers", return_value=1),
@@ -601,7 +601,7 @@ class TestVertexBufferGroup(unittest.TestCase):
         )
 
         with patch("picogl.gpu.buffers.vertex.legacy.glVertexPointer"), patch(
-            "picogl.gpu.buffers.vertex.legacy.glEnableClientState"
+            "picogl.gpu.buffers.vertex.legacy.gl_enableClientState"
         ), patch("picogl.gpu.buffers.vertex.legacy.glBindBuffer") as mock_bind_buffer:
             vbg.bind()
             mock_bind_buffer.assert_called()
@@ -627,7 +627,7 @@ class TestVertexBufferGroup(unittest.TestCase):
         with patch(
             "picogl.gpu.buffers.vertex.legacy.glVertexPointer"
         ) as mock_vertex_pointer, patch(
-            "picogl.gpu.buffers.vertex.legacy.glEnableClientState"
+            "picogl.gpu.buffers.vertex.legacy.gl_enableClientState"
         ) as mock_enable_state:
             vbg.bind()
             mock_enable_state.assert_called_once_with(GL_VERTEX_ARRAY)
@@ -657,7 +657,7 @@ class TestVertexBufferGroup(unittest.TestCase):
         )
 
         with patch("picogl.gpu.buffers.vertex.legacy.glVertexPointer"), patch(
-            "picogl.gpu.buffers.vertex.legacy.glEnableClientState"
+            "picogl.gpu.buffers.vertex.legacy.gl_enableClientState"
         ), patch("picogl.gpu.buffers.vertex.legacy.glBindBuffer") as mock_bind_buffer:
             vbg.bind()
             mock_bind_buffer.assert_any_call(GL_ARRAY_BUFFER, 77)
@@ -686,7 +686,7 @@ class TestVertexBufferGroup(unittest.TestCase):
         with patch(
             "picogl.gpu.buffers.vertex.legacy.glColorPointer"
         ) as mock_color_pointer, patch(
-            "picogl.gpu.buffers.vertex.legacy.glEnableClientState"
+            "picogl.gpu.buffers.vertex.legacy.gl_enableClientState"
         ), patch(
             "picogl.gpu.buffers.vertex.legacy.glBindBuffer"
         ):
@@ -718,7 +718,7 @@ class TestVertexBufferGroup(unittest.TestCase):
         with patch(
             "picogl.gpu.buffers.vertex.legacy.glColorPointer"
         ) as mock_color_pointer, patch(
-            "picogl.gpu.buffers.vertex.legacy.glEnableClientState"
+            "picogl.gpu.buffers.vertex.legacy.gl_enableClientState"
         ), patch(
             "picogl.gpu.buffers.vertex.legacy.glBindBuffer"
         ):

@@ -12,8 +12,8 @@ class Tu01Win(GLWindow):
     def initializeGL(self):
         glClearColor(0.0, 0, 0.4, 0)
         glDepthFunc(GL_LESS)
-        glEnable(GL_DEPTH_TEST)
-        glEnable(GL_CULL_FACE)
+        gl_enable(GL_DEPTH_TEST)
+        gl_enable(GL_CULL_FACE)
 
     def init_context(self):
         self.context = self.GLContext()
@@ -71,11 +71,11 @@ class Tu01Win(GLWindow):
             self.context.MVP_ID, 1, GL_FALSE, glm.value_ptr(self.context.MVP)
         )
 
-        glEnableVertexAttribArray(0)
+        gl_enableVertexAttribArray(0)
         glBindBuffer(GL_ARRAY_BUFFER, self.context.vertexbuffer)
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, None)
 
-        glEnableVertexAttribArray(1)
+        gl_enableVertexAttribArray(1)
         glBindBuffer(GL_ARRAY_BUFFER, self.context.colorbuffer)
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, None)
 

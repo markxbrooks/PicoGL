@@ -173,7 +173,7 @@ def create_vertex_program(color_mode, custom_expr=None):
 # -------------------------------
 def init_gl():
     glClearColor(0.15, 0.15, 0.2, 1.0)
-    glEnable(GL_DEPTH_TEST)
+    gl_enable(GL_DEPTH_TEST)
     glShadeModel(GL_SMOOTH)
 
 def display():

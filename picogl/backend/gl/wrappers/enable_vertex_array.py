@@ -5,7 +5,7 @@ gl enable vertex array wrapper
 
 from typing import Any
 
-from OpenGL.GL import glEnableVertexAttribArray
+from OpenGL.GL import gl_enableVertexAttribArray
 
 
 def gl_enable_vertex_array(location: int) -> Any:
@@ -15,4 +15,4 @@ def gl_enable_vertex_array(location: int) -> Any:
     :param location: int
     """
     assert location >= 0
-    glEnableVertexAttribArray(location)
+    gl_enableVertexAttribArray(location)

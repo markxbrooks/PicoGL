@@ -392,7 +392,7 @@ class MeshData:
 
         # Enable alpha blending for transparency
         if alpha < 1.0:
-            GL.glEnable(GL.GL_BLEND)
+            GL.gl_enable(GL.GL_BLEND)
             GL.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
         else:
             GL.glDisable(GL.GL_BLEND)

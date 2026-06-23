@@ -51,10 +51,10 @@ class SimpleTeapotRenderer:
         """Initialize OpenGL state."""
         try:
             glClearColor(0.1, 0.1, 0.2, 1.0)  # Dark blue background
-            glEnable(GL_DEPTH_TEST)
-            glEnable(GL_LIGHTING)
-            glEnable(GL_LIGHT0)
-            glEnable(GL_COLOR_MATERIAL)
+            gl_enable(GL_DEPTH_TEST)
+            gl_enable(GL_LIGHTING)
+            gl_enable(GL_LIGHT0)
+            gl_enable(GL_COLOR_MATERIAL)
             glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
 
             # Set up lighting
@@ -98,7 +98,7 @@ class SimpleTeapotRenderer:
             glColor3f(1.0, 0.0, 0.0)  # Red wireframe
         else:
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
-            glEnable(GL_LIGHTING)
+            gl_enable(GL_LIGHTING)
             glColor3f(0.8, 0.2, 0.2)  # Red teapot
 
         # Draw the teapot
@@ -110,7 +110,7 @@ class SimpleTeapotRenderer:
 
         # Reset polygon mode
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
-        glEnable(GL_LIGHTING)
+        gl_enable(GL_LIGHTING)
 
     def draw_normals(self):
         """Draw normal vectors (simplified)."""
@@ -132,7 +132,7 @@ class SimpleTeapotRenderer:
                 glVertex3f(x, y, z)
                 glVertex3f(x + nx * 0.2, y + ny * 0.2, z + nz * 0.2)
 
-        glEnable(GL_LIGHTING)
+        gl_enable(GL_LIGHTING)
 
     def reshape(self, width, height):
         """Reshape callback - handle window resize."""

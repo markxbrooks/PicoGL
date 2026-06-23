@@ -9,7 +9,7 @@ class GLWindow(AbstractGLWindow):
 
     def initializeGL(self) -> None:
         gl.glClearColor(0.0, 0.0, 0.0, 1.0)
-        gl.glEnable(gl.GL_DEPTH_TEST)
+        gl.gl_enable(gl.GL_DEPTH_TEST)
 
     def paintGL(self) -> None:
         gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)

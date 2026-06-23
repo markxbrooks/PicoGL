@@ -82,8 +82,8 @@ class Tu01Win(GLWindow):
     def initializeGL(self):
         glClearColor(0.0, 0, 0.4, 0)
         glDepthFunc(GL_LESS)
-        glEnable(GLPipelineCapability.DEPTH_TEST)
-        glEnable(GLPipelineCapability.CULL_FACE)
+        gl_enable(GLPipelineCapability.DEPTH_TEST)
+        gl_enable(GLPipelineCapability.CULL_FACE)
 
     def init_context(self):
         self.shader = Shader()

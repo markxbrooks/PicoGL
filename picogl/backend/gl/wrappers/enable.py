@@ -4,7 +4,6 @@ gl enable disable is enabled
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import glDisable, glEnable, glIsEnabled
 
-from picogl.boolean import GLBoolean
 
 
 def gl_enable(cap):

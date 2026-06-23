@@ -2,7 +2,7 @@
 Enable depth test
 """
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import glClearDepth, glEnable
+from OpenGL.raw.GL.VERSION.GL_1_0 import glClearDepth, gl_enable
 
 from picogl.backend.gl.capability import GLPipelineCapability
 
@@ -13,5 +13,5 @@ def enable_depth_test() -> None:
 
     :return: None
     """
-    glEnable(GLPipelineCapability.DEPTH_TEST)
+    gl_enable(GLPipelineCapability.DEPTH_TEST)
     glClearDepth(1.0)

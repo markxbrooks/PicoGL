@@ -206,8 +206,8 @@ class Tu01Win(GLWindow):
     def init_opengl(self):
         glClearColor(0.0, 0, 0.4, 0)
         glDepthFunc(GL_LESS)
-        glEnable(GL_DEPTH_TEST)
-        glEnable(GL_CULL_FACE)
+        gl_enable(GL_DEPTH_TEST)
+        gl_enable(GL_CULL_FACE)
 
     def init_context(self):
         self.context = self.GLContext()
@@ -256,12 +256,12 @@ class Tu01Win(GLWindow):
 
         # positions
         glBindBuffer(GL_ARRAY_BUFFER, self.context.vertex_buffer)
-        glEnableVertexAttribArray(0)
+        gl_enableVertexAttribArray(0)
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, None)
 
         # UVs
         glBindBuffer(GL_ARRAY_BUFFER, self.context.uv_buffer)
-        glEnableVertexAttribArray(1)
+        gl_enableVertexAttribArray(1)
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, None)
 
         # glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.context.indices)
@@ -350,11 +350,11 @@ class Tu01Win(GLWindow):
 
         bind_active_texture0()
 
-        glEnableVertexAttribArray(0)
+        gl_enableVertexAttribArray(0)
         glBindBuffer(GL_ARRAY_BUFFER, self.context.vertexbuffer)
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, None)
 
-        glEnableVertexAttribArray(1)
+        gl_enableVertexAttribArray(1)
         glBindBuffer(GL_ARRAY_BUFFER, self.context.uvbuffer)
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, None)
 

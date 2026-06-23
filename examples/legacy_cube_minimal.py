@@ -306,10 +306,10 @@ class MinimalCubeRenderer:
     def init_gl(self):
         """Initialize OpenGL state."""
         glClearColor(0.1, 0.1, 0.2, 1.0)  # Dark blue background
-        glEnable(GL_DEPTH_TEST)
-        glEnable(GLLight.LIGHTING)
-        glEnable(GL_LIGHT0)
-        glEnable(GL_COLOR_MATERIAL)
+        gl_enable(GL_DEPTH_TEST)
+        gl_enable(GLLight.LIGHTING)
+        gl_enable(GL_LIGHT0)
+        gl_enable(GL_COLOR_MATERIAL)
         glColorMaterial(GL_FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE)
 
         # Set up lighting
@@ -348,7 +348,7 @@ class MinimalCubeRenderer:
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
             glColor3f(1.0, 0.0, 0.0)  # Red wireframe
         else:
-            glEnable(GLLight.LIGHTING)
+            gl_enable(GLLight.LIGHTING)
             glPolygonMode(GLFace.FRONT_AND_BACK, GLFillMode.FILL)
 
         # Draw the cube using immediate mode
@@ -379,7 +379,7 @@ class MinimalCubeRenderer:
 
         # Reset polygon mode
         glPolygonMode(GLFace.FRONT_AND_BACK, GLFillMode.FILL)
-        glEnable(GLLight.LIGHTING)
+        gl_enable(GLLight.LIGHTING)
 
     def draw_normals(self):
         """Draw normal vectors (simplified)."""
@@ -413,7 +413,7 @@ class MinimalCubeRenderer:
                         center[1] + normal[1] * 0.5,
                         center[2] + normal[2] * 0.5,
                     )
-        glEnable(GLLight.LIGHTING)
+        gl_enable(GLLight.LIGHTING)
 
     def reshape(self, width, height):
         """Reshape callback - handle window resize."""

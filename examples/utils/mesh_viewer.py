@@ -19,7 +19,7 @@ class MeshViewWindow(GLWindow):
         """initializeGL"""
         glClearColor(0.1, 0.1, 0.1, 0.8)
         glDepthFunc(GL_LESS)
-        glEnable(GL_DEPTH_TEST)
+        gl_enable(GL_DEPTH_TEST)
 
     def add_mesh(self, mesh_with_render: object):
         """add_mesh"""

@@ -4,7 +4,7 @@ gl Cull Face
 
 from contextlib import contextmanager
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_CULL_FACE, glDisable, glEnable, glIsEnabled
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_CULL_FACE, glDisable, gl_enable, glIsEnabled
 
 
 class GLCullFace:
@@ -16,7 +16,7 @@ class GLCullFace:
 
     @staticmethod
     def enable() -> None:
-        glEnable(GL_CULL_FACE)
+        gl_enable(GL_CULL_FACE)
 
     @staticmethod
     def disable() -> None:
@@ -29,7 +29,7 @@ def gl_capability_enabled(capability: int) -> bool:
 
 def gl_set_capability(capability: int, enabled: bool) -> None:
     if enabled:
-        glEnable(capability)
+        gl_enable(capability)
     else:
         glDisable(capability)
 

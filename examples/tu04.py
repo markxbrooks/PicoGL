@@ -71,8 +71,8 @@ class Tu01Win(GlutRendererWindow):
     def initializeGL(self):
         glClearColor(0.0, 0, 0.4, 0)
         glDepthFunc(GL_LESS)
-        glEnable(GL_DEPTH_TEST)
-        glEnable(GL_CULL_FACE)
+        gl_enable(GL_DEPTH_TEST)
+        gl_enable(GL_CULL_FACE)
 
     def keyPressEvent(self, key, x, y):
         pass
@@ -139,11 +139,11 @@ class Tu01Win(GlutRendererWindow):
 
         bind_active_texture0()
 
-        glEnableVertexAttribArray(0)
+        gl_enableVertexAttribArray(0)
         glBindBuffer(GL_ARRAY_BUFFER, self.context.vertex_buffer)
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, None)
 
-        glEnableVertexAttribArray(1)
+        gl_enableVertexAttribArray(1)
         glBindBuffer(GL_ARRAY_BUFFER, self.context.uv_buffer)
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, None)
 

@@ -149,8 +149,8 @@ class LegacyTexturedTeapotRenderer(LegacyQtObjectRenderer):
     def initialize_state(self):
         """Set up basic OpenGL state"""
         glClearColor(0.1, 0.1, 0.2, 1.0)  # Dark blue background
-        glEnable(GL_DEPTH_TEST)
-        glEnable(GL_TEXTURE_2D)
+        gl_enable(GL_DEPTH_TEST)
+        gl_enable(GL_TEXTURE_2D)
         
     def initialize(self):
         """Initialize mesh data and upload to GPU"""
@@ -182,7 +182,7 @@ class LegacyTexturedTeapotRenderer(LegacyQtObjectRenderer):
         # Bind texture if available
         if self.texture_id is not None:
             glBindTexture(GL_TEXTURE_2D, self.texture_id)
-            glEnable(GL_TEXTURE_2D)
+            gl_enable(GL_TEXTURE_2D)
         else:
             glDisable(GL_TEXTURE_2D)
         

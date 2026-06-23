@@ -60,10 +60,10 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
     
     def initializeGL(self):
         """Initialize OpenGL settings"""
-        glEnable(GL_DEPTH_TEST)
-        glEnable(GL_LIGHTING)
-        glEnable(GL_LIGHT0)
-        glEnable(GL_COLOR_MATERIAL)
+        gl_enable(GL_DEPTH_TEST)
+        gl_enable(GL_LIGHTING)
+        gl_enable(GL_LIGHT0)
+        gl_enable(GL_COLOR_MATERIAL)
         glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
         
         # Set up lighting
@@ -160,16 +160,16 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
     def initializeGL(self):
         """Initialize OpenGL state"""
         glClearColor(0.0, 0.0, 0.0, 1.0)  # Black background
-        glEnable(GL_DEPTH_TEST)
-        glEnable(GL_LINE_SMOOTH)
-        glEnable(GL_BLEND)
+        gl_enable(GL_DEPTH_TEST)
+        gl_enable(GL_LINE_SMOOTH)
+        gl_enable(GL_BLEND)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
         glLineWidth(2.0)
         
         # Set up lighting for better visibility
-        glEnable(GL_LIGHTING)
-        glEnable(GL_LIGHT0)
-        glEnable(GL_COLOR_MATERIAL)
+        gl_enable(GL_LIGHTING)
+        gl_enable(GL_LIGHT0)
+        gl_enable(GL_COLOR_MATERIAL)
         glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
         
         # Set up light

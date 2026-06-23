@@ -59,7 +59,7 @@ class TestVertexArrayObject(unittest.TestCase):
             ),
             patch("picogl.backend.modern.core.vertex.array.object.glBindBuffer"),
             patch(
-                "picogl.backend.modern.core.vertex.array.object.glEnableVertexAttribArray"
+                "picogl.backend.modern.core.vertex.array.object.gl_enableVertexAttribArray"
             ),
             patch(
                 "picogl.backend.modern.core.vertex.array.object.glVertexAttribPointer"

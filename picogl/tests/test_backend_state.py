@@ -435,7 +435,7 @@ class TestDrawCommand(unittest.TestCase):
         blend = GLBlendDriver(capabilities)
 
         with (
-            patch("picogl.backend.gl.driver.capability.glEnable") as enable,
+            patch("picogl.backend.gl.driver.capability.gl_enable") as enable,
             patch("picogl.backend.gl.driver.capability.glDisable") as disable,
             patch(
                 "picogl.backend.gl.driver.capability.glIsEnabled", return_value=True

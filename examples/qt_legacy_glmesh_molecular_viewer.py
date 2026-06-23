@@ -67,10 +67,10 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
 
     def initializeGL(self):
         """Initialize OpenGL settings"""
-        glEnable(GL_DEPTH_TEST)
-        glEnable(GL_LIGHTING)
-        glEnable(GL_LIGHT0)
-        glEnable(GL_COLOR_MATERIAL)
+        gl_enable(GL_DEPTH_TEST)
+        gl_enable(GL_LIGHTING)
+        gl_enable(GL_LIGHT0)
+        gl_enable(GL_COLOR_MATERIAL)
         glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
 
         glClearColor(0.0, 0.0, 0.0, 1.0)
@@ -97,9 +97,9 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
 
         # Set up lighting conditionally
         if self.lighting_enabled:
-            glEnable(GL_LIGHTING)
-            glEnable(GL_LIGHT0)
-            glEnable(GL_COLOR_MATERIAL)
+            gl_enable(GL_LIGHTING)
+            gl_enable(GL_LIGHT0)
+            gl_enable(GL_COLOR_MATERIAL)
             glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
 
             # Set up lighting in world space (before transformations)

@@ -60,10 +60,10 @@ class LegacyRenderer:
     def init_gl(self):
         """Initialize OpenGL state."""
         glClearColor(0.1, 0.1, 0.2, 1.0)  # Dark blue background
-        glEnable(GL_DEPTH_TEST)
-        glEnable(GL_LIGHTING)
-        glEnable(GL_LIGHT0)
-        glEnable(GL_COLOR_MATERIAL)
+        gl_enable(GL_DEPTH_TEST)
+        gl_enable(GL_LIGHTING)
+        gl_enable(GL_LIGHT0)
+        gl_enable(GL_COLOR_MATERIAL)
         glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
 
         # Set up lighting
@@ -145,7 +145,7 @@ class LegacyRenderer:
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
         glutWireTeapot(1.0)
         set_polygon_mode_fill()
-        glEnable(GL_LIGHTING)
+        gl_enable(GL_LIGHTING)
 
     def reshape(self, width, height):
         """Reshape callback - handle window resize."""
