@@ -11,7 +11,6 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     glClear,
     glClearColor,
     glDepthFunc,
-    gl_enable,
 )
 from OpenGL.raw.GL.VERSION.GL_1_3 import GL_MULTISAMPLE
 
@@ -22,6 +21,8 @@ from picogl.backend.legacy.core.camera.setup import (
     enable_smoothing,
     setup_materials,
 )
+
+from picogl.backend.gl.wrappers.enable import gl_enable
 from picogl.info import get_gl_info
 from picogl.logger import Logger as log
 
