@@ -25,23 +25,27 @@ from picogl.renderer.backend import RenderBackend
 from picogl.boolean import GLBoolean
 
 
-def gl_enable(self, cap):
+def gl_enable(cap):
     glEnable(cap)
     
     
-def gl_disable(self, cap):
+def gl_disable(cap):
     glDisable(cap)
     
     
-def gl_is_enabled(self, cap):
+def gl_is_enabled(cap):
     return glIsEnabled(cap)
     
 
-def gl_blend_func(self, src, dst):
+def gl_blend_func(src, dst):
     glBlendFunc(src, dst)
     
+    
+def gl_get_depth_mask():
+    return glGetBooleanv(GL_DEPTH_WRITEMASK)
 
-def gl_set_depth_mask(self, flag):
+
+def gl_set_depth_mask(flag):
     glDepthMask(GLBoolean.TRUE if flag else GLBoolean.FALSE)
         
 
@@ -61,10 +65,10 @@ class LegacyOpenGLBackend(RenderBackend):
         gl_blend_func(src, dst)
 
     def set_depth_mask(self, flag):
-        glDepthMask(GLBoolean.TRUE if flag else GLBoolean.FALSE)
+        gl_set_depth_mask(flag)
 
     def get_depth_mask(self):
-        return glGetBooleanv(GL_DEPTH_WRITEMASK)
+        return gl_get_depth_mask()
 
     def set_material(self, face: GLMaterialFace, mat: PhongMaterial):
         f = FACE_MAP[face]
