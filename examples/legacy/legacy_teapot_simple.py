@@ -15,11 +15,14 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
 
-from picogl.backend.gl.capability import GLMaterialFace
+from examples.legacy_cube_fixed import set_up_legacy_lighting
+from picogl.backend.gl.capability import GLMaterialFace, GLFixedFunctionCapability
 from picogl.backend.gl.enums import GLDrawMode, GLBitMask
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
+from picogl.backend.gl.light import GLLightSource
+from picogl.backend.gl.state.fill import GLLightParameter
 from picogl.backend.gl.state.immediate import immediate_drawing
-from picogl.backend.gl.wrappers.clear import gl_clear
+from picogl.backend.gl.wrappers.clear import gl_clear, gl_clear_color
 from picogl.backend.gl.wrappers.enable import gl_enable
 from picogl.backend.gl.wrappers.material import gl_material_fv, gl_material_f
 
@@ -57,24 +60,16 @@ class SimpleTeapotRenderer:
     def init_gl(self):
         """Initialize OpenGL state."""
         try:
-            glClearColor(0.1, 0.1, 0.2, 1.0)  # Dark blue background
-            gl_enable(GL_DEPTH_TEST)
+            dark_blue_background = (0.1, 0.1, 0.2, 1.0)
+            gl_clear_color(*dark_blue_background)  # Dark blue background
+            gl_enable(GLPipelineCapability.DEPTH_TEST)
             gl_enable(GLFixedFunctionCapability.LIGHTING)
-            gl_enable(GL_LIGHT0)
-            gl_enable(GL_COLOR_MATERIAL)
+            gl_enable(GLFixedFunctionCapability.LIGHT0)
+            gl_enable(GLCapability.COLOR_MATERIAL)
             glColorMaterial(GLMaterialFace.FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
 
-            # Set up lighting
-            glLightfv(GL_LIGHT0, GL_POSITION, [1.0, 1.0, 1.0, 0.0])
-            glLightfv(GL_LIGHT0, GL_AMBIENT, [0.3, 0.3, 0.3, 1.0])
-            glLightfv(GL_LIGHT0, GL_DIFFUSE, [0.8, 0.8, 0.8, 1.0])
-            glLightfv(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
+            set_up_legacy_lighting()
 
-            # Set up material properties
-            gl_material_fv(GLMaterialFace.FRONT_AND_BACK, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
-            gl_material_fv(GLMaterialFace.FRONT_AND_BACK, GL_DIFFUSE, [0.8, 0.8, 0.8, 1.0])
-            gl_material_fv(GLMaterialFace.FRONT_AND_BACK, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
-            gl_material_f(GLMaterialFace.FRONT_AND_BACK, GL_SHININESS, 50.0)
         except Exception as e:
             print(f"Warning: OpenGL initialization issue: {e}")
             print("Continuing with basic rendering...")

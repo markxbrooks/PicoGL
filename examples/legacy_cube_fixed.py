@@ -50,6 +50,20 @@ except ImportError as e:
     sys.exit(1)
 
 
+def set_up_legacy_lighting():
+    # Set up lighting
+    GLLightSource.lightf(GLFixedFunctionCapability.LIGHT0, GLLightParameter.POSITION, [1.0, 1.0, 1.0, 0.0])
+    GLLightSource.lightf(GLFixedFunctionCapability.LIGHT0, GLLightParameter.AMBIENT, [0.3, 0.3, 0.3, 1.0])
+    GLLightSource.lightf(GLFixedFunctionCapability.LIGHT0, GLLightParameter.DIFFUSE, [0.8, 0.8, 0.8, 1.0])
+    GLLightSource.lightf(GLFixedFunctionCapability.LIGHT0, GLLightParameter.SPECULAR, [1.0, 1.0, 1.0, 1.0])
+
+    # Set up material properties
+    gl_material_fv(GLFace.FRONT_AND_BACK, GLLightParameter.AMBIENT, [0.2, 0.2, 0.2, 1.0])
+    gl_material_fv(GLFace.FRONT_AND_BACK, GLLightParameter.DIFFUSE, [0.8, 0.8, 0.8, 1.0])
+    gl_material_fv(GLFace.FRONT_AND_BACK, GLLightParameter.SPECULAR, [1.0, 1.0, 1.0, 1.0])
+    gl_material_f(GLFace.FRONT_AND_BACK, GLLightParameter.SHININESS, 50.0)
+
+
 class LegacyCubeRenderer:
     """Legacy cube renderer using PicoGL LegacyGLMesh."""
 
@@ -323,17 +337,7 @@ class LegacyCubeRenderer:
         GLCapabilityDriver.enable(GLCapability.COLOR_MATERIAL)
         glColorMaterial(GLFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE)
 
-        # Set up lighting
-        GLLightSource.lightf(GL_LIGHT0, GLLightParameter.POSITION, [1.0, 1.0, 1.0, 0.0])
-        GLLightSource.lightf(GL_LIGHT0, GLLightParameter.AMBIENT, [0.3, 0.3, 0.3, 1.0])
-        GLLightSource.lightf(GL_LIGHT0, GLLightParameter.DIFFUSE, [0.8, 0.8, 0.8, 1.0])
-        GLLightSource.lightf(GL_LIGHT0, GLLightParameter.SPECULAR, [1.0, 1.0, 1.0, 1.0])
-
-        # Set up material properties
-        gl_material_fv(GLFace.FRONT_AND_BACK, GLLightParameter.AMBIENT, [0.2, 0.2, 0.2, 1.0])
-        gl_material_fv(GLFace.FRONT_AND_BACK, GLLightParameter.DIFFUSE, [0.8, 0.8, 0.8, 1.0])
-        gl_material_fv(GLFace.FRONT_AND_BACK, GLLightParameter.SPECULAR, [1.0, 1.0, 1.0, 1.0])
-        gl_material_f(GLFace.FRONT_AND_BACK, GLLightParameter.SHININESS, 50.0)
+        set_up_legacy_lighting()
 
     def load_cube_data(self):
         """Load cube data using PicoGL LegacyGLMesh."""
