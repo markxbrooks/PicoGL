@@ -75,7 +75,7 @@ class TestMeshData(unittest.TestCase):
         
         # Mock OpenGL functions to avoid context issues
         self.gl_patches = [
-            patch('picogl.renderer.meshdata.gl.gl_enableClientState'),
+            patch('picogl.renderer.meshdata.gl_enableClientState'),
             patch('picogl.renderer.meshdata.gl.glDisableClientState'),
             patch('picogl.renderer.meshdata.gl.glVertexPointer'),
             patch('picogl.renderer.meshdata.gl.glNormalPointer'),
@@ -83,7 +83,7 @@ class TestMeshData(unittest.TestCase):
             patch('picogl.renderer.meshdata.gl.glTexCoordPointer'),
             patch('picogl.renderer.meshdata.gl.glDrawElements'),
             patch('picogl.renderer.meshdata.gl.glLineWidth'),
-            patch('picogl.renderer.meshdata.gl.gl_enable'),
+            patch('picogl.renderer.meshdata.gl_enable'),
             patch('picogl.renderer.meshdata.gl.glDisable'),
             patch('picogl.renderer.meshdata.gl.glBlendFunc'),
             patch('picogl.renderer.meshdata.gl.glColor4f'),
