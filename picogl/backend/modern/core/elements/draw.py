@@ -10,7 +10,11 @@ from picogl.backend.gl.wrappers.vertex_array import gl_bind_vertex_array
 
 @contextmanager
 def bound_vertex_array(vao: int):
-    """bound vertec array"""
+    """
+    bound vertex array object context manager
+    
+    :param vao: int Vertex Array Object to bind
+    """
     
     try:
        gl_bind_vertex_array(vao)
