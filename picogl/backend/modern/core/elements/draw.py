@@ -24,4 +24,8 @@ def draw_elements(
     - pointer: Optional client-side index data; if None, the bound EBO is used
     """
     with bound_vertex_array(vao):
-        gl_draw_elements(index_count=index_count, index_type=index_type, mode=mode, pointer=pointer, offset=0)
+        gl_draw_elements(index_count=index_count,
+                         dtype=index_type,
+                         mode=mode,
+                         pointer=pointer,
+                         offset=0)
