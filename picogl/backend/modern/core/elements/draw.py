@@ -2,7 +2,7 @@
 draw elements
 """
 
-from picogl.backend.gl.enums import GLDrawMode
+from picogl.backend.gl.enums import GLDrawMode, GLNumeric
 from picogl.backend.gl.wrappers import gl_draw_elements
 from picogl.backend.modern.core.elements.vertex_array import bound_vertex_array
 
@@ -11,7 +11,7 @@ def draw_elements(
     vao: int,
     index_count: int,
     mode: int = GLDrawMode.TRIANGLES,  # or int
-    index_type: int = GLIndexType.UNSIGNED_INT,  # or GLNumeric.UNSIGNED_INT
+    index_type: int = GLNumeric.UNSIGNED_INT,  # or GLNumeric.UNSIGNED_INT
     pointer: Optional[Any] = None
 ) -> None:
     """
