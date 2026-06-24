@@ -1,5 +1,6 @@
-from OpenGL.raw.GL._types import GL_UNSIGNED_INT
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_LINES
+"""
+draw elements
+"""
 
 from picogl.backend.gl.enums import GLDrawMode, GLNumeric
 from picogl.backend.gl.wrappers import gl_draw_elements
