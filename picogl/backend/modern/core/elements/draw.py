@@ -1,6 +1,7 @@
 """
 draw elements
 """
+from contextlib import contextmanager
 
 from picogl.backend.gl.enums import GLDrawMode, GLNumeric
 from picogl.backend.gl.wrappers import gl_draw_elements
@@ -21,3 +22,16 @@ def draw_elements(
     gl_bind_vertex_array(vao)
     gl_draw_elements(index_count, index_type, mode, pointer=None)
     gl_bind_vertex_array(0)
+    
+    
+@contextmanager
+def bound_vertex_array(vao):
+    """bound vertec array"""
+    
+    try:
+       gl_bind_vertex_array(vao)
+       yield:
+    
+    finally:
+       gl_bind_vertex_array(0)
+    
