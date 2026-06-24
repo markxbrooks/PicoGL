@@ -8,6 +8,17 @@ from picogl.backend.gl.wrappers import gl_draw_elements
 from picogl.backend.gl.wrappers.vertex_array import gl_bind_vertex_array
 
 
+@contextmanager
+def bound_vertex_array(vao: int):
+    """bound vertec array"""
+    
+    try:
+       gl_bind_vertex_array(vao)
+       yield
+    finally:
+       gl_bind_vertex_array(0)
+    
+    
 def draw_elements(
     vao: int,
     index_count: int,
@@ -24,19 +35,5 @@ def draw_elements(
     - index_type: Type of indices (e.g., GL_UNSIGNED_INT)
     - pointer: Optional client-side index data; if None, the bound EBO is used
     """
-    gl_bind_vertex_array(vao)
-    gl_draw_elements(index_count, index_type, mode, pointer=pointer, offset=0)
-    gl_bind_vertex_array(0)
-    
-    
-@contextmanager
-def bound_vertex_array(vao):
-    """bound vertec array"""
-    
-    try:
-       gl_bind_vertex_array(vao)
-       yield:
-    
-    finally:
-       gl_bind_vertex_array(0)
-    
+    with bound_vertex_array(vao):
+        gl_draw_elements(index_count, index_type, mode, pointer=pointer, offset=0)
