@@ -2,10 +2,9 @@
 draw elements
 """
 
-from picogl.backend.gl.enums import GLDrawMode, GLNumeric
+from picogl.backend.gl.enums import GLDrawMode
 from picogl.backend.gl.wrappers import gl_draw_elements
-from picogl.backend.gl.wrappers.vertex_array import gl_bind_vertex_array
-from picogl/backend/modern/core/elements/vertex-array import bound_vertex_array
+from picogl.backend.modern.core.elements.vertex_array import bound_vertex_array
 
     
 def draw_elements(

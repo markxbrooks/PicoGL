@@ -3,6 +3,7 @@ vao context manager
 """
 
 from contextlib import contextmanager
+from picogl.backend.gl.wrappers.vertex_array import gl_bind_vertex_array
 
 @contextmanager
 def bound_vertex_array(vao: int):
@@ -12,5 +13,5 @@ def bound_vertex_array(vao: int):
     try:
         yield
     finally:
-        gl_bind_vertex_array(0
+        gl_bind_vertex_array(0)
         
