@@ -1,27 +1,12 @@
 """
 draw elements
 """
-from contextlib import contextmanager
 
 from picogl.backend.gl.enums import GLDrawMode, GLNumeric
 from picogl.backend.gl.wrappers import gl_draw_elements
 from picogl.backend.gl.wrappers.vertex_array import gl_bind_vertex_array
+from picogl/backend/modern/core/elements/vertex-array import bound_vertex_array
 
-
-@contextmanager
-def bound_vertex_array(vao: int):
-    """
-    bound vertex array object context manager
-    
-    :param vao: int Vertex Array Object to bind
-    """
-    
-    try:
-       gl_bind_vertex_array(vao)
-       yield
-    finally:
-       gl_bind_vertex_array(0)
-    
     
 def draw_elements(
     vao: int,
