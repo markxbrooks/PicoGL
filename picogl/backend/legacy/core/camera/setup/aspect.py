@@ -3,7 +3,7 @@ Calculate aspect
 """
 
 
-def calculate_aspect(h: int, w: int) -> float:
+def calculate_aspect_ratio(h: int, w: int) -> float:
     """
     calculate_aspect
 

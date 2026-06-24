@@ -28,7 +28,7 @@ from picogl.backend.gl.wrappers.error import gl_check_errors
 from picogl.backend.gl.wrappers.frame import prepare_viewport
 from picogl.backend.legacy.core.camera.lighting import set_background_color
 from picogl.backend.legacy.core.camera.matrices.setup import setup_matrices
-from picogl.backend.legacy.core.camera.setup import calculate_aspect
+from picogl.backend.legacy.core.camera.setup import calculate_aspect_ratio
 
 
 @dataclass
@@ -127,7 +127,7 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
         h = max(h, 1)
         # Update viewport
         self.backend.frame.viewport(0, 0, w, h)
-        self.aspect_ratio = calculate_aspect(h, w)
+        self.aspect_ratio = calculate_aspect_ratio(h, w)
         gluPerspective(45.0, self.aspect_ratio, 1.0, 1000.0)
         setup_matrices(self.aspect_ratio)
         # Return to model view matrix

@@ -1,7 +1,7 @@
 PicoGL file tree structure 
 
 rom molib.pdb.coordinate.data import CoordinateData
-from picogl.backend.legacy.core.camera.setup import calculate_aspect
+from picogl.backend.legacy.core.camera.setup import calculate_aspect_ratio
 from picogl.backend.modern.core.mvp import compute_mvp_zoom_from_zoom
 from picogl.backend.modern.core.unproject import unproject
 from picogl.backend.state import GLClipPlaneState, RenderState
@@ -22,7 +22,7 @@ from picogl.backend.legacy.core.camera.lighting import (
 )
 from picogl.backend.legacy.core.camera.matrix import update_camera_matrix
 from picogl.backend.legacy.core.camera.setup import (
-    calculate_aspect,
+    calculate_aspect_ratio,
     enable_blending,
     enable_smoothing,
     setup_materials,
