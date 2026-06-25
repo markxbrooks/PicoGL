@@ -372,7 +372,7 @@ class VertexArrayObject(VertexBase, GLResource):
         index_count: int = None,
         dtype: int = GLIndexType.UNSIGNED_INT,
         mode: int = GLDrawMode.POINTS,
-        pointer: int = ctypes.c_void_p(0),
+        pointer: Union[int,ctypes.c_void_p,None] = ctypes.c_void_p(0),
         first: int = 0,
     ):
         """
