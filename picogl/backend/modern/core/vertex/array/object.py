@@ -332,6 +332,12 @@ class VertexArrayObject(VertexBase, GLResource):
         :param data: np.ndarray
         :return: int
         """
+        # EBO association is stored on the *currently bound* VAO. ``__init__`` ends
+        # with ``bind()``, but callers may have unbound since then — re-bind here.
+        if not self.bind():
+            raise RuntimeError(
+                "add_ebo: VAO is not valid in the current OpenGL context"
+            )
         ebo = ModernEBO(data=data)
         ebo.bind()
         ebo.set_element_attributes(
@@ -397,6 +403,10 @@ class VertexArrayObject(VertexBase, GLResource):
                 self.unbind()
                 return
             if self.ebo:
+                # Re-bind EBO: if it was not captured into this VAO at creation time,
+                # glDrawElements can use a stale global EBO (e.g. from bond draws) and
+                # produce fan/spike artefacts on indexed meshes such as ribbons.
+                self.ebo.bind()
                 gl_draw_elements(atom_count, dtype, mode, pointer=pointer)
             else:
                 gl_draw_arrays(atom_count, mode, first=int(first))
