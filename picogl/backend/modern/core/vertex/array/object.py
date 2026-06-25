@@ -388,10 +388,20 @@ class VertexArrayObject(VertexBase, GLResource):
         atom_count = index_count or self.index_count
         if mode == GLDrawMode.POINTS:
             enable_points_rendering_state()
-        if self.ebo:
-            gl_draw_elements(atom_count, dtype, mode, pointer=pointer)
-        else:
-            gl_draw_arrays(atom_count, mode, first=int(first))
+        try:
+            if not self.bind():
+                return
+            if index_count is None:
+                index_count = self.index_count
+            if index_count == 0:
+                self.unbind()
+                return
+            if self.ebo:
+                gl_draw_elements(atom_count, dtype, mode, pointer=pointer)
+            else:
+                gl_draw_arrays(atom_count, mode, first=int(first))
+        finally:
+            self.unbind()
 
     def _modern_vbo_for_attrib(self, attrib_index: int) -> Optional[ModernVBO]:
         """Return the :class:`ModernVBO` created for ``add_vbo(index=attrib_index, ...)``."""
