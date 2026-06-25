@@ -34,9 +34,9 @@ NAME_ALIASES = {
     VBOType.CBO: VertexBufferRole.CBO,
     "normals": VertexBufferRole.NBO,
     VBOType.NBO: VertexBufferRole.NBO,
-    "indices": VertexBufferRole.EBO,
-    VBOType.EBO: VertexBufferRole.EBO,
-    "elements": VertexBufferRole.EBO,
+    # "indices": VertexBufferRole.EBO,
+    # VBOType.EBO: VertexBufferRole.EBO,
+    # "elements": VertexBufferRole.EBO,
 }
 
 __all__ = ["VertexBufferRole", "NAME_ALIASES", "VertexArrayRole"]

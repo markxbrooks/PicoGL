@@ -136,10 +136,10 @@ class VertexArrayObject(VertexBase, GLResource):
 
     def set_layout(self, layout: LayoutDescriptor) -> None:
         """configure"""
-        if self._configured:
-            return
+        """if self._configured:
+            return"""
 
-        if self.vao is None:
+        if self.handle is None:
             return
 
         with self.bind():
