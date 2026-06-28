@@ -6,14 +6,15 @@ from typing import Union
 from OpenGL.raw.GL.VERSION.GL_1_0 import glDisable, glEnable, glIsEnabled
 
 from picogl.backend.gl.capability import GLFixedFunctionCapability, GLPipelineCapability
+from picogl.backend.gl.enums.point_size import GLPointCapability, GLLegacyPointCapability
 from picogl.backend.gl.state.fill import GLCapability
 
 
-def gl_enable(cap: Union[GLCapability, GLFixedFunctionCapability, GLPipelineCapability]):
+def gl_enable(cap: Union[GLCapability, GLLegacyPointCapability, GLPointCapability, GLFixedFunctionCapability, GLPipelineCapability]):
     glEnable(cap)
 
 
-def gl_disable(cap: Union[GLCapability, GLFixedFunctionCapability, GLPipelineCapability]):
+def gl_disable(cap: Union[GLCapability, GLLegacyPointCapability, GLPointCapability, GLFixedFunctionCapability, GLPipelineCapability]):
     glDisable(cap)
 
 
