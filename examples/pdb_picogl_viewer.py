@@ -15,7 +15,11 @@ from pathlib import Path
 
 import numpy as np
 from examples.utils.pdb_loader import PDBLoader
-from picogl.backend.gl.enums.point_size import GLPointCapability
+from picogl.backend.gl.capability import GLPipelineCapability
+from picogl.backend.gl.enums.point_size import GLPointCapability, GLLegacyPointCapability
+from picogl.backend.gl.glfunc import GLDepthFunc
+from picogl.backend.gl.wrappers.clear import gl_clear_color
+from picogl.backend.gl.wrappers.depth import gl_depth_func
 from picogl.backend.gl.wrappers.enable import gl_enable
 
 # Add the current directory to the path to find pdb_loader.py
@@ -136,11 +140,11 @@ class MolecularRenderWindow(RenderWindow):
         glLineWidth(2.0)
 
         # Enable depth testing
-        gl_enable(GL_DEPTH_TEST)
-        glDepthFunc(GL_LESS)
+        gl_enable(GLPipelineCapability.DEPTH_TEST)
+        gl_depth_func(GLDepthFunc.LESS)
 
         # Set background colour
-        glClearColor(0.1, 0.1, 0.2, 1.0)
+        gl_clear_color((0.1, 0.1, 0.2, 1.0))
 
     def _create_vaos(self):
         """Create Vertex Array Objects for efficient rendering"""
