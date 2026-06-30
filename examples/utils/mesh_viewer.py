@@ -7,6 +7,7 @@ from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.wrappers.clear import gl_clear_color
 from picogl.backend.gl.wrappers.depth import gl_depth_func
 from picogl.backend.gl.wrappers.enable import gl_enable
+from picogl.backend.gl.wrappers.glm import identity_matrix
 from picogl.backend.gl.wrappers.polygon_mode import gl_polygon_mode
 from picogl.backend.modern.core.shader.mvp.controller import MVPController
 from picogl.ui.backend.glut.window.gl import GLWindow
@@ -39,7 +40,7 @@ class MeshViewWindow(GLWindow):
         """calc_mvp"""
         if width != 0:
             self.controller.resize(width, height)
-        self._mvp = self.controller.calc_mvp(glm.mat4(1.0))
+        self._mvp = self.controller.calc_mvp(identity_matrix())
 
     def resizeGL(self, width, height):
         """resizeGL"""
