@@ -9,7 +9,6 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     glColorMaterial,
     glLoadIdentity,
     glMaterialf,
-    glMatrixMode,
     glTexCoord2f,
     glTranslatef,
     glVertex3f,
@@ -17,6 +16,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
 from OpenGL.raw.GLU import gluPerspective
 
 from picogl.backend.gl.capability import FACE_MAP
+from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.state.fill import (
     GLColorMaterialMode,
     GLFace,
@@ -24,6 +24,7 @@ from picogl.backend.gl.state.fill import (
     GLLightParameter,
 )
 from picogl.backend.gl.state.texture import TexCoord2f, Vertex3f
+from picogl.backend.gl.wrappers.matrix import gl_matrix_mode
 from picogl.backend.state import gl_value
 
 
@@ -55,11 +56,11 @@ class GLLegacyPipeline:
 
     @staticmethod
     def set_matrix_mode_model_view():
-        glMatrixMode(GL_MODELVIEW)
+        gl_matrix_mode(mode=GLLegacyMatrixMode.MODELVIEW)
 
     @staticmethod
     def set_matrix_mode_projection():
-        glMatrixMode(GL_PROJECTION)
+        gl_matrix_mode(mode=GLLegacyMatrixMode.PROJECTION)
 
     @staticmethod
     def load_identity():
@@ -71,10 +72,10 @@ class GLLegacyPipeline:
 
     @staticmethod
     def set_projection(fovy, aspect, znear, zfar):
-        glMatrixMode(GL_PROJECTION)
+        gl_matrix_mode(GL_PROJECTION)
         glLoadIdentity()
         gluPerspective(float(fovy), float(aspect), float(znear), float(zfar))
-        glMatrixMode(GL_MODELVIEW)
+        gl_matrix_mode(GL_MODELVIEW)
 
     @staticmethod
     def translate(x, y, z):
