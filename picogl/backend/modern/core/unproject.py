@@ -4,6 +4,7 @@ Modern OpenGL Unproject Function
 
 from typing import Any, Tuple
 
+import glm
 import numpy as np
 
 from elmo.ui.widgets.gl.mol.viewport import Viewport
@@ -15,7 +16,7 @@ from picogl.backend.modern.core.mvp import (
 )
 
 
-def unproject(x, y, depth, inv_mvp, viewport: Viewport):
+def unproject(x: float, y: float, depth: float, inv_mvp: glm.mat4, viewport: Viewport) -> np.ndarray:
     v = viewport
 
     y = v.height - y
