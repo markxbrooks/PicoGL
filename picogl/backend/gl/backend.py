@@ -110,7 +110,7 @@ class GLBackend:
             dpr = 2  # macOS Retina displays
         else:
             dpr = 1
-        self.frame.viewport(0, 0, width * dpr, height * dpr)
+        self.frame.set_viewport(Viewport(0, 0, width * dpr, height * dpr))
         self.depth.set_depth_test(True)
         self.frame.set_clear_color((0.1, 0.1, 0.1, 1.0))
         self.capabilities.enable(GLPointCapability.PROGRAM_POINT_SIZE)

@@ -7,16 +7,19 @@ the framebuffer with specified colors and configuring the viewport
 for rendering.
 """
 
-from OpenGL.GL import glViewport
-from OpenGL.GL import GL_FRAMEBUFFER, glBindFramebuffer
-
+from elmo.ui.widgets.gl.mol.viewport import Viewport
 from picogl.backend.gl.enums import GLBitMask
+from picogl.backend.gl.enums.legacy.scale import gl_viewport
 from picogl.backend.gl.wrappers.clear import gl_clear_color, gl_clear
+from picogl.backend.gl.wrappers.frame import gl_bind_framebuffer
 from picogl.backend.state import gl_value
 
 
 class GLFrameDriver:
     """Framebuffer execution helpers for clear and viewport operations."""
+
+    def __init__(self):
+        self.viewport: Viewport = Viewport(0, 0, 0, 0)
 
     @staticmethod
     def clear(mask):
@@ -41,7 +44,7 @@ class GLFrameDriver:
     @staticmethod
     def bind_framebuffer(framebuffer: int) -> None:
         """Bind the window-system default framebuffer (required on some Qt/macOS paths)."""
-        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer)
+        gl_bind_framebuffer(framebuffer)
 
     def bind_default_framebuffer(self) -> None:
         """Bind the window-system default framebuffer (required on some Qt/macOS paths)."""
@@ -58,9 +61,9 @@ class GLFrameDriver:
     def set_clear_color(color=(0.0, 0.0, 0.0, 1.0)):
         gl_clear_color(color)
 
-    @staticmethod
-    def viewport(x, y, width, height):
-        glViewport(x, y, width, height)
+    def set_viewport(self, viewport: Viewport):
+        self.viewport = viewport
+        gl_viewport(viewport.x, viewport.y, viewport.width, viewport.height)
 
     def clear_background(self):
         """
