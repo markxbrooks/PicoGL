@@ -11,6 +11,9 @@ from enum import IntEnum
 
 from OpenGL.GL import (
     GL_COLOR_ATTACHMENT0,
+    GL_COLOR_ATTACHMENT1,
+    GL_COLOR_ATTACHMENT2,
+    GL_COLOR_ATTACHMENT3,
     GL_DEPTH_ATTACHMENT,
     glFramebufferTexture2D,
     glGenFramebuffers
@@ -25,7 +28,7 @@ from picogl.texture.gltexture import GLTexture
 from picogl.texture.texture2d import Texture2D
 
 
-class GLFramebufferAttachment(IntEnum):
+class GLFrameBufferAttachment(IntEnum):
     """GLFramebufferAttachment"""
     COLOR0 = GL_COLOR_ATTACHMENT0
     COLOR1 = GL_COLOR_ATTACHMENT1
@@ -120,7 +123,7 @@ class GLFramebuffer(Initializable):
             None
         """
         with self.bound():
-            attachment = GL_COLOR_ATTACHMENT0 + index
+            attachment = GLFrameBufferAttachment.COLOR0 + index
             self._attach_texture(attachment, tex)
             self.color_attachments.append(tex.handle)
 
@@ -136,7 +139,7 @@ class GLFramebuffer(Initializable):
 
         """
         with self.bound():
-            self._attach_texture(GL_DEPTH_ATTACHMENT, tex)
+            self._attach_texture(GLFrameBufferAttachment.DEPTH, tex)
             self.depth_attachment = tex.handle
 
     def check_complete(self):
