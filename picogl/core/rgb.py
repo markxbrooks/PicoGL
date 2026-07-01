@@ -1,7 +1,5 @@
 """
 RGB Color 
-"""
-
 
 Simple, readable structure using dataclasses.
 Default values give you a convenient “white opaque” color (1.0, 1.0, 1.0, 1.0).
