@@ -46,7 +46,3 @@ class RGBA(RGB):
 
     def to_tuple(self) -> tuple[float, float, float, float]:
         return (self.r, self.g, self.b, self.a)
-
-If you don’t want immutability, drop frozen=True and adjust post_init accordingly.
-
-If you share how you plan to use these classes (e.g., color conversions, rendering, serialization), I can tailor the tweaks to fit your context.
