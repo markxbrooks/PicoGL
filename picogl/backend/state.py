@@ -8,6 +8,7 @@ desired OpenGL state and delegate the actual gl calls to a backend object.
 from dataclasses import dataclass
 from typing import Any, Protocol
 
+import numpy as np
 from numpy import ndarray
 from OpenGL.GL import glBlendFunc, glViewport
 from OpenGL.raw.GL.VERSION.GL_1_1 import (
@@ -407,8 +408,8 @@ class GLClipPlaneState:
 
     enabled0: bool = False
     enabled1: bool = False
-    plane0: bool = False
-    plane1: bool = False
+    plane0: np.ndarray = False
+    plane1: np.ndarray = False
 
     def apply(self, state: GLStateManager):
         state.set_enabled(GLCapability.CLIP_DISTANCE0, self.enabled0)
