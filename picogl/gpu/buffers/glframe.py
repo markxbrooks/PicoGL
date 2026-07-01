@@ -7,6 +7,7 @@ buffers with support for color and depth attachments.
 """
 
 from contextlib import contextmanager
+from enum import IntEnum
 
 from OpenGL.GL import (
     GL_COLOR_ATTACHMENT0,
@@ -22,6 +23,17 @@ from picogl.backend.gl.wrappers.frame import gl_bind_framebuffer, gl_check_frame
 from picogl.renderer.initializable import Initializable
 from picogl.texture.gltexture import GLTexture
 from picogl.texture.texture2d import Texture2D
+
+
+class GLFramebufferAttachment(IntEnum):
+    """GLFramebufferAttachment"""
+    COLOR0 = GL_COLOR_ATTACHMENT0
+    COLOR1 = GL_COLOR_ATTACHMENT1
+    COLOR2 = GL_COLOR_ATTACHMENT2
+    COLOR3 = GL_COLOR_ATTACHMENT3
+    DEPTH = GL_DEPTH_ATTACHMENT
+    STENCIL = GL_STENCIL_ATTACHMENT
+    DEPTH_STENCIL = GL_DEPTH_STENCIL_ATTACHMENT
 
 
 class GLFramebuffer(Initializable):
