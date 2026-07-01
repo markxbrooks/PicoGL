@@ -13,7 +13,6 @@ from OpenGL.GL import (
     GL_DEPTH_ATTACHMENT,
     GL_FRAMEBUFFER,
     GL_FRAMEBUFFER_COMPLETE,
-    glBindFramebuffer,
     glCheckFramebufferStatus,
     glFramebufferTexture2D,
     glGenFramebuffers,
@@ -21,6 +20,7 @@ from OpenGL.GL import (
 )
 from OpenGL.raw.GL.VERSION.GL_3_0 import GL_FRAMEBUFFER_BINDING
 
+from picogl.backend.gl.wrappers.frame import gl_bind_framebuffer
 from picogl.renderer.initializable import Initializable
 from picogl.texture.gltexture import GLTexture
 from picogl.texture.texture2d import Texture2D
@@ -60,7 +60,7 @@ class GLFramebuffer(Initializable):
         self._bind_frame_buffer_handle(handle)
 
     def _bind_frame_buffer_handle(self, handle):
-        glBindFramebuffer(GL_FRAMEBUFFER, handle)
+        gl_bind_framebuffer(GL_FRAMEBUFFER, handle)
 
     def unbind(self):
         """
