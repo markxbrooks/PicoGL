@@ -15,11 +15,11 @@ from OpenGL.GL import (
     GL_FRAMEBUFFER_COMPLETE,
     glCheckFramebufferStatus,
     glFramebufferTexture2D,
-    glGenFramebuffers,
-    glGetIntegerv,
+    glGenFramebuffers
 )
 from OpenGL.raw.GL.VERSION.GL_3_0 import GL_FRAMEBUFFER_BINDING
 
+from picogl.backend.gl.wrappers import gl_get_integerv
 from picogl.backend.gl.wrappers.frame import gl_bind_framebuffer
 from picogl.renderer.initializable import Initializable
 from picogl.texture.gltexture import GLTexture
@@ -86,7 +86,7 @@ class GLFramebuffer(Initializable):
         Yields:
             GLFramebuffer: The GLFramebuffer instance being managed.
         """
-        prev = glGetIntegerv(GL_FRAMEBUFFER_BINDING)
+        prev = gl_get_integerv(GL_FRAMEBUFFER_BINDING)
         self.bind()
         try:
             yield self
