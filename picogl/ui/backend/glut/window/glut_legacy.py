@@ -63,7 +63,7 @@ class GlutRendererWindow(GLWindow):
         self.context.view = glm.lookAt(
             self.context.eye, self.context.center, self.context.up
         )
-        self.context.model_matrix = glm.mat4(1.0)
+        self.context.model_matrix = identity_matrix()
 
         # The camera position in world space is just the eye
         self.context.eye_np = np.array(self.context.eye.to_list(), dtype=np.float32)
@@ -91,7 +91,7 @@ class GlutRendererWindow(GLWindow):
         self.calculate_mvp_matrix(width, height)
         # Apply rotations
         rotation_matrix = glm.rotate(
-            glm.mat4(1.0), glm.radians(self.rotation_x), glm.vec3(1, 0, 0)
+            identity_matrix(), glm.radians(self.rotation_x), glm.vec3(1, 0, 0)
         )
         rotation_matrix = glm.rotate(
             rotation_matrix, glm.radians(self.rotation_y), glm.vec3(0, 1, 0)

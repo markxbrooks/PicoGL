@@ -13,6 +13,7 @@ from picogl.backend.gl.wrappers import (
 from picogl.backend.gl.wrappers.buffer import gl_bind_buffer
 from picogl.backend.gl.wrappers.enable_vertex_array import gl_enable_vertex_array
 from picogl.backend.gl.wrappers.generate_buffers import gl_generate_buffers
+from picogl.backend.gl.wrappers.glm import identity_matrix
 from picogl.backend.gl.wrappers.vertex_attrib_pointer import gl_vertex_attrib_pointer
 from picogl.boolean import GLBoolean
 
@@ -68,7 +69,7 @@ class GLContext(GObject):
             glm.vec3(0, 0, 0),  # and looks at the (0.0.0))
             glm.vec3(0, 1, 0),  # Head is up (set to 0,-1,0 to look upside-down)
         )
-        self.Model = glm.mat4(1.0)
+        self.Model = identity_matrix()
 
         self.MVP = self.Projection * self.View * self.Model
 

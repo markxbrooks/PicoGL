@@ -1,15 +1,16 @@
 """
 Prepare viewport
 """
+from OpenGL.raw.GL.VERSION.GL_3_0 import glBindFramebuffer, GL_FRAMEBUFFER
 
-import platform
-
-from picogl.backend.gl.backend import GLBackend
+from elmo.ui.widgets.gl.mol.viewport import Viewport
+# from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums.point_size import GLPointCapability
+from picogl.backend.gl.wrappers.dpr import get_dpr
 
 
-def prepare_viewport(width: int, height: int, backend: GLBackend) -> None:
+def prepare_viewport(width: int, height: int, backend: "GLBackend") -> None:
     """
     prepare
 
@@ -20,12 +21,13 @@ def prepare_viewport(width: int, height: int, backend: GLBackend) -> None:
 
     Prepares an OpenGL Frame Viewport
     """
-    if platform.system() == "Darwin":
-        dpr = 2  # macOS Retina displays
-    else:
-        dpr = 1
-    backend.frame.viewport(0, 0, width * dpr, height * dpr)
+    dpr = get_dpr()
+    backend.frame.set_viewport(Viewport(0, 0, width * dpr, height * dpr))
     backend.depth.set_depth_test(True)
     backend.frame.set_clear_color((0.1, 0.1, 0.1, 1.0))
     backend.capabilities.enable(GLPointCapability.PROGRAM_POINT_SIZE)
     backend.frame.clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
+
+
+def gl_bind_framebuffer(framebuffer: int):
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer)

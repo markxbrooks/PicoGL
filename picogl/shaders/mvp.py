@@ -3,6 +3,7 @@ from OpenGL.GL import glUniformMatrix4fv
 from OpenGL.raw.GL._types import GL_FALSE
 from pyglm import glm
 
+from picogl.backend.gl.wrappers.glm import identity_matrix
 from picogl.backend.modern.core.shader.helpers import log_gl_error
 
 
@@ -22,7 +23,7 @@ def calculate_mvp_matrix(context: object, width: int = 1920, height: int = 1080)
         glm.vec3(0, 0, 0),  # and looks at the (0.0.0))
         glm.vec3(0, 1, 0),
     )  # Head is up (set to 0,-1,0 to look upside-down)
-    context.model = glm.mat4(1.0)
+    context.model = identity_matrix()
     context.mvp_matrix = context.projection * context.view * context.model
 
 

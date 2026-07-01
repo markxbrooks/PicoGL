@@ -278,7 +278,7 @@ class Tu01Win(GLWindow):
             glm.vec3(0, 1, 0),
         )  # Head is up (set to 0,-1,0 to look upside-down)
         # fixed Cube Size
-        self.context.Model = glm.mat4(1.0)
+        self.context.Model = identity_matrix()
         # print(self.context.Model
         self.context.mvp_matrix = (
             self.context.Projection * self.context.View * self.context.Model

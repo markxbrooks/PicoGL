@@ -143,7 +143,10 @@ class VertexArrayObject(VertexBase, GLResource):
             return
 
         with self.bind():
-
+            if layout is None:
+                raise RuntimeError(
+                    f"{type(self).__name__} has no LayoutDescriptor assigned."
+                )
             self.layout = layout
 
             if self.ebo:
