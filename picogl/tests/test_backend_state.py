@@ -27,7 +27,6 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_SPECULAR,
 )
 
-from elmo.ui.widgets.gl.mol.viewport import Viewport
 from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.capability import (
     GLBlendFactor,
@@ -801,7 +800,7 @@ class TestDrawCommand(unittest.TestCase):
             patch("picogl.backend.legacy.core.pipeline.glLightfv") as lightfv,
             patch("picogl.backend.gl.driver.frame.glClearColor") as clear_color,
         ):
-            backend.frame.set_viewport(Viewport(1, 2, 3, 4))
+            backend.frame.viewport(1, 2, 3, 4)
             backend.legacy.load_identity()
             backend.legacy.translate(1, 2, 3)
             backend.legacy.set_light([0.0, 0.0, 10.0, 1.0])

@@ -407,8 +407,6 @@ class GLClipPlaneState:
 
     enabled0: bool = False
     enabled1: bool = False
-    plane0: bool = False
-    plane1: bool = False
 
     def apply(self, state: GLStateManager):
         state.set_enabled(GLCapability.CLIP_DISTANCE0, self.enabled0)

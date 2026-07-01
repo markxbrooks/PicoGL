@@ -16,14 +16,17 @@ from picogl.backend.modern.core.mvp import (
 )
 
 
-def unproject(x: float, y: float, depth: float, inv_mvp: glm.mat4, viewport: Viewport) -> np.ndarray:
+def unproject(x: float, y: float, depth: float, inv_mvp: glm.mat4, viewport: Viewport | np.ndarray) -> np.ndarray:
     """unproject"""
-    v = viewport
+    if isinstance(viewport, Viewport):
+        vx, vy, vw, vh = viewport.x, viewport.y, viewport.width, viewport.height
+    else:
+        vx, vy, vw, vh = (int(viewport[0]), int(viewport[1]), int(viewport[2]), int(viewport[3]))
 
-    y = v.height - y
+    y = vh - y
 
     ndc = np.array(
-        [(x - v.x) / v.width * 2.0 - 1.0, (y - v.y) / v.height * 2.0 - 1.0, depth * 2.0 - 1.0, 1.0],
+        [(x - vx) / vw * 2.0 - 1.0, (y - vy) / vh * 2.0 - 1.0, depth * 2.0 - 1.0, 1.0],
         dtype=np.float32,
     )
 

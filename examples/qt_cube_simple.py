@@ -152,7 +152,7 @@ class SimpleQtCubeWidget(QOpenGLWidget):
     def resizeGL(self, w: int, h: int):
         """Resize viewport and projection via PicoGL drivers."""
         h = max(h, 1)
-        self.backend.frame.set_viewport(Viewport(0, 0, w, h))
+        self.backend.frame.viewport(0, 0, w, h)
         aspect = float(w) / float(h)
         self.backend.legacy.set_matrix_mode_projection()
         self.backend.legacy.load_identity()

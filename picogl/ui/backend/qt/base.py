@@ -25,9 +25,11 @@ from picogl.backend.gl.task.gl_init import (
 )
 from picogl.backend.gl.wrappers import gl_get_integerv
 from picogl.backend.gl.wrappers.error import gl_check_errors
+from picogl.backend.gl.wrappers.frame import prepare_viewport
 from picogl.backend.legacy.core.camera.lighting import set_background_color
 from picogl.backend.legacy.core.camera.matrices.setup import setup_matrices
 from picogl.backend.legacy.core.camera.setup import calculate_aspect_ratio
+from elmo.ui.widgets.gl.mol.viewport import Viewport
 
 
 @dataclass
@@ -102,7 +104,9 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
         Called automatically by Qt when the gl context is first created.
         """
         # Viewport setup
-        self.backend.frame.set_viewport(Viewport(0, 0, self.width(), self.height()))
+        self.backend.frame.set_viewport(
+            Viewport(0, 0, self.width(), self.height())
+        )
         init_list = (
             modern_init_gl_list
             if self.gl_mode == GLMode.MODERN
@@ -126,7 +130,7 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
         h = max(h, 1)
         # Update viewport
         self.backend.frame.set_viewport(Viewport(0, 0, w, h))
-        self.aspect_ratio = self.backend.frame.viewport.aspect_ratio
+        self.aspect_ratio = calculate_aspect_ratio(h, w)
         gluPerspective(45.0, self.aspect_ratio, 1.0, 1000.0)
         setup_matrices(self.aspect_ratio)
         # Return to model view matrix
