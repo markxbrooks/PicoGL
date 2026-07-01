@@ -11,16 +11,14 @@ from contextlib import contextmanager
 from OpenGL.GL import (
     GL_COLOR_ATTACHMENT0,
     GL_DEPTH_ATTACHMENT,
-    GL_FRAMEBUFFER,
-    GL_FRAMEBUFFER_COMPLETE,
-    glCheckFramebufferStatus,
     glFramebufferTexture2D,
     glGenFramebuffers
 )
 from OpenGL.raw.GL.VERSION.GL_3_0 import GL_FRAMEBUFFER_BINDING
 
+from picogl.backend.gl.enums.target.frame_buffer import GLFrameBufferTarget, GLFrameBufferStatus
 from picogl.backend.gl.wrappers import gl_get_integerv
-from picogl.backend.gl.wrappers.frame import gl_bind_framebuffer
+from picogl.backend.gl.wrappers.frame import gl_bind_framebuffer, gl_check_framebuffer_status
 from picogl.renderer.initializable import Initializable
 from picogl.texture.gltexture import GLTexture
 from picogl.texture.texture2d import Texture2D
@@ -60,7 +58,7 @@ class GLFramebuffer(Initializable):
         self._bind_frame_buffer_handle(handle)
 
     def _bind_frame_buffer_handle(self, handle):
-        gl_bind_framebuffer(GL_FRAMEBUFFER, handle)
+        gl_bind_framebuffer(GLFrameBufferTarget.FRAMEBUFFER, handle)
 
     def unbind(self):
         """
@@ -142,8 +140,8 @@ class GLFramebuffer(Initializable):
             RuntimeError: If the framebuffer is not complete, with the status code
             indicating the specific issue.
         """
-        status = glCheckFramebufferStatus(GL_FRAMEBUFFER)
-        if status != GL_FRAMEBUFFER_COMPLETE:
+        status = gl_check_framebuffer_status(GLFrameBufferTarget.FRAMEBUFFER)
+        if status != GLFrameBufferStatus.FRAMEBUFFER_COMPLETE:
             raise RuntimeError(f"Incomplete framebuffer: {status}")
 
     def _attach_texture(self, attachment: float | int, tex: Texture2D):
@@ -170,7 +168,7 @@ class GLFramebuffer(Initializable):
             function or improper argument usage.
         """
         glFramebufferTexture2D(
-            target=GL_FRAMEBUFFER,
+            target=GLFrameBufferTarget.FRAMEBUFFER,
             attachment=attachment,
             textarget=GLTexture.TEXTURE_2D,
             texture=tex.handle,
