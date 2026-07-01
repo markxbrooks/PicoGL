@@ -36,7 +36,7 @@ from OpenGL.raw.GL.VERSION.GL_4_5 import GL_TEXTURE_BINDING_2D
 
 from picogl.backend.gl.state.param import GLParam
 from picogl.backend.gl.state.query import GLStateQuery
-from picogl.backend.gl.wrappers import gl_active_texture, gl_bind_texture
+# from picogl.backend.gl.wrappers import gl_active_texture, gl_bind_texture
 
 
 class GLTexture(IntEnum):

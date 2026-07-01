@@ -8,7 +8,7 @@ from typing import Optional
 import numpy as np
 from decologr import Decologr as log
 from OpenGL.raw.GL.ARB.viewport_array import GL_VIEWPORT
-from OpenGL.raw.GL.VERSION.GL_1_0 import glLoadIdentity, glMatrixMode, glViewport
+from OpenGL.raw.GL.VERSION.GL_1_0 import glLoadIdentity, glMatrixMode
 from OpenGL.raw.GLU import gluPerspective
 from PySide6.QtGui import QMouseEvent, QOpenGLFunctions, Qt, QWheelEvent
 from PySide6.QtOpenGLWidgets import QOpenGLWidget

@@ -1,6 +1,7 @@
 """
 Prepare viewport
 """
+from OpenGL.GL import glGenFramebuffers
 from OpenGL.raw.GL.VERSION.GL_3_0 import glBindFramebuffer, glCheckFramebufferStatus
 
 from elmo.ui.widgets.gl.mol.viewport import Viewport
@@ -38,3 +39,7 @@ def gl_bind_framebuffer(framebuffer: int,
 
 def gl_check_framebuffer_status(target: GLFrameBufferTarget) -> bool:
     return glCheckFramebufferStatus(target)
+
+
+def gl_gen_framebuffers(param):
+    return glGenFramebuffers(param)

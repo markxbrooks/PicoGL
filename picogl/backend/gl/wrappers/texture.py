@@ -25,8 +25,11 @@ from OpenGL.GL import (
 )
 from OpenGL.raw.GL.ARB.internalformat_query2 import GL_TEXTURE_2D
 from OpenGL.raw.GL.VERSION.GL_1_2 import glTexImage3D
+from OpenGL.raw.GL.VERSION.GL_3_0 import glFramebufferTexture2D
 
 from picogl.backend.gl.enums import GLNumeric
+from picogl.backend.gl.enums.target.frame_buffer import GLFrameBufferTarget
+from picogl.texture.gltexture import GLTexture
 
 
 def gl_active_texture(unit: int) -> None:
@@ -134,3 +137,8 @@ def gl_tex_parameter(target: int, pname: Any, param: Any) -> None:
 def gl_generate_mipmap(target: int = GL_TEXTURE_2D) -> None:
     """Generate mipmaps for the currently bound texture."""
     glGenerateMipmap(target)
+
+
+def gl_framebuffer_texture_2d(target: GLFrameBufferTarget, attachment: float | None, textarget: GLTexture, texture: int, level: int) -> None:
+    """gl framebuffer texture 2d"""
+    glFramebufferTexture2D(target=target, attachment=attachment, textarget=textarget, texture=texture, level=level)

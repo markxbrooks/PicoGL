@@ -7,36 +7,17 @@ buffers with support for color and depth attachments.
 """
 
 from contextlib import contextmanager
-from enum import IntEnum
 
-from OpenGL.GL import (
-    GL_COLOR_ATTACHMENT0,
-    GL_COLOR_ATTACHMENT1,
-    GL_COLOR_ATTACHMENT2,
-    GL_COLOR_ATTACHMENT3,
-    GL_DEPTH_ATTACHMENT,
-    glFramebufferTexture2D,
-    glGenFramebuffers
-)
 from OpenGL.raw.GL.VERSION.GL_3_0 import GL_FRAMEBUFFER_BINDING
 
+from picogl.backend.gl.enums.frame import GLFrameBufferAttachment
 from picogl.backend.gl.enums.target.frame_buffer import GLFrameBufferTarget, GLFrameBufferStatus
 from picogl.backend.gl.wrappers import gl_get_integerv
-from picogl.backend.gl.wrappers.frame import gl_bind_framebuffer, gl_check_framebuffer_status
+from picogl.backend.gl.wrappers.frame import gl_bind_framebuffer, gl_check_framebuffer_status, gl_gen_framebuffers
+from picogl.backend.gl.wrappers.texture import gl_framebuffer_texture_2d
 from picogl.renderer.initializable import Initializable
 from picogl.texture.gltexture import GLTexture
 from picogl.texture.texture2d import Texture2D
-
-
-class GLFrameBufferAttachment(IntEnum):
-    """GLFramebufferAttachment"""
-    COLOR0 = GL_COLOR_ATTACHMENT0
-    COLOR1 = GL_COLOR_ATTACHMENT1
-    COLOR2 = GL_COLOR_ATTACHMENT2
-    COLOR3 = GL_COLOR_ATTACHMENT3
-    DEPTH = GL_DEPTH_ATTACHMENT
-    STENCIL = GL_STENCIL_ATTACHMENT
-    DEPTH_STENCIL = GL_DEPTH_STENCIL_ATTACHMENT
 
 
 class GLFramebuffer(Initializable):
@@ -65,7 +46,7 @@ class GLFramebuffer(Initializable):
         self._do_initialize()
 
     def _do_initialize(self):
-        self.handle = glGenFramebuffers(1)
+        self.handle = gl_gen_framebuffers(1)
 
     def bind(self):
         self.ensure_initialized()
@@ -182,7 +163,7 @@ class GLFramebuffer(Initializable):
             Any exception that might be triggered by the `glFramebufferTexture2D`
             function or improper argument usage.
         """
-        glFramebufferTexture2D(
+        gl_framebuffer_texture_2d(
             target=GLFrameBufferTarget.FRAMEBUFFER,
             attachment=attachment,
             textarget=GLTexture.TEXTURE_2D,
