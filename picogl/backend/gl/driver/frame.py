@@ -13,7 +13,7 @@ from picogl.backend.gl.enums.legacy.scale import gl_viewport
 from picogl.backend.gl.wrappers.clear import gl_clear_color, gl_clear
 from picogl.backend.gl.wrappers.frame import gl_bind_framebuffer
 from picogl.backend.state import gl_value
-
+from picogl.core.rgb import RGBA, clamp01
 
 class GLFrameDriver:
     """Framebuffer execution helpers for clear and viewport operations."""
@@ -24,6 +24,25 @@ class GLFrameDriver:
     @staticmethod
     def clear(mask):
         gl_clear(gl_value(mask))
+        
+    def set_clear_background_and_color_from_rgba(self, color: RGBA = RGBA(0.0, 0.0, 0.0, 1.0)) -> None:
+        """
+        Clears the screen to a specified color using OpenGL commands.
+
+        Args:
+            color (RGBA): color values to clear the screen. Each component is clamped to [0.0, 1.0].
+        """
+        color = RGBA(
+            clamp01(color.r),
+            clamp01(color.g),
+            clamp01(color.b),
+            clamp01(color.a),
+        )
+        rgba = to_rgba_tuple(color)
+        self.set_clear_color(rgba.to_tuple())
+
+        self.clear_background()
+
 
     def set_clear_background_and_color(self, color=(0.0, 0.0, 0.0, 1.0)):
         """
