@@ -12,6 +12,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
 )
 
 from picogl.backend.gl.wrappers.enable import gl_enable
+from picogl.backend.gl.wrappers.hint import gl_hint
 
 
 def enable_smoothing(backend: "GLBackend") -> None:
