@@ -8,12 +8,14 @@ for rendering.
 """
 
 from elmo.ui.widgets.gl.mol.viewport import Viewport
+
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums.legacy.scale import gl_viewport
-from picogl.backend.gl.wrappers.clear import gl_clear_color, gl_clear
+from picogl.backend.gl.wrappers.clear import gl_clear, gl_clear_color
 from picogl.backend.gl.wrappers.frame import gl_bind_framebuffer
 from picogl.backend.state import gl_value
 from picogl.core.rgb import RGBA, clamp01
+
 
 class GLFrameDriver:
     """Framebuffer execution helpers for clear and viewport operations."""
@@ -24,8 +26,10 @@ class GLFrameDriver:
     @staticmethod
     def clear(mask):
         gl_clear(gl_value(mask))
-        
-    def set_clear_background_and_color_from_rgba(self, color: RGBA = RGBA(0.0, 0.0, 0.0, 1.0)) -> None:
+
+    def set_clear_background_and_color_from_rgba(
+        self, color: RGBA = RGBA(0.0, 0.0, 0.0, 1.0)
+    ) -> None:
         """
         Clears the screen to a specified color using OpenGL commands.
 
@@ -42,7 +46,6 @@ class GLFrameDriver:
         self.set_clear_color(rgba.to_tuple())
 
         self.clear_background()
-
 
     def set_clear_background_and_color(self, color=(0.0, 0.0, 0.0, 1.0)):
         """
@@ -69,9 +72,7 @@ class GLFrameDriver:
         """Bind the window-system default framebuffer (required on some Qt/macOS paths)."""
         self.bind_framebuffer(framebuffer=0)
 
-    def set_clear_color_only(
-            self, color: tuple[float, float, float, float]
-    ) -> None:
+    def set_clear_color_only(self, color: tuple[float, float, float, float]) -> None:
         """Set the clear color without clearing (safe before the default FBO is ready)."""
         self.bind_default_framebuffer()
         self.set_clear_color(color)

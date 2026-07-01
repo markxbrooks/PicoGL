@@ -1,5 +1,5 @@
 """
-RGB Color 
+RGB Color
 
 Simple, readable structure using dataclasses.
 Default values give you a convenient “white opaque” color (1.0, 1.0, 1.0, 1.0).
@@ -17,32 +17,37 @@ Interoperability**: If you plan to convert to/from common formats (tuples, lists
 
 from dataclasses import dataclass
 
+
 def clamp01(x: float) -> float:
     return max(0.0, min(1.0, x))
+
 
 @dataclass(frozen=True)
 class RGB:
     """RGB color"""
+
     r: float = 1.0
     g: float = 1.0
     b: float = 1.0
 
     def post_init(self):
-        object.setattr(self, 'r', clamp01(self.r))
-        object.setattr(self, 'g', clamp01(self.g))
-        object.setattr(self, 'b', clamp01(self.b))
+        object.setattr(self, "r", clamp01(self.r))
+        object.setattr(self, "g", clamp01(self.g))
+        object.setattr(self, "b", clamp01(self.b))
 
     def to_tuple(self) -> tuple[float, float, float]:
         return (self.r, self.g, self.b)
 
+
 @dataclass(frozen=True)
 class RGBA(RGB):
     """RGBA color"""
+
     a: float = 1.0
 
     def post_init(self):
         super().post_init()
-        object.setattr(self, 'a', clamp01(self.a))
+        object.setattr(self, "a", clamp01(self.a))
 
     def to_tuple(self) -> tuple[float, float, float, float]:
         return (self.r, self.g, self.b, self.a)

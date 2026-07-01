@@ -139,6 +139,18 @@ def gl_generate_mipmap(target: int = GL_TEXTURE_2D) -> None:
     glGenerateMipmap(target)
 
 
-def gl_framebuffer_texture_2d(target: GLFrameBufferTarget, attachment: float | None, textarget: GLTexture, texture: int, level: int) -> None:
+def gl_framebuffer_texture_2d(
+    target: GLFrameBufferTarget,
+    attachment: float | None,
+    textarget: GLTexture,
+    texture: int,
+    level: int,
+) -> None:
     """gl framebuffer texture 2d"""
-    glFramebufferTexture2D(target=target, attachment=attachment, textarget=textarget, texture=texture, level=level)
+    glFramebufferTexture2D(
+        target=target,
+        attachment=attachment,
+        textarget=textarget,
+        texture=texture,
+        level=level,
+    )

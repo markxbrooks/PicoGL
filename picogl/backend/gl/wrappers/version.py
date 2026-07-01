@@ -15,6 +15,3 @@ def gl_get_version() -> str:
     """gl get version"""
     version = gl_get_string(GL_VERSION)
     return version
-
-
-

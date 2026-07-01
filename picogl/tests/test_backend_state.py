@@ -3,6 +3,7 @@
 import unittest
 from unittest.mock import call, patch
 
+from elmo.ui.widgets.gl.mol.viewport import Viewport
 from OpenGL.GL import (
     GL_BLEND,
     GL_CULL_FACE,
@@ -27,7 +28,6 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_SPECULAR,
 )
 
-from elmo.ui.widgets.gl.mol.viewport import Viewport
 from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.capability import (
     GLBlendFactor,
