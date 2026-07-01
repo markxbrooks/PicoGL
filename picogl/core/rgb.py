@@ -1,14 +1,12 @@
 """
 RGB Color 
 """
-Here are a few notes and suggestions to improve the design and reliability of your dataclasses.
 
-What works well
+
 Simple, readable structure using dataclasses.
 Default values give you a convenient “white opaque” color (1.0, 1.0, 1.0, 1.0).
 RGBA correctly inherits from RGB, reusing its fields.
 
-Suggestions for improvement
 
 Type hints and value constraints**: Ensure color components are in the [0.0, 1.0] range and handle possible out-of-range values.
   You could add a post-init check to enforce bounds.
