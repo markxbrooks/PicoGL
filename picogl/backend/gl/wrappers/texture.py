@@ -42,7 +42,7 @@ def gl_get_active_texture0() -> None:
     gl_active_texture(GL_TEXTURE0)
 
 
-def gl_gen_textures(number: int = 1) -> Any:
+def gl_gen_textures(number: int = 1) -> int:
     """Issue ``glGenTextures``."""
     return glGenTextures(number)
 
