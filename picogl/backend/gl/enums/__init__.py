@@ -1,5 +1,5 @@
 from .bitmask import GLBitMask
-from .buffer_target import GLBufferTarget
+from .target.buffer import GLBufferTarget
 from .draw_mode import GLDrawMode
 from .index_type import GLIndexType
 from .numerical import GLNumeric

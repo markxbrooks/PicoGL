@@ -11,6 +11,7 @@ from picogl.backend.gl.wrappers import (
     gl_draw_arrays,
 )
 from picogl.backend.gl.wrappers.buffer import gl_bind_buffer
+from picogl.backend.gl.wrappers.enable import gl_enable
 from picogl.backend.gl.wrappers.enable_vertex_array import gl_enable_vertex_array
 from picogl.backend.gl.wrappers.generate_buffers import gl_generate_buffers
 from picogl.backend.gl.wrappers.vertex_attrib_pointer import gl_vertex_attrib_pointer
