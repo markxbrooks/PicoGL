@@ -25,7 +25,7 @@ def prepare_viewport(width: int, height: int, backend: "GLBackend") -> None:
     dpr = get_dpr()
     backend.frame.set_viewport(Viewport(0, 0, width * dpr, height * dpr))
     backend.depth.set_depth_test(True)
-    backend.frame.set_clear_color((0.1, 0.1, 0.1, 1.0))
+    backend.frame.set_clear_color(color=(0.1, 0.1, 0.1, 1.0))
     backend.capabilities.enable(GLPointCapability.PROGRAM_POINT_SIZE)
     backend.frame.clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
 
