@@ -11,7 +11,6 @@ efficiently.
 
 from typing import TYPE_CHECKING
 
-from backend.gl.wrappers import gl_get_integerv
 from backend.gl.wrappers.blending import gl_blend_func
 from picogl.backend.gl.capability import (
     GLBlendFactor,
@@ -35,7 +34,7 @@ class GLBlendDriver(Applyable):
         super().__init__()
         self.capabilities = capabilities
 
-    def blend(self, enabled: bool):
+    def set_blend(self, enabled: bool):
         self.capabilities.set_enabled(GLPipelineCapability.BLEND, enabled)
 
     @staticmethod
@@ -56,12 +55,12 @@ class GLBlendDriver(Applyable):
         if state is None:
             return
         if prev is None or prev.enabled != state.enabled:
-            self.blend(state.enabled)
+            self.set_blend(state.enabled)
 
         if state.enabled and (
             prev is None or prev.src != state.src or prev.dst != state.dst
         ):
             self.set_blend_func(state.src, state.dst)
 
-    def _is_same(self, prev: BlendState, state: BlendState) -> bool:
+    def _is_same(self, prev: "BlendState", state: "BlendState") -> bool:
         return prev == state

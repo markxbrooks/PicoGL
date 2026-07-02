@@ -10,7 +10,7 @@ def enable_blending(backend: "GLBackend") -> None:
     :param backend: Backend to use
     :return: None
     """
-    backend.blend.blend(True)
+    backend.blend.set_blend(True)
     backend.blend.set_alpha_blending()
     black = (0.0, 0.0, 0.0, 1.0)
     backend.frame.set_clear_color(black)

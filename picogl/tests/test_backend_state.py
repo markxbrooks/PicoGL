@@ -449,7 +449,7 @@ class TestDrawCommand(unittest.TestCase):
             depth.set_depth_test(True)
             depth.set_depth_write(False)
             depth.set_depth_func_gl_less()
-            blend.blend(True)
+            blend.set_blend(True)
             blend.set_blend_func(GL_ONE, GL_ZERO)
 
         self.assertEqual(
@@ -485,7 +485,7 @@ class TestDrawCommand(unittest.TestCase):
             backend.depth.set_depth_test(True)
             backend.depth.set_depth_write(False)
             backend.depth.set_depth_func_gl_less()
-            backend.blend.blend(True)
+            backend.blend.set_blend(True)
             backend.blend.set_blend_func(GL_ONE, GL_ZERO)
             backend.blend.set_alpha_blending()
             backend.capabilities.set_enabled(GLPipelineCapability.CULL_FACE, True)
