@@ -9,7 +9,8 @@ from pathlib import Path
 
 import numpy as np
 
-from backend.gl.wrappers.shader import gl_use_program
+from backend.gl.enums.shader import GLShader
+from backend.gl.wrappers.shader import gl_use_program, gl_link_program, gl_create_program
 from boolean import GLBoolean
 from decologr import Decologr as log
 from OpenGL.GL import GL_VERTEX_SHADER, GL_FRAGMENT_SHADER
@@ -25,12 +26,6 @@ from picogl.backend.modern.core.shader.context import (
 from picogl.backend.modern.core.shader.helpers import log_gl_error, read_shader_source
 from picogl.backend.modern.core.uniform.location_value import set_uniform_location_value
 from picogl.shaders.uniform import get_uniform_location
-
-
-class GLShader(IntEnum):
-    """GL Shader"""
-    VERTEX_SHADER = GL_VERTEX_SHADER
-    FRAGMENT_SHADER = GL_FRAGMENT_SHADER
 
 
 class ShaderProgram:
@@ -141,7 +136,7 @@ class ShaderProgram:
         """
         create_shader_program
         """
-        self.program = gl.glCreateProgram()
+        self.program = gl_create_program()
         log.message(f"Created shader program {self.program}", silent=True)
         log_gl_error()
 
@@ -150,7 +145,7 @@ class ShaderProgram:
         link_shader_program
         """
         log.message("Linking shader program...", silent=True)
-        gl.glLinkProgram(self.program)
+        gl_link_program(self.program)
         if GLBoolean.TRUE != gl.glGetProgramiv(self.program, gl.GL_LINK_STATUS):
             err = gl.glGetProgramInfoLog(self.program)
             raise RuntimeError(f"Shader link failed: {err}")
