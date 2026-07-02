@@ -1,6 +1,16 @@
+"""
+This module provides a ShaderProgram class for managing OpenGL shader programs.
+It includes functionality for initializing shaders from GLSL files or source code,
+compiling and linking shaders, and setting uniform values.
+
+"""
+
 from pathlib import Path
 
 import numpy as np
+
+from backend.gl.wrappers.shader import gl_use_program
+from boolean import GLBoolean
 from decologr import Decologr as log
 from OpenGL import GL as gl
 
@@ -134,7 +144,7 @@ class ShaderProgram:
         """
         log.message("Linking shader program...", silent=True)
         gl.glLinkProgram(self.program)
-        if gl.GL_TRUE != gl.glGetProgramiv(self.program, gl.GL_LINK_STATUS):
+        if GLBoolean.TRUE != gl.glGetProgramiv(self.program, gl.GL_LINK_STATUS):
             err = gl.glGetProgramInfoLog(self.program)
             raise RuntimeError(f"Shader link failed: {err}")
         log_gl_error()
@@ -190,12 +200,12 @@ class ShaderProgram:
 
     def begin(self):
         """begin"""
-        gl.glUseProgram(self.program)
+        gl_use_program(self.program)
         log_gl_error()
 
     def end(self):
         """end"""
-        gl.glUseProgram(0)
+        gl_use_program(0)
 
     def bind(self):
         """Bind this program for uniform uploads and draws."""
@@ -208,7 +218,7 @@ class ShaderProgram:
                 f"ShaderProgram {self.shader_name!r}: program id {self.program} "
                 "is not valid in the current OpenGL context"
             )
-        gl.glUseProgram(self.program)
+        gl_use_program(self.program)
         log_gl_error()
 
     def unbind(self):
