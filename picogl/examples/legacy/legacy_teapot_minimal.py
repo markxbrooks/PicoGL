@@ -16,8 +16,8 @@ Features:
 import os
 import sys
 
-from backend.gl.legacy.lighting import gl_legacy_lighting
-from backend.gl.wrappers.glu import glut_swap_buffers
+from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
+from picogl.backend.gl.wrappers.glu import glut_swap_buffers
 from picogl.backend.gl.capability import (
     GLFixedFunctionCapability,
     GLMaterialFace,

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from backend.gl.wrappers.shader import gl_use_program
+from picogl.backend.gl.wrappers.shader import gl_use_program
 from picogl.renderer.initializable import Bindable
 
 if TYPE_CHECKING:

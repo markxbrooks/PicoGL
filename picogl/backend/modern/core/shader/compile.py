@@ -21,7 +21,7 @@ fails, an exception is raised with the compilation error message.
                    with the associated error log.
 """
 
-from backend.gl.wrappers.shader import (
+from picogl.backend.gl.wrappers.shader import (
     gl_attach_shader,
     gl_compile_shader,
     gl_create_shader,

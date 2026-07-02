@@ -9,7 +9,7 @@ from pathlib import Path
 
 import numpy as np
 
-from backend.gl.wrappers.shader import gl_use_program
+from picogl.backend.gl.wrappers.shader import gl_use_program
 from boolean import GLBoolean
 from decologr import Decologr as log
 from OpenGL.GL import GL_VERTEX_SHADER, GL_FRAGMENT_SHADER

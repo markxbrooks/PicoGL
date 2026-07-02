@@ -13,10 +13,10 @@ Functions:
 
 """
 
-from backend.gl.capability import GLFixedFunctionCapability
-from backend.gl.light import GLLightSource
-from backend.gl.state.fill import GLFace, GLLightParameter
-from backend.gl.wrappers.material import gl_material_f, gl_material_fv
+from picogl.backend.gl.capability import GLFixedFunctionCapability
+from picogl.backend.gl.light import GLLightSource
+from picogl.backend.gl.state.fill import GLFace, GLLightParameter
+from picogl.backend.gl.wrappers.material import gl_material_f, gl_material_fv
 
 
 def gl_legacy_lighting():

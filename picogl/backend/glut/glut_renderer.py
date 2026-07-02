@@ -14,14 +14,14 @@ import os
 import sys
 
 import numpy as np
-from backend.gl.enums.legacy.scale import gl_load_identity, gl_viewport
-from backend.gl.legacy.lighting import gl_legacy_lighting
-from backend.gl.wrappers.clear import gl_clear_color
-from backend.gl.wrappers.color import gl_color_3f
-from backend.gl.wrappers.glu import glu_look_at
-from backend.gl.wrappers.matrix import gl_matrix_mode
-from backend.gl.wrappers.rotate import gl_rotate_f
-from backend.glut.cube_data import CUBE_COLORS, CUBE_VERTICES
+from picogl.backend.gl.enums.legacy.scale import gl_load_identity, gl_viewport
+from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
+from picogl.backend.gl.wrappers.clear import gl_clear_color
+from picogl.backend.gl.wrappers.color import gl_color_3f
+from picogl.backend.gl.wrappers.glu import glu_look_at
+from picogl.backend.gl.wrappers.matrix import gl_matrix_mode
+from picogl.backend.gl.wrappers.rotate import gl_rotate_f
+from picogl.backend.glut.cube_data import CUBE_COLORS, CUBE_VERTICES
 from picogl.backend.gl.capability import GLFixedFunctionCapability, GLMaterialFace
 
 # from picogl.examples.legacy_cube_fixed import LegacyCubeRenderer

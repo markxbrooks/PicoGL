@@ -14,7 +14,7 @@ import os
 import sys
 
 import numpy as np
-from backend.gl.legacy.lighting import gl_legacy_lighting
+from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
 from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.gl.enums import GLBitMask

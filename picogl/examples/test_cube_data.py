@@ -9,7 +9,7 @@ import os
 import sys
 
 import numpy as np
-from backend.glut.cube_data import CUBE_VERTICES
+from picogl.backend.glut.cube_data import CUBE_VERTICES
 
 
 def test_cube_data():
