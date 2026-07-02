@@ -4,7 +4,7 @@ gl Blend Driver
 
 from typing import TYPE_CHECKING
 
-from OpenGL.GL import glBlendFunc
+from backend.gl.wrappers.blending import gl_blend_func
 from picogl.backend.gl.capability import (
     GLBlendFactor,
     GLBlendTarget,
@@ -32,7 +32,7 @@ class GLBlendDriver(Applyable):
 
     @staticmethod
     def set_blend_func(src: GLBlendFactor | int, dst: GLBlendFactor | int):
-        glBlendFunc(int(gl_value(src)), int(gl_value(dst)))
+        gl_blend_func(int(gl_value(src)), int(gl_value(dst)))
 
     @staticmethod
     def get_blend_func() -> tuple[GLBlendFactor, GLBlendFactor]:
