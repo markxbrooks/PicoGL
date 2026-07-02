@@ -1,10 +1,11 @@
 """
 Prepare viewport
 """
+
+from elmo.ui.widgets.gl.mol.viewport import Viewport
 from OpenGL.GL import glGenFramebuffers
 from OpenGL.raw.GL.VERSION.GL_3_0 import glBindFramebuffer, glCheckFramebufferStatus
 
-from elmo.ui.widgets.gl.mol.viewport import Viewport
 # from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums.point_size import GLPointCapability
@@ -31,8 +32,9 @@ def prepare_viewport(width: int, height: int, backend: "GLBackend") -> None:
     backend.frame.clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
 
 
-def gl_bind_framebuffer(framebuffer: int,
-                        target: GLFrameBufferTarget = GLFrameBufferTarget.FRAMEBUFFER) -> None:
+def gl_bind_framebuffer(
+    framebuffer: int, target: GLFrameBufferTarget = GLFrameBufferTarget.FRAMEBUFFER
+) -> None:
     """gl_bind_framebuffer"""
     glBindFramebuffer(target, framebuffer)
 

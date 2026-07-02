@@ -1,6 +1,7 @@
 """
 color
 """
+
 from OpenGL.GL import glColorMaterial
 
 from picogl.backend.gl.capability import GLMaterialFace

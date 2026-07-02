@@ -19,7 +19,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     glLineWidth,
 )
 
-from picogl.backend.gl.wrappers.enable import gl_enable, gl_disable
+from picogl.backend.gl.wrappers.enable import gl_disable, gl_enable
 from picogl.renderer.abstract import AbstractRenderer
 
 

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from OpenGL.GL import glUniformMatrix4fv, glGetUniformLocation
+from OpenGL.GL import glGetUniformLocation, glUniformMatrix4fv
 from OpenGL.raw.GL.VERSION.GL_2_0 import glUseProgram
 
 from picogl.boolean import GLBoolean
