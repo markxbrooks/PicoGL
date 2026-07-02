@@ -128,20 +128,6 @@ class ShaderProgram:
         )
         self.link_shader_program()
 
-    def uniform_old(self, name: str, value):
-        """
-        uniform
-
-        :param name: str - uniform name
-        :param value: value to set (float, int, vec2, vec3, vec4, mat4, or np.ndarray)
-        :return: self - for chaining
-        Set uniform value (auto-detect type)
-        """
-        loc = self.uniforms.get(name) or self.get_uniform_location(name)
-        self.uniforms[name] = loc
-        set_uniform_location_value(loc, value)
-        return self  # allow chaining
-
     def create_shader_program(self):
         """
         create_shader_program
@@ -175,23 +161,6 @@ class ShaderProgram:
         self._uniform_state[name] = value
         return self
 
-    def uniform_new(self, name: str, value):
-        """
-        Set uniform value with proper location caching.
-        """
-        if name not in self.uniforms:
-            loc = self.get_uniform_location(name)
-            self.uniforms[name] = loc
-        else:
-            loc = self.uniforms[name]
-
-        # Optional: skip invalid uniforms
-        if loc == -1:
-            return self
-
-        set_uniform_location_value(loc, value)
-        return self
-
     def get_uniform_location(self, uniform_name: str) -> int:
         if uniform_name in self.uniforms:
             return self.uniforms[uniform_name]
@@ -202,13 +171,6 @@ class ShaderProgram:
 
         self.uniforms[uniform_name] = loc
         return loc
-
-    def get_uniform_location_old(self, uniform_name):
-        """get_uniform_location"""
-        mvp_id = get_uniform_location(
-            shader_program=self.program, uniform_name=uniform_name
-        )
-        return mvp_id
 
     def begin(self):
         """begin"""
