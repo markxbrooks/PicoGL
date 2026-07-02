@@ -30,13 +30,13 @@ class RGBColor:
     g: float = 1.0
     b: float = 1.0
 
-    def post_init(self):
+    def __post_init__(self):
         object.setattr(self, "r", clamp01(self.r))
         object.setattr(self, "g", clamp01(self.g))
         object.setattr(self, "b", clamp01(self.b))
 
     def to_tuple(self) -> tuple[float, float, float]:
-        return (self.r, self.g, self.b)
+        return self.r, self.g, self.b
 
 
 @dataclass(frozen=True)
@@ -45,9 +45,9 @@ class RGBAColor(RGBColor):
 
     a: float = 1.0
 
-    def post_init(self):
+    def __post_init__(self):
         super().post_init()
         object.setattr(self, "a", clamp01(self.a))
 
     def to_tuple(self) -> tuple[float, float, float, float]:
-        return (self.r, self.g, self.b, self.a)
+        return self.r, self.g, self.b, self.a
