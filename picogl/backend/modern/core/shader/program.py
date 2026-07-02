@@ -10,7 +10,7 @@ from pathlib import Path
 import numpy as np
 
 from backend.gl.enums.shader import GLShader
-from backend.gl.wrappers.shader import gl_use_program, gl_link_program, gl_create_program
+from backend.gl.wrappers.shader import gl_use_program
 from boolean import GLBoolean
 from decologr import Decologr as log
 from OpenGL.GL import GL_VERTEX_SHADER, GL_FRAGMENT_SHADER
@@ -136,7 +136,7 @@ class ShaderProgram:
         """
         create_shader_program
         """
-        self.program = gl_create_program()
+        self.program = gl.glCreateProgram()
         log.message(f"Created shader program {self.program}", silent=True)
         log_gl_error()
 
@@ -145,7 +145,7 @@ class ShaderProgram:
         link_shader_program
         """
         log.message("Linking shader program...", silent=True)
-        gl_link_program(self.program)
+        gl.glLinkProgram(self.program)
         if GLBoolean.TRUE != gl.glGetProgramiv(self.program, gl.GL_LINK_STATUS):
             err = gl.glGetProgramInfoLog(self.program)
             raise RuntimeError(f"Shader link failed: {err}")
