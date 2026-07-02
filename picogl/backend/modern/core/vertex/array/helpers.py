@@ -2,6 +2,7 @@
 Enable points rendering state
 """
 
+
 from picogl.backend.gl.capability import GLBlendFactor, GLPipelineCapability
 from picogl.backend.gl.enums.point_size import GLPointCapability
 from picogl.backend.gl.wrappers.blending import gl_blend_func

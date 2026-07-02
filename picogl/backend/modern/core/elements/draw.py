@@ -1,20 +1,19 @@
 """
 draw elements
 """
-
-from typing import Any, Optional
+from typing import Optional, Any
 
 from picogl.backend.gl.enums import GLDrawMode, GLNumeric
 from picogl.backend.gl.wrappers import gl_draw_elements
 from picogl.backend.modern.core.elements.vertex_array import bound_vertex_array
 
-
+    
 def draw_elements(
     vao: int,
     index_count: int,
     mode: int = GLDrawMode.TRIANGLES,  # or int
     index_type: int = GLNumeric.UNSIGNED_INT,  # or GLNumeric.UNSIGNED_INT
-    pointer: Optional[Any] = None,
+    pointer: Optional[Any] = None
 ) -> None:
     """
     Bind a VAO and issue glDrawElements for the bound element buffer.
@@ -26,10 +25,8 @@ def draw_elements(
     - pointer: Optional client-side index data; if None, the bound EBO is used
     """
     with bound_vertex_array(vao):
-        gl_draw_elements(
-            index_count=index_count,
-            dtype=index_type,
-            mode=mode,
-            pointer=pointer,
-            offset=0,
-        )
+        gl_draw_elements(index_count=index_count,
+                         dtype=index_type,
+                         mode=mode,
+                         pointer=pointer,
+                         offset=0)

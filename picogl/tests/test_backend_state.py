@@ -3,7 +3,6 @@
 import unittest
 from unittest.mock import call, patch
 
-from elmo.ui.widgets.gl.mol.viewport import Viewport
 from OpenGL.GL import (
     GL_BLEND,
     GL_CULL_FACE,

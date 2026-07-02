@@ -44,7 +44,12 @@ def gl_get_active_texture0() -> None:
 
 def gl_gen_textures(number: int = 1) -> int:
     """Issue ``glGenTextures``."""
-    return glGenTextures(number)
+    result = glGenTextures(number)
+    if number == 1:
+        if hasattr(result, "__len__") and not isinstance(result, (int, np.integer)):
+            return int(result[0])
+        return int(result)
+    return result
 
 
 def gl_bind_texture(tex_id: int, target: int = GL_TEXTURE_2D) -> None:
