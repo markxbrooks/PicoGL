@@ -12,6 +12,8 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
 )
 
 from picogl.backend.gl.wrappers.enable import gl_enable
+from picogl.backend.gl.wrappers.error import gl_check_errors
+from picogl.backend.gl.wrappers.hint import gl_hint
 
 
 def enable_smoothing(backend: "GLBackend") -> None:
@@ -26,4 +28,4 @@ def enable_smoothing(backend: "GLBackend") -> None:
         gl_hint(GL_POINT_SMOOTH_HINT, GL_NICEST)
         gl_hint(GL_LINE_SMOOTH_HINT, GL_NICEST)
     except gl_error.GLError:
-        pass
+        gl_check_errors()
