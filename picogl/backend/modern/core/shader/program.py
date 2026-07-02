@@ -4,7 +4,7 @@ It includes functionality for initializing shaders from GLSL files or source cod
 compiling and linking shaders, and setting uniform values.
 
 """
-
+from enum import IntEnum
 from pathlib import Path
 
 import numpy as np
@@ -12,6 +12,7 @@ import numpy as np
 from backend.gl.wrappers.shader import gl_use_program
 from boolean import GLBoolean
 from decologr import Decologr as log
+from OpenGL.GL import GL_VERTEX_SHADER, GL_FRAGMENT_SHADER
 from OpenGL import GL as gl
 
 from picogl.backend.modern.core.shader.compile import compile_shader
@@ -24,6 +25,12 @@ from picogl.backend.modern.core.shader.context import (
 from picogl.backend.modern.core.shader.helpers import log_gl_error, read_shader_source
 from picogl.backend.modern.core.uniform.location_value import set_uniform_location_value
 from picogl.shaders.uniform import get_uniform_location
+
+
+class GLShader(IntEnum):
+    """GL Shader"""
+    VERTEX_SHADER = GL_VERTEX_SHADER
+    FRAGMENT_SHADER = GL_FRAGMENT_SHADER
 
 
 class ShaderProgram:
@@ -109,10 +116,10 @@ class ShaderProgram:
         log.parameter("vertex_source", vertex_source, silent=True)
         log.parameter("fragment_source", fragment_source, silent=True)
         self.vertex_shader = compile_shader(
-            self.program, gl.GL_VERTEX_SHADER, vertex_source
+            self.program, GLShader.VERTEX_SHADER, vertex_source
         )
         self.fragment_shader = compile_shader(
-            self.program, gl.GL_FRAGMENT_SHADER, fragment_source
+            self.program, GLShader.FRAGMENT_SHADER, fragment_source
         )
         self.link_shader_program()
 
