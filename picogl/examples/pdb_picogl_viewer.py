@@ -41,7 +41,7 @@ from picogl.ui.backend.glut.window.object import RenderWindow
 
 def create_vao(mesh):
     vao = VertexArrayObject()
-    atom_vertices = np.array(mesh.CUBE_DATA, dtype=np.float32).reshape(
+    atom_vertices = np.array(mesh.vertices, dtype=np.float32).reshape(
         -1, 3
     )
     atom_colors = np.array(mesh.colors, dtype=np.float32).reshape(-1, 3)
@@ -184,11 +184,11 @@ class MolecularRenderWindow(RenderWindow):
 
             # Render atoms
             with self.atom_vao:
-                glDrawArrays(GL_POINTS, 0, len(self.atom_mesh.CUBE_DATA) // 3)
+                glDrawArrays(GL_POINTS, 0, len(self.atom_mesh.vertices) // 3)
         else:
             # Fallback rendering without shader
             with self.atom_vao:
-                glDrawArrays(GL_POINTS, 0, len(self.atom_mesh.CUBE_DATA) // 3)
+                glDrawArrays(GL_POINTS, 0, len(self.atom_mesh.vertices) // 3)
 
     def _render_bonds(self):
         """Render bonds as lines"""
@@ -205,11 +205,11 @@ class MolecularRenderWindow(RenderWindow):
 
             # Render bonds
             with self.bond_vao:
-                glDrawArrays(GL_LINES, 0, len(self.bond_mesh.CUBE_DATA) // 3)
+                glDrawArrays(GL_LINES, 0, len(self.bond_mesh.vertices) // 3)
         else:
             # Fallback rendering without shader
             with self.bond_vao:
-                glDrawArrays(GL_LINES, 0, len(self.bond_mesh.CUBE_DATA) // 3)
+                glDrawArrays(GL_LINES, 0, len(self.bond_mesh.vertices) // 3)
 
     def keyPressEvent(self, key, x, y):
         """Handle keyboard input"""

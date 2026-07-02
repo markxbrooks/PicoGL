@@ -33,7 +33,7 @@ class ObjectRenderer(RendererBase):
         self.texture_file = texture_file
         self.context = context
         self.data = data
-        self.data.vertex_count = len(self.data.CUBE_DATA.flatten()) // 3
+        self.data.vertex_count = len(self.data.vertices.flatten()) // 3
         self.show_model = True
         self.glsl_dir = glsl_dir
 
@@ -65,7 +65,7 @@ class ObjectRenderer(RendererBase):
         if self.context.vaos is None:
             self.context.vaos = {}
         model_vao = VertexArrayObject()
-        model_vao.add_vbo(index=0, data=self.data.CUBE_DATA, size=3)
+        model_vao.add_vbo(index=0, data=self.data.vertices, size=3)
 
         if self.use_texture and self.data.texcoords is not None:
             model_vao.add_vbo(index=1, data=self.data.texcoords, size=2)

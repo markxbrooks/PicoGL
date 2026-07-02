@@ -10,7 +10,7 @@ from picogl.renderer import MeshData
 def validate_mesh_data(data: MeshData):
     """validate mesh data"""
     validate_input_data(
-        vertices=data.CUBE_DATA,
+        vertices=data.vertices,
         indices=data.indices,
         normals=data.normals,
         colors=data.colors,
