@@ -9,11 +9,16 @@ from pathlib import Path
 
 import numpy as np
 
-from picogl.backend.gl.wrappers.shader import gl_use_program
-from boolean import GLBoolean
+from picogl.backend.gl.wrappers.shader import (
+    gl_create_program,
+    gl_get_program_info_log,
+    gl_get_programiv,
+    gl_link_program,
+    gl_use_program,
+)
+from picogl.boolean import GLBoolean
 from decologr import Decologr as log
 from OpenGL.GL import GL_VERTEX_SHADER, GL_FRAGMENT_SHADER
-from OpenGL import GL as gl
 
 from picogl.backend.modern.core.shader.compile import compile_shader
 from picogl.backend.modern.core.shader.context import (
@@ -141,7 +146,7 @@ class ShaderProgram:
         """
         create_shader_program
         """
-        self.program = gl.glCreateProgram()
+        self.program = gl_create_program()
         log.message(f"Created shader program {self.program}", silent=True)
         log_gl_error()
 
@@ -150,9 +155,9 @@ class ShaderProgram:
         link_shader_program
         """
         log.message("Linking shader program...", silent=True)
-        gl.glLinkProgram(self.program)
-        if GLBoolean.TRUE != gl.glGetProgramiv(self.program, gl.GL_LINK_STATUS):
-            err = gl.glGetProgramInfoLog(self.program)
+        gl_link_program(self.program)
+        if GLBoolean.TRUE != gl_get_programiv(self.program):
+            err = gl_get_program_info_log(self.program)
             raise RuntimeError(f"Shader link failed: {err}")
         log_gl_error()
 
@@ -232,10 +237,10 @@ class ShaderProgram:
         if not gl_context_available():
             return
         clear_gl_errors()
-        gl.glUseProgram(0)
+        gl_use_program(0)
 
     def release(self):
-        gl.glUseProgram(0)
+        gl_use_program(0)
 
     def delete(self):
         self.release()
