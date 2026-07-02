@@ -16,15 +16,21 @@ Features:
 import os
 import sys
 
-from examples.glut_renderer import GlutRenderer, set_up_legacy_lighting
+from backend.gl.legacy.lighting import gl_legacy_lighting
+from backend.gl.wrappers.glu import glut_swap_buffers
+from picogl.backend.glut.glut_renderer import GlutRenderer
 from picogl.backend.gl.capability import GLMaterialFace, GLPipelineCapability, GLFixedFunctionCapability
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
+from picogl.backend.gl.enums.legacy.scale import gl_load_identity, gl_viewport
 from picogl.backend.gl.state.fill import GLColorMaterialMode, GLCapability, GLFillMode
 from picogl.backend.gl.wrappers.clear import gl_clear_color, gl_clear
-from picogl.backend.gl.wrappers.color import gl_color_material
+from picogl.backend.gl.wrappers.color import gl_color_material, gl_color_3f
 from picogl.backend.gl.wrappers.enable import gl_enable, toggle_capability
+from picogl.backend.gl.wrappers.glu import glu_look_at
+from picogl.backend.gl.wrappers.matrix import gl_matrix_mode
 from picogl.backend.gl.wrappers.polygon_mode import gl_polygon_mode
+from picogl.backend.gl.wrappers.rotate import gl_rotate_f
 
 # Check for display before importing OpenGL
 if os.environ.get("DISPLAY") is None and os.name != "nt":
@@ -33,7 +39,6 @@ if os.environ.get("DISPLAY") is None and os.name != "nt":
     sys.exit(1)
 
 try:
-    from OpenGL.GL import *
     from OpenGL.GLU import *
     from OpenGL.GLUT import *
 except ImportError as e:
@@ -65,24 +70,24 @@ class MinimalTeapotRenderer(GlutRenderer):
         gl_enable(GLFixedFunctionCapability.LIGHT0)
         gl_enable(GLCapability.COLOR_MATERIAL)
         gl_color_material(GLMaterialFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE)
-        set_up_legacy_lighting()
+        gl_legacy_lighting()
 
     def display(self):
         """Display callback - render the scene."""
         gl_clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
-        glLoadIdentity()
+        gl_load_identity()
 
         # Set up camera
-        gluLookAt(0, 0, self.zoom_distance, 0, 0, 0, 0, 1, 0)
+        glu_look_at(0, 0, self.zoom_distance, 0, 0, 0, 0, 1, 0)
 
         # Apply rotations
-        glRotatef(self.rotation_x, 1, 0, 0)
-        glRotatef(self.rotation_y, 0, 1, 0)
+        gl_rotate_f(angle=self.rotation_x, x=1, y=0, z=0)
+        gl_rotate_f(angle=self.rotation_y, x=0, y=1, z=0)
 
         # Draw the teapot
         self.draw_teapot()
 
-        glutSwapBuffers()
+        glut_swap_buffers()
 
     def draw_teapot(self):
         """Draw the teapot using built-in OpenGL primitives."""
@@ -95,7 +100,7 @@ class MinimalTeapotRenderer(GlutRenderer):
         else:
             fill_mode = GLFillMode.FILL
             color = red_teapot
-        glColor3f(*color)
+        gl_color_3f(color)
         toggle_capability(enabled=not self.wireframe_mode, capability=GLFixedFunctionCapability.LIGHTING)
         gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, fill_mode)
         # Draw the teapot
@@ -109,11 +114,11 @@ class MinimalTeapotRenderer(GlutRenderer):
         """Reshape callback - handle window resize."""
         self.width = width
         self.height = height
-        glViewport(0, 0, width, height)
-        glMatrixMode(GLLegacyMatrixMode.PROJECTION)
-        glLoadIdentity()
+        gl_viewport(0, 0, width, height)
+        gl_matrix_mode(GLLegacyMatrixMode.PROJECTION)
+        gl_load_identity()
         gluPerspective(45.0, float(width) / float(height), 0.1, 100.0)
-        glMatrixMode(GLLegacyMatrixMode.MODELVIEW)
+        gl_matrix_mode(GLLegacyMatrixMode.MODELVIEW)
 
     def run(self):
         """Run the application."""

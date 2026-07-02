@@ -15,14 +15,21 @@ import sys
 
 import numpy as np
 
+from backend.gl.enums.legacy.scale import gl_viewport, gl_load_identity
+from backend.gl.legacy.lighting import gl_legacy_lighting
+from backend.gl.wrappers.clear import gl_clear_color
+from backend.gl.wrappers.color import gl_color_3f
+from backend.gl.wrappers.glu import glu_look_at
+from backend.gl.wrappers.matrix import gl_matrix_mode
+from backend.gl.wrappers.rotate import gl_rotate_f
+from backend.glut.cube_data import CUBE_VERTICES, CUBE_COLORS
+# from picogl.examples.legacy_cube_fixed import LegacyCubeRenderer
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
-from picogl.backend.gl.light import GLLightSource
-from picogl.backend.gl.capability import GLFixedFunctionCapability
+from picogl.backend.gl.capability import GLFixedFunctionCapability, GLMaterialFace
 from picogl.backend.gl.enums import GLBitMask
-from picogl.backend.gl.state.fill import GLFace, GLCapability, GLColorMaterialMode, GLLightParameter, GLFillMode
+from picogl.backend.gl.state.fill import GLFace, GLCapability, GLColorMaterialMode, GLFillMode
 from picogl.backend.gl.wrappers.clear import gl_clear
-from picogl.backend.gl.wrappers.material import gl_material_fv, gl_material_f
 from picogl.backend.gl.wrappers.polygon_mode import gl_polygon_mode
 
 # Check for display before importing OpenGL
@@ -50,20 +57,6 @@ except ImportError as e:
     sys.exit(1)
 
 
-def set_up_legacy_lighting():
-    # Set up lighting
-    GLLightSource.lightf(GLFixedFunctionCapability.LIGHT0, GLLightParameter.POSITION, [1.0, 1.0, 1.0, 0.0])
-    GLLightSource.lightf(GLFixedFunctionCapability.LIGHT0, GLLightParameter.AMBIENT, [0.3, 0.3, 0.3, 1.0])
-    GLLightSource.lightf(GLFixedFunctionCapability.LIGHT0, GLLightParameter.DIFFUSE, [0.8, 0.8, 0.8, 1.0])
-    GLLightSource.lightf(GLFixedFunctionCapability.LIGHT0, GLLightParameter.SPECULAR, [1.0, 1.0, 1.0, 1.0])
-
-    # Set up material properties
-    gl_material_fv(GLFace.FRONT_AND_BACK, GLLightParameter.AMBIENT, [0.2, 0.2, 0.2, 1.0])
-    gl_material_fv(GLFace.FRONT_AND_BACK, GLLightParameter.DIFFUSE, [0.8, 0.8, 0.8, 1.0])
-    gl_material_fv(GLFace.FRONT_AND_BACK, GLLightParameter.SPECULAR, [1.0, 1.0, 1.0, 1.0])
-    gl_material_f(GLFace.FRONT_AND_BACK, GLLightParameter.SHININESS, 50.0)
-
-
 class GlutRenderer:
     """Legacy cube renderer using PicoGL LegacyGLMesh."""
 
@@ -81,233 +74,9 @@ class GlutRenderer:
         self.mesh = None
 
         # Cube data (from cube_data.py)
-        self.vertices = np.array(
-            [
-                -1.0,
-                -1.0,
-                -1.0,  # 0
-                -1.0,
-                -1.0,
-                1.0,  # 1
-                -1.0,
-                1.0,
-                1.0,  # 2
-                1.0,
-                1.0,
-                -1.0,  # 3
-                -1.0,
-                -1.0,
-                -1.0,  # 4
-                -1.0,
-                1.0,
-                -1.0,  # 5
-                1.0,
-                -1.0,
-                1.0,  # 6
-                -1.0,
-                -1.0,
-                -1.0,  # 7
-                1.0,
-                -1.0,
-                -1.0,  # 8
-                1.0,
-                1.0,
-                -1.0,  # 9
-                1.0,
-                -1.0,
-                -1.0,  # 10
-                -1.0,
-                -1.0,
-                -1.0,  # 11
-                -1.0,
-                -1.0,
-                -1.0,  # 12
-                -1.0,
-                1.0,
-                1.0,  # 13
-                -1.0,
-                1.0,
-                -1.0,  # 14
-                1.0,
-                -1.0,
-                1.0,  # 15
-                -1.0,
-                -1.0,
-                1.0,  # 16
-                -1.0,
-                -1.0,
-                -1.0,  # 17
-                -1.0,
-                1.0,
-                1.0,  # 18
-                -1.0,
-                -1.0,
-                1.0,  # 19
-                1.0,
-                -1.0,
-                1.0,  # 20
-                1.0,
-                1.0,
-                1.0,  # 21
-                1.0,
-                -1.0,
-                -1.0,  # 22
-                1.0,
-                1.0,
-                -1.0,  # 23
-                1.0,
-                -1.0,
-                -1.0,  # 24
-                1.0,
-                1.0,
-                1.0,  # 25
-                1.0,
-                -1.0,
-                1.0,  # 26
-                1.0,
-                1.0,
-                1.0,  # 27
-                1.0,
-                1.0,
-                -1.0,  # 28
-                -1.0,
-                1.0,
-                -1.0,  # 29
-                1.0,
-                1.0,
-                1.0,  # 30
-                -1.0,
-                1.0,
-                -1.0,  # 31
-                -1.0,
-                1.0,
-                1.0,  # 32
-                1.0,
-                1.0,
-                1.0,  # 33
-                -1.0,
-                1.0,
-                1.0,  # 34
-                1.0,
-                -1.0,
-                1.0,  # 35
-            ],
-            dtype=np.float32,
-        )
+        self.vertices = CUBE_VERTICES
 
-        self.colors = np.array(
-            [
-                0.583,
-                0.771,
-                0.014,  # 0
-                0.609,
-                0.115,
-                0.436,  # 1
-                0.327,
-                0.483,
-                0.844,  # 2
-                0.822,
-                0.569,
-                0.201,  # 3
-                0.435,
-                0.602,
-                0.223,  # 4
-                0.310,
-                0.747,
-                0.185,  # 5
-                0.597,
-                0.770,
-                0.761,  # 6
-                0.559,
-                0.436,
-                0.730,  # 7
-                0.359,
-                0.583,
-                0.152,  # 8
-                0.483,
-                0.596,
-                0.789,  # 9
-                0.559,
-                0.861,
-                0.639,  # 10
-                0.195,
-                0.548,
-                0.859,  # 11
-                0.014,
-                0.184,
-                0.576,  # 12
-                0.771,
-                0.328,
-                0.970,  # 13
-                0.406,
-                0.615,
-                0.116,  # 14
-                0.676,
-                0.977,
-                0.133,  # 15
-                0.971,
-                0.572,
-                0.833,  # 16
-                0.140,
-                0.616,
-                0.489,  # 17
-                0.997,
-                0.513,
-                0.064,  # 18
-                0.945,
-                0.719,
-                0.592,  # 19
-                0.543,
-                0.021,
-                0.978,  # 20
-                0.279,
-                0.317,
-                0.505,  # 21
-                0.167,
-                0.620,
-                0.077,  # 22
-                0.347,
-                0.857,
-                0.137,  # 23
-                0.055,
-                0.953,
-                0.042,  # 24
-                0.714,
-                0.505,
-                0.345,  # 25
-                0.783,
-                0.290,
-                0.734,  # 26
-                0.722,
-                0.645,
-                0.174,  # 27
-                0.302,
-                0.455,
-                0.848,  # 28
-                0.225,
-                0.587,
-                0.040,  # 29
-                0.517,
-                0.713,
-                0.338,  # 30
-                0.053,
-                0.959,
-                0.120,  # 31
-                0.393,
-                0.621,
-                0.362,  # 32
-                0.673,
-                0.211,
-                0.457,  # 33
-                0.820,
-                0.883,
-                0.371,  # 34
-                0.982,
-                0.099,
-                0.879,  # 35
-            ],
-            dtype=np.float32,
-        )
+        self.colors = CUBE_COLORS
 
         # Reshape for easier access
         self.vertices = self.vertices.reshape(-1, 3)
@@ -333,14 +102,14 @@ class GlutRenderer:
 
     def init_gl(self):
         """Initialize OpenGL state."""
-        glClearColor(0.1, 0.1, 0.2, 1.0)  # Dark blue background
+        gl_clear_color(0.1, 0.1, 0.2, 1.0)  # Dark blue background
         GLCapabilityDriver.enable(GL_DEPTH_TEST)
         GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHTING)
         GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHT0)
         GLCapabilityDriver.enable(GLCapability.COLOR_MATERIAL)
-        glColorMaterial(GLFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE)
+        gl_color_material(GLFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE)
 
-        set_up_legacy_lighting()
+        gl_legacy_lighting()
 
     def load_cube_data(self):
         """Load cube data using PicoGL LegacyGLMesh."""
@@ -374,14 +143,14 @@ class GlutRenderer:
     def display(self):
         """Display callback - render the scene."""
         gl_clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
-        glLoadIdentity()
+        gl_load_identity()
 
         # Set up camera
-        gluLookAt(0, 0, self.zoom_distance, 0, 0, 0, 0, 1, 0)
+        glu_look_at(0, 0, self.zoom_distance, 0, 0, 0, 0, 1, 0)
 
         # Apply rotations
-        glRotatef(self.rotation_x, 1, 0, 0)
-        glRotatef(self.rotation_y, 0, 1, 0)
+        gl_rotate_f(self.rotation_x, 1, 0, 0)
+        gl_rotate_f(self.rotation_y, 0, 1, 0)
 
         # Draw the cube
         if self.mesh:
@@ -390,13 +159,13 @@ class GlutRenderer:
                     gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.LINE)
                     gl_disable(GLFixedFunctionCapability.LIGHTING)
                 else:
-                    glPolygonMode(GLFace.FRONT_AND_BACK, GLFillMode.FILL)
+                    gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.FILL)
                     GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHTING)
 
                 self.mesh.draw()
 
                 # Reset polygon mode
-                glPolygonMode(GLFace.FRONT_AND_BACK, GLFillMode.FILL)
+                gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.FILL)
                 GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHTING)
 
             except Exception as e:
@@ -413,7 +182,7 @@ class GlutRenderer:
         """Draw a simple wireframe cube as fallback."""
         gl_disable(GLFixedFunctionCapability.LIGHTING)
         red_rgb = (1.0, 0.0, 0.0)
-        glColor3f(*red_rgb)  # Red wireframe
+        gl_color_3f(red_rgb)  # Red wireframe
         gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.LINE)
         glutWireCube(2.0)
         gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.FILL)
@@ -423,11 +192,11 @@ class GlutRenderer:
         """Reshape callback - handle window resize."""
         self.width = width
         self.height = height
-        glViewport(0, 0, width, height)
-        glMatrixMode(GLLegacyMatrixMode.PROJECTION)
-        glLoadIdentity()
+        gl_viewport(0, 0, width, height)
+        gl_matrix_mode(GLLegacyMatrixMode.PROJECTION)
+        gl_load_identity()
         gluPerspective(45.0, float(width) / float(height), 0.1, 100.0)
-        glMatrixMode(GLLegacyMatrixMode.MODELVIEW)
+        gl_matrix_mode(GLLegacyMatrixMode.MODELVIEW)
 
     def keyboard(self, key, x, y):
         """Keyboard callback."""
@@ -515,6 +284,7 @@ def main():
     print("=" * 40)
 
     try:
+        from picogl.examples.legacy_cube_fixed import LegacyCubeRenderer
         renderer = LegacyCubeRenderer(
             width=800,
             height=600,

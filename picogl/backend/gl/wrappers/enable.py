@@ -12,6 +12,7 @@ from picogl.backend.gl.enums.point_size import (
     GLPointCapability,
 )
 from picogl.backend.gl.state.fill import GLCapability
+from picogl.texture.gltexture import GLTexture
 
 
 def gl_enable(
@@ -21,6 +22,7 @@ def gl_enable(
         GLPointCapability,
         GLFixedFunctionCapability,
         GLPipelineCapability,
+        GLTexture
     ],
 ):
     glEnable(cap)

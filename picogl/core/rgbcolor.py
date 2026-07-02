@@ -23,7 +23,7 @@ def clamp01(x: float) -> float:
 
 
 @dataclass(frozen=True)
-class RGB:
+class RGBColor:
     """RGB color"""
 
     r: float = 1.0
@@ -40,7 +40,7 @@ class RGB:
 
 
 @dataclass(frozen=True)
-class RGBA(RGB):
+class RGBAColor(RGBColor):
     """RGBA color"""
 
     a: float = 1.0

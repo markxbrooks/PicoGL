@@ -22,7 +22,17 @@ import sys
 from pathlib import Path
 from typing import Optional
 
+from picogl.backend.gl.enums import GLBitMask
+from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
+from picogl.backend.gl.enums.legacy.scale import gl_load_identity
 from picogl.backend.gl.mode import GLMode
+from picogl.backend.gl.wrappers import gl_bind_texture
+from picogl.backend.gl.wrappers.clear import gl_clear
+from picogl.backend.gl.wrappers.enable import gl_disable, gl_enable
+from picogl.backend.gl.wrappers.glu import glu_look_at
+from picogl.backend.gl.wrappers.matrix import gl_matrix_mode
+from picogl.backend.gl.wrappers.rotate import gl_rotate_f
+from picogl.texture.gltexture import GLTexture
 from picogl.ui.backend.qt.legacy.renderer import LegacyQtObjectRenderer
 from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
 from PySide6.QtCore import Qt, QTimer
@@ -166,25 +176,25 @@ class LegacyTexturedTeapotRenderer(LegacyQtObjectRenderer):
     def paintGL(self):
         """Render the textured teapot scene"""
         # Clear buffers
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        gl_clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
         
         # Set up modelview matrix
-        glMatrixMode(GL_MODELVIEW)
-        glLoadIdentity()
+        gl_matrix_mode(GLLegacyMatrixMode.MODELVIEW)
+        gl_load_identity()
         
         # Position camera
-        gluLookAt(0, 0, self.zoom, 0, 0, 0, 0, 1, 0)
+        glu_look_at(0, 0, self.zoom, 0, 0, 0, 0, 1, 0)
         
         # Apply rotations
-        glRotatef(self.rotation_x, 1, 0, 0)
-        glRotatef(self.rotation_y, 0, 1, 0)
+        gl_rotate_f(self.rotation_x, 1, 0, 0)
+        gl_rotate_f(self.rotation_y, 0, 1, 0)
         
         # Bind texture if available
         if self.texture_id is not None:
-            glBindTexture(GL_TEXTURE_2D, self.texture_id)
-            gl_enable(GL_TEXTURE_2D)
+            gl_bind_texture(GLTexture.TEXTURE_2D, self.texture_id)
+            gl_enable(GLTexture.TEXTURE_2D)
         else:
-            glDisable(GL_TEXTURE_2D)
+            gl_disable(GLTexture.TEXTURE_2D)
         
         # Draw the teapot using LegacyGLMesh
         self.draw()
