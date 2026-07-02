@@ -2,6 +2,8 @@
 Error checking
 """
 
+from __future__ import annotations
+
 from decologr import Decologr as log
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_NO_ERROR, glGetError
 from OpenGL.raw.GLU import gluErrorString
@@ -35,3 +37,8 @@ def gl_check_error(chain_id: str = ""):
     err = glGetError()
     if err != GL_NO_ERROR:
         log.warning(f"⚠️ GL error after VAO setup for chain {chain_id}: {err}")
+
+
+def gl_get_error():
+    """gl get error"""
+    return glGetError()
