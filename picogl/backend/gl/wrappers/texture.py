@@ -32,9 +32,9 @@ from picogl.backend.gl.enums.target.frame_buffer import GLFrameBufferTarget
 from picogl.texture.gltexture import GLTexture
 
 
-def gl_active_texture(unit: int) -> None:
+def gl_active_texture(texture: GLTexture) -> None:
     """Issue ``glActiveTexture``."""
-    glActiveTexture(unit)
+    glActiveTexture(texture)
 
 
 def gl_get_active_texture0() -> None:
