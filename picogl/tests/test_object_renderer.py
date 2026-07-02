@@ -250,7 +250,7 @@ class TestObjectRenderer(unittest.TestCase):
         self.assertEqual(vertex_call[1]["index"], 0)
         self.assertEqual(vertex_call[1]["size"], 3)
         np.testing.assert_array_equal(
-            vertex_call[1]["data"], self.test_mesh_data.vertices
+            vertex_call[1]["data"], self.test_mesh_data.CUBE_DATA
         )
 
         # Test UV VBO (index 1, size 2)

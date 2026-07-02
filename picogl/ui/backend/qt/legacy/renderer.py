@@ -19,7 +19,7 @@ from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import QWidget
 
 from examples import g_color_buffer_data, g_vertex_buffer_data
-from picogl.backend.gl.enums import GLBitMask, GLLegacyMatrixMode
+from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.mode import GLMode
 from picogl.backend.gl.state.fill import (
     GLCapability,

@@ -93,8 +93,8 @@ class LegacyRenderer:
 
             # Create legacy mesh
             self.mesh = LegacyGLMesh(
-                vertices=mesh_data.vertices.reshape(-1, 3),
-                faces=np.arange(len(mesh_data.vertices) // 3).reshape(-1, 3),
+                vertices=mesh_data.CUBE_DATA.reshape(-1, 3),
+                faces=np.arange(len(mesh_data.CUBE_DATA) // 3).reshape(-1, 3),
                 colors=mesh_data.colors.reshape(-1, 3)
                 if mesh_data.colors is not None
                 else None,

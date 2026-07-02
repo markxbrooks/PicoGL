@@ -487,7 +487,7 @@ class TestGLMesh(unittest.TestCase):
         glmesh = GLMesh.from_mesh_data(mesh_data)
 
         # Test data consistency - GLMesh reshapes data to (N, 3) while MeshData keeps it flat
-        np.testing.assert_array_equal(glmesh.vertices.reshape(-1), mesh_data.vertices)
+        np.testing.assert_array_equal(glmesh.vertices.reshape(-1), mesh_data.CUBE_DATA)
         np.testing.assert_array_equal(glmesh.indices, mesh_data.indices)
         np.testing.assert_array_equal(glmesh.colors.reshape(-1), mesh_data.colors)
         np.testing.assert_array_equal(glmesh.normals.reshape(-1), mesh_data.normals)

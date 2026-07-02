@@ -224,7 +224,7 @@ class MolecularRenderWindow(RenderWindow):
         vao = VertexArrayObject()
 
         # Add vertex buffer
-        vao.add_vbo(index=0, data=np.array(mesh.vertices, dtype=np.float32), size=3)
+        vao.add_vbo(index=0, data=np.array(mesh.CUBE_DATA, dtype=np.float32), size=3)
 
         # Add colour buffer if available
         if hasattr(mesh, "colors") and mesh.colors:
@@ -235,7 +235,7 @@ class MolecularRenderWindow(RenderWindow):
             vao.add_vbo(index=2, data=np.array(mesh.indices, dtype=np.uint32), size=1)
             vao.draw(mode=mode, index_count=len(mesh.indices))
         else:
-            vao.draw(mode=mode, index_count=len(mesh.vertices) // 3)
+            vao.draw(mode=mode, index_count=len(mesh.CUBE_DATA) // 3)
 
 
 def main():

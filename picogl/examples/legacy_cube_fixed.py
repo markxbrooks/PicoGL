@@ -15,7 +15,8 @@ import sys
 
 import numpy as np
 
-from examples.glut_renderer import GlutRenderer, set_up_legacy_lighting
+from picogl.backend.glut.glut_renderer import GlutRenderer
+from backend.gl.legacy.lighting import gl_legacy_lighting
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.capability import GLFixedFunctionCapability
@@ -52,7 +53,7 @@ except ImportError as e:
 class LegacyCubeRenderer(GlutRenderer):
     """Legacy cube renderer using PicoGL LegacyGLMesh."""
 
-    def __init__(self, width=800, height=600, title="Legacy PicoGL Cube"):
+    def __init__(self, width: object = 800, height: object = 600, title: object = "Legacy PicoGL Cube") -> None:
         super().__init__(width, height, title)
         self.width = width
         self.height = height
@@ -313,7 +314,7 @@ class LegacyCubeRenderer(GlutRenderer):
         GLCapabilityDriver.enable(GLCapability.COLOR_MATERIAL)
         glColorMaterial(GLFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE)
 
-        set_up_legacy_lighting()
+        gl_legacy_lighting()
 
     def load_cube_data(self):
         """Load cube data using PicoGL LegacyGLMesh."""

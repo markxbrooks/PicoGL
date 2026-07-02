@@ -96,7 +96,7 @@ class LegacyGLMesh:
             Ready-to-upload mesh (GPU buffers are allocated only when `upload()` is called).
         """
         return cls(
-            vertices=mesh.vertices,
+            vertices=mesh.CUBE_DATA,
             faces=mesh.indices,
             colors=mesh.colors,
             normals=mesh.normals,
