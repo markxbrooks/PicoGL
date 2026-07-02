@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from array import array
-from typing import Any, Union
+from typing import Union
 
 import numpy as np
 from OpenGL.constant import (
@@ -22,7 +22,6 @@ from OpenGL.GL import (
     glTexImage2D,
     glTexParameteri,
 )
-from OpenGL.raw.GL.ARB.internalformat_query2 import GL_TEXTURE_2D
 from OpenGL.raw.GL.VERSION.GL_1_2 import glTexImage3D
 from OpenGL.raw.GL.VERSION.GL_3_0 import glFramebufferTexture2D
 
@@ -52,7 +51,7 @@ def gl_gen_textures(number: int = 1) -> int:
     return result
 
 
-def gl_bind_texture(tex_id: int, target: int = GLTexture.TEXTURE_2D) -> None:
+def gl_bind_texture(tex_id: int, target: GLTexture = GLTexture.TEXTURE_2D) -> None:
     """Issue ``glBindTexture``."""
     glBindTexture(target, tex_id)
 
