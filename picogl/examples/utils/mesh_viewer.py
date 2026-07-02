@@ -2,7 +2,6 @@ from decologr import Decologr as log
 from examples.utils.world_sheet import WorldSheet
 from OpenGL.GL import *  # pylint: disable=W0614
 from OpenGL.GLUT import *  # pylint: disable=W0614
-
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.wrappers.clear import gl_clear_color
 from picogl.backend.gl.wrappers.depth import gl_depth_func

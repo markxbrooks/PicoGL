@@ -26,7 +26,6 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_SHININESS,
     GL_SPECULAR,
 )
-
 from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.capability import (
     GLBlendFactor,

@@ -20,7 +20,6 @@ Example Usage:
 """
 
 from numpy import ndarray
-
 from picogl.texture.texture_spec import TextureSpec
 
 

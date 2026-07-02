@@ -14,8 +14,7 @@ from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 
-from elmo.gl.backend.modern.entities.bonds.compute_indices import \
-    atoms_should_bond
+from elmo.gl.backend.modern.entities.bonds.compute_indices import atoms_should_bond
 
 
 @dataclass
@@ -88,6 +87,7 @@ class PDBStructure:
         if 0 <= residue_idx < len(self.residues):
             return self.residues[residue_idx].atoms
         return []
+
 
 """
 def atoms_should_bond(atom1: Atom, atom2: Atom, distance: float) -> bool:
@@ -299,7 +299,9 @@ class PDBLoader:
 
                     # Simple bond detection based on distance and element types
                     if atoms_should_bond(atom1, atom2, dist):
-                        bonds.append(Bond(atom1_idx=i, atom2_idx=j, bond_type=BondType.SINGLE))
+                        bonds.append(
+                            Bond(atom1_idx=i, atom2_idx=j, bond_type=BondType.SINGLE)
+                        )
 
         return bonds
 

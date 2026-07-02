@@ -21,14 +21,19 @@ fails, an exception is raised with the compilation error message.
                    with the associated error log.
 """
 
-from OpenGL.GL import (
-    GL_COMPILE_STATUS)
+from backend.gl.wrappers.shader import (
+    gl_attach_shader,
+    gl_compile_shader,
+    gl_create_shader,
+    gl_get_shader_info_log,
+    gl_get_shader_iv,
+    gl_shader_source,
+)
+from OpenGL.GL import GL_COMPILE_STATUS
+from picogl.backend.modern.core.shader.helpers import log_gl_error
 
-from backend.gl.wrappers.shader import gl_attach_shader, gl_create_shader, gl_shader_source, gl_compile_shader, \
-    gl_get_shader_iv, gl_get_shader_info_log
 # from picogl.backend.modern.core.shader.program import GLShader
 from picogl.boolean import GLBoolean
-from picogl.backend.modern.core.shader.helpers import log_gl_error
 
 
 def compile_shader(shader_program: int, shader_type: "GLShader", source: str):

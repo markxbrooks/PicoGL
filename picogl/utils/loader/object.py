@@ -6,7 +6,6 @@ Loader of object data from an .loader file.
 import os
 
 from decologr import Decologr as log
-
 from picogl.utils.loader.helpers import log_properties
 from picogl.utils.loader.object_data import ObjectData
 

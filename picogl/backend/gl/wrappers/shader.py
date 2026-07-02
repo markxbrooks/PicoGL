@@ -10,11 +10,24 @@ from __future__ import annotations
 
 from typing import Any
 
-from OpenGL.GL import glGetUniformLocation, glUniformMatrix4fv, glShaderSource, glGetShaderiv, glGetShaderInfoLog, \
-    glGetProgramiv
-from OpenGL.raw.GL.VERSION.GL_2_0 import glUseProgram, glAttachShader, glCreateShader, glCompileShader, \
-    GL_COMPILE_STATUS, glCreateProgram, glLinkProgram, GL_LINK_STATUS
-
+from OpenGL.GL import (
+    glGetProgramiv,
+    glGetShaderInfoLog,
+    glGetShaderiv,
+    glGetUniformLocation,
+    glShaderSource,
+    glUniformMatrix4fv,
+)
+from OpenGL.raw.GL.VERSION.GL_2_0 import (
+    GL_COMPILE_STATUS,
+    GL_LINK_STATUS,
+    glAttachShader,
+    glCompileShader,
+    glCreateProgram,
+    glCreateShader,
+    glLinkProgram,
+    glUseProgram,
+)
 from picogl.boolean import GLBoolean
 
 
@@ -36,7 +49,10 @@ def gl_use_program(shader_program: int) -> None:
     """
     glUseProgram(shader_program)
 
-def gl_uniform_matrix_4fv(location: int, count: int, transpose: GLBoolean, value: Any) -> None:
+
+def gl_uniform_matrix_4fv(
+    location: int, count: int, transpose: GLBoolean, value: Any
+) -> None:
     """
     Sets a 4x4 matrix for a given uniform variable in the currently active shader program.
 
@@ -50,6 +66,7 @@ def gl_uniform_matrix_4fv(location: int, count: int, transpose: GLBoolean, value
     None
     """
     glUniformMatrix4fv(location, count, transpose, value)
+
 
 def gl_uniform_name_matrix_4f(value: Any, location: int, uniform_name: str) -> None:
     """

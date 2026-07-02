@@ -14,21 +14,26 @@ import os
 import sys
 
 import numpy as np
-
-from backend.gl.enums.legacy.scale import gl_viewport, gl_load_identity
+from backend.gl.enums.legacy.scale import gl_load_identity, gl_viewport
 from backend.gl.legacy.lighting import gl_legacy_lighting
 from backend.gl.wrappers.clear import gl_clear_color
 from backend.gl.wrappers.color import gl_color_3f
 from backend.gl.wrappers.glu import glu_look_at
 from backend.gl.wrappers.matrix import gl_matrix_mode
 from backend.gl.wrappers.rotate import gl_rotate_f
-from backend.glut.cube_data import CUBE_VERTICES, CUBE_COLORS
+from backend.glut.cube_data import CUBE_COLORS, CUBE_VERTICES
+from picogl.backend.gl.capability import GLFixedFunctionCapability, GLMaterialFace
+
 # from picogl.examples.legacy_cube_fixed import LegacyCubeRenderer
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
-from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
-from picogl.backend.gl.capability import GLFixedFunctionCapability, GLMaterialFace
 from picogl.backend.gl.enums import GLBitMask
-from picogl.backend.gl.state.fill import GLFace, GLCapability, GLColorMaterialMode, GLFillMode
+from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
+from picogl.backend.gl.state.fill import (
+    GLCapability,
+    GLColorMaterialMode,
+    GLFace,
+    GLFillMode,
+)
 from picogl.backend.gl.wrappers.clear import gl_clear
 from picogl.backend.gl.wrappers.polygon_mode import gl_polygon_mode
 
@@ -107,7 +112,9 @@ class GlutRenderer:
         GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHTING)
         GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHT0)
         GLCapabilityDriver.enable(GLCapability.COLOR_MATERIAL)
-        gl_color_material(GLFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE)
+        gl_color_material(
+            GLFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE
+        )
 
         gl_legacy_lighting()
 
@@ -285,6 +292,7 @@ def main():
 
     try:
         from picogl.examples.legacy_cube_fixed import LegacyCubeRenderer
+
         renderer = LegacyCubeRenderer(
             width=800,
             height=600,

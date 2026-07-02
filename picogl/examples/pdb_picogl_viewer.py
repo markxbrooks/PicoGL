@@ -16,7 +16,10 @@ from pathlib import Path
 import numpy as np
 from examples.utils.pdb_loader import PDBLoader
 from picogl.backend.gl.capability import GLPipelineCapability
-from picogl.backend.gl.enums.point_size import GLPointCapability, GLLegacyPointCapability
+from picogl.backend.gl.enums.point_size import (
+    GLLegacyPointCapability,
+    GLPointCapability,
+)
 from picogl.backend.gl.glfunc import GLDepthFunc
 from picogl.backend.gl.wrappers.clear import gl_clear_color
 from picogl.backend.gl.wrappers.depth import gl_depth_func
@@ -41,9 +44,7 @@ from picogl.ui.backend.glut.window.object import RenderWindow
 
 def create_vao(mesh):
     vao = VertexArrayObject()
-    atom_vertices = np.array(mesh.vertices, dtype=np.float32).reshape(
-        -1, 3
-    )
+    atom_vertices = np.array(mesh.vertices, dtype=np.float32).reshape(-1, 3)
     atom_colors = np.array(mesh.colors, dtype=np.float32).reshape(-1, 3)
 
     vao.add_vbo(index=0, data=atom_vertices, size=3)

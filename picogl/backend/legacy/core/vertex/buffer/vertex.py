@@ -6,7 +6,6 @@ import ctypes
 
 import numpy as np
 from OpenGL.raw.GL.VERSION.GL_1_5 import glBufferSubData
-
 from picogl.backend.gl.enums import GLBufferTarget, GLNumeric, GLUsageHint
 from picogl.backend.gl.wrappers import gl_buffer_data
 from picogl.backend.gl.wrappers.generate_buffers import gl_generate_buffers

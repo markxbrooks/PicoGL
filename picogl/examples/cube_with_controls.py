@@ -2,6 +2,21 @@ import sys
 from typing import Any
 
 import numpy as np
+from picogl.backend.gl.capability import GLPipelineCapability
+from picogl.backend.gl.enums import GLBitMask
+from picogl.backend.gl.enums.legacy.scale import (
+    gl_pop_matrix,
+    gl_push_matrix,
+    gl_rotatef,
+    gl_scalef,
+    gl_translatef,
+    gl_viewport,
+)
+from picogl.backend.gl.wrappers.clear import gl_clear, gl_clear_color
+from picogl.backend.gl.wrappers.enable import gl_enable
+from picogl.backend.legacy.core.pipeline import LegacyPipeline
+from picogl.renderer import MeshData
+from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
 from PySide6.QtWidgets import (
@@ -12,15 +27,6 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
-
-from picogl.backend.gl.capability import GLPipelineCapability
-from picogl.backend.gl.enums import GLBitMask
-from picogl.backend.gl.enums.legacy.scale import gl_push_matrix, gl_translatef, gl_scalef, gl_rotatef, gl_pop_matrix, gl_viewport
-from picogl.backend.gl.wrappers.clear import gl_clear, gl_clear_color
-from picogl.backend.gl.wrappers.enable import gl_enable
-from picogl.backend.legacy.core.pipeline import LegacyPipeline
-from picogl.renderer import MeshData
-from picogl.renderer.legacy_glmesh import LegacyGLMesh
 
 
 def _triangulate_quads(quad_indices: list[int]) -> np.ndarray:
@@ -108,12 +114,30 @@ class GLWidget(QOpenGLWidget):
             dtype=np.float32,
         )
         quad_indices = [
-            0, 1, 2, 3,
-            3, 2, 6, 7,
-            1, 0, 4, 5,
-            2, 1, 5, 6,
-            0, 3, 7, 4,
-            7, 6, 5, 4,
+            0,
+            1,
+            2,
+            3,
+            3,
+            2,
+            6,
+            7,
+            1,
+            0,
+            4,
+            5,
+            2,
+            1,
+            5,
+            6,
+            0,
+            3,
+            7,
+            4,
+            7,
+            6,
+            5,
+            4,
         ]
         mesh_data = MeshData.from_raw(
             vertices=cube_vertices,

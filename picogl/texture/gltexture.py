@@ -33,7 +33,6 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
 from OpenGL.raw.GL.VERSION.GL_1_2 import GL_TEXTURE_3D
 from OpenGL.raw.GL.VERSION.GL_1_3 import GL_ACTIVE_TEXTURE, GL_TEXTURE0
 from OpenGL.raw.GL.VERSION.GL_4_5 import GL_TEXTURE_BINDING_2D
-
 from picogl.backend.gl.state.param import GLParam
 from picogl.backend.gl.state.query import GLStateQuery
 

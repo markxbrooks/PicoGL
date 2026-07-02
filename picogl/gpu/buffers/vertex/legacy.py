@@ -12,7 +12,6 @@ from typing import Any, Optional
 
 import numpy as np
 from decologr import Decologr as log
-
 from picogl.backend.gl.enums import GLBufferTarget, GLDrawMode, GLNumeric
 from picogl.backend.gl.state.client import GLClientState
 from picogl.backend.gl.wrappers.buffer import gl_bind_buffer

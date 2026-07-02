@@ -6,14 +6,17 @@ This example demonstrates how to:
 2. Visualize molecular structures with PicoGL
 3. Export to MolViewSpec format for portable viewing
 """
+
 import os
 import sys
 from pathlib import Path
 
 import numpy as np
 from OpenGL.GL import *
-
-from picogl.backend.gl.enums.point_size import GLPointCapability, GLLegacyPointCapability
+from picogl.backend.gl.enums.point_size import (
+    GLLegacyPointCapability,
+    GLPointCapability,
+)
 from picogl.backend.gl.wrappers.enable import gl_enable
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.renderer import MeshData

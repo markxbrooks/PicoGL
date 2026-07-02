@@ -6,11 +6,22 @@ This module defines a utility function to set up the view transformation in a
 is looking at, and the up vector. It serves as a direct interface to
 OpenGL's gluLookAt function.
 """
+
 from OpenGL.raw.GLU import gluLookAt
 from OpenGL.raw.GLUT import glutSwapBuffers
 
 
-def glu_look_at(eye_x: float, eye_y: float, eye_z: float, center_x: float, center_y: float, center_z: float, up_x: float, up_y: float, up_z: float) -> None:
+def glu_look_at(
+    eye_x: float,
+    eye_y: float,
+    eye_z: float,
+    center_x: float,
+    center_y: float,
+    center_z: float,
+    up_x: float,
+    up_y: float,
+    up_z: float,
+) -> None:
     """glu lookat"""
     gluLookAt(eye_x, eye_y, eye_z, center_x, center_y, center_z, up_x, up_y, up_z)
 

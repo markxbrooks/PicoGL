@@ -9,7 +9,6 @@ from pathlib import Path
 
 import numpy as np
 
-from backend.gl.enums.shader import GLShader
 from backend.gl.wrappers.shader import gl_use_program
 from boolean import GLBoolean
 from decologr import Decologr as log
@@ -26,6 +25,12 @@ from picogl.backend.modern.core.shader.context import (
 from picogl.backend.modern.core.shader.helpers import log_gl_error, read_shader_source
 from picogl.backend.modern.core.uniform.location_value import set_uniform_location_value
 from picogl.shaders.uniform import get_uniform_location
+
+
+class GLShader(IntEnum):
+    """GL Shader"""
+    VERTEX_SHADER = GL_VERTEX_SHADER
+    FRAGMENT_SHADER = GL_FRAGMENT_SHADER
 
 
 class ShaderProgram:

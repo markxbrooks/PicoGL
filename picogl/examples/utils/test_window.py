@@ -7,7 +7,6 @@ from picogl.ui.abc_window import AbstractGLWindow
 class GLWindow(AbstractGLWindow):
     """GLWindow"""
 
-
     def initializeGL(self) -> None:
         gl.glClearColor(0.0, 0.0, 0.0, 1.0)
         gl_enable(gl.GL_DEPTH_TEST)

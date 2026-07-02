@@ -7,14 +7,14 @@ the framebuffer with specified colors and configuring the viewport
 for rendering.
 """
 
-from elmo.ui.widgets.gl.mol.viewport import Viewport
-
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums.legacy.scale import gl_viewport
 from picogl.backend.gl.wrappers.clear import gl_clear, gl_clear_color
 from picogl.backend.gl.wrappers.frame import gl_bind_framebuffer
 from picogl.backend.state import gl_value
 from picogl.core.rgbcolor import RGBAColor, clamp01
+
+from elmo.ui.widgets.gl.mol.viewport import Viewport
 
 
 class GLFrameDriver:

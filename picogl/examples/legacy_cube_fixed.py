@@ -14,16 +14,20 @@ import os
 import sys
 
 import numpy as np
-
-from picogl.backend.glut.glut_renderer import GlutRenderer
 from backend.gl.legacy.lighting import gl_legacy_lighting
-from picogl.backend.gl.driver.capability import GLCapabilityDriver
-from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.capability import GLFixedFunctionCapability
+from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.gl.enums import GLBitMask
-from picogl.backend.gl.state.fill import GLFace, GLCapability, GLColorMaterialMode, GLFillMode
+from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
+from picogl.backend.gl.state.fill import (
+    GLCapability,
+    GLColorMaterialMode,
+    GLFace,
+    GLFillMode,
+)
 from picogl.backend.gl.wrappers.clear import gl_clear
 from picogl.backend.gl.wrappers.polygon_mode import gl_polygon_mode
+from picogl.backend.glut.glut_renderer import GlutRenderer
 
 # Check for display before importing OpenGL
 if os.environ.get("DISPLAY") is None and os.name != "nt":
@@ -53,7 +57,12 @@ except ImportError as e:
 class LegacyCubeRenderer(GlutRenderer):
     """Legacy cube renderer using PicoGL LegacyGLMesh."""
 
-    def __init__(self, width: object = 800, height: object = 600, title: object = "Legacy PicoGL Cube") -> None:
+    def __init__(
+        self,
+        width: object = 800,
+        height: object = 600,
+        title: object = "Legacy PicoGL Cube",
+    ) -> None:
         super().__init__(width, height, title)
         self.width = width
         self.height = height

@@ -40,8 +40,6 @@ from typing import Callable, Dict, Iterable, Optional, Tuple, Union
 
 import numpy as np
 from decologr import Decologr as log
-from pyglm import glm
-
 from picogl.backend.modern.core.shader.context import gl_context_available
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.backend.modern.core.uniform.location import get_uniform_location
@@ -56,6 +54,7 @@ from picogl.shaders.load import (
     load_shader_source_string,
 )
 from picogl.shaders.type import ShaderType
+from pyglm import glm
 
 
 def _progress_iter(
