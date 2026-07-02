@@ -4,8 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from OpenGL.GL import glUseProgram
-
+from backend.gl.wrappers.shader import gl_use_program
 from picogl.renderer.initializable import Bindable
 
 if TYPE_CHECKING:
@@ -32,7 +31,7 @@ class ShaderPipeline(Bindable):
         self._program.bind()
 
     def _do_unbinding(self) -> None:
-        glUseProgram(0)
+        gl_use_program(0)
 
     def set_uniforms(self, uniforms: dict[str, Any]) -> None:
         if self._program is None:
