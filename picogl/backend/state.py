@@ -306,22 +306,22 @@ class GLAttributeArray:
     stride: int
     pointer: Any
 
-    def enable_legacy(self, kind):
+    def enable_legacy(self, kind: GLClientState):
         gl_enable_legacy_client_state(kind)
-        if kind == GL_VERTEX_ARRAY:
+        if kind == GLClientState.VERTEX:
             gl_vertex_array_pointer(
                 pointer=self.pointer,
                 size=self.size,
                 num_type=GLNumeric.FLOAT,
                 stride=self.stride,
             )
-        elif kind == GL_NORMAL_ARRAY:
+        elif kind == GLClientState.NORMAL:
             gl_normal_array_pointer(
                 pointer=self.pointer,
                 num_type=GLNumeric.FLOAT,
                 stride=self.stride,
             )
-        elif kind == GL_COLOR_ARRAY:
+        elif kind == GLClientState.COLOR_ARRAY:
             gl_color_array_pointer(
                 pointer=self.pointer,
                 size=self.size,
