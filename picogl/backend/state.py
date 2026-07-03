@@ -16,6 +16,8 @@ from OpenGL.raw.GL.VERSION.GL_1_1 import (
     GL_NORMAL_ARRAY,
     GL_VERTEX_ARRAY,
 )
+
+from backend.gl.state.client import GLClientState
 from picogl.backend.gl.capability import (
     GLBlendFactor,
     GLFixedFunctionCapability,
