@@ -2,7 +2,6 @@ from typing import TYPE_CHECKING, Any
 
 from OpenGL.GL import (
     GL_DEPTH_WRITEMASK,
-    GL_LESS,
     glDepthFunc,
     glDepthMask,
     glGetBooleanv,
