@@ -11,6 +11,7 @@ efficiently.
 
 from typing import TYPE_CHECKING
 
+from backend.gl.wrappers import gl_get_integerv
 from backend.gl.wrappers.blending import gl_blend_func
 from picogl.backend.gl.capability import (
     GLBlendFactor,
