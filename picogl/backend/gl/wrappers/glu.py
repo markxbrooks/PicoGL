@@ -8,7 +8,7 @@ OpenGL's gluLookAt function.
 """
 
 from OpenGL.raw.GLU import gluLookAt
-from OpenGL.raw.GLUT import glutSwapBuffers
+from OpenGL.raw.GLUT import glutSwapBuffers, glutSolidTeapot
 
 
 def glu_look_at(
@@ -29,3 +29,7 @@ def glu_look_at(
 def glut_swap_buffers():
     """glut swap buffers"""
     glutSwapBuffers()
+    
+def glut_solid_teapot(size):
+    glutSolidTeapot(size)
+
