@@ -10,9 +10,11 @@ from typing import Any, Protocol
 
 import numpy as np
 from numpy import ndarray
-from OpenGL.GL import glBlendFunc, glViewport
+from OpenGL.GL import glViewport
 
+from backend.gl.enums.legacy.scale import gl_viewport
 from backend.gl.state.client import GLClientState
+from backend.gl.wrappers.blending import gl_blend_func
 from picogl.backend.gl.capability import (
     GLBlendFactor,
     GLFixedFunctionCapability,
@@ -153,7 +155,7 @@ class BlendState:
             return
         state.set_enabled(GLPipelineCapability.BLEND, self.enabled)
         if self.enabled:
-            glBlendFunc(gl_value(self.src), gl_value(self.dst))
+            gl_blend_func(gl_value(self.src), gl_value(self.dst))
 
 
 @dataclass(frozen=True, init=False)
@@ -574,7 +576,7 @@ class GLViewport:
         This function may raise an OpenGL context-specific error if incorrect
         parameters are used.
         """
-        glViewport(self.x, self.y, self.width, self.height)
+        gl_viewport(self.x, self.y, self.width, self.height)
 
 
 class TestGLMesh:
