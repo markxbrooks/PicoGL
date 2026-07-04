@@ -7,6 +7,8 @@ compiling and linking shaders, and setting uniform values.
 from pathlib import Path
 
 import numpy as np
+
+from picogl.backend.gl.wrappers.shader import gl_link_program
 from decologr import Decologr as log
 from OpenGL import GL as gl
 from picogl.backend.gl.wrappers.shader import GLShader, gl_use_program
@@ -148,7 +150,7 @@ class ShaderProgram:
         link_shader_program
         """
         log.message("Linking shader program...", silent=True)
-        gl.glLinkProgram(self.program)
+        gl_link_program(self.program)
         if GLBoolean.TRUE != gl.glGetProgramiv(self.program, gl.GL_LINK_STATUS):
             err = gl.glGetProgramInfoLog(self.program)
             raise RuntimeError(f"Shader link failed: {err}")

@@ -207,7 +207,7 @@ def gl_get_program_info_log(program: int) -> int:
     return glGetProgramInfoLog(program)
 
 
-def gl_link_program(program):
+def gl_link_program(program: int):
     """
     Links a given OpenGL program object.
 
@@ -221,7 +221,7 @@ def gl_link_program(program):
     glLinkProgram(program)
 
 
-def gl_get_programiv(program, status=GL_LINK_STATUS) -> int:
+def gl_get_programiv(program: int, status: int = GL_LINK_STATUS) -> int:
     """
     Retrieves the integer value of a specific program parameter.
 
