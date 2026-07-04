@@ -206,10 +206,10 @@ class ShaderProgram:
         if not gl_context_available():
             return
         clear_gl_errors()
-        gl.glUseProgram(0)
+        gl_use_program(0)
 
     def release(self):
-        gl.glUseProgram(0)
+        gl_use_program(0)
 
     def delete(self):
         self.release()
