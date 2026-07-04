@@ -10,6 +10,7 @@ import numpy as np
 from decologr import Decologr as log
 from OpenGL import GL as gl
 from picogl.backend.gl.wrappers.shader import GLShader, gl_use_program
+from picogl.backend.gl.wrappers.program import gl_create_program
 from picogl.backend.modern.core.shader.compile import compile_shader
 from picogl.backend.modern.core.shader.context import (clear_gl_errors,
                                                        gl_context_available,
@@ -45,7 +46,7 @@ class ShaderProgram:
         self.uniforms = {}
         self._uniform_state = {}
 
-        if vertex_source_file is not None and vertex_source_file is not None:
+        if vertex_source_file is not None and fragment_source_file is not None and glsl_dir is not None:
             self.init_shader_from_shader_files(ShaderFiles(
                 vertex=vertex_source_file,
                 fragment=fragment_source_file,
@@ -74,10 +75,10 @@ class ShaderProgram:
         :param shader_files: directory containing vertex shaders
         :return: None
         """
-        if shader_fies is None:
-            raise RuntimeError(f"shader_fies object not available")
+        if shader_files is None:
+            raise RuntimeError(f"shader_filss object not available")
         if shader_files.vertex is None or shader_files.fragment is None:
-            raise FileNotFoundError(f"{shader_fies.vertex} or {shader_fies.fragment} not found")
+            raise FileNotFoundError(f"{shader_files.vertex} or {shader_files.fragment} not found")
         vertex_sources = read_shader_source(shader_files.vertex, glsl_dir=shader_files.glsl_dir)
         fragment_sources = read_shader_source(shader_files.fragment, glsl_dir=shader_files.glsl_dir)
         self.init_shader_from_glsl(vertex_sources, fragment_sources)
@@ -138,7 +139,7 @@ class ShaderProgram:
         """
         create_shader_program
         """
-        self.program = gl.glCreateProgram()
+        self.program = gl_create_program()
         log.message(f"Created shader program {self.program}", silent=True)
         log_gl_error()
 
@@ -212,3 +213,4 @@ class ShaderProgram:
 
     def delete(self):
         self.release()
+

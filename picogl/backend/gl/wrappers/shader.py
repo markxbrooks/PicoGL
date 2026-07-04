@@ -10,14 +10,14 @@ from __future__ import annotations
 
 from enum import IntEnum
 from typing import Any
-
+from OpenGL.GL import glCreateProgram
 from OpenGL.GL import (glGetProgramiv, glGetShaderInfoLog, glGetShaderiv,
                        glGetUniformLocation, glShaderSource,
                        glUniformMatrix4fv)
 from OpenGL.raw.GL.VERSION.GL_2_0 import (GL_COMPILE_STATUS,
                                           GL_FRAGMENT_SHADER, GL_LINK_STATUS,
                                           GL_VERTEX_SHADER, glAttachShader,
-                                          glCompileShader, glCreateProgram,
+                                          glCompileShader,
                                           glCreateShader, glLinkProgram,
                                           glUseProgram)
 from picogl.boolean import GLBoolean
