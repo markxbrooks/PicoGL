@@ -7,7 +7,7 @@ is looking at, and the up vector. It serves as a direct interface to
 OpenGL's gluLookAt function.
 """
 
-from OpenGL.raw.GLU import gluLookAt
+from OpenGL.raw.GLU import gluLookAt, gluPerspective
 from OpenGL.raw.GLUT import glutSwapBuffers, glutSolidTeapot
 
 
@@ -25,8 +25,8 @@ def glu_look_at(
     """glu lookat"""
     gluLookAt(eye_x, eye_y, eye_z, center_x, center_y, center_z, up_x, up_y, up_z)
 
-def glu_perspective(45.0, float(width) / float(height), 0.1, 100.0)
-    gluPerspective(45.0, float(width) / float(height), 0.1, 100.0)
+def glu_perspective(fovy: float, aspect: float, near: float, far)
+    gluPerspective(fovy, aspect, near, far: float)
 
 def glut_swap_buffers():
     """glut swap buffers"""
