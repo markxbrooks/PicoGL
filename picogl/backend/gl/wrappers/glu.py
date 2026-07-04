@@ -25,7 +25,8 @@ def glu_look_at(
     """glu lookat"""
     gluLookAt(eye_x, eye_y, eye_z, center_x, center_y, center_z, up_x, up_y, up_z)
 
-def glu_perspective(fovy: float, aspect: float, near: float, far)
+def glu_perspective(fovy: float, aspect: float, near: float, far):
+    """glu perspective"""
     gluPerspective(fovy, aspect, near, far: float)
 
 def glut_swap_buffers():
