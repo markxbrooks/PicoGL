@@ -20,7 +20,8 @@ from OpenGL.GL import glGetUniformLocation, glUniformMatrix4fv
 from OpenGL.raw.GL._types import GL_TRUE
 from picogl.backend.legacy.core.camera.look_at import look_at
 from picogl.backend.legacy.core.camera.perspective import perspective
-from picogl.backend.modern.core.shader.rotation_matrix import create_rotation_matrix
+from picogl.backend.modern.core.shader.rotation_matrix import \
+    create_rotation_matrix
 from pyglm import glm
 
 

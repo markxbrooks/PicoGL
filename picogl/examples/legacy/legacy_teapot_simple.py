@@ -15,14 +15,12 @@ from examples.glut_renderer import GlutRenderer, set_up_legacy_lighting
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
-from picogl.backend.gl.capability import (
-    GLFixedFunctionCapability,
-    GLMaterialFace,
-    GLPipelineCapability,
-)
+from picogl.backend.gl.capability import (GLFixedFunctionCapability,
+                                          GLMaterialFace, GLPipelineCapability)
 from picogl.backend.gl.enums import GLBitMask, GLDrawMode
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
-from picogl.backend.gl.state.fill import GLCapability, GLColorMaterialMode, GLFillMode
+from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode,
+                                          GLFillMode)
 from picogl.backend.gl.state.immediate import immediate_drawing
 from picogl.backend.gl.wrappers.clear import gl_clear, gl_clear_color
 from picogl.backend.gl.wrappers.enable import gl_disable, gl_enable

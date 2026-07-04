@@ -12,12 +12,8 @@ and rendering state initialization.
 from typing import Callable, Optional
 
 import numpy as np
-from OpenGL.raw.GL.VERSION.GL_1_0 import (
-    GL_DEPTH_TEST,
-    GL_LINE_SMOOTH,
-    glFlush,
-    glLineWidth,
-)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_DEPTH_TEST, GL_LINE_SMOOTH,
+                                          glFlush, glLineWidth)
 from picogl.backend.gl.wrappers.enable import gl_disable, gl_enable
 from picogl.renderer.abstract import AbstractRenderer
 

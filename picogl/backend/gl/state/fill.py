@@ -4,22 +4,10 @@ gl Fill Mode
 
 from enum import IntEnum
 
-from OpenGL.GL import (
-    GL_AMBIENT,
-    GL_AMBIENT_AND_DIFFUSE,
-    GL_BACK,
-    GL_DIFFUSE,
-    GL_FILL,
-    GL_FRONT,
-    GL_FRONT_AND_BACK,
-    GL_LIGHT0,
-    GL_LIGHT1,
-    GL_LIGHTING,
-    GL_LINE,
-    GL_POINT,
-    GL_POSITION,
-    GL_SPECULAR,
-)
+from OpenGL.GL import (GL_AMBIENT, GL_AMBIENT_AND_DIFFUSE, GL_BACK, GL_DIFFUSE,
+                       GL_FILL, GL_FRONT, GL_FRONT_AND_BACK, GL_LIGHT0,
+                       GL_LIGHT1, GL_LIGHTING, GL_LINE, GL_POINT, GL_POSITION,
+                       GL_SPECULAR)
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_COLOR_MATERIAL, GL_SHININESS
 from OpenGL.raw.GL.VERSION.GL_3_0 import GL_CLIP_DISTANCE0, GL_CLIP_DISTANCE1
 

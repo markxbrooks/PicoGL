@@ -6,31 +6,20 @@ import numpy as np
 import OpenGL.GL as gl  # python wrapping of OpenGL
 from molib.ligand.pdb.layouts.hetatm import HETATMLayout
 from OpenGL import GLU  # OpenGL Utility Library, extends OpenGL functionality
-from OpenGL.GL import (
-    GL_FLOAT,
-    GL_STATIC_DRAW,
-    glBindBuffer,
-    glBufferData,
-    glGenBuffers,
-    glScale,
-)
+from OpenGL.GL import (GL_FLOAT, GL_STATIC_DRAW, glBindBuffer, glBufferData,
+                       glGenBuffers, glScale)
 from OpenGL.GLU import gluLookAt
 from picogl.backend.gl.enums import GLBufferTarget, GLDrawMode
 from picogl.backend.gl.enums.legacy.scale import gl_viewport
 from picogl.backend.gl.state.client import GLClientState
 from picogl.backend.gl.wrappers.clear import gl_clear_color
 from picogl.backend.gl.wrappers.enable import gl_enable
-from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
+from picogl.backend.legacy.core.vertex.buffer.client_states import \
+    legacy_client_states
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
-from PySide6.QtWidgets import (
-    QApplication,
-    QHBoxLayout,
-    QMainWindow,
-    QSlider,
-    QVBoxLayout,
-    QWidget,
-)
+from PySide6.QtWidgets import (QApplication, QHBoxLayout, QMainWindow, QSlider,
+                               QVBoxLayout, QWidget)
 
 
 def _pdb_atom_xyz(line: str) -> list[float]:

@@ -8,7 +8,7 @@ OpenGL's gluLookAt function.
 """
 
 from OpenGL.raw.GLU import gluLookAt, gluPerspective
-from OpenGL.raw.GLUT import glutSwapBuffers, glutSolidTeapot
+from OpenGL.raw.GLUT import glutSolidTeapot, glutSwapBuffers
 
 
 def glu_look_at(

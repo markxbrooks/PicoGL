@@ -5,11 +5,10 @@ gl enable disable is enabled
 from typing import Union
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import glDisable, glEnable, glIsEnabled
-from picogl.backend.gl.capability import GLFixedFunctionCapability, GLPipelineCapability
-from picogl.backend.gl.enums.point_size import (
-    GLLegacyPointCapability,
-    GLPointCapability,
-)
+from picogl.backend.gl.capability import (GLFixedFunctionCapability,
+                                          GLPipelineCapability)
+from picogl.backend.gl.enums.point_size import (GLLegacyPointCapability,
+                                                GLPointCapability)
 from picogl.backend.gl.state.fill import GLCapability
 from picogl.texture.gltexture import GLTexture
 

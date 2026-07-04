@@ -15,15 +15,15 @@ from decologr import Decologr as log
 from picogl.backend.gl.enums import GLBufferTarget, GLDrawMode, GLNumeric
 from picogl.backend.gl.state.client import GLClientState
 from picogl.backend.gl.wrappers.buffer import gl_bind_buffer
-from picogl.backend.gl.wrappers.client_state import gl_enable_legacy_client_state
+from picogl.backend.gl.wrappers.client_state import \
+    gl_enable_legacy_client_state
 from picogl.backend.gl.wrappers.draw import gl_draw_arrays, gl_draw_elements
 from picogl.backend.gl.wrappers.glcleanup import gl_delete_buffer_object
-from picogl.backend.gl.wrappers.pointer import (
-    gl_color_pointer_from_spec,
-    gl_normal_pointer_from_spec,
-    gl_vertex_pointer_from_spec,
-)
-from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
+from picogl.backend.gl.wrappers.pointer import (gl_color_pointer_from_spec,
+                                                gl_normal_pointer_from_spec,
+                                                gl_vertex_pointer_from_spec)
+from picogl.backend.legacy.core.vertex.buffer.client_states import \
+    legacy_client_states
 from picogl.backend.legacy.core.vertex.buffer.color import LegacyColorVBO
 from picogl.backend.legacy.core.vertex.buffer.element import LegacyEBO
 from picogl.backend.legacy.core.vertex.buffer.normal import LegacyNormalVBO

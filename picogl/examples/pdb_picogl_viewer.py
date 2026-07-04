@@ -16,10 +16,8 @@ from pathlib import Path
 import numpy as np
 from examples.utils.pdb_loader import PDBLoader
 from picogl.backend.gl.capability import GLPipelineCapability
-from picogl.backend.gl.enums.point_size import (
-    GLLegacyPointCapability,
-    GLPointCapability,
-)
+from picogl.backend.gl.enums.point_size import (GLLegacyPointCapability,
+                                                GLPointCapability)
 from picogl.backend.gl.glfunc import GLDepthFunc
 from picogl.backend.gl.wrappers.clear import gl_clear_color
 from picogl.backend.gl.wrappers.depth import gl_depth_func

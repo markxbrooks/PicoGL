@@ -1,27 +1,16 @@
 from typing import Any, Protocol, runtime_checkable
 
 from OpenGL.GL import glLightfv, glMaterialfv
-from OpenGL.raw.GL.VERSION.GL_1_0 import (
-    GL_MODELVIEW,
-    GL_PROJECTION,
-    GL_SHININESS,
-    glColor4f,
-    glColorMaterial,
-    glLoadIdentity,
-    glMaterialf,
-    glMatrixMode,
-    glTexCoord2f,
-    glTranslatef,
-    glVertex3f,
-)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_MODELVIEW, GL_PROJECTION,
+                                          GL_SHININESS, glColor4f,
+                                          glColorMaterial, glLoadIdentity,
+                                          glMaterialf, glMatrixMode,
+                                          glTexCoord2f, glTranslatef,
+                                          glVertex3f)
 from OpenGL.raw.GLU import gluPerspective
 from picogl.backend.gl.capability import FACE_MAP
-from picogl.backend.gl.state.fill import (
-    GLColorMaterialMode,
-    GLFace,
-    GLLight,
-    GLLightParameter,
-)
+from picogl.backend.gl.state.fill import (GLColorMaterialMode, GLFace, GLLight,
+                                          GLLightParameter)
 from picogl.backend.gl.state.texture import TexCoord2f, Vertex3f
 from picogl.backend.state import gl_value
 
