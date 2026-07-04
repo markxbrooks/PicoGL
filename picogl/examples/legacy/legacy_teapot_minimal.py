@@ -17,7 +17,7 @@ import os
 import sys
 
 from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
-from picogl.backend.gl.wrappers.glu import glut_swap_buffers, glu_look_at, glut_solid_teapot
+from picogl.backend.gl.wrappers.glu import glu_perspective, glut_swap_buffers, glu_look_at, glut_solid_teapot
 from picogl.backend.gl.capability import (
     GLFixedFunctionCapability,
     GLMaterialFace,
@@ -125,7 +125,7 @@ class MinimalTeapotRenderer(GlutRenderer):
         gl_viewport(0, 0, width, height)
         gl_matrix_mode(GLLegacyMatrixMode.PROJECTION)
         gl_load_identity()
-        gluPerspective(45.0, float(width) / float(height), 0.1, 100.0)
+        glu_perspective(45.0, float(width) / float(height), 0.1, 100.0)
         gl_matrix_mode(GLLegacyMatrixMode.MODELVIEW)
 
     def run(self):
