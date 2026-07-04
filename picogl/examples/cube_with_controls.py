@@ -4,10 +4,14 @@ from typing import Any
 import numpy as np
 from picogl.backend.gl.capability import GLPipelineCapability
 from picogl.backend.gl.enums import GLBitMask
-from picogl.backend.gl.enums.legacy.scale import (gl_pop_matrix,
-                                                  gl_push_matrix, gl_rotatef,
-                                                  gl_scalef, gl_translatef,
-                                                  gl_viewport)
+from picogl.backend.gl.enums.legacy.scale import (
+    gl_pop_matrix,
+    gl_push_matrix,
+    gl_rotatef,
+    gl_scalef,
+    gl_translatef,
+    gl_viewport,
+)
 from picogl.backend.gl.wrappers.clear import gl_clear, gl_clear_color
 from picogl.backend.gl.wrappers.enable import gl_enable
 from picogl.backend.legacy.core.pipeline import LegacyPipeline
@@ -15,8 +19,14 @@ from picogl.renderer import MeshData
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
-from PySide6.QtWidgets import (QApplication, QHBoxLayout, QMainWindow, QSlider,
-                               QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (
+    QApplication,
+    QHBoxLayout,
+    QMainWindow,
+    QSlider,
+    QVBoxLayout,
+    QWidget,
+)
 
 
 def _triangulate_quads(quad_indices: list[int]) -> np.ndarray:

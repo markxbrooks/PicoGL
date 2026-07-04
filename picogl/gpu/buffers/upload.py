@@ -51,14 +51,11 @@ import numpy as np
 from picogl.backend.gl.enums import GLBufferTarget, GLNumeric, GLUsageHint
 from picogl.backend.gl.wrappers.buffer import gl_bind_buffer
 from picogl.backend.gl.wrappers.buffer_data import gl_buffer_data
-from picogl.backend.gl.wrappers.enable_vertex_array import \
-    gl_enable_vertex_array
+from picogl.backend.gl.wrappers.enable_vertex_array import gl_enable_vertex_array
 from picogl.backend.gl.wrappers.generate_buffers import gl_generate_buffers
-from picogl.backend.gl.wrappers.generate_vertex_array import \
-    gl_generate_vertex_array
+from picogl.backend.gl.wrappers.generate_vertex_array import gl_generate_vertex_array
 from picogl.backend.gl.wrappers.vertex_array import gl_bind_vertex_array
-from picogl.backend.gl.wrappers.vertex_attrib_pointer import \
-    gl_vertex_attrib_pointer
+from picogl.backend.gl.wrappers.vertex_attrib_pointer import gl_vertex_attrib_pointer
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.boolean import GLBoolean
 

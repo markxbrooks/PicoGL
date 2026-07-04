@@ -22,8 +22,11 @@ Example Usage:
 from OpenGL.GL import glGenTextures
 from OpenGL.raw.GL.VERSION.GL_1_1 import glBindTexture, glDeleteTextures
 from picogl.backend.gl.enums import GLNumeric
-from picogl.backend.gl.wrappers import (gl_generate_mipmap, gl_tex_parameter,
-                                        gl_teximage2d)
+from picogl.backend.gl.wrappers import (
+    gl_generate_mipmap,
+    gl_tex_parameter,
+    gl_teximage2d,
+)
 from picogl.texture.gltexture import GLTexture
 from picogl.texture.mapping import FILTER_MAP, FORMAT_MAP, WRAP_MAP
 from picogl.texture.texture2d import Texture2D
