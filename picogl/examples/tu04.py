@@ -1,6 +1,6 @@
 # import os,sys
 # sys.path.append(os.path.abspath(os.path.dirname(__file__)))
-from backend.modern.core.shader.files import ShaderFiles
+from picogl.backend.modern.core.shader.files import ShaderFiles
 from decologr import Decologr as log
 from OpenGL.GL import *  # pylint: disable=W0614
 from picogl.backend.gl.wrappers import gl_bind_texture, gl_get_active_texture0

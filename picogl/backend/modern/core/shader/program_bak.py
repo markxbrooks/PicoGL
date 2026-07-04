@@ -8,8 +8,8 @@ compiling and linking shaders, and setting uniform values.
 from pathlib import Path
 
 import numpy as np
-from backend.gl.enums.shader import GLShader
-from backend.gl.wrappers.program import gl_use_program
+from picogl.backend.gl.enums.shader import GLShader
+from picogl.backend.gl.wrappers.program import gl_use_program
 from decologr import Decologr as log
 from picogl.backend.gl.wrappers.program import gl_create_program
 from picogl.backend.gl.wrappers.shader import (

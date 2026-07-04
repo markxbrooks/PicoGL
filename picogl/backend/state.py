@@ -9,9 +9,9 @@ from dataclasses import dataclass
 from typing import Any, Protocol
 
 import numpy as np
-from backend.gl.enums.legacy.scale import gl_viewport
-from backend.gl.state.client import GLClientState
-from backend.gl.wrappers.blending import gl_blend_func
+from picogl.backend.gl.enums.legacy.scale import gl_viewport
+from picogl.backend.gl.state.client import GLClientState
+from picogl.backend.gl.wrappers.blending import gl_blend_func
 from numpy import ndarray
 from picogl.backend.gl.capability import (
     GLBlendFactor,
