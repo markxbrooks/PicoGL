@@ -10,7 +10,6 @@ from typing import Any, Protocol
 
 import numpy as np
 from numpy import ndarray
-from OpenGL.GL import glViewport
 
 from backend.gl.enums.legacy.scale import gl_viewport
 from backend.gl.state.client import GLClientState
