@@ -8,9 +8,10 @@ from pathlib import Path
 
 import numpy as np
 
-from picogl.backend.gl.wrappers.shader import gl_link_program
+from picogl.backend.gl.wrappers.shader import gl_link_program, gl_get_program_info_log
 from decologr import Decologr as log
 from OpenGL import GL as gl
+from OpenGL.raw.GL.VERSION.GL_2_0 import GL_LINK_STATUS
 from picogl.backend.gl.wrappers.shader import GLShader, gl_use_program
 from picogl.backend.gl.wrappers.program import gl_create_program
 from picogl.backend.modern.core.shader.compile import compile_shader
@@ -151,8 +152,8 @@ class ShaderProgram:
         """
         log.message("Linking shader program...", silent=True)
         gl_link_program(self.program)
-        if GLBoolean.TRUE != gl.glGetProgramiv(self.program, gl.GL_LINK_STATUS):
-            err = gl.glGetProgramInfoLog(self.program)
+        if GLBoolean.TRUE != gl.glGetProgramiv(self.program, GL_LINK_STATUS):
+            err = gl_get_program_info_log(self.program)
             raise RuntimeError(f"Shader link failed: {err}")
         log_gl_error()
 

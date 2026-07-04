@@ -12,7 +12,7 @@ from enum import IntEnum
 from typing import Any
 from OpenGL.GL import (glGetProgramiv, glGetShaderInfoLog, glGetShaderiv,
                        glGetUniformLocation, glShaderSource,
-                       glUniformMatrix4fv)
+                       glUniformMatrix4fv, glGetProgramInfoLog)
 from OpenGL.raw.GL.VERSION.GL_2_0 import (GL_COMPILE_STATUS,
                                           GL_FRAGMENT_SHADER, GL_LINK_STATUS,
                                           GL_VERTEX_SHADER, glAttachShader,
