@@ -1,31 +1,36 @@
 import os.path
+import sys  # we'll need this later to run our Qt application
 from pathlib import Path
 
+import numpy as np
 import OpenGL.GL as gl  # python wrapping of OpenGL
+from molib.ligand.pdb.layouts.hetatm import HETATMLayout
 from OpenGL import GLU  # OpenGL Utility Library, extends OpenGL functionality
-from OpenGL.GLU import gluLookAt
 from OpenGL.GL import (
-    glBufferData,
-    glScale,
-    glGenBuffers,
-    glBindBuffer,
     GL_FLOAT,
     GL_STATIC_DRAW,
+    glBindBuffer,
+    glBufferData,
+    glGenBuffers,
+    glScale,
 )
-from picogl.backend.gl.enums import GLBufferTarget
-import sys  # we'll need this later to run our Qt application
-import numpy as np
-from PySide6.QtCore import Qt, QTimer
-from PySide6.QtOpenGLWidgets import QOpenGLWidget
-from PySide6.QtWidgets import QMainWindow, QApplication, QWidget, QVBoxLayout, QSlider, QHBoxLayout
-
+from OpenGL.GLU import gluLookAt
+from picogl.backend.gl.enums import GLBufferTarget, GLDrawMode
 from picogl.backend.gl.enums.legacy.scale import gl_viewport
+from picogl.backend.gl.state.client import GLClientState
 from picogl.backend.gl.wrappers.clear import gl_clear_color
 from picogl.backend.gl.wrappers.enable import gl_enable
 from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
-from picogl.backend.gl.state.client import GLClientState
-from molib.ligand.pdb.layouts.hetatm import HETATMLayout
-from picogl.backend.gl.enums import GLDrawMode
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtOpenGLWidgets import QOpenGLWidget
+from PySide6.QtWidgets import (
+    QApplication,
+    QHBoxLayout,
+    QMainWindow,
+    QSlider,
+    QVBoxLayout,
+    QWidget,
+)
 
 
 def _pdb_atom_xyz(line: str) -> list[float]:
@@ -73,7 +78,7 @@ class GLWidget(QOpenGLWidget):
 
     def pdb_file_parse_atoms(self, file_path):
         coordinates = []
-        with open(file_path, 'r') as file:
+        with open(file_path, "r") as file:
             for line in file:
                 if HETATMLayout.record_type.parse(line) == "ATOM":
                     coordinates.append(_pdb_atom_xyz(line))
@@ -81,7 +86,7 @@ class GLWidget(QOpenGLWidget):
 
     def pdb_file_parse_calphas(self, file_path):
         coordinates = []
-        with open(file_path, 'r') as file:
+        with open(file_path, "r") as file:
             for line in file:
                 if HETATMLayout.record_type.parse(line) != "ATOM":
                     continue
@@ -98,7 +103,9 @@ class GLWidget(QOpenGLWidget):
     def create_vbo_object(self, coordinates):
         vbo = glGenBuffers(1)
         glBindBuffer(GLBufferTarget.ARRAY, vbo)
-        glBufferData(GLBufferTarget.ARRAY, coordinates.nbytes, coordinates, GL_STATIC_DRAW)
+        glBufferData(
+            GLBufferTarget.ARRAY, coordinates.nbytes, coordinates, GL_STATIC_DRAW
+        )
         return vbo
 
     def init_geometry(self):
@@ -119,7 +126,6 @@ class GLWidget(QOpenGLWidget):
 
         self.centered_coordinates = self.center_coordinates(self.coordinates)
         self.vbo = self.create_vbo_object(self.centered_coordinates)
-
 
     def paintGL(self):
         gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
@@ -144,7 +150,6 @@ class GLWidget(QOpenGLWidget):
             gl.glDrawArrays(int(GLDrawMode.LINE_STRIP), 0, len(self.coordinates))
         gl.glPopMatrix()
 
-
     def set_rot_x(self, val):
         self.rot_x = np.pi * val
 
@@ -164,7 +169,7 @@ class MainWindow(QMainWindow):
         QMainWindow.__init__(self)  # call the init for the parent class
 
         self.resize(300, 300)
-        self.setWindowTitle('Cube OpenGL App')
+        self.setWindowTitle("Cube OpenGL App")
 
         self.gl_widget = GLWidget(self)
         self.init_gui()
@@ -206,7 +211,7 @@ class MainWindow(QMainWindow):
         gui_layout.addWidget(slider_z)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     win = MainWindow()

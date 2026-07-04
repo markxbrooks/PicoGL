@@ -1,16 +1,13 @@
 from pathlib import Path
 
 from OpenGL.GL import *  # pylint: disable=W0614
-
+from picogl.backend.gl.enums import GLBufferTarget, GLUsageHint
+from picogl.backend.gl.wrappers import gl_bind_texture, gl_get_active_texture0
 from picogl.core.uniform import gl_uniform1i
 from picogl.globals import PROJECT_ROOT
-from picogl.backend.gl.enums import GLBufferTarget
-from picogl.backend.gl.enums import GLUsageHint
 from picogl.ui.backend.glut.window.gl import GLWindow
 from picogl.utils.loader.texture import TextureLoader
 from pyglm import glm
-
-from picogl.backend.gl.wrappers import gl_bind_texture, gl_get_active_texture0
 from utils.shader_loader import Shader
 
 g_vertex_buffer_data = [
@@ -223,7 +220,9 @@ class Tu01Win(GLWindow):
         self.context.mvp_id = glGetUniformLocation(shader.program, "MVP")
         self.context.texture_id = glGetUniformLocation(shader.program, "texture0")
 
-        texture = TextureLoader(Path(PROJECT_ROOT) / "examples" / "resources" / "tu02" / "uvtemplate.tga")
+        texture = TextureLoader(
+            Path(PROJECT_ROOT) / "examples" / "resources" / "tu02" / "uvtemplate.tga"
+        )
 
         self.context.textureGLID = texture.texture_gl_id
 
@@ -284,7 +283,7 @@ class Tu01Win(GLWindow):
             self.context.Projection * self.context.View * self.context.Model
         )
         self.context.mvp_matrix = (
-                self.context.Projection * self.context.View * self.context.Model
+            self.context.Projection * self.context.View * self.context.Model
         )
 
     def resize(self, Width, Height):

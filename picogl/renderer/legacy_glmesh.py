@@ -16,7 +16,6 @@ LegacyGLMesh
 from typing import Optional
 
 import numpy as np
-
 from picogl.backend.gl.enums import GLDrawMode, GLNumeric
 from picogl.backend.gl.state.client import GLClientState
 from picogl.backend.gl.wrappers import gl_draw_elements

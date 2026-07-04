@@ -26,7 +26,6 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_SHININESS,
     GL_SPECULAR,
 )
-
 from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.capability import (
     GLBlendFactor,
@@ -488,7 +487,7 @@ class TestDrawCommand(unittest.TestCase):
             backend.depth.set_depth_func_gl_less()
             backend.blend.set_blend(True)
             backend.blend.set_blend_func(GL_ONE, GL_ZERO)
-            backend.blend.setup_blending()
+            backend.blend.set_alpha_blending()
             backend.capabilities.set_enabled(GLPipelineCapability.CULL_FACE, True)
             backend.capabilities.set_enabled(GLFixedFunctionCapability.LIGHTING, False)
 

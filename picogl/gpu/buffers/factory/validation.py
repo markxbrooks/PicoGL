@@ -3,7 +3,6 @@ Validation of input data
 """
 
 import numpy as np
-
 from picogl.renderer import MeshData
 
 

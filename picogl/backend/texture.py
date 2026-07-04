@@ -12,13 +12,13 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
-from elmo.globals import RESOURCE_DIR
-
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.gl.wrappers import gl_bind_texture
 from picogl.texture.gltexture import GLTexture
 from picogl.texture.gltexture_driver import GLTextureDriver
 from picogl.texture.texture2d import Texture2D
+
+from elmo.globals import RESOURCE_DIR
 
 
 @contextmanager

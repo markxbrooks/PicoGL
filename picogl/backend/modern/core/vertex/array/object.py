@@ -34,14 +34,11 @@ Intended for OpenGL 3.0+ with VAO support.
 """
 
 import ctypes
-from contextlib import contextmanager, nullcontext
+from contextlib import contextmanager
 from typing import Optional, Union
 
 import numpy as np
 from decologr import Decologr as log
-from elmo.log.silence import SILENT_VAO
-from PySide6.QtGui import QOpenGLContext
-
 from picogl.backend.gl.enums import (
     GLBufferTarget,
     GLDrawMode,
@@ -64,7 +61,7 @@ from picogl.backend.gl.wrappers.vertex_array import (
 )
 from picogl.backend.gl.wrappers.vertex_attrib_pointer import gl_vertex_attrib_pointer
 from picogl.backend.modern.core.vertex.array.helpers import (
-    configure_point_rendering, point_rendering,
+    enable_points_rendering_state,
 )
 from picogl.backend.modern.core.vertex.base import VertexBuffer
 from picogl.backend.modern.core.vertex.buffer.element import ModernEBO
@@ -73,6 +70,9 @@ from picogl.gpu.buffers.attributes import LayoutDescriptor
 from picogl.gpu.buffers.base import VertexBase
 from picogl.gpu.buffers.vertex.aliases import NAME_ALIASES
 from picogl.safe import gl_gen_safe
+from PySide6.QtGui import QOpenGLContext
+
+from elmo.log.silence import SILENT_VAO
 
 
 class VertexArrayObject(VertexBase, GLResource):
@@ -374,36 +374,44 @@ class VertexArrayObject(VertexBase, GLResource):
             log.error(f"error {ex} occurred")
 
     def draw(
-            self,
-            index_count: int | None = None,
-            dtype: GLIndexType = GLIndexType.UNSIGNED_INT,
-            mode: GLDrawMode = GLDrawMode.POINTS,
-            pointer: ctypes.c_void_p | None = ctypes.c_void_p(0),
-            first: int = 0,
-    ) -> None:
-        """Draw the currently bound mesh."""
+        self,
+        index_count: int = None,
+        dtype: int = GLIndexType.UNSIGNED_INT,
+        mode: int = GLDrawMode.POINTS,
+        pointer: Union[int, ctypes.c_void_p, None] = ctypes.c_void_p(0),
+        first: int = 0,
+    ):
+        """
+        draw
 
-        if index_count is None:
-            index_count = self.index_count
-
-        if index_count == 0:
-            return
-
-        context = point_rendering() if mode == GLDrawMode.POINTS else nullcontext()
-        with context:
-            try:
-                if not self.bind():
-                    return
-
-                if self.ebo:
-                    # Re-bind EBO: if it was not captured into this VAO at creation
-                    # time, glDrawElements can otherwise use a stale global EBO.
-                    self.ebo.bind()
-                    gl_draw_elements(index_count, dtype, mode, pointer=pointer)
-                else:
-                    gl_draw_arrays(index_count, mode, first)
-            finally:
+        :param pointer: ctypes.c_void_p(0)
+        :param dtype: GL_UNSIGNED_INT
+        :param index_count: int Number of vertices to draw.
+        :param mode: int e.g. GL_POINT
+        :param first: First vertex for non-indexed draws.
+        :return: None
+        """
+        atom_count = index_count or self.index_count
+        if mode == GLDrawMode.POINTS:
+            enable_points_rendering_state()
+        try:
+            if not self.bind():
+                return
+            if index_count is None:
+                index_count = self.index_count
+            if index_count == 0:
                 self.unbind()
+                return
+            if self.ebo:
+                # Re-bind EBO: if it was not captured into this VAO at creation time,
+                # glDrawElements can use a stale global EBO (e.g. from bond draws) and
+                # produce fan/spike artefacts on indexed meshes such as ribbons.
+                self.ebo.bind()
+                gl_draw_elements(atom_count, dtype, mode, pointer=pointer)
+            else:
+                gl_draw_arrays(atom_count, mode, first=int(first))
+        finally:
+            self.unbind()
 
     def _modern_vbo_for_attrib(self, attrib_index: int) -> Optional[ModernVBO]:
         """Return the :class:`ModernVBO` created for ``add_vbo(index=attrib_index, ...)``."""

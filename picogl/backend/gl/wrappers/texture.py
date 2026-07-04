@@ -43,7 +43,6 @@ from OpenGL.GL import (
 )
 from OpenGL.raw.GL.VERSION.GL_1_2 import glTexImage3D
 from OpenGL.raw.GL.VERSION.GL_3_0 import glFramebufferTexture2D
-
 from picogl.backend.gl.enums import GLNumeric
 from picogl.backend.gl.enums.target.frame_buffer import GLFrameBufferTarget
 from picogl.texture.gltexparam import GLTexParam
@@ -152,7 +151,9 @@ def gl_teximage3d(
     )
 
 
-def gl_tex_parameter(target: int, pname: GLTexture, param: Union[GLTexParam, GLTextureClamp]) -> None:
+def gl_tex_parameter(
+    target: int, pname: GLTexture, param: Union[GLTexParam, GLTextureClamp]
+) -> None:
     """Issue ``glTexParameteri``."""
     glTexParameteri(target, pname, param)
 

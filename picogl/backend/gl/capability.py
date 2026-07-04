@@ -75,6 +75,10 @@ class GLBlendFactor(IntEnum):
         except ValueError:
             raise ValueError(f"Unknown gl blend factor: {param}")
 
+    @classmethod
+    def to_gl(cls, value: "GLBlendFactor | int") -> int:
+        return int(gl_value(value))
+
 
 @dataclass(frozen=True)
 class GLBlendFunc:

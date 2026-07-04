@@ -21,7 +21,6 @@ Example Usage:
 
 from OpenGL.GL import glGenTextures
 from OpenGL.raw.GL.VERSION.GL_1_1 import glBindTexture, glDeleteTextures
-
 from picogl.backend.gl.enums import GLNumeric
 from picogl.backend.gl.wrappers import (
     gl_generate_mipmap,

@@ -18,6 +18,7 @@ Attributes:
         floating-point values (r, g, b). The total shape of the data matches
         the number of vertices times 3.
 """
+
 import numpy as np
 
 # Cube data (from cube_data.py)

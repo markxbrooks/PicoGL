@@ -11,18 +11,21 @@ Features:
 - Interactive rotation and zoom
 """
 
+from examples.glut_renderer import GlutRenderer, set_up_legacy_lighting
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
-
-from examples.glut_renderer import GlutRenderer, set_up_legacy_lighting
-from picogl.backend.gl.capability import GLMaterialFace, GLFixedFunctionCapability, GLPipelineCapability
-from picogl.backend.gl.enums import GLDrawMode, GLBitMask
+from picogl.backend.gl.capability import (
+    GLFixedFunctionCapability,
+    GLMaterialFace,
+    GLPipelineCapability,
+)
+from picogl.backend.gl.enums import GLBitMask, GLDrawMode
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.state.fill import GLCapability, GLColorMaterialMode, GLFillMode
 from picogl.backend.gl.state.immediate import immediate_drawing
 from picogl.backend.gl.wrappers.clear import gl_clear, gl_clear_color
-from picogl.backend.gl.wrappers.enable import gl_enable, gl_disable
+from picogl.backend.gl.wrappers.enable import gl_disable, gl_enable
 from picogl.backend.gl.wrappers.polygon_mode import gl_polygon_mode
 
 
@@ -56,7 +59,9 @@ class SimpleTeapotRenderer(GlutRenderer):
             gl_enable(GLFixedFunctionCapability.LIGHTING)
             gl_enable(GLFixedFunctionCapability.LIGHT0)
             gl_enable(GLCapability.COLOR_MATERIAL)
-            glColorMaterial(GLMaterialFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE)
+            glColorMaterial(
+                GLMaterialFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE
+            )
 
             set_up_legacy_lighting()
 

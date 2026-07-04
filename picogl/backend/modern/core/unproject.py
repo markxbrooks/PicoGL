@@ -6,8 +6,6 @@ from typing import Any, Tuple
 
 import glm
 import numpy as np
-
-from elmo.ui.widgets.gl.mol.viewport import Viewport
 from picogl.backend.modern.core.mvp import (
     convert_to_world_coordinates,
     create_normalized_device_vector,
@@ -15,13 +13,22 @@ from picogl.backend.modern.core.mvp import (
     normalize_device_coordinates,
 )
 
+from elmo.ui.widgets.gl.mol.viewport import Viewport
 
-def unproject(x: float, y: float, depth: float, inv_mvp: glm.mat4, viewport: Viewport | np.ndarray) -> np.ndarray:
+
+def unproject(
+    x: float, y: float, depth: float, inv_mvp: glm.mat4, viewport: Viewport | np.ndarray
+) -> np.ndarray:
     """unproject"""
     if isinstance(viewport, Viewport):
         vx, vy, vw, vh = viewport.x, viewport.y, viewport.width, viewport.height
     else:
-        vx, vy, vw, vh = (int(viewport[0]), int(viewport[1]), int(viewport[2]), int(viewport[3]))
+        vx, vy, vw, vh = (
+            int(viewport[0]),
+            int(viewport[1]),
+            int(viewport[2]),
+            int(viewport[3]),
+        )
 
     y = vh - y
 

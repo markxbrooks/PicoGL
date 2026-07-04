@@ -22,7 +22,7 @@ def clamp01(x: float) -> float:
     return max(0.0, min(1.0, x))
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=False)
 class RGBColor:
     """RGB color"""
 
@@ -30,24 +30,24 @@ class RGBColor:
     g: float = 1.0
     b: float = 1.0
 
-    def post_init(self):
-        object.setattr(self, "r", clamp01(self.r))
-        object.setattr(self, "g", clamp01(self.g))
-        object.setattr(self, "b", clamp01(self.b))
+    def __post_init__(self):
+        setattr(self, "r", clamp01(self.r))
+        setattr(self, "g", clamp01(self.g))
+        setattr(self, "b", clamp01(self.b))
 
     def to_tuple(self) -> tuple[float, float, float]:
-        return (self.r, self.g, self.b)
+        return self.r, self.g, self.b
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=False)
 class RGBAColor(RGBColor):
     """RGBA color"""
 
     a: float = 1.0
 
-    def post_init(self):
-        super().post_init()
-        object.setattr(self, "a", clamp01(self.a))
+    def __post_init__(self):
+        super().__post_init__()
+        setattr(self, "a", clamp01(self.a))
 
     def to_tuple(self) -> tuple[float, float, float, float]:
-        return (self.r, self.g, self.b, self.a)
+        return self.r, self.g, self.b, self.a

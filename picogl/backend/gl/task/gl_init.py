@@ -14,7 +14,6 @@ from dataclasses import dataclass
 from typing import Callable, Optional
 
 from decologr import Decologr as log
-
 from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.capability import GLPipelineCapability
 from picogl.backend.gl.enums import GLBitMask

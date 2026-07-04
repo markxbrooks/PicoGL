@@ -2,6 +2,7 @@ from typing import Optional
 
 import numpy as np
 from decologr import Decologr as log
+from examples import g_color_buffer_data, g_vertex_buffer_data
 from OpenGL.GL import glLightfv, glMaterialfv
 from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_DEPTH_TEST,
@@ -15,10 +16,6 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     glRotatef,
 )
 from OpenGL.raw.GLU import gluLookAt, gluPerspective
-from PySide6.QtCore import Qt, QTimer
-from PySide6.QtWidgets import QWidget
-
-from examples import g_color_buffer_data, g_vertex_buffer_data
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.mode import GLMode
 from picogl.backend.gl.state.fill import (
@@ -32,6 +29,8 @@ from picogl.backend.gl.wrappers.enable import gl_enable
 from picogl.renderer import MeshData
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.ui.backend.qt.base import GLBase
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtWidgets import QWidget
 
 
 class LegacyQtObjectRenderer(GLBase):

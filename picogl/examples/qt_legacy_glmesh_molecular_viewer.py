@@ -22,11 +22,19 @@ from picogl.renderer.meshdata import MeshData
 from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
-from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMessageBox,
-                               QPushButton, QSplitter, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (
+    QApplication,
+    QHBoxLayout,
+    QLabel,
+    QMessageBox,
+    QPushButton,
+    QSplitter,
+    QVBoxLayout,
+    QWidget,
+)
 
 # Add the examples directory to the path so we can import the PDB loader
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'utils'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "utils"))
 
 from pdb_loader import Atom, PDBLoader
 
@@ -78,7 +86,7 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         # Create meshes now that OpenGL context is ready
         self._create_mesh_data()
         self._initialized = True
-        
+
         # Enable controls after a short delay to ensure everything is ready
         QTimer.singleShot(100, self._enable_controls)
 
@@ -104,14 +112,20 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
 
             # Set up lighting in world space (before transformations)
             glLightfv(GL_LIGHT0, GL_POSITION, [1.0, 1.0, 1.0, 0.0])
-            glLightfv(GL_LIGHT0, GL_AMBIENT, [0.4, 0.4, 0.4, 1.0])  # Higher ambient for more consistent lighting
+            glLightfv(
+                GL_LIGHT0, GL_AMBIENT, [0.4, 0.4, 0.4, 1.0]
+            )  # Higher ambient for more consistent lighting
             glLightfv(GL_LIGHT0, GL_DIFFUSE, [0.6, 0.6, 0.6, 1.0])  # Reduced diffuse
-            glLightfv(GL_LIGHT0, GL_SPECULAR, [0.2, 0.2, 0.2, 1.0])  # Much lower specular
+            glLightfv(
+                GL_LIGHT0, GL_SPECULAR, [0.2, 0.2, 0.2, 1.0]
+            )  # Much lower specular
 
             # Set material properties to be more diffuse and less specular
             glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, [0.3, 0.3, 0.3, 1.0])
             glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, [0.7, 0.7, 0.7, 1.0])
-            glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, [0.1, 0.1, 0.1, 1.0])  # Very low specular
+            glMaterialfv(
+                GL_FRONT_AND_BACK, GL_SPECULAR, [0.1, 0.1, 0.1, 1.0]
+            )  # Very low specular
             glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 10.0)  # Lower shininess
         else:
             glDisable(GL_LIGHTING)
@@ -141,7 +155,11 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
             print(f"✓ Residues: {len(structure.residues)}")
 
             # Extract C-alpha atoms
-            self.calpha_atoms = [atom for atom in structure.atoms if atom.name == MoLibConstant.PEPTIDE_CHAIN_ATOMNAME]
+            self.calpha_atoms = [
+                atom
+                for atom in structure.atoms
+                if atom.name == MoLibConstant.PEPTIDE_CHAIN_ATOMNAME
+            ]
             print(f"✓ Found {len(self.calpha_atoms)} C-alpha atoms")
 
             # Generate C-alpha bonds (sequential bonds within each chain)
@@ -181,15 +199,17 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         # Create sphere mesh data for atoms
         if self._initialized:
             return
-        atom_vertices, atom_normals, atom_colors_rgba, atom_indices = self._create_sphere_mesh_data()
+        atom_vertices, atom_normals, atom_colors_rgba, atom_indices = (
+            self._create_sphere_mesh_data()
+        )
 
         # Create line mesh data for bonds
         bond_vertices, bond_colors, bond_indices = self._create_bond_mesh_data()
         # Convert RGBA colors to RGB for LegacyGLMesh
         atom_colors_rgb = atom_colors_rgba[:, :3]  # Remove alpha channel
-        mesh_data = MeshData.from_raw(vertices=atom_vertices,
-                                      indices=atom_indices,
-                                      colors=atom_colors_rgb)
+        mesh_data = MeshData.from_raw(
+            vertices=atom_vertices, indices=atom_indices, colors=atom_colors_rgb
+        )
 
         # Create atoms mesh
         if atom_vertices is not None:
@@ -201,9 +221,7 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
             # Convert RGBA colors to RGB for LegacyGLMesh
             bond_colors_rgb = bond_colors[:, :3]  # Remove alpha channel
             self.bonds_mesh = LegacyGLMesh(
-                vertices=bond_vertices,
-                faces=bond_indices,
-                colors=bond_colors_rgb
+                vertices=bond_vertices, faces=bond_indices, colors=bond_colors_rgb
             )
             self.bonds_mesh.upload()
 
@@ -256,20 +274,18 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
 
         for atom in self.calpha_atoms:
             # Set colour based on chain
-            if atom.chain_id == 'A':
+            if atom.chain_id == "A":
                 color = [0.0, 1.0, 0.0, 1.0]  # Green
-            elif atom.chain_id == 'B':
+            elif atom.chain_id == "B":
                 color = [0.0, 0.0, 1.0, 1.0]  # Blue
             else:
                 color = [1.0, 1.0, 1.0, 1.0]  # White for other chains
 
             # Add sphere vertices for this atom
             for vertex in vertices:
-                atom_vertices.append([
-                    vertex[0] + atom.x,
-                    vertex[1] + atom.y,
-                    vertex[2] + atom.z
-                ])
+                atom_vertices.append(
+                    [vertex[0] + atom.x, vertex[1] + atom.y, vertex[2] + atom.z]
+                )
                 atom_colors.append(color)
 
             # Add normals (same for all atoms)
@@ -285,7 +301,7 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
             np.array(atom_vertices, dtype=np.float32),
             np.array(atom_normals, dtype=np.float32),
             np.array(atom_colors, dtype=np.float32),
-            np.array(atom_indices, dtype=np.uint32)
+            np.array(atom_indices, dtype=np.uint32),
         )
 
     def _create_bond_mesh_data(self):
@@ -296,9 +312,9 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
 
         for i, (atom1, atom2) in enumerate(self.calpha_bonds):
             # Set colour based on chain
-            if atom1.chain_id == 'A':
+            if atom1.chain_id == "A":
                 color = [0.0, 1.0, 0.0, 1.0]  # Green
-            elif atom1.chain_id == 'B':
+            elif atom1.chain_id == "B":
                 color = [0.0, 0.0, 1.0, 1.0]  # Blue
             else:
                 color = [1.0, 1.0, 1.0, 1.0]  # White for other chains
@@ -315,7 +331,7 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         return (
             np.array(vertices, dtype=np.float32),
             np.array(colors, dtype=np.float32),
-            np.array(indices, dtype=np.uint32)
+            np.array(indices, dtype=np.uint32),
         )
 
     def _render_molecular_structure(self):
@@ -343,7 +359,7 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         # Walk up the widget hierarchy to find the main window
         widget = self.parent()
         while widget is not None:
-            if hasattr(widget, 'lighting_button'):
+            if hasattr(widget, "lighting_button"):
                 widget.lighting_button.setEnabled(True)
                 print("Controls enabled")
                 break
@@ -399,7 +415,12 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
             self.wireframe_mode = not self.wireframe_mode
             print(f"Wireframe mode: {'ON' if self.wireframe_mode else 'OFF'}")
             self.update()
-        elif event.key() == Qt.Key_L or event.text().lower() == 'l' or event.key() == Qt.Key_T or event.text().lower() == 't':
+        elif (
+            event.key() == Qt.Key_L
+            or event.text().lower() == "l"
+            or event.key() == Qt.Key_T
+            or event.text().lower() == "t"
+        ):
             # Toggle lighting
             self.lighting_enabled = not self.lighting_enabled
             print(f"Lighting: {'ON' if self.lighting_enabled else 'OFF'}")
@@ -430,13 +451,17 @@ class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
 
     def init_ui(self):
         """Initialize the user interface"""
-        self.setWindowTitle("Qt Legacy GLMesh Molecular Viewer - 2VUG C-alpha (Chain A: Green, Chain B: Blue)")
+        self.setWindowTitle(
+            "Qt Legacy GLMesh Molecular Viewer - 2VUG C-alpha (Chain A: Green, Chain B: Blue)"
+        )
         self.setGeometry(100, 100, 1200, 800)
 
     def set_layout(self, layout):
         """set layout"""
         # Add info label
-        info_label = QLabel("PDB Structure - C-alpha Atoms (Chain A: Green, Chain B: Blue)")
+        info_label = QLabel(
+            "PDB Structure - C-alpha Atoms (Chain A: Green, Chain B: Blue)"
+        )
         info_label.setStyleSheet("font-size: 14px; font-weight: bold; padding: 10px;")
 
         splitter = QSplitter(Qt.Vertical)
@@ -453,7 +478,7 @@ class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
         splitter.setSizes([200, 800])
         lower_widget.setLayout(lower_layout)
         # Create OpenGL widget with the PDB path first
-        pdb_path = getattr(self, '_pdb_path', None) or self.object_file_path
+        pdb_path = getattr(self, "_pdb_path", None) or self.object_file_path
         self.gl_widget = QtLegacyGLMeshMolecularViewer(pdb_path)
         lower_layout.addWidget(self.gl_widget)
 
@@ -488,7 +513,9 @@ class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
             "• Chain A: Green, Chain B: Blue\n"
             "• Using LegacyGLMesh for rendering"
         )
-        instructions.setStyleSheet("colour: black; font-size: 12px; padding: 10px; background-colour: #f0f0f0;")
+        instructions.setStyleSheet(
+            "colour: black; font-size: 12px; padding: 10px; background-colour: #f0f0f0;"
+        )
         upper_layout.addWidget(instructions)
 
     def reset_view(self):
@@ -496,7 +523,7 @@ class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
         if self.gl_widget is None:
             print("OpenGL widget not yet initialized")
             return
-            
+
         self.gl_widget.rotation_x = 0.0
         self.gl_widget.rotation_y = 0.0
         self.gl_widget.zoom = 1.0
@@ -509,16 +536,16 @@ class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
         if self.gl_widget is None:
             print("OpenGL widget not yet initialized")
             return
-        
+
         self.gl_widget.lighting_enabled = not self.gl_widget.lighting_enabled
         status = "ON" if self.gl_widget.lighting_enabled else "OFF"
         print(f"Lighting: {status}")
         self.lighting_button.setText(f"Lighting: {status}")
         self.gl_widget.update()
-    
+
     def enable_controls(self):
         """Enable control buttons once OpenGL widget is ready"""
-        if hasattr(self, 'lighting_button'):
+        if hasattr(self, "lighting_button"):
             self.lighting_button.setEnabled(True)
             print("Controls enabled")
 

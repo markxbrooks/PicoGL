@@ -7,14 +7,14 @@ the framebuffer with specified colors and configuring the viewport
 for rendering.
 """
 
-from elmo.ui.widgets.gl.mol.viewport import Viewport
-
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums.legacy.scale import gl_viewport
 from picogl.backend.gl.wrappers.clear import gl_clear, gl_clear_color
 from picogl.backend.gl.wrappers.frame import gl_bind_framebuffer
 from picogl.backend.state import gl_value
-from picogl.core.rgb import RGBA, clamp01
+from picogl.core.rgbcolor import RGBAColor, clamp01
+
+from elmo.ui.widgets.gl.mol.viewport import Viewport
 
 
 class GLFrameDriver:
@@ -28,7 +28,7 @@ class GLFrameDriver:
         gl_clear(gl_value(mask))
 
     def set_clear_background_and_color_from_rgba(
-        self, color: RGBA = RGBA(0.0, 0.0, 0.0, 1.0)
+        self, color: RGBAColor = RGBAColor(0.0, 0.0, 0.0, 1.0)
     ) -> None:
         """
         Clears the screen to a specified color using OpenGL commands.
@@ -36,7 +36,7 @@ class GLFrameDriver:
         Args:
             color (RGBA): color values to clear the screen. Each component is clamped to [0.0, 1.0].
         """
-        color = RGBA(
+        color = RGBAColor(
             clamp01(color.r),
             clamp01(color.g),
             clamp01(color.b),

@@ -15,25 +15,36 @@ Usage:
 """
 
 import sys
-from typing import Optional, Any
+from typing import Any, Optional
 
 import numpy as np
 from numpy import dtype, generic, ndarray
-
 from picogl.backend.gl.light import GLLightSource
 
 # Try different Qt imports
 try:
     from PySide6.QtCore import Qt, QTimer
     from PySide6.QtOpenGLWidgets import QOpenGLWidget
-    from PySide6.QtWidgets import QApplication, QLabel, QMainWindow, QVBoxLayout, QWidget
+    from PySide6.QtWidgets import (
+        QApplication,
+        QLabel,
+        QMainWindow,
+        QVBoxLayout,
+        QWidget,
+    )
 
     QT_VERSION = "PySide6"
 except ImportError:
     try:
         from PyQt5.QtCore import Qt, QTimer
         from PyQt5.QtOpenGL import QGLWidget as QOpenGLWidget
-        from PyQt5.QtWidgets import QApplication, QLabel, QMainWindow, QVBoxLayout, QWidget
+        from PyQt5.QtWidgets import (
+            QApplication,
+            QLabel,
+            QMainWindow,
+            QVBoxLayout,
+            QWidget,
+        )
 
         QT_VERSION = "PyQt5"
     except ImportError:
@@ -63,10 +74,13 @@ except ImportError:
     sys.exit(1)
 
 from examples.data.cube_data import g_color_buffer_data, g_vertex_buffer_data
-from picogl.backend.gl.backend import GLBackend
-from picogl.backend.gl.capability import GLMaterialFace, PhongMaterial, GLFixedFunctionCapability
 from picogl.backend.geometry.factory import LegacyBinding
-from picogl.renderer.legacy_glmesh import LegacyGLMesh
+from picogl.backend.gl.backend import GLBackend
+from picogl.backend.gl.capability import (
+    GLFixedFunctionCapability,
+    GLMaterialFace,
+    PhongMaterial,
+)
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.state.fill import (
     GLCapability,
@@ -75,6 +89,7 @@ from picogl.backend.gl.state.fill import (
     GLLight,
     GLLightParameter,
 )
+from picogl.renderer.legacy_glmesh import LegacyGLMesh
 
 
 def _to_np_array(data) -> ndarray[Any, dtype[Any]] | ndarray[Any, dtype[generic]]:
@@ -125,9 +140,21 @@ class SimpleQtCubeWidget(QOpenGLWidget):
             light=GLLight.LIGHT0,
         )
 
-        GLLightSource.lightf(GLFixedFunctionCapability.LIGHT0, GLLightParameter.AMBIENT, [0.3, 0.3, 0.3, 1.0])
-        GLLightSource.lightf(GLFixedFunctionCapability.LIGHT0, GLLightParameter.DIFFUSE, [0.8, 0.8, 0.8, 1.0])
-        GLLightSource.lightf(GLFixedFunctionCapability.LIGHT0, GLLightParameter.SPECULAR, [1.0, 1.0, 1.0, 1.0])
+        GLLightSource.lightf(
+            GLFixedFunctionCapability.LIGHT0,
+            GLLightParameter.AMBIENT,
+            [0.3, 0.3, 0.3, 1.0],
+        )
+        GLLightSource.lightf(
+            GLFixedFunctionCapability.LIGHT0,
+            GLLightParameter.DIFFUSE,
+            [0.8, 0.8, 0.8, 1.0],
+        )
+        GLLightSource.lightf(
+            GLFixedFunctionCapability.LIGHT0,
+            GLLightParameter.SPECULAR,
+            [1.0, 1.0, 1.0, 1.0],
+        )
 
         material = PhongMaterial(
             ambient=(0.2, 0.2, 0.2, 1.0),
