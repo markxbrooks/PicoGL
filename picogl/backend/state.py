@@ -11,11 +11,6 @@ from typing import Any, Protocol
 import numpy as np
 from numpy import ndarray
 from OpenGL.GL import glBlendFunc, glViewport
-from OpenGL.raw.GL.VERSION.GL_1_1 import (
-    GL_COLOR_ARRAY,
-    GL_NORMAL_ARRAY,
-    GL_VERTEX_ARRAY,
-)
 
 from backend.gl.state.client import GLClientState
 from picogl.backend.gl.capability import (
@@ -53,6 +48,21 @@ class RasterState:
     point_size: float | None = None
 
     def apply(self, backend: Any) -> None:
+        """
+        Applies rendering properties to the given backend.
+
+        This method configures the rendering settings of the provided backend
+        based on its attributes. It will utilize the appropriate backend's
+        methods to apply the rendering properties.
+
+        Parameters:
+        backend (Any): The rendering backend to apply the settings to. The backend should
+            have either a 'raster' attribute with an 'apply()' method or methods
+            for setting polygon mode and line width.
+
+        Returns:
+        None
+        """
         if hasattr(backend, "raster"):
             backend.raster.apply(self)
             return
@@ -69,6 +79,21 @@ class GLStateManager:
         self._caps: dict[int, bool] = {}
 
     def set_enabled(self, cap: int, enabled: bool) -> None:
+        """
+        Sets the state of a specific capability.
+
+        This method enables or disables a given capability based on the specified flag.
+        It ensures that the backend is updated only if the capability's state changes.
+
+        Parameters:
+        cap: int
+            The capability to be enabled or disabled.
+        enabled: bool
+            A boolean value indicating whether to enable (True) or disable (False) the capability.
+
+        Returns:
+        None
+        """
         cap = gl_value(cap)
         enabled = bool(enabled)
         if self._caps.get(cap) == enabled:
@@ -81,6 +106,22 @@ class GLStateManager:
             self.backend.disable(cap)
 
     def is_enabled(self, cap: int) -> bool:
+        """
+        Determines if a specific capability is enabled.
+
+        This method checks whether a given capability, identified by its
+        integer representation, is currently enabled. The capability's
+        value is processed using the `gl_value` function, and the result
+        is determined by querying the internal data structure.
+
+        Parameters:
+        cap: int
+            The integer representation of the capability to check.
+
+        Returns:
+        bool
+            True if the specified capability is enabled, False otherwise.
+        """
         return self._caps.get(gl_value(cap), False)
 
 
@@ -93,6 +134,19 @@ class BlendState:
     dst: Any = GLBlendFactor.ONE_MINUS_SRC_ALPHA
 
     def apply(self, state: GLStateManager):
+        """
+        Applies blending state to the given GLStateManager.
+
+        This method adjusts the blending settings in the given OpenGL state manager
+        based on the current configuration. If the backend of the GLStateManager
+        supports blending and has a custom implementation, that custom behavior is
+        invoked; otherwise, standard OpenGL blending state is configured.
+
+        Parameters:
+        state (GLStateManager): The state manager to which the blending configuration
+          should be applied.
+
+        """
         backend = state.backend
         if hasattr(backend, "blend"):
             backend.blend.apply(self)
@@ -104,7 +158,21 @@ class BlendState:
 
 @dataclass(frozen=True, init=False)
 class DepthState:
-    """Depth State"""
+    """
+    Represents depth-related state settings used for rendering.
+
+    This class encapsulates settings for depth test and depth write functionalities,
+    commonly used in rendering pipelines. It ensures immutability, allowing safe usage
+    in contexts where concurrent access or state integrity is required. The class
+    provides mechanisms to apply depth states to an OpenGL rendering backend.
+
+    Attributes
+    ----------
+    test : bool
+        Indicates whether depth testing is enabled (True) or disabled (False).
+    write : bool
+        Indicates whether depth writing is enabled (True) or disabled (False).
+    """
 
     test: bool = True
     write: bool = True
@@ -122,9 +190,36 @@ class DepthState:
 
     @property
     def enabled(self) -> bool:
+        """
+        Checks if the feature is currently enabled.
+
+        This property determines whether the feature or functionality controlled by
+        the associated test attribute is active or not.
+
+        Returns
+        -------
+        bool
+            True if the feature is enabled, False otherwise.
+        """
         return self.test
 
     def apply(self, state: GLStateManager):
+        """
+        Applies depth-related settings to the given GLStateManager.
+
+        The method interacts with the provided GLStateManager to configure depth
+        test and depth write capabilities. If the backend associated with the
+        GLStateManager supports depth operations directly, it delegates the
+        application of these settings to the backend; otherwise, it sets the
+        appropriate GL pipeline capabilities and depth write settings.
+
+        Parameters:
+        state (GLStateManager): The state manager used to manage OpenGL states and
+                                 capabilities.
+
+        Raises:
+        None
+        """
         backend = state.backend
         if hasattr(backend, "depth"):
             backend.depth.apply(self)
@@ -135,7 +230,49 @@ class DepthState:
 
 @dataclass(frozen=True, init=False)
 class RenderState:
-    """Flat render-state descriptor with nested-state constructor support."""
+    """
+    Represents the rendering state configuration for a graphics pipeline.
+
+    The RenderState class encapsulates various rendering states such as blending, depth
+    testing, polygon rendering modes, and other state-related settings. This class is
+    intended to provide an immutable configuration object for managing rendering behavior.
+
+    Attributes
+    ----------
+    blend : bool
+        Whether blending is enabled.
+    blend_src : Any
+        The source blend factor for blending operations.
+    blend_dst : Any
+        The destination blend factor for blending operations.
+    depth_test : bool
+        Indicates whether depth testing is enabled.
+    depth_write : bool
+        Specifies if writing to the depth buffer is enabled.
+    line_width : float
+        The width of rendered lines.
+    polygon_mode : Any
+        The polygon rendering mode.
+    polygon_offset : tuple[float, float]
+        The polygon offset as a (factor, units) tuple.
+    point_size : float | None
+        The size of rendered points. None indicates default size.
+    program_point_size : bool
+        Indicates whether point size is controlled by the program.
+    cull_face : bool
+        Whether face culling is enabled.
+    lighting : bool
+        Whether lighting calculations are enabled.
+
+    Methods
+    -------
+    raster
+        Retrieve the rasterization state represented by a RasterState object.
+    depth
+        Retrieve the depth state represented by a DepthState object.
+    blend_state
+        Retrieve the blend state represented by a BlendState object.
+    """
 
     blend: bool = False
     blend_src: Any = GLBlendFactor.SRC_ALPHA
@@ -222,6 +359,16 @@ class RenderState:
 
     @property
     def raster(self) -> RasterState:
+        """
+        Property to retrieve the rasterization state.
+
+        The raster property gathers various rendering state settings related
+        to rasterization and combines them into a RasterState object.
+
+        Returns:
+            RasterState: An object representing the rasterization settings,
+            including polygon mode, line width, polygon offset, and point size.
+        """
         return RasterState(
             polygon_mode=self.polygon_mode,
             line_width=self.line_width,
@@ -231,10 +378,35 @@ class RenderState:
 
     @property
     def depth(self) -> DepthState:
+        """
+        Returns the DepthState object representing the current depth state.
+
+        The DepthState object encapsulates whether depth testing is enabled,
+        and whether depth writing is allowed. This property provides a way to
+        retrieve the current state of depth testing and writing configured
+        in the system.
+
+        Returns
+        -------
+        DepthState
+            An object combining depth test and depth write settings, where
+            `test` reflects the current depth test state and `write`
+            reflects the current depth write state.
+        """
         return DepthState(test=self.depth_test, write=self.depth_write)
 
     @property
     def blend_state(self) -> BlendState:
+        """
+        Retrieve the blend state of the object.
+
+        Provides the configuration of the blending state based on the object's
+        current attributes.
+
+        Returns:
+            BlendState: An object representing the blend state, including whether
+            blending is enabled and the source and destination blend factors.
+        """
         return BlendState(
             enabled=self.blend,
             src=self.blend_src,
@@ -243,7 +415,27 @@ class RenderState:
 
 
 class RenderStateApplier:
-    """Applies render-state deltas through a gl backend."""
+    """
+    Manages the application of render states to a backend.
+
+    This class ensures that a given render state is applied incrementally
+    to a backend, avoiding redundant operations. The purpose is to optimize
+    rendering performance by minimizing redundant state changes. The `apply`
+    method orchestrates the comparison of the current state with a new state
+    and applies only the necessary differences.
+
+    Attributes:
+        backend (Any): The rendering backend to which the render states
+            are applied.
+        current (RenderState | None): The current render state that has
+            been applied. This is updated each time a new state is applied.
+
+    Methods:
+        apply(state: RenderState):
+            Applies a given render state to the backend. Only applies differences
+            compared to the currently applied state to optimize the rendering
+            process.
+    """
 
     def __init__(self, backend: Any):
         self.backend = backend
@@ -309,42 +501,100 @@ class GLAttributeArray:
     pointer: Any
 
     def enable_legacy(self, kind: GLClientState):
+        """
+        Enables the legacy client state for a specific OpenGL client state.
+
+        This method enables the specified OpenGL client state by calling the
+        appropriate `gl_enable_legacy_client_state` function and then uses a
+        corresponding handler to configure the relevant pointer settings for
+        the client state. If the given client state is unsupported by the
+        handlers, a `RuntimeError` is raised.
+
+        Parameters:
+        kind (GLClientState): The type of OpenGL client state to enable. This
+        determines the specific handler to be invoked for configuring pointer
+        settings.
+
+        Raises:
+        RuntimeError: If the argument `kind` cannot be processed by any of the
+        handlers provided in the method.
+        """
         gl_enable_legacy_client_state(kind)
-        if kind == GLClientState.VERTEX:
-            gl_vertex_array_pointer(
+        handlers = {
+            GLClientState.VERTEX: gl_vertex_array_pointer,
+            GLClientState.NORMAL: gl_normal_array_pointer,
+            GLClientState.COLOR_ARRAY: gl_color_array_pointer
+        }
+        handler = handlers.get(kind, None)
+        if handler is None:
+            raise RuntimeError(f"kind {kind} not handled: {kind}")
+        handler(
                 pointer=self.pointer,
                 size=self.size,
                 num_type=GLNumeric.FLOAT,
                 stride=self.stride,
-            )
-        elif kind == GLClientState.NORMAL:
-            gl_normal_array_pointer(
-                pointer=self.pointer,
-                num_type=GLNumeric.FLOAT,
-                stride=self.stride,
-            )
-        elif kind == GLClientState.COLOR_ARRAY:
-            gl_color_array_pointer(
-                pointer=self.pointer,
-                size=self.size,
-                num_type=GLNumeric.FLOAT,
-                stride=self.stride,
-            )
+        )
 
 
 @dataclass
 class GLViewport:
+    """
+    Represents a viewport in OpenGL with specified position and dimensions.
+
+    This class encapsulates the functionality of an OpenGL viewport, allowing
+    the user to define the x and y position, as well as the width and height
+    of the viewport. The `apply` method sets the viewport in the OpenGL
+    context using the specified attributes.
+
+    Attributes:
+        x: int
+            The x-coordinate of the lower-left corner of the viewport.
+        y: int
+            The y-coordinate of the lower-left corner of the viewport.
+        width: int
+            The width of the viewport in pixels.
+        height: int
+            The height of the viewport in pixels.
+    """
     x: int
     y: int
     width: int
     height: int
 
     def apply(self):
+        """
+        Adjusts the viewport to the specified dimensions and coordinates.
+
+        The `apply` method sets the area of the window where OpenGL draws content. It
+        defines the x and y coordinates of the lower-left corner of the viewport, as
+        well as the width and height of the viewable region.
+
+        Raises
+        ------
+        This function may raise an OpenGL context-specific error if incorrect
+        parameters are used.
+        """
         glViewport(self.x, self.y, self.width, self.height)
 
 
 class TestGLMesh:
-    """Test gl Mesh"""
+    """
+    Representation of a GL mesh with vertices, optional indices, and attributes.
+
+    This class allows for the creation and management of a graphical mesh,
+    including the specification of vertices, optional indices, and associated
+    attributes for rendering purposes. It provides methods to add attributes
+    to the mesh and handle its drawing using OpenGL.
+
+    Attributes:
+        vertices (Any): The vertices of the mesh as provided by the user.
+        indices (Optional[Any]): Optional indices for indexed rendering,
+            allowing for more efficient rendering of shared vertices.
+        attributes (list[GLAttributeArray]): A list of attribute arrays
+            associated with the mesh, representing the additional data
+            (e.g., colors, texture coordinates) needed for rendering.
+
+    """
 
     def __init__(self, vertices, indices=None):
         self.vertices = vertices
@@ -352,11 +602,31 @@ class TestGLMesh:
         self.attributes: list[GLAttributeArray] = []
 
     def add_attribute(self, attr: GLAttributeArray):
+        """
+        Adds a GLAttributeArray instance to the attributes list.
+
+        Attributes represent specific data or configuration required for the
+        functional operation of the object. This method allows adding new
+        attributes dynamically to the internal list.
+
+        Parameters:
+            attr (GLAttributeArray): The attribute object to add to the list.
+        """
         self.attributes.append(attr)
 
     def draw(self):
+        """
+        Draw the object using the attributes and indices provided. This method prepares
+        and manages OpenGL drawing by enabling necessary vertex attributes and rendering
+        either indexed or non-indexed primitives based on the presence of indices.
+
+        Raises
+        ------
+        RuntimeError
+            If an OpenGL error occurs during the drawing process.
+        """
         for attr in self.attributes:
-            attr.enable_legacy(GL_VERTEX_ARRAY)  # refine mapping
+            attr.enable_legacy(GLClientState.VERTEX)  # refine mapping
 
         if self.indices is not None:
             gl_draw_elements(
@@ -369,7 +639,29 @@ class TestGLMesh:
 
 @dataclass
 class DrawCommand:
-    """Draw Command"""
+    """
+    Represents a command for drawing a mesh with optional rendering parameters.
+
+    This class serves as a utility to encapsulate mesh drawing operations alongside
+    related rendering state, texture, and mode settings. It integrates with a rendering
+    backend to facilitate the execution of drawing commands.
+
+    Attributes:
+        mesh (Any): The mesh object to be drawn. Must support a `draw` method or be used
+            with a backend capable of drawing it.
+        mode (int | None): Optional drawing mode. Determines how the mesh should be
+            rendered. Not all rendering backends require this attribute.
+        texture (GLTextureDriver | int | None): Optional texture or reference to a texture.
+            If specified, the texture is bound before drawing the mesh.
+        state (RenderState | None): Optional rendering state to apply before executing the
+            drawing command.
+
+    Methods:
+        execute(backend: Any):
+            Executes the drawing command by applying the rendering state, binding the texture,
+            and invoking the appropriate backend-specific draw operation.
+
+    """
 
     mesh: Any
     mode: int | None = None
