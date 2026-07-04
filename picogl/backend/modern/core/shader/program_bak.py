@@ -4,16 +4,20 @@ It includes functionality for initializing shaders from GLSL files or source cod
 compiling and linking shaders, and setting uniform values.
 
 """
-from enum import IntEnum
 from pathlib import Path
 
 import numpy as np
 
-from backend.gl.wrappers.shader import gl_use_program
-from boolean import GLBoolean
+from backend.gl.enums.shader import GLShader
+from picogl.backend.gl.wrappers.shader import (
+    gl_create_program,
+    gl_get_program_info_log,
+    gl_get_programiv,
+    gl_link_program,
+    gl_use_program,
+)
+from picogl.boolean import GLBoolean
 from decologr import Decologr as log
-from OpenGL.GL import GL_VERTEX_SHADER, GL_FRAGMENT_SHADER
-from OpenGL import GL as gl
 
 from picogl.backend.modern.core.shader.compile import compile_shader
 from picogl.backend.modern.core.shader.context import (
@@ -25,12 +29,6 @@ from picogl.backend.modern.core.shader.context import (
 from picogl.backend.modern.core.shader.helpers import log_gl_error, read_shader_source
 from picogl.backend.modern.core.uniform.location_value import set_uniform_location_value
 from picogl.shaders.uniform import get_uniform_location
-
-
-class GLShader(IntEnum):
-    """GL Shader"""
-    VERTEX_SHADER = GL_VERTEX_SHADER
-    FRAGMENT_SHADER = GL_FRAGMENT_SHADER
 
 
 class ShaderProgram:
@@ -123,25 +121,11 @@ class ShaderProgram:
         )
         self.link_shader_program()
 
-    def uniform_old(self, name: str, value):
-        """
-        uniform
-
-        :param name: str - uniform name
-        :param value: value to set (float, int, vec2, vec3, vec4, mat4, or np.ndarray)
-        :return: self - for chaining
-        Set uniform value (auto-detect type)
-        """
-        loc = self.uniforms.get(name) or self.get_uniform_location(name)
-        self.uniforms[name] = loc
-        set_uniform_location_value(loc, value)
-        return self  # allow chaining
-
     def create_shader_program(self):
         """
         create_shader_program
         """
-        self.program = gl.glCreateProgram()
+        self.program = gl_create_program()
         log.message(f"Created shader program {self.program}", silent=True)
         log_gl_error()
 
@@ -150,9 +134,9 @@ class ShaderProgram:
         link_shader_program
         """
         log.message("Linking shader program...", silent=True)
-        gl.glLinkProgram(self.program)
-        if GLBoolean.TRUE != gl.glGetProgramiv(self.program, gl.GL_LINK_STATUS):
-            err = gl.glGetProgramInfoLog(self.program)
+        gl_link_program(self.program)
+        if GLBoolean.TRUE != gl_get_programiv(self.program):
+            err = gl_get_program_info_log(self.program)
             raise RuntimeError(f"Shader link failed: {err}")
         log_gl_error()
 
@@ -170,23 +154,6 @@ class ShaderProgram:
         self._uniform_state[name] = value
         return self
 
-    def uniform_new(self, name: str, value):
-        """
-        Set uniform value with proper location caching.
-        """
-        if name not in self.uniforms:
-            loc = self.get_uniform_location(name)
-            self.uniforms[name] = loc
-        else:
-            loc = self.uniforms[name]
-
-        # Optional: skip invalid uniforms
-        if loc == -1:
-            return self
-
-        set_uniform_location_value(loc, value)
-        return self
-
     def get_uniform_location(self, uniform_name: str) -> int:
         if uniform_name in self.uniforms:
             return self.uniforms[uniform_name]
@@ -197,13 +164,6 @@ class ShaderProgram:
 
         self.uniforms[uniform_name] = loc
         return loc
-
-    def get_uniform_location_old(self, uniform_name):
-        """get_uniform_location"""
-        mvp_id = get_uniform_location(
-            shader_program=self.program, uniform_name=uniform_name
-        )
-        return mvp_id
 
     def begin(self):
         """begin"""
@@ -232,10 +192,10 @@ class ShaderProgram:
         if not gl_context_available():
             return
         clear_gl_errors()
-        gl.glUseProgram(0)
+        gl_use_program(0)
 
     def release(self):
-        gl.glUseProgram(0)
+        gl_use_program(0)
 
     def delete(self):
         self.release()
