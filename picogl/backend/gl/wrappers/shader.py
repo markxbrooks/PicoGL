@@ -10,7 +10,6 @@ from __future__ import annotations
 
 from enum import IntEnum
 from typing import Any
-from OpenGL.GL import glCreateProgram
 from OpenGL.GL import (glGetProgramiv, glGetShaderInfoLog, glGetShaderiv,
                        glGetUniformLocation, glShaderSource,
                        glUniformMatrix4fv)
@@ -18,28 +17,8 @@ from OpenGL.raw.GL.VERSION.GL_2_0 import (GL_COMPILE_STATUS,
                                           GL_FRAGMENT_SHADER, GL_LINK_STATUS,
                                           GL_VERTEX_SHADER, glAttachShader,
                                           glCompileShader,
-                                          glCreateShader, glLinkProgram,
-                                          glUseProgram)
+                                          glCreateShader, glLinkProgram, glUseProgram)
 from picogl.boolean import GLBoolean
-
-
-def gl_use_program(shader_program: int) -> None:
-    """
-    Sets the active shader program for subsequent rendering operations.
-
-    This function enables the use of a specific shader program for OpenGL
-    rendering. Once set, all subsequent rendering operations will utilize
-    the provided shader program until a different program is set or the
-    shader program is disabled.
-
-    Parameters:
-    shader_program: int
-        The ID of the OpenGL shader program to be activated.
-
-    Returns:
-    None
-    """
-    glUseProgram(shader_program)
 
 
 def gl_uniform_matrix_4fv(
@@ -208,21 +187,6 @@ def gl_get_shader_info_log(shader) -> str:
     return glGetShaderInfoLog(shader)
 
 
-def gl_create_program():
-    """
-    Creates a new OpenGL program object.
-
-    This function is a wrapper for the OpenGL function `glCreateProgram`.
-    It is used to create an empty program object that can later be linked
-    with shader objects. A program object manages all the shaders and
-    their interactions within a single OpenGL program.
-
-    Returns:
-        int: The handle to the created OpenGL program object.
-    """
-    return glCreateProgram()
-
-
 def gl_get_program_info_log(program: int) -> int:
     """
     Returns the information log for a program object.
@@ -273,6 +237,25 @@ def gl_get_programiv(program, status=GL_LINK_STATUS) -> int:
     int: The integer value of the specified program parameter.
     """
     return glGetProgramiv(program, status)
+
+
+def gl_use_program(shader_program: int) -> None:
+    """
+    Sets the active shader program for subsequent rendering operations.
+
+    This function enables the use of a specific shader program for OpenGL
+    rendering. Once set, all subsequent rendering operations will utilize
+    the provided shader program until a different program is set or the
+    shader program is disabled.
+
+    Parameters:
+    shader_program: int
+        The ID of the OpenGL shader program to be activated.
+
+    Returns:
+    None
+    """
+    glUseProgram(shader_program)
 
 
 class GLShader(IntEnum):
