@@ -82,7 +82,7 @@ class ShaderProgram:
         shader_files: ShaderFiles | None,
     ) -> None:
         """
-        init_shader_from_glsl_files
+        init_shader_from_shader_files
 
         :param shader_files: directory containing vertex shaders
         :return: None
