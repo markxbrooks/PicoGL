@@ -69,6 +69,13 @@ def gl_release_vertex_array_object(vao: Any) -> None:
             delete_bufs()
         except Exception:
             pass
+
+    delete_bufs = getattr(vao, "delete", None)
+    if callable(delete_bufs):
+        try:
+            delete_bufs()
+        except Exception:
+            pass
     handle = getattr(vao, "handle", None)
     if handle is not None and int(handle) > 0:
         gl_delete_vertex_arrays(int(handle))
