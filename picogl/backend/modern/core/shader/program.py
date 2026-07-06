@@ -88,7 +88,7 @@ class ShaderProgram:
         :return: None
         """
         if shader_files is None:
-            raise RuntimeError(f"shader_filss object not available")
+            raise RuntimeError(f"shader_files object not available")
         if shader_files.vertex is None or shader_files.fragment is None:
             raise FileNotFoundError(
                 f"{shader_files.vertex} or {shader_files.fragment} not found"
