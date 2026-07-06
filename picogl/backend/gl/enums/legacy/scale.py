@@ -2,9 +2,15 @@
 GL Push Matrix
 """
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import (glLoadIdentity, glPopMatrix,
-                                          glPushMatrix, glRotatef, glScalef,
-                                          glTranslatef, glViewport)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (
+    glLoadIdentity,
+    glPopMatrix,
+    glPushMatrix,
+    glRotatef,
+    glScalef,
+    glTranslatef,
+    glViewport,
+)
 
 
 def gl_viewport(x, y, width, height):

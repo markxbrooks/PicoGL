@@ -11,10 +11,13 @@ efficiently.
 
 from typing import TYPE_CHECKING
 
-from backend.gl.wrappers import gl_get_integerv
-from backend.gl.wrappers.blending import gl_blend_func
-from picogl.backend.gl.capability import (GLBlendFactor, GLBlendTarget,
-                                          GLPipelineCapability)
+from picogl.backend.gl.wrappers import gl_get_integerv
+from picogl.backend.gl.wrappers.blending import gl_blend_func
+from picogl.backend.gl.capability import (
+    GLBlendFactor,
+    GLBlendTarget,
+    GLPipelineCapability,
+)
 from picogl.backend.gl.driver.applyable import Applyable
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.state import gl_value

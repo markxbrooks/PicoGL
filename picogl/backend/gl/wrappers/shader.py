@@ -10,14 +10,27 @@ from __future__ import annotations
 
 from enum import IntEnum
 from typing import Any
-from OpenGL.GL import (glGetProgramiv, glGetShaderInfoLog, glGetShaderiv,
-                       glGetUniformLocation, glShaderSource,
-                       glUniformMatrix4fv)
-from OpenGL.raw.GL.VERSION.GL_2_0 import (GL_COMPILE_STATUS,
-                                          GL_FRAGMENT_SHADER, GL_LINK_STATUS,
-                                          GL_VERTEX_SHADER, glAttachShader,
-                                          glCompileShader,
-                                          glCreateShader, glLinkProgram, glUseProgram)
+
+from OpenGL.GL import (
+    glGetProgramInfoLog,
+    glGetProgramiv,
+    glGetShaderInfoLog,
+    glGetShaderiv,
+    glGetUniformLocation,
+    glShaderSource,
+    glUniformMatrix4fv,
+)
+from OpenGL.raw.GL.VERSION.GL_2_0 import (
+    GL_COMPILE_STATUS,
+    GL_FRAGMENT_SHADER,
+    GL_LINK_STATUS,
+    GL_VERTEX_SHADER,
+    glAttachShader,
+    glCompileShader,
+    glCreateShader,
+    glLinkProgram,
+    glUseProgram,
+)
 from picogl.boolean import GLBoolean
 
 
@@ -207,7 +220,7 @@ def gl_get_program_info_log(program: int) -> int:
     return glGetProgramInfoLog(program)
 
 
-def gl_link_program(program):
+def gl_link_program(program: int):
     """
     Links a given OpenGL program object.
 
@@ -221,7 +234,7 @@ def gl_link_program(program):
     glLinkProgram(program)
 
 
-def gl_get_programiv(program, status=GL_LINK_STATUS) -> int:
+def gl_get_programiv(program: int, status: int = GL_LINK_STATUS) -> int:
     """
     Retrieves the integer value of a specific program parameter.
 
@@ -260,5 +273,6 @@ def gl_use_program(shader_program: int) -> None:
 
 class GLShader(IntEnum):
     """GL Shader"""
+
     VERTEX_SHADER = GL_VERTEX_SHADER
     FRAGMENT_SHADER = GL_FRAGMENT_SHADER

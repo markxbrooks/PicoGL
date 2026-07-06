@@ -25,11 +25,22 @@ from array import array
 from typing import Union
 
 import numpy as np
-from OpenGL.constant import (Constant, FloatConstant, IntConstant,
-                             LongConstant, StringConstant)
-from OpenGL.GL import (glActiveTexture, glBindTexture, glCompressedTexImage2D,
-                       glGenerateMipmap, glGenTextures, glTexImage2D,
-                       glTexParameteri)
+from OpenGL.constant import (
+    Constant,
+    FloatConstant,
+    IntConstant,
+    LongConstant,
+    StringConstant,
+)
+from OpenGL.GL import (
+    glActiveTexture,
+    glBindTexture,
+    glCompressedTexImage2D,
+    glGenerateMipmap,
+    glGenTextures,
+    glTexImage2D,
+    glTexParameteri,
+)
 from OpenGL.raw.GL.VERSION.GL_1_2 import glTexImage3D
 from OpenGL.raw.GL.VERSION.GL_3_0 import glFramebufferTexture2D
 from picogl.backend.gl.enums import GLNumeric

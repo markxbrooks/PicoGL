@@ -18,13 +18,21 @@ import sys
 
 import numpy as np
 from examples.glut_renderer import GlutRenderer, set_up_legacy_lighting
-from picogl.backend.gl.capability import (GLFixedFunctionCapability,
-                                          GLMaterialFace, GLPipelineCapability)
+from picogl.backend.gl.capability import (
+    GLFixedFunctionCapability,
+    GLMaterialFace,
+    GLPipelineCapability,
+)
 from picogl.backend.gl.enums import GLBitMask, GLDrawMode
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
-from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode,
-                                          GLFace, GLFillMode, GLLight,
-                                          GLLightParameter)
+from picogl.backend.gl.state.fill import (
+    GLCapability,
+    GLColorMaterialMode,
+    GLFace,
+    GLFillMode,
+    GLLight,
+    GLLightParameter,
+)
 from picogl.backend.gl.state.immediate import immediate_drawing
 from picogl.backend.gl.wrappers.clear import gl_clear_color
 from picogl.backend.gl.wrappers.enable import gl_enable

@@ -25,14 +25,16 @@ def glu_look_at(
     """glu lookat"""
     gluLookAt(eye_x, eye_y, eye_z, center_x, center_y, center_z, up_x, up_y, up_z)
 
+
 def glu_perspective(fovy: float, aspect: float, near: float, far: float):
     """glu perspective"""
     gluPerspective(fovy, aspect, near, far)
 
+
 def glut_swap_buffers():
     """glut swap buffers"""
     glutSwapBuffers()
-    
+
+
 def glut_solid_teapot(size):
     glutSolidTeapot(size)
-

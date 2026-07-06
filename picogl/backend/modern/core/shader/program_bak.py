@@ -4,25 +4,28 @@ It includes functionality for initializing shaders from GLSL files or source cod
 compiling and linking shaders, and setting uniform values.
 
 """
+
 from pathlib import Path
 
 import numpy as np
-from backend.gl.enums.shader import GLShader
+from picogl.backend.gl.enums.shader import GLShader
+from picogl.backend.gl.wrappers.program import gl_use_program
 from decologr import Decologr as log
 from picogl.backend.gl.wrappers.program import gl_create_program
-from picogl.backend.gl.wrappers.shader import (gl_get_program_info_log,
-                                               gl_get_programiv,
-                                               gl_link_program)
-from backend.gl.wrappers.program import gl_use_program
+from picogl.backend.gl.wrappers.shader import (
+    gl_get_program_info_log,
+    gl_get_programiv,
+    gl_link_program,
+)
 from picogl.backend.modern.core.shader.compile import compile_shader
-from picogl.backend.modern.core.shader.context import (clear_gl_errors,
-                                                       gl_context_available,
-                                                       program_is_valid,
-                                                       require_gl_context)
-from picogl.backend.modern.core.shader.helpers import (log_gl_error,
-                                                       read_shader_source)
-from picogl.backend.modern.core.uniform.location_value import \
-    set_uniform_location_value
+from picogl.backend.modern.core.shader.context import (
+    clear_gl_errors,
+    gl_context_available,
+    program_is_valid,
+    require_gl_context,
+)
+from picogl.backend.modern.core.shader.helpers import log_gl_error, read_shader_source
+from picogl.backend.modern.core.uniform.location_value import set_uniform_location_value
 from picogl.boolean import GLBoolean
 from picogl.shaders.uniform import get_uniform_location
 

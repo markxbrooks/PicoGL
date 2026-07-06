@@ -4,9 +4,12 @@ from typing import Callable
 
 from OpenGL.GL import glGetDoublev, glGetFloatv, glGetIntegerv
 from OpenGL.raw.GL.ARB.viewport_array import GL_VIEWPORT
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_LINE_WIDTH, GL_MAX_TEXTURE_SIZE,
-                                          GL_MODELVIEW_MATRIX,
-                                          GL_PROJECTION_MATRIX)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (
+    GL_LINE_WIDTH,
+    GL_MAX_TEXTURE_SIZE,
+    GL_MODELVIEW_MATRIX,
+    GL_PROJECTION_MATRIX,
+)
 from OpenGL.raw.GL.VERSION.GL_1_3 import GL_ACTIVE_TEXTURE
 from OpenGL.raw.GL.VERSION.GL_1_5 import GL_ELEMENT_ARRAY_BUFFER_BINDING
 from OpenGL.raw.GL.VERSION.GL_2_0 import GL_CURRENT_PROGRAM

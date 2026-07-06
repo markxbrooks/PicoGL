@@ -3,8 +3,11 @@ from decologr import Decologr as log
 from decologr import setup_logging
 from OpenGL.raw.GL.VERSION.GL_1_0 import glViewport
 from picogl.backend.gl.backend import GLBackend
-from picogl.backend.gl.task.gl_init import (execute_gl_tasks,
-                                            legacy_init_gl_list, paint_gl_list)
+from picogl.backend.gl.task.gl_init import (
+    execute_gl_tasks,
+    legacy_init_gl_list,
+    paint_gl_list,
+)
 from picogl.backend.opengl import LegacyBinding
 from picogl.renderer import GLResourceRegistry
 from picogl.ui.backend.glut.window.gl import GLWindow

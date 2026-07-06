@@ -4,23 +4,29 @@ It includes functionality for initializing shaders from GLSL files or source cod
 compiling and linking shaders, and setting uniform values.
 
 """
+
 from pathlib import Path
 
 import numpy as np
 from decologr import Decologr as log
-from OpenGL import GL as gl
-from picogl.backend.gl.wrappers.shader import GLShader, gl_use_program
-from picogl.backend.gl.wrappers.program import gl_create_program
+from OpenGL.raw.GL.VERSION.GL_2_0 import GL_LINK_STATUS
+from picogl.backend.gl.wrappers.program import gl_create_program, gl_get_program_iv
+from picogl.backend.gl.wrappers.shader import (
+    GLShader,
+    gl_get_program_info_log,
+    gl_link_program,
+    gl_use_program,
+)
 from picogl.backend.modern.core.shader.compile import compile_shader
-from picogl.backend.modern.core.shader.context import (clear_gl_errors,
-                                                       gl_context_available,
-                                                       program_is_valid,
-                                                       require_gl_context)
+from picogl.backend.modern.core.shader.context import (
+    clear_gl_errors,
+    gl_context_available,
+    program_is_valid,
+    require_gl_context,
+)
 from picogl.backend.modern.core.shader.files import ShaderFiles
-from picogl.backend.modern.core.shader.helpers import (log_gl_error,
-                                                       read_shader_source)
-from picogl.backend.modern.core.uniform.location_value import \
-    set_uniform_location_value
+from picogl.backend.modern.core.shader.helpers import log_gl_error, read_shader_source
+from picogl.backend.modern.core.uniform.location_value import set_uniform_location_value
 from picogl.boolean import GLBoolean
 from picogl.shaders.uniform import get_uniform_location
 
@@ -46,11 +52,17 @@ class ShaderProgram:
         self.uniforms = {}
         self._uniform_state = {}
 
-        if vertex_source_file is not None and fragment_source_file is not None and glsl_dir is not None:
-            self.init_shader_from_shader_files(ShaderFiles(
-                vertex=vertex_source_file,
-                fragment=fragment_source_file,
-                glsl_dir=glsl_dir)
+        if (
+            vertex_source_file is not None
+            and fragment_source_file is not None
+            and glsl_dir is not None
+        ):
+            self.init_shader_from_shader_files(
+                ShaderFiles(
+                    vertex=vertex_source_file,
+                    fragment=fragment_source_file,
+                    glsl_dir=glsl_dir,
+                )
             )
 
     def __str__(self):
@@ -78,9 +90,15 @@ class ShaderProgram:
         if shader_files is None:
             raise RuntimeError(f"shader_filss object not available")
         if shader_files.vertex is None or shader_files.fragment is None:
-            raise FileNotFoundError(f"{shader_files.vertex} or {shader_files.fragment} not found")
-        vertex_sources = read_shader_source(shader_files.vertex, glsl_dir=shader_files.glsl_dir)
-        fragment_sources = read_shader_source(shader_files.fragment, glsl_dir=shader_files.glsl_dir)
+            raise FileNotFoundError(
+                f"{shader_files.vertex} or {shader_files.fragment} not found"
+            )
+        vertex_sources = read_shader_source(
+            shader_files.vertex, glsl_dir=shader_files.glsl_dir
+        )
+        fragment_sources = read_shader_source(
+            shader_files.fragment, glsl_dir=shader_files.glsl_dir
+        )
         self.init_shader_from_glsl(vertex_sources, fragment_sources)
 
     def init_shader_from_glsl_files(
@@ -98,7 +116,9 @@ class ShaderProgram:
         :return: None
         """
         if vertex_source_file is None or fragment_source_file is None:
-            raise FileNotFoundError(f"{vertex_source_file} or {fragment_source_file} not found")
+            raise FileNotFoundError(
+                f"{vertex_source_file} or {fragment_source_file} not found"
+            )
         vertex_sources = read_shader_source(vertex_source_file, glsl_dir=glsl_dir)
         fragment_sources = read_shader_source(fragment_source_file, glsl_dir=glsl_dir)
         self.init_shader_from_glsl(vertex_sources, fragment_sources)
@@ -148,9 +168,11 @@ class ShaderProgram:
         link_shader_program
         """
         log.message("Linking shader program...", silent=True)
-        gl.glLinkProgram(self.program)
-        if GLBoolean.TRUE != gl.glGetProgramiv(self.program, gl.GL_LINK_STATUS):
-            err = gl.glGetProgramInfoLog(self.program)
+        gl_link_program(self.program)
+        if GLBoolean.TRUE != gl_get_program_iv(
+            program=self.program, pname=GL_LINK_STATUS
+        ):
+            err = gl_get_program_info_log(self.program)
             raise RuntimeError(f"Shader link failed: {err}")
         log_gl_error()
 
@@ -206,11 +228,10 @@ class ShaderProgram:
         if not gl_context_available():
             return
         clear_gl_errors()
-        gl.glUseProgram(0)
+        gl_use_program(0)
 
     def release(self):
-        gl.glUseProgram(0)
+        gl_use_program(0)
 
     def delete(self):
         self.release()
-

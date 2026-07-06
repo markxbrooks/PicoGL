@@ -1,18 +1,18 @@
 # import os,sys
 # sys.path.append(os.path.abspath(os.path.dirname(__file__)))
-
+from picogl.backend.modern.core.shader.files import ShaderFiles
 from decologr import Decologr as log
 from OpenGL.GL import *  # pylint: disable=W0614
 from picogl.backend.gl.wrappers import gl_bind_texture, gl_get_active_texture0
 from picogl.backend.gl.wrappers.glm import identity_matrix
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.core.uniform import gl_uniform1i
-from picogl.gpu.buffers.vertex import data
+# from picogl.gpu.buffers.vertex import data
 from picogl.ui.backend.glut.window.glut import GlutRendererWindow
 from picogl.utils.loader.texture import TextureLoader
 from pyglm import glm
-from utils.objLoader import objLoader
-from utils.textureLoader import textureLoader
+# from utils.objLoader import objLoader
+# from utils.textureLoader import textureLoader
 
 
 class MeshUE4:
@@ -96,9 +96,11 @@ class Tu01Win(GlutRendererWindow):
         self.context = self.GLContext()
 
         self.shader = shader = ShaderProgram()
-        shader.init_shader_from_glsl_files(
+        shader_files = ShaderFiles(vertex="vertex.glsl", fragment="fragment.glsl", glsl_dir="glsl/tu02")
+        """shader.init_shader_from_glsl_files(
             "glsl/tu02/vertex.glsl", "glsl/tu02/fragment.glsl"
-        )
+        )"""
+        shader.init_shader_from_shader_files(shader_files)
         # shader var ids
         self.context.mvp_id = glGetUniformLocation(shader.program, "mvp_matrix")
         self.context.texture_id = glGetUniformLocation(
@@ -197,7 +199,7 @@ class Tu01Win(GlutRendererWindow):
 
 
 if __name__ == "__main__":
-    win = Tu01Win()
+    win = Tu01Win(width=400, height=300)
     win.initializeGL()
     win.initialize()
     win.run()

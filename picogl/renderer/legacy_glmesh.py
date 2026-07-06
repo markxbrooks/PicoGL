@@ -20,10 +20,12 @@ from picogl.backend.gl.enums import GLDrawMode, GLNumeric
 from picogl.backend.gl.state.client import GLClientState
 from picogl.backend.gl.wrappers import gl_draw_elements
 from picogl.backend.gl.wrappers.glcleanup import gl_delete_buffer_object
-from picogl.backend.legacy.core.vertex.buffer.client_states import \
-    legacy_client_states
-from picogl.gpu.buffers.attributes import (AttributeSpec, CanonicalVertexAttrs,
-                                           legacy_attribute_spec)
+from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
+from picogl.gpu.buffers.attributes import (
+    AttributeSpec,
+    CanonicalVertexAttrs,
+    legacy_attribute_spec,
+)
 from picogl.gpu.buffers.factory import create_layout
 from picogl.gpu.buffers.helper import as_vec3_array
 from picogl.gpu.buffers.vertex.aliases import VertexBufferRole
