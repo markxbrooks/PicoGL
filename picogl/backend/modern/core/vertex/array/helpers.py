@@ -13,3 +13,4 @@ def enable_points_rendering_state() -> None:
     gl_enable(GLPipelineCapability.BLEND)
     gl_blend_func(GLBlendFactor.SRC_ALPHA, GLBlendFactor.ONE_MINUS_SRC_ALPHA)
     gl_enable(GLPointCapability.PROGRAM_POINT_SIZE)
+
