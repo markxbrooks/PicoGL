@@ -16,7 +16,7 @@ class GLResource:
     def __init__(self, handle):
         self._creation_context = QOpenGLContext.currentContext()
         self._deleted = False
-        self._handle = None
+        self._handle = handle
 
     @property
     def context(self):

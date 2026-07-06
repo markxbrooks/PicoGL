@@ -41,6 +41,11 @@ from typing import Dict, Optional
 
 from OpenGL.GL import glDeleteBuffers, glDeleteVertexArrays
 
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from picogl.backend.modern.core.vertex.buffer.object import ModernVBO
+
+
 # from picogl.backend.modern.core.vertex.base import VertexBuffer
 
 

@@ -291,7 +291,7 @@ class VertexArrayObject(VertexBase, GLResource):
         :return: None
         """
         for vbo in self.vbos:
-            gl_delete_buffers(vbo)
+            vbo.delete()
         self.vbos.clear()
 
         if self.ebo:
@@ -385,7 +385,7 @@ class VertexArrayObject(VertexBase, GLResource):
         draw
 
         :param pointer: ctypes.c_void_p(0)
-        :param dtype: GL_UNSIGNED_INT
+        :param dtype: GL_UNSIGNED_INT or GLIndexType.UNSIGNED_INT
         :param index_count: int Number of vertices to draw.
         :param mode: int e.g. GL_POINT
         :param first: First vertex for non-indexed draws.
