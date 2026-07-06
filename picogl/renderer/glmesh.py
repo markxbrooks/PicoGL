@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING, Literal, Optional, Union
 
 import numpy as np
 from picogl.backend.gl.enums import GLDrawMode, GLIndexType
-from picogl.backend.gl.wrappers.glcleanup import gl_delete_buffer_object
+from picogl.backend.gl.wrappers.glcleanup import gl_release_vertex_array_object
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.gpu.buffers.helper import as_vec3_array
 from picogl.gpu.buffers.vertex.vbo.vbo_class import MeshDataAttrs, VBOType
@@ -254,7 +254,7 @@ class GLMesh:
             # If add_vbo/add_ebo failed after VAO gen, drop orphan VAO so the next
             # upload() retry does not accumulate registry leaks.
             if vao is not None:
-                gl_delete_buffer_object(vao)
+                gl_release_vertex_array_object(vao)
 
     def bind(self):
         self.upload()
@@ -269,7 +269,7 @@ class GLMesh:
     def delete(self):
         """Free GPU resources."""
         if self.vao:
-            gl_delete_buffer_object(self.vao)
+            gl_release_vertex_array_object(self.vao)
             self.vao = None
             self.index_count = 0
 

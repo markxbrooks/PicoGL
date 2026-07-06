@@ -53,6 +53,7 @@ from picogl.backend.gl.wrappers.enable_vertex_array import gl_enable_vertex_arra
 from picogl.backend.gl.wrappers.glcleanup import (
     gl_delete_buffers,
     gl_delete_vertex_arrays,
+    gl_release_vertex_array_object,
 )
 from picogl.backend.gl.wrappers.vertex_array import (
     gl_bind_vertex_array,
@@ -203,7 +204,7 @@ class VertexArrayObject(VertexBase, GLResource):
         """
         Delete the VAO from GPU memory.
         """
-        gl_delete_vertex_arrays(1, [self.handle])
+        gl_release_vertex_array_object(self)
 
     def configure(self):
         """set layout"""
