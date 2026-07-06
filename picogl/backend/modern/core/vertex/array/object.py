@@ -34,7 +34,7 @@ Intended for OpenGL 3.0+ with VAO support.
 """
 
 import ctypes
-from contextlib import contextmanager
+from contextlib import contextmanager, nullcontext
 from typing import Optional, Union
 
 import numpy as np
@@ -61,7 +61,7 @@ from picogl.backend.gl.wrappers.vertex_array import (
 )
 from picogl.backend.gl.wrappers.vertex_attrib_pointer import gl_vertex_attrib_pointer
 from picogl.backend.modern.core.vertex.array.helpers import (
-    enable_points_rendering_state,
+    point_rendering,
 )
 from picogl.backend.modern.core.vertex.base import VertexBuffer
 from picogl.backend.modern.core.vertex.buffer.element import ModernEBO
@@ -375,7 +375,7 @@ class VertexArrayObject(VertexBase, GLResource):
 
     def draw(
         self,
-        index_count: int = None,
+        index_count: Union[int, None] = None,
         dtype: int = GLIndexType.UNSIGNED_INT,
         mode: int = GLDrawMode.POINTS,
         pointer: Union[int, ctypes.c_void_p, None] = ctypes.c_void_p(0),
@@ -391,27 +391,27 @@ class VertexArrayObject(VertexBase, GLResource):
         :param first: First vertex for non-indexed draws.
         :return: None
         """
-        atom_count = index_count or self.index_count
-        if mode == GLDrawMode.POINTS:
-            enable_points_rendering_state()
-        try:
-            if not self.bind():
-                return
-            if index_count is None:
-                index_count = self.index_count
-            if index_count == 0:
+        atom_count: int = int(index_count) or int(self.index_count)
+        context = point_rendering() if mode == GLDrawMode.POINTS else nullcontext()
+        with context:
+            try:
+                if not self.bind():
+                    return
+                if index_count is None:
+                    index_count = self.index_count
+                if index_count == 0:
+                    self.unbind()
+                    return
+                if self.ebo:
+                    # Re-bind EBO: if it was not captured into this VAO at creation time,
+                    # glDrawElements can use a stale global EBO (e.g. from bond draws) and
+                    # produce fan/spike artefacts on indexed meshes such as ribbons.
+                    self.ebo.bind()
+                    gl_draw_elements(atom_count, dtype, mode, pointer=pointer)
+                else:
+                    gl_draw_arrays(atom_count, mode, first=int(first))
+            finally:
                 self.unbind()
-                return
-            if self.ebo:
-                # Re-bind EBO: if it was not captured into this VAO at creation time,
-                # glDrawElements can use a stale global EBO (e.g. from bond draws) and
-                # produce fan/spike artefacts on indexed meshes such as ribbons.
-                self.ebo.bind()
-                gl_draw_elements(atom_count, dtype, mode, pointer=pointer)
-            else:
-                gl_draw_arrays(atom_count, mode, first=int(first))
-        finally:
-            self.unbind()
 
     def _modern_vbo_for_attrib(self, attrib_index: int) -> Optional[ModernVBO]:
         """Return the :class:`ModernVBO` created for ``add_vbo(index=attrib_index, ...)``."""
