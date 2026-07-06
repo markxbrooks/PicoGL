@@ -1,4 +1,7 @@
 import numpy as np
+
+from backend.geometry import LegacyBinding
+from backend.gl.backend import GLBackend
 from decologr import Decologr as log
 from decologr import setup_logging
 from OpenGL.raw.GL.VERSION.GL_1_0 import glViewport
@@ -25,7 +28,7 @@ class GlutRendererWindow(GLWindow):
         *args,
         **kwargs,
     ):
-        super().__init__(title=title, *args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.context = GLResourceRegistry() if context is None else context
         self.title = title
         self.renderer = None
@@ -40,6 +43,7 @@ class GlutRendererWindow(GLWindow):
         self.zoom_fov: int = 45  # field of view
         self.zoom_distance: int = 10  # camera backwards in Z
         self.distance_threshold: float = 5.0
+        self.backend = GLBackend(binding=LegacyBinding())
 
     def initializeGL(self):
         """Initial OpenGL configuration."""
@@ -79,7 +83,7 @@ class GlutRendererWindow(GLWindow):
 
     def paintGL(self):
         """paintGL"""
-        execute_gl_tasks(paint_gl_list)
+        execute_gl_tasks(paint_gl_list, self.backend)
         self.renderer.render()
 
     def update_mvp(self):

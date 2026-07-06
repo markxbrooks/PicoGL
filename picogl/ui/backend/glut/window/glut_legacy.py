@@ -1,4 +1,7 @@
 import numpy as np
+from picogl.renderer.object import ObjectRenderer
+
+from backend.gl.wrappers.glm import identity_matrix
 from decologr import Decologr as log
 from decologr import setup_logging
 from OpenGL.raw.GL.VERSION.GL_1_0 import glViewport
@@ -29,7 +32,7 @@ class GlutRendererWindow(GLWindow):
         super().__init__(title=title, *args, **kwargs)
         self.context = GLResourceRegistry() if context is None else context
         self.title = title
-        self.renderer = None
+        self.renderer = ObjectRenderer(context, data=None)
         self.width = width
         self.height = height
         # Mouse interaction state

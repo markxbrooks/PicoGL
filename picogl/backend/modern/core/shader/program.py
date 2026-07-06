@@ -8,6 +8,7 @@ compiling and linking shaders, and setting uniform values.
 from pathlib import Path
 
 import numpy as np
+
 from decologr import Decologr as log
 from OpenGL.raw.GL.VERSION.GL_2_0 import GL_LINK_STATUS
 from picogl.backend.gl.wrappers.program import gl_create_program, gl_get_program_iv
@@ -31,6 +32,117 @@ from picogl.boolean import GLBoolean
 from picogl.shaders.uniform import get_uniform_location
 
 
+class ShaderCompiler:
+    """OpenGL Shader program manager for vertex and fragment shaders."""
+
+    def __init__(
+        self
+    ):
+        """constructor"""
+
+    def __str__(self):
+        return f"ShaderCompiler(name={self.shader_name}, program={self.program})"
+
+    def program_id(self):
+        return self.program
+
+    @staticmethod
+    def compile_shader_files(
+            shader_files: ShaderFiles | None,
+    ) -> int:
+        """
+        init_shader_from_shader_files
+
+        :param shader_files: directory containing vertex shaders
+        :return: None
+        """
+        if shader_files is None:
+            raise RuntimeError(f"shader_files object not available")
+        if shader_files.vertex is None or shader_files.fragment is None:
+            raise FileNotFoundError(
+                f"{shader_files.vertex} or {shader_files.fragment} not found"
+            )
+        vertex_sources = read_shader_source(
+            shader_files.vertex, glsl_dir=shader_files.glsl_dir
+        )
+        fragment_sources = read_shader_source(
+            shader_files.fragment, glsl_dir=shader_files.glsl_dir
+        )
+        program = ShaderCompiler.init_shader(vertex_sources, fragment_sources)
+        return program
+
+    @staticmethod
+    def compile_glsl_files(
+            vertex_source_file: str | None,
+        fragment_source_file: str | None,
+        glsl_dir: str | Path | None = None,
+    ) -> int:
+        """
+        init_shader_from_glsl_files
+
+        :param glsl_dir: directory containing vertex shaders
+        :param vertex_source_file: list of paths to vertex shaders
+        :param fragment_source_file: list of paths to fragment shaders
+        :return: None
+        """
+        if vertex_source_file is None or fragment_source_file is None:
+            raise FileNotFoundError(
+                f"{vertex_source_file} or {fragment_source_file} not found"
+            )
+        vertex_sources = read_shader_source(vertex_source_file, glsl_dir=glsl_dir)
+        fragment_sources = read_shader_source(fragment_source_file, glsl_dir=glsl_dir)
+        program = ShaderCompiler.init_shader(vertex_sources, fragment_sources)
+        return program
+
+    def init_shader(self, vertex_source: str, fragment_source: str) -> int:
+        """
+        init_shader
+
+        :param vertex_source: list of paths to vertex shaders
+        :param fragment_source: list of paths to fragment shaders
+        :return: None
+
+        Create, compile, and link shaders into a program.
+        """
+        program = ShaderCompiler.create_shader_program()
+        log.parameter("self.program", program, silent=True)
+        log.parameter("vertex_source", vertex_source, silent=True)
+        log.parameter("fragment_source", fragment_source, silent=True)
+        vertex_shader = compile_shader(
+            program, GLShader.VERTEX_SHADER, vertex_source
+        )
+        fragment_shader = compile_shader(
+            program, GLShader.FRAGMENT_SHADER, fragment_source
+        )
+        program = ShaderCompiler.link_shader_program()
+        return program
+
+    @staticmethod
+    def create_shader_program() -> int:
+        """
+        create_shader_program
+        """
+        program = gl_create_program()
+        log.message(f"Created shader program {program}", silent=True)
+        log_gl_error()
+        return program
+
+    @staticmethod
+    def link_shader_program(program) -> int:
+        """
+        link_shader_program
+        """
+        log.message("Linking shader program...", silent=True)
+        gl_link_program(program)
+        if GLBoolean.TRUE != gl_get_program_iv(
+            program=program, pname=GL_LINK_STATUS
+        ):
+            err = gl_get_program_info_log(program)
+            raise RuntimeError(f"Shader link failed: {err}")
+        log_gl_error()
+        return program
+
+
 class ShaderProgram:
     """OpenGL Shader program manager for vertex and fragment shaders."""
 
@@ -51,13 +163,14 @@ class ShaderProgram:
         self.program = None
         self.uniforms = {}
         self._uniform_state = {}
+        self.compiler = ShaderCompiler()
 
         if (
             vertex_source_file is not None
             and fragment_source_file is not None
             and glsl_dir is not None
         ):
-            self.init_shader_from_shader_files(
+            self.program = self.compiler.compile_shader_files(
                 ShaderFiles(
                     vertex=vertex_source_file,
                     fragment=fragment_source_file,
@@ -66,7 +179,7 @@ class ShaderProgram:
             )
 
     def __str__(self):
-        return f"PicoGLShader(name={self.shader_name}, program={self.program})"
+        return f"ShaderProgram(name={self.shader_name}, program={self.program})"
 
     def __enter__(self):
         self.bind()

@@ -32,7 +32,9 @@ class ObjectRenderer(RendererBase):
         self.texture_file = texture_file
         self.context = context
         self.data = data
-        self.data.vertex_count = len(self.data.vertices.flatten()) // 3
+        if self.data is not None:
+            self.data.vertex_count = len(self.data.vertices.flatten()) // 3
+
         self.show_model = True
         self.glsl_dir = glsl_dir
 

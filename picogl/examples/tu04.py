@@ -97,10 +97,8 @@ class Tu01Win(GlutRendererWindow):
 
         self.shader = shader = ShaderProgram()
         shader_files = ShaderFiles(vertex="vertex.glsl", fragment="fragment.glsl", glsl_dir="glsl/tu02")
-        """shader.init_shader_from_glsl_files(
-            "glsl/tu02/vertex.glsl", "glsl/tu02/fragment.glsl"
-        )"""
-        shader.init_shader_from_shader_files(shader_files)
+
+        shader.compiler.compile_shader_files(shader_files)
         # shader var ids
         self.context.mvp_id = glGetUniformLocation(shader.program, "mvp_matrix")
         self.context.texture_id = glGetUniformLocation(
