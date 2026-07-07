@@ -1,13 +1,24 @@
 """
-Base Renderer Class
+RendererBase is a base class for rendering operations, providing foundational
+methods for initializing rendering states, managing OpenGL features, and
+dispatching rendering tasks.
+
+This module implements essential rendering functionality and acts as a
+common base for custom rendering logic. It primarily revolves around
+OpenGL-based rendering pipelines and provides interfaces for model drawing
+and rendering state initialization.
 """
 
 from typing import Callable, Optional
 
 import numpy as np
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_DEPTH_TEST, GL_LINE_SMOOTH,
-                                          glDisable, glEnable, glFlush,
-                                          glLineWidth)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (
+    GL_DEPTH_TEST,
+    GL_LINE_SMOOTH,
+    glFlush,
+    glLineWidth,
+)
+from picogl.backend.gl.wrappers.enable import gl_disable, gl_enable
 from picogl.renderer.abstract import AbstractRenderer
 
 
@@ -28,12 +39,12 @@ class RendererBase(AbstractRenderer):
     def _set_gl_state(self):
         """Set the line width and disable depth test."""
         glLineWidth(self.line_width)
-        glDisable(GL_DEPTH_TEST)
-        glEnable(GL_LINE_SMOOTH)
+        gl_disable(GL_DEPTH_TEST)
+        gl_enable(GL_LINE_SMOOTH)
 
     def _restore_gl_state(self):
         """Restore the original line width and depth test state."""
-        glEnable(GL_DEPTH_TEST)
+        gl_enable(GL_DEPTH_TEST)
 
     @property
     def dispatch_list(self):

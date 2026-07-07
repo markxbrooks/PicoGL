@@ -2,6 +2,7 @@
 gl bind buffer wrapper
 
 """
+
 from typing import Any, Callable
 
 from OpenGL.GL import glGenVertexArrays

@@ -4,17 +4,30 @@ import numpy as np
 from decologr import Decologr as log
 from examples import g_color_buffer_data, g_vertex_buffer_data
 from OpenGL.GL import glLightfv, glMaterialfv
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_DEPTH_TEST, GL_SHININESS, glClear,
-                                          glClearColor, glColorMaterial,
-                                          glEnable, glLoadIdentity,
-                                          glMaterialf, glMatrixMode, glRotatef)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (
+    GL_DEPTH_TEST,
+    GL_SHININESS,
+    glClear,
+    glClearColor,
+    glColorMaterial,
+    glLoadIdentity,
+    glMaterialf,
+    glMatrixMode,
+    glRotatef,
+)
 from OpenGL.raw.GLU import gluLookAt, gluPerspective
-from picogl.backend.gl.enums import GLBitMask, GLLegacyMatrixMode
+from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.mode import GLMode
+from picogl.backend.gl.state.fill import (
+    GLCapability,
+    GLColorMaterialMode,
+    GLFace,
+    GLLight,
+    GLLightParameter,
+)
+from picogl.backend.gl.wrappers.enable import gl_enable
 from picogl.renderer import MeshData
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
-from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode, GLFace,
-                                          GLLight, GLLightParameter)
 from picogl.ui.backend.qt.base import GLBase
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import QWidget
@@ -104,12 +117,12 @@ class LegacyQtObjectRenderer(GLBase):
     def initialize_state(self):
         # Set up OpenGL state
         glClearColor(0.1, 0.1, 0.2, 1.0)  # Dark blue background
-        glEnable(GL_DEPTH_TEST)
+        gl_enable(GL_DEPTH_TEST)
 
     def initialize_lighting(self):
-        glEnable(GLLight.LIGHTING)
-        glEnable(GLLight.LIGHT0)
-        glEnable(GLCapability.COLOR_MATERIAL)
+        gl_enable(GLLight.LIGHTING)
+        gl_enable(GLLight.LIGHT0)
+        gl_enable(GLCapability.COLOR_MATERIAL)
         glColorMaterial(GLFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE)
         # Set up lighting
         glLightfv(GLLight.LIGHT0, GLLightParameter.POSITION, [1.0, 1.0, 1.0, 0.0])

@@ -5,11 +5,10 @@ draw legacy bond vao
 from contextlib import contextmanager
 
 from picogl.backend.gl.enums import GLDrawMode
-from picogl.backend.gl.wrappers import gl_draw_arrays
-from picogl.backend.legacy.core.vertex.buffer.client_states import \
-    legacy_client_states
-from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
 from picogl.backend.gl.state.client import GLClientState
+from picogl.backend.gl.wrappers import gl_draw_arrays
+from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
+from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
 
 
 def gl_draw_arrays_legacy(index_count: int, mode: int):

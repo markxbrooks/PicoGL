@@ -14,25 +14,18 @@ from dataclasses import dataclass
 from typing import Callable, Optional
 
 from decologr import Decologr as log
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_CULL_FACE
 from picogl.backend.gl.backend import GLBackend
+from picogl.backend.gl.capability import GLPipelineCapability
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.legacy.core.camera.setup import enable_blending
 from picogl.info import get_gl_info
-
-
-def bind_default_framebuffer() -> None:
-    """Bind the window-system default framebuffer (required on some Qt/macOS paths)."""
-    from OpenGL.GL import GL_FRAMEBUFFER, glBindFramebuffer
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0)
 
 
 def set_clear_color_only(
     backend: GLBackend, color: tuple[float, float, float, float]
 ) -> None:
     """Set the clear color without clearing (safe before the default FBO is ready)."""
-    bind_default_framebuffer()
+    backend.frame.bind_default_framebuffer()
     backend.frame.set_clear_color(color)
 
 
@@ -40,7 +33,7 @@ def clear_to_color(
     backend: GLBackend, color: tuple[float, float, float, float]
 ) -> None:
     """Apply a clear color and clear the color/depth buffers."""
-    bind_default_framebuffer()
+    backend.frame.bind_default_framebuffer()
     backend.frame.set_clear_color(color)
     try:
         backend.frame.clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
@@ -108,7 +101,7 @@ legacy_init_gl_list = [
     GLTask("✅ Enabling depth test", lambda b: b.depth.set_depth_test(True)),
     GLTask(
         "✅ Enabling face culling",
-        lambda b: b.capabilities.set_enabled(GL_CULL_FACE, True),
+        lambda b: b.capabilities.set_enabled(GLPipelineCapability.CULL_FACE, True),
     ),
 ]
 

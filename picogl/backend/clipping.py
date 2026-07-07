@@ -1,7 +1,7 @@
 from contextlib import contextmanager
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_CLIP_PLANE0, GL_CLIP_PLANE1,
-                                          glDisable, glEnable)
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_CLIP_PLANE0, GL_CLIP_PLANE1
+from picogl.backend.gl.wrappers.enable import gl_disable, gl_enable
 
 
 @contextmanager
@@ -13,13 +13,13 @@ def gl_clipping_planes(enabled: bool):
     """
     try:
         if enabled:
-            glEnable(GL_CLIP_PLANE0)
-            glEnable(GL_CLIP_PLANE1)
+            gl_enable(GL_CLIP_PLANE0)
+            gl_enable(GL_CLIP_PLANE1)
         else:
-            glDisable(GL_CLIP_PLANE0)
-            glDisable(GL_CLIP_PLANE1)
+            gl_disable(GL_CLIP_PLANE0)
+            gl_disable(GL_CLIP_PLANE1)
         yield
     finally:
         # Optional: ensure a known safe state after use
-        glDisable(GL_CLIP_PLANE0)
-        glDisable(GL_CLIP_PLANE1)
+        gl_disable(GL_CLIP_PLANE0)
+        gl_disable(GL_CLIP_PLANE1)

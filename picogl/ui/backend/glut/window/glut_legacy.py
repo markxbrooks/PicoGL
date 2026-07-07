@@ -1,13 +1,19 @@
 import numpy as np
+from picogl.renderer.object import ObjectRenderer
+
+from backend.gl.wrappers.glm import identity_matrix
 from decologr import Decologr as log
 from decologr import setup_logging
 from OpenGL.raw.GL.VERSION.GL_1_0 import glViewport
 from picogl.backend.gl.backend import GLBackend
+from picogl.backend.gl.task.gl_init import (
+    execute_gl_tasks,
+    legacy_init_gl_list,
+    paint_gl_list,
+)
 from picogl.backend.opengl import LegacyBinding
 from picogl.renderer import GLResourceRegistry
 from picogl.ui.backend.glut.window.gl import GLWindow
-from picogl.backend.gl.task.gl_init import (execute_gl_tasks, legacy_init_gl_list,
-                                            paint_gl_list)
 from pyglm import glm
 
 
@@ -26,7 +32,7 @@ class GlutRendererWindow(GLWindow):
         super().__init__(title=title, *args, **kwargs)
         self.context = GLResourceRegistry() if context is None else context
         self.title = title
-        self.renderer = None
+        self.renderer = ObjectRenderer(context, data=None)
         self.width = width
         self.height = height
         # Mouse interaction state
@@ -59,7 +65,7 @@ class GlutRendererWindow(GLWindow):
         self.context.view = glm.lookAt(
             self.context.eye, self.context.center, self.context.up
         )
-        self.context.model_matrix = glm.mat4(1.0)
+        self.context.model_matrix = identity_matrix()
 
         # The camera position in world space is just the eye
         self.context.eye_np = np.array(self.context.eye.to_list(), dtype=np.float32)
@@ -87,7 +93,7 @@ class GlutRendererWindow(GLWindow):
         self.calculate_mvp_matrix(width, height)
         # Apply rotations
         rotation_matrix = glm.rotate(
-            glm.mat4(1.0), glm.radians(self.rotation_x), glm.vec3(1, 0, 0)
+            identity_matrix(), glm.radians(self.rotation_x), glm.vec3(1, 0, 0)
         )
         rotation_matrix = glm.rotate(
             rotation_matrix, glm.radians(self.rotation_y), glm.vec3(0, 1, 0)

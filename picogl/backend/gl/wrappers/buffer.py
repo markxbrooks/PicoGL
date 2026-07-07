@@ -2,6 +2,7 @@
 gl bind buffer wrapper
 
 """
+
 from typing import Any
 
 from OpenGL.GL import glBufferSubData

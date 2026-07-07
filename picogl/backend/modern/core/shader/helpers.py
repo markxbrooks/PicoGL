@@ -35,7 +35,7 @@ def compile_shader(program: int, shader: int, shader_source_list: str):
 
 
 def read_shader_source(
-    shader_file_name: str, glsl_dir: str | Path | None = None
+    shader_file_name: str | Path, glsl_dir: str | Path | None = None
 ) -> str:
     """
     Read shader source from a file.

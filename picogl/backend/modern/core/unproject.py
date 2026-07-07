@@ -4,15 +4,31 @@ Modern OpenGL Unproject Function
 
 from typing import Any, Tuple
 
+import glm
 import numpy as np
-from picogl.backend.modern.core.mvp import (convert_to_world_coordinates,
-                                            create_normalized_device_vector,
-                                            invert_mvp_matrix,
-                                            normalize_device_coordinates)
+from picogl.backend.modern.core.mvp import (
+    convert_to_world_coordinates,
+    create_normalized_device_vector,
+    invert_mvp_matrix,
+    normalize_device_coordinates,
+)
+
+from elmo.ui.widgets.gl.mol.viewport import Viewport
 
 
-def unproject(x, y, depth, inv_mvp, viewport):
-    vx, vy, vw, vh = viewport
+def unproject(
+    x: float, y: float, depth: float, inv_mvp: glm.mat4, viewport: Viewport | np.ndarray
+) -> np.ndarray:
+    """unproject"""
+    if isinstance(viewport, Viewport):
+        vx, vy, vw, vh = viewport.x, viewport.y, viewport.width, viewport.height
+    else:
+        vx, vy, vw, vh = (
+            int(viewport[0]),
+            int(viewport[1]),
+            int(viewport[2]),
+            int(viewport[3]),
+        )
 
     y = vh - y
 

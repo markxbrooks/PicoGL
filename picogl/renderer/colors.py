@@ -1,3 +1,15 @@
+"""
+Provides functionality to attach RGBA colors to a mesh data object for use with a
+legacy isosurface renderer. The module operates by combining input colors with
+an opacity value derived from a given view state and assigns the resultant RGBA
+data to the mesh.
+
+Functions:
+- attach_rgba_colors_to_mesh: Processes color data and attaches RGBA colors to
+  mesh data.
+
+"""
+
 import numpy as np
 from decologr import Decologr as log
 from numpy import ndarray

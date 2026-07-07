@@ -1,20 +1,35 @@
-from OpenGL.raw.GL._types import GL_UNSIGNED_INT
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_LINES
+"""
+draw elements
+"""
+
+from typing import Any, Optional
+
+from picogl.backend.gl.enums import GLDrawMode, GLNumeric
 from picogl.backend.gl.wrappers import gl_draw_elements
-from picogl.backend.gl.wrappers.vertex_array import gl_bind_vertex_array
+from picogl.backend.modern.core.elements.vertex_array import bound_vertex_array
 
 
 def draw_elements(
-    vao: int, index_count: int, mode: int = GL_LINES, index_type: int = GL_UNSIGNED_INT
-):
+    vao: int,
+    index_count: int,
+    mode: int = GLDrawMode.TRIANGLES,  # or int
+    index_type: int = GLNumeric.UNSIGNED_INT,  # or GLNumeric.UNSIGNED_INT
+    pointer: Optional[Any] = None,
+) -> None:
     """
-    Helper method to bind a VAO and draw its elements.
+    Bind a VAO and issue glDrawElements for the bound element buffer.
 
-    :param vao: Vertex Array Object to bind
-    :param index_count: Number of indices to draw
-    :param mode: Drawing gl_mode (e.g., GL_LINES, GL_TRIANGLES)
-    :param index_type: Type of indices (e.g., GL_UNSIGNED_INT)
+    - vao: Vertex Array Object to bind
+    - index_count: Number of indices to draw
+    - mode: GL draw mode (e.g., GL_LINES, GL_TRIANGLES)
+    - index_type: Type of indices (e.g., GL_UNSIGNED_INT)
+    - pointer: Optional client-side index data; if None, the bound EBO is used
     """
-    gl_bind_vertex_array(vao)
-    gl_draw_elements(index_count, index_type, mode, pointer=None)
-    gl_bind_vertex_array(0)
+    with bound_vertex_array(vao):
+        gl_draw_elements(
+            index_count=index_count,
+            dtype=index_type,
+            mode=mode,
+            pointer=pointer,
+            offset=0,
+        )

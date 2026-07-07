@@ -1,5 +1,15 @@
 """
-Object Window for displaying Mesh Data
+This module defines a RenderWindow class that provides a unified rendering
+window supporting textured or untextured rendering.
+
+The RenderWindow class extends the GlutRendererWindow and serves as an
+interface to render 3D models with or without textures. It uses the
+GLResourceRegistry to manage OpenGL resources and the ObjectRenderer to
+handle the rendering process.
+
+Classes:
+    RenderWindow: Unified render window supporting textured or untextured
+    rendering.
 """
 
 from pathlib import Path

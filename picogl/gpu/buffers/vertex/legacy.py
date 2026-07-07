@@ -13,13 +13,17 @@ from typing import Any, Optional
 import numpy as np
 from decologr import Decologr as log
 from picogl.backend.gl.enums import GLBufferTarget, GLDrawMode, GLNumeric
+from picogl.backend.gl.state.client import GLClientState
 from picogl.backend.gl.wrappers.buffer import gl_bind_buffer
-from picogl.backend.gl.wrappers.client_state import \
-    gl_enable_legacy_client_state
+from picogl.backend.gl.wrappers.client_state import gl_enable_legacy_client_state
 from picogl.backend.gl.wrappers.draw import gl_draw_arrays, gl_draw_elements
 from picogl.backend.gl.wrappers.glcleanup import gl_delete_buffer_object
-from picogl.backend.legacy.core.vertex.buffer.client_states import \
-    legacy_client_states
+from picogl.backend.gl.wrappers.pointer import (
+    gl_color_pointer_from_spec,
+    gl_normal_pointer_from_spec,
+    gl_vertex_pointer_from_spec,
+)
+from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
 from picogl.backend.legacy.core.vertex.buffer.color import LegacyColorVBO
 from picogl.backend.legacy.core.vertex.buffer.element import LegacyEBO
 from picogl.backend.legacy.core.vertex.buffer.normal import LegacyNormalVBO
@@ -29,16 +33,15 @@ from picogl.gpu.buffers.attributes import LayoutDescriptor, VBOAttrs
 from picogl.gpu.buffers.base import VertexBase
 from picogl.gpu.buffers.vertex.aliases import NAME_ALIASES, VertexBufferRole
 from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
-from picogl.backend.gl.state.client import GLClientState
 
 
 class VertexBufferGroup(VertexBase):
     """Container for legacy VBOs, mimicking VAO interface."""
 
     LEGACY_ATTR_BINDINGS = {
-        VertexBufferRole.VBO: (GLClientState.VERTEX, "_vertex_pointer"),
-        VertexBufferRole.NBO: (GLClientState.NORMAL, "_normal_pointer"),
-        VertexBufferRole.CBO: (GLClientState.COLOR, "_color_pointer"),
+        VertexBufferRole.VBO: (GLClientState.VERTEX, gl_vertex_pointer_from_spec),
+        VertexBufferRole.NBO: (GLClientState.NORMAL, gl_normal_pointer_from_spec),
+        VertexBufferRole.CBO: (GLClientState.COLOR, gl_color_pointer_from_spec),
     }
 
     def __init__(self, draw_mode: GLDrawMode = GLDrawMode.LINE_STRIP):
@@ -276,9 +279,9 @@ class VertexBufferGroup(VertexBase):
                 if not binding:
                     continue
 
-                state, fn_name = binding
+                state, fn = binding
                 gl_enable_legacy_client_state(state)
-                getattr(self, fn_name)(attr)
+                fn(attr)
             self._bind_ebo()
 
         except Exception as ex:

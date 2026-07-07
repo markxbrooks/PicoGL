@@ -65,7 +65,7 @@ class GLWindow(AbstractGLWindow):
         """initialize_gl"""
         GL.glClearColor(0.0, 0, 0.4, 0)
         GL.glDepthFunc(GL.GL_LESS)
-        GL.glEnable(GL.GL_DEPTH_TEST)
+        GL.gl_enable(GL.GL_DEPTH_TEST)
 
     def paintGL(self):
         """paintGL"""

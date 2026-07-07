@@ -9,6 +9,7 @@ Classes:Ï
       performing rendering operations.
 """
 
+import platform
 import warnings
 
 from picogl.backend.gl.driver.blend import GLBlendDriver
@@ -18,14 +19,19 @@ from picogl.backend.gl.driver.frame import GLFrameDriver
 from picogl.backend.gl.driver.geometry import GLGeometryDriver
 from picogl.backend.gl.driver.raster import GLRasterDriver
 from picogl.backend.gl.driver.texture import GLTextureSystem
+from picogl.backend.gl.enums import GLBitMask
+from picogl.backend.gl.enums.point_size import GLPointCapability
 from picogl.backend.legacy.core.attribute_binder import LegacyAttributeBinder
-from picogl.backend.legacy.core.pipeline import (GLLegacyPipeline,
-                                                 LegacyPipeline)
+from picogl.backend.legacy.core.pipeline import GLLegacyPipeline, LegacyPipeline
 from picogl.backend.modern.core.pipeline import ShaderPipeline
 from picogl.backend.opengl import GLBindingStrategy
-from picogl.backend.state import (DrawCommand, GLClipPlaneState,
-                                  GLStateManager, RenderState,
-                                  RenderStateApplier)
+from picogl.backend.state import (
+    DrawCommand,
+    GLClipPlaneState,
+    GLStateManager,
+    RenderState,
+    RenderStateApplier,
+)
 from picogl.gpu.buffers.glframe import GLFramebuffer
 from picogl.renderer.readback import GLReadback
 
@@ -89,3 +95,23 @@ class GLBackend:
         pipeline = ShaderPipeline(program)
         self.shader = pipeline
         return pipeline
+
+    def prepare_viewport(self, width: int, height: int) -> None:
+        """
+        prepare
+
+        :param width: int
+        :param height: int
+        :return: None
+
+        Prepares an OpenGL Frame Viewport
+        """
+        if platform.system() == "Darwin":
+            dpr = 2  # macOS Retina displays
+        else:
+            dpr = 1
+        self.frame.set_viewport(Viewport(0, 0, width * dpr, height * dpr))
+        self.depth.set_depth_test(True)
+        self.frame.set_clear_color((0.1, 0.1, 0.1, 1.0))
+        self.capabilities.enable(GLPointCapability.PROGRAM_POINT_SIZE)
+        self.frame.clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)

@@ -11,8 +11,8 @@ Classes:
     operations such as enabling/disabling features and querying their states.
 """
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import glDisable, glEnable, glIsEnabled
 from OpenGL.raw.GL.VERSION.GL_1_3 import GL_MULTISAMPLE
+from picogl.backend.gl.wrappers.enable import gl_disable, gl_enable, gl_is_enabled
 from picogl.backend.gl.wrappers.get_integerv import gl_get_integerv
 from picogl.backend.state import gl_value
 
@@ -22,18 +22,18 @@ class GLCapabilityDriver:
 
     @staticmethod
     def enable(cap):
-        glEnable(gl_value(cap))
+        gl_enable(gl_value(cap))
 
     @staticmethod
     def disable(cap):
-        glDisable(gl_value(cap))
+        gl_disable(gl_value(cap))
 
     def set_enabled(self, cap, enabled: bool):
         self.enable(cap) if enabled else self.disable(cap)
 
     @staticmethod
     def is_enabled(cap) -> bool:
-        return bool(glIsEnabled(gl_value(cap)))
+        return bool(gl_is_enabled(gl_value(cap)))
 
     @staticmethod
     def get_integerv(val: int):

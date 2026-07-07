@@ -1,10 +1,10 @@
 from typing import TYPE_CHECKING, Any
 
-from OpenGL.GL import (GL_DEPTH_WRITEMASK, GL_LESS, glDepthFunc, glDepthMask,
-                       glGetBooleanv)
+from OpenGL.GL import GL_DEPTH_WRITEMASK, glDepthFunc, glDepthMask, glGetBooleanv
 from picogl.backend.gl.capability import GLPipelineCapability
 from picogl.backend.gl.driver.applyable import Applyable
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
+from picogl.backend.gl.glfunc import GLDepthFunc
 
 if TYPE_CHECKING:
     from picogl.backend.state import DepthState
@@ -31,7 +31,7 @@ class GLDepthDriver(Applyable):
 
     @staticmethod
     def set_depth_func_gl_less() -> Any:
-        return glDepthFunc(GL_LESS)
+        return glDepthFunc(GLDepthFunc.LESS)
 
     def _do_apply(self, state: "DepthState", prev: "DepthState | None"):
         if prev is None or prev.test != state.test:

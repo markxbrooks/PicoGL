@@ -3,33 +3,59 @@
 import unittest
 from unittest.mock import call, patch
 
-from OpenGL.GL import (GL_BLEND, GL_CULL_FACE, GL_DEPTH_TEST, GL_FLOAT,
-                       GL_LIGHT0, GL_LIGHTING, GL_LINE, GL_MODELVIEW, GL_ONE,
-                       GL_POSITION, GL_TEXTURE_2D, GL_UNSIGNED_INT, GL_ZERO)
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_AMBIENT, GL_DIFFUSE,
-                                          GL_FRONT_AND_BACK, GL_PROJECTION,
-                                          GL_SHININESS, GL_SPECULAR)
+from OpenGL.GL import (
+    GL_BLEND,
+    GL_CULL_FACE,
+    GL_DEPTH_TEST,
+    GL_FLOAT,
+    GL_LIGHT0,
+    GL_LIGHTING,
+    GL_LINE,
+    GL_MODELVIEW,
+    GL_ONE,
+    GL_POSITION,
+    GL_TEXTURE_2D,
+    GL_UNSIGNED_INT,
+    GL_ZERO,
+)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (
+    GL_AMBIENT,
+    GL_DIFFUSE,
+    GL_FRONT_AND_BACK,
+    GL_PROJECTION,
+    GL_SHININESS,
+    GL_SPECULAR,
+)
 from picogl.backend.gl.backend import GLBackend
-from picogl.backend.gl.capability import (GLBlendFactor,
-                                          GLFixedFunctionCapability,
-                                          GLMaterialFace, GLPipelineCapability,
-                                          PhongMaterial)
+from picogl.backend.gl.capability import (
+    GLBlendFactor,
+    GLFixedFunctionCapability,
+    GLMaterialFace,
+    GLPipelineCapability,
+    PhongMaterial,
+)
 from picogl.backend.gl.driver.blend import GLBlendDriver
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.gl.driver.depth import GLDepthDriver
 from picogl.backend.gl.driver.frame import GLFrameDriver
 from picogl.backend.gl.driver.geometry import GLGeometryDriver
-from picogl.backend.gl.driver.raster import (GLRasterDriver,
-                                             resolve_polygon_mode_args)
+from picogl.backend.gl.driver.raster import GLRasterDriver, resolve_polygon_mode_args
 from picogl.backend.gl.driver.texture import GLTextureSystem
-from picogl.backend.legacy.core.attribute_binder import LegacyAttributeBinder
-from picogl.backend.legacy.core.pipeline import GLLegacyPipeline
-from picogl.backend.state import (BlendState, DepthState, DrawCommand,
-                                  GLClipPlaneState, RasterState, RenderState,
-                                  RenderStateApplier, gl_value)
-from picogl.core.polygon.mode import PolygonMode
 from picogl.backend.gl.state.client import GLClientState
 from picogl.backend.gl.state.fill import GLFace, GLFillMode, GLLightParameter
+from picogl.backend.legacy.core.attribute_binder import LegacyAttributeBinder
+from picogl.backend.legacy.core.pipeline import GLLegacyPipeline
+from picogl.backend.state import (
+    BlendState,
+    DepthState,
+    DrawCommand,
+    GLClipPlaneState,
+    RasterState,
+    RenderState,
+    RenderStateApplier,
+    gl_value,
+)
+from picogl.core.polygon.mode import PolygonMode
 
 
 class _RecordingRaster:
@@ -408,7 +434,7 @@ class TestDrawCommand(unittest.TestCase):
         blend = GLBlendDriver(capabilities)
 
         with (
-            patch("picogl.backend.gl.driver.capability.glEnable") as enable,
+            patch("picogl.backend.gl.driver.capability.gl_enable") as enable,
             patch("picogl.backend.gl.driver.capability.glDisable") as disable,
             patch(
                 "picogl.backend.gl.driver.capability.glIsEnabled", return_value=True
@@ -461,7 +487,7 @@ class TestDrawCommand(unittest.TestCase):
             backend.depth.set_depth_func_gl_less()
             backend.blend.set_blend(True)
             backend.blend.set_blend_func(GL_ONE, GL_ZERO)
-            backend.blend.setup_blending()
+            backend.blend.set_alpha_blending()
             backend.capabilities.set_enabled(GLPipelineCapability.CULL_FACE, True)
             backend.capabilities.set_enabled(GLFixedFunctionCapability.LIGHTING, False)
 

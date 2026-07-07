@@ -7,7 +7,7 @@ Classes:
 - GLTextureClamp: Represents OpenGL texture clamping constants.
 """
 
-from OpenGL.raw.GL.VERSION.GL_1_2 import GL_CLAMP_TO_BORDER, GL_CLAMP_TO_EDGE
+from OpenGL.GL import GL_CLAMP_TO_BORDER, GL_CLAMP_TO_EDGE
 
 
 class GLTextureClamp:

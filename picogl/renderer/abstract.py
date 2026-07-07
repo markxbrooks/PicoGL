@@ -1,3 +1,10 @@
+"""
+Defines the AbstractRenderer class, serving as a base class for rendering
+objects. This class enforces initialization routines and requires
+implementation of rendering and resource management methods in its derived
+classes.
+"""
+
 from abc import ABC, abstractmethod
 
 from picogl.renderer.initializable import Initializable

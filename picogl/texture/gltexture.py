@@ -23,13 +23,16 @@ from contextlib import contextmanager
 from enum import IntEnum
 from typing import Any
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
-                                          GL_TEXTURE_MIN_FILTER,
-                                          GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (
+    GL_TEXTURE_2D,
+    GL_TEXTURE_MAG_FILTER,
+    GL_TEXTURE_MIN_FILTER,
+    GL_TEXTURE_WRAP_S,
+    GL_TEXTURE_WRAP_T,
+)
 from OpenGL.raw.GL.VERSION.GL_1_2 import GL_TEXTURE_3D
 from OpenGL.raw.GL.VERSION.GL_1_3 import GL_ACTIVE_TEXTURE, GL_TEXTURE0
 from OpenGL.raw.GL.VERSION.GL_4_5 import GL_TEXTURE_BINDING_2D
-from picogl.backend.gl.wrappers import gl_active_texture, gl_bind_texture
 from picogl.backend.gl.state.param import GLParam
 from picogl.backend.gl.state.query import GLStateQuery
 
@@ -53,10 +56,15 @@ class GLTexture(IntEnum):
 
     @staticmethod
     def set_active(unit=TEXTURE0):
+        # Lazy import avoids circular import with picogl.backend.gl.wrappers.texture.
+        from picogl.backend.gl.wrappers.texture import gl_active_texture
+
         gl_active_texture(unit)
 
     @staticmethod
     def bind(target: int, texture: int):
+        from picogl.backend.gl.wrappers.texture import gl_bind_texture
+
         gl_bind_texture(texture, target)
 
     @staticmethod

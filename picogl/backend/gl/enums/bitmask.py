@@ -9,8 +9,11 @@ in the `GL_1_0` version of the OpenGL library.
 
 from enum import IntFlag
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_COLOR_BUFFER_BIT,
-                                          GL_DEPTH_BUFFER_BIT, GL_LINE_BIT)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (
+    GL_COLOR_BUFFER_BIT,
+    GL_DEPTH_BUFFER_BIT,
+    GL_LINE_BIT,
+)
 
 
 class GLBitMask(IntFlag):

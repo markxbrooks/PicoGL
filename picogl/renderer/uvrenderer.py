@@ -1,5 +1,10 @@
 """
-UV render
+Module providing the UvRenderer class for rendering 2D UV meshes using OpenGL.
+
+The module implements a specific renderer for meshes defined with UV
+coordinates and indices. The UvRenderer class is designed for lightweight UV
+rendering tasks and operates using OpenGL buffers. It provides methods for
+binding buffers and rendering the defined UV mesh content.
 """
 
 from typing import Optional
@@ -7,19 +12,20 @@ from typing import Optional
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POLYGON_MODE
 from picogl.backend.gl.capability import GLMaterialFace
 from picogl.backend.gl.enums import GLBufferTarget, GLDrawMode, GLNumeric
-from picogl.backend.gl.wrappers import (gl_disable_vertex_array,
-                                        gl_draw_elements, gl_get_integerv)
+from picogl.backend.gl.state.fill import GLFillMode
+from picogl.backend.gl.wrappers import (
+    gl_disable_vertex_array,
+    gl_draw_elements,
+    gl_get_integerv,
+)
 from picogl.backend.gl.wrappers.buffer import gl_bind_buffer
-from picogl.backend.gl.wrappers.enable_vertex_array import \
-    gl_enable_vertex_array
+from picogl.backend.gl.wrappers.enable_vertex_array import gl_enable_vertex_array
 from picogl.backend.gl.wrappers.polygon_mode import gl_polygon_mode
-from picogl.backend.gl.wrappers.vertex_attrib_pointer import \
-    gl_vertex_attrib_pointer
+from picogl.backend.gl.wrappers.vertex_attrib_pointer import gl_vertex_attrib_pointer
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.boolean import GLBoolean
 from picogl.renderer import RendererBase
 from picogl.renderer.initializable import Initializable
-from picogl.backend.gl.state.fill import GLFillMode
 
 
 class UvRenderer(Initializable, RendererBase):

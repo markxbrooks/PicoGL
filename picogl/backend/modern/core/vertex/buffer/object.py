@@ -1,6 +1,8 @@
 """Modern VBO"""
 
 import numpy as np
+
+from backend.gl.wrappers.glcleanup import gl_delete_buffers
 from picogl.backend.gl.enums import GLBufferTarget
 from picogl.backend.gl.wrappers.generate_buffers import gl_generate_buffers
 from picogl.backend.modern.core.vertex.base import VertexBuffer
@@ -23,3 +25,8 @@ class ModernVBO(VertexBuffer):
         super().__init__(
             handle=handle, size=size, data=data, target=target, index=index
         )
+
+    def delete(self):
+        if self.handle:
+            gl_delete_buffers(1, [self.handle])
+            self.handle = None

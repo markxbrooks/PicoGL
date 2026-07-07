@@ -10,17 +10,21 @@ import numpy as np
 from decologr import Decologr as log
 from OpenGL import GL
 from picogl.backend.gl.enums import GLDrawMode, GLIndexType, GLNumeric
-from picogl.backend.gl.wrappers import (gl_disable_legacy_client_state,
-                                        gl_draw_elements,
-                                        gl_enable_legacy_client_state)
-from picogl.backend.gl.wrappers.pointer import (gl_color_array_pointer,
-                                                gl_normal_array_pointer,
-                                                gl_texcoord_array_pointer,
-                                                gl_vertex_array_pointer)
-from picogl.gpu.buffers.attributes import CanonicalVertexAttrs
-from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
 from picogl.backend.gl.state.client import GLClientState
 from picogl.backend.gl.state.fill import GLFace, GLFillMode
+from picogl.backend.gl.wrappers import (
+    gl_disable_legacy_client_state,
+    gl_draw_elements,
+    gl_enable_legacy_client_state,
+)
+from picogl.backend.gl.wrappers.pointer import (
+    gl_color_array_pointer,
+    gl_normal_array_pointer,
+    gl_texcoord_array_pointer,
+    gl_vertex_array_pointer,
+)
+from picogl.gpu.buffers.attributes import CanonicalVertexAttrs
+from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
 
 
 class MeshData:
@@ -387,7 +391,7 @@ class MeshData:
 
         # Enable alpha blending for transparency
         if alpha < 1.0:
-            GL.glEnable(GL.GL_BLEND)
+            GL.gl_enable(GL.GL_BLEND)
             GL.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
         else:
             GL.glDisable(GL.GL_BLEND)

@@ -1,11 +1,18 @@
 import numpy as np
+
+from backend.geometry import LegacyBinding
+from backend.gl.backend import GLBackend
 from decologr import Decologr as log
 from decologr import setup_logging
 from OpenGL.raw.GL.VERSION.GL_1_0 import glViewport
+from picogl.backend.gl.task.gl_init import (
+    execute_gl_tasks,
+    legacy_init_gl_list,
+    paint_gl_list,
+)
+from picogl.backend.gl.wrappers.glm import identity_matrix
 from picogl.renderer import GLResourceRegistry
 from picogl.ui.backend.glut.window.gl import GLWindow
-from picogl.backend.gl.task.gl_init import (execute_gl_tasks, legacy_init_gl_list,
-                                            paint_gl_list)
 from pyglm import glm
 
 
@@ -21,7 +28,7 @@ class GlutRendererWindow(GLWindow):
         *args,
         **kwargs,
     ):
-        super().__init__(title=title, *args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.context = GLResourceRegistry() if context is None else context
         self.title = title
         self.renderer = None
@@ -36,6 +43,7 @@ class GlutRendererWindow(GLWindow):
         self.zoom_fov: int = 45  # field of view
         self.zoom_distance: int = 10  # camera backwards in Z
         self.distance_threshold: float = 5.0
+        self.backend = GLBackend(binding=LegacyBinding())
 
     def initializeGL(self):
         """Initial OpenGL configuration."""
@@ -56,7 +64,7 @@ class GlutRendererWindow(GLWindow):
         self.context.view = glm.lookAt(
             self.context.eye, self.context.center, self.context.up
         )
-        self.context.model_matrix = glm.mat4(1.0)
+        self.context.model_matrix = identity_matrix()
 
         # The camera position in world space is just the eye
         self.context.eye_np = np.array(self.context.eye.to_list(), dtype=np.float32)
@@ -75,7 +83,7 @@ class GlutRendererWindow(GLWindow):
 
     def paintGL(self):
         """paintGL"""
-        execute_gl_tasks(paint_gl_list)
+        execute_gl_tasks(paint_gl_list, self.backend)
         self.renderer.render()
 
     def update_mvp(self):
@@ -84,7 +92,7 @@ class GlutRendererWindow(GLWindow):
         self.calculate_mvp_matrix(width, height)
         # Apply rotations
         rotation_matrix = glm.rotate(
-            glm.mat4(1.0), glm.radians(self.rotation_x), glm.vec3(1, 0, 0)
+            identity_matrix(), glm.radians(self.rotation_x), glm.vec3(1, 0, 0)
         )
         rotation_matrix = glm.rotate(
             rotation_matrix, glm.radians(self.rotation_y), glm.vec3(0, 1, 0)

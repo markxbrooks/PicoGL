@@ -3,22 +3,28 @@ Enable Smoothing
 """
 
 from OpenGL import error as gl_error
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_LINE_SMOOTH, GL_LINE_SMOOTH_HINT,
-                                          GL_NICEST, GL_POINT_SMOOTH,
-                                          GL_POINT_SMOOTH_HINT, glEnable,
-                                          glHint)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (
+    GL_LINE_SMOOTH,
+    GL_LINE_SMOOTH_HINT,
+    GL_NICEST,
+    GL_POINT_SMOOTH,
+    GL_POINT_SMOOTH_HINT,
+)
+from picogl.backend.gl.wrappers.enable import gl_enable
+from picogl.backend.gl.wrappers.error import gl_check_errors
+from picogl.backend.gl.wrappers.hint import gl_hint
 
 
 def enable_smoothing(backend: "GLBackend") -> None:
     """
     Legacy point/line smoothing (GL_POINT_SMOOTH, GL_LINE_SMOOTH).
 
-    Omitted in OpenGL core profile (e.g. macOS): enums are invalid for glEnable.
+    Omitted in OpenGL core profile (e.g. macOS): enums are invalid for gl_enable.
     """
     try:
-        glEnable(GL_POINT_SMOOTH)
-        glEnable(GL_LINE_SMOOTH)
-        glHint(GL_POINT_SMOOTH_HINT, GL_NICEST)
-        glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
+        gl_enable(GL_POINT_SMOOTH)
+        gl_enable(GL_LINE_SMOOTH)
+        gl_hint(GL_POINT_SMOOTH_HINT, GL_NICEST)
+        gl_hint(GL_LINE_SMOOTH_HINT, GL_NICEST)
     except gl_error.GLError:
-        pass
+        gl_check_errors()

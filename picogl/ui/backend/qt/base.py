@@ -8,24 +8,28 @@ from typing import Optional
 import numpy as np
 from decologr import Decologr as log
 from OpenGL.raw.GL.ARB.viewport_array import GL_VIEWPORT
-from OpenGL.raw.GL.VERSION.GL_1_0 import (glLoadIdentity, glMatrixMode,
-                                          glViewport)
+from OpenGL.raw.GL.VERSION.GL_1_0 import glLoadIdentity, glMatrixMode
 from OpenGL.raw.GLU import gluPerspective
 from picogl.backend.geometry.factory import LegacyBinding, ModernBinding
 from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
+from picogl.backend.gl.mode import GLMode
+from picogl.backend.gl.task.gl_init import (
+    execute_gl_tasks,
+    legacy_init_gl_list,
+    modern_init_gl_list,
+)
 from picogl.backend.gl.wrappers import gl_get_integerv
-from picogl.backend.legacy.core.camera.lighting import set_background_color
-from picogl.backend.legacy.core.camera.matrices.setup import setup_matrices
-from picogl.backend.legacy.core.camera.setup import calculate_aspect
 from picogl.backend.gl.wrappers.error import gl_check_errors
 from picogl.backend.gl.wrappers.frame import prepare_viewport
-from picogl.backend.gl.mode import GLMode
-from picogl.backend.gl.task.gl_init import (execute_gl_tasks, legacy_init_gl_list,
-                                            modern_init_gl_list)
+from picogl.backend.legacy.core.camera.lighting import set_background_color
+from picogl.backend.legacy.core.camera.matrices.setup import setup_matrices
+from picogl.backend.legacy.core.camera.setup import calculate_aspect_ratio
 from PySide6.QtGui import QMouseEvent, QOpenGLFunctions, Qt, QWheelEvent
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
 from PySide6.QtWidgets import QWidget
+
+from elmo.ui.widgets.gl.mol.viewport import Viewport
 
 
 @dataclass
@@ -62,16 +66,18 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
     OpenGL Qt Widget
     """
 
-    def __init__(self, parent: QWidget = None, gl_mode: GLMode = GLMode.LEGACY):
+    def __init__(
+        self, parent: Optional[QWidget] = None, gl_mode: GLMode = GLMode.LEGACY
+    ):
         """
         constructor
 
         :param parent: QWidget
         """
         super().__init__(parent)
-        if gl_mode is True:
+        if gl_mode:
             gl_mode = GLMode.LEGACY
-        elif gl_mode is False:
+        elif not gl_mode:
             gl_mode = GLMode.MODERN
         self.aspect_ratio = None
         self.gl_mode = gl_mode
@@ -98,7 +104,7 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
         Called automatically by Qt when the gl context is first created.
         """
         # Viewport setup
-        glViewport(0, 0, self.width(), self.height())
+        self.backend.frame.set_viewport(Viewport(0, 0, self.width(), self.height()))
         init_list = (
             modern_init_gl_list
             if self.gl_mode == GLMode.MODERN
@@ -121,11 +127,11 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
         # Prevent division by zero
         h = max(h, 1)
         # Update viewport
-        glViewport(0, 0, w, h)
-        self.aspect_ratio = calculate_aspect(h, w)
+        self.backend.frame.set_viewport(Viewport(0, 0, w, h))
+        self.aspect_ratio = calculate_aspect_ratio(h, w)
         gluPerspective(45.0, self.aspect_ratio, 1.0, 1000.0)
         setup_matrices(self.aspect_ratio)
-        # Return to modelview matrix
+        # Return to model view matrix
         glMatrixMode(GLLegacyMatrixMode.MODELVIEW)
         glLoadIdentity()
         # Update camera matrix using legacy pipeline
@@ -146,7 +152,7 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
         """
         gl_check_errors()
         width, height = self.width(), self.height()
-        prepare_viewport(width, height, self.backend)
+        self.backend.prepare_viewport(width, height)
         set_background_color(show_white_background=False)  # Then set visuals
         gl_check_errors()
 

@@ -8,12 +8,19 @@ buffers with support for color and depth attachments.
 
 from contextlib import contextmanager
 
-from OpenGL.GL import (GL_COLOR_ATTACHMENT0, GL_DEPTH_ATTACHMENT,
-                       GL_FRAMEBUFFER, GL_FRAMEBUFFER_COMPLETE,
-                       glBindFramebuffer, glCheckFramebufferStatus,
-                       glFramebufferTexture2D, glGenFramebuffers,
-                       glGetIntegerv)
 from OpenGL.raw.GL.VERSION.GL_3_0 import GL_FRAMEBUFFER_BINDING
+from picogl.backend.gl.enums.frame import GLFrameBufferAttachment
+from picogl.backend.gl.enums.target.frame_buffer import (
+    GLFrameBufferStatus,
+    GLFrameBufferTarget,
+)
+from picogl.backend.gl.wrappers import gl_get_integerv
+from picogl.backend.gl.wrappers.frame import (
+    gl_bind_framebuffer,
+    gl_check_framebuffer_status,
+    gl_gen_framebuffers,
+)
+from picogl.backend.gl.wrappers.texture import gl_framebuffer_texture_2d
 from picogl.renderer.initializable import Initializable
 from picogl.texture.gltexture import GLTexture
 from picogl.texture.texture2d import Texture2D
@@ -45,7 +52,7 @@ class GLFramebuffer(Initializable):
         self._do_initialize()
 
     def _do_initialize(self):
-        self.handle = glGenFramebuffers(1)
+        self.handle = gl_gen_framebuffers(1)
 
     def bind(self):
         self.ensure_initialized()
@@ -53,7 +60,7 @@ class GLFramebuffer(Initializable):
         self._bind_frame_buffer_handle(handle)
 
     def _bind_frame_buffer_handle(self, handle):
-        glBindFramebuffer(GL_FRAMEBUFFER, handle)
+        gl_bind_framebuffer(GLFrameBufferTarget.FRAMEBUFFER, handle)
 
     def unbind(self):
         """
@@ -79,7 +86,7 @@ class GLFramebuffer(Initializable):
         Yields:
             GLFramebuffer: The GLFramebuffer instance being managed.
         """
-        prev = glGetIntegerv(GL_FRAMEBUFFER_BINDING)
+        prev = gl_get_integerv(GL_FRAMEBUFFER_BINDING)
         self.bind()
         try:
             yield self
@@ -103,7 +110,7 @@ class GLFramebuffer(Initializable):
             None
         """
         with self.bound():
-            attachment = GL_COLOR_ATTACHMENT0 + index
+            attachment = GLFrameBufferAttachment.COLOR0 + index
             self._attach_texture(attachment, tex)
             self.color_attachments.append(tex.handle)
 
@@ -119,7 +126,7 @@ class GLFramebuffer(Initializable):
 
         """
         with self.bound():
-            self._attach_texture(GL_DEPTH_ATTACHMENT, tex)
+            self._attach_texture(GLFrameBufferAttachment.DEPTH, tex)
             self.depth_attachment = tex.handle
 
     def check_complete(self):
@@ -135,8 +142,8 @@ class GLFramebuffer(Initializable):
             RuntimeError: If the framebuffer is not complete, with the status code
             indicating the specific issue.
         """
-        status = glCheckFramebufferStatus(GL_FRAMEBUFFER)
-        if status != GL_FRAMEBUFFER_COMPLETE:
+        status = gl_check_framebuffer_status(GLFrameBufferTarget.FRAMEBUFFER)
+        if status != GLFrameBufferStatus.FRAMEBUFFER_COMPLETE:
             raise RuntimeError(f"Incomplete framebuffer: {status}")
 
     def _attach_texture(self, attachment: float | int, tex: Texture2D):
@@ -162,8 +169,8 @@ class GLFramebuffer(Initializable):
             Any exception that might be triggered by the `glFramebufferTexture2D`
             function or improper argument usage.
         """
-        glFramebufferTexture2D(
-            target=GL_FRAMEBUFFER,
+        gl_framebuffer_texture_2d(
+            target=GLFrameBufferTarget.FRAMEBUFFER,
             attachment=attachment,
             textarget=GLTexture.TEXTURE_2D,
             texture=tex.handle,
