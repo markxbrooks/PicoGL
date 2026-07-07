@@ -25,7 +25,7 @@ class AttributeSpec:
     index: int  # attribute location
     size: int  # number of components (e.g., 3 for vec3)
     type: GLNumeric  # GL_FLOAT, GL_INT, etc.
-    normalized: GLBoolean
+    normalized: GLBoolean = GLBoolean.FALSE
     stride: int = 0
     offset: int = 0 # in bytes
     vbo_type: VBOType = VBOType.VBO
