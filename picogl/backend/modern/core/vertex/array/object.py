@@ -415,7 +415,7 @@ class VertexArrayObject(VertexBase, GLResource):
         if mode == GLDrawMode.POINTS:
             enable_points_rendering_state()
         if self.ebo:
-            self.ebo.bind():
+            self.ebo.bind()
             gl_draw_elements(atom_count, dtype, mode, pointer=pointer)
         else:
             gl_draw_arrays(atom_count, mode, first=int(first))
