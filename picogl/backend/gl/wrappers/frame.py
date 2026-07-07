@@ -5,11 +5,13 @@ Prepare viewport
 import platform
 
 from OpenGL.raw.GL.VERSION.GL_3_2 import GL_PROGRAM_POINT_SIZE
-from picogl.backend.gl.backend import GLBackend
+
+from backend.gl.enums.point_size import GLPointCapability
+# from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.enums import GLBitMask
 
 
-def prepare_viewport(width: int, height: int, backend: GLBackend) -> None:
+def prepare_viewport(width: int, height: int, backend: "GLBackend") -> None:
     """
     prepare
 
@@ -27,5 +29,5 @@ def prepare_viewport(width: int, height: int, backend: GLBackend) -> None:
     backend.frame.viewport(0, 0, width * dpr, height * dpr)
     backend.depth.set_depth_test(True)
     backend.frame.set_clear_color((0.1, 0.1, 0.1, 1.0))
-    backend.capabilities.enable(GL_PROGRAM_POINT_SIZE)
+    backend.capabilities.enable(GLPointCapability.PROGRAM_POINT_SIZE)
     backend.frame.clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
