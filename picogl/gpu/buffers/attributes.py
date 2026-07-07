@@ -10,6 +10,7 @@ or processing purposes.
 from dataclasses import dataclass
 from typing import List
 
+from picogl.boolean import GLBoolean
 from picogl.backend.gl.enums import GLNumeric
 from picogl.gpu.buffers.vertex.aliases import VertexBufferRole
 from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
@@ -24,9 +25,9 @@ class AttributeSpec:
     index: int  # attribute location
     size: int  # number of components (e.g., 3 for vec3)
     type: GLNumeric  # GL_FLOAT, GL_INT, etc.
-    normalized: bool
-    stride: int
-    offset: int  # in bytes
+    normalized: GLBoolean
+    stride: int = 0
+    offset: int = 0 # in bytes
     vbo_type: VBOType = VBOType.VBO
     role: VertexBufferRole = VertexBufferRole.VBO
 
@@ -38,7 +39,7 @@ def legacy_attribute_spec(
     size: int = 3,
     name: str | VertexBufferRole | None = None,
     type: GLNumeric,
-    normalized: bool = False,
+    normalized: GLBoolean = GLBoolean.FALSE,
     stride: int = 0,
     offset: int = 0,
 ) -> AttributeSpec:
