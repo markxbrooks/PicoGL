@@ -34,7 +34,7 @@ Intended for OpenGL 3.0+ with VAO support.
 """
 
 import ctypes
-from contextlib import contextmanager
+from contextlib import contextmanager, nullcontext
 from typing import Optional, Union
 
 import numpy as np
