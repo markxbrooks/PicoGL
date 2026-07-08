@@ -5,9 +5,8 @@ gl enable disable is enabled
 from typing import Union
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import glDisable, glEnable, glIsEnabled
-
-from picogl.backend.gl.enums.legacy import GLLegacyClipPlane
 from picogl.backend.gl.capability import GLFixedFunctionCapability, GLPipelineCapability
+from picogl.backend.gl.enums.legacy import GLLegacyClipPlane
 from picogl.backend.gl.enums.point_size import (
     GLLegacyPointCapability,
     GLPointCapability,
@@ -15,13 +14,14 @@ from picogl.backend.gl.enums.point_size import (
 from picogl.backend.gl.state.fill import GLCapability
 
 GLCapabilities = Union[
-        GLCapability,
-        GLLegacyPointCapability,
-        GLPointCapability,
-        GLFixedFunctionCapability,
-        GLPipelineCapability,
-        GLLegacyClipPlane
-    ]
+    GLCapability,
+    GLLegacyPointCapability,
+    GLPointCapability,
+    GLFixedFunctionCapability,
+    GLPipelineCapability,
+    GLLegacyClipPlane,
+]
+
 
 def gl_enable(
     cap: GLCapabilities,

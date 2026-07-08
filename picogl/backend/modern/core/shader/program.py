@@ -8,7 +8,6 @@ compiling and linking shaders, and setting uniform values.
 from pathlib import Path
 
 import numpy as np
-
 from decologr import Decologr as log
 from OpenGL.raw.GL.VERSION.GL_2_0 import GL_LINK_STATUS
 from picogl.backend.gl.wrappers.program import gl_create_program, gl_get_program_iv
@@ -35,9 +34,7 @@ from picogl.shaders.uniform import get_uniform_location
 class ShaderCompiler:
     """OpenGL Shader program manager for vertex and fragment shaders."""
 
-    def __init__(
-        self
-    ):
+    def __init__(self):
         """constructor"""
 
     def __str__(self):
@@ -48,7 +45,7 @@ class ShaderCompiler:
 
     @staticmethod
     def compile_shader_files(
-            shader_files: ShaderFiles | None,
+        shader_files: ShaderFiles | None,
     ) -> int:
         """
         init_shader_from_shader_files
@@ -73,7 +70,7 @@ class ShaderCompiler:
 
     @staticmethod
     def compile_glsl_files(
-            vertex_source_file: str | None,
+        vertex_source_file: str | None,
         fragment_source_file: str | None,
         glsl_dir: str | Path | None = None,
     ) -> int:
@@ -108,9 +105,7 @@ class ShaderCompiler:
         log.parameter("self.program", program, silent=True)
         log.parameter("vertex_source", vertex_source, silent=True)
         log.parameter("fragment_source", fragment_source, silent=True)
-        vertex_shader = compile_shader(
-            program, GLShader.VERTEX_SHADER, vertex_source
-        )
+        vertex_shader = compile_shader(program, GLShader.VERTEX_SHADER, vertex_source)
         fragment_shader = compile_shader(
             program, GLShader.FRAGMENT_SHADER, fragment_source
         )
@@ -134,9 +129,7 @@ class ShaderCompiler:
         """
         log.message("Linking shader program...", silent=True)
         gl_link_program(program)
-        if GLBoolean.TRUE != gl_get_program_iv(
-            program=program, pname=GL_LINK_STATUS
-        ):
+        if GLBoolean.TRUE != gl_get_program_iv(program=program, pname=GL_LINK_STATUS):
             err = gl_get_program_info_log(program)
             raise RuntimeError(f"Shader link failed: {err}")
         log_gl_error()

@@ -1,7 +1,6 @@
 from contextlib import contextmanager
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_CLIP_PLANE0, GL_CLIP_PLANE1
-
 from picogl.backend.gl.enums.legacy import GLLegacyClipPlane
 from picogl.backend.gl.wrappers.enable import gl_disable, gl_enable
 

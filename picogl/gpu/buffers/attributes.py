@@ -10,8 +10,8 @@ or processing purposes.
 from dataclasses import dataclass
 from typing import List
 
-from picogl.boolean import GLBoolean
 from picogl.backend.gl.enums import GLNumeric
+from picogl.boolean import GLBoolean
 from picogl.gpu.buffers.vertex.aliases import VertexBufferRole
 from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
 from picogl.utils.strenum import StrEnum
@@ -27,7 +27,7 @@ class AttributeSpec:
     type: GLNumeric  # GL_FLOAT, GL_INT, etc.
     normalized: GLBoolean = GLBoolean.FALSE
     stride: int = 0
-    offset: int = 0 # in bytes
+    offset: int = 0  # in bytes
     vbo_type: VBOType = VBOType.VBO
     role: VertexBufferRole = VertexBufferRole.VBO
 
