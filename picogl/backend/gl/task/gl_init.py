@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from typing import Callable, Optional
 
 from decologr import Decologr as log
-from picogl.backend.gl.backend import GLBackend
+# from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.capability import GLPipelineCapability
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.legacy.core.camera.setup import enable_blending
@@ -22,7 +22,7 @@ from picogl.info import get_gl_info
 
 
 def set_clear_color_only(
-    backend: GLBackend, color: tuple[float, float, float, float]
+    backend: "GLBackend", color: tuple[float, float, float, float]
 ) -> None:
     """Set the clear color without clearing (safe before the default FBO is ready)."""
     backend.frame.bind_default_framebuffer()
@@ -30,7 +30,7 @@ def set_clear_color_only(
 
 
 def clear_to_color(
-    backend: GLBackend, color: tuple[float, float, float, float]
+    backend: "GLBackend", color: tuple[float, float, float, float]
 ) -> None:
     """Apply a clear color and clear the color/depth buffers."""
     backend.frame.bind_default_framebuffer()
@@ -59,7 +59,7 @@ class GLTask:
 
 def execute_gl_tasks(
     task_list: list[GLTask],
-    backend: GLBackend,
+    backend: "GLBackend",
     *,
     on_step: Optional[Callable[[int, int, Optional[str]], None]] = None,
 ):

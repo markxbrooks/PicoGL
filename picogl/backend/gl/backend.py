@@ -11,7 +11,9 @@ Classes:Ï
 
 import platform
 import warnings
+from typing import Optional, Callable
 
+from backend.gl.task.gl_init import GLTask
 from elmo.ui.widgets.gl.mol.viewport import Viewport
 from picogl.backend.gl.driver.blend import GLBlendDriver
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
@@ -96,6 +98,39 @@ class GLBackend:
         pipeline = ShaderPipeline(program)
         self.shader = pipeline
         return pipeline
+
+    def execute_gl_tasks(
+            self,
+            task_list: list[GLTask],
+            *,
+            on_step: Optional[Callable[[int, int, Optional[str]], None]] = None,
+    ):
+        if not isinstance(task_list, list):
+            raise TypeError("task_list must be a list of GLTask.")
+
+        total = len(task_list)
+
+        for i, task in enumerate(task_list, start=1):
+            if not isinstance(task, GLTask):
+                raise TypeError(f"Task #{i} is not a GLTask: {task!r}")
+
+            if task.message:
+                log.message(f"[{i}/{total}] {task.message}")
+
+            try:
+                task.func(self)
+            except Exception as ex:
+                log.error(
+                    f"Error in task #{i} ({task.message or 'no message'}): {ex}",
+                    exception=ex,
+                )
+                raise
+
+            if on_step:
+                try:
+                    on_step(i, total, task.message)
+                except Exception:
+                    pass
 
     def prepare_viewport(self, width: int, height: int) -> None:
         """
