@@ -11,9 +11,11 @@ Classes:Ï
 
 import platform
 import warnings
-from typing import Optional, Callable
+from typing import Callable, Optional
 
-from backend.gl.task.gl_init import GLTask
+from decologr import Decologr as log
+
+from picogl.backend.gl.task.gl_init import GLTask
 from elmo.ui.widgets.gl.mol.viewport import Viewport
 from picogl.backend.gl.driver.blend import GLBlendDriver
 from picogl.backend.gl.driver.capability import GLCapabilityDriver

@@ -6,7 +6,7 @@ from typing import Union
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import glDisable, glEnable, glIsEnabled
 
-from backend.gl.enums.legacy import GLLegacyClipPlane
+from picogl.backend.gl.enums.legacy import GLLegacyClipPlane
 from picogl.backend.gl.capability import GLFixedFunctionCapability, GLPipelineCapability
 from picogl.backend.gl.enums.point_size import (
     GLLegacyPointCapability,

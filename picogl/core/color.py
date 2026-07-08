@@ -7,6 +7,7 @@ input data.
 """
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_RED, GL_RGB, GL_RGBA
+from OpenGL.raw.GL.VERSION.GL_2_1 import GL_SRGB8
 
 
 class GLColor:
@@ -15,3 +16,4 @@ class GLColor:
     RED = GL_RED
     RGBA = GL_RGBA
     RGB = GL_RGB
+    SRGB8 = GL_SRGB8

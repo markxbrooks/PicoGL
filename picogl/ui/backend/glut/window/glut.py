@@ -1,15 +1,11 @@
 import numpy as np
 
-from backend.geometry import LegacyBinding
-from backend.gl.backend import GLBackend
+from picogl.backend.geometry import LegacyBinding
+from picogl.backend.gl.backend import GLBackend
 from decologr import Decologr as log
 from decologr import setup_logging
 from OpenGL.raw.GL.VERSION.GL_1_0 import glViewport
-from picogl.backend.gl.task.gl_init import (
-    execute_gl_tasks,
-    legacy_init_gl_list,
-    paint_gl_list,
-)
+from picogl.backend.gl.task.gl_init import legacy_init_gl_list, paint_gl_list
 from picogl.backend.gl.wrappers.glm import identity_matrix
 from picogl.renderer import GLResourceRegistry
 from picogl.ui.backend.glut.window.gl import GLWindow
@@ -48,7 +44,7 @@ class GlutRendererWindow(GLWindow):
     def initializeGL(self):
         """Initial OpenGL configuration."""
         log.message("Initializing OpenGL context...")
-        execute_gl_tasks(legacy_init_gl_list)
+        self.backend.execute_gl_tasks(legacy_init_gl_list)
         self.renderer.initialize_shaders()
         self.renderer.initialize()
 
@@ -83,7 +79,7 @@ class GlutRendererWindow(GLWindow):
 
     def paintGL(self):
         """paintGL"""
-        execute_gl_tasks(paint_gl_list, self.backend)
+        self.backend.execute_gl_tasks(paint_gl_list)
         self.renderer.render()
 
     def update_mvp(self):

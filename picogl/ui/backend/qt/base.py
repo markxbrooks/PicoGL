@@ -14,11 +14,7 @@ from picogl.backend.geometry.factory import LegacyBinding, ModernBinding
 from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.mode import GLMode
-from picogl.backend.gl.task.gl_init import (
-    execute_gl_tasks,
-    legacy_init_gl_list,
-    modern_init_gl_list,
-)
+from picogl.backend.gl.task.gl_init import legacy_init_gl_list, modern_init_gl_list
 from picogl.backend.gl.wrappers import gl_get_integerv
 from picogl.backend.gl.wrappers.error import gl_check_errors
 from picogl.backend.gl.wrappers.frame import prepare_viewport
@@ -110,7 +106,7 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
             if self.gl_mode == GLMode.MODERN
             else legacy_init_gl_list
         )
-        execute_gl_tasks(init_list, backend=self.backend)
+        self.backend.execute_gl_tasks(init_list)
 
     def resizeGL(self, w: int, h: int) -> None:
         """

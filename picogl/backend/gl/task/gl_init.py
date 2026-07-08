@@ -62,33 +62,9 @@ def execute_gl_tasks(
     backend: "GLBackend",
     *,
     on_step: Optional[Callable[[int, int, Optional[str]], None]] = None,
-):
-    if not isinstance(task_list, list):
-        raise TypeError("task_list must be a list of GLTask.")
-
-    total = len(task_list)
-
-    for i, task in enumerate(task_list, start=1):
-        if not isinstance(task, GLTask):
-            raise TypeError(f"Task #{i} is not a GLTask: {task!r}")
-
-        if task.message:
-            log.message(f"[{i}/{total}] {task.message}")
-
-        try:
-            task.func(backend)
-        except Exception as ex:
-            log.error(
-                f"Error in task #{i} ({task.message or 'no message'}): {ex}",
-                exception=ex,
-            )
-            raise
-
-        if on_step:
-            try:
-                on_step(i, total, task.message)
-            except Exception:
-                pass
+) -> None:
+    """Deprecated: prefer :meth:`GLBackend.execute_gl_tasks`."""
+    backend.execute_gl_tasks(task_list, on_step=on_step)
 
 
 legacy_init_gl_list = [
