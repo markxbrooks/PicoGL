@@ -12,6 +12,7 @@ Classes:Ï
 import platform
 import warnings
 
+from elmo.ui.widgets.gl.mol.viewport import Viewport
 from picogl.backend.gl.driver.blend import GLBlendDriver
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.gl.driver.depth import GLDepthDriver
