@@ -1,20 +1,17 @@
+"""
+LegacyPipelineProtocol
+"""
+
 from typing import Any, Protocol, runtime_checkable
 
-from OpenGL.GL import glLightfv, glMaterialfv
-from OpenGL.raw.GL.VERSION.GL_1_0 import (
-    GL_MODELVIEW,
-    GL_PROJECTION,
-    GL_SHININESS,
-    glColor4f,
-    glColorMaterial,
-    glLoadIdentity,
-    glMaterialf,
-    glMatrixMode,
-    glTexCoord2f,
-    glTranslatef,
-    glVertex3f,
-)
-from OpenGL.raw.GLU import gluPerspective
+from backend.gl.wrappers.light import gl_light_fv
+from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
+from picogl.backend.gl.enums.legacy.scale import gl_load_identity, gl_translatef
+from picogl.backend.gl.wrappers.color import gl_color_material, gl_color_4f
+from picogl.backend.gl.wrappers.glu import glu_perspective
+from picogl.backend.gl.wrappers.material import gl_material_fv, gl_material_f
+from picogl.backend.gl.wrappers.matrix import gl_matrix_mode
+from picogl.backend.gl.wrappers.vertex import gl_vertex_3f
 from picogl.backend.gl.capability import FACE_MAP
 from picogl.backend.gl.state.fill import (
     GLColorMaterialMode,
@@ -24,6 +21,7 @@ from picogl.backend.gl.state.fill import (
 )
 from picogl.backend.gl.state.texture import TexCoord2f, Vertex3f
 from picogl.backend.state import gl_value
+from picogl.texture.coord import gl_tex_coord2f
 
 
 @runtime_checkable
@@ -54,66 +52,76 @@ class GLLegacyPipeline:
 
     @staticmethod
     def set_matrix_mode_model_view():
-        glMatrixMode(GL_MODELVIEW)
+        gl_matrix_mode(GLLegacyMatrixMode.MODELVIEW)
 
     @staticmethod
     def set_matrix_mode_projection():
-        glMatrixMode(GL_PROJECTION)
+        gl_matrix_mode(GLLegacyMatrixMode.PROJECTION)
 
     @staticmethod
     def load_identity():
-        glLoadIdentity()
+        gl_load_identity()
 
     @staticmethod
-    def set_perspective(fovy, aspect, znear, zfar):
-        gluPerspective(float(fovy), float(aspect), float(znear), float(zfar))
+    def set_perspective(fovy: float, aspect: float, znear: float, zfar: float):
+        """
+        set perspective
+        """
+        glu_perspective(float(fovy), float(aspect), float(znear), float(zfar))
 
     @staticmethod
-    def set_projection(fovy, aspect, znear, zfar):
-        glMatrixMode(GL_PROJECTION)
-        glLoadIdentity()
-        gluPerspective(float(fovy), float(aspect), float(znear), float(zfar))
-        glMatrixMode(GL_MODELVIEW)
+    def set_projection(fovy: float, aspect: float, znear: float, zfar: float):
+        """
+        set projection
+        """
+        gl_matrix_mode(GLLegacyMatrixMode.PROJECTION)
+        gl_load_identity()
+        glu_perspective(float(fovy), float(aspect), float(znear), float(zfar))
+        gl_matrix_mode(GLLegacyMatrixMode.MODELVIEW)
 
     @staticmethod
-    def translate(x, y, z):
-        glTranslatef(float(x), float(y), float(z))
+    def translate(x: float, y: float, z: float) -> None:
+        gl_translatef(float(x), float(y), float(z))
 
     @staticmethod
-    def set_light(position, light=GLLight.LIGHT0):
-        glLightfv(gl_value(light), GLLightParameter.POSITION, position)
+    def set_light(position, light: GLLight = GLLight.LIGHT0) -> None:
+        """set light"""
+        gl_light_fv(light=gl_value(light), param=GLLightParameter.POSITION, position=position)
 
     @staticmethod
-    def set_material(face, material):
+    def set_material(face, material ) -> None:
         f = FACE_MAP.get(face, gl_value(face))
-        glMaterialfv(f, GLLightParameter.AMBIENT, material.ambient)
-        glMaterialfv(f, GLLightParameter.DIFFUSE, material.diffuse)
-        glMaterialfv(f, GLLightParameter.SPECULAR, material.specular)
-        glMaterialf(f, GL_SHININESS, material.shininess)
+        gl_material_fv(f, GLLightParameter.AMBIENT, material.ambient)
+        gl_material_fv(f, GLLightParameter.DIFFUSE, material.diffuse)
+        gl_material_fv(f, GLLightParameter.SPECULAR, material.specular)
+        gl_material_f(f, GLLightParameter.SHININESS, material.shininess)
 
     @staticmethod
     def set_color_material(
-        face=GLFace.FRONT_AND_BACK,
-        mode=GLColorMaterialMode.AMBIENT_AND_DIFFUSE,
-    ):
+        face: GLFace = GLFace.FRONT_AND_BACK,
+        mode: GLColorMaterialMode = GLColorMaterialMode.AMBIENT_AND_DIFFUSE,
+    ) -> None:
+        """set_color_material"""
         f = FACE_MAP.get(face, gl_value(face))
-        glColorMaterial(f, gl_value(mode))
+        gl_color_material(f, gl_value(mode))
 
     @staticmethod
-    def set_color(rgba):
-        glColor4f(*rgba)
+    def set_color(rgba: tuple[float, float, float, float]) -> None:
+        gl_color_4f(rgba)
 
-    def set_uniform_color(self, color, alpha):
+    def set_uniform_color(self, color: tuple, alpha) -> None:
         r, g, b = color[:3]
         self.set_color((r, g, b, 1.0 - alpha))
 
     @staticmethod
-    def tex_coord2f(coord: TexCoord2f):
-        return glTexCoord2f(coord.u, coord.v)
+    def tex_coord2f(coord: TexCoord2f) -> None:
+        """tex_coord2f"""
+        return gl_tex_coord2f(coord.u, coord.v)
 
     @staticmethod
     def vertex_3f(v1: Vertex3f):
-        glVertex3f(v1.x, v1.y, v1.z)
+        """vertex_3f"""
+        gl_vertex_3f(v1.x, v1.y, v1.z)
 
 
 # Preferred public name for fixed-function pipeline access.
