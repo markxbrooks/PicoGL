@@ -19,12 +19,8 @@ from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
-from picogl.backend.gl.state.fill import (
-    GLCapability,
-    GLColorMaterialMode,
-    GLFace,
-    GLFillMode,
-)
+from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode,
+                                          GLFace, GLFillMode)
 from picogl.backend.gl.wrappers.clear import gl_clear
 from picogl.backend.gl.wrappers.polygon_mode import gl_polygon_mode
 from picogl.backend.glut.glut_renderer import GlutRenderer

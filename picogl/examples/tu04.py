@@ -7,7 +7,6 @@ from picogl.backend.gl.wrappers.glm import identity_matrix
 from picogl.backend.modern.core.shader.files import ShaderFiles
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.core.uniform import gl_uniform1i
-
 # from picogl.gpu.buffers.vertex import data
 from picogl.ui.backend.glut.window.glut import GlutRendererWindow
 from picogl.utils.loader.texture import TextureLoader

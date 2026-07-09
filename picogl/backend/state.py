@@ -10,23 +10,20 @@ from typing import Any, Protocol
 
 import numpy as np
 from numpy import ndarray
-from picogl.backend.gl.capability import (
-    GLBlendFactor,
-    GLFixedFunctionCapability,
-    GLPipelineCapability,
-)
+from picogl.backend.gl.capability import (GLBlendFactor,
+                                          GLFixedFunctionCapability,
+                                          GLPipelineCapability)
 from picogl.backend.gl.enums import GLDrawMode, GLIndexType, GLNumeric
 from picogl.backend.gl.enums.legacy.scale import gl_viewport
 from picogl.backend.gl.enums.point_size import GLPointCapability
 from picogl.backend.gl.state.client import GLClientState
 from picogl.backend.gl.state.fill import GLCapability, GLFace, GLFillMode
-from picogl.backend.gl.wrappers import gl_draw_elements, gl_enable_legacy_client_state
+from picogl.backend.gl.wrappers import (gl_draw_elements,
+                                        gl_enable_legacy_client_state)
 from picogl.backend.gl.wrappers.blending import gl_blend_func
-from picogl.backend.gl.wrappers.pointer import (
-    gl_color_array_pointer,
-    gl_normal_array_pointer,
-    gl_vertex_array_pointer,
-)
+from picogl.backend.gl.wrappers.pointer import (gl_color_array_pointer,
+                                                gl_normal_array_pointer,
+                                                gl_vertex_array_pointer)
 from picogl.backend.value import gl_value
 from picogl.texture.gltexture_driver import GLTextureDriver
 

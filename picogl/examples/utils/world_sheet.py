@@ -8,17 +8,11 @@ from OpenGL.GL.shaders import GL_FALSE
 from OpenGL.raw.GL.ARB.vertex_shader import GL_FLOAT
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_LINES
 from OpenGL.raw.GL.VERSION.GL_1_1 import glDrawArrays
-from OpenGL.raw.GL.VERSION.GL_1_5 import (
-    GL_ARRAY_BUFFER,
-    GL_STATIC_DRAW,
-    glBindBuffer,
-    glBufferData,
-)
-from OpenGL.raw.GL.VERSION.GL_2_0 import (
-    gl_enableVertexAttribArray,
-    glDisableVertexAttribArray,
-    glVertexAttribPointer,
-)
+from OpenGL.raw.GL.VERSION.GL_1_5 import (GL_ARRAY_BUFFER, GL_STATIC_DRAW,
+                                          glBindBuffer, glBufferData)
+from OpenGL.raw.GL.VERSION.GL_2_0 import (gl_enableVertexAttribArray,
+                                          glDisableVertexAttribArray,
+                                          glVertexAttribPointer)
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.backend.modern.renderers.mesh import ShaderMeshRenderer
 from pyglm import glm

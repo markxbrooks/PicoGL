@@ -16,7 +16,8 @@ Functions:
 """
 
 from picogl.backend.gl.enums import GLNumeric
-from picogl.gpu.buffers.attributes import LayoutDescriptor, legacy_attribute_spec
+from picogl.gpu.buffers.attributes import (LayoutDescriptor,
+                                           legacy_attribute_spec)
 from picogl.gpu.buffers.vertex.aliases import VertexBufferRole
 
 

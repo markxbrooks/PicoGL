@@ -3,11 +3,7 @@ gl_light_fv
 """
 
 from OpenGL.GL import glLightfv
-from picogl.backend.gl.state.fill import (
-    GLLight,
-    GLLightParameter,
-)
-
+from picogl.backend.gl.state.fill import GLLight, GLLightParameter
 from picogl.backend.state import gl_value
 
 

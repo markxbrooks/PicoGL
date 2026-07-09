@@ -1,28 +1,18 @@
 from typing import Any, Protocol, runtime_checkable
 
+from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
+from picogl.backend.gl.enums.legacy.scale import gl_load_identity
+from picogl.backend.gl.wrappers.color import gl_color_4f, gl_color_material
+from picogl.backend.gl.wrappers.glu import glu_perspective
+from picogl.backend.gl.wrappers.material import gl_material_f, gl_material_fv
+from picogl.backend.gl.wrappers.matrix import gl_matrix_mode
 from OpenGL.GL import glLightfv
-from OpenGL.raw.GL.VERSION.GL_1_0 import (
-    GL_MODELVIEW,
-    GL_PROJECTION,
-    GL_SHININESS,
-    glTexCoord2f,
-    glTranslatef,
-    glVertex3f,
-)
-
-from backend.gl.enums.legacy import GLLegacyMatrixMode
-from backend.gl.enums.legacy.scale import gl_load_identity
-from backend.gl.wrappers.color import gl_color_material, gl_color_4f
-from backend.gl.wrappers.glu import glu_perspective
-from backend.gl.wrappers.material import gl_material_fv, gl_material_f
-from backend.gl.wrappers.matrix import gl_matrix_mode
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_MODELVIEW, GL_PROJECTION,
+                                          GL_SHININESS, glTexCoord2f,
+                                          glTranslatef, glVertex3f)
 from picogl.backend.gl.capability import FACE_MAP
-from picogl.backend.gl.state.fill import (
-    GLColorMaterialMode,
-    GLFace,
-    GLLight,
-    GLLightParameter,
-)
+from picogl.backend.gl.state.fill import (GLColorMaterialMode, GLFace, GLLight,
+                                          GLLightParameter)
 from picogl.backend.gl.state.texture import TexCoord2f, Vertex3f
 from picogl.backend.state import gl_value
 

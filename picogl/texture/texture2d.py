@@ -18,9 +18,14 @@ Example Usage:
   >> return tex.handle
 
 """
+from typing import Any
 
+from picogl.backend.gl.enums import GLNumeric
+from picogl.backend.gl.wrappers import gl_gen_textures, gl_teximage2d
+from picogl.core.color import GLColor
 from numpy import ndarray
 from picogl.texture.texture_spec import TextureSpec
+from picogl.texture.binding import bound_texture
 
 
 class Texture2D:
@@ -31,3 +36,29 @@ class Texture2D:
         self.data = data
         self.handle = None  # assigned by backend
         self.initialized = False
+
+
+def upload_texture_2d(target: GLNumeric, texture_buffer: bytes, texture_height: int, texture_width: int) -> Any:
+    """
+    generate_texture
+
+    :param target: GLNumeric.UNSIGNED_BYTE
+    :param texture_buffer: bytes
+    :param texture_height: int
+    :param texture_width: int
+    :return: int
+    """
+    texture_id = gl_gen_textures(1)
+    with bound_texture(texture_id, target):
+        gl_teximage2d(
+            target=target,
+            level=0,
+            internalformat=GLColor.SRGB8,
+            width=texture_width,
+            height=texture_height,
+            border=0,
+            format=GLColor.RGB,
+            num_type=GLNumeric.UNSIGNED_BYTE,
+            data=texture_buffer,
+        )
+    return texture_id
