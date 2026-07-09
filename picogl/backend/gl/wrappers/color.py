@@ -13,7 +13,7 @@ Functions:
 """
 
 from OpenGL.GL import glColorMaterial
-from OpenGL.raw.GL.VERSION.GL_1_0 import glColor3f
+from OpenGL.raw.GL.VERSION.GL_1_0 import glColor3f, glColor4f
 from picogl.backend.gl.capability import GLMaterialFace
 from picogl.backend.gl.state.fill import GLColorMaterialMode
 from picogl.core.rgbcolor import RGBColor
@@ -57,6 +57,9 @@ def gl_color_rgb(rgb_color: RGBColor) -> None:
     """
     glColor3f(*rgb_color.to_tuple())
 
+
+def gl_color_4f(color: tuple[float, float, float, float]) -> None:
+    glColor4f(*color)
 
 def gl_color_3f(color: tuple[float, float, float]) -> None:
     """
