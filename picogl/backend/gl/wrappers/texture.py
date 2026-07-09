@@ -43,6 +43,8 @@ from OpenGL.GL import (
 )
 from OpenGL.raw.GL.VERSION.GL_1_2 import glTexImage3D
 from OpenGL.raw.GL.VERSION.GL_3_0 import glFramebufferTexture2D
+
+from picogl.core.texture_clamp import GLTextureClamp
 from picogl.backend.gl.enums import GLNumeric
 from picogl.backend.gl.enums.target.frame_buffer import GLFrameBufferTarget
 from picogl.texture.gltexparam import GLTexParam
