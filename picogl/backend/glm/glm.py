@@ -1,3 +1,14 @@
+"""
+A module for handling matrix and vector operations using the `pyglm` and `numpy` libraries.
+
+This module provides utility functions for creating, converting, and manipulating
+matrices (`mat4`) and vectors (`vec4`) compatible with the `pyglm` library, as well as
+converting between `pyglm` and `numpy` data structures.
+
+The module also includes functions for calculating perspective projection matrices
+commonly used in graphics programming.
+"""
+
 from __future__ import annotations
 
 import numpy as np
