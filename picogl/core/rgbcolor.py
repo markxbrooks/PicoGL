@@ -38,6 +38,9 @@ class RGBColor:
     def to_tuple(self) -> tuple[float, float, float]:
         return self.r, self.g, self.b
 
+    def with_alpha(self, alpha: float) -> "RGBAColor":
+        return RGBAColor(self.r, self.g, self.b, alpha)
+
 
 @dataclass(frozen=False)
 class RGBAColor(RGBColor):
@@ -50,4 +53,7 @@ class RGBAColor(RGBColor):
         setattr(self, "a", clamp01(self.a))
 
     def to_tuple(self) -> tuple[float, float, float, float]:
-        return self.r, self.g, self.b, self.a
+        return (*super().to_tuple(), self.a)
+
+    def without_alpha(self) -> "RGBColor":
+        return RGBColor(self.r, self.g, self.b)
