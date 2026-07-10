@@ -25,7 +25,7 @@ from picogl.backend.gl.wrappers import gl_gen_textures, gl_teximage2d
 from picogl.core.color import GLColor
 from numpy import ndarray
 from picogl.texture.texture_spec import TextureSpec
-from picogl.texture.binding import bound_texture
+from picogl.texture.binding import gl_bound_texture
 
 
 class Texture2D:
@@ -49,7 +49,7 @@ def upload_texture_2d(target: GLNumeric, texture_buffer: bytes, texture_height: 
     :return: int
     """
     texture_id = gl_gen_textures(1)
-    with bound_texture(texture_id, target):
+    with gl_bound_texture(texture_id, target):
         gl_teximage2d(
             target=target,
             level=0,
