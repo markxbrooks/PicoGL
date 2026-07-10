@@ -44,11 +44,11 @@ from picogl.backend.gl.enums import (GLBufferTarget, GLDrawMode, GLIndexType,
 from picogl.backend.gl.api import gl_draw_arrays, gl_draw_elements
 from picogl.backend.gl.api.buffer.subdata import gl_buffer_subdata
 from picogl.backend.gl.api import gl_bind_buffer
-from picogl.backend.gl.api.enable_vertex_array import \
+from picogl.backend.gl.api.vertex.enable_array import \
     gl_enable_vertex_array
 from picogl.backend.gl.api.glcleanup import (gl_delete_buffers,
                                              gl_delete_vertex_arrays)
-from picogl.backend.gl.api.vertex.vertex_array import (gl_bind_vertex_array,
+from picogl.backend.gl.api.vertex.array import (gl_bind_vertex_array,
                                                 gl_gen_vertex_arrays,
                                                 gl_is_vertex_array)
 from picogl.backend.gl.api.vertex.attrib_pointer import \
