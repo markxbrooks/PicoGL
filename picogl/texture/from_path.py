@@ -2,7 +2,7 @@ import os
 
 from decologr import Decologr as log
 from PIL import Image
-from texture.checkerboard import generate_checkerboard_texture
+from picogl.texture.checkerboard import generate_checkerboard_texture
 
 
 def load_texture_file_from_path(texture_path: str) -> tuple[bytes, int, int]:
