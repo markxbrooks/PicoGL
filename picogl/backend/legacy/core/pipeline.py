@@ -4,20 +4,22 @@ LegacyPipelineProtocol
 
 from typing import Any, Protocol, runtime_checkable
 
-from picogl.backend.gl.capability import PhongMaterial
-from picogl.backend.gl.api.light import gl_light_fv
-from picogl.backend.gl.capability import FACE_MAP
-from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
-from picogl.backend.gl.enums.legacy.scale import (gl_load_identity,
-                                                  gl_translatef)
-from picogl.backend.gl.state.fill import (GLColorMaterialMode, GLFace, GLLight,
-                                          GLLightParameter)
-from picogl.backend.gl.state.texture import TexCoord2f, Vertex3f
 from picogl.backend.gl.api.color import gl_color_4f, gl_color_material
 from picogl.backend.gl.api.glu import glu_perspective
+from picogl.backend.gl.api.light import gl_light_fv
 from picogl.backend.gl.api.material import gl_material_f, gl_material_fv
 from picogl.backend.gl.api.matrix import gl_matrix_mode
 from picogl.backend.gl.api.vertex.vertex_3f import gl_vertex_3f
+from picogl.backend.gl.capability import FACE_MAP, PhongMaterial
+from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
+from picogl.backend.gl.enums.legacy.scale import gl_load_identity, gl_translatef
+from picogl.backend.gl.state.fill import (
+    GLColorMaterialMode,
+    GLFace,
+    GLLight,
+    GLLightParameter,
+)
+from picogl.backend.gl.state.texture import TexCoord2f, Vertex3f
 from picogl.backend.state import gl_value
 from picogl.texture.coord import gl_tex_coord2f
 
@@ -84,7 +86,9 @@ class GLLegacyPipeline:
     @staticmethod
     def set_light(position, light: GLLight = GLLight.LIGHT0) -> None:
         """set light"""
-        gl_light_fv(light=gl_value(light), param=GLLightParameter.POSITION, position=position)
+        gl_light_fv(
+            light=gl_value(light), param=GLLightParameter.POSITION, position=position
+        )
 
     @staticmethod
     def set_material(face, material: PhongMaterial) -> None:

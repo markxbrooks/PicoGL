@@ -3,13 +3,13 @@ Prepare viewport
 """
 
 from OpenGL.GL import glGenFramebuffers
-from OpenGL.raw.GL.VERSION.GL_3_0 import (glBindFramebuffer,
-                                          glCheckFramebufferStatus)
+from OpenGL.raw.GL.VERSION.GL_3_0 import glBindFramebuffer, glCheckFramebufferStatus
+from picogl.backend.gl.api.dpr import get_dpr
+
 # from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums.point_size import GLPointCapability
 from picogl.backend.gl.enums.target.frame_buffer import GLFrameBufferTarget
-from picogl.backend.gl.api.dpr import get_dpr
 
 from elmo.ui.widgets.gl.mol.viewport import Viewport
 

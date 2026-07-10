@@ -1,6 +1,7 @@
 """
 Wrapper for glVertex3f
 """
+
 from OpenGL.raw.GL.VERSION.GL_1_0 import glVertex3f
 
 

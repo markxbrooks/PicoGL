@@ -7,13 +7,13 @@ matrix modes.
 Functions in this module include setting the matrix mode and loading a
 matrix into the current matrix stack.
 """
+
 from typing import Optional, Union
 
 import numpy as np
-from OpenGL.raw.GL.VERSION.GL_1_0 import glMatrixMode, glLoadMatrixf
-from pyglm import glm
-
+from OpenGL.raw.GL.VERSION.GL_1_0 import glLoadMatrixf, glMatrixMode
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
+from pyglm import glm
 
 
 def gl_matrix_mode(mode: GLLegacyMatrixMode):

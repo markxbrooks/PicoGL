@@ -14,11 +14,16 @@ import warnings
 from abc import ABC, abstractmethod
 from typing import Any, Protocol, runtime_checkable
 
-from picogl.backend.geometry.factory import (GLBindingStrategy, LegacyBinding,
-                                             ModernBinding)
-from picogl.backend.legacy.core.pipeline import (GLLegacyPipeline,
-                                                 LegacyPipeline,
-                                                 LegacyPipelineProtocol)
+from picogl.backend.geometry.factory import (
+    GLBindingStrategy,
+    LegacyBinding,
+    ModernBinding,
+)
+from picogl.backend.legacy.core.pipeline import (
+    GLLegacyPipeline,
+    LegacyPipeline,
+    LegacyPipelineProtocol,
+)
 
 __all__ = [
     "AbstractGLBackend",

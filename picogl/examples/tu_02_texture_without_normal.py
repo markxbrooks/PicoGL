@@ -1,8 +1,8 @@
 from pathlib import Path
 
 from OpenGL.GL import *  # pylint: disable=W0614
-from picogl.backend.gl.enums import GLBufferTarget, GLUsageHint
 from picogl.backend.gl.api import gl_bind_texture, gl_get_active_texture0
+from picogl.backend.gl.enums import GLBufferTarget, GLUsageHint
 from picogl.core.uniform import gl_uniform1i
 from picogl.globals import PROJECT_ROOT
 from picogl.ui.backend.glut.window.gl import GLWindow

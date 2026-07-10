@@ -10,9 +10,15 @@ integer constants for easy usage in OpenGL-related operations.
 
 from enum import IntEnum
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_ALWAYS, GL_EQUAL, GL_GEQUAL,
-                                          GL_GREATER, GL_LEQUAL, GL_LESS,
-                                          GL_NEVER)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (
+    GL_ALWAYS,
+    GL_EQUAL,
+    GL_GEQUAL,
+    GL_GREATER,
+    GL_LEQUAL,
+    GL_LESS,
+    GL_NEVER,
+)
 
 
 class GLDepthFunc(IntEnum):

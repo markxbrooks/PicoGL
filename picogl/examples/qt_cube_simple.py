@@ -25,24 +25,39 @@ from picogl.backend.gl.light import GLLightSource
 try:
     from PySide6.QtCore import Qt, QTimer
     from PySide6.QtOpenGLWidgets import QOpenGLWidget
-    from PySide6.QtWidgets import (QApplication, QLabel, QMainWindow,
-                                   QVBoxLayout, QWidget)
+    from PySide6.QtWidgets import (
+        QApplication,
+        QLabel,
+        QMainWindow,
+        QVBoxLayout,
+        QWidget,
+    )
 
     QT_VERSION = "PySide6"
 except ImportError:
     try:
         from PyQt5.QtCore import Qt, QTimer
         from PyQt5.QtOpenGL import QGLWidget as QOpenGLWidget
-        from PyQt5.QtWidgets import (QApplication, QLabel, QMainWindow,
-                                     QVBoxLayout, QWidget)
+        from PyQt5.QtWidgets import (
+            QApplication,
+            QLabel,
+            QMainWindow,
+            QVBoxLayout,
+            QWidget,
+        )
 
         QT_VERSION = "PyQt5"
     except ImportError:
         try:
             from PyQt6.QtCore import Qt, QTimer
             from PyQt6.QtOpenGLWidgets import QOpenGLWidget
-            from PyQt6.QtWidgets import (QApplication, QLabel, QMainWindow,
-                                         QVBoxLayout, QWidget)
+            from PyQt6.QtWidgets import (
+                QApplication,
+                QLabel,
+                QMainWindow,
+                QVBoxLayout,
+                QWidget,
+            )
 
             QT_VERSION = "PyQt6"
         except ImportError:
@@ -61,11 +76,19 @@ except ImportError:
 from examples.data.cube_data import g_color_buffer_data, g_vertex_buffer_data
 from picogl.backend.geometry.factory import LegacyBinding
 from picogl.backend.gl.backend import GLBackend
-from picogl.backend.gl.capability import (GLFixedFunctionCapability,
-                                          GLMaterialFace, PhongMaterial)
+from picogl.backend.gl.capability import (
+    GLFixedFunctionCapability,
+    GLMaterialFace,
+    PhongMaterial,
+)
 from picogl.backend.gl.enums import GLBitMask
-from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode,
-                                          GLFace, GLLight, GLLightParameter)
+from picogl.backend.gl.state.fill import (
+    GLCapability,
+    GLColorMaterialMode,
+    GLFace,
+    GLLight,
+    GLLightParameter,
+)
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 
 

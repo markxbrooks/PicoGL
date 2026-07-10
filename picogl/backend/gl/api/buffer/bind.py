@@ -9,6 +9,7 @@ pipelines to enable operations on buffer objects.
 Functions:
 - gl_bind_buffer: Binds a buffer object to the specified target.
 """
+
 from OpenGL.raw.GL.VERSION.GL_1_5 import glBindBuffer
 
 

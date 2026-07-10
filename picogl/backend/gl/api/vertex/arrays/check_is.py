@@ -5,6 +5,7 @@ is a valid OpenGL Vertex Array Object.
 It utilizes the OpenGL function glIsVertexArray to perform
 the check and returns the result as a boolean value.
 """
+
 from typing import Any
 
 from OpenGL.raw.GL.VERSION.GL_3_0 import glIsVertexArray

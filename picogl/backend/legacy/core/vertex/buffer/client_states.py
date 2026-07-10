@@ -9,10 +9,12 @@ context, even in the case of an exception.
 
 from contextlib import contextmanager
 
+from picogl.backend.gl.api import (
+    gl_bind_buffer,
+    gl_disable_legacy_client_state,
+    gl_enable_legacy_client_state,
+)
 from picogl.backend.gl.enums import GLBufferTarget
-from picogl.backend.gl.api import (gl_disable_legacy_client_state,
-                                   gl_enable_legacy_client_state)
-from picogl.backend.gl.api import gl_bind_buffer
 
 
 @contextmanager

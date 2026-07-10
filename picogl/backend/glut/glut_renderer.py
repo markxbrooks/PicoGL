@@ -14,22 +14,26 @@ import os
 import sys
 
 import numpy as np
-from picogl.backend.gl.capability import (GLFixedFunctionCapability,
-                                          GLMaterialFace)
-# from picogl.examples.legacy_cube_fixed import LegacyCubeRenderer
-from picogl.backend.gl.driver.capability import GLCapabilityDriver
-from picogl.backend.gl.enums import GLBitMask
-from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
-from picogl.backend.gl.enums.legacy.scale import gl_load_identity, gl_viewport
-from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
-from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode,
-                                          GLFace, GLFillMode)
 from picogl.backend.gl.api.clear import gl_clear, gl_clear_color
 from picogl.backend.gl.api.color import gl_color_3f
 from picogl.backend.gl.api.glu import glu_look_at
 from picogl.backend.gl.api.matrix import gl_matrix_mode
 from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
 from picogl.backend.gl.api.rotate import gl_rotate_f
+from picogl.backend.gl.capability import GLFixedFunctionCapability, GLMaterialFace
+
+# from picogl.examples.legacy_cube_fixed import LegacyCubeRenderer
+from picogl.backend.gl.driver.capability import GLCapabilityDriver
+from picogl.backend.gl.enums import GLBitMask
+from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
+from picogl.backend.gl.enums.legacy.scale import gl_load_identity, gl_viewport
+from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
+from picogl.backend.gl.state.fill import (
+    GLCapability,
+    GLColorMaterialMode,
+    GLFace,
+    GLFillMode,
+)
 from picogl.backend.glut.cube_data import CUBE_COLORS, CUBE_VERTICES
 
 # Check for display before importing OpenGL

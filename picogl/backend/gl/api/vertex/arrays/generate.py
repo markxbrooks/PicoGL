@@ -7,7 +7,8 @@ that allows for its usage, enabling creation of vertex
 array objects. It relies on the PyOpenGL library and
 the OpenGL.GL module for implementation.
 """
-from typing import Callable, Any
+
+from typing import Any, Callable
 
 from OpenGL.GL import glGenVertexArrays
 

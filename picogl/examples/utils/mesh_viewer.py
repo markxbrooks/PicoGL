@@ -2,12 +2,12 @@ from decologr import Decologr as log
 from examples.utils.world_sheet import WorldSheet
 from OpenGL.GL import *  # pylint: disable=W0614
 from OpenGL.GLUT import *  # pylint: disable=W0614
-from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.api.clear import gl_clear_color
 from picogl.backend.gl.api.depth import gl_depth_func
 from picogl.backend.gl.api.enable import gl_enable
-from picogl.backend.glm.glm import glm_identity_matrix
 from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
+from picogl.backend.gl.enums import GLBitMask
+from picogl.backend.glm.glm import glm_identity_matrix
 from picogl.backend.modern.core.shader.mvp.controller import MVPController
 from picogl.ui.backend.glut.window.gl import GLWindow
 from pyglm import glm

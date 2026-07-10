@@ -7,10 +7,10 @@ the framebuffer with specified colors and configuring the viewport
 for rendering.
 """
 
-from picogl.backend.gl.enums import GLBitMask
-from picogl.backend.gl.enums.legacy.scale import gl_viewport
 from picogl.backend.gl.api.clear import gl_clear, gl_clear_color
 from picogl.backend.gl.api.frame import gl_bind_framebuffer
+from picogl.backend.gl.enums import GLBitMask
+from picogl.backend.gl.enums.legacy.scale import gl_viewport
 from picogl.backend.state import gl_value
 from picogl.core.rgbcolor import RGBAColor, clamp01
 

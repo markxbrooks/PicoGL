@@ -15,13 +15,15 @@ from pathlib import Path
 
 import numpy as np
 from examples.utils.pdb_loader import PDBLoader
-from picogl.backend.gl.capability import GLPipelineCapability
-from picogl.backend.gl.enums.point_size import (GLLegacyPointCapability,
-                                                GLPointCapability)
-from picogl.backend.gl.glfunc import GLDepthFunc
 from picogl.backend.gl.api.clear import gl_clear_color
 from picogl.backend.gl.api.depth import gl_depth_func
 from picogl.backend.gl.api.enable import gl_enable
+from picogl.backend.gl.capability import GLPipelineCapability
+from picogl.backend.gl.enums.point_size import (
+    GLLegacyPointCapability,
+    GLPointCapability,
+)
+from picogl.backend.gl.glfunc import GLDepthFunc
 
 # Add the current directory to the path to find pdb_loader.py
 sys.path.insert(0, os.path.dirname(__file__))

@@ -11,9 +11,9 @@ Classes:
 """
 
 from picogl.backend.geometry.mesh import GPUMesh
-from picogl.backend.gl.enums import GLIndexType
 from picogl.backend.gl.api import gl_draw_arrays, gl_draw_elements
 from picogl.backend.gl.api.vertex.arrays.bind import gl_bind_vertex_array
+from picogl.backend.gl.enums import GLIndexType
 from picogl.backend.opengl import GLBindingStrategy
 from picogl.backend.state import gl_value
 

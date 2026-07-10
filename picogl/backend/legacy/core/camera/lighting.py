@@ -2,10 +2,15 @@
 Setup lighting
 """
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_UNPACK_ALIGNMENT, glLoadIdentity,
-                                          glMaterialf, glMatrixMode,
-                                          glPixelStorei, glPopMatrix,
-                                          glPushMatrix)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (
+    GL_UNPACK_ALIGNMENT,
+    glLoadIdentity,
+    glMaterialf,
+    glMatrixMode,
+    glPixelStorei,
+    glPopMatrix,
+    glPushMatrix,
+)
 from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.gl.light import GLLightSource

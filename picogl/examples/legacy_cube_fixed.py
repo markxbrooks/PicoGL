@@ -14,15 +14,19 @@ import os
 import sys
 
 import numpy as np
+from picogl.backend.gl.api.clear import gl_clear
+from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
 from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
-from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode,
-                                          GLFace, GLFillMode)
-from picogl.backend.gl.api.clear import gl_clear
-from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
+from picogl.backend.gl.state.fill import (
+    GLCapability,
+    GLColorMaterialMode,
+    GLFace,
+    GLFillMode,
+)
 from picogl.backend.glut.glut_renderer import GlutRenderer
 
 # Check for display before importing OpenGL

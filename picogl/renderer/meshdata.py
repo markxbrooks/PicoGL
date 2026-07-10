@@ -9,16 +9,20 @@ from typing import Optional, Union
 import numpy as np
 from decologr import Decologr as log
 from OpenGL import GL
+from picogl.backend.gl.api import (
+    gl_disable_legacy_client_state,
+    gl_draw_elements,
+    gl_enable_legacy_client_state,
+)
+from picogl.backend.gl.api.pointer import (
+    gl_color_array_pointer,
+    gl_normal_array_pointer,
+    gl_texcoord_array_pointer,
+    gl_vertex_array_pointer,
+)
 from picogl.backend.gl.enums import GLDrawMode, GLIndexType, GLNumeric
 from picogl.backend.gl.state.client import GLClientState
 from picogl.backend.gl.state.fill import GLFace, GLFillMode
-from picogl.backend.gl.api import (gl_disable_legacy_client_state,
-                                   gl_draw_elements,
-                                   gl_enable_legacy_client_state)
-from picogl.backend.gl.api.pointer import (gl_color_array_pointer,
-                                           gl_normal_array_pointer,
-                                           gl_texcoord_array_pointer,
-                                           gl_vertex_array_pointer)
 from picogl.gpu.buffers.attributes import CanonicalVertexAttrs
 from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
 

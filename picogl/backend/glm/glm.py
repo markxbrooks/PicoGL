@@ -40,7 +40,7 @@ def as_glm_mat4(m) -> glm.mat4:
 
 
 def glm_vec4(arg1, arg2, arg3, arg4) -> vec4:
-    """glm_vec4 """
+    """glm_vec4"""
     return glm.vec4(arg1, arg2, arg3, arg4)
 
 
@@ -66,5 +66,5 @@ def glm_compute_projection_matrix(
     near: float = 0.1,
     far: float = 500.0,
 ) -> glm.mat4:
-    """glm_compute_projection_matrix """
+    """glm_compute_projection_matrix"""
     return glm.perspective(glm.radians(fov_deg), float(aspect), near, far)

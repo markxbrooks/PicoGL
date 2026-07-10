@@ -61,6 +61,7 @@ def gl_color_rgb(rgb_color: RGBColor) -> None:
 def gl_color_4f(color: tuple[float, float, float, float]) -> None:
     glColor4f(*color)
 
+
 def gl_color_3f(color: tuple[float, float, float]) -> None:
     """
     Sets the current OpenGL color using the RGB values provided.
