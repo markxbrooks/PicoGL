@@ -4,6 +4,7 @@ LegacyPipelineProtocol
 
 from typing import Any, Protocol, runtime_checkable
 
+from backend.gl.capability import PhongMaterial
 from picogl.backend.gl.wrappers.light import gl_light_fv
 from picogl.backend.gl.capability import FACE_MAP
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
@@ -86,7 +87,7 @@ class GLLegacyPipeline:
         gl_light_fv(light=gl_value(light), param=GLLightParameter.POSITION, position=position)
 
     @staticmethod
-    def set_material(face, material ) -> None:
+    def set_material(face, material: PhongMaterial) -> None:
         f = FACE_MAP.get(face, gl_value(face))
         gl_material_fv(f, GLLightParameter.AMBIENT, material.ambient)
         gl_material_fv(f, GLLightParameter.DIFFUSE, material.diffuse)
