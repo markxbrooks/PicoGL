@@ -49,15 +49,15 @@ from typing import Optional
 
 import numpy as np
 from picogl.backend.gl.enums import GLBufferTarget, GLNumeric, GLUsageHint
-from picogl.backend.gl.api.buffer import gl_bind_buffer
+from picogl.backend.gl.api import gl_bind_buffer
 from picogl.backend.gl.api.buffer_data import gl_buffer_data
 from picogl.backend.gl.api.enable_vertex_array import \
     gl_enable_vertex_array
-from picogl.backend.gl.api.generate_buffers import gl_generate_buffers
-from picogl.backend.gl.api.generate_vertex_array import \
+from picogl.backend.gl.api.buffer.generate import gl_generate_buffers
+from picogl.backend.gl.api.vertex.generate_array import \
     gl_generate_vertex_array
-from picogl.backend.gl.api.vertex_array import gl_bind_vertex_array
-from picogl.backend.gl.api.vertex_attrib_pointer import \
+from picogl.backend.gl.api.vertex.vertex_array import gl_bind_vertex_array
+from picogl.backend.gl.api.vertex.attrib_pointer import \
     gl_vertex_attrib_pointer
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.boolean import GLBoolean

@@ -19,7 +19,7 @@ from picogl.backend.gl.state.fill import GLColorMaterialMode
 from picogl.core.rgbcolor import RGBColor
 
 
-def gl_color_material(face: GLMaterialFace, mode: GLColorMaterialMode):
+def gl_color_material(face: GLMaterialFace, mode: GLColorMaterialMode) -> None:
     """
     Sets the material properties for the specified face and mode in the OpenGL rendering state.
 

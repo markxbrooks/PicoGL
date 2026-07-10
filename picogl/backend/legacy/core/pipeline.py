@@ -17,7 +17,7 @@ from picogl.backend.gl.api.color import gl_color_4f, gl_color_material
 from picogl.backend.gl.api.glu import glu_perspective
 from picogl.backend.gl.api.material import gl_material_f, gl_material_fv
 from picogl.backend.gl.api.matrix import gl_matrix_mode
-from picogl.backend.gl.api.vertex import gl_vertex_3f
+from picogl.backend.gl.api.vertex.vertex_3f import gl_vertex_3f
 from picogl.backend.state import gl_value
 from picogl.texture.coord import gl_tex_coord2f
 

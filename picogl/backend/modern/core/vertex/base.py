@@ -40,10 +40,10 @@ from OpenGL.raw.GL.VERSION.GL_1_5 import glBufferSubData, glIsBuffer
 from picogl.backend.gl.enums import (GLBufferTarget, GLIndexType, GLNumeric,
                                      GLUsageHint)
 from picogl.backend.gl.api import gl_buffer_data
-from picogl.backend.gl.api.buffer import gl_bind_buffer
-from picogl.backend.gl.api.enable_vertex_array import \
+from picogl.backend.gl.api import gl_bind_buffer
+from picogl.backend.gl.api.vertex.enable_array import \
     gl_enable_vertex_array
-from picogl.backend.gl.api.vertex_attrib_pointer import \
+from picogl.backend.gl.api.vertex.attrib_pointer import \
     gl_vertex_attrib_pointer
 from picogl.boolean import GLBoolean
 from picogl.gpu.buffers.base import VertexBase
