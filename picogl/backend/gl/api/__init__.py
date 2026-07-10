@@ -1,5 +1,11 @@
 """
-Thin OpenGL call wrappers (legacy client state, pointers, buffers, draws).
+This module provides bindings and utilities for interacting with OpenGL buffers,
+vertex arrays, textures, client states, and drawing operations. These functions
+facilitate working with OpenGL through abstractions and are commonly utilized in
+graphics programming for setting up and rendering graphics pipelines.
+
+Exports a variety of OpenGL utility functions, including buffer operations,
+vertex and texture handling, and client state management.
 """
 
 from .buffer.bind import gl_bind_buffer
