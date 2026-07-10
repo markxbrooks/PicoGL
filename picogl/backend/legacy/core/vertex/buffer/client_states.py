@@ -9,7 +9,7 @@ context, even in the case of an exception.
 
 from contextlib import contextmanager
 
-from OpenGL.GL import GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER
+from picogl.backend.gl.enums import GLBufferTarget
 from picogl.backend.gl.api import (gl_disable_legacy_client_state,
                                    gl_enable_legacy_client_state)
 from picogl.backend.gl.api import gl_bind_buffer
@@ -25,5 +25,5 @@ def legacy_client_states(*states):
     finally:
         for s in reversed(states):
             gl_disable_legacy_client_state(s)
-        gl_bind_buffer(GL_ARRAY_BUFFER, 0)
-        gl_bind_buffer(GL_ELEMENT_ARRAY_BUFFER, 0)
+        gl_bind_buffer(GLBufferTarget.ARRAY, 0)
+        gl_bind_buffer(GLBufferTarget.ELEMENT, 0)

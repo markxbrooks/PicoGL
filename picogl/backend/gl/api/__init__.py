@@ -27,7 +27,7 @@ from picogl.backend.gl.api.texture import (gl_active_texture,
                                            gl_get_active_texture0,
                                            gl_tex_parameter,
                                            gl_teximage2d, gl_teximage3d)
-from picogl.backend.gl.api.vertex.array import gl_bind_vertex_array
+from picogl.backend.gl.api.vertex.arrays.bind import gl_bind_vertex_array
 from picogl.backend.gl.api.vertex.attrib_pointer import \
     gl_vertex_attrib_pointer
 

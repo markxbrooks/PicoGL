@@ -1,5 +1,13 @@
 """
-glVertexAttribPointer wrapper.
+Provides OpenGL utilities for handling attribute pointers.
+
+This module defines utility functions for working with attribute pointers,
+specifically for managing OpenGL attribute pointers like `glVertexAttribPointer`.
+It includes internal helper functions for resolving pointer offsets.
+
+Functions:
+- gl_vertex_attrib_pointer: Wraps the OpenGL function `glVertexAttribPointer`.
+
 """
 
 import ctypes

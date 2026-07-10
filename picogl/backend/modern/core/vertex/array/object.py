@@ -48,9 +48,9 @@ from picogl.backend.gl.api.vertex.enable_array import \
     gl_enable_vertex_array
 from picogl.backend.gl.api.glcleanup import (gl_delete_buffers,
                                              gl_delete_vertex_arrays)
-from picogl.backend.gl.api.vertex.array import (gl_bind_vertex_array,
-                                                gl_gen_vertex_arrays,
-                                                gl_is_vertex_array)
+from picogl.backend.gl.api.vertex.arrays.bind import (gl_bind_vertex_array)
+from picogl.backend.gl.api.vertex.arrays.generate import gl_gen_vertex_arrays
+from picogl.backend.gl.api.vertex.arrays.check_is import gl_is_vertex_array
 from picogl.backend.gl.api.vertex.attrib_pointer import \
     gl_vertex_attrib_pointer
 from picogl.backend.modern.core.vertex.array.helpers import point_rendering
