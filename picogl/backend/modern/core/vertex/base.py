@@ -39,11 +39,11 @@ from OpenGL import error as _gl_err
 from OpenGL.raw.GL.VERSION.GL_1_5 import glBufferSubData, glIsBuffer
 from picogl.backend.gl.enums import (GLBufferTarget, GLIndexType, GLNumeric,
                                      GLUsageHint)
-from picogl.backend.gl.wrappers import gl_buffer_data
-from picogl.backend.gl.wrappers.buffer import gl_bind_buffer
-from picogl.backend.gl.wrappers.enable_vertex_array import \
+from picogl.backend.gl.api import gl_buffer_data
+from picogl.backend.gl.api.buffer import gl_bind_buffer
+from picogl.backend.gl.api.enable_vertex_array import \
     gl_enable_vertex_array
-from picogl.backend.gl.wrappers.vertex_attrib_pointer import \
+from picogl.backend.gl.api.vertex_attrib_pointer import \
     gl_vertex_attrib_pointer
 from picogl.boolean import GLBoolean
 from picogl.gpu.buffers.base import VertexBase

@@ -7,7 +7,7 @@ state changes when working with OpenGL textures.
 
 from contextlib import contextmanager
 
-from picogl.backend.gl.wrappers import gl_bind_texture, gl_get_integerv
+from picogl.backend.gl.api import gl_bind_texture, gl_get_integerv
 from picogl.texture.gltexture import GLTexture
 
 

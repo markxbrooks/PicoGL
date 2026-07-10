@@ -41,16 +41,16 @@ import numpy as np
 from decologr import Decologr as log
 from picogl.backend.gl.enums import (GLBufferTarget, GLDrawMode, GLIndexType,
                                      GLNumeric, GLUsageHint)
-from picogl.backend.gl.wrappers import gl_draw_arrays, gl_draw_elements
-from picogl.backend.gl.wrappers.buffer import gl_bind_buffer, gl_buffer_subdata
-from picogl.backend.gl.wrappers.enable_vertex_array import \
+from picogl.backend.gl.api import gl_draw_arrays, gl_draw_elements
+from picogl.backend.gl.api.buffer import gl_bind_buffer, gl_buffer_subdata
+from picogl.backend.gl.api.enable_vertex_array import \
     gl_enable_vertex_array
-from picogl.backend.gl.wrappers.glcleanup import (gl_delete_buffers,
-                                                  gl_delete_vertex_arrays)
-from picogl.backend.gl.wrappers.vertex_array import (gl_bind_vertex_array,
-                                                     gl_gen_vertex_arrays,
-                                                     gl_is_vertex_array)
-from picogl.backend.gl.wrappers.vertex_attrib_pointer import \
+from picogl.backend.gl.api.glcleanup import (gl_delete_buffers,
+                                             gl_delete_vertex_arrays)
+from picogl.backend.gl.api.vertex_array import (gl_bind_vertex_array,
+                                                gl_gen_vertex_arrays,
+                                                gl_is_vertex_array)
+from picogl.backend.gl.api.vertex_attrib_pointer import \
     gl_vertex_attrib_pointer
 from picogl.backend.modern.core.vertex.array.helpers import point_rendering
 from picogl.backend.modern.core.vertex.base import VertexBuffer

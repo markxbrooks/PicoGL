@@ -1,19 +1,19 @@
-from picogl.backend.gl.wrappers.glm import glm_identity_matrix
+from picogl.backend.gl.api.glm import glm_identity_matrix
 from examples.utils.shader_loader import Shader
 from examples.utils.test_window import GLWindow
 from OpenGL.GL import *  # pylint: disable=W0614
 from picogl.backend.gl.capability import GLPipelineCapability
 from picogl.backend.gl.enums import (GLBitMask, GLBufferTarget, GLNumeric,
                                      GLUsageHint)
-from picogl.backend.gl.wrappers import (gl_buffer_data,
-                                        gl_disable_vertex_array,
-                                        gl_draw_arrays)
-from picogl.backend.gl.wrappers.buffer import gl_bind_buffer
-from picogl.backend.gl.wrappers.enable import gl_enable
-from picogl.backend.gl.wrappers.enable_vertex_array import \
+from picogl.backend.gl.api import (gl_buffer_data,
+                                   gl_disable_vertex_array,
+                                   gl_draw_arrays)
+from picogl.backend.gl.api.buffer import gl_bind_buffer
+from picogl.backend.gl.api.enable import gl_enable
+from picogl.backend.gl.api.enable_vertex_array import \
     gl_enable_vertex_array
-from picogl.backend.gl.wrappers.generate_buffers import gl_generate_buffers
-from picogl.backend.gl.wrappers.vertex_attrib_pointer import \
+from picogl.backend.gl.api.generate_buffers import gl_generate_buffers
+from picogl.backend.gl.api.vertex_attrib_pointer import \
     gl_vertex_attrib_pointer
 from picogl.boolean import GLBoolean
 from pyglm import glm

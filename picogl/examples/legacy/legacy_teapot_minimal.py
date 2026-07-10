@@ -24,15 +24,15 @@ from picogl.backend.gl.enums.legacy.scale import gl_load_identity, gl_viewport
 from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
 from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode,
                                           GLFillMode)
-from picogl.backend.gl.wrappers.clear import gl_clear, gl_clear_color
-from picogl.backend.gl.wrappers.color import gl_color_3f, gl_color_material
-from picogl.backend.gl.wrappers.enable import gl_enable, toggle_capability
-from picogl.backend.gl.wrappers.glu import (glu_look_at, glu_perspective,
-                                            glut_solid_teapot,
-                                            glut_swap_buffers)
-from picogl.backend.gl.wrappers.matrix import gl_matrix_mode
-from picogl.backend.gl.wrappers.polygon_mode import gl_polygon_mode
-from picogl.backend.gl.wrappers.rotate import gl_rotate_f
+from picogl.backend.gl.api.clear import gl_clear, gl_clear_color
+from picogl.backend.gl.api.color import gl_color_3f, gl_color_material
+from picogl.backend.gl.api.enable import gl_enable, toggle_capability
+from picogl.backend.gl.api.glu import (glu_look_at, glu_perspective,
+                                       glut_solid_teapot,
+                                       glut_swap_buffers)
+from picogl.backend.gl.api.matrix import gl_matrix_mode
+from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
+from picogl.backend.gl.api.rotate import gl_rotate_f
 from picogl.backend.glut.glut_renderer import GlutRenderer
 
 # Check for display before importing OpenGL

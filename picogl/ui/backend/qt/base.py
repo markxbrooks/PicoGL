@@ -16,9 +16,9 @@ from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.mode import GLMode
 from picogl.backend.gl.task.gl_init import (legacy_init_gl_list,
                                             modern_init_gl_list)
-from picogl.backend.gl.wrappers import gl_get_integerv
-from picogl.backend.gl.wrappers.error import gl_check_errors
-from picogl.backend.gl.wrappers.frame import prepare_viewport
+from picogl.backend.gl.api import gl_get_integerv
+from picogl.backend.gl.api.error import gl_check_errors
+from picogl.backend.gl.api.frame import prepare_viewport
 from picogl.backend.legacy.core.camera.lighting import set_background_color
 from picogl.backend.legacy.core.camera.matrices.setup import setup_matrices
 from picogl.backend.legacy.core.camera.setup import calculate_aspect_ratio

@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums.point_size import GLPointCapability
-from picogl.backend.gl.wrappers.frame import prepare_viewport
+from picogl.backend.gl.api.frame import prepare_viewport
 
 
 class RecordingFrame:

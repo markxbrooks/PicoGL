@@ -15,7 +15,7 @@ import numpy as np
 from OpenGL.GL import *
 from picogl.backend.gl.enums.point_size import (GLLegacyPointCapability,
                                                 GLPointCapability)
-from picogl.backend.gl.wrappers.enable import gl_enable
+from picogl.backend.gl.api.enable import gl_enable
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.renderer import MeshData
 from picogl.shaders.registry import ShaderRegistry

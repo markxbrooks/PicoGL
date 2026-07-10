@@ -10,11 +10,11 @@ from pathlib import Path
 import numpy as np
 from decologr import Decologr as log
 from picogl.backend.gl.enums.shader import GLShader
-from picogl.backend.gl.wrappers.program import (gl_create_program,
-                                                gl_use_program)
-from picogl.backend.gl.wrappers.shader import (gl_get_program_info_log,
-                                               gl_get_programiv,
-                                               gl_link_program)
+from picogl.backend.gl.api.program import (gl_create_program,
+                                           gl_use_program)
+from picogl.backend.gl.api.shader import (gl_get_program_info_log,
+                                          gl_get_programiv,
+                                          gl_link_program)
 from picogl.backend.modern.core.shader.compile import compile_shader
 from picogl.backend.modern.core.shader.context import (clear_gl_errors,
                                                        gl_context_available,

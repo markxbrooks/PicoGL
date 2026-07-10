@@ -53,13 +53,13 @@ class GLTexture(IntEnum):
     @staticmethod
     def set_active(unit=TEXTURE0):
         # Lazy import avoids circular import with picogl.backend.gl.wrappers.texture.
-        from picogl.backend.gl.wrappers.texture import gl_active_texture
+        from picogl.backend.gl.api.texture import gl_active_texture
 
         gl_active_texture(unit)
 
     @staticmethod
     def bind(target: int, texture: int):
-        from picogl.backend.gl.wrappers.texture import gl_bind_texture
+        from picogl.backend.gl.api.texture import gl_bind_texture
 
         gl_bind_texture(texture, target)
 

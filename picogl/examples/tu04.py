@@ -2,8 +2,8 @@
 # sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 from decologr import Decologr as log
 from OpenGL.GL import *  # pylint: disable=W0614
-from picogl.backend.gl.wrappers import gl_bind_texture, gl_get_active_texture0
-from picogl.backend.gl.wrappers.glm import glm_identity_matrix
+from picogl.backend.gl.api import gl_bind_texture, gl_get_active_texture0
+from picogl.backend.gl.api.glm import glm_identity_matrix
 from picogl.backend.modern.core.shader.files import ShaderFiles
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.core.uniform import gl_uniform1i

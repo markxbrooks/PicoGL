@@ -2,14 +2,14 @@ from typing import Optional
 
 from OpenGL.GL import glDeleteVertexArrays
 from picogl.backend.gl.enums import GLBufferTarget
-from picogl.backend.gl.wrappers.buffer import gl_bind_buffer
-from picogl.backend.gl.wrappers.enable_vertex_array import \
+from picogl.backend.gl.api.buffer import gl_bind_buffer
+from picogl.backend.gl.api.enable_vertex_array import \
     gl_enable_vertex_array
-from picogl.backend.gl.wrappers.generate_vertex_array import \
+from picogl.backend.gl.api.generate_vertex_array import \
     gl_generate_vertex_array
-from picogl.backend.gl.wrappers.glcleanup import gl_delete_buffers
-from picogl.backend.gl.wrappers.vertex_array import gl_bind_vertex_array
-from picogl.backend.gl.wrappers.vertex_attrib_pointer import \
+from picogl.backend.gl.api.glcleanup import gl_delete_buffers
+from picogl.backend.gl.api.vertex_array import gl_bind_vertex_array
+from picogl.backend.gl.api.vertex_attrib_pointer import \
     gl_vertex_attrib_pointer
 from picogl.gpu.buffers.attributes import LayoutDescriptor
 from picogl.gpu.buffers.base import VertexBase

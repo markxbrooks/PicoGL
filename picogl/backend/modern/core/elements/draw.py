@@ -5,7 +5,7 @@ draw elements
 from typing import Any, Optional
 
 from picogl.backend.gl.enums import GLDrawMode, GLNumeric
-from picogl.backend.gl.wrappers import gl_draw_elements
+from picogl.backend.gl.api import gl_draw_elements
 from picogl.backend.modern.core.elements.vertex_array import bound_vertex_array
 
 

@@ -13,7 +13,7 @@ from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.mode import GLMode
 from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode,
                                           GLFace, GLLight, GLLightParameter)
-from picogl.backend.gl.wrappers.enable import gl_enable
+from picogl.backend.gl.api.enable import gl_enable
 from picogl.renderer import MeshData
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.ui.backend.qt.base import GLBase

@@ -22,9 +22,9 @@ from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode,
                                           GLFillMode)
 from picogl.backend.gl.state.immediate import immediate_drawing
-from picogl.backend.gl.wrappers.clear import gl_clear, gl_clear_color
-from picogl.backend.gl.wrappers.enable import gl_disable, gl_enable
-from picogl.backend.gl.wrappers.polygon_mode import gl_polygon_mode
+from picogl.backend.gl.api.clear import gl_clear, gl_clear_color
+from picogl.backend.gl.api.enable import gl_disable, gl_enable
+from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
 
 
 class SimpleTeapotRenderer(GlutRenderer):

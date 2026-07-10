@@ -3,8 +3,8 @@ Enable depth test
 """
 
 from picogl.backend.gl.capability import GLPipelineCapability
-from picogl.backend.gl.wrappers.depth import gl_clear_depth
-from picogl.backend.gl.wrappers.enable import gl_enable
+from picogl.backend.gl.api.depth import gl_clear_depth
+from picogl.backend.gl.api.enable import gl_enable
 
 
 def enable_depth_test() -> None:

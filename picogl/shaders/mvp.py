@@ -1,7 +1,7 @@
 import numpy as np
 from OpenGL.GL import glUniformMatrix4fv
 from OpenGL.raw.GL._types import GL_FALSE
-from picogl.backend.gl.wrappers.glm import glm_identity_matrix
+from picogl.backend.gl.api.glm import glm_identity_matrix
 from picogl.backend.modern.core.shader.helpers import log_gl_error
 from pyglm import glm
 

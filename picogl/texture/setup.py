@@ -2,7 +2,7 @@
 setup clamp-to-edge textures mapping
 """
 
-from picogl.backend.gl.wrappers import gl_tex_parameter
+from picogl.backend.gl.api import gl_tex_parameter
 from picogl.core.texture_clamp import GLTextureClamp
 from picogl.texture.gltexparam import GLTexParam
 from picogl.texture.gltexture import GLTexture

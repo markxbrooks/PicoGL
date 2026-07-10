@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Any, Optional
 
 from picogl.backend.geometry.mesh import GPUMesh
 from picogl.backend.gl.enums import GLNumeric
-from picogl.backend.gl.wrappers import gl_draw_elements
+from picogl.backend.gl.api import gl_draw_elements
 
 if TYPE_CHECKING:
     from picogl.renderer.glmesh import GLMesh

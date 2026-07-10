@@ -26,9 +26,9 @@ from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode,
                                           GLFace, GLFillMode, GLLight,
                                           GLLightParameter)
 from picogl.backend.gl.state.immediate import immediate_drawing
-from picogl.backend.gl.wrappers.clear import gl_clear_color
-from picogl.backend.gl.wrappers.enable import gl_enable
-from picogl.backend.gl.wrappers.polygon_mode import gl_polygon_mode
+from picogl.backend.gl.api.clear import gl_clear_color
+from picogl.backend.gl.api.enable import gl_enable
+from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
 
 # Check for display before importing OpenGL
 if os.environ.get("DISPLAY") is None and os.name != "nt":

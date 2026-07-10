@@ -2,8 +2,8 @@
 
 import numpy as np
 from picogl.backend.gl.enums import GLBufferTarget
-from picogl.backend.gl.wrappers.generate_buffers import gl_generate_buffers
-from picogl.backend.gl.wrappers.glcleanup import gl_delete_buffers
+from picogl.backend.gl.api.generate_buffers import gl_generate_buffers
+from picogl.backend.gl.api.glcleanup import gl_delete_buffers
 from picogl.backend.modern.core.vertex.base import VertexBuffer
 
 

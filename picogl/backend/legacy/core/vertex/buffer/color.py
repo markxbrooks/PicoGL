@@ -1,6 +1,6 @@
 import numpy as np
 from picogl.backend.gl.enums import GLNumeric
-from picogl.backend.gl.wrappers.pointer import gl_color_array_pointer
+from picogl.backend.gl.api.pointer import gl_color_array_pointer
 from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
 
 

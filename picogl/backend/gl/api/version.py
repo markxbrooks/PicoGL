@@ -7,7 +7,7 @@ OpenGL implementation in use.
 """
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_VERSION
-from picogl.backend.gl.wrappers.string import gl_get_string
+from picogl.backend.gl.api.string import gl_get_string
 
 
 def gl_get_version() -> str:
