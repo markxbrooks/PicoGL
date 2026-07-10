@@ -45,3 +45,14 @@ def glm_mat4_to_np(m) -> np.ndarray:
             dtype=np.float32,
         )
     return np.frombuffer(glm.value_ptr(m), dtype=np.float32).reshape(4, 4)
+
+
+def glm_compute_projection_matrix(
+    aspect: float,
+    *,
+    fov_deg: float = 45.0,
+    near: float = 0.1,
+    far: float = 500.0,
+) -> glm.mat4:
+    """glm_compute_projection_matrix """
+    return glm.perspective(glm.radians(fov_deg), float(aspect), near, far)
