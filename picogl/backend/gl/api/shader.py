@@ -34,6 +34,31 @@ from OpenGL.raw.GL.VERSION.GL_2_0 import (
 from picogl.boolean import GLBoolean
 
 
+def gl_get_uniform_location(program: int, name: str):
+    """
+    Retrieve the location of a uniform variable in a given shader program.
+
+    This function retrieves the location of a uniform variable specified by its name
+    from a provided shader program. The location is used to set the values of uniform
+    variables in a shader during rendering. The function relies on glGetUniformLocation
+    from an OpenGL context.
+
+    Parameters:
+    program (int): An integer representing the OpenGL shader program from which the
+        uniform location should be retrieved.
+    name: The name of the uniform variable whose location needs to be determined.
+
+    Returns:
+    int: The location of the uniform variable in the shader program. If the uniform
+        variable does not exist in the program, a value of -1 will be returned.
+
+    Raises:
+    TypeError: If the parameter types are not as expected or if the input arguments
+        are invalid.
+    """
+    return glGetUniformLocation(program, name)
+
+
 def gl_uniform_matrix_4fv(
     location: int, count: int, transpose: GLBoolean, value: Any
 ) -> None:

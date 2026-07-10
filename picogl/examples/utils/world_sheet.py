@@ -3,22 +3,12 @@ World Sheet Widget
 """
 
 import numpy as np
-from OpenGL.GL import glGenBuffers, glGetUniformLocation, glUniformMatrix4fv
-from OpenGL.GL.shaders import GL_FALSE
-from OpenGL.raw.GL.ARB.vertex_shader import GL_FLOAT
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_LINES
-from OpenGL.raw.GL.VERSION.GL_1_1 import glDrawArrays
-from OpenGL.raw.GL.VERSION.GL_1_5 import (
-    GL_ARRAY_BUFFER,
-    GL_STATIC_DRAW,
-    glBindBuffer,
-    glBufferData,
-)
-from OpenGL.raw.GL.VERSION.GL_2_0 import (
-    gl_enableVertexAttribArray,
-    glDisableVertexAttribArray,
-    glVertexAttribPointer,
-)
+
+from picogl.backend.gl.api import gl_vertex_attrib_pointer, gl_draw_arrays, gl_bind_buffer, gl_buffer_data, gl_generate_buffers
+from picogl.backend.gl.api.shader import gl_uniform_matrix_4fv
+from picogl.backend.gl.api.vertex.attrib_array.generate import gl_enable_vertex_attrib_array
+from picogl.backend.gl.enums import GLBufferTarget, GLUsageHint, GLNumeric, GLDrawMode
+from picogl.boolean import GLBoolean
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.backend.modern.renderers.mesh import ShaderMeshRenderer
 from pyglm import glm
@@ -42,7 +32,7 @@ class WorldSheet(ShaderMeshRenderer):
             "glsl/utils/worldsheet/fragment.glsl",
             glsl_dir=self.base_dir,
         )
-        self.mvp_id = glGetUniformLocation(self.shader.program, "mvp_matrix")
+        self.mvp_id = gl_get_uniform_location(self.shader.program, "mvp_matrix")
         if self.mvp_id == -1:
             raise RuntimeError("MVP uniform not found in shader")
 
@@ -55,9 +45,9 @@ class WorldSheet(ShaderMeshRenderer):
             lines.extend([fi, 0.0, -self.size, fi, 0.0, self.size])
         self.lines = np.array(lines, dtype=np.float32)
 
-        self.line_buffer = glGenBuffers(1)
-        glBindBuffer(GL_ARRAY_BUFFER, self.line_buffer)
-        glBufferData(GL_ARRAY_BUFFER, self.lines.nbytes, self.lines, GL_STATIC_DRAW)
+        self.line_buffer = gl_generate_buffers(1)
+        gl_bind_buffer(GLBufferTarget.ARRAY, self.line_buffer)
+        gl_buffer_data(GLBufferTarget.ARRAY, self.lines.nbytes, self.lines, GLUsageHint.STATIC_DRAW)
 
     def load_texture(self):
         """load texture"""
@@ -65,15 +55,15 @@ class WorldSheet(ShaderMeshRenderer):
 
     def render(self, mvp_matrix, view_matrix, projection_matrix):
         self.shader.begin()
-        glUniformMatrix4fv(self.mvp_id, 1, GL_FALSE, glm.value_ptr(mvp_matrix))
+        gl_uniform_matrix_4fv(self.mvp_id, 1, GLBoolean.FALSE, glm.value_ptr(mvp_matrix))
 
-        gl_enableVertexAttribArray(0)
-        glBindBuffer(GL_ARRAY_BUFFER, self.line_buffer)
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, None)
+        gl_enable_vertex_attrib_array(0)
+        gl_bind_buffer(GLBufferTarget.ARRAY, self.line_buffer)
+        gl_vertex_attrib_pointer(0, 3, GLNumeric.FLOAT, GLBoolean.FALSE, 0, None)
 
-        glDrawArrays(GL_LINES, 0, len(self.lines) // 3)
+        gl_draw_arrays(GLDrawMode.LINES, 0, len(self.lines) // 3)
 
-        glDisableVertexAttribArray(0)
+        gl_disable_vertex_attrib_array(0)
         self.shader.end()
 
     def run(self):
