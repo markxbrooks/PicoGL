@@ -4,7 +4,7 @@ from decologr import setup_logging
 from OpenGL.raw.GL.VERSION.GL_1_0 import glViewport
 from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.task.gl_init import legacy_init_gl_list, paint_gl_list
-from picogl.backend.gl.wrappers.glm import identity_matrix
+from picogl.backend.gl.wrappers.glm import glm_identity_matrix
 from picogl.backend.opengl import LegacyBinding
 from picogl.renderer import GLResourceRegistry
 from picogl.renderer.object import ObjectRenderer
@@ -60,7 +60,7 @@ class GlutRendererWindow(GLWindow):
         self.context.view = glm.lookAt(
             self.context.eye, self.context.center, self.context.up
         )
-        self.context.model_matrix = identity_matrix()
+        self.context.model_matrix = glm_identity_matrix()
 
         # The camera position in world space is just the eye
         self.context.eye_np = np.array(self.context.eye.to_list(), dtype=np.float32)
@@ -88,7 +88,7 @@ class GlutRendererWindow(GLWindow):
         self.calculate_mvp_matrix(width, height)
         # Apply rotations
         rotation_matrix = glm.rotate(
-            identity_matrix(), glm.radians(self.rotation_x), glm.vec3(1, 0, 0)
+            glm_identity_matrix(), glm.radians(self.rotation_x), glm.vec3(1, 0, 0)
         )
         rotation_matrix = glm.rotate(
             rotation_matrix, glm.radians(self.rotation_y), glm.vec3(0, 1, 0)

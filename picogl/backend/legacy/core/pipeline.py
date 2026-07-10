@@ -4,7 +4,7 @@ LegacyPipelineProtocol
 
 from typing import Any, Protocol, runtime_checkable
 
-from backend.gl.capability import PhongMaterial
+from picogl.backend.gl.capability import PhongMaterial
 from picogl.backend.gl.wrappers.light import gl_light_fv
 from picogl.backend.gl.capability import FACE_MAP
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode

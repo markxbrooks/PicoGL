@@ -3,7 +3,7 @@
 from decologr import Decologr as log
 from OpenGL.GL import *  # pylint: disable=W0614
 from picogl.backend.gl.wrappers import gl_bind_texture, gl_get_active_texture0
-from picogl.backend.gl.wrappers.glm import identity_matrix
+from picogl.backend.gl.wrappers.glm import glm_identity_matrix
 from picogl.backend.modern.core.shader.files import ShaderFiles
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.core.uniform import gl_uniform1i
@@ -150,7 +150,7 @@ class Tu01Win(GlutRendererWindow):
             glm.vec3(0, 1, 0),
         )  # Head is up (set to 0,-1,0 to look upside-down)
 
-        self.context.model_matrix = identity_matrix()
+        self.context.model_matrix = glm_identity_matrix()
         # print self.context.model_matrix
         self.context.mvp_matrix = (
             self.context.projection_matrix
