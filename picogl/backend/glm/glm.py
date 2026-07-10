@@ -40,6 +40,7 @@ def as_glm_mat4(m) -> glm.mat4:
 
 
 def glm_vec4(arg1, arg2, arg3, arg4) -> vec4:
+    """glm_vec4 """
     return glm.vec4(arg1, arg2, arg3, arg4)
 
 

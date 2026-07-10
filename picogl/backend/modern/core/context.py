@@ -1,4 +1,4 @@
-from picogl.backend.gl.api.glm import glm_identity_matrix
+from picogl.backend.glm.glm import glm_identity_matrix
 from examples.utils.shader_loader import Shader
 from examples.utils.test_window import GLWindow
 from OpenGL.GL import *  # pylint: disable=W0614

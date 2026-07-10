@@ -6,7 +6,7 @@ from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.api.clear import gl_clear_color
 from picogl.backend.gl.api.depth import gl_depth_func
 from picogl.backend.gl.api.enable import gl_enable
-from picogl.backend.gl.api.glm import glm_identity_matrix
+from picogl.backend.glm.glm import glm_identity_matrix
 from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
 from picogl.backend.modern.core.shader.mvp.controller import MVPController
 from picogl.ui.backend.glut.window.gl import GLWindow
