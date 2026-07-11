@@ -14,12 +14,15 @@ import os
 import sys
 
 import numpy as np
-from picogl.backend.gl.api.clear import gl_clear
+from picogl.backend.gl.api.clear import gl_clear, gl_clear_color
+from picogl.backend.gl.api.color import gl_color_3f
 from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
+from picogl.backend.gl.api.rotate import gl_rotate_f
 from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
+from picogl.backend.gl.enums.legacy.scale import gl_rotatef, gl_load_identity, gl_viewport
 from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
 from picogl.backend.gl.state.fill import (
     GLCapability,
@@ -27,6 +30,11 @@ from picogl.backend.gl.state.fill import (
     GLFace,
     GLFillMode,
 )
+from picogl.backend.glu.lookat import glu_look_at
+from picogl.backend.glu.perspective import glu_perspective
+from picogl.backend.glut.buffers import glut_swap_buffers
+from picogl.backend.glut.cube import glut_wire_cube
+from picogl.backend.glut.display import glut_post_redisplay
 from picogl.backend.glut.glut_renderer import GlutRenderer
 
 # Check for display before importing OpenGL
@@ -316,7 +324,7 @@ class LegacyCubeRenderer(GlutRenderer):
 
     def init_gl(self):
         """Initialize OpenGL state."""
-        glClearColor(0.1, 0.1, 0.2, 1.0)  # Dark blue background
+        gl_clear_color(color=(0.1, 0.1, 0.2, 1.0))  # Dark blue background
         GLCapabilityDriver.enable(GL_DEPTH_TEST)
         GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHTING)
         GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHT0)
@@ -357,14 +365,14 @@ class LegacyCubeRenderer(GlutRenderer):
     def display(self):
         """Display callback - render the scene."""
         gl_clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
-        glLoadIdentity()
+        gl_load_identity()
 
         # Set up camera
-        gluLookAt(0, 0, self.zoom_distance, 0, 0, 0, 0, 1, 0)
+        glu_look_at(0, 0, self.zoom_distance, 0, 0, 0, 0, 1, 0)
 
         # Apply rotations
-        glRotatef(self.rotation_x, 1, 0, 0)
-        glRotatef(self.rotation_y, 0, 1, 0)
+        gl_rotatef(self.rotation_x, 1, 0, 0)
+        gl_rotatef(self.rotation_y, 0, 1, 0)
 
         # Draw the cube
         if self.mesh:
@@ -390,15 +398,15 @@ class LegacyCubeRenderer(GlutRenderer):
             # Fallback: draw a simple wireframe cube
             self.draw_fallback_cube()
 
-        glutSwapBuffers()
+        glut_swap_buffers()
 
     def draw_fallback_cube(self):
         """Draw a simple wireframe cube as fallback."""
         gl_disable(GLFixedFunctionCapability.LIGHTING)
         red_rgb = (1.0, 0.0, 0.0)
-        glColor3f(*red_rgb)  # Red wireframe
+        gl_color_3f(red_rgb)  # Red wireframe
         gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.LINE)
-        glutWireCube(2.0)
+        glut_wire_cube(2.0)
         gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.FILL)
         GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHTING)
 
@@ -406,17 +414,17 @@ class LegacyCubeRenderer(GlutRenderer):
         """Reshape callback - handle window resize."""
         self.width = width
         self.height = height
-        glViewport(0, 0, width, height)
-        glMatrixMode(GLLegacyMatrixMode.PROJECTION)
-        glLoadIdentity()
-        gluPerspective(45.0, float(width) / float(height), 0.1, 100.0)
-        glMatrixMode(GLLegacyMatrixMode.MODELVIEW)
+        gl_viewport(0, 0, width, height)
+        gl_matrix_mode(GLLegacyMatrixMode.PROJECTION)
+        gl_load_identity()
+        glu_perspective(45.0, float(width) / float(height), 0.1, 100.0)
+        gl_matrix_mode(GLLegacyMatrixMode.MODELVIEW)
 
     def idle(self):
         """Idle callback for animation."""
         if self.auto_rotate:
             self.rotation_y += 0.5
-            glutPostRedisplay()
+            glut_post_redisplay()
 
 
 def main():
