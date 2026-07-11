@@ -428,7 +428,7 @@ class TestMeshData(unittest.TestCase):
         # The actual OpenGL calls are mocked in setUp
 
     def test_draw_with_custom_mode(self):
-        """Test draw method with custom drawing mode."""
+        """Test draw method with custom draw mode."""
         mesh = MeshData(vertices=self.test_vertices, indices=self.test_indices)
 
         mesh.draw(mode=GL.GL_LINES)

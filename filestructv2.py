@@ -34,7 +34,7 @@ MOVE_MAP = {
 
 # --- WRAPPERS ---
 "wrappers/buffer.py": "backend/gl/wrappers/buffer.py",
-"wrappers/draw.py": "backend/gl/wrappers/draw.py",
+"wrappers/helper.py": "backend/gl/wrappers/helper.py",
 "wrappers/vertex_array.py": "backend/gl/wrappers/vao.py",
 "wrappers/vertex_attrib_pointer.py": "backend/gl/wrappers/attrib.py",
 "wrappers/enable_vertex_array.py": "backend/gl/wrappers/enable.py",

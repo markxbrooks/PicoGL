@@ -11,7 +11,7 @@ class GPUMesh(ABC):
 
     @abstractmethod
     def bind(self) -> None:
-        """Bind GPU buffers or client arrays for drawing."""
+        """Bind GPU buffers or client arrays for draw."""
 
     @abstractmethod
     def draw(self, mode: int) -> None:

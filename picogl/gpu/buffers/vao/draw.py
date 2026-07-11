@@ -13,9 +13,9 @@ def vao_draw_with_attributes(
     """
     vao_draw_with_attributes
 
-    :param attributes: list Attributes for drawing.
+    :param attributes: list Attributes for draw.
     :param atom_count: int Number of vertices to draw.
-    :param mode: int Enum specifying the gl_mode of drawing (default is GL_POINTS).
+    :param mode: int Enum specifying the gl_mode of draw (default is GL_POINTS).
 
     Draw the VAO with the specified gl_mode and atom count.
     """

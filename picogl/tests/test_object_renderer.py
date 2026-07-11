@@ -10,7 +10,7 @@ The tests cover:
 - Object initialization with various parameters
 - Shader initialization and compilation
 - VAO and VBO setup for different data types
-- Rendering pipeline and drawing operations
+- Rendering pipeline and draw operations
 - Texture loading and binding
 - Error handling and edge cases
 - Data validation and type conversion

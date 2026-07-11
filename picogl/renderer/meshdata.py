@@ -54,7 +54,7 @@ class MeshData:
             Converts the mesh data into a dictionary with canonical attribute names.
         draw:
             Draws the mesh with optional OpenGL parameters for color, line width,
-            drawing mode, fill mode, and alpha transparency.
+            draw mode, fill mode, and alpha transparency.
         from_raw:
             Class method for constructing a MeshData object from raw input data.
     """
@@ -345,7 +345,7 @@ class MeshData:
         Args:
             color: Optional color override. If None and vertex colors exist, uses vertex colors.
             line_width: Line width for wireframe mode
-            mode: OpenGL drawing mode
+            mode: OpenGL draw mode
             fill: Whether to fill or use wireframe
             alpha: Transparency value from 0.0 (opaque) to 1.0 (fully transparent)
         """

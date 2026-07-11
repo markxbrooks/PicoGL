@@ -2,7 +2,7 @@
 gl Backend Interface.
 
 This module provides an interface for a gl backend implementation, which
-offers functionalities for managing OpenGL state, drawing meshes, managing
+offers functionalities for managing OpenGL state, draw meshes, managing
 materials, handling client-side arrays, and interacting with texture.
 
 Classes:

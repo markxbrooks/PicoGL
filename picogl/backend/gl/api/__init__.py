@@ -1,6 +1,6 @@
 """
 This module provides bindings and utilities for interacting with OpenGL buffers,
-vertex arrays, texture, client states, and drawing operations. These functions
+vertex arrays, texture, client states, and draw operations. These functions
 facilitate working with OpenGL through abstractions and are commonly utilized in
 graphics programming for setting up and rendering graphics pipelines.
 

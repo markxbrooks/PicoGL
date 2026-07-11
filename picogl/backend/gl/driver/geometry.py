@@ -1,12 +1,12 @@
 """
 Mesh binding and indexed draw operations.
 
-Handles the binding of GPU-based meshes and facilitates drawing operations
+Handles the binding of GPU-based meshes and facilitates draw operations
 using various strategies, including indexed draw and array draw functionalities.
-Provides both static and class methods for drawing operations.
+Provides both static and class methods for draw operations.
 
 Classes:
-    GLGeometryDriver: Utility for binding, drawing, and managing GPU meshes.
+    GLGeometryDriver: Utility for binding, draw, and managing GPU meshes.
 
 """
 

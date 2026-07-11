@@ -5,7 +5,7 @@ dispatching rendering tasks.
 
 This module implements essential rendering functionality and acts as a
 common base for custom rendering logic. It primarily revolves around
-OpenGL-based rendering pipelines and provides interfaces for model drawing
+OpenGL-based rendering pipelines and provides interfaces for model draw
 and rendering state initialization.
 """
 

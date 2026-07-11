@@ -585,7 +585,7 @@ class TestGLMesh:
     This class allows for the creation and management of a graphical mesh,
     including the specification of vertices, optional indices, and associated
     attributes for rendering purposes. It provides methods to add attributes
-    to the mesh and handle its drawing using OpenGL.
+    to the mesh and handle its draw using OpenGL.
 
     Attributes:
         vertices (Any): The vertices of the mesh as provided by the user.
@@ -618,13 +618,13 @@ class TestGLMesh:
     def draw(self):
         """
         Draw the object using the attributes and indices provided. This method prepares
-        and manages OpenGL drawing by enabling necessary vertex attributes and rendering
+        and manages OpenGL draw by enabling necessary vertex attributes and rendering
         either indexed or non-indexed primitives based on the presence of indices.
 
         Raises
         ------
         RuntimeError
-            If an OpenGL error occurs during the drawing process.
+            If an OpenGL error occurs during the draw process.
         """
         for attr in self.attributes:
             attr.enable_legacy(GLClientState.VERTEX)  # refine mapping
@@ -641,25 +641,25 @@ class TestGLMesh:
 @dataclass
 class DrawCommand:
     """
-    Represents a command for drawing a mesh with optional rendering parameters.
+    Represents a command for draw a mesh with optional rendering parameters.
 
-    This class serves as a utility to encapsulate mesh drawing operations alongside
+    This class serves as a utility to encapsulate mesh draw operations alongside
     related rendering state, texture, and mode settings. It integrates with a rendering
-    backend to facilitate the execution of drawing commands.
+    backend to facilitate the execution of draw commands.
 
     Attributes:
         mesh (Any): The mesh object to be drawn. Must support a `draw` method or be used
-            with a backend capable of drawing it.
-        mode (int | None): Optional drawing mode. Determines how the mesh should be
+            with a backend capable of draw it.
+        mode (int | None): Optional draw mode. Determines how the mesh should be
             rendered. Not all rendering backends require this attribute.
         texture (GLTextureDriver | int | None): Optional texture or reference to a texture.
-            If specified, the texture is bound before drawing the mesh.
+            If specified, the texture is bound before draw the mesh.
         state (RenderState | None): Optional rendering state to apply before executing the
-            drawing command.
+            draw command.
 
     Methods:
         execute(backend: Any):
-            Executes the drawing command by applying the rendering state, binding the texture,
+            Executes the draw command by applying the rendering state, binding the texture,
             and invoking the appropriate backend-specific draw operation.
 
     """

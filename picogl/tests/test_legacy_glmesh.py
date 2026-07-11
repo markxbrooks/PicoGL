@@ -544,7 +544,7 @@ class TestLegacyGLMesh(unittest.TestCase):
         mock_client_states.assert_called_once_with(GL_VERTEX_ARRAY, GL_COLOR_ARRAY)
 
     def test_draw_with_custom_mode(self):
-        """Test draw method with custom drawing mode."""
+        """Test draw method with custom draw mode."""
         mesh = LegacyGLMesh(vertices=self.test_vertices, faces=self.test_faces)
 
         # Mock VAO and its VBOs

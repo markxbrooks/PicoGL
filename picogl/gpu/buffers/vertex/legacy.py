@@ -1,11 +1,11 @@
 """
 This module provides the VertexBufferGroup class, which is a container for legacy
 VBOs that mimics the VAO interface. It supports the creation, management, binding,
-and drawing of vertex buffer objects (VBOs) and element buffer objects (EBOs).
+and draw of vertex buffer objects (VBOs) and element buffer objects (EBOs).
 
 Classes:
 - VertexBufferGroup: Manages various VBOs and provides functionality for
-  adding, accessing, and drawing vertex buffer data.
+  adding, accessing, and draw vertex buffer data.
 """
 
 from typing import Any, Optional
