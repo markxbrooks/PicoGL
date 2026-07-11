@@ -103,6 +103,7 @@ class PhongMaterial:
     ambient: Sequence[float] = (0.2, 0.2, 0.2, 1.0)
     diffuse: Sequence[float] = (0.8, 0.8, 0.8, 1.0)
     specular: Sequence[float] = (0.0, 0.0, 0.0, 1.0)
+    emission: Sequence[float] = (0.0, 0.0, 0.0, 1.0)
     shininess: float = 0.0
 
 
