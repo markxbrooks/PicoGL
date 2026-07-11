@@ -9,7 +9,7 @@ import libcst as cst
 MODULE_MAP = {
     "picogl.backend.gl": "picogl.backend.gl",
     "picogl.mode": "picogl.core.enums.mode",
-    "picogl.error": "picogl.core.errors.gl_errors",
+    "picogl.error": "picogl.core.error.gl_errors",
     "picogl.state.draw_mode": "picogl.core.enums.draw_mode",
     "picogl.wrappers": "picogl.backend.gl.wrappers",
     "picogl.buffers": "picogl.gpu.buffers",

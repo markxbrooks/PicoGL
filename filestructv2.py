@@ -21,7 +21,7 @@ MOVE_MAP = {
 "mode.py": "core/enums/mode.py",
 "state/draw_mode.py": "core/enums/draw_mode.py",
 
-"error.py": "core/errors/gl_errors.py",
+"check.py": "core/error/gl_errors.py",
 
 # --- gl BACKEND ---
 "backend/gl/driver/blend.py": "backend/gl/driver/blend.py",
@@ -79,7 +79,7 @@ MOVE_MAP = {
 REWRITE_RULES = [
 (r"picogl.backend.gl.", "picogl.backend.gl."),
 (r"picogl.mode", "picogl.core.enums.mode"),
-(r"picogl.error", "picogl.core.errors.gl_errors"),
+(r"picogl.error", "picogl.core.error.gl_errors"),
 (r"picogl.state.draw_mode", "picogl.core.enums.draw_mode"),
 (r"picogl.wrappers.", "picogl.backend.gl.wrappers."),
 (r"picogl.buffers.", "picogl.gpu.buffers."),

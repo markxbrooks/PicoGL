@@ -204,7 +204,7 @@ def main():
         print(
             "  3. The fix: Initialize mvp_parameters values to 0.0 in QtCubeRenderer.__init__"
         )
-        print("  4. The result: Arithmetic operations now work without errors")
+        print("  4. The result: Arithmetic operations now work without error")
         return 0
     else:
         print("❌ Some tests failed. Please check the implementation.")

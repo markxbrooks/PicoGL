@@ -13,7 +13,7 @@ STAGE_MAPS = {
     "enums": {
         "picogl.mode": "picogl.core.enums.mode",
         "picogl.state.draw_mode": "picogl.core.enums.draw_mode",
-        "picogl.error": "picogl.core.errors.gl_errors",
+        "picogl.error": "picogl.core.error.gl_errors",
     },
     "gpu": {
         "picogl.buffers": "picogl.gpu.buffers",

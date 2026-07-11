@@ -123,7 +123,7 @@ def main():
         print("\n📝 Note: OpenGL context is required for actual texture rendering.")
         return 0
     else:
-        print("❌ Some tests failed. Please check the errors above.")
+        print("❌ Some tests failed. Please check the error above.")
         return 1
 
 

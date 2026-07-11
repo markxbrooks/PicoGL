@@ -240,7 +240,7 @@ def main():
         print("   • C-alpha bonds as lines")
         print("   • Wireframe/filled toggle")
     else:
-        print("⚠️  Some tests failed. Please check the errors above.")
+        print("⚠️  Some tests failed. Please check the error above.")
 
     return passed == total
 

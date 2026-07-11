@@ -467,7 +467,7 @@ class TestTextureRenderer(unittest.TestCase):
         self.assertTrue(hasattr(renderer, "_draw_selection"))
         self.assertTrue(callable(getattr(renderer, "_draw_selection")))
 
-        # Test that it can be called without errors
+        # Test that it can be called without error
         renderer._draw_selection()  # Should not raise an exception
 
     def test_initialization_with_minimal_mesh_data(self):

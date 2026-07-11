@@ -326,7 +326,7 @@ class TestMeshData(unittest.TestCase):
 
         mesh.bind()
 
-        # Should not raise any errors
+        # Should not raise any error
 
     def test_bind_with_none_buffers(self):
         """Test bind method with None buffers."""
@@ -334,7 +334,7 @@ class TestMeshData(unittest.TestCase):
 
         mesh.bind()
 
-        # Should not raise any errors
+        # Should not raise any error
 
     def test_unbind_with_all_buffers(self):
         """Test unbind method with all buffers present."""
@@ -356,7 +356,7 @@ class TestMeshData(unittest.TestCase):
 
         mesh.unbind()
 
-        # Should not raise any errors
+        # Should not raise any error
 
     def test_context_manager(self):
         """Test that MeshData can be used as a context manager."""

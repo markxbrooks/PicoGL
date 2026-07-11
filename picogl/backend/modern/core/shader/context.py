@@ -6,7 +6,7 @@ from OpenGL import GL as gl
 
 
 def clear_gl_errors(max_clear: int = 8) -> None:
-    """Drain pending gl errors so the next call's status is meaningful."""
+    """Drain pending gl error so the next call's status is meaningful."""
     for _ in range(max_clear):
         err = gl.glGetError()
         if err == gl.GL_NO_ERROR:

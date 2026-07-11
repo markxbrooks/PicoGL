@@ -3,7 +3,7 @@
 Test script to verify the Qt cube fix
 
 This script tests that the mvp_parameters are properly initialized
-and that the rotation values can be updated without errors.
+and that the rotation values can be updated without error.
 """
 
 import sys
@@ -104,7 +104,7 @@ def test_qt_cube_initialization():
 
 
 def test_rotation_operations():
-    """Test that rotation operations work without errors"""
+    """Test that rotation operations work without error"""
     print("🧪 Testing rotation operations...")
 
     try:

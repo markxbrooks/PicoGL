@@ -3,7 +3,7 @@
 Test script to verify both Qt cube fixes
 
 This script tests that both the mvp_parameters and camera_parameters
-are properly initialized and that arithmetic operations work without errors.
+are properly initialized and that arithmetic operations work without error.
 """
 
 
@@ -199,7 +199,7 @@ def main():
         print("  2. Fixed AttributeError: camera_parameter → camera_parameters")
         print("  3. Fixed TypeError: camera_parameters values initialized to 0.0")
         print("")
-        print("✅ The Qt cube examples should now work without errors!")
+        print("✅ The Qt cube examples should now work without error!")
         return 0
     else:
         print("❌ Some tests failed. Please check the implementation.")

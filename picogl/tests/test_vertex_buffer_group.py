@@ -410,7 +410,7 @@ class TestVertexBufferGroup(unittest.TestCase):
         vbg.bind()
 
         # The bind method calls glBindBuffer and glVertexAttribPointer
-        # which are already mocked in setUp, so we just verify no errors occurred
+        # which are already mocked in setUp, so we just verify no error occurred
 
     def test_bind_without_layout(self):
         """Test bind method without layout."""
@@ -418,7 +418,7 @@ class TestVertexBufferGroup(unittest.TestCase):
 
         # Should return early without processing
         vbg.bind()
-        # No assertions needed - should not raise any errors
+        # No assertions needed - should not raise any error
 
     def test_bind_with_missing_vbo(self):
         """Test bind method with missing VBO in layout."""
@@ -468,7 +468,7 @@ class TestVertexBufferGroup(unittest.TestCase):
 
         # Should return early without processing
         vbg.unbind()
-        # No assertions needed - should not raise any errors
+        # No assertions needed - should not raise any error
 
     def test_delete(self):
         """Test delete method."""
@@ -508,7 +508,7 @@ class TestVertexBufferGroup(unittest.TestCase):
         # All buffers are None by default
         vbg.delete()
 
-        # Should not raise any errors
+        # Should not raise any error
         self.assertIsNone(vbg.vbo)
         self.assertIsNone(vbg.cbo)
         self.assertIsNone(vbg.nbo)

@@ -180,7 +180,7 @@ def main():
         print("   • W key: Toggle wireframe/filled spheres")
         print("   • ESC: Exit")
     else:
-        print("⚠️  Some tests failed. Please check the errors above.")
+        print("⚠️  Some tests failed. Please check the error above.")
 
     return passed == total
 
