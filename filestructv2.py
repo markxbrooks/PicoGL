@@ -30,7 +30,7 @@ MOVE_MAP = {
 "backend/gl/driver/frame.py": "backend/gl/driver/frame.py",
 "backend/gl/driver/geometry.py": "backend/gl/driver/geometry.py",
 "backend/gl/driver/raster.py": "backend/gl/driver/raster.py",
-"backend/gl/driver/texture.py": "backend/gl/driver/texture.py",
+"backend/gl/driver/framebuffer.py": "backend/gl/driver/framebuffer.py",
 
 # --- WRAPPERS ---
 "wrappers/buffer.py": "backend/gl/wrappers/buffer.py",

@@ -1,7 +1,7 @@
 """
 Module to handle operations related to 3D texture upload.
 
-This module provides functionality to upload 3D textures using
+This module provides functionality to upload 3D texture using
 OpenGL, with proper texture parameters and normalization of the
 input data.
 """

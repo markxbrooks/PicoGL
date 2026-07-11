@@ -1,8 +1,8 @@
 """
-This module provides functionality for managing 2D OpenGL textures.
+This module provides functionality for managing 2D OpenGL texture.
 
 It includes a class for creating, binding, uploading data, setting parameters, generating mipmaps, and deleting
-2D textures in OpenGL. This class ensures efficient management of texture resources in graphics applications.
+2D texture in OpenGL. This class ensures efficient management of texture resources in graphics applications.
 
 Example Usage:
 ==============
@@ -57,13 +57,13 @@ class GLTexture(IntEnum):
     @staticmethod
     def set_active(unit=TEXTURE0):
         # Lazy import avoids circular import with picogl.backend.gl.wrappers.texture.
-        from picogl.backend.gl.api.texture import gl_active_texture
+        from picogl.backend.gl.api import gl_active_texture
 
         gl_active_texture(unit)
 
     @staticmethod
     def bind(target: int, texture: int):
-        from picogl.backend.gl.api.texture import gl_bind_texture
+        from picogl.backend.gl.api import gl_bind_texture
 
         gl_bind_texture(texture, target)
 

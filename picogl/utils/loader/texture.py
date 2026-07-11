@@ -55,7 +55,7 @@ class TextureLoader:
     def load_dds(self, file_name: str) -> None:
         """
         Load a DDS texture from file.
-        Supports DXT1, DXT3, DXT5 compressed textures.
+        Supports DXT1, DXT3, DXT5 compressed texture.
         Falls back to PIL loading if compressed texture loading fails.
         """
         try:

@@ -2,7 +2,7 @@
 
 This module allows temporary binding of a texture in an OpenGL context,
 ensuring that the original binding is restored afterwards. It helps manage
-state changes when working with OpenGL textures.
+state changes when working with OpenGL texture.
 """
 
 from contextlib import contextmanager

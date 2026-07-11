@@ -175,7 +175,7 @@ class ObjectRenderer(RendererBase):
 
 ```python
 """
-Demonstrating textures - compare to tu02_texture_without_normal.py
+Demonstrating texture - compare to tu02_texture_without_normal.py
 """
 
 from pathlib import Path

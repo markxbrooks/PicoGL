@@ -1,8 +1,8 @@
 """
-Provides utilities and context managers for managing OpenGL textures.
+Provides utilities and context managers for managing OpenGL texture.
 
 This module defines enumerations and helper classes for texture handling, along
-with context managers for safely enabling and binding textures in an OpenGL
+with context managers for safely enabling and binding texture in an OpenGL
 environment. It aims to simplify texture management tasks and ensure proper
 state restoration after operations.
 """

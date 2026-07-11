@@ -168,7 +168,7 @@ Textures are loaded using PicoGL's `TextureLoader`:
    ```python
    self.texture_options = {
        "Your Texture": ("subdir", "filename.ext"),
-       # ... existing textures
+       # ... existing texture
    }
    ```
 

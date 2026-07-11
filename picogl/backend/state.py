@@ -677,7 +677,7 @@ class DrawCommand:
                 RenderStateApplier(backend).apply(self.state)
 
         if self.texture:
-            if isinstance(self.texture, int) and hasattr(backend, "textures"):
+            if isinstance(self.texture, int) and hasattr(backend, "texture"):
                 backend.textures.bind_texture(self.texture)
             elif isinstance(self.texture, int) and hasattr(backend, "bind_texture"):
                 backend.bind_texture(self.texture)

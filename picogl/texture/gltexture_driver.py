@@ -1,8 +1,8 @@
 """
-This module provides functionality for managing 2D OpenGL textures.
+This module provides functionality for managing 2D OpenGL texture.
 
 It includes a class for creating, binding, uploading data, setting parameters, generating mipmaps, and deleting
-2D textures in OpenGL. This class ensures efficient management of texture resources in graphics applications.
+2D texture in OpenGL. This class ensures efficient management of texture resources in graphics applications.
 
 Example Usage:
 ==============
@@ -20,8 +20,9 @@ Example Usage:
 """
 
 from OpenGL.GL import glGenTextures
-from OpenGL.raw.GL.VERSION.GL_1_1 import glBindTexture, glDeleteTextures
+from OpenGL.raw.GL.VERSION.GL_1_1 import glBindTexture
 from picogl.backend.gl.api import gl_generate_mipmap, gl_tex_parameter, gl_teximage2d
+from picogl.backend.gl.api.texture.delete import gl_delete_textures
 from picogl.backend.gl.enums import GLNumeric
 from picogl.texture.gltexture import GLTexture
 from picogl.texture.mapping import FILTER_MAP, FORMAT_MAP, WRAP_MAP
@@ -89,6 +90,6 @@ class GLTextureDriver:
     def delete(tex: Texture2D):
         """delete"""
         if tex.handle is not None:
-            glDeleteTextures([tex.handle])
+            gl_delete_textures([tex.handle])
             tex.handle = None
             tex.initialized = False

@@ -14,7 +14,7 @@ class ShaderType(str, Enum):
     RIBBONS = "ribbons"
     SURFACE_WITH_LIGHTING = "surface_with_lighting"
     SURFACE_BASIC = "surface_basic"
-    TEXTURES = "textures"
+    TEXTURES = "texture"
 
     def __str__(self):
         return self.value

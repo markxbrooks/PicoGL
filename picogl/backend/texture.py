@@ -1,9 +1,9 @@
 """
-Module provides utility functions and a class for managing OpenGL textures.
+Module provides utility functions and a class for managing OpenGL texture.
 
 This module contains context managers for handling texture bindings, utility
-functions for creating procedural textures, and the TextureManager class for
-managing and reloading textures. It integrates with OpenGL through a backend
+functions for creating procedural texture, and the TextureManager class for
+managing and reloading texture. It integrates with OpenGL through a backend
 driver, providing streamlined texture handling and fallback behavior.
 """
 

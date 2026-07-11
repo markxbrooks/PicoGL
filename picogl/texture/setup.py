@@ -1,5 +1,5 @@
 """
-setup clamp-to-edge textures mapping
+setup clamp-to-edge texture mapping
 """
 
 from picogl.backend.gl.api import gl_tex_parameter

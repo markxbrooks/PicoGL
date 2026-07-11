@@ -11,7 +11,7 @@ Features:
 - Interactive controls for rotation and zoom
 - Multiple texture options
 
-Available textures:
+Available texture:
 - resources/tu02/uvtemplate.DDS - UV template texture
 - resources/tu03/uvmap.DDS - UV mapping texture
 - resources/tu09/Holstein.DDS - Holstein pattern

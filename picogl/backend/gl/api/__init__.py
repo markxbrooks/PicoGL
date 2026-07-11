@@ -1,6 +1,6 @@
 """
 This module provides bindings and utilities for interacting with OpenGL buffers,
-vertex arrays, textures, client states, and drawing operations. These functions
+vertex arrays, texture, client states, and drawing operations. These functions
 facilitate working with OpenGL through abstractions and are commonly utilized in
 graphics programming for setting up and rendering graphics pipelines.
 
@@ -24,17 +24,12 @@ from picogl.backend.gl.api.pointer import (
     gl_vertex_array_pointer,
     gl_vertex_pointer_from_spec,
 )
-from picogl.backend.gl.api.texture import (
-    gl_active_texture,
-    gl_bind_texture,
-    gl_compressed_tex_image,
-    gl_gen_textures,
-    gl_generate_mipmap,
-    gl_get_active_texture0,
-    gl_tex_parameter,
-    gl_teximage2d,
-    gl_teximage3d,
-)
+from .texture.parameter import gl_tex_parameter
+from .texture.mipmap import gl_generate_mipmap
+from .texture.image import gl_compressed_tex_image, gl_teximage2d, gl_teximage3d
+from .texture.generate import gl_gen_textures
+from .texture.active import gl_active_texture, gl_get_active_texture0
+from .texture.bind import gl_bind_texture
 from picogl.backend.gl.api.vertex.arrays.bind import gl_bind_vertex_array
 from picogl.backend.gl.api.vertex.attrib_pointer import gl_vertex_attrib_pointer
 from picogl.backend.gl.api.vertex.enable_array import gl_enable_vertex_array

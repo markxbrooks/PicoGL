@@ -15,7 +15,7 @@ from picogl.backend.gl.api.frame import (
     gl_check_framebuffer_status,
     gl_gen_framebuffers,
 )
-from picogl.backend.gl.api.texture import gl_framebuffer_texture_2d
+from picogl.backend.gl.api.texture.framebuffer import gl_framebuffer_texture_2d
 from picogl.backend.gl.enums.frame import GLFrameBufferAttachment
 from picogl.backend.gl.enums.target.frame_buffer import (
     GLFrameBufferStatus,

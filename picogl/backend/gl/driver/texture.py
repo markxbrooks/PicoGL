@@ -2,13 +2,13 @@
 Module for managing OpenGL texture creation, binding, and deletion.
 
 This module provides the functionality for creating, binding, and deleting
-2D textures using OpenGL. It leverages low-level OpenGL functions as well as
+2D texture using OpenGL. It leverages low-level OpenGL functions as well as
 custom driver and utility classes to abstract and simplify texture management.
 """
 
-from OpenGL.GL import glDeleteTextures
 from OpenGL.raw.GL.ARB.internalformat_query2 import GL_TEXTURE_2D
 from picogl.backend.gl.api import gl_bind_texture
+from picogl.backend.gl.api.texture.delete import gl_delete_textures
 from picogl.texture.gltexture_driver import GLTextureDriver
 from picogl.texture.texture2d import Texture2D
 from picogl.texture.texture_spec import TextureSpec
@@ -34,4 +34,4 @@ class GLTextureSystem:
 
     @staticmethod
     def delete_texture(tex_id: int):
-        glDeleteTextures([tex_id])
+        gl_delete_textures([tex_id])

@@ -1,8 +1,8 @@
 """
-This module provides functionality for managing 2D OpenGL textures.
+This module provides functionality for managing 2D OpenGL texture.
 
 It includes a class for creating, binding, uploading data, setting parameters, generating mipmaps, and deleting
-2D textures in OpenGL. This class ensures efficient management of texture resources in graphics applications.
+2D texture in OpenGL. This class ensures efficient management of texture resources in graphics applications.
 
 Example Usage:
 ==============
