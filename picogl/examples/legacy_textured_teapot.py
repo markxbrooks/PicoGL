@@ -25,7 +25,7 @@ from typing import Optional
 from picogl.backend.gl.api import gl_bind_texture
 from picogl.backend.gl.api.clear import gl_clear
 from picogl.backend.gl.api.enable import gl_disable, gl_enable
-from picogl.backend.gl.api.glu import glu_look_at
+from picogl.backend.glu.lookat import glu_look_at
 from picogl.backend.gl.api.matrix import gl_matrix_mode
 from picogl.backend.gl.api.rotate import gl_rotate_f
 from picogl.backend.gl.enums import GLBitMask

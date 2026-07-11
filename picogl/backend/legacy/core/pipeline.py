@@ -5,7 +5,7 @@ LegacyPipelineProtocol
 from typing import Any, Protocol, runtime_checkable
 
 from picogl.backend.gl.api.color import gl_color_4f, gl_color_material
-from picogl.backend.gl.api.glu import glu_perspective
+from picogl.backend.glu.perspective import glu_perspective
 from picogl.backend.gl.api.light import gl_light_fv
 from picogl.backend.gl.api.material import gl_material_f, gl_material_fv
 from picogl.backend.gl.api.matrix import gl_matrix_mode
