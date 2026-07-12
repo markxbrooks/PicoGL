@@ -11,7 +11,7 @@ Features:
 - Interactive rotation and zoom
 """
 
-from examples.glut_renderer import GlutRenderer, set_up_legacy_lighting
+from picogl.examples.glut_renderer import GlutRenderer, set_up_legacy_lighting
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
@@ -27,6 +27,7 @@ from picogl.backend.gl.enums import GLBitMask, GLDrawMode
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.state.fill import GLCapability, GLColorMaterialMode, GLFillMode
 from picogl.backend.gl.state.immediate import immediate_drawing
+from picogl.core.rgbcolor import RGBColor
 
 
 class SimpleTeapotRenderer(GlutRenderer):
@@ -92,7 +93,8 @@ class SimpleTeapotRenderer(GlutRenderer):
         if self.wireframe_mode:
             gl_polygon_mode(GL_FRONT_AND_BACK, GL_LINE)
             gl_disable(GLFixedFunctionCapability.LIGHTING)
-            glColor3f(1.0, 0.0, 0.0)  # Red wireframe
+            red_teapot = RGBColor(1.0, 0.0, 0.0)
+            glColor3f(*red_teapot.tuple)  # Red wireframe
         else:
             gl_polygon_mode(GL_FRONT_AND_BACK, GL_FILL)
             gl_enable(GLFixedFunctionCapability.LIGHTING)

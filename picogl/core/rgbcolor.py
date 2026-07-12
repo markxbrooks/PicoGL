@@ -35,6 +35,10 @@ class RGBColor:
         setattr(self, "g", clamp01(self.g))
         setattr(self, "b", clamp01(self.b))
 
+    @property
+    def tuple(self) -> tuple[float, float, float]:
+        return self.to_tuple()
+
     def to_tuple(self) -> tuple[float, float, float]:
         return self.r, self.g, self.b
 
