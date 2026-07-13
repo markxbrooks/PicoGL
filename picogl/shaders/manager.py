@@ -336,6 +336,7 @@ class ShaderManager:
         """
         load_shader
 
+        :param shader_number: Shader Number
         :param shader_type: ShaderType
         :return: None
         """
@@ -370,7 +371,7 @@ class ShaderManager:
                 self.shaders[shader_type] = self.fallback_shader
         except Exception as ex:
             log.warning(
-                f"⚠️ Shader load failed for {shader_type}: {ex}", scope="load_shader"
+                f"⚠️ Shader load failed for shader number {shader_number}, type {shader_type} directory {self.shader_directory}: {ex}", scope="load_shader"
             )
             self._ensure_fallback()
             self.shaders[shader_type] = self.fallback_shader
