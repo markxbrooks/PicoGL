@@ -10,7 +10,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_UNPACK_ALIGNMENT,
                                           glPixelStorei,
                                           )
 
-from core.rgbcolor import RGBAColor
+from picogl.core.rgbcolor import RGBAColor
 from picogl.backend.gl.enums.legacy.scale import gl_push_matrix, gl_pop_matrix
 from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
