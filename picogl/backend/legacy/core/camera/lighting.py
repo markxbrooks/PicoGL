@@ -6,11 +6,14 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_UNPACK_ALIGNMENT, glLoadIdentity,
                                           glMaterialf, glMatrixMode,
                                           glPixelStorei, glPopMatrix,
                                           glPushMatrix)
+
+from backend.gl.enums.legacy.scale import gl_push_matrix, gl_pop_matrix
 from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.gl.light import GLLightSource
 from picogl.backend.gl.state.fill import GLFace, GLLightParameter
 from picogl.gpu.buffers.glframe import GLFramebuffer
+from ui.backend.glut.window import glut_legacy
 
 
 def set_second_light_state(second_light_state: bool) -> None:
@@ -173,8 +176,8 @@ def setup_lighting(mode: int = 0) -> None:
         GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHT0)
 
         glMatrixMode(GLLegacyMatrixMode.MODELVIEW)
-        glPushMatrix()
-        glLoadIdentity()  # reset modelview matrix
+        gl_push_matrix()
+        gl_load_identity()  # reset modelview matrix
 
         # Set light position_array (camera-relative)
         light_pos = [10.0, 10.0, 10.0, 1.0]
@@ -182,7 +185,7 @@ def setup_lighting(mode: int = 0) -> None:
             GLFixedFunctionCapability.LIGHT0, GLLightParameter.POSITION, light_pos
         )
 
-        glPopMatrix()
+        gl_pop_matrix()
 
         # Set light properties (these are not affected by the matrix)
         GLLightSource.lightf(
