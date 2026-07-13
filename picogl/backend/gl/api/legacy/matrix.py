@@ -22,7 +22,8 @@ def gl_pushed_matrix():
 
 
 @contextmanager
-def gl_projection_matrix():
+def gl_matrix_mode():
+    """gl matrix mode"""
     set_matrix_mode(GLLegacyMatrixMode.PROJECTION)
     try:
         gl_load_identity()
