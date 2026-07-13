@@ -12,7 +12,8 @@ from picogl.backend.gl.api.frame import gl_bind_framebuffer
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums.legacy.scale import gl_viewport
 from picogl.backend.state import gl_value
-from picogl.core.rgbcolor import RGBAColor, clamp01
+from picogl.core.rgbcolor import RGBAColor
+from picogl.core.mixin.vec3 import clamp01
 
 from elmo.ui.widgets.gl.mol.viewport import Viewport
 
