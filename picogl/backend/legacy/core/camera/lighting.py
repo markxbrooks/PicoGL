@@ -1,22 +1,104 @@
 """
 Setup lighting
 """
+from dataclasses import dataclass
+from typing import Sequence
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_UNPACK_ALIGNMENT, glLoadIdentity,
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_UNPACK_ALIGNMENT,
                                           glMaterialf, glMatrixMode,
-                                          glPixelStorei, glPopMatrix,
-                                          glPushMatrix)
+                                          glPixelStorei,
+                                          )
 
-from backend.gl.enums.legacy.scale import gl_push_matrix, gl_pop_matrix
+from picogl.backend.gl.enums.legacy.scale import gl_push_matrix, gl_pop_matrix
 from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.gl.light import GLLightSource
 from picogl.backend.gl.state.fill import GLFace, GLLightParameter
 from picogl.gpu.buffers.glframe import GLFramebuffer
-from ui.backend.glut.window import glut_legacy
 
+
+@dataclass(frozen=True)
+class GLLight:
+    """GL Light"""
+    position: Sequence[float] = (10.0, 10.0, 10.0, 1.0)
+    ambient: Sequence[float] = (0.2, 0.2, 0.2, 1.0)
+    diffuse: Sequence[float] = (1.0, 1.0, 1.0, 1.0)
+    specular: Sequence[float] = (1.0, 1.0, 1.0, 1.0)
+
+
+def apply_light(
+    capability: GLFixedFunctionCapability,
+    light: GLLight,
+) -> None:
+    GLLightSource.lightf(
+        capability,
+        GLLightParameter.POSITION,
+        light.position,
+    )
+
+    GLLightSource.lightf(
+        capability,
+        GLLightParameter.AMBIENT,
+        light.ambient,
+    )
+
+    GLLightSource.lightf(
+        capability,
+        GLLightParameter.DIFFUSE,
+        light.diffuse,
+    )
+
+    GLLightSource.lightf(
+        capability,
+        GLLightParameter.SPECULAR,
+        light.specular,
+    )
 
 def set_second_light_state(second_light_state: bool) -> None:
+    """
+    set_second_light_state
+
+    :param second_light_state: bool Whether the second light is on or off
+    :return: None
+
+    Second light
+    """
+    if second_light_state:
+        light1 = GLLight(position=[-10.0, -10.0, -10.0, 1.0],
+                         diffuse=[0.5, 0.5, 0.5, 1.0],
+                         specular=[0.3, 0.3, 0.3, 1.0],
+                         ambient=[0.3, 0.3, 0.3, 1.0])
+        light2 = GLLight(position=[90.0, 90.0, 90.0, 1.0],
+                         diffuse=[0.5, 0.5, 0.5, 1.0],
+                         specular=[0.3, 0.3, 0.3, 1.0],
+                         ambient=[0.3, 0.3, 0.3, 1.0])
+        light3 = GLLight(position=[-90.0, -90.0, -90.0, 1.0],
+                         diffuse=[0.5, 0.5, 0.5, 1.0],
+                         specular=[0.3, 0.3, 0.3, 1.0],
+                         ambient=[0.3, 0.3, 0.3, 1.0])
+        light4 = GLLight(position=[270.0, 270.0, 270.0, 1.0],
+                         diffuse=[0.5, 0.5, 0.5, 1.0],
+                         specular=[0.3, 0.3, 0.3, 1.0],
+                         ambient=[0.3, 0.3, 0.3, 1.0])
+        lights = {GLFixedFunctionCapability.LIGHT1: light1,
+                  GLFixedFunctionCapability.LIGHT2: light2,
+                  GLFixedFunctionCapability.LIGHT3: light3,
+                  GLFixedFunctionCapability.LIGHT4: light4}
+        for capability, light in lights.items():
+            enable_light(capability=capability, light=light1)
+
+    else:
+        GLCapabilityDriver.disable(GLFixedFunctionCapability.LIGHT1)
+
+
+def enable_light(capability: GLFixedFunctionCapability, light: GLLight = None) -> None:
+    """enable light"""
+    GLCapabilityDriver.enable(capability)
+    if light is not None:
+        apply_light(capability, light)
+
+
+def set_second_light_state_old(second_light_state: bool) -> None:
     """
     set_second_light_state
 
