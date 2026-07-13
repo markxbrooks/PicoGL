@@ -7,6 +7,7 @@ the matrix state within a given context.
 """
 from contextlib import contextmanager
 
+from backend.gl.enums.legacy.scale import gl_load_identity
 from picogl.backend.gl.enums.legacy.scale import gl_pop_matrix, gl_push_matrix
 
 
@@ -18,3 +19,13 @@ def gl_pushed_matrix():
         yield
     finally:
         gl_pop_matrix()
+
+
+@contextmanager
+def gl_projection_matrix():
+    set_matrix_mode(GLLegacyMatrixMode.PROJECTION)
+    try:
+        gl_load_identity()
+        yield
+    finally:
+        set_matrix_mode(GLLegacyMatrixMode.MODELVIEW)

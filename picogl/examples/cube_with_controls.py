@@ -7,8 +7,7 @@ from picogl.backend.gl.api.enable import gl_enable
 from picogl.backend.gl.api.legacy.matrix import gl_pushed_matrix
 from picogl.backend.gl.capability import GLPipelineCapability
 from picogl.backend.gl.enums import GLBitMask
-from picogl.backend.gl.enums.legacy.scale import (gl_pop_matrix,
-                                                  gl_push_matrix, gl_rotatef,
+from picogl.backend.gl.enums.legacy.scale import (gl_rotatef,
                                                   gl_scalef, gl_translatef,
                                                   gl_viewport)
 from picogl.backend.legacy.core.pipeline import LegacyPipeline
