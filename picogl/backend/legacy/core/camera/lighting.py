@@ -2,6 +2,7 @@
 Setup lighting
 """
 from dataclasses import dataclass
+from enum import auto, Enum
 from typing import Sequence
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_UNPACK_ALIGNMENT,
@@ -9,12 +10,20 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_UNPACK_ALIGNMENT,
                                           glPixelStorei,
                                           )
 
+from core.rgbcolor import RGBAColor
 from picogl.backend.gl.enums.legacy.scale import gl_push_matrix, gl_pop_matrix
 from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.gl.light import GLLightSource
 from picogl.backend.gl.state.fill import GLFace, GLLightParameter
 from picogl.gpu.buffers.glframe import GLFramebuffer
+
+class GLLightingMode(Enum):
+    """GL Lighting mode"""
+    EYE_SPACE = auto()
+    CAMERA_FIXED = auto()
+    CAMERA_ORIGIN = auto()
+    WORLD_SPACE = auto()
 
 
 @dataclass(frozen=True)
@@ -98,84 +107,6 @@ def enable_light(capability: GLFixedFunctionCapability, light: GLLight = None) -
         apply_light(capability, light)
 
 
-def set_second_light_state_old(second_light_state: bool) -> None:
-    """
-    set_second_light_state
-
-    :param second_light_state: bool Whether the second light is on or off
-    :return: None
-
-    Second light
-    """
-    if second_light_state:
-        GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHT1)
-        GLLightSource.lightf(
-            GLFixedFunctionCapability.LIGHT1,
-            GLLightParameter.POSITION,
-            [-10.0, -10.0, -10.0, 1.0],
-        )
-        GLLightSource.lightf(
-            GLFixedFunctionCapability.LIGHT1,
-            GLLightParameter.DIFFUSE,
-            [0.5, 0.5, 0.5, 1.0],
-        )
-        GLLightSource.lightf(
-            GLFixedFunctionCapability.LIGHT1,
-            GLLightParameter.SPECULAR,
-            [0.3, 0.3, 0.3, 1.0],
-        )
-        GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHT2)
-        GLLightSource.lightf(
-            GLFixedFunctionCapability.LIGHT2,
-            GLLightParameter.POSITION,
-            [90.0, 90.0, 90.0, 1.0],
-        )
-        GLLightSource.lightf(
-            GLFixedFunctionCapability.LIGHT2,
-            GLLightParameter.DIFFUSE,
-            [0.5, 0.5, 0.5, 1.0],
-        )
-        GLLightSource.lightf(
-            GLFixedFunctionCapability.LIGHT2,
-            GLLightParameter.SPECULAR,
-            [0.3, 0.3, 0.3, 1.0],
-        )
-        GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHT3)
-        GLLightSource.lightf(
-            GLFixedFunctionCapability.LIGHT3,
-            GLLightParameter.POSITION,
-            [-90.0, -90.0, -90.0, 1.0],
-        )
-        GLLightSource.lightf(
-            GLFixedFunctionCapability.LIGHT3,
-            GLLightParameter.DIFFUSE,
-            [0.5, 0.5, 0.5, 1.0],
-        )
-        GLLightSource.lightf(
-            GLFixedFunctionCapability.LIGHT3,
-            GLLightParameter.SPECULAR,
-            [0.3, 0.3, 0.3, 1.0],
-        )
-        GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHT4)
-        GLLightSource.lightf(
-            GLFixedFunctionCapability.LIGHT4,
-            GLLightParameter.POSITION,
-            [270.0, 270.0, 270.0, 1.0],
-        )
-        GLLightSource.lightf(
-            GLFixedFunctionCapability.LIGHT4,
-            GLLightParameter.DIFFUSE,
-            [0.5, 0.5, 0.5, 1.0],
-        )
-        GLLightSource.lightf(
-            GLFixedFunctionCapability.LIGHT4,
-            GLLightParameter.SPECULAR,
-            [0.3, 0.3, 0.3, 1.0],
-        )
-    else:
-        GLCapabilityDriver.disable(GLFixedFunctionCapability.LIGHT1)
-
-
 def set_background_color(show_white_background: bool) -> None:
     """
     set_background_color
@@ -185,11 +116,11 @@ def set_background_color(show_white_background: bool) -> None:
     Choose bg color_array
     """
     if show_white_background:
-        color = (1.0, 1.0, 1.0, 1.0)  # White background
+        color = RGBAColor(1.0, 1.0, 1.0, 1.0)  # White background
     else:
-        color = (0.0, 0.0, 0.0, 1.0)
+        color = RGBAColor(0.0, 0.0, 0.0, 1.0)
     buffer = GLFramebuffer()
-    buffer.clear(color=color)
+    buffer.clear(color=color.tuple)
 
 
 def setup_lighting(mode: int = 0) -> None:
