@@ -7,7 +7,7 @@ _immediate_active = False
 
 
 @contextmanager
-def immediate_drawing(draw_mode: GLDrawMode = GLDrawMode.LINE_STRIP):
+def gl_immediate_drawing(draw_mode: GLDrawMode = GLDrawMode.LINE_STRIP):
     global _immediate_active
 
     if _immediate_active:

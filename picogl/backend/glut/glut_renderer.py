@@ -21,8 +21,6 @@ from picogl.backend.gl.api.matrix import gl_matrix_mode
 from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
 from picogl.backend.gl.api.rotate import gl_rotate_f
 from picogl.backend.gl.capability import GLFixedFunctionCapability, GLMaterialFace
-
-# from picogl.examples.legacy_cube_fixed import LegacyCubeRenderer
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode

@@ -17,7 +17,7 @@ import os
 import sys
 
 import numpy as np
-from examples.glut_renderer import GlutRenderer, set_up_legacy_lighting
+from examples.glut_renderer import GlutRenderer, gl_legacy_lighting
 from picogl.backend.gl.api.clear import gl_clear_color
 from picogl.backend.gl.api.enable import gl_enable
 from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
@@ -36,7 +36,7 @@ from picogl.backend.gl.state.fill import (
     GLLight,
     GLLightParameter,
 )
-from picogl.backend.gl.state.immediate import immediate_drawing
+from picogl.backend.gl.state.immediate import gl_immediate_drawing
 
 # Check for display before importing OpenGL
 if os.environ.get("DISPLAY") is None and os.name != "nt":
@@ -332,7 +332,7 @@ class MinimalCubeRenderer(GlutRenderer):
         )
 
         # Set up lighting
-        set_up_legacy_lighting()
+        gl_legacy_lighting()
 
     def display(self):
         """Display callback - render the scene."""
@@ -362,7 +362,7 @@ class MinimalCubeRenderer(GlutRenderer):
             gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.FILL)
 
         # Draw the cube using immediate mode
-        with immediate_drawing(GLDrawMode.TRIANGLES):
+        with gl_immediate_drawing(GLDrawMode.TRIANGLES):
             for i in range(0, len(self.vertices), 3):
                 # Each triangle has 3 vertices
                 for j in range(3):
@@ -395,7 +395,7 @@ class MinimalCubeRenderer(GlutRenderer):
         """Draw normal vectors (simplified)."""
         gl_disable(GLFixedFunctionCapability.LIGHTING)
         glColor3f(0.0, 1.0, 0.0)  # Green normals
-        with immediate_drawing(GLDrawMode.LINES):
+        with gl_immediate_drawing(GLDrawMode.LINES):
 
             # Draw a few normal vectors for demonstration
             for i in range(0, len(self.vertices), 6):  # Every 6 vertices (2 triangles)

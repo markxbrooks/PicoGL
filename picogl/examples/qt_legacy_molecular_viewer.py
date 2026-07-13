@@ -16,7 +16,7 @@ from molib.core.constants import MoLibConstant
 from OpenGL.GL import *
 from OpenGL.raw.GLU import gluPerspective
 from picogl.backend.gl.enums import GLDrawMode
-from picogl.backend.gl.state.immediate import immediate_drawing
+from picogl.backend.gl.state.immediate import gl_immediate_drawing
 from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
 from PySide6.QtCore import Qt
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
@@ -256,7 +256,7 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
         if not self.calpha_bonds or self.calpha_positions is None:
             return
 
-        with immediate_drawing(GLDrawMode.LINES):
+        with gl_immediate_drawing(GLDrawMode.LINES):
             for atom1_idx, atom2_idx in self.calpha_bonds:
                 if 0 <= atom1_idx < len(self.calpha_positions) and 0 <= atom2_idx < len(
                     self.calpha_positions
@@ -294,7 +294,7 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
 
             if not self.wireframe_mode:
                 # Draw filled triangles between the two latitude rings
-                with immediate_drawing(GLDrawMode.TRIANGLE_STRIP):
+                with gl_immediate_drawing(GLDrawMode.TRIANGLE_STRIP):
                     for j in range(slices + 1):
                         lng = 2 * math.pi * j / slices
                         x = math.cos(lng)
@@ -318,7 +318,7 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
                         glVertex3f(x * zr1, y * zr1, z1)
 
             # Draw wireframe lines for the latitude rings
-            with immediate_drawing(GLDrawMode.LINE_LOOP):
+            with gl_immediate_drawing(GLDrawMode.LINE_LOOP):
                 for j in range(slices + 1):
                     lng = 2 * math.pi * j / slices
                     x = math.cos(lng)
@@ -327,7 +327,7 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
                     glVertex3f(x * zr0, y * zr0, z0)
 
             # Draw vertical lines connecting the rings
-            with immediate_drawing(GLDrawMode.LINES):
+            with gl_immediate_drawing(GLDrawMode.LINES):
                 for j in range(slices + 1):
                     lng = 2 * math.pi * j / slices
                     x = math.cos(lng)

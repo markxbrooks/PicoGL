@@ -3,7 +3,7 @@ import sys
 
 import numpy as np
 from picogl.backend.gl.enums import GLDrawMode
-from picogl.backend.gl.state.immediate import immediate_drawing
+from picogl.backend.gl.state.immediate import gl_immediate_drawing
 
 # Check for display before importing OpenGL
 if os.environ.get("DISPLAY") is None and os.name != "nt":
@@ -226,7 +226,7 @@ def display():
 
 
 def render(mvp_matrix, vertex_processor):
-    with immediate_drawing(GLDrawMode.TRIANGLES):
+    with gl_immediate_drawing(GLDrawMode.TRIANGLES):
         for idx in quad_indices:
             for i in idx:
                 v = quad_verts[i]
