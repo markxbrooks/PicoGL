@@ -2,38 +2,27 @@ import os.path
 import sys  # we'll need this later to run our Qt application
 from contextlib import contextmanager
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 import OpenGL.GL as gl  # python wrapping of OpenGL
 
-from backend.gl.api import gl_bind_buffer, gl_draw_arrays
-from backend.gl.api.legacy.matrix import gl_pushed_matrix
-from backend.gl.api.legacy.rotate import gl_rotate_f
-from backend.gl.api.legacy.scale import gl_scale
-from backend.gl.api.line import gl_line_width
-from backend.gl.enums.legacy.scale import gl_load_identity, gl_push_matrix, gl_translatef
-from backend.glu.lookat import glu_look_at
+from backend.gl.api.legacy.vertex import gl_vertex_pointer
+from picogl.backend.gl.api import gl_bind_buffer, gl_draw_arrays, gl_buffer_data, gl_generate_buffers
+from picogl.backend.gl.api.legacy.matrix import gl_pushed_matrix
+from picogl.backend.gl.api.legacy.rotate import gl_rotate_f
+from picogl.backend.gl.api.legacy.scale import gl_scale
+from picogl.backend.gl.api.line import gl_line_width
+from picogl.backend.gl.api.matrix import gl_matrix_mode
+from picogl.backend.gl.enums import GLNumeric, GLBitMask, GLUsageHint
+from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
+from picogl.backend.gl.enums.legacy.scale import gl_load_identity, gl_translatef
+from picogl.backend.glu.lookat import glu_look_at
+from picogl.backend.glu.perspective import glu_perspective
+from biotoolkit.gui.opengl.gl_widget import GLSliderWindow
 from molib.ligand.pdb.layouts.hetatm import HETATMLayout
-from OpenGL import GLU  # OpenGL Utility Library, extends OpenGL functionality
-from OpenGL.GL import (
-    GL_FLOAT,
-    GL_STATIC_DRAW,
-    glBindBuffer,
-    glBufferData,
-    glGenBuffers,
-    glScale,
-)
-from OpenGL.GLU import gluLookAt
-from PySide6.QtCore import Qt, QTimer
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
-from PySide6.QtWidgets import (
-    QApplication,
-    QHBoxLayout,
-    QMainWindow,
-    QSlider,
-    QVBoxLayout,
-    QWidget,
-)
+from PySide6.QtWidgets import QApplication
 
 from picogl.backend.gl.api.clear import gl_clear_color, gl_clear
 from picogl.backend.gl.api.enable import gl_enable
@@ -52,7 +41,7 @@ def _pdb_atom_xyz(line: str) -> list[float]:
     ]
 
 @contextmanager
-def gl_bound_buffer(vbo):
+def gl_bound_buffer(vbo: int):
     """gl bound buffer"""
     try:
         gl_bind_buffer(GLBufferTarget.ARRAY, vbo)
@@ -61,7 +50,26 @@ def gl_bound_buffer(vbo):
         gl_bind_buffer(GLBufferTarget.ARRAY, 0)
 
 
-class GLWidget(QOpenGLWidget):
+def calculate_aspect(height, width) -> Any:
+    aspect = width / float(height)
+    return aspect
+
+
+def create_vbo_object(coordinates: np.ndarray):
+    vbo = gl_generate_buffers(1)
+    gl_bind_buffer(GLBufferTarget.ARRAY, vbo)
+    gl_buffer_data(
+        GLBufferTarget.ARRAY, coordinates.nbytes, coordinates, GLUsageHint.STATIC_DRAW
+    )
+    return vbo
+
+
+def get_downloads_pdb_path(file_name) -> str:
+    pdb_path = os.path.join(Path.home(), "Downloads", file_name)
+    return pdb_path
+
+
+class GLProteinWidget(QOpenGLWidget):
     def __init__(self, parent=None):
         self.rot_x = None
         self.rot_y = None
@@ -78,7 +86,6 @@ class GLWidget(QOpenGLWidget):
     def initializeGL(self):
         gl_clear_color((0.15, 0.15, 0.2, 1.0))
         gl_enable(gl.GL_DEPTH_TEST)
-
         self.init_geometry()
 
         self.rot_x = 0.0
@@ -88,12 +95,12 @@ class GLWidget(QOpenGLWidget):
 
     def resizeGL(self, width, height):
         gl_viewport(0, 0, width, height)
-        gl.glMatrixMode(gl.GL_PROJECTION)
-        gl.glLoadIdentity()
-        aspect = width / float(height)
+        gl_matrix_mode(GLLegacyMatrixMode.PROJECTION)
+        gl_load_identity()
+        aspect = calculate_aspect(height, width)
 
-        GLU.gluPerspective(45.0, aspect, 1.0, 100.0)
-        gl.glMatrixMode(gl.GL_MODELVIEW)
+        glu_perspective(45.0, aspect, 1.0, 100.0)
+        gl_matrix_mode(GLLegacyMatrixMode.MODELVIEW)
 
     def pdb_file_parse_atoms(self, file_path):
         coordinates = []
@@ -119,16 +126,10 @@ class GLWidget(QOpenGLWidget):
         return coordinates - center
 
     # Create a VBO object
-    def create_vbo_object(self, coordinates):
-        vbo = glGenBuffers(1)
-        glBindBuffer(GLBufferTarget.ARRAY, vbo)
-        glBufferData(
-            GLBufferTarget.ARRAY, coordinates.nbytes, coordinates, GL_STATIC_DRAW
-        )
-        return vbo
 
     def init_geometry(self):
-        pdb_path = os.path.join(Path.home(), "Downloads", "6VFF.pdb")
+        """init geometry"""
+        pdb_path = get_downloads_pdb_path("6VFF.pdb")
         if os.path.isfile(pdb_path):
             self.coordinates = self.pdb_file_parse_calphas(pdb_path)
         else:
@@ -144,10 +145,11 @@ class GLWidget(QOpenGLWidget):
             return
 
         self.centered_coordinates = self.center_coordinates(self.coordinates)
-        self.vbo = self.create_vbo_object(self.centered_coordinates)
+        self.vbo = create_vbo_object(self.centered_coordinates)
 
     def paintGL(self):
-        gl_clear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
+        """paint GL"""
+        gl_clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
         gl_load_identity()
         glu_look_at(0, 0, -40, 0, 0, 0, 0, 1, 0)
 
@@ -160,7 +162,7 @@ class GLWidget(QOpenGLWidget):
             gl_line_width(2.0)
             with gl_bound_buffer(self.vbo):
                 with legacy_client_states(GLClientState.VERTEX):
-                    gl.glVertexPointer(3, GL_FLOAT, 0, None)
+                    gl_vertex_pointer(size=3, type=GLNumeric.FLOAT, stride=0, pointer=None)
                     gl_draw_arrays(mode=int(GLDrawMode.LINE_STRIP), first=0, index_count=len(self.coordinates))
 
     def set_rot_x(self, val):
@@ -175,59 +177,9 @@ class GLWidget(QOpenGLWidget):
     def set_zoom(self, val):
         self.zoom = val
 
-
-class MainWindow(QMainWindow):
-
-    def __init__(self):
-        QMainWindow.__init__(self)  # call the init for the parent class
-
-        self.resize(300, 300)
-        self.setWindowTitle("Cube OpenGL App")
-
-        self.gl_widget = GLWidget(self)
-        self.init_gui()
-
-        timer = QTimer(self)
-        timer.setInterval(20)  # period, in milliseconds
-        timer.timeout.connect(self.gl_widget.update)
-        timer.start()
-
-    def init_gui(self):
-        central_widget = QWidget()
-        xslider_layout = QHBoxLayout()
-
-        gui_layout = QVBoxLayout()
-        central_widget.setLayout(gui_layout)
-
-        self.setCentralWidget(central_widget)
-
-        xslider_layout.addWidget(self.gl_widget)
-
-        slider_zoom = QSlider(Qt.Vertical)
-        slider_zoom.setMaximum(-20.0)
-        slider_zoom.setMinimum(-80.0)
-        slider_zoom.valueChanged.connect(lambda val: self.gl_widget.set_zoom(val))
-        xslider_layout.addWidget(slider_zoom)
-
-        slider_x = QSlider(Qt.Vertical)
-        slider_x.valueChanged.connect(lambda val: self.gl_widget.set_rot_x(val))
-        xslider_layout.addWidget(slider_x)
-
-        slider_y = QSlider(Qt.Horizontal)
-        slider_y.valueChanged.connect(lambda val: self.gl_widget.set_rot_y(val))
-
-        slider_z = QSlider(Qt.Horizontal)
-        slider_z.valueChanged.connect(lambda val: self.gl_widget.set_rot_z(val))
-
-        gui_layout.addLayout(xslider_layout)
-        gui_layout.addWidget(slider_y)
-        gui_layout.addWidget(slider_z)
-
-
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-
-    win = MainWindow()
+    widget = GLProteinWidget()
+    win = GLSliderWindow(widget)
     win.show()
-
     sys.exit(app.exec())

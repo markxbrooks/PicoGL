@@ -7,7 +7,7 @@ the matrix state within a given context.
 """
 from contextlib import contextmanager
 
-from backend.gl.enums.legacy.scale import gl_push_matrix, gl_pop_matrix
+from picogl.backend.gl.enums.legacy.scale import gl_push_matrix, gl_pop_matrix
 
 
 @contextmanager

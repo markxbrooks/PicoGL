@@ -13,7 +13,7 @@ Functions:
 from OpenGL.raw.GL.VERSION.GL_1_5 import glBindBuffer
 
 
-def gl_bind_buffer(target: int, ebo_id: int | None):
+def gl_bind_buffer(target: int, vbo_id: int | None):
     """
     Binds a buffer object to a specified binding point in the OpenGL context.
 
@@ -29,4 +29,4 @@ def gl_bind_buffer(target: int, ebo_id: int | None):
         The name (ID) of the buffer object to bind. If None is provided, the
         target will be unbound, and no buffer will be associated with it.
     """
-    glBindBuffer(target, ebo_id)
+    glBindBuffer(target, vbo_id)

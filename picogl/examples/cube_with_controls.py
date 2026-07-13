@@ -13,7 +13,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from backend.gl.api.legacy.matrix import gl_pushed_matrix
+from picogl.backend.gl.api.legacy.matrix import gl_pushed_matrix
 from picogl.backend.gl.api.clear import gl_clear, gl_clear_color
 from picogl.backend.gl.api.enable import gl_enable
 from picogl.backend.gl.capability import GLPipelineCapability
@@ -44,7 +44,7 @@ def _multiply_by_pi(val) -> float | Any:
     return np.pi * val
 
 
-class GLWidget(QOpenGLWidget):
+class GLCubeWidget(QOpenGLWidget):
     def __init__(self, parent=None):
         self.rot_x = None
         self.rot_y = None
@@ -169,7 +169,7 @@ class MainWindow(QMainWindow):
         self.resize(300, 300)
         self.setWindowTitle("Cube OpenGL App")
 
-        self.gl_widget = GLWidget(self)
+        self.gl_widget = GLCubeWidget(self)
         self.init_gui()
 
         timer = QTimer(self)
