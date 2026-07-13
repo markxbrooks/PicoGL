@@ -1,1 +1,1 @@
-from .check import gl_check_error, check_error_after, gl_get_error, gl_check_errors
+from .check import check_error_after, gl_check_error, gl_check_errors, gl_get_error

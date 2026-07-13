@@ -16,20 +16,22 @@ Interoperability**: If you plan to convert to/from common formats (tuples, lists
 """
 
 from __future__ import annotations
+
 from dataclasses import dataclass
 from typing import Tuple
 
-from picogl.core.mixin.vec3 import clamp01, Vec3Mixin
-
+from picogl.core.mixin.vec3 import Vec3Mixin, clamp01
 
 # Utility
 
 # Vec3 mixin to share common RGB-like behavior
 
+
 # RGBColor
 @dataclass
 class RGBColor(Vec3Mixin):
     """RGB color"""
+
     r: float = 1.0
     g: float = 1.0
     b: float = 1.0
@@ -55,10 +57,12 @@ class RGBColor(Vec3Mixin):
     def with_alpha(self, alpha: float) -> "RGBAColor":
         return RGBAColor(self.r, self.g, self.b, alpha)
 
+
 # RGBAColor
 @dataclass
 class RGBAColor(RGBColor):
     """RGBA color"""
+
     a: float = 1.0
 
     def __post_init__(self):

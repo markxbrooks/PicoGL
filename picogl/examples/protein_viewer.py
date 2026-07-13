@@ -15,12 +15,6 @@ from OpenGL.GL import (
     glScale,
 )
 from OpenGL.GLU import gluLookAt
-from picogl.backend.gl.api.clear import gl_clear_color
-from picogl.backend.gl.api.enable import gl_enable
-from picogl.backend.gl.enums import GLBufferTarget, GLDrawMode
-from picogl.backend.gl.enums.legacy.scale import gl_viewport
-from picogl.backend.gl.state.client import GLClientState
-from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
 from PySide6.QtWidgets import (
@@ -31,6 +25,13 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+
+from picogl.backend.gl.api.clear import gl_clear_color
+from picogl.backend.gl.api.enable import gl_enable
+from picogl.backend.gl.enums import GLBufferTarget, GLDrawMode
+from picogl.backend.gl.enums.legacy.scale import gl_viewport
+from picogl.backend.gl.state.client import GLClientState
+from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
 
 
 def _pdb_atom_xyz(line: str) -> list[float]:

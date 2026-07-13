@@ -1,6 +1,12 @@
 from __future__ import annotations
 
-from OpenGL.GL import glGetUniformLocation, glGetShaderiv, glGetShaderInfoLog, glGetProgramInfoLog, glGetProgramiv
+from OpenGL.GL import (
+    glGetProgramInfoLog,
+    glGetProgramiv,
+    glGetShaderInfoLog,
+    glGetShaderiv,
+    glGetUniformLocation,
+)
 from OpenGL.raw.GL.VERSION.GL_2_0 import GL_COMPILE_STATUS, GL_LINK_STATUS
 
 

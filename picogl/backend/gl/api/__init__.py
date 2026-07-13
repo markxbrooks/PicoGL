@@ -24,12 +24,6 @@ from picogl.backend.gl.api.pointer import (
     gl_vertex_array_pointer,
     gl_vertex_pointer_from_spec,
 )
-from .texture.parameter import gl_tex_parameter
-from .texture.mipmap import gl_generate_mipmap
-from .texture.image import gl_compressed_tex_image, gl_teximage2d, gl_teximage3d
-from .texture.generate import gl_gen_textures
-from .texture.active import gl_active_texture, gl_get_active_texture0
-from .texture.bind import gl_bind_texture
 from picogl.backend.gl.api.vertex.arrays.bind import gl_bind_vertex_array
 from picogl.backend.gl.api.vertex.attrib_pointer import gl_vertex_attrib_pointer
 from picogl.backend.gl.api.vertex.enable_array import gl_enable_vertex_array
@@ -37,6 +31,12 @@ from picogl.backend.gl.api.vertex.generate_array import gl_generate_vertex_array
 
 from .buffer.bind import gl_bind_buffer
 from .get_integerv import gl_get_integerv
+from .texture.active import gl_active_texture, gl_get_active_texture0
+from .texture.bind import gl_bind_texture
+from .texture.generate import gl_gen_textures
+from .texture.image import gl_compressed_tex_image, gl_teximage2d, gl_teximage3d
+from .texture.mipmap import gl_generate_mipmap
+from .texture.parameter import gl_tex_parameter
 
 __all__ = [
     "gl_bind_buffer",

@@ -19,6 +19,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     glFogfv,
     glFogi,
 )
+
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 
 

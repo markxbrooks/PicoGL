@@ -3,15 +3,23 @@ World Sheet Widget
 """
 
 import numpy as np
+from pyglm import glm
 
-from picogl.backend.gl.api import gl_vertex_attrib_pointer, gl_draw_arrays, gl_bind_buffer, gl_buffer_data, gl_generate_buffers
+from picogl.backend.gl.api import (
+    gl_bind_buffer,
+    gl_buffer_data,
+    gl_draw_arrays,
+    gl_generate_buffers,
+    gl_vertex_attrib_pointer,
+)
 from picogl.backend.gl.api.shader import gl_uniform_matrix_4fv
-from picogl.backend.gl.api.vertex.attrib_array.generate import gl_enable_vertex_attrib_array
-from picogl.backend.gl.enums import GLBufferTarget, GLUsageHint, GLNumeric, GLDrawMode
-from picogl.boolean import GLBoolean
+from picogl.backend.gl.api.vertex.attrib_array.generate import (
+    gl_enable_vertex_attrib_array,
+)
+from picogl.backend.gl.enums import GLBufferTarget, GLDrawMode, GLNumeric, GLUsageHint
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.backend.modern.renderers.mesh import ShaderMeshRenderer
-from pyglm import glm
+from picogl.boolean import GLBoolean
 
 
 class WorldSheet(ShaderMeshRenderer):
@@ -47,7 +55,9 @@ class WorldSheet(ShaderMeshRenderer):
 
         self.line_buffer = gl_generate_buffers(1)
         gl_bind_buffer(GLBufferTarget.ARRAY, self.line_buffer)
-        gl_buffer_data(GLBufferTarget.ARRAY, self.lines.nbytes, self.lines, GLUsageHint.STATIC_DRAW)
+        gl_buffer_data(
+            GLBufferTarget.ARRAY, self.lines.nbytes, self.lines, GLUsageHint.STATIC_DRAW
+        )
 
     def load_texture(self):
         """load texture"""
@@ -55,7 +65,9 @@ class WorldSheet(ShaderMeshRenderer):
 
     def render(self, mvp_matrix, view_matrix, projection_matrix):
         self.shader.begin()
-        gl_uniform_matrix_4fv(self.mvp_id, 1, GLBoolean.FALSE, glm.value_ptr(mvp_matrix))
+        gl_uniform_matrix_4fv(
+            self.mvp_id, 1, GLBoolean.FALSE, glm.value_ptr(mvp_matrix)
+        )
 
         gl_enable_vertex_attrib_array(0)
         gl_bind_buffer(GLBufferTarget.ARRAY, self.line_buffer)

@@ -15,9 +15,6 @@ import numpy as np
 from molib.core.constants import MoLibConstant
 from OpenGL.GL import *
 from OpenGL.raw.GLU import gluPerspective
-from picogl.backend.gl.enums import GLDrawMode
-from picogl.backend.gl.state.immediate import gl_immediate_drawing
-from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
 from PySide6.QtCore import Qt
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
 from PySide6.QtWidgets import (
@@ -30,6 +27,10 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+
+from picogl.backend.gl.enums import GLDrawMode
+from picogl.backend.gl.state.immediate import gl_immediate_drawing
+from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
 
 # Add the examples directory to the path so we can import the PDB loader
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "utils"))

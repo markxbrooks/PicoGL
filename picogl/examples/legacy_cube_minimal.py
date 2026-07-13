@@ -17,7 +17,7 @@ import os
 import sys
 
 import numpy as np
-from picogl.examples.glut_renderer import GlutRenderer, gl_legacy_lighting
+
 from picogl.backend.gl.api.clear import gl_clear_color
 from picogl.backend.gl.api.enable import gl_enable
 from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
@@ -37,6 +37,7 @@ from picogl.backend.gl.state.fill import (
     GLLightParameter,
 )
 from picogl.backend.gl.state.immediate import gl_immediate_drawing
+from picogl.examples.glut_renderer import GlutRenderer, gl_legacy_lighting
 
 # Check for display before importing OpenGL
 if os.environ.get("DISPLAY") is None and os.name != "nt":

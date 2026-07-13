@@ -34,5 +34,3 @@ def draw_pointer(pointer: Any | None, offset: int) -> Any:
     if isinstance(pointer, list):
         return np.asarray(pointer, dtype=np.uint32)
     return pointer
-
-

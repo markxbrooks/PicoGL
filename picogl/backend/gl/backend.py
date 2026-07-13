@@ -14,6 +14,7 @@ import warnings
 from typing import Callable, Optional
 
 from decologr import Decologr as log
+
 from picogl.backend.gl.driver.blend import GLBlendDriver
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.gl.driver.depth import GLDepthDriver
@@ -35,10 +36,9 @@ from picogl.backend.state import (
     RenderState,
     RenderStateApplier,
 )
+from picogl.core.viewport import Viewport
 from picogl.gpu.buffers.glframe import GLFramebuffer
 from picogl.renderer.readback import GLReadback
-
-from elmo.ui.widgets.gl.mol.viewport import Viewport
 
 
 class GLBackend:

@@ -1,6 +1,7 @@
 from typing import Optional
 
 from OpenGL.GL import glDeleteVertexArrays
+
 from picogl.backend.gl.api import gl_bind_buffer
 from picogl.backend.gl.api.enable_vertex_array import gl_enable_vertex_array
 from picogl.backend.gl.api.glcleanup import gl_delete_buffers

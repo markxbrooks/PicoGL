@@ -19,6 +19,7 @@ from typing import Any, Optional
 
 import numpy as np
 from numpy import dtype, generic, ndarray
+
 from picogl.backend.gl.light import GLLightSource
 
 # Try different Qt imports
@@ -73,7 +74,6 @@ except ImportError:
     print("Please install PyOpenGL: pip install PyOpenGL PyOpenGL_accelerate")
     sys.exit(1)
 
-from picogl.examples.data.cube_data import g_color_buffer_data, g_vertex_buffer_data
 from picogl.backend.geometry.factory import LegacyBinding
 from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.capability import (
@@ -89,6 +89,7 @@ from picogl.backend.gl.state.fill import (
     GLLight,
     GLLightParameter,
 )
+from picogl.examples.data.cube_data import g_color_buffer_data, g_vertex_buffer_data
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 
 

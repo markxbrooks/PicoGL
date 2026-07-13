@@ -22,19 +22,6 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-from picogl.backend.gl.api import gl_bind_texture
-from picogl.backend.gl.api.clear import gl_clear
-from picogl.backend.gl.api.enable import gl_disable, gl_enable
-from picogl.backend.glu.lookat import glu_look_at
-from picogl.backend.gl.api.matrix import gl_matrix_mode
-from picogl.backend.gl.api.rotate import gl_rotate_f
-from picogl.backend.gl.enums import GLBitMask
-from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
-from picogl.backend.gl.enums.legacy.scale import gl_load_identity
-from picogl.backend.gl.mode import GLMode
-from picogl.texture.gltexture import GLTexture
-from picogl.ui.backend.qt.legacy.renderer import LegacyQtObjectRenderer
-from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import (
     QApplication,
@@ -44,6 +31,20 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+
+from picogl.backend.gl.api import gl_bind_texture
+from picogl.backend.gl.api.clear import gl_clear
+from picogl.backend.gl.api.enable import gl_disable, gl_enable
+from picogl.backend.gl.api.matrix import gl_matrix_mode
+from picogl.backend.gl.api.rotate import gl_rotate_f
+from picogl.backend.gl.enums import GLBitMask
+from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
+from picogl.backend.gl.enums.legacy.scale import gl_load_identity
+from picogl.backend.gl.mode import GLMode
+from picogl.backend.glu.lookat import glu_look_at
+from picogl.texture.gltexture import GLTexture
+from picogl.ui.backend.qt.legacy.renderer import LegacyQtObjectRenderer
+from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
 
 # OpenGL imports
 try:

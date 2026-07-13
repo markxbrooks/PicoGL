@@ -35,6 +35,7 @@ from unittest.mock import MagicMock, call, patch
 
 import numpy as np
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT
+
 from picogl.renderer.glmesh import GLMesh
 from picogl.renderer.meshdata import MeshData
 

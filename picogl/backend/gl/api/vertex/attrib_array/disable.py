@@ -7,6 +7,7 @@ and it disables the specified vertex attribute array based on the given
 index. This action can be useful when managing vertex attribute pointers
 while rendering graphics using OpenGL.
 """
+
 from OpenGL.raw.GL.VERSION.GL_2_0 import glDisableVertexAttribArray
 
 

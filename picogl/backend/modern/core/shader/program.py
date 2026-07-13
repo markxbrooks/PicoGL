@@ -10,14 +10,15 @@ from pathlib import Path
 import numpy as np
 from decologr import Decologr as log
 from OpenGL.raw.GL.VERSION.GL_2_0 import GL_LINK_STATUS
-from picogl.backend.gl.api.shader.geter import gl_get_program_iv
-from picogl.backend.gl.api.shader.create import gl_create_program
+
 from picogl.backend.gl.api.shader import (
     GLShader,
     gl_get_program_info_log,
     gl_link_program,
     gl_use_program,
 )
+from picogl.backend.gl.api.shader.create import gl_create_program
+from picogl.backend.gl.api.shader.geter import gl_get_program_iv
 from picogl.backend.modern.core.shader.compile import compile_shader
 from picogl.backend.modern.core.shader.context import (
     clear_gl_errors,

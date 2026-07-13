@@ -25,11 +25,12 @@ Usage:
 import sys
 from typing import Optional
 
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QApplication, QLabel, QPushButton, QVBoxLayout, QWidget
+
 from picogl.examples.qt_cube_simple import SimpleQtCubeWidget
 from picogl.ui.backend.qt.legacy.renderer import LegacyQtObjectRenderer
 from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
-from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QApplication, QLabel, QPushButton, QVBoxLayout, QWidget
 
 # OpenGL imports
 try:

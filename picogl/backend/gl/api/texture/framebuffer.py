@@ -22,6 +22,7 @@ Functions:
 from __future__ import annotations
 
 from OpenGL.raw.GL.VERSION.GL_3_0 import glFramebufferTexture2D
+
 from picogl.backend.gl.enums.target.frame_buffer import GLFrameBufferTarget
 from picogl.texture.gltexture import GLTexture
 
@@ -41,5 +42,3 @@ def gl_framebuffer_texture_2d(
         texture=texture,
         level=level,
     )
-
-

@@ -13,6 +13,8 @@ from pathlib import Path
 
 import numpy as np
 from OpenGL.GL import *
+from utils.pdb_loader import PDBLoader
+
 from picogl.backend.gl.api.enable import gl_enable
 from picogl.backend.gl.enums.point_size import (
     GLLegacyPointCapability,
@@ -23,7 +25,6 @@ from picogl.renderer import MeshData
 from picogl.shaders.registry import ShaderRegistry
 from picogl.shaders.type import ShaderType
 from picogl.ui.backend.glut.window.object import RenderWindow
-from utils.pdb_loader import PDBLoader
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 

@@ -1,12 +1,12 @@
 import numpy as np
 from decologr import Decologr as log
+from elmo.gl.shader import ShaderUniformName
 from OpenGL.GL import glUniformMatrix4fv
 from OpenGL.raw.GL._types import GL_FALSE
-from picogl.backend.modern.core.shader.program import ShaderProgram
-from picogl.backend.modern.core.uniform.location import get_uniform_location
 from pyglm import glm
 
-from elmo.gl.shader import ShaderUniformName
+from picogl.backend.modern.core.shader.program import ShaderProgram
+from picogl.backend.modern.core.uniform.location import get_uniform_location
 
 
 def set_mvp_uniform(shader: ShaderProgram = None, mvp: glm.mat4 = None) -> None:

@@ -3,6 +3,7 @@ gl Polygon Mode
 """
 
 from OpenGL.GL import glPolygonMode
+
 from picogl.backend.gl.state.fill import GLFace, GLFillMode
 
 

@@ -9,13 +9,21 @@ vertex attributes.
 Functions:
 - gl_vertex_attrib_pointer: Configures a single vertex attribute pointer.
 """
+
 from OpenGL.GL import glVertexAttribPointer
 
 from picogl.backend.gl.enums import GLNumeric
 from picogl.boolean import GLBoolean
 
 
-def gl_vertex_attrib_pointer(index, size: int = 3, type: GLNumeric= GLNumeric.FLOAT, normalized: GLBoolean=GLBoolean.FALSE, stride: int = 0, pointer=None):
+def gl_vertex_attrib_pointer(
+    index,
+    size: int = 3,
+    type: GLNumeric = GLNumeric.FLOAT,
+    normalized: GLBoolean = GLBoolean.FALSE,
+    stride: int = 0,
+    pointer=None,
+):
     """
     Configures a vertex attribute pointer for the currently bound vertex array object (VAO).
 

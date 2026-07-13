@@ -1,6 +1,7 @@
 """
 Glut wire cube
 """
+
 from OpenGL.GLUT import glutWireCube
 
 
