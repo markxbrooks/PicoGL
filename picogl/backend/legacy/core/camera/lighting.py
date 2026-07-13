@@ -20,10 +20,10 @@ from picogl.gpu.buffers.glframe import GLFramebuffer
 
 class GLLightingMode(Enum):
     """GL Lighting mode"""
-    EYE_SPACE = auto()
-    CAMERA_FIXED = auto()
-    CAMERA_ORIGIN = auto()
-    WORLD_SPACE = auto()
+    EYE_SPACE = 0
+    CAMERA_FIXED = 1
+    CAMERA_ORIGIN = 2
+    WORLD_SPACE = 3
 
 
 @dataclass(frozen=True)
@@ -123,7 +123,7 @@ def set_background_color(show_white_background: bool) -> None:
     buffer.clear(color=color.tuple)
 
 
-def setup_lighting(mode: int = 0) -> None:
+def setup_lighting(mode: GLLightingMode = GLLightingMode.EYE_SPACE) -> None:
     """
     setup_lighting
 
@@ -131,7 +131,7 @@ def setup_lighting(mode: int = 0) -> None:
     :return: None
     """
     current_shininess = 1.0
-    if mode == 0:
+    if mode == GLLightingMode.EYE_SPACE:
         GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHTING)
         GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHT0)
         # GLCapabilityDriver.enable(GL_COLOR_MATERIAL)
@@ -144,23 +144,23 @@ def setup_lighting(mode: int = 0) -> None:
         GLLightSource.lightf(
             GLFixedFunctionCapability.LIGHT0,
             GLLightParameter.DIFFUSE,
-            [1.0, 1.0, 1.0, 1.0],
+            [0.2, 0.2, 0.2, 0.2],
         )
         GLLightSource.lightf(
             GLFixedFunctionCapability.LIGHT0,
             GLLightParameter.SPECULAR,
-            [1.0, 1.0, 1.0, 1.0],
+            [0.3, 0.3, 0.3, 0.2],
         )
         GLLightSource.lightf(
             GLFixedFunctionCapability.LIGHT0,
             GLLightParameter.AMBIENT,
-            [0.2, 0.2, 0.2, 1.0],
+            [0.2, 0.2, 0.2, 0.2],
         )
         glMaterialf(
             GLFace.FRONT_AND_BACK, GLLightParameter.SHININESS, 128.0 * current_shininess
         )
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1)
-    if mode == 2:
+    if mode == GLLightingMode.CAMERA_ORIGIN:
         GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHTING)
         GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHT0)
         # Set up light position_array (in eye space)
@@ -184,7 +184,7 @@ def setup_lighting(mode: int = 0) -> None:
             GLLightParameter.AMBIENT,
             [0.2, 0.2, 0.2, 1.0],
         )
-    elif mode == 1:
+    elif mode == GLLightingMode.WORLD_SPACE:
         GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHTING)
         GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHT0)
 
@@ -249,4 +249,4 @@ def setup_lighting(mode: int = 0) -> None:
 
 
 def setup_lighting_mode_zero(backend: "GLBackend"):
-    setup_lighting(mode=0)
+    setup_lighting(mode=GLLightingMode.EYE_SPACE)
