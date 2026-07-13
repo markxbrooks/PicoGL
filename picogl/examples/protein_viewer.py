@@ -1,9 +1,18 @@
 import os.path
 import sys  # we'll need this later to run our Qt application
+from contextlib import contextmanager
 from pathlib import Path
 
 import numpy as np
 import OpenGL.GL as gl  # python wrapping of OpenGL
+
+from backend.gl.api import gl_bind_buffer, gl_draw_arrays
+from backend.gl.api.legacy.matrix import gl_pushed_matrix
+from backend.gl.api.legacy.rotate import gl_rotate_f
+from backend.gl.api.legacy.scale import gl_scale
+from backend.gl.api.line import gl_line_width
+from backend.gl.enums.legacy.scale import gl_load_identity, gl_push_matrix, gl_translatef
+from backend.glu.lookat import glu_look_at
 from molib.ligand.pdb.layouts.hetatm import HETATMLayout
 from OpenGL import GLU  # OpenGL Utility Library, extends OpenGL functionality
 from OpenGL.GL import (
@@ -26,7 +35,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from picogl.backend.gl.api.clear import gl_clear_color
+from picogl.backend.gl.api.clear import gl_clear_color, gl_clear
 from picogl.backend.gl.api.enable import gl_enable
 from picogl.backend.gl.enums import GLBufferTarget, GLDrawMode
 from picogl.backend.gl.enums.legacy.scale import gl_viewport
@@ -41,6 +50,15 @@ def _pdb_atom_xyz(line: str) -> list[float]:
         HETATMLayout.y.parse(line),
         HETATMLayout.z.parse(line),
     ]
+
+@contextmanager
+def gl_bound_buffer(vbo):
+    """gl bound buffer"""
+    try:
+        gl_bind_buffer(GLBufferTarget.ARRAY, vbo)
+        yield
+    except:
+        gl_bind_buffer(GLBufferTarget.ARRAY, 0)
 
 
 class GLWidget(QOpenGLWidget):
@@ -129,27 +147,21 @@ class GLWidget(QOpenGLWidget):
         self.vbo = self.create_vbo_object(self.centered_coordinates)
 
     def paintGL(self):
-        gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
-        gl.glLoadIdentity()
-        gluLookAt(0, 0, -40, 0, 0, 0, 0, 1, 0)
+        gl_clear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
+        gl_load_identity()
+        glu_look_at(0, 0, -40, 0, 0, 0, 0, 1, 0)
 
-        gl.glPushMatrix()
-        gl.glTranslate(0.0, 0.0, self.zoom)
-        glScale(0.1, 0.1, 0.1)
-        gl.glRotate(self.rot_x, 1.0, 0.0, 0.0)
-        gl.glRotate(self.rot_y, 0.0, 1.0, 0.0)
-        gl.glRotate(self.rot_z, 0.0, 0.0, 1.0)
-
-        if self.vbo is None or len(self.coordinates) < 2:
-            gl.glPopMatrix()
-            return
-
-        gl.glLineWidth(2.0)
-        glBindBuffer(GLBufferTarget.ARRAY, self.vbo)
-        with legacy_client_states(GLClientState.VERTEX):
-            gl.glVertexPointer(3, GL_FLOAT, 0, None)
-            gl.glDrawArrays(int(GLDrawMode.LINE_STRIP), 0, len(self.coordinates))
-        gl.glPopMatrix()
+        with gl_pushed_matrix():
+            gl_translatef(0.0, 0.0, self.zoom)
+            gl_scale(0.1, 0.1, 0.1)
+            gl_rotate_f(self.rot_x, 1.0, 0.0, 0.0)
+            gl_rotate_f(self.rot_y, 0.0, 1.0, 0.0)
+            gl_rotate_f(self.rot_z, 0.0, 0.0, 1.0)
+            gl_line_width(2.0)
+            with gl_bound_buffer(self.vbo):
+                with legacy_client_states(GLClientState.VERTEX):
+                    gl.glVertexPointer(3, GL_FLOAT, 0, None)
+                    gl_draw_arrays(mode=int(GLDrawMode.LINE_STRIP), first=0, index_count=len(self.coordinates))
 
     def set_rot_x(self, val):
         self.rot_x = np.pi * val

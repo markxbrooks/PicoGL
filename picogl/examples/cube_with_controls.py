@@ -13,6 +13,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from backend.gl.api.legacy.matrix import gl_pushed_matrix
 from picogl.backend.gl.api.clear import gl_clear, gl_clear_color
 from picogl.backend.gl.api.enable import gl_enable
 from picogl.backend.gl.capability import GLPipelineCapability
@@ -73,21 +74,20 @@ class GLWidget(QOpenGLWidget):
 
     def paintGL(self):
         gl_clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
-        gl_push_matrix()
-        gl_translatef(0.0, 0.0, float(self.zoom))
-        gl_scalef(20.0, 20.0, 20.0)
-        gl_rotatef(float(self.rot_x), 1.0, 0.0, 0.0)
-        gl_rotatef(float(self.rot_y), 0.0, 1.0, 0.0)
-        gl_rotatef(float(self.rot_z), 0.0, 0.0, 1.0)
-        gl_translatef(-0.5, -0.5, -0.5)
+        with gl_pushed_matrix():
+            gl_translatef(0.0, 0.0, float(self.zoom))
+            gl_scalef(20.0, 20.0, 20.0)
+            gl_rotatef(float(self.rot_x), 1.0, 0.0, 0.0)
+            gl_rotatef(float(self.rot_y), 0.0, 1.0, 0.0)
+            gl_rotatef(float(self.rot_z), 0.0, 0.0, 1.0)
+            gl_translatef(-0.5, -0.5, -0.5)
 
-        if self.cube_mesh is not None:
-            with self.cube_mesh:
-                self.cube_mesh.draw()
-
-        gl_pop_matrix()
+            if self.cube_mesh is not None:
+                with self.cube_mesh:
+                    self.cube_mesh.draw()
 
     def init_geometry(self):
+        """init geometry"""
         cube_vertices = np.array(
             [
                 [0.0, 0.0, 0.0],
