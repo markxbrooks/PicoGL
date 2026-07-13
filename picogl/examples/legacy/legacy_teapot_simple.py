@@ -11,7 +11,7 @@ Features:
 - Interactive rotation and zoom
 """
 
-from picogl.examples.glut_renderer import GlutRenderer, set_up_legacy_lighting
+# from picogl.examples.glut_renderer import GlutRenderer, set_up_legacy_lighting
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
@@ -27,6 +27,7 @@ from picogl.backend.gl.enums import GLBitMask, GLDrawMode
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.state.fill import GLCapability, GLColorMaterialMode, GLFillMode
 from picogl.backend.gl.state.immediate import immediate_drawing
+from picogl.backend.glut.glut_renderer import GlutRenderer
 from picogl.core.rgbcolor import RGBColor
 
 
