@@ -22,16 +22,14 @@ from picogl.backend.gl.api.enable import gl_enable, toggle_capability
 from picogl.backend.gl.api.matrix import gl_matrix_mode
 from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
 from picogl.backend.gl.api.rotate import gl_rotate_f
-from picogl.backend.gl.capability import (
-    GLFixedFunctionCapability,
-    GLMaterialFace,
-    GLPipelineCapability,
-)
+from picogl.backend.gl.capability import (GLFixedFunctionCapability,
+                                          GLMaterialFace, GLPipelineCapability)
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.enums.legacy.scale import gl_load_identity, gl_viewport
 from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
-from picogl.backend.gl.state.fill import GLCapability, GLColorMaterialMode, GLFillMode
+from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode,
+                                          GLFillMode)
 from picogl.backend.glu.lookat import glu_look_at
 from picogl.backend.glu.perspective import glu_perspective
 from picogl.backend.glut.buffers import glut_swap_buffers

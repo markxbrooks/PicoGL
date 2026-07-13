@@ -11,13 +11,10 @@ from picogl.backend.gl.api.matrix import gl_matrix_mode
 from picogl.backend.gl.api.vertex.vertex_3f import gl_vertex_3f
 from picogl.backend.gl.capability import FACE_MAP, PhongMaterial
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
-from picogl.backend.gl.enums.legacy.scale import gl_load_identity, gl_translatef
-from picogl.backend.gl.state.fill import (
-    GLColorMaterialMode,
-    GLFace,
-    GLLight,
-    GLLightParameter,
-)
+from picogl.backend.gl.enums.legacy.scale import (gl_load_identity,
+                                                  gl_translatef)
+from picogl.backend.gl.state.fill import (GLColorMaterialMode, GLFace, GLLight,
+                                          GLLightParameter)
 from picogl.backend.gl.state.texture import TexCoord2f, Vertex3f
 from picogl.backend.glu.perspective import glu_perspective
 from picogl.backend.state import gl_value

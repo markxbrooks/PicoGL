@@ -12,11 +12,9 @@ Features:
 """
 
 import numpy as np
-
 # from picogl.examples.glut_renderer import GlutRenderer, gl_legacy_lighting
 from OpenGL.GL import *
 from OpenGL.GLUT import *
-
 from picogl.backend.gl.api.clear import gl_clear, gl_clear_color
 from picogl.backend.gl.api.color import gl_color_3f, gl_color_material
 from picogl.backend.gl.api.enable import gl_disable, gl_enable
@@ -24,16 +22,14 @@ from picogl.backend.gl.api.matrix import gl_matrix_mode
 from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
 from picogl.backend.gl.api.rotate import gl_rotate_f
 from picogl.backend.gl.api.vertex.vertex_3f import gl_vertex_3f
-from picogl.backend.gl.capability import (
-    GLFixedFunctionCapability,
-    GLMaterialFace,
-    GLPipelineCapability,
-)
+from picogl.backend.gl.capability import (GLFixedFunctionCapability,
+                                          GLMaterialFace, GLPipelineCapability)
 from picogl.backend.gl.enums import GLBitMask, GLDrawMode
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.enums.legacy.scale import gl_load_identity, gl_viewport
 from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
-from picogl.backend.gl.state.fill import GLCapability, GLColorMaterialMode, GLFillMode
+from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode,
+                                          GLFillMode)
 from picogl.backend.gl.state.immediate import gl_immediate_drawing
 from picogl.backend.glu.lookat import glu_look_at
 from picogl.backend.glu.perspective import glu_perspective

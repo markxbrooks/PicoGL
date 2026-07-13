@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from OpenGL.raw.GL.VERSION.GL_3_0 import glGenerateMipmap
-
 from picogl.texture.gltexture import GLTexture
 
 

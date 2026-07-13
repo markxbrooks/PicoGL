@@ -14,15 +14,12 @@ import sys
 from pathlib import Path
 
 import numpy as np
-
 from picogl.backend.gl.api.clear import gl_clear_color
 from picogl.backend.gl.api.depth import gl_depth_func
 from picogl.backend.gl.api.enable import gl_enable
 from picogl.backend.gl.capability import GLPipelineCapability
-from picogl.backend.gl.enums.point_size import (
-    GLLegacyPointCapability,
-    GLPointCapability,
-)
+from picogl.backend.gl.enums.point_size import (GLLegacyPointCapability,
+                                                GLPointCapability)
 from picogl.backend.gl.glfunc import GLDepthFunc
 from picogl.examples.utils.pdb_loader import PDBLoader
 
@@ -38,7 +35,6 @@ except ImportError as e:
     sys.exit(1)
 
 from OpenGL.GL import *
-
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.renderer import MeshData
 from picogl.ui.backend.glut.window.object import RenderWindow

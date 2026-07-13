@@ -10,16 +10,12 @@ binding buffers and rendering the defined UV mesh content.
 from typing import Optional
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POLYGON_MODE
-
-from picogl.backend.gl.api import (
-    gl_bind_buffer,
-    gl_disable_vertex_array,
-    gl_draw_elements,
-    gl_get_integerv,
-)
+from picogl.backend.gl.api import (gl_bind_buffer, gl_disable_vertex_array,
+                                   gl_draw_elements, gl_get_integerv)
 from picogl.backend.gl.api.enable_vertex_array import gl_enable_vertex_array
 from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
-from picogl.backend.gl.api.vertex.attrib_pointer import gl_vertex_attrib_pointer
+from picogl.backend.gl.api.vertex.attrib_pointer import \
+    gl_vertex_attrib_pointer
 from picogl.backend.gl.capability import GLMaterialFace
 from picogl.backend.gl.enums import GLBufferTarget, GLDrawMode, GLNumeric
 from picogl.backend.gl.state.fill import GLFillMode

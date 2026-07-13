@@ -18,19 +18,6 @@ from molib.core.constants import MoLibConstant
 from OpenGL.GL import *
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_LINES
 from OpenGL.raw.GLU import gluPerspective
-from PySide6.QtCore import Qt, QTimer
-from PySide6.QtOpenGLWidgets import QOpenGLWidget
-from PySide6.QtWidgets import (
-    QApplication,
-    QHBoxLayout,
-    QLabel,
-    QMessageBox,
-    QPushButton,
-    QSplitter,
-    QVBoxLayout,
-    QWidget,
-)
-
 from picogl.backend.gl.api.clear import gl_clear
 from picogl.backend.gl.api.color import gl_color_material
 from picogl.backend.gl.api.enable import gl_enable
@@ -41,6 +28,10 @@ from picogl.backend.glu.perspective import glu_perspective
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.renderer.meshdata import MeshData
 from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtOpenGLWidgets import QOpenGLWidget
+from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMessageBox,
+                               QPushButton, QSplitter, QVBoxLayout, QWidget)
 
 # Add the examples directory to the path so we can import the PDB loader
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "utils"))

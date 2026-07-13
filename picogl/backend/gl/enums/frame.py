@@ -8,15 +8,13 @@ configuring framebuffers for rendering processes.
 
 from enum import IntEnum
 
-from OpenGL.raw.GL.VERSION.GL_3_0 import (
-    GL_COLOR_ATTACHMENT0,
-    GL_COLOR_ATTACHMENT1,
-    GL_COLOR_ATTACHMENT2,
-    GL_COLOR_ATTACHMENT3,
-    GL_DEPTH_ATTACHMENT,
-    GL_DEPTH_STENCIL_ATTACHMENT,
-    GL_STENCIL_ATTACHMENT,
-)
+from OpenGL.raw.GL.VERSION.GL_3_0 import (GL_COLOR_ATTACHMENT0,
+                                          GL_COLOR_ATTACHMENT1,
+                                          GL_COLOR_ATTACHMENT2,
+                                          GL_COLOR_ATTACHMENT3,
+                                          GL_DEPTH_ATTACHMENT,
+                                          GL_DEPTH_STENCIL_ATTACHMENT,
+                                          GL_STENCIL_ATTACHMENT)
 
 
 class GLFrameBufferAttachment(IntEnum):

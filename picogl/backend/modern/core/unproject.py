@@ -6,13 +6,10 @@ from typing import Any, Tuple
 
 import glm
 import numpy as np
-
-from picogl.backend.modern.core.mvp import (
-    convert_to_world_coordinates,
-    create_normalized_device_vector,
-    invert_mvp_matrix,
-    normalize_device_coordinates,
-)
+from picogl.backend.modern.core.mvp import (convert_to_world_coordinates,
+                                            create_normalized_device_vector,
+                                            invert_mvp_matrix,
+                                            normalize_device_coordinates)
 from picogl.core.viewport import Viewport
 
 

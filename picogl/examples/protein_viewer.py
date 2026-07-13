@@ -6,30 +6,31 @@ from typing import Any
 
 import numpy as np
 import OpenGL.GL as gl  # python wrapping of OpenGL
-
-from backend.gl.api.legacy.vertex import gl_vertex_pointer
-from picogl.backend.gl.api import gl_bind_buffer, gl_draw_arrays, gl_buffer_data, gl_generate_buffers
+from molib.ligand.pdb.layouts.hetatm import HETATMLayout
+from picogl.backend.gl.api import (gl_bind_buffer, gl_buffer_data,
+                                   gl_draw_arrays, gl_generate_buffers)
+from picogl.backend.gl.api.clear import gl_clear, gl_clear_color
+from picogl.backend.gl.api.enable import gl_enable
 from picogl.backend.gl.api.legacy.matrix import gl_pushed_matrix
 from picogl.backend.gl.api.legacy.rotate import gl_rotate_f
 from picogl.backend.gl.api.legacy.scale import gl_scale
+from picogl.backend.gl.api.legacy.vertex import gl_vertex_pointer
 from picogl.backend.gl.api.line import gl_line_width
 from picogl.backend.gl.api.matrix import gl_matrix_mode
-from picogl.backend.gl.enums import GLNumeric, GLBitMask, GLUsageHint
+from picogl.backend.gl.enums import (GLBitMask, GLBufferTarget, GLDrawMode,
+                                     GLNumeric, GLUsageHint)
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
-from picogl.backend.gl.enums.legacy.scale import gl_load_identity, gl_translatef
+from picogl.backend.gl.enums.legacy.scale import (gl_load_identity,
+                                                  gl_translatef, gl_viewport)
+from picogl.backend.gl.state.client import GLClientState
 from picogl.backend.glu.lookat import glu_look_at
 from picogl.backend.glu.perspective import glu_perspective
-from biotoolkit.gui.opengl.gl_widget import GLSliderWindow
-from molib.ligand.pdb.layouts.hetatm import HETATMLayout
+from picogl.backend.legacy.core.vertex.buffer.client_states import \
+    legacy_client_states
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
 from PySide6.QtWidgets import QApplication
 
-from picogl.backend.gl.api.clear import gl_clear_color, gl_clear
-from picogl.backend.gl.api.enable import gl_enable
-from picogl.backend.gl.enums import GLBufferTarget, GLDrawMode
-from picogl.backend.gl.enums.legacy.scale import gl_viewport
-from picogl.backend.gl.state.client import GLClientState
-from picogl.backend.legacy.core.vertex.buffer.client_states import legacy_client_states
+from biotoolkit.gui.opengl.gl_widget import GLSliderWindow
 
 
 def _pdb_atom_xyz(line: str) -> list[float]:
@@ -51,11 +52,13 @@ def gl_bound_buffer(vbo: int):
 
 
 def calculate_aspect(height, width) -> Any:
+    """calculate aspect"""
     aspect = width / float(height)
     return aspect
 
 
 def create_vbo_object(coordinates: np.ndarray):
+    """create VBO object"""
     vbo = gl_generate_buffers(1)
     gl_bind_buffer(GLBufferTarget.ARRAY, vbo)
     gl_buffer_data(
@@ -65,11 +68,14 @@ def create_vbo_object(coordinates: np.ndarray):
 
 
 def get_downloads_pdb_path(file_name) -> str:
+    """get downloads pdb path"""
     pdb_path = os.path.join(Path.home(), "Downloads", file_name)
     return pdb_path
 
 
 class GLProteinWidget(QOpenGLWidget):
+    """GL Protein Widget"""
+
     def __init__(self, parent=None):
         self.rot_x = None
         self.rot_y = None
@@ -80,10 +86,12 @@ class GLProteinWidget(QOpenGLWidget):
         self.pdb_data = None  # This will hold your PDB data
 
     def load_pdb_data(self, pdb_data):
+        """load PDB data"""
         self.pdb_data = pdb_data
         self.update()  # Trigger a repaint
 
     def initializeGL(self):
+        """initialize GL"""
         gl_clear_color((0.15, 0.15, 0.2, 1.0))
         gl_enable(gl.GL_DEPTH_TEST)
         self.init_geometry()
@@ -93,7 +101,8 @@ class GLProteinWidget(QOpenGLWidget):
         self.rot_z = 0.0
         self.zoom = -50.0
 
-    def resizeGL(self, width, height):
+    def resizeGL(self, width: int, height: int):
+        """resize GL"""
         gl_viewport(0, 0, width, height)
         gl_matrix_mode(GLLegacyMatrixMode.PROJECTION)
         gl_load_identity()
@@ -103,6 +112,7 @@ class GLProteinWidget(QOpenGLWidget):
         gl_matrix_mode(GLLegacyMatrixMode.MODELVIEW)
 
     def pdb_file_parse_atoms(self, file_path):
+        """pdb file parse atoms"""
         coordinates = []
         with open(file_path, "r") as file:
             for line in file:

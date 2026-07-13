@@ -14,11 +14,10 @@ from weakref import WeakKeyDictionary
 
 import numpy as np
 from decologr import Decologr as log
-from PySide6.QtGui import QOpenGLContext
-
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.shaders import ShaderType
+from PySide6.QtGui import QOpenGLContext
 
 T = TypeVar("T")
 

@@ -7,10 +7,9 @@ import sys
 import OpenGL.GL as GL
 import OpenGL.GLU as GLU
 import OpenGL.GLUT as GLUT
-from OpenGL import platform as gl_platform
-
 # Must run before OpenGL.GLUT: Homebrew freeglut shadows Apple GLUT on macOS.
 import picogl.ui.backend.glut.prefer_apple_glut  # noqa: F401
+from OpenGL import platform as gl_platform
 from picogl.ui.abc_window import AbstractGLWindow
 
 

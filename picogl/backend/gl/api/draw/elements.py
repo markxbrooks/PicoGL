@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import Any
 
 from OpenGL.raw.GL.VERSION.GL_1_1 import glDrawElements
-
 from picogl.backend.gl.api.draw.helper import draw_pointer, gl_enum
 from picogl.backend.gl.enums import GLDrawMode, GLIndexType
 

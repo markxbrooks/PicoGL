@@ -13,7 +13,6 @@ from typing import Any
 
 from OpenGL.GL import glGetUniformLocation, glUniformMatrix4fv
 from OpenGL.raw.GL.VERSION.GL_2_0 import GL_FRAGMENT_SHADER, GL_VERTEX_SHADER
-
 from picogl.boolean import GLBoolean
 
 

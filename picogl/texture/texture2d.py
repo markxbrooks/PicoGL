@@ -22,7 +22,6 @@ Example Usage:
 from typing import Any
 
 from numpy import ndarray
-
 from picogl.backend.gl.api import gl_gen_textures, gl_teximage2d
 from picogl.backend.gl.enums import GLNumeric
 from picogl.core.color import GLColor

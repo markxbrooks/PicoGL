@@ -13,7 +13,9 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 import numpy as np
-from elmo.gl.backend.modern.entities.bonds.compute_indices import atoms_should_bond
+
+from elmo.gl.backend.modern.entities.bonds.compute_indices import \
+    atoms_should_bond
 
 
 @dataclass

@@ -21,7 +21,8 @@ Example Usage:
 
 from enum import IntEnum
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR, GL_REPEAT
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR,
+                                          GL_REPEAT)
 
 
 class GLTexParam(IntEnum):

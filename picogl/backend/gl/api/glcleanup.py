@@ -45,7 +45,8 @@ from OpenGL.GL import glDeleteBuffers, glDeleteVertexArrays
 def _gl_context_ok() -> bool:
     """True when OpenGL deletes are safe (current, valid context)."""
     try:
-        from picogl.backend.modern.core.shader.context import gl_context_available
+        from picogl.backend.modern.core.shader.context import \
+            gl_context_available
 
         return gl_context_available()
     except Exception:

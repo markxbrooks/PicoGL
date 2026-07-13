@@ -6,11 +6,8 @@ from picogl.backend.gl.api.color import gl_color_material
 from picogl.backend.gl.api.enable import gl_enable
 from picogl.backend.gl.api.material import gl_material_f, gl_material_fv
 from picogl.backend.gl.capability import GLMaterialFace
-from picogl.backend.gl.state.fill import (
-    GLCapability,
-    GLColorMaterialMode,
-    GLLightParameter,
-)
+from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode,
+                                          GLLightParameter)
 
 
 def setup_materials() -> None:

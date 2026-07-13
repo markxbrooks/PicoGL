@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from OpenGL.raw.GL.VERSION.GL_1_3 import glActiveTexture
-
 from picogl.texture.gltexture import GLTexture
 
 

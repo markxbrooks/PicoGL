@@ -10,25 +10,20 @@ from pathlib import Path
 import numpy as np
 from decologr import Decologr as log
 from OpenGL.raw.GL.VERSION.GL_2_0 import GL_LINK_STATUS
-
-from picogl.backend.gl.api.shader import (
-    GLShader,
-    gl_get_program_info_log,
-    gl_link_program,
-    gl_use_program,
-)
+from picogl.backend.gl.api.shader import (GLShader, gl_get_program_info_log,
+                                          gl_link_program, gl_use_program)
 from picogl.backend.gl.api.shader.create import gl_create_program
 from picogl.backend.gl.api.shader.geter import gl_get_program_iv
 from picogl.backend.modern.core.shader.compile import compile_shader
-from picogl.backend.modern.core.shader.context import (
-    clear_gl_errors,
-    gl_context_available,
-    program_is_valid,
-    require_gl_context,
-)
+from picogl.backend.modern.core.shader.context import (clear_gl_errors,
+                                                       gl_context_available,
+                                                       program_is_valid,
+                                                       require_gl_context)
 from picogl.backend.modern.core.shader.files import ShaderFiles
-from picogl.backend.modern.core.shader.helpers import log_gl_error, read_shader_source
-from picogl.backend.modern.core.uniform.location_value import set_uniform_location_value
+from picogl.backend.modern.core.shader.helpers import (log_gl_error,
+                                                       read_shader_source)
+from picogl.backend.modern.core.uniform.location_value import \
+    set_uniform_location_value
 from picogl.boolean import GLBoolean
 from picogl.shaders.uniform import get_uniform_location
 
