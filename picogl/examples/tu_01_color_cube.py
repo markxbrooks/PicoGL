@@ -1,4 +1,4 @@
-from examples.data.cube_data import g_color_buffer_data, g_vertex_buffer_data
+from picogl.examples.data.cube_data import g_color_buffer_data, g_vertex_buffer_data
 from OpenGL.GL import *  # pylint: disable=W0614
 from picogl.backend.glm.glm import glm_identity_matrix
 from picogl.ui.backend.glut.window.gl import GLWindow

@@ -17,7 +17,7 @@ import os
 import sys
 
 import numpy as np
-from examples.glut_renderer import GlutRenderer, gl_legacy_lighting
+from picogl.examples.glut_renderer import GlutRenderer, gl_legacy_lighting
 from picogl.backend.gl.api.clear import gl_clear_color
 from picogl.backend.gl.api.enable import gl_enable
 from picogl.backend.gl.api.polygon_mode import gl_polygon_mode

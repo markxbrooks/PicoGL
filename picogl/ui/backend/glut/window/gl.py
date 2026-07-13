@@ -4,9 +4,13 @@ Glut Window
 
 import sys
 
+# Must run before OpenGL.GLUT: Homebrew freeglut shadows Apple GLUT on macOS.
+import picogl.ui.backend.glut.prefer_apple_glut  # noqa: F401
+
 import OpenGL.GL as GL
 import OpenGL.GLU as GLU
 import OpenGL.GLUT as GLUT
+from OpenGL import platform as gl_platform
 from picogl.ui.abc_window import AbstractGLWindow
 
 
@@ -53,13 +57,26 @@ class GLWindow(AbstractGLWindow):
         else:
             title_bytes = b"Window Title"
         self.window = GLUT.glutCreateWindow(title_bytes)
+        if not gl_platform.GetCurrentContext():
+            glut_lib = getattr(getattr(GLUT, "platform", None), "PLATFORM", None)
+            glut_name = getattr(getattr(glut_lib, "GLUT", None), "_name", "unknown")
+            raise RuntimeError(
+                "GLUT window created but no OpenGL context is current "
+                f"(GLUT library: {glut_name}). On macOS, Homebrew freeglut "
+                "(X11/Mesa) often shadows Apple GLUT.framework — ensure "
+                "picogl.ui.backend.glut.prefer_apple_glut loads first, or use "
+                "the Qt examples (e.g. picogl/examples/qt_cube_simple.py)."
+            )
         GLUT.glutDisplayFunc(self.display)
         GLUT.glutReshapeFunc(self.resizeGL)
         GLUT.glutKeyboardFunc(self.keyPressEvent)
         GLUT.glutSpecialFunc(self.on_special_key)
         GLUT.glutMouseFunc(self.mousePressEvent)
         GLUT.glutMotionFunc(self.mouseMoveEvent)
-        GLUT.glutMouseWheelFunc(self.wheelEvent)
+        # freeglut extension; absent from Apple GLUT.framework
+        glut_lib = GLUT.platform.PLATFORM.GLUT
+        if hasattr(glut_lib, "glutMouseWheelFunc"):
+            GLUT.glutMouseWheelFunc(self.wheelEvent)
 
     def initializeGL(self):
         """initialize_gl"""

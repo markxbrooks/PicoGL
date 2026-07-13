@@ -48,7 +48,7 @@ class ObjectRenderer(RendererBase):
             if texture_file:
                 texture_path = resource_path / texture_file
                 self.texture = TextureLoader(str(texture_path))
-                self.context.texture_id = self.texture.texture_glid
+                self.context.texture_id = self.texture.texture_gl_id
 
     def initialize_shaders(self):
         """Load and compile shaders."""

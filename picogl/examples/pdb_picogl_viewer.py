@@ -14,7 +14,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
-from examples.utils.pdb_loader import PDBLoader
+from picogl.examples.utils.pdb_loader import PDBLoader
 from picogl.backend.gl.api.clear import gl_clear_color
 from picogl.backend.gl.api.depth import gl_depth_func
 from picogl.backend.gl.api.enable import gl_enable

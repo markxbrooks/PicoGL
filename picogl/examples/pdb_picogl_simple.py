@@ -11,7 +11,7 @@ import os
 import sys
 from pathlib import Path
 
-from examples.utils.pdb_loader import PDBLoader
+from picogl.examples.utils.pdb_loader import PDBLoader
 
 # Add the utils directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "utils"))

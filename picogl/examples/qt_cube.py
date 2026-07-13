@@ -25,7 +25,7 @@ Usage:
 import sys
 from typing import Optional
 
-from examples.qt_cube_simple import SimpleQtCubeWidget
+from picogl.examples.qt_cube_simple import SimpleQtCubeWidget
 from picogl.ui.backend.qt.legacy.renderer import LegacyQtObjectRenderer
 from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
 from PySide6.QtCore import Qt

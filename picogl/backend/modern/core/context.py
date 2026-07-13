@@ -1,5 +1,5 @@
-from examples.utils.shader_loader import Shader
-from examples.utils.test_window import GLWindow
+from picogl.examples.utils.shader_loader import Shader
+from picogl.examples.utils.test_window import GLWindow
 from OpenGL.GL import *  # pylint: disable=W0614
 from picogl.backend.gl.api import (
     gl_bind_buffer,

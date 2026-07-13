@@ -17,6 +17,15 @@ import numpy as np
 from OpenGL.GL import *
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_LINES
 from OpenGL.raw.GLU import gluPerspective
+
+from molib.core.constants import MoLibConstant
+from picogl.backend.gl.api.clear import gl_clear
+from picogl.backend.gl.api.color import gl_color_material
+from picogl.backend.gl.api.enable import gl_enable
+from picogl.backend.gl.api.matrix import gl_matrix_mode
+from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
+from picogl.backend.gl.enums.legacy.scale import gl_viewport, gl_load_identity
+from picogl.backend.glu.perspective import glu_perspective
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.renderer.meshdata import MeshData
 from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
@@ -92,15 +101,15 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
 
     def resizeGL(self, width, height):
         """Handle window resize"""
-        glViewport(0, 0, width, height)
-        glMatrixMode(GL_PROJECTION)
-        glLoadIdentity()
-        gluPerspective(45.0, width / height, 0.1, 100.0)
-        glMatrixMode(GL_MODELVIEW)
+        gl_viewport(0, 0, width, height)
+        gl_matrix_mode(GLLegacyMatrixMode.PROJECTION)
+        gl_load_identity()
+        glu_perspective(45.0, width / height, 0.1, 100.0)
+        gl_matrix_mode(GLLegacyMatrixMode.MODELVIEW)
 
     def paintGL(self):
         """Main rendering function"""
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        gl_clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         glLoadIdentity()
 
         # Set up lighting conditionally
@@ -108,7 +117,7 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
             gl_enable(GL_LIGHTING)
             gl_enable(GL_LIGHT0)
             gl_enable(GL_COLOR_MATERIAL)
-            glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
+            gl_color_material(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
 
             # Set up lighting in world space (before transformations)
             glLightfv(GL_LIGHT0, GL_POSITION, [1.0, 1.0, 1.0, 0.0])

@@ -2,7 +2,8 @@ from typing import Optional
 
 import numpy as np
 from decologr import Decologr as log
-from examples import g_color_buffer_data, g_vertex_buffer_data
+from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
+from picogl.examples import g_color_buffer_data, g_vertex_buffer_data
 from OpenGL.GL import glLightfv, glMaterialfv
 from OpenGL.raw.GL.VERSION.GL_1_0 import (
     GL_DEPTH_TEST,

@@ -73,7 +73,7 @@ except ImportError:
     print("Please install PyOpenGL: pip install PyOpenGL PyOpenGL_accelerate")
     sys.exit(1)
 
-from examples.data.cube_data import g_color_buffer_data, g_vertex_buffer_data
+from picogl.examples.data.cube_data import g_color_buffer_data, g_vertex_buffer_data
 from picogl.backend.geometry.factory import LegacyBinding
 from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.capability import (

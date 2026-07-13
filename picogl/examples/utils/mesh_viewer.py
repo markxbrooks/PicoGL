@@ -1,5 +1,5 @@
 from decologr import Decologr as log
-from examples.utils.world_sheet import WorldSheet
+from picogl.examples.utils.world_sheet import WorldSheet
 from OpenGL.GL import *  # pylint: disable=W0614
 from OpenGL.GLUT import *  # pylint: disable=W0614
 from picogl.backend.gl.api.clear import gl_clear_color

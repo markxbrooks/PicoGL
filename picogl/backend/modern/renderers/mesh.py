@@ -1,5 +1,5 @@
 import numpy as np
-from examples.utils.shader_loader import Shader
+from picogl.examples.utils.shader_loader import Shader
 
 
 class ShaderMeshRenderer:

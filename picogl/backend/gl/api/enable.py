@@ -12,6 +12,7 @@ from picogl.backend.gl.enums.point_size import (
     GLPointCapability,
 )
 from picogl.backend.gl.state.fill import GLCapability
+from picogl.texture.gltexture import GLTexture
 
 GLCapabilities = Union[
     GLCapability,
@@ -20,6 +21,7 @@ GLCapabilities = Union[
     GLFixedFunctionCapability,
     GLPipelineCapability,
     GLLegacyClipPlane,
+    GLTexture
 ]
 
 

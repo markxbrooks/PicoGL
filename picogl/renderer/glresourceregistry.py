@@ -1,14 +1,20 @@
 """
-gl Context Class
+GL Resource Registry
+
+Holds OpenGL-related state (VAOs, shaders, textures, transform matrices)
+and tracks resources per Qt / GL context.
 """
 
+from __future__ import annotations
+
 import threading
-from dataclasses import field
+from pathlib import Path
 from typing import Callable, Optional, TypeVar
 from weakref import WeakKeyDictionary
 
 import numpy as np
 from decologr import Decologr as log
+from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.shaders import ShaderType
 from PySide6.QtGui import QOpenGLContext
@@ -17,7 +23,7 @@ T = TypeVar("T")
 
 
 class GLResourceRegistry:
-    """gl Resource Registry"""
+    """OpenGL resource registry and render-state holder."""
 
     def __init__(self):
         self._creation_context = QOpenGLContext.currentContext()
@@ -26,26 +32,49 @@ class GLResourceRegistry:
         )
         self._contexts = WeakKeyDictionary()
         self._cache: dict[object, object] = {}
-        self.vaos: dict[str, VertexArrayObject] = field(default_factory=dict)
-        self.current_vao: Optional[VertexArrayObject] = None
         self._creation_thread_id = threading.get_ident()
 
+        self.vaos: dict[str, VertexArrayObject] = {}
+        self.current_vao: Optional[VertexArrayObject] = None
+
+        self.shader: Optional[ShaderProgram] = None
         self.shader_type: ShaderType = ShaderType.DEFAULT
 
-        self.textures: dict[str, int] = field(default_factory=dict)
+        self.textures: dict[str, int] = {}
         self.active_texture: Optional[str] = None
+        self.texture_id: Optional[int] = None
 
-        self.model_matrix: np.ndarray = field(
-            default_factory=lambda: np.identity(4, dtype=np.float32)
+        self.model_matrix = np.identity(4, dtype=np.float32)
+        self.view_matrix = np.identity(4, dtype=np.float32)
+        self.projection_matrix = np.identity(4, dtype=np.float32)
+        self.mvp_matrix = np.identity(4, dtype=np.float32)
+        self.eye_position = np.zeros(3, dtype=np.float32)
+        self.eye_np = np.zeros(3, dtype=np.float32)
+
+        # Set by GlutRendererWindow.calculate_mvp_matrix (glm types / products)
+        self.projection = None
+        self.view = None
+        self.eye = None
+        self.center = None
+        self.up = None
+
+    def create_shader_program(
+        self,
+        vertex_source_file: str,
+        fragment_source_file: str,
+        glsl_dir: str | Path | None = None,
+    ) -> None:
+        """Compile and store a vertex/fragment shader program on this registry."""
+        # Use init_shader_from_glsl_files rather than ShaderProgram.__init__'s
+        # ShaderCompiler.compile_shader_files path (that double-joins ShaderFiles
+        # paths and has a broken static/instance init_shader call).
+        self.shader = ShaderProgram(
+            shader_name=f"{vertex_source_file}+{fragment_source_file}",
         )
-        self.view_matrix: np.ndarray = field(
-            default_factory=lambda: np.identity(4, dtype=np.float32)
-        )
-        self.projection_matrix: np.ndarray = field(
-            default_factory=lambda: np.identity(4, dtype=np.float32)
-        )
-        self.eye_position: np.ndarray = field(
-            default_factory=lambda: np.zeros(3, dtype=np.float32)
+        self.shader.init_shader_from_glsl_files(
+            vertex_source_file=vertex_source_file,
+            fragment_source_file=fragment_source_file,
+            glsl_dir=glsl_dir,
         )
 
     @property
@@ -88,10 +117,10 @@ class GLResourceRegistry:
     def get_context_key(self, ctx):
         if ctx is None:
             return None
-        return ctx  # simple version
+        return ctx
 
     def get_or_create(self, key: object, factory: Callable[[], T]) -> T:
-        """Return a cached gl resource, creating it with *factory* if needed."""
+        """Return a cached GL resource, creating it with *factory* if needed."""
         if key not in self._cache:
             self._cache[key] = factory()
         return self._cache[key]
