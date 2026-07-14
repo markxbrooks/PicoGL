@@ -2,14 +2,15 @@
 Setup lighting
 """
 from dataclasses import dataclass
-from enum import auto, Enum
+from enum import Enum
 from typing import Sequence
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_UNPACK_ALIGNMENT,
-                                          glMaterialf, glMatrixMode,
                                           glPixelStorei,
                                           )
 
+from picogl.backend.gl.api.legacy.matrix import gl_matrix_mode
+from picogl.backend.gl.api.material import gl_material_f
 from picogl.core.rgbcolor import RGBAColor
 from picogl.backend.gl.enums.legacy.scale import gl_push_matrix, gl_pop_matrix
 from picogl.backend.gl.capability import GLFixedFunctionCapability
@@ -156,7 +157,7 @@ def setup_lighting(mode: GLLightingMode = GLLightingMode.EYE_SPACE) -> None:
             GLLightParameter.AMBIENT,
             [0.2, 0.2, 0.2, 0.2],
         )
-        glMaterialf(
+        gl_material_f(
             GLFace.FRONT_AND_BACK, GLLightParameter.SHININESS, 128.0 * current_shininess
         )
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1)
@@ -188,7 +189,7 @@ def setup_lighting(mode: GLLightingMode = GLLightingMode.EYE_SPACE) -> None:
         GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHTING)
         GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHT0)
 
-        glMatrixMode(GLLegacyMatrixMode.MODELVIEW)
+        gl_matrix_mode(GLLegacyMatrixMode.MODELVIEW)
         gl_push_matrix()
         gl_load_identity()  # reset modelview matrix
 
