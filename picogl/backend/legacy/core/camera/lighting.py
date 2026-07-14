@@ -6,9 +6,9 @@ from enum import Enum
 from typing import Sequence
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_UNPACK_ALIGNMENT,
-                                          glPixelStorei,
                                           )
 
+from backend.gl.api.legacy.pixel_store import gl_pixel_store_i
 from picogl.backend.gl.api.legacy.matrix import gl_matrix_mode
 from picogl.backend.gl.api.material import gl_material_f
 from picogl.core.rgbcolor import RGBAColor
@@ -160,7 +160,7 @@ def setup_lighting(mode: GLLightingMode = GLLightingMode.EYE_SPACE) -> None:
         gl_material_f(
             GLFace.FRONT_AND_BACK, GLLightParameter.SHININESS, 128.0 * current_shininess
         )
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1)
+        gl_pixel_store_i(GL_UNPACK_ALIGNMENT, 1)
     if mode == GLLightingMode.CAMERA_ORIGIN:
         GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHTING)
         GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHT0)
@@ -247,6 +247,8 @@ def setup_lighting(mode: GLLightingMode = GLLightingMode.EYE_SPACE) -> None:
         GLLightSource.lightf(
             GLFixedFunctionCapability.LIGHT0, GLLightParameter.POSITION, light_pos
         )
+
+`
 
 
 def setup_lighting_mode_zero(backend: "GLBackend"):
