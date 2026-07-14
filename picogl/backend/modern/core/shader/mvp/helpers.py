@@ -15,6 +15,7 @@ Set up model_matrix view projection (MVP) matrix for 3D rendering.
 
 import numpy as np
 
+from elmo.gl.shader import LegacyShaderUniformName
 from picogl.backend.gl.api.shader import gl_get_uniform_location, gl_uniform_matrix_4fv
 from picogl.boolean import GLBoolean
 from decologr import Decologr as log
@@ -72,7 +73,7 @@ def np_setup_mvp(shader: int, width: int, height: int, angle_x: float, angle_y: 
     rotated_up = (rotation @ np.array([0, 1, 0, 0], dtype=np.float32))[:3]
     view = look_at(rotated_eye, target, rotated_up)
     mvp = proj @ view
-    mvp_loc = gl_get_uniform_location(shader, "mvp_matrix")
+    mvp_loc = gl_get_uniform_location(shader, LegacyShaderUniformName.MVP_MATRIX)
     if mvp_loc == -1:
         log.error("❌ Failed to find uniform location for 'mvp_matrix'")
     else:
