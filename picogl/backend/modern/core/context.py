@@ -1,4 +1,6 @@
 from OpenGL.GL import *  # pylint: disable=W0614
+from pyglm import glm
+
 from picogl.backend.gl.api import (gl_bind_buffer, gl_buffer_data,
                                    gl_disable_vertex_array, gl_draw_arrays)
 from picogl.backend.gl.api.buffer.generate import gl_generate_buffers
@@ -13,7 +15,6 @@ from picogl.backend.glm.glm import glm_identity_matrix
 from picogl.boolean import GLBoolean
 from picogl.examples.utils.shader_loader import Shader
 from picogl.examples.utils.test_window import GLWindow
-from pyglm import glm
 
 
 class GObject:

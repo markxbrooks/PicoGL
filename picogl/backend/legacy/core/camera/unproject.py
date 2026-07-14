@@ -13,6 +13,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_DEPTH_COMPONENT,
                                           GL_MODELVIEW_MATRIX,
                                           GL_PROJECTION_MATRIX, GL_VIEWPORT,
                                           glFlush, glIsEnabled, glReadPixels)
+
 from picogl.backend.gl.capability import GLPipelineCapability
 
 

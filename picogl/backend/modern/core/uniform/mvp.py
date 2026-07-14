@@ -12,17 +12,17 @@ Functions:
 - shader_uniform_set_mvp: Assigns the MVP matrix uniform in the shader
   program using either numpy or pyglm matrix formats.
 """
+from typing import Union
 
 import numpy as np
-
-from picogl.backend.gl.api.shader import gl_uniform_matrix_4fv
-from picogl.boolean import GLBoolean
 from decologr import Decologr as log
-from picogl.backend.modern.core.shader.program import ShaderProgram
-from picogl.backend.modern.core.uniform.location import get_uniform_location
+from elmo.gl.shader import LegacyShaderUniformName, ShaderUniformName
 from pyglm import glm
 
-from elmo.gl.shader import ShaderUniformName, LegacyShaderUniformName
+from picogl.backend.gl.api.shader import gl_uniform_matrix_4fv
+from picogl.backend.modern.core.shader.program import ShaderProgram
+from picogl.backend.modern.core.uniform.location import get_uniform_location
+from picogl.boolean import GLBoolean
 
 
 def set_mvp_uniform(shader: ShaderProgram = None, mvp: glm.mat4 = None) -> None:
@@ -38,7 +38,7 @@ def set_mvp_uniform(shader: ShaderProgram = None, mvp: glm.mat4 = None) -> None:
     gl_uniform_matrix_4fv(mvp_loc, 1, GLBoolean.FALSE, glm.value_ptr(mvp))
 
 
-def shader_uniform_set_mvp(shader_program: int, mvp_matrix: np.ndarray | glm.mat4):
+def shader_uniform_set_mvp(shader_program: int, mvp_matrix: Union[np.ndarray, glm.mat4]):
     """
     shader_uniform_set_mvp
 

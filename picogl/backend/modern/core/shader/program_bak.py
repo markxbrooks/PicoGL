@@ -9,6 +9,7 @@ from pathlib import Path
 
 import numpy as np
 from decologr import Decologr as log
+
 from picogl.backend.gl.api.program import gl_use_program
 from picogl.backend.gl.api.shader import (gl_get_program_info_log,
                                           gl_get_programiv, gl_link_program)

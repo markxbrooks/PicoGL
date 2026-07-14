@@ -7,20 +7,18 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import TYPE_CHECKING, Sequence
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import (
-    GL_UNPACK_ALIGNMENT
-)
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_UNPACK_ALIGNMENT
 
-from picogl.backend.gl.enums.light import GLLightModel
+from picogl.backend.gl.api.legacy.matrix import gl_pushed_matrix
 from picogl.backend.gl.api.legacy.pixel_store import gl_pixel_store_i
 from picogl.backend.gl.api.light.model import gl_light_model_fv
 from picogl.backend.gl.api.material import gl_material_f
 from picogl.backend.gl.api.matrix import gl_matrix_mode
-from picogl.backend.gl.api.legacy.matrix import gl_pushed_matrix
 from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.enums.legacy.scale import gl_load_identity
+from picogl.backend.gl.enums.light import GLLightModel
 from picogl.backend.gl.light import GLLightSource
 from picogl.backend.gl.state.fill import GLFace, GLLightParameter
 from picogl.core.rgbcolor import RGBAColor

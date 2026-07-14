@@ -19,6 +19,7 @@ from typing import Any, Optional
 
 import numpy as np
 from numpy import dtype, generic, ndarray
+
 from picogl.backend.gl.light import GLLightSource
 
 # Try different Qt imports

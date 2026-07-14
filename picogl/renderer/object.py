@@ -6,6 +6,7 @@ from pathlib import Path
 
 from decologr import Decologr as log
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES
+
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.renderer import GLResourceRegistry, MeshData, RendererBase

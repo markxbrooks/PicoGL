@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from OpenGL.raw.GL.VERSION.GL_2_0 import glCreateProgram, glCreateShader
+
 from picogl.backend.gl.api.shader.uniform import GLShader
 
 

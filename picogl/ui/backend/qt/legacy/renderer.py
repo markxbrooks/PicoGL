@@ -8,6 +8,9 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_DEPTH_TEST, GL_SHININESS, glClear,
                                           glLoadIdentity, glMaterialf,
                                           glMatrixMode, glRotatef)
 from OpenGL.raw.GLU import gluLookAt, gluPerspective
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtWidgets import QWidget
+
 from picogl.backend.gl.api.enable import gl_enable
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
@@ -18,8 +21,6 @@ from picogl.examples import g_color_buffer_data, g_vertex_buffer_data
 from picogl.renderer import MeshData
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.ui.backend.qt.base import GLBase
-from PySide6.QtCore import Qt, QTimer
-from PySide6.QtWidgets import QWidget
 
 
 class LegacyQtObjectRenderer(GLBase):

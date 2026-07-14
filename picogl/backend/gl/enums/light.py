@@ -1,7 +1,9 @@
 
 
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_LIGHT_MODEL_AMBIENT, GL_LIGHT_MODEL_LOCAL_VIEWER, GL_LIGHT_MODEL_TWO_SIDE
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_LIGHT_MODEL_AMBIENT,
+                                          GL_LIGHT_MODEL_LOCAL_VIEWER,
+                                          GL_LIGHT_MODEL_TWO_SIDE)
 
 
 class GLLightModel:

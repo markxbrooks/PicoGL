@@ -37,6 +37,7 @@ import ctypes
 import numpy as np
 from OpenGL import error as _gl_err
 from OpenGL.raw.GL.VERSION.GL_1_5 import glBufferSubData, glIsBuffer
+
 from picogl.backend.gl.api import gl_bind_buffer, gl_buffer_data
 from picogl.backend.gl.api.vertex.attrib_pointer import \
     gl_vertex_attrib_pointer

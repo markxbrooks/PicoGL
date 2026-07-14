@@ -14,6 +14,7 @@ import os
 import sys
 
 import numpy as np
+
 from picogl.backend.gl.api.clear import gl_clear, gl_clear_color
 from picogl.backend.gl.api.color import gl_color_3f
 from picogl.backend.gl.api.matrix import gl_matrix_mode

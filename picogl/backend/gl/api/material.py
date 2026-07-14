@@ -10,6 +10,7 @@ using single-floating point values or sequences of floating-point values.
 from typing import Any, Sequence
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import glMaterialf, glMaterialfv
+
 from picogl.backend.gl.state.fill import GLLightParameter
 
 

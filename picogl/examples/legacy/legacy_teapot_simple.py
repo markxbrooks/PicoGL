@@ -15,6 +15,7 @@ import numpy as np
 # from picogl.examples.glut_renderer import GlutRenderer, gl_legacy_lighting
 from OpenGL.GL import *
 from OpenGL.GLUT import *
+
 from picogl.backend.gl.api.clear import gl_clear, gl_clear_color
 from picogl.backend.gl.api.color import gl_color_3f, gl_color_material
 from picogl.backend.gl.api.enable import gl_disable, gl_enable

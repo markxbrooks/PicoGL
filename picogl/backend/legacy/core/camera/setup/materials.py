@@ -6,7 +6,8 @@ from __future__ import annotations
 
 from picogl.backend.gl.api.enable import gl_enable
 from picogl.backend.gl.capability import GLMaterialFace, PhongMaterial
-from picogl.backend.gl.state.fill import GLCapability, GLColorMaterialMode, GLFace
+from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode,
+                                          GLFace)
 from picogl.backend.legacy.core.pipeline import GLLegacyPipeline
 
 # Soft Phong defaults for COLOR_MATERIAL molecule draws (near modern ambient ~0.18).

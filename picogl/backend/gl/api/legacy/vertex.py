@@ -1,5 +1,6 @@
 from OpenGL import GL as gl
 from OpenGL.raw.GL.VERSION.GL_1_0 import glVertex3f
+
 from picogl.backend.gl.enums import GLNumeric
 
 

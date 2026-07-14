@@ -14,6 +14,7 @@ import warnings
 from typing import Callable, Optional
 
 from decologr import Decologr as log
+
 from picogl.backend.gl.driver.blend import GLBlendDriver
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.gl.driver.depth import GLDepthDriver

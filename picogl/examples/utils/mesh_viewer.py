@@ -1,6 +1,8 @@
 from decologr import Decologr as log
 from OpenGL.GL import *  # pylint: disable=W0614
 from OpenGL.GLUT import *  # pylint: disable=W0614
+from pyglm import glm
+
 from picogl.backend.gl.api.clear import gl_clear_color
 from picogl.backend.gl.api.depth import gl_depth_func
 from picogl.backend.gl.api.enable import gl_enable
@@ -10,7 +12,6 @@ from picogl.backend.glm.glm import glm_identity_matrix
 from picogl.backend.modern.core.shader.mvp.controller import MVPController
 from picogl.examples.utils.world_sheet import WorldSheet
 from picogl.ui.backend.glut.window.gl import GLWindow
-from pyglm import glm
 
 
 class MeshViewWindow(GLWindow):

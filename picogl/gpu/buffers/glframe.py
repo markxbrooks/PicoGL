@@ -9,6 +9,7 @@ buffers with support for color and depth attachments.
 from contextlib import contextmanager
 
 from OpenGL.raw.GL.VERSION.GL_3_0 import GL_FRAMEBUFFER_BINDING
+
 from picogl.backend.gl.api import gl_get_integerv
 from picogl.backend.gl.api.frame import (gl_bind_framebuffer,
                                          gl_check_framebuffer_status,
