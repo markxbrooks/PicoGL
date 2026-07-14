@@ -8,10 +8,10 @@ from enum import Enum
 from typing import TYPE_CHECKING, Sequence
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import (
-    GL_LIGHT_MODEL_AMBIENT,
     GL_UNPACK_ALIGNMENT
 )
 
+from picogl.backend.gl.enums.light import GLLightModel
 from picogl.backend.gl.api.legacy.pixel_store import gl_pixel_store_i
 from picogl.backend.gl.api.light.model import gl_light_model_fv
 from picogl.backend.gl.api.material import gl_material_f
@@ -181,7 +181,7 @@ def setup_lighting(mode: GLLightingMode = GLLightingMode.EYE_SPACE) -> None:
     current_shininess = 1.0
     GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHTING)
     # Default OpenGL light-model ambient (0.2) adds a flat wash under COLOR_MATERIAL.
-    gl_light_model_fv(GL_LIGHT_MODEL_AMBIENT, (0.12, 0.12, 0.12, 1.0))
+    gl_light_model_fv(GLLightModel.AMBIENT, (0.12, 0.12, 0.12, 1.0))
 
     if mode == GLLightingMode.EYE_SPACE:
         enable_light(GLFixedFunctionCapability.LIGHT0, _EYE_SPACE_LIGHT0)
@@ -199,6 +199,7 @@ def setup_lighting(mode: GLLightingMode = GLLightingMode.EYE_SPACE) -> None:
         with gl_pushed_matrix():
             gl_load_identity()
             enable_light(GLFixedFunctionCapability.LIGHT0, _WORLD_OR_FIXED_LIGHT0)
+        gl_matrix_mode(GLLegacyMatrixMode.PROJECTION)
 
     elif mode == GLLightingMode.CAMERA_FIXED:
         # Call after model/view transforms (e.g. after gl_update_camera_matrix).
