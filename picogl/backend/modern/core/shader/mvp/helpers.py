@@ -15,14 +15,16 @@ Set up model_matrix view projection (MVP) matrix for 3D rendering.
 
 import numpy as np
 from decologr import Decologr as log
-from numpy import ndarray
-from OpenGL.GL import glGetUniformLocation, glUniformMatrix4fv
-from OpenGL.raw.GL._types import GL_TRUE
+from elmo.gl.shader import LegacyShaderUniformName
+from pyglm import glm
+
+from picogl.backend.gl.api.shader import (gl_get_uniform_location,
+                                          gl_uniform_matrix_4fv)
 from picogl.backend.legacy.core.camera.look_at import look_at
 from picogl.backend.legacy.core.camera.perspective import perspective
 from picogl.backend.modern.core.shader.rotation_matrix import \
     create_rotation_matrix
-from pyglm import glm
+from picogl.boolean import GLBoolean
 
 
 def setup_mvp(angle_x: float, angle_y: float, zoom: float, aspect: float) -> glm.mat4:
@@ -57,7 +59,7 @@ def setup_mvp(angle_x: float, angle_y: float, zoom: float, aspect: float) -> glm
     return projection * view
 
 
-def np_setup_mvp(shader, width, height, angle_x, angle_y, zoom) -> np.ndarray:
+def np_setup_mvp(shader: int, width: int, height: int, angle_x: float, angle_y: float, zoom: float) -> np.ndarray:
     """
     setup_mvp
 
@@ -72,10 +74,10 @@ def np_setup_mvp(shader, width, height, angle_x, angle_y, zoom) -> np.ndarray:
     rotated_up = (rotation @ np.array([0, 1, 0, 0], dtype=np.float32))[:3]
     view = look_at(rotated_eye, target, rotated_up)
     mvp = proj @ view
-    mvp_loc = glGetUniformLocation(shader, "mvp_matrix")
+    mvp_loc = gl_get_uniform_location(shader, LegacyShaderUniformName.MVP_MATRIX)
     if mvp_loc == -1:
         log.error("❌ Failed to find uniform location for 'mvp_matrix'")
     else:
-        glUniformMatrix4fv(mvp_loc, 1, GL_TRUE, mvp.astype(np.float32))
+        gl_uniform_matrix_4fv(mvp_loc, 1, GLBoolean.TRUE, mvp.astype(np.float32))
 
     return mvp

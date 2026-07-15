@@ -9,6 +9,7 @@ from OpenGL.GL import (GL_BLEND, GL_CULL_FACE, GL_DEPTH_TEST, GL_FLOAT,
 from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_AMBIENT, GL_DIFFUSE,
                                           GL_FRONT_AND_BACK, GL_PROJECTION,
                                           GL_SHININESS, GL_SPECULAR)
+
 from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.capability import (GLBlendFactor,
                                           GLFixedFunctionCapability,

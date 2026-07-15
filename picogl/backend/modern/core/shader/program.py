@@ -10,6 +10,7 @@ from pathlib import Path
 import numpy as np
 from decologr import Decologr as log
 from OpenGL.raw.GL.VERSION.GL_2_0 import GL_LINK_STATUS
+
 from picogl.backend.gl.api.shader import (GLShader, gl_get_program_info_log,
                                           gl_link_program, gl_use_program)
 from picogl.backend.gl.api.shader.create import gl_create_program

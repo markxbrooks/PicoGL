@@ -12,6 +12,7 @@ from typing import TYPE_CHECKING, Any, Optional
 from OpenGL.GL import (GL_POINT_SIZE_RANGE, glGetFloatv, glLineWidth,
                        glPointSize, glPolygonMode)
 from OpenGL.raw.GL.VERSION.GL_1_1 import glPolygonOffset
+
 from picogl.backend.gl.driver.applyable import Applyable
 from picogl.backend.gl.state.fill import GLFace, GLFillMode
 from picogl.backend.state import gl_value

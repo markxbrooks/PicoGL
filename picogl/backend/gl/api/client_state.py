@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from OpenGL.raw.GL.VERSION.GL_1_1 import (glDisableClientState,
                                           glEnableClientState)
+
 from picogl.backend.gl.state.client import GLClientState
 
 

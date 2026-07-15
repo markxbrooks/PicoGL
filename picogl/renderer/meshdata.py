@@ -9,6 +9,7 @@ from typing import Optional, Union
 import numpy as np
 from decologr import Decologr as log
 from OpenGL import GL
+
 from picogl.backend.gl.api import (gl_disable_legacy_client_state,
                                    gl_draw_elements,
                                    gl_enable_legacy_client_state)
