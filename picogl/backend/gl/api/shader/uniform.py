@@ -15,7 +15,7 @@ import numpy as np
 from OpenGL.GL import glGetUniformLocation, glUniformMatrix4fv
 from OpenGL.raw.GL.VERSION.GL_2_0 import GL_FRAGMENT_SHADER, GL_VERTEX_SHADER
 
-from backend.gl.api.shader import gl_get_uniform_location
+from picogl.backend.gl.api.shader import gl_get_uniform_location
 from boolean import GLBoolean
 
 from picogl.boolean import GLBoolean
