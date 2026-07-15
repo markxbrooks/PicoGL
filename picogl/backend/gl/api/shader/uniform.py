@@ -11,8 +11,12 @@ from __future__ import annotations
 from enum import IntEnum
 from typing import Any
 
+import numpy as np
 from OpenGL.GL import glGetUniformLocation, glUniformMatrix4fv
 from OpenGL.raw.GL.VERSION.GL_2_0 import GL_FRAGMENT_SHADER, GL_VERTEX_SHADER
+
+from backend.gl.api.shader import gl_get_uniform_location
+from boolean import GLBoolean
 
 from picogl.boolean import GLBoolean
 
@@ -64,3 +68,10 @@ class GLShader(IntEnum):
 
     VERTEX_SHADER = GL_VERTEX_SHADER
     FRAGMENT_SHADER = GL_FRAGMENT_SHADER
+
+
+def gl_set_uniform_matrix(shader_program: int, shader_uniform_name: str, matrix: np.ndarray):
+    """gl set uniform matrix"""
+    gl_uniform_matrix_4fv(
+        gl_get_uniform_location(shader_program, shader_uniform_name), 1, GLBoolean.FALSE, matrix
+    )
