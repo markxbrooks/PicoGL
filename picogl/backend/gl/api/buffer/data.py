@@ -1,6 +1,10 @@
 """
-gl buffer data wrapper
+Provides a function to bind GPU buffer data using OpenGL.
 
+This module defines a utility function to wrap the OpenGL `glBufferData`
+call, which uploads data to a specified buffer object in GPU memory. The
+function enforces checks to ensure valid arguments and simplifies the usage
+of OpenGL buffer operations by abstracting certain details.
 """
 
 from OpenGL.GL import glBufferData
