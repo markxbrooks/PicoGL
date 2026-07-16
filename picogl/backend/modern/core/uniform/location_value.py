@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Sequence, Union
 
 import numpy as np
 from decologr import Decologr as log
@@ -13,14 +13,22 @@ from pyglm import glm
 def set_uniform_location_value(
     location: int,
     uniform_value: Union[
-        float, int, glm.vec2, glm.vec3, glm.vec4, glm.mat4, np.ndarray
+        float,
+        int,
+        glm.vec2,
+        glm.vec3,
+        glm.vec4,
+        glm.mat4,
+        np.ndarray,
+        Sequence[float],
     ],
 ):
     """
     set_uniform_value
 
     :param uniform location:  int
-    :param uniform_value: Value to set (supports float, int, vec2, vec3, vec4, mat4, or np.ndarray)
+    :param uniform_value: Value to set (supports float, int, vec2, vec3, vec4, mat4,
+        np.ndarray, or a 2/3/4-length float sequence)
 
     Set a uniform variable in a shader program
     """
@@ -46,9 +54,23 @@ def set_uniform_location_value(
             glUniform3fv(location, 1, uniform_value.astype(np.float32))
         elif uniform_value.shape == (4,):  # vec4
             glUniform4fv(location, 1, uniform_value.astype(np.float32))
+        elif uniform_value.shape == (2,):  # vec2
+            glUniform2fv(location, 1, uniform_value.astype(np.float32))
         else:
             log.warning(
                 f"Unsupported ndarray shape {uniform_value.shape} for uniform '{location}'"
+            )
+    elif isinstance(uniform_value, (list, tuple)):
+        arr = np.asarray(uniform_value, dtype=np.float32)
+        if arr.shape == (3,):
+            glUniform3fv(location, 1, arr)
+        elif arr.shape == (4,):
+            glUniform4fv(location, 1, arr)
+        elif arr.shape == (2,):
+            glUniform2fv(location, 1, arr)
+        else:
+            log.warning(
+                f"Unsupported sequence length {arr.shape} for uniform '{location}'"
             )
     else:
         log.warning(f"Unsupported uniform type for '{location}': {type(uniform_value)}")

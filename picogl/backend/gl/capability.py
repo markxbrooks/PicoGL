@@ -17,9 +17,9 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_BACK, GL_BLEND, GL_BLEND_DST,
                                           GL_DEPTH_TEST, GL_FRONT,
                                           GL_FRONT_AND_BACK, GL_LIGHT0,
                                           GL_LIGHT1, GL_LIGHT2, GL_LIGHT3,
-                                          GL_LIGHT4, GL_LIGHTING, GL_ONE,
-                                          GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA,
-                                          GL_ZERO)
+                                          GL_LIGHT4, GL_LIGHTING, GL_LINE_SMOOTH,
+                                          GL_ONE, GL_ONE_MINUS_SRC_ALPHA,
+                                          GL_SRC_ALPHA, GL_ZERO)
 
 
 class GLPipelineCapability(IntEnum):
@@ -28,6 +28,7 @@ class GLPipelineCapability(IntEnum):
     BLEND = GL_BLEND
     DEPTH_TEST = GL_DEPTH_TEST
     CULL_FACE = GL_CULL_FACE
+    LINE_SMOOTH = GL_LINE_SMOOTH
 
 
 class GLFixedFunctionCapability(IntEnum):
@@ -101,6 +102,7 @@ CAP_MAP = {
     GLFixedFunctionCapability.LIGHT0: GL_LIGHT0,
     GLPipelineCapability.DEPTH_TEST: GL_DEPTH_TEST,
     GLPipelineCapability.CULL_FACE: GL_CULL_FACE,
+    GLPipelineCapability.LINE_SMOOTH: GL_LINE_SMOOTH,
 }
 BLEND_FACTOR_MAP = {
     GLBlendFactor.SRC_ALPHA: GL_SRC_ALPHA,
