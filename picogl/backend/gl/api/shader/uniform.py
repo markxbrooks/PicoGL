@@ -12,8 +12,7 @@ from enum import IntEnum
 from typing import Any
 
 import numpy as np
-from picogl.boolean import GLBoolean
-from OpenGL.GL import glGetUniformLocation, glUniformMatrix4fv
+from OpenGL.GL import glUniformMatrix4fv
 from OpenGL.raw.GL.VERSION.GL_2_0 import GL_FRAGMENT_SHADER, GL_VERTEX_SHADER
 
 from picogl.backend.gl.api.shader import gl_get_uniform_location
@@ -58,7 +57,7 @@ def gl_uniform_name_matrix_4f(value: Any, location: int, uniform_name: str) -> N
     None
     """
     gl_uniform_matrix_4fv(
-        glGetUniformLocation(location, uniform_name), 1, GLBoolean.FALSE, value
+        gl_get_uniform_location(location, uniform_name), 1, GLBoolean.FALSE, value
     )
 
 
