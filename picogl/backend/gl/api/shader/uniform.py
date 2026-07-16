@@ -12,7 +12,7 @@ from enum import IntEnum
 from typing import Any
 
 import numpy as np
-from boolean import GLBoolean
+from picogl.boolean import GLBoolean
 from OpenGL.GL import glGetUniformLocation, glUniformMatrix4fv
 from OpenGL.raw.GL.VERSION.GL_2_0 import GL_FRAGMENT_SHADER, GL_VERTEX_SHADER
 

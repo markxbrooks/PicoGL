@@ -81,7 +81,7 @@ def clamp01_old(x: float) -> float:
 
 
 @dataclass(frozen=False)
-class RGBColorOld:
+class Coord:
     """RGB color"""
 
     r: float = 1.0
