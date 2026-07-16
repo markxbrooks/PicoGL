@@ -7,14 +7,14 @@ geometry objects. It exposes functions for setting material properties
 using single-floating point values or sequences of floating-point values.
 """
 
-from typing import Any, Sequence
+from typing import Any, Sequence, Union
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import glMaterialf, glMaterialfv
 
-from picogl.backend.gl.state.fill import GLLightParameter
+from picogl.backend.gl.state.fill import GLLightParameter, GLColorMaterialMode
 
 
-def gl_material_fv(face: Any, pname: GLLightParameter, param: Sequence[float]):
+def gl_material_fv(face: Any, pname: Union[GLLightParameter, GLColorMaterialMode], param: Sequence[float]):
     """
     Sets material properties for a specified face of a geometry object.
 
