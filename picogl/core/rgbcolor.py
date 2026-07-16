@@ -32,30 +32,18 @@ from picogl.core.mixin.vec3 import Vec3Mixin, clamp01
 class RGBColor(Vec3Mixin):
     """RGB color"""
 
-    r: float = 1.0
-    g: float = 1.0
-    b: float = 1.0
+    x: float = 0.0
+    y: float = 0.0
+    z: float = 0.0
 
     def __post_init__(self):
         # Enforce constraints on init
-        self.r = clamp01(self.r)
-        self.g = clamp01(self.g)
-        self.b = clamp01(self.b)
+        self.x = clamp01(self.r)
+        self.y = clamp01(self.g)
+        self.z = clamp01(self.b)
 
     def to_tuple(self) -> Tuple[float, float, float]:
-        return self.r, self.g, self.b
-
-    @property
-    def alpha(self) -> float:
-        return 1.0
-
-    @classmethod
-    def from_rgba_tuple(cls, t: Tuple[float, float, float, float]):
-        r, g, b, _a = t
-        return cls(r, g, b)
-
-    def with_alpha(self, alpha: float) -> "RGBAColor":
-        return RGBAColor(self.r, self.g, self.b, alpha)
+        return self.x, self.y, self.z
 
 
 # RGBAColor
