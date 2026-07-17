@@ -6,7 +6,6 @@ from typing import Optional
 
 import numpy as np
 from decologr import Decologr as log
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_DEPTH_TEST
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import QWidget
 
@@ -16,7 +15,7 @@ from picogl.backend.gl.api.enable import gl_enable
 from picogl.backend.gl.api.matrix import gl_matrix_mode
 from picogl.backend.gl.api.rotate import gl_rotate_f
 from picogl.backend.gl.capability import (GLFixedFunctionCapability,
-                                          GLMaterialFace)
+                                          GLMaterialFace, GLPipelineCapability)
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.enums.legacy.scale import gl_load_identity
@@ -102,7 +101,7 @@ class LegacyQtObjectRenderer(GLBase):
     def initialize_state(self):
         # Set up OpenGL state
         gl_clear_color(0.1, 0.1, 0.2, 1.0)  # Dark blue background
-        gl_enable(GL_DEPTH_TEST)
+        gl_enable(GLPipelineCapability.DEPTH_TEST)
 
     def initialize_materials(self):
         """Apply the default legacy Phong material."""
