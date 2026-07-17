@@ -33,6 +33,7 @@ from picogl.backend.state import (BlendState, DepthState, DrawCommand,
                                   RenderStateApplier, gl_value)
 from picogl.core.polygon.mode import PolygonMode
 from picogl.core.rgbcolor import RGBAColor
+from picogl.core.viewport import Viewport
 
 
 class _RecordingRaster:
@@ -784,7 +785,7 @@ class TestDrawCommand(unittest.TestCase):
         backend = GLBackend(binding=FakeBinding())
 
         with (
-            patch("picogl.backend.gl.driver.frame.glViewport") as viewport,
+            patch("picogl.backend.gl.driver.frame.gl_viewport") as viewport,
             patch(
                 "picogl.backend.legacy.core.pipeline.glLoadIdentity"
             ) as load_identity,
@@ -792,7 +793,7 @@ class TestDrawCommand(unittest.TestCase):
             patch("picogl.backend.legacy.core.pipeline.glLightfv") as lightfv,
             patch("picogl.backend.gl.driver.frame.glClearColor") as clear_color,
         ):
-            backend.frame.viewport(1, 2, 3, 4)
+            backend.frame.set_viewport(Viewport(1, 2, 3, 4))
             backend.legacy.load_identity()
             backend.legacy.translate(1, 2, 3)
             backend.legacy.set_light([0.0, 0.0, 10.0, 1.0])

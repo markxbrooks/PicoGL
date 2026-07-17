@@ -3,9 +3,9 @@ Setup lighting
 """
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
-from typing import TYPE_CHECKING, Sequence
+from typing import TYPE_CHECKING
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_UNPACK_ALIGNMENT
 
@@ -22,6 +22,7 @@ from picogl.backend.gl.enums.light import GLLightModel
 from picogl.backend.gl.light import GLLightSource
 from picogl.backend.gl.state.fill import GLFace, GLLightParameter
 from picogl.core.rgbcolor import RGBAColor
+from picogl.core.vec4 import Vec4
 from picogl.gpu.buffers.glframe import GLFramebuffer
 
 if TYPE_CHECKING:
@@ -45,32 +46,42 @@ class GLLight:
     ``GLLight()`` does not install a full-bright OpenGL LIGHT0.
     """
 
-    position: Sequence[float] = (10.0, 10.0, 10.0, 1.0)
-    ambient: Sequence[float] = (0.18, 0.18, 0.18, 1.0)
-    diffuse: Sequence[float] = (0.55, 0.55, 0.55, 1.0)
-    specular: Sequence[float] = (0.2, 0.2, 0.2, 1.0)
+    position: Vec4 = field(default_factory=lambda: Vec4(10.0, 10.0, 10.0, 1.0))
+    ambient: RGBAColor = field(
+        default_factory=lambda: RGBAColor(0.18, 0.18, 0.18, 1.0)
+    )
+    diffuse: RGBAColor = field(
+        default_factory=lambda: RGBAColor(0.55, 0.55, 0.55, 1.0)
+    )
+    specular: RGBAColor = field(
+        default_factory=lambda: RGBAColor(0.2, 0.2, 0.2, 1.0)
+    )
+
+    def apply(self, capability: GLFixedFunctionCapability) -> None:
+        """Apply this light to a fixed-function light slot."""
+        apply_light(capability, self)
 
 
 # Dim eye-space LIGHT0 used by legacy molecule viewers (ElMo paintGL).
 _EYE_SPACE_LIGHT0 = GLLight(
-    position=(10.0, 10.0, 10.0, 1.0),
-    ambient=(0.15, 0.15, 0.15, 1.0),
-    diffuse=(0.35, 0.35, 0.35, 1.0),
-    specular=(0.12, 0.12, 0.12, 1.0),
+    position=Vec4(10.0, 10.0, 10.0, 1.0),
+    ambient=RGBAColor(0.15, 0.15, 0.15, 1.0),
+    diffuse=RGBAColor(0.35, 0.35, 0.35, 1.0),
+    specular=RGBAColor(0.12, 0.12, 0.12, 1.0),
 )
 
 _CAMERA_ORIGIN_LIGHT0 = GLLight(
-    position=(0.0, 0.0, 0.0, 1.0),
-    ambient=(0.18, 0.18, 0.18, 1.0),
-    diffuse=(0.7, 0.7, 0.7, 1.0),
-    specular=(0.25, 0.25, 0.25, 1.0),
+    position=Vec4(0.0, 0.0, 0.0, 1.0),
+    ambient=RGBAColor(0.18, 0.18, 0.18, 1.0),
+    diffuse=RGBAColor(0.7, 0.7, 0.7, 1.0),
+    specular=RGBAColor(0.25, 0.25, 0.25, 1.0),
 )
 
 _WORLD_OR_FIXED_LIGHT0 = GLLight(
-    position=(10.0, 10.0, 10.0, 1.0),
-    ambient=(0.18, 0.18, 0.18, 1.0),
-    diffuse=(0.7, 0.7, 0.7, 1.0),
-    specular=(0.25, 0.25, 0.25, 1.0),
+    position=Vec4(10.0, 10.0, 10.0, 1.0),
+    ambient=RGBAColor(0.18, 0.18, 0.18, 1.0),
+    diffuse=RGBAColor(0.7, 0.7, 0.7, 1.0),
+    specular=RGBAColor(0.25, 0.25, 0.25, 1.0),
 )
 
 
@@ -82,22 +93,22 @@ def apply_light(
     GLLightSource.lightf(
         capability,
         GLLightParameter.POSITION,
-        light.position,
+        light.position.to_tuple(),
     )
     GLLightSource.lightf(
         capability,
         GLLightParameter.AMBIENT,
-        light.ambient,
+        light.ambient.to_tuple(),
     )
     GLLightSource.lightf(
         capability,
         GLLightParameter.DIFFUSE,
-        light.diffuse,
+        light.diffuse.to_tuple(),
     )
     GLLightSource.lightf(
         capability,
         GLLightParameter.SPECULAR,
-        light.specular,
+        light.specular.to_tuple(),
     )
 
 
@@ -119,22 +130,22 @@ def set_second_light_state(second_light_state: bool) -> None:
     if second_light_state:
         # Keep fill lights soft so they don't wash out COLOUR_MATERIAL.
         soft = dict(
-            diffuse=(0.25, 0.25, 0.25, 1.0),
-            specular=(0.1, 0.1, 0.1, 1.0),
-            ambient=(0.08, 0.08, 0.08, 1.0),
+            diffuse=RGBAColor(0.25, 0.25, 0.25, 1.0),
+            specular=RGBAColor(0.1, 0.1, 0.1, 1.0),
+            ambient=RGBAColor(0.08, 0.08, 0.08, 1.0),
         )
         lights = {
             GLFixedFunctionCapability.LIGHT1: GLLight(
-                position=(-10.0, -10.0, -10.0, 1.0), **soft
+                position=Vec4(-10.0, -10.0, -10.0, 1.0), **soft
             ),
             GLFixedFunctionCapability.LIGHT2: GLLight(
-                position=(90.0, 90.0, 90.0, 1.0), **soft
+                position=Vec4(90.0, 90.0, 90.0, 1.0), **soft
             ),
             GLFixedFunctionCapability.LIGHT3: GLLight(
-                position=(-90.0, -90.0, -90.0, 1.0), **soft
+                position=Vec4(-90.0, -90.0, -90.0, 1.0), **soft
             ),
             GLFixedFunctionCapability.LIGHT4: GLLight(
-                position=(270.0, 270.0, 270.0, 1.0), **soft
+                position=Vec4(270.0, 270.0, 270.0, 1.0), **soft
             ),
         }
         for capability, light in lights.items():

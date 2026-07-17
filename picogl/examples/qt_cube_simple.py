@@ -20,8 +20,6 @@ from typing import Any, Optional
 import numpy as np
 from numpy import dtype, generic, ndarray
 
-from picogl.backend.gl.light import GLLightSource
-
 # Try different Qt imports
 try:
     from PySide6.QtCore import Qt, QTimer
@@ -61,13 +59,12 @@ except ImportError:
 
 from picogl.backend.geometry.factory import LegacyBinding
 from picogl.backend.gl.backend import GLBackend
-from picogl.backend.gl.capability import (GLFixedFunctionCapability,
-                                          GLMaterialFace)
-from picogl.backend.gl.phong.material import PhongMaterial
+from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.enums import GLBitMask
+from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
 from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode,
-                                          GLFace, GLLight, GLLightParameter)
-from picogl.core.rgbcolor import RGBAColor
+                                          GLFace)
+from picogl.core.viewport import Viewport
 from picogl.examples.data.cube_data import (g_color_buffer_data,
                                             g_vertex_buffer_data)
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
@@ -116,34 +113,7 @@ class SimpleQtCubeWidget(QOpenGLWidget):
             GLFace.FRONT_AND_BACK,
             GLColorMaterialMode.AMBIENT_AND_DIFFUSE,
         )
-        self.backend.legacy.set_light(
-            [1.0, 1.0, 1.0, 0.0],
-            light=GLLight.LIGHT0,
-        )
-
-        GLLightSource.lightf(
-            GLFixedFunctionCapability.LIGHT0,
-            GLLightParameter.AMBIENT,
-            [0.3, 0.3, 0.3, 1.0],
-        )
-        GLLightSource.lightf(
-            GLFixedFunctionCapability.LIGHT0,
-            GLLightParameter.DIFFUSE,
-            [0.8, 0.8, 0.8, 1.0],
-        )
-        GLLightSource.lightf(
-            GLFixedFunctionCapability.LIGHT0,
-            GLLightParameter.SPECULAR,
-            [1.0, 1.0, 1.0, 1.0],
-        )
-
-        material = PhongMaterial(
-            ambient=RGBAColor(0.2, 0.2, 0.2, 1.0),
-            diffuse=RGBAColor(0.8, 0.8, 0.8, 1.0),
-            specular=RGBAColor(1.0, 1.0, 1.0, 1.0),
-            shininess=50.0,
-        )
-        self.backend.legacy.set_material(GLMaterialFace.FRONT_AND_BACK, material)
+        gl_legacy_lighting()
 
         verts = self.vertices.reshape(-1, 3)
         cols = self.colors.reshape(-1, 3)
@@ -160,7 +130,7 @@ class SimpleQtCubeWidget(QOpenGLWidget):
     def resizeGL(self, w: int, h: int):
         """Resize viewport and projection via PicoGL drivers."""
         h = max(h, 1)
-        self.backend.frame.viewport(0, 0, w, h)
+        self.backend.frame.set_viewport(Viewport(0, 0, w, h))
         aspect = float(w) / float(h)
         self.backend.legacy.set_matrix_mode_projection()
         self.backend.legacy.load_identity()
