@@ -2,23 +2,26 @@ from typing import Optional
 
 import numpy as np
 from decologr import Decologr as log
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_DEPTH_TEST, glClear, glClearColor,
-                                          glColorMaterial, glLoadIdentity,
-                                          glMatrixMode, glRotatef)
-from OpenGL.raw.GLU import gluLookAt, gluPerspective
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_DEPTH_TEST
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import QWidget
 
+from picogl.backend.gl.api.clear import gl_clear_color, gl_clear
+from picogl.backend.gl.api.color import gl_color_material
 from picogl.backend.gl.api.enable import gl_enable
+from picogl.backend.gl.api.matrix import gl_matrix_mode
+from picogl.backend.gl.api.rotate import gl_rotate_f
 from picogl.backend.gl.capability import (GLFixedFunctionCapability,
                                           GLMaterialFace)
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
+from picogl.backend.gl.enums.legacy.scale import gl_load_identity
 from picogl.backend.gl.legacy.lighting import (DEFAULT_LEGACY_MATERIAL,
                                                gl_legacy_lighting)
 from picogl.backend.gl.mode import GLMode
-from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode,
-                                          GLFace)
+from picogl.backend.gl.state.fill import GLCapability, GLColorMaterialMode
+from picogl.backend.glu.lookat import glu_look_at
+from picogl.backend.glu.perspective import glu_perspective
 from picogl.examples import g_color_buffer_data, g_vertex_buffer_data
 from picogl.renderer import MeshData
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
@@ -94,7 +97,7 @@ class LegacyQtObjectRenderer(GLBase):
 
     def initialize_state(self):
         # Set up OpenGL state
-        glClearColor(0.1, 0.1, 0.2, 1.0)  # Dark blue background
+        gl_clear_color(0.1, 0.1, 0.2, 1.0)  # Dark blue background
         gl_enable(GL_DEPTH_TEST)
 
     def initialize_materials(self):
@@ -105,7 +108,7 @@ class LegacyQtObjectRenderer(GLBase):
         gl_enable(GLFixedFunctionCapability.LIGHTING)
         gl_enable(GLFixedFunctionCapability.LIGHT0)
         gl_enable(GLCapability.COLOR_MATERIAL)
-        glColorMaterial(GLFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE)
+        gl_color_material(GLMaterialFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE)
         gl_legacy_lighting()
 
     def resizeGL(self, w: int, h: int):
@@ -113,13 +116,13 @@ class LegacyQtObjectRenderer(GLBase):
         super().resizeGL(w, h)
 
         # Set up projection matrix
-        glMatrixMode(GLLegacyMatrixMode.PROJECTION)
-        glLoadIdentity()
-        gluPerspective(45.0, w / h, 0.1, 100.0)
+        gl_matrix_mode(GLLegacyMatrixMode.PROJECTION)
+        gl_load_identity()
+        glu_perspective(45.0, w / h, 0.1, 100.0)
 
         # Return to modelview matrix
-        glMatrixMode(GLLegacyMatrixMode.MODELVIEW)
-        glLoadIdentity()
+        gl_matrix_mode(GLLegacyMatrixMode.MODELVIEW)
+        gl_load_identity()
 
     def _emit_rotation_feedback(self):
         pass
@@ -127,18 +130,18 @@ class LegacyQtObjectRenderer(GLBase):
     def paintGL(self):
         """Render the cube scene"""
         # Clear buffers
-        glClear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
+        gl_clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
 
         # Set up modelview matrix
-        glMatrixMode(GLLegacyMatrixMode.MODELVIEW)
-        glLoadIdentity()
+        gl_matrix_mode(GLLegacyMatrixMode.MODELVIEW)
+        gl_load_identity()
 
         # Position camera
-        gluLookAt(0, 0, self.zoom, 0, 0, 0, 0, 1, 0)
+        glu_look_at(0, 0, self.zoom, 0, 0, 0, 0, 1, 0)
 
         # Apply rotations
-        glRotatef(self.rotation_x, 1, 0, 0)
-        glRotatef(self.rotation_y, 0, 1, 0)
+        gl_rotate_f(self.rotation_x, 1, 0, 0)
+        gl_rotate_f(self.rotation_y, 0, 1, 0)
 
         # Draw the cube using legacy OpenGL
         self.draw()
