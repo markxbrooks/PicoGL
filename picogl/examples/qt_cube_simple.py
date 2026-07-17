@@ -62,10 +62,12 @@ except ImportError:
 from picogl.backend.geometry.factory import LegacyBinding
 from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.capability import (GLFixedFunctionCapability,
-                                          GLMaterialFace, PhongMaterial)
+                                          GLMaterialFace)
+from picogl.backend.gl.phong.material import PhongMaterial
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode,
                                           GLFace, GLLight, GLLightParameter)
+from picogl.core.rgbcolor import RGBAColor
 from picogl.examples.data.cube_data import (g_color_buffer_data,
                                             g_vertex_buffer_data)
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
@@ -136,9 +138,9 @@ class SimpleQtCubeWidget(QOpenGLWidget):
         )
 
         material = PhongMaterial(
-            ambient=(0.2, 0.2, 0.2, 1.0),
-            diffuse=(0.8, 0.8, 0.8, 1.0),
-            specular=(1.0, 1.0, 1.0, 1.0),
+            ambient=RGBAColor(0.2, 0.2, 0.2, 1.0),
+            diffuse=RGBAColor(0.8, 0.8, 0.8, 1.0),
+            specular=RGBAColor(1.0, 1.0, 1.0, 1.0),
             shininess=50.0,
         )
         self.backend.legacy.set_material(GLMaterialFace.FRONT_AND_BACK, material)

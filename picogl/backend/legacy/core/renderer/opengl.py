@@ -12,8 +12,8 @@ from picogl.backend.gl.api.blending import gl_blend_func
 from picogl.backend.gl.api.depth import gl_get_depth_mask, gl_set_depth_mask
 from picogl.backend.gl.api.enable import gl_disable, gl_enable, gl_is_enabled
 from picogl.backend.gl.api.material import gl_material_f, gl_material_fv
-from picogl.backend.gl.capability import (FACE_MAP, GLMaterialFace,
-                                          PhongMaterial)
+from picogl.backend.gl.capability import (FACE_MAP, GLMaterialFace)
+from picogl.backend.gl.phong.material import PhongMaterial
 from picogl.backend.gl.state.fill import GLLightParameter
 from picogl.renderer.backend import RenderBackend
 
@@ -42,7 +42,7 @@ class LegacyOpenGLBackend(RenderBackend):
     def set_material(self, face: GLMaterialFace, mat: PhongMaterial):
         f = FACE_MAP[face]
 
-        gl_material_fv(f, GLLightParameter.AMBIENT, mat.ambient)
-        gl_material_fv(f, GLLightParameter.DIFFUSE, mat.diffuse)
-        gl_material_fv(f, GLLightParameter.SPECULAR, mat.specular)
+        gl_material_fv(f, GLLightParameter.AMBIENT, mat.ambient.to_tuple())
+        gl_material_fv(f, GLLightParameter.DIFFUSE, mat.diffuse.to_tuple())
+        gl_material_fv(f, GLLightParameter.SPECULAR, mat.specular.to_tuple())
         gl_material_f(f, GLLightParameter.SHININESS, mat.shininess)

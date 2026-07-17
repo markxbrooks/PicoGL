@@ -28,7 +28,7 @@ from picogl.core.mixin.vec3 import Vec3Mixin, clamp01
 
 
 # RGBColor
-@dataclass
+@dataclass(frozen=True)
 class RGBColor(Vec3Mixin):
     """RGB color"""
 
@@ -38,11 +38,15 @@ class RGBColor(Vec3Mixin):
 
     def __post_init__(self):
         # Enforce constraints on init
-        self.r = clamp01(self.r)
-        self.g = clamp01(self.g)
-        self.b = clamp01(self.b)
+        object.__setattr__(self, "r", clamp01(self.r))
+        object.__setattr__(self, "g", clamp01(self.g))
+        object.__setattr__(self, "b", clamp01(self.b))
 
     def to_tuple(self) -> Tuple[float, float, float]:
+        return self.r, self.g, self.b
+
+    @property
+    def rgb(self) -> Tuple[float, float, float]:
         return self.r, self.g, self.b
 
     @property
@@ -59,7 +63,7 @@ class RGBColor(Vec3Mixin):
 
 
 # RGBAColor
-@dataclass
+@dataclass(frozen=True)
 class RGBAColor(RGBColor):
     """RGBA color"""
 
@@ -67,7 +71,7 @@ class RGBAColor(RGBColor):
 
     def __post_init__(self):
         super().__post_init__()
-        self.a = clamp01(self.a)
+        object.__setattr__(self, "a", clamp01(self.a))
 
     def to_tuple(self) -> Tuple[float, float, float, float]:
         return (self.r, self.g, self.b, self.a)

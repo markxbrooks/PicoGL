@@ -5,16 +5,18 @@ Setup Materials
 from __future__ import annotations
 
 from picogl.backend.gl.api.enable import gl_enable
-from picogl.backend.gl.capability import GLMaterialFace, PhongMaterial
+from picogl.backend.gl.capability import GLMaterialFace
+from picogl.backend.gl.phong.material import PhongMaterial
 from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode,
                                           GLFace)
 from picogl.backend.legacy.core.pipeline import GLLegacyPipeline
+from picogl.core.rgbcolor import RGBAColor
 
 # Soft Phong defaults for COLOR_MATERIAL molecule draws (near modern ambient ~0.18).
 DEFAULT_SCENE_MATERIAL = PhongMaterial(
-    ambient=(0.18, 0.18, 0.18, 1.0),
-    diffuse=(0.8, 0.8, 0.8, 1.0),
-    specular=(0.15, 0.15, 0.15, 1.0),
+    ambient=RGBAColor(0.18, 0.18, 0.18, 1.0),
+    diffuse=RGBAColor(0.8, 0.8, 0.8, 1.0),
+    specular=RGBAColor(0.15, 0.15, 0.15, 1.0),
     shininess=32.0,
 )
 

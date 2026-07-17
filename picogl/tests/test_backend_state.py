@@ -13,8 +13,8 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_AMBIENT, GL_DIFFUSE,
 from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.capability import (GLBlendFactor,
                                           GLFixedFunctionCapability,
-                                          GLMaterialFace, GLPipelineCapability,
-                                          PhongMaterial)
+                                          GLMaterialFace, GLPipelineCapability)
+from picogl.backend.gl.phong.material import PhongMaterial
 from picogl.backend.gl.driver.blend import GLBlendDriver
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.gl.driver.depth import GLDepthDriver
@@ -23,6 +23,7 @@ from picogl.backend.gl.driver.geometry import GLGeometryDriver
 from picogl.backend.gl.driver.raster import (GLRasterDriver,
                                              resolve_polygon_mode_args)
 from picogl.backend.gl.driver.texture import GLTextureSystem
+from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.state.client import GLClientState
 from picogl.backend.gl.state.fill import GLFace, GLFillMode, GLLightParameter
 from picogl.backend.legacy.core.attribute_binder import LegacyAttributeBinder
@@ -31,6 +32,7 @@ from picogl.backend.state import (BlendState, DepthState, DrawCommand,
                                   GLClipPlaneState, RasterState, RenderState,
                                   RenderStateApplier, gl_value)
 from picogl.core.polygon.mode import PolygonMode
+from picogl.core.rgbcolor import RGBAColor
 
 
 class _RecordingRaster:
@@ -511,22 +513,20 @@ class TestDrawCommand(unittest.TestCase):
     def test_legacy_pipeline_delegates_to_opengl(self):
         legacy = GLLegacyPipeline()
         material = PhongMaterial(
-            ambient=(0.1, 0.2, 0.3, 1.0),
-            diffuse=(0.4, 0.5, 0.6, 1.0),
-            specular=(0.7, 0.8, 0.9, 1.0),
+            ambient=RGBAColor(0.1, 0.2, 0.3, 1.0),
+            diffuse=RGBAColor(0.4, 0.5, 0.6, 1.0),
+            specular=RGBAColor(0.7, 0.8, 0.9, 1.0),
             shininess=32.0,
         )
 
         with (
-            patch("picogl.backend.legacy.core.pipeline.glMatrixMode") as matrix_mode,
-            patch(
-                "picogl.backend.legacy.core.pipeline.glLoadIdentity"
-            ) as load_identity,
-            patch("picogl.backend.legacy.core.pipeline.gluPerspective") as perspective,
-            patch("picogl.backend.legacy.core.pipeline.glTranslatef") as translate,
-            patch("picogl.backend.legacy.core.pipeline.glLightfv") as lightfv,
-            patch("picogl.backend.legacy.core.pipeline.glMaterialfv") as materialfv,
-            patch("picogl.backend.legacy.core.pipeline.glMaterialf") as materialf,
+            patch("picogl.backend.legacy.core.pipeline.gl_matrix_mode") as matrix_mode,
+            patch("picogl.backend.legacy.core.pipeline.gl_load_identity") as load_identity,
+            patch("picogl.backend.legacy.core.pipeline.glu_perspective") as perspective,
+            patch("picogl.backend.legacy.core.pipeline.gl_translatef") as translate,
+            patch("picogl.backend.legacy.core.pipeline.gl_light_fv") as lightfv,
+            patch("picogl.backend.legacy.core.pipeline.gl_material_fv") as materialfv,
+            patch("picogl.backend.legacy.core.pipeline.gl_material_f") as materialf,
         ):
             legacy.set_projection(45.0, 1.5, 0.1, 1000.0)
             legacy.translate(1, 2, 3)
@@ -534,19 +534,37 @@ class TestDrawCommand(unittest.TestCase):
             legacy.set_material(GLMaterialFace.FRONT_AND_BACK, material)
 
         self.assertEqual(
-            matrix_mode.call_args_list, [call(GL_PROJECTION), call(GL_MODELVIEW)]
+            matrix_mode.call_args_list,
+            [
+                call(GLLegacyMatrixMode.PROJECTION),
+                call(GLLegacyMatrixMode.MODELVIEW),
+            ],
         )
         load_identity.assert_called_once_with()
         perspective.assert_called_once_with(45.0, 1.5, 0.1, 1000.0)
         translate.assert_called_once_with(1.0, 2.0, 3.0)
-        lightfv.assert_called_once_with(GL_LIGHT0, GL_POSITION, [0.0, 0.0, 10.0, 1.0])
+        lightfv.assert_called_once_with(
+            light=GL_LIGHT0,
+            param=GLLightParameter.POSITION,
+            position=[0.0, 0.0, 10.0, 1.0],
+        )
         self.assertEqual(
             materialfv.call_args_list,
             [
-                call(GLFace.FRONT_AND_BACK, GLLightParameter.AMBIENT, material.ambient),
-                call(GLFace.FRONT_AND_BACK, GLLightParameter.DIFFUSE, material.diffuse),
                 call(
-                    GLFace.FRONT_AND_BACK, GLLightParameter.SPECULAR, material.specular
+                    GLFace.FRONT_AND_BACK,
+                    GLLightParameter.AMBIENT,
+                    material.ambient.to_tuple(),
+                ),
+                call(
+                    GLFace.FRONT_AND_BACK,
+                    GLLightParameter.DIFFUSE,
+                    material.diffuse.to_tuple(),
+                ),
+                call(
+                    GLFace.FRONT_AND_BACK,
+                    GLLightParameter.SPECULAR,
+                    material.specular.to_tuple(),
                 ),
             ],
         )
@@ -559,9 +577,9 @@ class TestDrawCommand(unittest.TestCase):
     def test_glbackend_fixed_function_uses_legacy_pipeline(self):
         backend = GLBackend(binding=FakeBinding())
         material = PhongMaterial(
-            ambient=(0.1, 0.2, 0.3, 1.0),
-            diffuse=(0.4, 0.5, 0.6, 1.0),
-            specular=(0.7, 0.8, 0.9, 1.0),
+            ambient=RGBAColor(0.1, 0.2, 0.3, 1.0),
+            diffuse=RGBAColor(0.4, 0.5, 0.6, 1.0),
+            specular=RGBAColor(0.7, 0.8, 0.9, 1.0),
             shininess=32.0,
         )
 
@@ -829,24 +847,36 @@ class TestDrawCommand(unittest.TestCase):
     def test_glbackend_set_material_delegates_to_opengl(self):
         backend = GLBackend(binding=FakeBinding())
         material = PhongMaterial(
-            ambient=(0.1, 0.2, 0.3, 1.0),
-            diffuse=(0.4, 0.5, 0.6, 1.0),
-            specular=(0.7, 0.8, 0.9, 1.0),
+            ambient=RGBAColor(0.1, 0.2, 0.3, 1.0),
+            diffuse=RGBAColor(0.4, 0.5, 0.6, 1.0),
+            specular=RGBAColor(0.7, 0.8, 0.9, 1.0),
             shininess=32.0,
         )
 
         with (
-            patch("picogl.backend.legacy.core.pipeline.glMaterialfv") as materialfv,
-            patch("picogl.backend.legacy.core.pipeline.glMaterialf") as materialf,
+            patch("picogl.backend.legacy.core.pipeline.gl_material_fv") as materialfv,
+            patch("picogl.backend.legacy.core.pipeline.gl_material_f") as materialf,
         ):
             backend.legacy.set_material(GLMaterialFace.FRONT_AND_BACK, material)
 
         self.assertEqual(
             materialfv.call_args_list,
             [
-                call(GLFace.FRONT_AND_BACK, GL_AMBIENT, material.ambient),
-                call(GLFace.FRONT_AND_BACK, GL_DIFFUSE, material.diffuse),
-                call(GLFace.FRONT_AND_BACK, GL_SPECULAR, material.specular),
+                call(
+                    GLFace.FRONT_AND_BACK,
+                    GL_AMBIENT,
+                    material.ambient.to_tuple(),
+                ),
+                call(
+                    GLFace.FRONT_AND_BACK,
+                    GL_DIFFUSE,
+                    material.diffuse.to_tuple(),
+                ),
+                call(
+                    GLFace.FRONT_AND_BACK,
+                    GL_SPECULAR,
+                    material.specular.to_tuple(),
+                ),
             ],
         )
         materialf.assert_called_once_with(

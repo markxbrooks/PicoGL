@@ -10,7 +10,6 @@ integer constants for easy usage in OpenGL-related operations.
 
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import Sequence
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_BACK, GL_BLEND, GL_BLEND_DST,
                                           GL_BLEND_SRC, GL_CULL_FACE,
@@ -83,17 +82,6 @@ class GLMaterialFace(IntEnum):
     FRONT = GL_FRONT
     BACK = GL_BACK
     FRONT_AND_BACK = GL_FRONT_AND_BACK
-
-
-@dataclass(frozen=True)
-class PhongMaterial:
-    """Phong Material"""
-
-    ambient: Sequence[float] = (0.2, 0.2, 0.2, 1.0)
-    diffuse: Sequence[float] = (0.8, 0.8, 0.8, 1.0)
-    specular: Sequence[float] = (0.0, 0.0, 0.0, 1.0)
-    emission: Sequence[float] = (0.0, 0.0, 0.0, 1.0)
-    shininess: float = 0.0
 
 
 CAP_MAP = {

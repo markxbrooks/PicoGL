@@ -10,7 +10,8 @@ from picogl.backend.gl.api.light import gl_light_fv
 from picogl.backend.gl.api.material import gl_material_f, gl_material_fv
 from picogl.backend.gl.api.matrix import gl_matrix_mode
 from picogl.backend.gl.api.vertex.vertex_3f import gl_vertex_3f
-from picogl.backend.gl.capability import FACE_MAP, PhongMaterial
+from picogl.backend.gl.capability import FACE_MAP
+from picogl.backend.gl.phong.material import PhongMaterial
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.enums.legacy.scale import (gl_load_identity,
                                                   gl_translatef)
@@ -154,9 +155,9 @@ class GLLegacyPipeline:
             None
         """
         f = FACE_MAP.get(face, gl_value(face))
-        gl_material_fv(f, GLLightParameter.AMBIENT, material.ambient)
-        gl_material_fv(f, GLLightParameter.DIFFUSE, material.diffuse)
-        gl_material_fv(f, GLLightParameter.SPECULAR, material.specular)
+        gl_material_fv(f, GLLightParameter.AMBIENT, material.ambient.to_tuple())
+        gl_material_fv(f, GLLightParameter.DIFFUSE, material.diffuse.to_tuple())
+        gl_material_fv(f, GLLightParameter.SPECULAR, material.specular.to_tuple())
         gl_material_f(f, GLLightParameter.SHININESS, material.shininess)
 
     @staticmethod
@@ -214,7 +215,7 @@ class GLLegacyPipeline:
         Returns:
             None
         """
-        GLLegacyPipeline.set_color(*rgba_color)
+        GLLegacyPipeline.set_color(rgba_color.to_tuple())
 
     @staticmethod
     def tex_coord2f(coord: TexCoord2f) -> None:
