@@ -60,24 +60,19 @@ class LegacyRenderer:
 
     def init_gl(self):
         """Initialize OpenGL state."""
+        from picogl.backend.gl.api.enable import gl_enable
+        from picogl.backend.gl.capability import GLFixedFunctionCapability
+        from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
+        from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode,
+                                                  GLFace)
+
         glClearColor(0.1, 0.1, 0.2, 1.0)  # Dark blue background
         gl_enable(GL_DEPTH_TEST)
-        gl_enable(GL_LIGHTING)
-        gl_enable(GL_LIGHT0)
-        gl_enable(GL_COLOR_MATERIAL)
-        glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
-
-        # Set up lighting
-        glLightfv(GL_LIGHT0, GL_POSITION, [1.0, 1.0, 1.0, 0.0])
-        glLightfv(GL_LIGHT0, GL_AMBIENT, [0.3, 0.3, 0.3, 1.0])
-        glLightfv(GL_LIGHT0, GL_DIFFUSE, [0.8, 0.8, 0.8, 1.0])
-        glLightfv(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
-
-        # Set up material properties
-        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
-        glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, [0.8, 0.8, 0.8, 1.0])
-        glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
-        glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50.0)
+        gl_enable(GLFixedFunctionCapability.LIGHTING)
+        gl_enable(GLFixedFunctionCapability.LIGHT0)
+        gl_enable(GLCapability.COLOR_MATERIAL)
+        glColorMaterial(GLFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE)
+        gl_legacy_lighting()
 
     def load_object_data(self, obj_file_path):
         """Load teapot data from OBJ file."""
