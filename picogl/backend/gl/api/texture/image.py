@@ -15,18 +15,18 @@ from picogl.texture.gltexture import GLTexture
 def gl_compressed_tex_image(
     byte_array: array[int],
     gl_format: FloatConstant | IntConstant | LongConstant | StringConstant | Constant,
-    h: int,
+    height: int,
     level: int,
     size: int,
-    w: int,
+    width: int,
 ) -> None:
     """Issue ``glCompressedTexImage2D`` for a 2D texture."""
     glCompressedTexImage2D(
         GLTexture.TEXTURE_2D,
         level,
         gl_format,
-        w,
-        h,
+        width,
+        height,
         0,
         size,
         byte_array,
@@ -86,4 +86,24 @@ def gl_teximage3d(
         format,
         num_type,
         data,
+    )
+    
+def gl_compressed_tex_image_old(
+    byte_array: array[int],
+    gl_format: FloatConstant | IntConstant | LongConstant | StringConstant | Constant,
+    h: int,
+    level: int,
+    size: int,
+    w: int,
+) -> None:
+    """Issue ``glCompressedTexImage2D`` for a 2D texture."""
+    glCompressedTexImage2D(
+        GLTexture.TEXTURE_2D,
+        level,
+        gl_format,
+        w,
+        h,
+        0,
+        size,
+        byte_array,
     )
