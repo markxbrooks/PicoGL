@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 from array import array
+from dataclasses import dataclass
+from typing import Union
+import numpy as np
 
 import numpy as np
 from OpenGL.constant import (Constant, FloatConstant, IntConstant,
@@ -12,11 +15,8 @@ from picogl.backend.gl.enums import GLNumeric
 from picogl.texture.gltexture import GLTexture
 
 
-from dataclasses import dataclass
-from typing import Union
-import numpy as np
-
 ConstantType = Union[FloatConstant, IntConstant, LongConstant, StringConstant, Constant]
+
 
 @dataclass
 class TexImageParams:
@@ -30,10 +30,12 @@ class TexImageParams:
     num_type: int = GLNumeric.UNSIGNED_BYTE
     data: Union[bytes, np.ndarray, None] = None
     
+    
 @dataclass
 class TexImage3DParams(TexImageParams):
     """Parameters for glTexImage3D operations."""
     depth: int = 0
+
 
 @dataclass
 class CompressedTexImageParams:
@@ -45,7 +47,51 @@ class CompressedTexImageParams:
     size: int
     byte_array: array[int]
     
-    
+
+def gl_teximage2d_from_params(params: TexImageParams, target: int = GLTexture.TEXTURE_2D) -> None:
+    """Issue ``glTexImage2D``."""
+    glTexImage2D(
+        target,
+        params.level,
+        params.internalformat,
+        params.width,
+        params.height,
+        params.border,
+        params.format,
+        params.num_type,
+        params.data,
+    )
+
+
+def gl_teximage3d_from_params(params: TexImage3DParams, target: int = GLTexture.TEXTURE_2D) -> None:
+    """Issue ``glTexImage3D``."""
+    glTexImage3D(
+        target,
+        params.level,
+        params.internalformat,
+        params.width,
+        params.height,
+        params.depth,
+        params.border,
+        params.format,
+        params.num_type,
+        params.data,
+    )
+
+
+def gl_compressed_tex_image__from_params(params: CompressedTexImageParams) -> None:
+    """Issue ``glCompressedTexImage2D`` for a 2D texture."""
+    glCompressedTexImage2D(
+        GLTexture.TEXTURE_2D,
+        params.level,
+        params.gl_format,
+        params.width,
+        params.height,
+        0,
+        params.size,
+        params.byte_array,
+    )
+
 
 def gl_compressed_tex_image(
     byte_array: array[int],
