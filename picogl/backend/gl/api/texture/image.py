@@ -12,6 +12,41 @@ from picogl.backend.gl.enums import GLNumeric
 from picogl.texture.gltexture import GLTexture
 
 
+from dataclasses import dataclass
+from typing import Union
+import numpy as np
+
+ConstantType = Union[FloatConstant, IntConstant, LongConstant, StringConstant, Constant]
+
+@dataclass
+class TexImageParams:
+    """Parameters for glTexImage operations."""
+    level: int
+    internalformat: ConstantType
+    width: int
+    height: int
+    border: int
+    format: ConstantType
+    num_type: int = GLNumeric.UNSIGNED_BYTE
+    data: Union[bytes, np.ndarray, None] = None
+    
+@dataclass
+class TexImage3DParams(TexImageParams):
+    """Parameters for glTexImage3D operations."""
+    depth: int = 0
+
+@dataclass
+class CompressedTexImageParams:
+    """Parameters for glCompressedTexImage2D operations."""
+    level: int
+    gl_format: ConstantType
+    width: int
+    height: int
+    size: int
+    byte_array: array[int]
+    
+    
+
 def gl_compressed_tex_image(
     byte_array: array[int],
     gl_format: FloatConstant | IntConstant | LongConstant | StringConstant | Constant,
