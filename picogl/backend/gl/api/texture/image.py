@@ -79,7 +79,7 @@ def gl_teximage3d_from_params(params: TexImage3DParams, target: int = GLTexture.
     )
 
 
-def gl_compressed_tex_image__from_params(params: CompressedTexImageParams) -> None:
+def gl_compressed_tex_image_from_params(params: CompressedTexImageParams) -> None:
     """Issue ``glCompressedTexImage2D`` for a 2D texture."""
     glCompressedTexImage2D(
         GLTexture.TEXTURE_2D,
