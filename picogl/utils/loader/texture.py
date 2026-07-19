@@ -91,25 +91,14 @@ class TextureLoader:
             w, h = self.width, self.height
             for level in range(mip_map_count):
                 size = ((w + 3) // 4) * ((h + 3) // 4) * block_size
-                try:
-                    gl_compressed_tex_image(
-                        dds_buffer[offset : offset + size], gl_format, h, level, size, w
-                    )
-                except Exception as e:
-                    # Fallback: try with explicit byte array conversion
-                    try:
-                        import array
-
-                        byte_array = array.array(
-                            "B", dds_buffer[offset : offset + size]
-                        )
-                        gl_compressed_tex_image(
-                            byte_array, gl_format, h, level, size, w
-                        )
-                    except Exception as e2:
-                        raise RuntimeError(
-                            f"Failed to load DDS compressed texture: {e2}"
-                        )
+                gl_compressed_tex_image(
+                    dds_buffer[offset : offset + size],
+                    gl_format,
+                    h,
+                    level,
+                    size,
+                    w,
+                )
 
                 offset += size
                 w //= 2

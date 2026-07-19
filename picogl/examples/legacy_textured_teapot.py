@@ -192,7 +192,7 @@ class LegacyTexturedTeapotRenderer(LegacyQtObjectRenderer):
 
         # Bind texture if available
         if self.texture_id is not None:
-            gl_bind_texture(GLTexture.TEXTURE_2D, self.texture_id)
+            gl_bind_texture(self.texture_id, GLTexture.TEXTURE_2D)
             gl_enable(GLTexture.TEXTURE_2D)
         else:
             gl_disable(GLTexture.TEXTURE_2D)

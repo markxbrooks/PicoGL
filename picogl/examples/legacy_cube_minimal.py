@@ -25,11 +25,12 @@ from picogl.backend.gl.capability import (GLFixedFunctionCapability,
                                           GLMaterialFace, GLPipelineCapability)
 from picogl.backend.gl.enums import GLBitMask, GLDrawMode
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
+from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
 from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode,
                                           GLFace, GLFillMode, GLLight,
                                           GLLightParameter)
 from picogl.backend.gl.state.immediate import gl_immediate_drawing
-from picogl.examples.glut_renderer import GlutRenderer, gl_legacy_lighting
+from picogl.backend.glut.glut_renderer import GlutRenderer
 
 # Check for display before importing OpenGL
 if os.environ.get("DISPLAY") is None and os.name != "nt":
