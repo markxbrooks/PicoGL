@@ -20,8 +20,18 @@ from PySide6.QtOpenGLWidgets import QOpenGLWidget
 from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMessageBox,
                                QPushButton, QSplitter, QVBoxLayout, QWidget)
 
-from picogl.backend.gl.enums import GLDrawMode
+from picogl.backend.gl.api.clear import gl_clear_color, gl_clear
+from picogl.backend.gl.api.color import gl_color_material
+from picogl.backend.gl.api.enable import gl_enable
+from picogl.backend.gl.api.legacy.matrix import gl_matrix_mode
+from picogl.backend.gl.api.legacy.rotate import gl_rotate_f
+from picogl.backend.gl.api.light import gl_light_fv
+from picogl.backend.gl.api.material import gl_material_fv, gl_material_f
+from picogl.backend.gl.enums import GLDrawMode, GLBitMask
+from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
+from picogl.backend.gl.enums.legacy.scale import gl_viewport, gl_load_identity, gl_translatef, gl_scalef
 from picogl.backend.gl.state.immediate import gl_immediate_drawing
+from picogl.backend.glu.perspective import glu_perspective
 from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
 
 # Add the examples directory to the path so we can import the PDB loader
@@ -64,40 +74,40 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
         gl_enable(GL_LIGHTING)
         gl_enable(GL_LIGHT0)
         gl_enable(GL_COLOR_MATERIAL)
-        glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
+        gl_color_material(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
 
         # Set up lighting
-        glLightfv(GL_LIGHT0, GL_POSITION, [1.0, 1.0, 1.0, 0.0])
-        glLightfv(GL_LIGHT0, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
-        glLightfv(GL_LIGHT0, GL_DIFFUSE, [0.8, 0.8, 0.8, 1.0])
-        glLightfv(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
+        gl_light_fv(GL_LIGHT0, GL_POSITION, [1.0, 1.0, 1.0, 0.0])
+        gl_light_fv(GL_LIGHT0, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
+        gl_light_fv(GL_LIGHT0, GL_DIFFUSE, [0.8, 0.8, 0.8, 1.0])
+        gl_light_fv(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
 
         # Set material properties
-        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
-        glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, [0.8, 0.8, 0.8, 1.0])
-        glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
-        glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50.0)
+        gl_material_fv(GL_FRONT_AND_BACK, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
+        gl_material_fv(GL_FRONT_AND_BACK, GL_DIFFUSE, [0.8, 0.8, 0.8, 1.0])
+        gl_material_fv(GL_FRONT_AND_BACK, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
+        gl_material_f(GL_FRONT_AND_BACK, GL_SHININESS, 50.0)
 
-        glClearColor(0.0, 0.0, 0.0, 1.0)
+        gl_clear_color(0.0, 0.0, 0.0, 1.0)
 
     def resizeGL(self, width, height):
         """Handle window resize"""
-        glViewport(0, 0, width, height)
-        glMatrixMode(GL_PROJECTION)
-        glLoadIdentity()
-        gluPerspective(45.0, width / height, 0.1, 100.0)
-        glMatrixMode(GL_MODELVIEW)
+        gl_viewport(0, 0, width, height)
+        gl_matrix_mode(GL_PROJECTION)
+        gl_load_identity()
+        glu_perspective(45.0, width / height, 0.1, 100.0)
+        gl_matrix_mode(GLLegacyMatrixMode.MODELVIEW)
 
     def paintGL(self):
         """Main rendering function"""
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-        glLoadIdentity()
+        gl_clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
+        gl_load_identity()
 
         # Apply transformations
-        glTranslatef(self.translation_x, self.translation_y, -5.0)
-        glRotatef(self.rotation_x, 1.0, 0.0, 0.0)
-        glRotatef(self.rotation_y, 0.0, 1.0, 0.0)
-        glScalef(self.zoom, self.zoom, self.zoom)
+        gl_translatef(self.translation_x, self.translation_y, -5.0)
+        gl_rotate_f(self.rotation_x, 1.0, 0.0, 0.0)
+        gl_rotate_f(self.rotation_y, 0.0, 1.0, 0.0)
+        gl_scalef(self.zoom, self.zoom, self.zoom)
 
         # Render the molecular structure
         self._render_molecular_structure()
