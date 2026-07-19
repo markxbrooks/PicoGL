@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from enum import Enum
 
+from molib.pdb.materials import Vec3
 from picogl.backend.gl.api.light import gl_light_fv
 from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.state.fill import GLLight, GLLightParameter
@@ -48,6 +49,12 @@ class LightSource:
             cls,
             direction: Vec3,
     ) -> "LightSource":
+        return cls(
+            position=Vec4(direction, 0.0),
+            ambient=RGBAColor(0.0, 0.0, 0.0, 1.0),
+            diffuse=RGBAColor(1.0, 1.0, 1.0, 1.0),
+            specular=RGBAColor(0.0, 0.0, 0.0, 1.0),
+        )
 
     @classmethod
     def from_raw(
