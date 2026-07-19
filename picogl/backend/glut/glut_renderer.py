@@ -102,7 +102,7 @@ class GlutRenderer:
 
     def init_gl(self):
         """Initialize OpenGL state."""
-        gl_clear_color(0.1, 0.1, 0.2, 1.0)  # Dark blue background
+        gl_clear_color((0.1, 0.1, 0.2, 1.0))  # Dark blue background
         GLCapabilityDriver.enable(GL_DEPTH_TEST)
         GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHTING)
         GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHT0)
