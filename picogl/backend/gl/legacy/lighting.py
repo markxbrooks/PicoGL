@@ -13,8 +13,8 @@ Functions:
 
 from picogl.backend.gl.capability import (GLFixedFunctionCapability,
                                           GLMaterialFace)
+from picogl.backend.gl.lighting import GLLight, enable_light
 from picogl.backend.gl.phong.material import PhongMaterial
-from picogl.backend.legacy.core.camera.lighting import GLLight
 from picogl.core.rgbcolor import RGBAColor
 from picogl.core.vec4 import Vec4
 
@@ -36,5 +36,5 @@ DEFAULT_LEGACY_MATERIAL = PhongMaterial(
 
 def gl_legacy_lighting() -> None:
     """Install the default legacy light and material."""
-    DEFAULT_LEGACY_LIGHT.apply(GLFixedFunctionCapability.LIGHT0)
+    enable_light(GLFixedFunctionCapability.LIGHT0, DEFAULT_LEGACY_LIGHT)
     DEFAULT_LEGACY_MATERIAL.apply(GLMaterialFace.FRONT_AND_BACK)

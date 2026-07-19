@@ -4,15 +4,18 @@ from unittest.mock import call, patch
 
 from picogl.backend.gl.capability import (GLFixedFunctionCapability,
                                           GLMaterialFace)
-from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
+from picogl.backend.gl.legacy.lighting import (DEFAULT_LEGACY_LIGHT,
+                                               gl_legacy_lighting)
+from picogl.backend.gl.lighting import (EYE_SPACE_LIGHTING, GLLight,
+                                        SECONDARY_LIGHTS, apply_light,
+                                        set_secondary_lights)
 from picogl.backend.gl.phong.material import PhongMaterial
 from picogl.backend.gl.state.fill import GLLightParameter
-from picogl.backend.legacy.core.camera.lighting import GLLight
 from picogl.core.rgbcolor import RGBAColor
 from picogl.core.vec4 import Vec4
 
 
-def test_gl_light_apply_converts_value_objects_to_tuples():
+def test_apply_light_converts_value_objects_to_tuples():
     light = GLLight(
         position=Vec4(1.0, 2.0, 3.0, 0.0),
         ambient=RGBAColor(0.1, 0.2, 0.3, 1.0),
@@ -20,10 +23,8 @@ def test_gl_light_apply_converts_value_objects_to_tuples():
         specular=RGBAColor(0.7, 0.8, 0.9, 1.0),
     )
 
-    with patch(
-        "picogl.backend.legacy.core.camera.lighting.GLLightSource.lightf"
-    ) as lightf:
-        light.apply(GLFixedFunctionCapability.LIGHT0)
+    with patch("picogl.backend.gl.lighting.driver.GLLightSource.lightf") as lightf:
+        apply_light(GLFixedFunctionCapability.LIGHT0, light)
 
     assert lightf.call_args_list == [
         call(
@@ -95,10 +96,45 @@ def test_phong_material_apply_converts_value_objects_to_tuples():
 
 def test_gl_legacy_lighting_applies_default_value_objects():
     with (
-        patch.object(GLLight, "apply") as apply_light,
+        patch("picogl.backend.gl.legacy.lighting.enable_light") as enable,
         patch.object(PhongMaterial, "apply") as apply_material,
     ):
         gl_legacy_lighting()
 
-    apply_light.assert_called_once_with(GLFixedFunctionCapability.LIGHT0)
+    enable.assert_called_once_with(
+        GLFixedFunctionCapability.LIGHT0, DEFAULT_LEGACY_LIGHT
+    )
     apply_material.assert_called_once_with(GLMaterialFace.FRONT_AND_BACK)
+
+
+def test_eye_space_lighting_apply_enables_light0_and_shininess():
+    with (
+        patch("picogl.backend.gl.lighting.system.GLCapabilityDriver.enable") as enable,
+        patch("picogl.backend.gl.lighting.system.gl_light_model_fv") as light_model,
+        patch("picogl.backend.gl.lighting.system.enable_light") as enable_light,
+        patch("picogl.backend.gl.lighting.system.gl_material_f") as material_f,
+        patch("picogl.backend.gl.lighting.system.gl_pixel_store_i") as pixel_store,
+    ):
+        EYE_SPACE_LIGHTING.apply()
+
+    enable.assert_called_once_with(GLFixedFunctionCapability.LIGHTING)
+    light_model.assert_called_once()
+    enable_light.assert_called_once()
+    assert enable_light.call_args[0][0] == GLFixedFunctionCapability.LIGHT0
+    material_f.assert_called_once()
+    assert material_f.call_args[0][2] == 32.0
+    pixel_store.assert_called_once()
+
+
+def test_set_secondary_lights_enable_and_disable():
+    with (
+        patch("picogl.backend.gl.lighting.presets.enable_light") as enable,
+        patch("picogl.backend.gl.lighting.presets.disable_light") as disable,
+    ):
+        set_secondary_lights(True)
+        assert enable.call_count == len(SECONDARY_LIGHTS)
+        set_secondary_lights(False)
+        assert disable.call_count == len(SECONDARY_LIGHTS)
+        assert set(c.args[0] for c in disable.call_args_list) == set(
+            SECONDARY_LIGHTS.keys()
+        )
