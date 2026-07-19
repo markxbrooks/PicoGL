@@ -15,8 +15,8 @@ import sys
 
 import numpy as np
 
-from picogl.backend.gl.api.clear import gl_clear, gl_clear_color
-from picogl.backend.gl.api.color import gl_color_3f
+from picogl.backend.gl.api.clear import gl_clear, gl_clear_rgba_color
+from picogl.backend.gl.api.color import gl_color_3f, gl_color_material
 from picogl.backend.gl.api.matrix import gl_matrix_mode
 from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
 from picogl.backend.gl.api.rotate import gl_rotate_f
@@ -27,10 +27,20 @@ from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.enums.legacy.scale import gl_load_identity, gl_viewport
 from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
-from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode,
-                                          GLFace, GLFillMode)
+from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode, GLFillMode)
 from picogl.backend.glu.lookat import glu_look_at
+from picogl.backend.glut.buffers import glut_swap_buffers
+from picogl.backend.glut.cube import glut_wire_cube
 from picogl.backend.glut.cube_data import CUBE_COLORS, CUBE_VERTICES
+from picogl.backend.glut.display import (glut_display_func, glut_idle_func,
+                                         glut_keyboard_func, glut_motion_func,
+                                         glut_mouse_func, glut_post_redisplay,
+                                         glut_reshape_func)
+from picogl.backend.glut.enums import GLUTDisplayMode
+from picogl.backend.glut.init import (glut_create_window, glut_init,
+                                      glut_init_display_mode,
+                                      glut_init_window_size, glut_main_loop)
+from picogl.core.rgbcolor import RGBAColor
 
 # Check for display before importing OpenGL
 if os.environ.get("DISPLAY") is None and os.name != "nt":
@@ -85,30 +95,32 @@ class GlutRenderer:
     def init_glut(self):
         """Initialize GLUT window."""
         self.initialize_glut()
-        glutIdleFunc(self.idle)
+        glut_idle_func(self.idle)
 
     def initialize_glut(self):
-        glutInit(sys.argv)
-        glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH)
-        glutInitWindowSize(self.width, self.height)
-        glutCreateWindow(self.title.encode("utf-8"))
+        glut_init(sys.argv)
+        glut_init_display_mode(
+            GLUTDisplayMode.RGBA | GLUTDisplayMode.DOUBLE | GLUTDisplayMode.DEPTH
+        )
+        glut_init_window_size(self.width, self.height)
+        glut_create_window(self.title)
 
         # Set callbacks
-        glutDisplayFunc(self.display)
-        glutReshapeFunc(self.reshape)
-        glutKeyboardFunc(self.keyboard)
-        glutMouseFunc(self.mouse)
-        glutMotionFunc(self.motion)
+        glut_display_func(self.display)
+        glut_reshape_func(self.reshape)
+        glut_keyboard_func(self.keyboard)
+        glut_mouse_func(self.mouse)
+        glut_motion_func(self.motion)
 
     def init_gl(self):
         """Initialize OpenGL state."""
-        gl_clear_color((0.1, 0.1, 0.2, 1.0))  # Dark blue background
+        gl_clear_rgba_color(RGBAColor(0.1, 0.1, 0.2, 1.0))  # Dark blue background
         GLCapabilityDriver.enable(GL_DEPTH_TEST)
         GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHTING)
         GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHT0)
         GLCapabilityDriver.enable(GLCapability.COLOR_MATERIAL)
         gl_color_material(
-            GLFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE
+            GLMaterialFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE
         )
 
         gl_legacy_lighting()
@@ -178,7 +190,7 @@ class GlutRenderer:
             # Fallback: draw a simple wireframe cube
             self.draw_fallback_cube()
 
-        glutSwapBuffers()
+        glut_swap_buffers()
 
     def draw_fallback_cube(self):
         """Draw a simple wireframe cube as fallback."""
@@ -186,7 +198,7 @@ class GlutRenderer:
         red_rgb = (1.0, 0.0, 0.0)
         gl_color_3f(red_rgb)  # Red wireframe
         gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.LINE)
-        glutWireCube(2.0)
+        glut_wire_cube(2.0)
         gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.FILL)
         GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHTING)
 
@@ -218,7 +230,7 @@ class GlutRenderer:
         elif key == b" ":  # Space bar - auto rotate
             self.auto_rotate = not self.auto_rotate
 
-        glutPostRedisplay()
+        glut_post_redisplay()
 
     def mouse(self, button, state, x, y):
         """Mouse callback."""
@@ -233,7 +245,7 @@ class GlutRenderer:
             self.zoom_distance = max(1.0, self.zoom_distance - 0.5)
         elif button == 4:  # Mouse wheel down
             self.zoom_distance = min(20.0, self.zoom_distance + 0.5)
-        glutPostRedisplay()
+        glut_post_redisplay()
 
     def motion(self, x, y):
         """Mouse motion callback."""
@@ -249,13 +261,13 @@ class GlutRenderer:
 
             self.last_mouse_x = x
             self.last_mouse_y = y
-            glutPostRedisplay()
+            glut_post_redisplay()
 
     def idle(self):
         """Idle callback for animation."""
         if self.auto_rotate:
             self.rotation_y += 0.5
-            glutPostRedisplay()
+            glut_post_redisplay()
 
     def run(self):
         """Run the application."""
@@ -277,7 +289,7 @@ class GlutRenderer:
         print("   ESC: Exit")
         print("\n🚀 Starting legacy renderer...")
 
-        glutMainLoop()
+        glut_main_loop()
 
 
 def main():
