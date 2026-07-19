@@ -6,7 +6,8 @@ from enum import IntEnum
 
 from OpenGL.GL import (GL_AMBIENT, GL_AMBIENT_AND_DIFFUSE, GL_BACK, GL_DIFFUSE,
                        GL_FILL, GL_FRONT, GL_FRONT_AND_BACK, GL_LIGHT0,
-                       GL_LIGHT1, GL_LIGHTING, GL_LINE, GL_POINT, GL_POSITION,
+                       GL_LIGHT1, GL_LIGHT2, GL_LIGHT3, GL_LIGHT4,
+                       GL_LIGHTING, GL_LINE, GL_POINT, GL_POSITION,
                        GL_SPECULAR)
 from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_COLOR_MATERIAL, GL_EMISSION,
                                           GL_SHININESS)
@@ -31,6 +32,9 @@ class GLLight(Selectable, IntEnum):
     LIGHTING = GL_LIGHTING
     LIGHT0 = GL_LIGHT0
     LIGHT1 = GL_LIGHT1
+    LIGHT2 = GL_LIGHT2
+    LIGHT3 = GL_LIGHT3
+    LIGHT4 = GL_LIGHT4
 
 
 class GLCapability(IntEnum):

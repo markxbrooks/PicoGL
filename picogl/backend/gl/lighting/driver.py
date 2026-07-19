@@ -5,13 +5,13 @@ from __future__ import annotations
 from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.gl.light import GLLightSource
-from picogl.backend.gl.lighting.light import GLLight
+from picogl.backend.gl.lighting.light import GLLighting
 from picogl.backend.gl.state.fill import GLLightParameter
 
 
 def apply_light(
     capability: GLFixedFunctionCapability,
-    light: GLLight,
+    light: GLLighting,
 ) -> None:
     """Apply position and colour terms for a light source."""
     GLLightSource.lightf(
@@ -37,7 +37,7 @@ def apply_light(
 
 
 def enable_light(
-    capability: GLFixedFunctionCapability, light: GLLight | None = None
+    capability: GLFixedFunctionCapability, light: GLLighting | None = None
 ) -> None:
     """Enable a light capability and optionally apply its parameters."""
     GLCapabilityDriver.enable(capability)

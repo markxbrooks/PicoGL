@@ -6,7 +6,7 @@ from picogl.backend.gl.capability import (GLFixedFunctionCapability,
                                           GLMaterialFace)
 from picogl.backend.gl.legacy.lighting import (DEFAULT_LEGACY_LIGHT,
                                                gl_legacy_lighting)
-from picogl.backend.gl.lighting import (EYE_SPACE_LIGHTING, GLLight,
+from picogl.backend.gl.lighting import (EYE_SPACE_LIGHTING, GLLighting,
                                         SECONDARY_LIGHTS, apply_light,
                                         set_secondary_lights)
 from picogl.backend.gl.phong.material import PhongMaterial
@@ -16,7 +16,7 @@ from picogl.core.vec4 import Vec4
 
 
 def test_apply_light_converts_value_objects_to_tuples():
-    light = GLLight(
+    light = GLLighting(
         position=Vec4(1.0, 2.0, 3.0, 0.0),
         ambient=RGBAColor(0.1, 0.2, 0.3, 1.0),
         diffuse=RGBAColor(0.4, 0.5, 0.6, 1.0),

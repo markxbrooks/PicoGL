@@ -4,27 +4,27 @@ from __future__ import annotations
 
 from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.lighting.driver import disable_light, enable_light
-from picogl.backend.gl.lighting.light import GLLight, GLLightingMode
+from picogl.backend.gl.lighting.light import GLLighting, GLLightingMode
 from picogl.backend.gl.lighting.system import GLLightingSystem
 from picogl.core.rgbcolor import RGBAColor
 from picogl.core.vec4 import Vec4
 
 # Dim eye-space LIGHT0 used by legacy molecule viewers (ElMo paintGL).
-LEGACY_EYE_LIGHT = GLLight(
+LEGACY_EYE_LIGHT = GLLighting(
     position=Vec4(10.0, 10.0, 10.0, 1.0),
     ambient=RGBAColor(0.15, 0.15, 0.15, 1.0),
     diffuse=RGBAColor(0.35, 0.35, 0.35, 1.0),
     specular=RGBAColor(0.12, 0.12, 0.12, 1.0),
 )
 
-CAMERA_ORIGIN_LIGHT = GLLight(
+CAMERA_ORIGIN_LIGHT = GLLighting(
     position=Vec4(0.0, 0.0, 0.0, 1.0),
     ambient=RGBAColor(0.18, 0.18, 0.18, 1.0),
     diffuse=RGBAColor(0.7, 0.7, 0.7, 1.0),
     specular=RGBAColor(0.25, 0.25, 0.25, 1.0),
 )
 
-WORLD_LIGHT = GLLight(
+WORLD_LIGHT = GLLighting(
     position=Vec4(10.0, 10.0, 10.0, 1.0),
     ambient=RGBAColor(0.18, 0.18, 0.18, 1.0),
     diffuse=RGBAColor(0.7, 0.7, 0.7, 1.0),
@@ -38,17 +38,17 @@ _SOFT = dict(
     ambient=RGBAColor(0.08, 0.08, 0.08, 1.0),
 )
 
-SECONDARY_LIGHTS: dict[GLFixedFunctionCapability, GLLight] = {
-    GLFixedFunctionCapability.LIGHT1: GLLight(
+SECONDARY_LIGHTS: dict[GLFixedFunctionCapability, GLLighting] = {
+    GLFixedFunctionCapability.LIGHT1: GLLighting(
         position=Vec4(-10.0, -10.0, -10.0, 1.0), **_SOFT
     ),
-    GLFixedFunctionCapability.LIGHT2: GLLight(
+    GLFixedFunctionCapability.LIGHT2: GLLighting(
         position=Vec4(90.0, 90.0, 90.0, 1.0), **_SOFT
     ),
-    GLFixedFunctionCapability.LIGHT3: GLLight(
+    GLFixedFunctionCapability.LIGHT3: GLLighting(
         position=Vec4(-90.0, -90.0, -90.0, 1.0), **_SOFT
     ),
-    GLFixedFunctionCapability.LIGHT4: GLLight(
+    GLFixedFunctionCapability.LIGHT4: GLLighting(
         position=Vec4(270.0, 270.0, 270.0, 1.0), **_SOFT
     ),
 }

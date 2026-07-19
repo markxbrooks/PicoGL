@@ -5,6 +5,9 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from enum import Enum
 
+from picogl.backend.gl.api.light import gl_light_fv
+from picogl.backend.gl.capability import GLFixedFunctionCapability
+from picogl.backend.gl.state.fill import GLLight, GLLightParameter
 from picogl.core.rgbcolor import RGBAColor
 from picogl.core.vec4 import Vec4
 
@@ -19,7 +22,7 @@ class GLLightingMode(Enum):
 
 
 @dataclass(frozen=True)
-class GLLight:
+class GLLighting:
     """GL Light
 
     Defaults stay muted (near modern shader ambient ~0.18) so accidental use of
@@ -36,3 +39,10 @@ class GLLight:
     specular: RGBAColor = field(
         default_factory=lambda: RGBAColor(0.2, 0.2, 0.2, 1.0)
     )
+
+    def apply(self, light):
+        """apply the lighting"""
+        gl_light_fv(light, GLLightParameter.POSITION, self.position)
+        gl_light_fv(light, GLLightParameter.AMBIENT, self.ambient)
+        gl_light_fv(light, GLLightParameter.DIFFUSE, self.diffuse)
+        gl_light_fv(light, GLLightParameter.SPECULAR, self.specular)
