@@ -21,12 +21,15 @@ class GLLightingMode(Enum):
     WORLD_SPACE = 3
 
 
-@dataclass(frozen=True)
-class GLLighting:
-    """GL Light
+rgba_tuple = tuple[float, float, float, float]
 
-    Defaults stay muted (near modern shader ambient ~0.18) so accidental use of
-    ``GLLight()`` does not install a full-bright OpenGL LIGHT0.
+
+@dataclass(frozen=True)
+class LightSource:
+    """Light Source
+
+    Accidental construction of ``LightSource()`` produces a
+    soft white directional light suitable for general rendering.
     """
 
     position: Vec4 = field(default_factory=lambda: Vec4(10.0, 10.0, 10.0, 1.0))
@@ -39,6 +42,27 @@ class GLLighting:
     specular: RGBAColor = field(
         default_factory=lambda: RGBAColor(0.2, 0.2, 0.2, 1.0)
     )
+
+    @classmethod
+    def directional(
+            cls,
+            direction: Vec3,
+    ) -> "LightSource":
+
+    @classmethod
+    def from_raw(
+            cls,
+            position: rgba_tuple,
+            ambient: rgba_tuple,
+            diffuse: rgba_tuple,
+            specular: rgba_tuple,
+    ) -> "LightSource":
+        return cls(
+            position=Vec4(*position),
+            ambient=RGBAColor(*ambient),
+            diffuse=RGBAColor(*diffuse),
+            specular=RGBAColor(*specular),
+        )
 
     def apply(self, light):
         """apply the lighting"""

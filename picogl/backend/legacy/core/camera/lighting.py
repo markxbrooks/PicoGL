@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from picogl.backend.gl.lighting import (EYE_SPACE_LIGHTING, GLLighting,
+from picogl.backend.gl.lighting import (EYE_SPACE_LIGHTING, LightSource,
                                         GLLightingMode, LIGHTING_PRESETS,
                                         apply_light, disable_light,
                                         enable_light, set_secondary_lights)
@@ -18,7 +18,7 @@ if TYPE_CHECKING:
     from picogl.backend.gl.backend import GLBackend
 
 __all__ = [
-    "GLLighting",
+    "LightSource",
     "GLLightingMode",
     "apply_light",
     "disable_light",

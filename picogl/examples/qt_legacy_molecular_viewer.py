@@ -25,17 +25,17 @@ from picogl.backend.gl.api.color import gl_color_material
 from picogl.backend.gl.api.enable import gl_enable
 from picogl.backend.gl.api.legacy.matrix import gl_matrix_mode
 from picogl.backend.gl.api.legacy.rotate import gl_rotate_f
-from picogl.backend.gl.api.light import gl_light_fv
-from picogl.backend.gl.capability import GLMaterialFace
+from picogl.backend.gl.capability import GLMaterialFace, GLPipelineCapability
 from picogl.backend.gl.enums import GLDrawMode, GLBitMask
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.enums.legacy.scale import gl_viewport, gl_load_identity, gl_translatef, gl_scalef
-from picogl.backend.gl.lighting import GLLighting
+from picogl.backend.gl.lighting import LightSource
 from picogl.backend.gl.phong import PhongMaterial
 from picogl.backend.gl.state.fill import GLColorMaterialMode, GLCapability, GLLight
 from picogl.backend.gl.state.immediate import gl_immediate_drawing
 from picogl.backend.glu.perspective import glu_perspective
 from picogl.core.rgbcolor import RGBAColor
+from picogl.core.vec4 import Vec4
 from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
 
 # Add the examples directory to the path so we can import the PDB loader
@@ -74,17 +74,17 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
 
     def initializeGL(self):
         """Initialize OpenGL settings"""
-        gl_enable(GL_DEPTH_TEST)
-        gl_enable(GL_LIGHTING)
-        gl_enable(GL_LIGHT0)
+        gl_enable(GLPipelineCapability.DEPTH_TEST)
+        gl_enable(GLLight.LIGHTING)
+        gl_enable(GLLight.LIGHT0)
         gl_enable(GLCapability.COLOR_MATERIAL)
         gl_color_material(GLMaterialFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE)
 
         # Set up lighting
-        light = GLLighting(position=Vec4(1.0, 1.0, 1.0, 0.0),
-                           ambient=RGBAColor(0.2, 0.2, 0.2, 1.0),
-                           diffuse=RGBAColor(0.8, 0.8, 0.8, 1.0),
-                           specular=RGBAColor(1.0, 1.0, 1.0, 1.0))
+        light = LightSource(position=Vec4(1.0, 1.0, 1.0, 0.0),
+                            ambient=RGBAColor(0.2, 0.2, 0.2, 1.0),
+                            diffuse=RGBAColor(0.8, 0.8, 0.8, 1.0),
+                            specular=RGBAColor(1.0, 1.0, 1.0, 1.0))
         light.apply(GLLight.LIGHT0)
 
         # Set material properties

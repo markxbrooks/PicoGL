@@ -13,13 +13,13 @@ Functions:
 
 from picogl.backend.gl.capability import (GLFixedFunctionCapability,
                                           GLMaterialFace)
-from picogl.backend.gl.lighting import GLLighting, enable_light
+from picogl.backend.gl.lighting import LightSource, enable_light
 from picogl.backend.gl.phong.material import PhongMaterial
 from picogl.core.rgbcolor import RGBAColor
 from picogl.core.vec4 import Vec4
 
 
-DEFAULT_LEGACY_LIGHT = GLLighting(
+DEFAULT_LEGACY_LIGHT = LightSource(
     position=Vec4(1.0, 1.0, 1.0, 0.0),
     ambient=RGBAColor(0.3, 0.3, 0.3, 1.0),
     diffuse=RGBAColor(0.8, 0.8, 0.8, 1.0),

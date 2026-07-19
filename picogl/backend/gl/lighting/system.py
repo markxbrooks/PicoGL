@@ -17,7 +17,7 @@ from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.enums.legacy.scale import gl_load_identity
 from picogl.backend.gl.enums.light import GLLightModel
 from picogl.backend.gl.lighting.driver import enable_light
-from picogl.backend.gl.lighting.light import GLLighting, GLLightingMode
+from picogl.backend.gl.lighting.light import LightSource, GLLightingMode
 from picogl.backend.gl.state.fill import GLFace, GLLightParameter
 from picogl.core.rgbcolor import RGBAColor
 
@@ -30,7 +30,7 @@ class GLLightingSystem:
     ambient: RGBAColor = field(
         default_factory=lambda: RGBAColor(0.12, 0.12, 0.12, 1.0)
     )
-    lights: dict[GLFixedFunctionCapability, GLLighting] = field(default_factory=dict)
+    lights: dict[GLFixedFunctionCapability, LightSource] = field(default_factory=dict)
     material_shininess: float | None = None
     set_unpack_alignment: bool = False
 
