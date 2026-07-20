@@ -10,7 +10,7 @@ This example demonstrates how to:
 import math
 import os
 import sys
-from typing import Any
+from typing import Any, Sequence
 
 import numpy as np
 from molib.core.constants import MoLibConstant
@@ -40,6 +40,11 @@ from picogl.core.vec4 import Vec4
 from picogl.examples.utils.pdb_loader import PDBLoader
 from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
 
+CHAIN_COLORS = {
+    "A": RGBColor.GREEN,
+    "B": RGBColor.BLUE,
+}
+
 ZOOM_SCALE_FACTOR = -50.0
 
 # Add the examples directory to the path so we can import the PDB loader
@@ -51,6 +56,12 @@ def _calculate_normals(lat: float | Any, x: float, y: float) -> tuple[float, flo
     ny = y * math.cos(lat)
     nz = math.sin(lat)
     return nx, ny, nz
+
+
+def gl_legacy_draw_line(pos1: Sequence[float], pos2: Sequence[float]) -> None:
+    """Emit two vertices for a GL_LINES segment."""
+    gl_vertex_3f((pos1[0], pos1[1], pos1[2]))
+    gl_vertex_3f((pos2[0], pos2[1], pos2[2]))
 
 
 class QtLegacyMolecularViewer(QOpenGLWidget):
@@ -228,12 +239,8 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
             chain_id = atom.chain_id
 
             # Set colour based on chain
-            if chain_id == "A":
-                gl_color_rgb(RGBColor.GREEN)  # Green for chain A
-            elif chain_id == "B":
-                gl_color_rgb(RGBColor.BLUE)  # Blue for chain B
-            else:
-                gl_color_rgb(RGBColor.WHITE)  # White for other chains
+            color = CHAIN_COLORS.get(chain_id, RGBColor.WHITE)
+            gl_color_rgb(color)
 
             with gl_pushed_matrix():
                 gl_translatef(pos[0], pos[1], pos[2])
@@ -255,18 +262,12 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
                     chain_id = atom1.chain_id
 
                     # Set colour based on chain
-                    if chain_id == "A":
-                        gl_color_3f((0.0, 1.0, 0.0))  # Green for chain A
-                    elif chain_id == "B":
-                        gl_color_3f((0.0, 0.0, 1.0))  # Blue for chain B
-                    else:
-                        gl_color_3f((1.0, 1.0, 1.0))  # White for other chains
-
+                    color = CHAIN_COLORS.get(chain_id, RGBColor.WHITE)  # White for other chains
+                    gl_color_rgb(color)
                     pos1 = self.calpha_positions[atom1_idx]
                     pos2 = self.calpha_positions[atom2_idx]
 
-                    gl_vertex_3f((pos1[0], pos1[1], pos1[2]))
-                    gl_vertex_3f((pos2[0], pos2[1], pos2[2]))
+                    gl_legacy_draw_line(pos1, pos2)
 
     def _draw_wireframe_sphere(self, radius, slices, stacks):
         """Draw a sphere (filled or wireframe) using legacy OpenGL"""
@@ -317,8 +318,10 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
                     x = math.cos(lng)
                     y = math.sin(lng)
 
-                    gl_vertex_3f((x * zr0, y * zr0, z0))
-                    gl_vertex_3f((x * zr1, y * zr1, z1))
+                    gl_legacy_draw_line(
+                        (x * zr0, y * zr0, z0),
+                        (x * zr1, y * zr1, z1),
+                    )
 
     def mousePressEvent(self, event):
         """Handle mouse press for rotation"""
