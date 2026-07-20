@@ -14,7 +14,7 @@ from picogl.backend.gl.capability import FACE_MAP
 from picogl.backend.gl.phong.material import PhongMaterial
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.enums.legacy.scale import (gl_load_identity,
-                                                  gl_translatef)
+                                                  gl_translatef, gl_viewport)
 from picogl.backend.gl.state.fill import (GLColorMaterialMode, GLFace, GLLight,
                                           GLLightParameter)
 from picogl.backend.gl.state.texture import TexCoord2f, Vertex3f
@@ -87,6 +87,14 @@ class GLLegacyPipeline:
         set perspective
         """
         glu_perspective(float(fovy), float(aspect), float(znear), float(zfar))
+
+    @staticmethod
+    def set_view(height, width):
+        gl_viewport(0, 0, width, height)
+        gl_matrix_mode(GLLegacyMatrixMode.PROJECTION)
+        gl_load_identity()
+        glu_perspective(45.0, width / height, 0.1, 100.0)
+        gl_matrix_mode(GLLegacyMatrixMode.MODELVIEW)
 
     @staticmethod
     def set_projection(fovy: float, aspect: float, znear: float, zfar: float):

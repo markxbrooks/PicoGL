@@ -18,27 +18,28 @@ from PySide6.QtOpenGLWidgets import QOpenGLWidget
 from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMessageBox,
                                QPushButton, QSplitter, QVBoxLayout, QWidget)
 
+from picogl.backend.geometry import LegacyBinding
 from picogl.backend.gl.api import gl_normal_3f
 from picogl.backend.gl.api.clear import gl_clear, gl_clear_rgba_color
-from picogl.backend.gl.api.color import gl_color_material, gl_color_3f
+from picogl.backend.gl.api.color import gl_color_material, gl_color_3f, gl_color_rgb
 from picogl.backend.gl.api.enable import gl_enable
 from picogl.backend.gl.api.legacy.matrix import gl_pushed_matrix
 from picogl.backend.gl.api.legacy.rotate import gl_rotate_f
 from picogl.backend.gl.api.legacy.vertex import gl_vertex_3f
-from picogl.backend.gl.api.matrix import gl_matrix_mode
+from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.capability import GLMaterialFace, GLPipelineCapability
 from picogl.backend.gl.enums import GLDrawMode, GLBitMask
-from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
-from picogl.backend.gl.enums.legacy.scale import gl_viewport, gl_load_identity, gl_translatef, gl_scalef
+from picogl.backend.gl.enums.legacy.scale import gl_load_identity, gl_translatef, gl_scalef
 from picogl.backend.gl.lighting import LightSource
 from picogl.backend.gl.phong import PhongMaterial
 from picogl.backend.gl.state.fill import GLColorMaterialMode, GLCapability, GLLight
 from picogl.backend.gl.state.immediate import gl_immediate_drawing
-from picogl.backend.glu.perspective import glu_perspective
-from picogl.core.rgbcolor import RGBAColor
+from picogl.core.rgbcolor import RGBAColor, RGBColor
 from picogl.core.vec4 import Vec4
 from picogl.examples.utils.pdb_loader import PDBLoader
 from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
+
+ZOOM_SCALE_FACTOR = -50.0
 
 # Add the examples directory to the path so we can import the PDB loader
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "utils"))
@@ -54,6 +55,7 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
         self.calpha_atoms = []
         self.calpha_positions = None
         self.calpha_bonds = []
+        self.backend = GLBackend(binding=LegacyBinding())
 
         # Camera parameters
         self.rotation_x = 0.0
@@ -61,6 +63,9 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
         self.zoom = 1.0
         self.translation_x = 0.0
         self.translation_y = 0.0
+
+        self.x_axis_matrix = (1.0, 0.0, 0.0)
+        self.y_axis_matrix = (0.0, 1.0, 0.0)
 
         # Mouse interaction
         self.last_mouse_pos = None
@@ -74,46 +79,45 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
 
     def initializeGL(self):
         """Initialize OpenGL settings"""
+        self._setup_depth_test()
+        self._setup_lighting()
+        self._setup_materials()
+        self._setup_background_color()
+
+    def _setup_background_color(self):
+        gl_clear_rgba_color(RGBAColor.BLACK)
+
+    def _setup_depth_test(self):
         gl_enable(GLPipelineCapability.DEPTH_TEST)
+
+    def _setup_lighting(self):
+        # Set up lighting
         gl_enable(GLLight.LIGHTING)
         gl_enable(GLLight.LIGHT0)
-        gl_enable(GLCapability.COLOR_MATERIAL)
-        gl_color_material(GLMaterialFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE)
-
-        # Set up lighting
         light = LightSource(position=Vec4(1.0, 1.0, 1.0, 0.0),
                             ambient=RGBAColor.WHITE.scaled(0.2),
                             diffuse=RGBAColor.WHITE.scaled(0.8),
                             specular=RGBAColor.WHITE.with_alpha(1.0))
         light.apply(GLLight.LIGHT0)
 
+    def _setup_materials(self):
+        gl_enable(GLCapability.COLOR_MATERIAL)
+        gl_color_material(GLMaterialFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE)
         # Set material properties
         material = PhongMaterial(ambient=RGBAColor.WHITE.scaled(0.2),
                                  diffuse=RGBAColor.WHITE.scaled(0.8),
                                  specular=RGBAColor.WHITE.with_alpha(1.0),
                                  shininess=50)
         material.apply(GLMaterialFace.FRONT_AND_BACK)
-        black_rgba = RGBAColor(0.0, 0.0, 0.0, 1.0)
-        gl_clear_rgba_color(black_rgba)
 
     def resizeGL(self, width, height):
         """Handle window resize"""
-        gl_viewport(0, 0, width, height)
-        gl_matrix_mode(GLLegacyMatrixMode.PROJECTION)
-        gl_load_identity()
-        glu_perspective(45.0, width / height, 0.1, 100.0)
-        gl_matrix_mode(GLLegacyMatrixMode.MODELVIEW)
+        self.backend.legacy.set_view(height, width)
 
     def paintGL(self):
         """Main rendering function"""
         gl_clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
         gl_load_identity()
-
-        # Apply transformations
-        gl_translatef(self.translation_x, self.translation_y, -5.0)
-        gl_rotate_f(self.rotation_x, 1.0, 0.0, 0.0)
-        gl_rotate_f(self.rotation_y, 0.0, 1.0, 0.0)
-        gl_scalef(self.zoom, self.zoom, self.zoom)
 
         # Render the molecular structure
         self._render_molecular_structure()
@@ -182,10 +186,7 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
         gl_clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
         gl_load_identity()
 
-        # Apply camera transformations
-        gl_translatef(self.translation_x, self.translation_y, -50.0 * self.zoom)
-        gl_rotate_f(self.rotation_x, 1.0, 0.0, 0.0)
-        gl_rotate_f(self.rotation_y, 0.0, 1.0, 0.0)
+        self._apply_camera_transformations()
 
         # Center the structure
         if self.calpha_positions is not None and len(self.calpha_positions) > 0:
@@ -199,6 +200,15 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
         # Render bonds between C-alpha atoms
         self._render_calpha_bonds()
 
+    def _apply_camera_transformations(self):
+        """Apply camera transformations"""
+        gl_translatef(self.translation_x, self.translation_y, ZOOM_SCALE_FACTOR * self.zoom)
+        gl_rotate_f(self.rotation_x, *self.x_axis_matrix)
+        gl_rotate_f(self.rotation_y, *self.y_axis_matrix)
+
+    def _apply_zoom(self):
+        gl_scalef(self.zoom, self.zoom, self.zoom)
+
     def _render_calpha_atoms(self):
         """Render C-alpha atoms as colored wireframe spheres based on chain"""
         if self.calpha_positions is None:
@@ -211,11 +221,11 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
 
             # Set colour based on chain
             if chain_id == "A":
-                gl_color_3f((0.0, 1.0, 0.0))  # Green for chain A
+                gl_color_rgb(RGBColor.GREEN)  # Green for chain A
             elif chain_id == "B":
-                gl_color_3f((0.0, 0.0, 1.0)) # Blue for chain B
+                gl_color_rgb(RGBColor.BLUE)  # Blue for chain B
             else:
-                gl_color_3f((1.0, 1.0, 1.0))  # White for other chains
+                gl_color_rgb(RGBColor.WHITE)  # White for other chains
 
             with gl_pushed_matrix():
                 gl_translatef(pos[0], pos[1], pos[2])
@@ -230,7 +240,7 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
         with gl_immediate_drawing(GLDrawMode.LINES):
             for atom1_idx, atom2_idx in self.calpha_bonds:
                 if 0 <= atom1_idx < len(self.calpha_positions) and 0 <= atom2_idx < len(
-                    self.calpha_positions
+                        self.calpha_positions
                 ):
                     # Get the chain ID for the first atom to determine colour
                     atom1 = self.calpha_atoms[atom1_idx]
@@ -240,7 +250,7 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
                     if chain_id == "A":
                         gl_color_3f((0.0, 1.0, 0.0))  # Green for chain A
                     elif chain_id == "B":
-                        gl_color_3f((0.0, 0.0, 1.0)) # Blue for chain B
+                        gl_color_3f((0.0, 0.0, 1.0))  # Blue for chain B
                     else:
                         gl_color_3f((1.0, 1.0, 1.0))  # White for other chains
 
