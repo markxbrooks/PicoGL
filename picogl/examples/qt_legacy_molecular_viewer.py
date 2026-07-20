@@ -46,11 +46,11 @@ ZOOM_SCALE_FACTOR = -50.0
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "utils"))
 
 
-def _calculate_normals(lat0: float | Any, x: float, y: float) -> tuple[float, float, float]:
-    nx0 = x * math.cos(lat0)
-    ny0 = y * math.cos(lat0)
-    nz0 = math.sin(lat0)
-    return nx0, ny0, nz0
+def _calculate_normals(lat: float | Any, x: float, y: float) -> tuple[float, float, float]:
+    nx = x * math.cos(lat)
+    ny = y * math.cos(lat)
+    nz = math.sin(lat)
+    return nx, ny, nz
 
 
 class QtLegacyMolecularViewer(QOpenGLWidget):
