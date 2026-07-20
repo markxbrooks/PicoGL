@@ -270,7 +270,6 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
 
     def _draw_wireframe_sphere(self, radius, slices, stacks):
         """Draw a sphere (filled or wireframe) using legacy OpenGL"""
-        import math
 
         for i in range(stacks):
             lat0 = math.pi * (-0.5 + i / stacks)
