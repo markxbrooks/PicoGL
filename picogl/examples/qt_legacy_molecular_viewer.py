@@ -13,17 +13,16 @@ import sys
 
 import numpy as np
 from molib.core.constants import MoLibConstant
-from OpenGL.GL import *
-from OpenGL.raw.GLU import gluPerspective
 from PySide6.QtCore import Qt
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
 from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMessageBox,
                                QPushButton, QSplitter, QVBoxLayout, QWidget)
 
+from picogl.backend.gl.api import gl_normal_3f
 from picogl.backend.gl.api.clear import gl_clear, gl_clear_rgba_color
 from picogl.backend.gl.api.color import gl_color_material, gl_color_3f
 from picogl.backend.gl.api.enable import gl_enable
-# from picogl.backend.gl.api.legacy.matrix import gl_matrix_mode
+from picogl.backend.gl.api.legacy.matrix import gl_pushed_matrix
 from picogl.backend.gl.api.legacy.rotate import gl_rotate_f
 from picogl.backend.gl.api.legacy.vertex import gl_vertex_3f
 from picogl.backend.gl.api.matrix import gl_matrix_mode
@@ -212,19 +211,16 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
 
             # Set colour based on chain
             if chain_id == "A":
-                glColor3f(0.0, 1.0, 0.0)  # Green for chain A
+                gl_color_3f((0.0, 1.0, 0.0))  # Green for chain A
             elif chain_id == "B":
-                glColor3f(0.0, 0.0, 1.0)  # Blue for chain B
+                gl_color_3f((0.0, 0.0, 1.0)) # Blue for chain B
             else:
-                glColor3f(1.0, 1.0, 1.0)  # White for other chains
+                gl_color_3f((1.0, 1.0, 1.0))  # White for other chains
 
-            glPushMatrix()
-            glTranslatef(pos[0], pos[1], pos[2])
-
-            # Draw a small wireframe sphere for each C-alpha atom
-            self._draw_wireframe_sphere(0.5, 8, 6)
-
-            glPopMatrix()
+            with gl_pushed_matrix():
+                gl_translatef(pos[0], pos[1], pos[2])
+                # Draw a small wireframe sphere for each C-alpha atom
+                self._draw_wireframe_sphere(0.5, 8, 6)
 
     def _render_calpha_bonds(self):
         """Render bonds between C-alpha atoms with chain-based colors"""
@@ -285,12 +281,12 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
                         nz1 = math.sin(lat1)
 
                         # First vertex of the strip
-                        glNormal3f(nx0, ny0, nz0)
-                        glVertex3f(x * zr0, y * zr0, z0)
+                        gl_normal_3f(nx0, ny0, nz0)
+                        gl_vertex_3f((x * zr0, y * zr0, z0))
 
                         # Second vertex of the strip
-                        glNormal3f(nx1, ny1, nz1)
-                        glVertex3f(x * zr1, y * zr1, z1)
+                        gl_normal_3f(nx1, ny1, nz1)
+                        gl_vertex_3f((x * zr1, y * zr1, z1))
 
             # Draw wireframe lines for the latitude rings
             with gl_immediate_drawing(GLDrawMode.LINE_LOOP):
@@ -299,7 +295,7 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
                     x = math.cos(lng)
                     y = math.sin(lng)
 
-                    glVertex3f(x * zr0, y * zr0, z0)
+                    gl_vertex_3f((x * zr0, y * zr0, z0))
 
             # Draw vertical lines connecting the rings
             with gl_immediate_drawing(GLDrawMode.LINES):
@@ -308,8 +304,8 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
                     x = math.cos(lng)
                     y = math.sin(lng)
 
-                    glVertex3f(x * zr0, y * zr0, z0)
-                    glVertex3f(x * zr1, y * zr1, z1)
+                    gl_vertex_3f((x * zr0, y * zr0, z0))
+                    gl_vertex_3f((x * zr1, y * zr1, z1))
 
     def mousePressEvent(self, event):
         """Handle mouse press for rotation"""
