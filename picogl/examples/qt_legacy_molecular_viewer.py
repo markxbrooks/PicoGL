@@ -7,9 +7,10 @@ This example demonstrates how to:
 3. Display them as a white wireframe model using Qt and legacy OpenGL
 4. Provide interactive controls for rotation and zoom
 """
-
+import math
 import os
 import sys
+from typing import Any
 
 import numpy as np
 from molib.core.constants import MoLibConstant
@@ -43,6 +44,13 @@ ZOOM_SCALE_FACTOR = -50.0
 
 # Add the examples directory to the path so we can import the PDB loader
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "utils"))
+
+
+def _calculate_normals(lat0: float | Any, x: float, y: float) -> tuple[float, float, float]:
+    nx0 = x * math.cos(lat0)
+    ny0 = y * math.cos(lat0)
+    nz0 = math.sin(lat0)
+    return nx0, ny0, nz0
 
 
 class QtLegacyMolecularViewer(QOpenGLWidget):
@@ -282,13 +290,9 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
                         y = math.sin(lng)
 
                         # Calculate normals for proper lighting
-                        nx0 = x * math.cos(lat0)
-                        ny0 = y * math.cos(lat0)
-                        nz0 = math.sin(lat0)
+                        nx0, ny0, nz0 = _calculate_normals(lat0, x, y)
 
-                        nx1 = x * math.cos(lat1)
-                        ny1 = y * math.cos(lat1)
-                        nz1 = math.sin(lat1)
+                        nx1, ny1, nz1 = _calculate_normals(lat1, x, y)
 
                         # First vertex of the strip
                         gl_normal_3f(nx0, ny0, nz0)
