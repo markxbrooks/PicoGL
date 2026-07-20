@@ -7,8 +7,8 @@ from enum import Enum
 
 from molib.pdb.materials import Vec3
 from picogl.backend.gl.api.light import gl_light_fv
-from picogl.backend.gl.capability import GLFixedFunctionCapability
-from picogl.backend.gl.state.fill import GLLight, GLLightParameter
+from picogl.backend.gl.state.fill import GLLightParameter
+from picogl.core.data_type import vec4_tuple, rgba_tuple
 from picogl.core.rgbcolor import RGBAColor
 from picogl.core.vec4 import Vec4
 
@@ -20,9 +20,6 @@ class GLLightingMode(Enum):
     CAMERA_FIXED = 1
     CAMERA_ORIGIN = 2
     WORLD_SPACE = 3
-
-
-rgba_tuple = tuple[float, float, float, float]
 
 
 @dataclass(frozen=True)
@@ -59,7 +56,7 @@ class LightSource:
     @classmethod
     def from_raw(
             cls,
-            position: rgba_tuple,
+            position: vec4_tuple,
             ambient: rgba_tuple,
             diffuse: rgba_tuple,
             specular: rgba_tuple,
@@ -73,7 +70,7 @@ class LightSource:
 
     def apply(self, light):
         """apply the lighting"""
-        gl_light_fv(light, GLLightParameter.POSITION, self.position)
-        gl_light_fv(light, GLLightParameter.AMBIENT, self.ambient)
-        gl_light_fv(light, GLLightParameter.DIFFUSE, self.diffuse)
-        gl_light_fv(light, GLLightParameter.SPECULAR, self.specular)
+        gl_light_fv(light, GLLightParameter.POSITION, self.position.to_tuple())
+        gl_light_fv(light, GLLightParameter.AMBIENT, self.ambient.to_tuple())
+        gl_light_fv(light, GLLightParameter.DIFFUSE, self.diffuse.to_tuple())
+        gl_light_fv(light, GLLightParameter.SPECULAR, self.specular.to_tuple())

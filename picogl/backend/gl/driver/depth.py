@@ -1,10 +1,14 @@
+"""
+GL Depth Driver
+"""
+
 from typing import TYPE_CHECKING, Any
 
 from OpenGL.GL import (GL_DEPTH_WRITEMASK, glDepthFunc, glDepthMask,
                        glGetBooleanv)
 
 from picogl.backend.gl.capability import GLPipelineCapability
-from picogl.backend.gl.driver.applyable import Applyable
+from picogl.backend.gl.driver.applicable_state import ApplicableState
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.gl.glfunc import GLDepthFunc
 
@@ -12,7 +16,7 @@ if TYPE_CHECKING:
     from picogl.backend.state import DepthState
 
 
-class GLDepthDriver(Applyable):
+class GLDepthDriver(ApplicableState):
     """Depth test, write mask, and depth-function operations."""
 
     def __init__(self, capabilities: GLCapabilityDriver):

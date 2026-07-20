@@ -2,9 +2,11 @@
 
 from dataclasses import dataclass
 
+from picogl.core.mixin.vec4 import Vec4Mixin
+
 
 @dataclass(frozen=True)
-class Vec4:
+class Vec4(Vec4Mixin):
     """A four-component vector, including homogeneous coordinates."""
 
     x: float

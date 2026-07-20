@@ -18,9 +18,13 @@ Interoperability**: If you plan to convert to/from common formats (tuples, lists
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Tuple
+from typing import Tuple, ClassVar
+
+from typing_extensions import Self
 
 from picogl.core.mixin.vec3 import Vec3Mixin, clamp01
+from picogl.core.mixin.vec4 import Vec4Mixin
+
 
 # Utility
 
@@ -35,6 +39,15 @@ class RGBColor(Vec3Mixin):
     r: float = 1.0
     g: float = 1.0
     b: float = 1.0
+
+    WHITE: ClassVar["Self"]
+    BLACK: ClassVar["Self"]
+    RED: ClassVar["Self"]
+    GREEN: ClassVar["Self"]
+    BLUE: ClassVar["Self"]
+    YELLOW: ClassVar["Self"]
+    MAGENTA: ClassVar["Self"]
+    CYAN: ClassVar["Self"]
 
     def __post_init__(self):
         # Enforce constraints on init
@@ -54,6 +67,10 @@ class RGBColor(Vec3Mixin):
         return 1.0
 
     @classmethod
+    def from_tuple(cls, rgb: Tuple[float, float, float]) -> RGBColor:
+        return cls(*rgb)
+
+    @classmethod
     def from_rgba_tuple(cls, t: Tuple[float, float, float, float]):
         r, g, b, _a = t
         return cls(r, g, b)
@@ -61,10 +78,17 @@ class RGBColor(Vec3Mixin):
     def with_alpha(self, alpha: float) -> "RGBAColor":
         return RGBAColor(self.r, self.g, self.b, alpha)
 
+    def scaled(self, factor: float) -> Self:
+        return type(self)(
+            self.r * factor,
+            self.g * factor,
+            self.b * factor,
+        )
+
 
 # RGBAColor
 @dataclass(frozen=True)
-class RGBAColor(RGBColor):
+class RGBAColor(RGBColor, Vec4Mixin):
     """RGBA color"""
 
     a: float = 1.0
@@ -74,14 +98,34 @@ class RGBAColor(RGBColor):
         object.__setattr__(self, "a", clamp01(self.a))
 
     def to_tuple(self) -> Tuple[float, float, float, float]:
-        return (self.r, self.g, self.b, self.a)
+        return self.r, self.g, self.b, self.a
 
     def without_alpha(self) -> RGBColor:
         return RGBColor(self.r, self.g, self.b)
 
+    def scaled(self, factor: float) -> Self:
+        return type(self)(
+            self.r * factor,
+            self.g * factor,
+            self.b * factor,
+            self.a,
+        )
 
-def clamp01_old(x: float) -> float:
-    return max(0.0, min(1.0, x))
+
+_COLOR_VALUES = {
+    "WHITE": (1.0, 1.0, 1.0),
+    "BLACK": (0.0, 0.0, 0.0),
+    "RED": (1.0, 0.0, 0.0),
+    "GREEN": (0.0, 1.0, 0.0),
+    "BLUE": (0.0, 0.0, 1.0),
+    "YELLOW": (1.0, 1.0, 0.0),
+    "MAGENTA": (1.0, 0.0, 1.0),
+    "CYAN": (0.0, 1.0, 1.0),
+}
+
+for name, rgb in _COLOR_VALUES.items():
+    setattr(RGBColor, name, RGBColor(*rgb))
+    setattr(RGBAColor, name, RGBAColor(*rgb, 1.0))
 
 
 @dataclass(frozen=False)

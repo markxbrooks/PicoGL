@@ -21,10 +21,12 @@ from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMessageBox,
                                QPushButton, QSplitter, QVBoxLayout, QWidget)
 
 from picogl.backend.gl.api.clear import gl_clear, gl_clear_rgba_color
-from picogl.backend.gl.api.color import gl_color_material
+from picogl.backend.gl.api.color import gl_color_material, gl_color_3f
 from picogl.backend.gl.api.enable import gl_enable
-from picogl.backend.gl.api.legacy.matrix import gl_matrix_mode
+# from picogl.backend.gl.api.legacy.matrix import gl_matrix_mode
 from picogl.backend.gl.api.legacy.rotate import gl_rotate_f
+from picogl.backend.gl.api.legacy.vertex import gl_vertex_3f
+from picogl.backend.gl.api.matrix import gl_matrix_mode
 from picogl.backend.gl.capability import GLMaterialFace, GLPipelineCapability
 from picogl.backend.gl.enums import GLDrawMode, GLBitMask
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
@@ -36,12 +38,11 @@ from picogl.backend.gl.state.immediate import gl_immediate_drawing
 from picogl.backend.glu.perspective import glu_perspective
 from picogl.core.rgbcolor import RGBAColor
 from picogl.core.vec4 import Vec4
+from picogl.examples.utils.pdb_loader import PDBLoader
 from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
 
 # Add the examples directory to the path so we can import the PDB loader
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "utils"))
-
-from pdb_loader import Atom, PDBLoader
 
 
 class QtLegacyMolecularViewer(QOpenGLWidget):
@@ -82,15 +83,15 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
 
         # Set up lighting
         light = LightSource(position=Vec4(1.0, 1.0, 1.0, 0.0),
-                            ambient=RGBAColor(0.2, 0.2, 0.2, 1.0),
-                            diffuse=RGBAColor(0.8, 0.8, 0.8, 1.0),
-                            specular=RGBAColor(1.0, 1.0, 1.0, 1.0))
+                            ambient=RGBAColor.WHITE.scaled(0.2),
+                            diffuse=RGBAColor.WHITE.scaled(0.8),
+                            specular=RGBAColor.WHITE.with_alpha(1.0))
         light.apply(GLLight.LIGHT0)
 
         # Set material properties
-        material = PhongMaterial(ambient=RGBAColor(0.2, 0.2, 0.2, 1.0),
-                                 diffuse=RGBAColor(0.8, 0.8, 0.8, 1.0),
-                                 specular=RGBAColor(1.0, 1.0, 1.0, 1.0),
+        material = PhongMaterial(ambient=RGBAColor.WHITE.scaled(0.2),
+                                 diffuse=RGBAColor.WHITE.scaled(0.8),
+                                 specular=RGBAColor.WHITE.with_alpha(1.0),
                                  shininess=50)
         material.apply(GLMaterialFace.FRONT_AND_BACK)
         black_rgba = RGBAColor(0.0, 0.0, 0.0, 1.0)
@@ -99,7 +100,7 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
     def resizeGL(self, width, height):
         """Handle window resize"""
         gl_viewport(0, 0, width, height)
-        gl_matrix_mode(GL_PROJECTION)
+        gl_matrix_mode(GLLegacyMatrixMode.PROJECTION)
         gl_load_identity()
         glu_perspective(45.0, width / height, 0.1, 100.0)
         gl_matrix_mode(GLLegacyMatrixMode.MODELVIEW)
@@ -177,56 +178,21 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
 
         print(f"✓ Generated {len(self.calpha_bonds)} C-alpha bonds")
 
-    def initializeGL(self):
-        """Initialize OpenGL state"""
-        glClearColor(0.0, 0.0, 0.0, 1.0)  # Black background
-        gl_enable(GL_DEPTH_TEST)
-        gl_enable(GL_LINE_SMOOTH)
-        gl_enable(GL_BLEND)
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-        glLineWidth(2.0)
-
-        # Set up lighting for better visibility
-        gl_enable(GL_LIGHTING)
-        gl_enable(GL_LIGHT0)
-        gl_enable(GL_COLOR_MATERIAL)
-        glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
-
-        # Set up light
-        light_pos = [1.0, 1.0, 1.0, 0.0]
-        glLightfv(GL_LIGHT0, GL_POSITION, light_pos)
-
-        ambient = [0.2, 0.2, 0.2, 1.0]
-        diffuse = [0.8, 0.8, 0.8, 1.0]
-        glLightfv(GL_LIGHT0, GL_AMBIENT, ambient)
-        glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse)
-
-    def resizeGL(self, width, height):
-        """Handle window resize"""
-        glViewport(0, 0, width, height)
-        glMatrixMode(GL_PROJECTION)
-        glLoadIdentity()
-
-        # Set up perspective projection
-        aspect = width / height if height > 0 else 1.0
-        gluPerspective(45.0, aspect, 0.1, 1000.0)
-
-        glMatrixMode(GL_MODELVIEW)
-
-    def paintGL(self):
+    def _render_molecular_structure(self):
         """Render the molecular structure"""
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-        glLoadIdentity()
+        gl_clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
+        gl_load_identity()
 
         # Apply camera transformations
-        glTranslatef(self.translation_x, self.translation_y, -50.0 * self.zoom)
-        glRotatef(self.rotation_x, 1.0, 0.0, 0.0)
-        glRotatef(self.rotation_y, 0.0, 1.0, 0.0)
+        gl_translatef(self.translation_x, self.translation_y, -50.0 * self.zoom)
+        gl_rotate_f(self.rotation_x, 1.0, 0.0, 0.0)
+        gl_rotate_f(self.rotation_y, 0.0, 1.0, 0.0)
 
         # Center the structure
         if self.calpha_positions is not None and len(self.calpha_positions) > 0:
             center = np.mean(self.calpha_positions, axis=0)
-            glTranslatef(-center[0], -center[1], -center[2])
+            gl_translatef(
+                -center[0], -center[1], -center[2])
 
         # Render C-alpha atoms as white wireframe spheres
         self._render_calpha_atoms()
@@ -276,17 +242,17 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
 
                     # Set colour based on chain
                     if chain_id == "A":
-                        glColor3f(0.0, 1.0, 0.0)  # Green for chain A
+                        gl_color_3f((0.0, 1.0, 0.0))  # Green for chain A
                     elif chain_id == "B":
-                        glColor3f(0.0, 0.0, 1.0)  # Blue for chain B
+                        gl_color_3f((0.0, 0.0, 1.0)) # Blue for chain B
                     else:
-                        glColor3f(1.0, 1.0, 1.0)  # White for other chains
+                        gl_color_3f((1.0, 1.0, 1.0))  # White for other chains
 
                     pos1 = self.calpha_positions[atom1_idx]
                     pos2 = self.calpha_positions[atom2_idx]
 
-                    glVertex3f(pos1[0], pos1[1], pos1[2])
-                    glVertex3f(pos2[0], pos2[1], pos2[2])
+                    gl_vertex_3f((pos1[0], pos1[1], pos1[2]))
+                    gl_vertex_3f((pos2[0], pos2[1], pos2[2]))
 
     def _draw_wireframe_sphere(self, radius, slices, stacks):
         """Draw a sphere (filled or wireframe) using legacy OpenGL"""

@@ -3,9 +3,11 @@ Phong Material
 """
 
 from dataclasses import dataclass, field
+from math import e
 
 from picogl.backend.gl.api.material import gl_material_f, gl_material_fv
 from picogl.backend.gl.capability import GLMaterialFace
+from picogl.core.data_type import rgba_tuple
 from picogl.backend.gl.state.fill import GLLightParameter
 from picogl.core.rgbcolor import RGBAColor
 
@@ -27,6 +29,21 @@ class PhongMaterial:
         default_factory=lambda: RGBAColor(0.0, 0.0, 0.0, 1.0)
     )
     shininess: float = 0.0
+
+    @classmethod
+    def from_raw(
+            cls,
+            emission: rgba_tuple,
+            ambient: rgba_tuple,
+            diffuse: rgba_tuple,
+            specular: rgba_tuple,
+    ) -> "PhongMaterial":
+        return cls(
+            emission=RGBAColor(*emission),
+            ambient=RGBAColor(*ambient),
+            diffuse=RGBAColor(*diffuse),
+            specular=RGBAColor(*specular),
+        )
 
     def apply(
         self, face: GLMaterialFace = GLMaterialFace.FRONT_AND_BACK

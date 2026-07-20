@@ -1,10 +1,12 @@
 """
-Applyable State
+Applicable State
 """
 
+from picogl.core.protocol.applicable import Applicable
 
-class Applyable:
-    """Applyable State"""
+
+class ApplicableState(Applicable):
+    """Applicable State"""
 
     def __init__(self):
         self._current = None

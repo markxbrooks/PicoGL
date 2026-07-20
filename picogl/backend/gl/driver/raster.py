@@ -13,7 +13,7 @@ from OpenGL.GL import (GL_POINT_SIZE_RANGE, glGetFloatv, glLineWidth,
                        glPointSize, glPolygonMode)
 from OpenGL.raw.GL.VERSION.GL_1_1 import glPolygonOffset
 
-from picogl.backend.gl.driver.applyable import Applyable
+from picogl.backend.gl.driver.applicable_state import ApplicableState
 from picogl.backend.gl.state.fill import GLFace, GLFillMode
 from picogl.backend.state import gl_value
 
@@ -35,7 +35,7 @@ def _gl_set_polygon_mode(face_val: int, mode_val: int) -> None:
     glPolygonMode(face_val, mode_val)
 
 
-class GLRasterDriver(Applyable):
+class GLRasterDriver(ApplicableState):
     """Fixed-function raster state with write-only gl and cached current values."""
 
     _shared: Optional["GLRasterDriver"] = None
