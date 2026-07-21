@@ -13,7 +13,7 @@ from picogl.backend.gl.api.legacy.matrix import gl_pushed_matrix
 from picogl.backend.gl.capability import GLPipelineCapability
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums.legacy.scale import (gl_rotatef, gl_scalef,
-                                                  gl_translatef, gl_viewport)
+                                                  gl_translate_f, gl_viewport)
 from picogl.backend.legacy.core.pipeline import LegacyPipeline
 from picogl.renderer import MeshData
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
@@ -63,12 +63,12 @@ class GLCubeWidget(QOpenGLWidget):
     def paintGL(self):
         gl_clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
         with gl_pushed_matrix():
-            gl_translatef(0.0, 0.0, float(self.zoom))
+            gl_translate_f(0.0, 0.0, float(self.zoom))
             gl_scalef(20.0, 20.0, 20.0)
             gl_rotatef(float(self.rot_x), 1.0, 0.0, 0.0)
             gl_rotatef(float(self.rot_y), 0.0, 1.0, 0.0)
             gl_rotatef(float(self.rot_z), 0.0, 0.0, 1.0)
-            gl_translatef(-0.5, -0.5, -0.5)
+            gl_translate_f(-0.5, -0.5, -0.5)
 
             if self.cube_mesh is not None:
                 with self.cube_mesh:

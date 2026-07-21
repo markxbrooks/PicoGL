@@ -6,6 +6,8 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (glLoadIdentity, glPopMatrix,
                                           glPushMatrix, glRotatef, glScalef,
                                           glTranslatef, glViewport)
 
+from picogl.core.vec3 import Vec3
+
 
 def gl_viewport(x, y, width, height):
     glViewport(x, y, width, height)
@@ -23,8 +25,12 @@ def gl_push_matrix():
     glPushMatrix()
 
 
-def gl_translatef(x: float, y: float, zoom: float):
+def gl_translate_f(x: float, y: float, zoom: float):
     glTranslatef(x, y, float(zoom))
+
+
+def gl_translate_vec3(vec3: Vec3):
+    glTranslatef(vec3.x, vec3.y, float(vec3.z))
 
 
 def gl_scalef(x: float, y: float, z: float):

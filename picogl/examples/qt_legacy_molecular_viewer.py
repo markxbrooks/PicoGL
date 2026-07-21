@@ -10,7 +10,7 @@ This example demonstrates how to:
 import math
 import os
 import sys
-from typing import Sequence
+from typing import Sequence, Any
 
 import numpy as np
 from molib.core.constants import MoLibConstant
@@ -24,13 +24,14 @@ from picogl.backend.gl.api.clear import gl_clear, gl_clear_rgba_color
 from picogl.backend.gl.api.color import gl_color_material, gl_color_rgb
 from picogl.backend.gl.api.enable import gl_enable
 from picogl.backend.gl.api.legacy.matrix import gl_pushed_matrix
-from picogl.backend.gl.api.legacy.rotate import gl_rotate_f
-from picogl.backend.gl.api.legacy.vertex import gl_vertex_tuple_3f, gl_vertex_vec3
+from picogl.backend.gl.api.legacy.rotate import gl_rotate_f, gl_rotate_vec3
+from picogl.backend.gl.api.legacy.vertex import gl_vertex_tuple_3f, gl_vertex_vec3, gl_vertex_any
 from picogl.backend.gl.api.vertex.normal_3f import gl_normal_vec3
 from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.capability import GLMaterialFace, GLPipelineCapability
 from picogl.backend.gl.enums import GLDrawMode, GLBitMask
-from picogl.backend.gl.enums.legacy.scale import gl_load_identity, gl_translatef, gl_scalef
+from picogl.backend.gl.enums.legacy.scale import gl_load_identity, gl_translate_f, gl_scalef, gl_translate_vec3
+from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
 from picogl.backend.gl.lighting import LightSource
 from picogl.backend.gl.phong import PhongMaterial
 from picogl.backend.gl.state.fill import GLColorMaterialMode, GLCapability, GLLight
@@ -56,14 +57,22 @@ Point3 = Vec3 | Sequence[float]
 
 def gl_legacy_draw_line(pos1: Point3, pos2: Point3) -> None:
     """Emit two vertices for a GL_LINES segment."""
-    if isinstance(pos1, Vec3):
-        gl_vertex_vec3(pos1)
-    else:
-        gl_vertex_tuple_3f((pos1[0], pos1[1], pos1[2]))
-    if isinstance(pos2, Vec3):
-        gl_vertex_vec3(pos2)
-    else:
-        gl_vertex_tuple_3f((pos2[0], pos2[1], pos2[2]))
+    gl_vertex_any(pos1)
+    gl_vertex_any(pos2)
+
+
+def get_lat_for_stack_no(i: int, stacks) -> float | Any:
+    lat0 = math.pi * (-0.5 + i / stacks)
+    return lat0
+
+
+def gl_legacy_draw_line_with_normal(vertex0: Vec3, vertex1: Vec3):
+    """gl legacy draw line with normal"""
+    gl_normal_vec3(vertex0.normalized())
+    gl_vertex_vec3(vertex0)
+
+    gl_normal_vec3(vertex1.normalized())
+    gl_vertex_vec3(vertex1)
 
 
 class QtLegacyMolecularViewer(QOpenGLWidget):
@@ -85,8 +94,8 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
         self.translation_x = 0.0
         self.translation_y = 0.0
 
-        self.x_axis_matrix = (1.0, 0.0, 0.0)
-        self.y_axis_matrix = (0.0, 1.0, 0.0)
+        self.x_axis_matrix = Vec3(1.0, 0.0, 0.0)
+        self.y_axis_matrix = Vec3(0.0, 1.0, 0.0)
 
         # Mouse interaction
         self.last_mouse_pos = None
@@ -212,7 +221,7 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
         # Center the structure
         if self.calpha_positions is not None and len(self.calpha_positions) > 0:
             center = np.mean(self.calpha_positions, axis=0)
-            gl_translatef(
+            gl_translate_f(
                 -center[0], -center[1], -center[2])
 
         # Render C-alpha atoms as white wireframe spheres
@@ -223,9 +232,9 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
 
     def _apply_camera_transformations(self):
         """Apply camera transformations"""
-        gl_translatef(self.translation_x, self.translation_y, ZOOM_SCALE_FACTOR * self.zoom)
-        gl_rotate_f(self.rotation_x, *self.x_axis_matrix)
-        gl_rotate_f(self.rotation_y, *self.y_axis_matrix)
+        gl_translate_vec3(Vec3(self.translation_x, self.translation_y, ZOOM_SCALE_FACTOR * self.zoom))
+        gl_rotate_vec3(self.rotation_x, self.x_axis_matrix)
+        gl_rotate_vec3(self.rotation_y, self.y_axis_matrix)
 
     def _apply_zoom(self):
         gl_scalef(self.zoom, self.zoom, self.zoom)
@@ -245,7 +254,7 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
             gl_color_rgb(color)
 
             with gl_pushed_matrix():
-                gl_translatef(pos[0], pos[1], pos[2])
+                gl_translate_f(pos[0], pos[1], pos[2])
                 # Draw a small wireframe sphere for each C-alpha atom
                 self._draw_wireframe_sphere(0.5, 8, 6)
 
@@ -275,8 +284,8 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
         """Draw a sphere (filled or wireframe) using legacy OpenGL"""
 
         for i in range(stacks):
-            lat0 = math.pi * (-0.5 + i / stacks)
-            lat1 = math.pi * (-0.5 + (i + 1) / stacks)
+            lat0 = get_lat_for_stack_no(i, stacks)
+            lat1 = get_lat_for_stack_no(i + 1, stacks)
 
             if not self.wireframe_mode:
                 # Draw filled triangles between the two latitude rings
@@ -285,12 +294,7 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
                         lng = 2 * math.pi * j / slices
                         vertex0 = Vec3.sphere(radius, lat0, lng)
                         vertex1 = Vec3.sphere(radius, lat1, lng)
-
-                        gl_normal_vec3(vertex0.normalized())
-                        gl_vertex_vec3(vertex0)
-
-                        gl_normal_vec3(vertex1.normalized())
-                        gl_vertex_vec3(vertex1)
+                        gl_legacy_draw_line_with_normal(vertex0, vertex1)
 
             # Draw wireframe lines for the latitude rings
             with gl_immediate_drawing(GLDrawMode.LINE_LOOP):
@@ -443,12 +447,12 @@ class LegacyMolecularViewerWindow(LegacyQtObjectWindow):
 
     def show_info(self):
         """Show structure information"""
-        if self.gl_widget.pdb_loader:
-            structure = self.gl_widget.pdb_loader.structure
+        if self.pdb_loader:
+            structure = self.pdb_loader.structure
             info_text = (
                 f"Structure: {structure.title}\n"
-                f"C-alpha atoms: {len(self.gl_widget.calpha_atoms)}\n"
-                f"C-alpha bonds: {len(self.gl_widget.calpha_bonds)}\n"
+                f"C-alpha atoms: {len(self.calpha_atoms)}\n"
+                f"C-alpha bonds: {len(self.calpha_bonds)}\n"
                 f"Chains: {', '.join(structure.chains)}\n"
                 f"Total atoms: {len(structure.atoms)}"
             )

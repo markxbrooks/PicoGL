@@ -1,6 +1,7 @@
 """
 Vertex functions
 """
+from typing import Sequence
 
 from OpenGL import GL as gl
 from OpenGL.raw.GL.VERSION.GL_1_0 import glVertex3f
@@ -22,6 +23,14 @@ def gl_vertex_tuple_3f(v1) -> None:
 def gl_vertex_vec3(vec3: Vec3) -> None:
     """gl vertex vec3"""
     gl_vertex_3f(vec3.x, vec3.y, vec3.z)
+
+
+def gl_vertex_any(pos1: Vec3 | Sequence[float]):
+    """gl vertex any"""
+    if isinstance(pos1, Vec3):
+        gl_vertex_vec3(pos1)
+    else:
+        gl_vertex_tuple_3f((pos1[0], pos1[1], pos1[2]))
 
 
 def gl_vertex_pointer(size: int, type: GLNumeric, stride: int =0, pointer=None):

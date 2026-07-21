@@ -14,7 +14,7 @@ from picogl.backend.gl.capability import FACE_MAP
 from picogl.backend.gl.phong.material import PhongMaterial
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.enums.legacy.scale import (gl_load_identity,
-                                                  gl_translatef, gl_viewport)
+                                                  gl_translate_f, gl_viewport)
 from picogl.backend.gl.state.fill import (GLColorMaterialMode, GLFace, GLLight,
                                           GLLightParameter)
 from picogl.backend.gl.state.texture import TexCoord2f, Vertex3f
@@ -123,7 +123,7 @@ class GLLegacyPipeline:
         Returns:
             None
         """
-        gl_translatef(float(x), float(y), float(z))
+        gl_translate_f(float(x), float(y), float(z))
 
     @staticmethod
     def set_light(position, light: GLLight = GLLight.LIGHT0) -> None:
