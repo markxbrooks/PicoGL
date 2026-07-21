@@ -1,248 +1,246 @@
-Yes. There is quite a bit of duplication, and I think the module could be reduced by around 30–40% without losing readability. There are also a couple of bugs that have probably crept in because of the duplication.
+Yes—this is a significant improvement. It feels much more cohesive now. The public API has become very thin, and most of the OpenGL mechanics are centralized. If I were reviewing this in a pull request, I'd consider it a substantial step forward.
 
-The main areas I noticed are:
+I'd rate it around 8.5–9/10. There are just a few things I'd still refine.
 
-1. Validation logic is repeated three times ⭐⭐⭐
+👍 What's much better
+1. ValidatedMesh is the right abstraction
 
-render_isosurface_mesh_data(), render_isosurface_safe(), and render_isosurface_mesh() all perform essentially the same validation:
+I much prefer:
 
-null checks
-empty array checks
-contiguous conversion
-NaN/Inf validation
-index validation
-mesh size limits
-
-For example:
-
-if np.any(np.isnan(vertices)) or np.any(np.isinf(vertices)):
-    ...
-
-appears repeatedly.
-
-Likewise:
-
-if np.any(faces < 0) or np.any(faces >= vertex_count):
-
-and
-
-if len(vertices) > MAX_VERTEX_COUNT:
-I'd extract
-def validate_mesh(vertices, indices):
-    ...
-    return vertices, indices, vertex_count
-
-or
-
-MeshValidationResult(
-    vertices,
-    indices,
-    vertex_count,
-)
-
-Then every renderer becomes
-
-vertices, faces, vertex_count = validate_mesh(vertices, faces)
-2. Drawing logic is duplicated ⭐⭐⭐⭐
-
-You already started extracting this into
-
-_draw_surface(...)
-
-but render_isosurface_mesh_data() still has almost identical code.
-
-Specifically:
-
-with legacy_client_states(...):
-    ...
-    gl_backend.geometry.draw_elements(...)
-
-is almost the same.
-
-I'd probably make _draw_surface() more generic:
+validated = _validate_mesh_arrays(vertices, faces)
 
 _draw_surface(
-    vertices,
-    indices,
-    normals=None,
-    colors=None,
-    fill_mode=False,
-    line_width=1.0,
+    gl_backend,
+    validated.vertices,
+    validated.indices,
 )
 
-Then all three public renderers reduce to
+over passing around three independent variables.
+
+It also leaves room to grow:
+
+@dataclass(frozen=True)
+class ValidatedMesh:
+    vertices: np.ndarray
+    indices: np.ndarray
+    vertex_count: int
+    triangle_count: int
+    has_normals: bool
+
+without changing the renderer signatures.
+
+2. Validation is now completely centralized
+
+This is probably the biggest improvement.
+
+Every renderer now simply does
 
 validate
-↓
-
-prepare optional arrays
 
 ↓
 
-_draw_surface(...)
-3. Backend setup repeated
+draw
 
-This appears several times
+instead of duplicating ten validation checks.
 
-gl_backend = _resolve_backend(backend)
+3. _draw_surface() is much cleaner
 
-gl_backend.depth.set_depth_test(True)
-gl_backend.raster.set_line_width(line_width)
+Previously the rendering logic was spread across three functions.
 
-That could become
+Now there is one canonical rendering path.
 
-_setup_backend(
-    backend,
-    line_width,
-    rgba_color,
+That's exactly what I'd want.
+
+4. _polygon_mode context manager
+
+Excellent.
+
+This is much safer than remembering
+
+finally:
+    set_polygon_mode(FILL)
+
+everywhere.
+
+5. _setup_backend()
+
+Nice extraction.
+
+I like that the renderer no longer worries about OpenGL state.
+
+Things I'd still improve
+1. _render_with_error_handling()
+
+I'm not convinced this buys you much.
+
+Right now every renderer looks like
+
+def render(...):
+
+    def _render():
+        ...
+
+    _render_with_error_handling(...)
+
+which creates an unnecessary nested function.
+
+I'd honestly just write
+
+def render(...):
+    try:
+        ...
+    except Exception:
+        ...
+
+Three try/except blocks aren't that much duplication, and they're easier to read than introducing an inner closure.
+
+This is the one abstraction I'd probably remove.
+
+2. use_legacy_color
+
+This is starting to smell.
+
+_draw_surface(
+    ...
+    colors=None,
+    use_legacy_color=True,
 )
-4. Polygon mode restore
 
-This appears repeatedly
+means there are now two mutually exclusive coloring systems.
 
-gl_backend.raster.set_polygon_mode(
-    GLFace.FRONT_AND_BACK,
-    GLFillMode.FILL
-)
+I'd rather express that directly.
 
-I'd actually make a context manager
+For example
 
-with polygon_mode(GLFillMode.LINE):
-    draw()
+color_array=None,
+constant_color=None,
 
-Then restoring is automatic.
+Then inside
 
-5. Exception handling duplicated
+if color_array is not None:
+    ...
 
-Every renderer ends with
+elif constant_color is not None:
+    ...
 
-except Exception as ex:
-    log.error(...)
-    import traceback
-    traceback.print_exc()
+That's self-documenting.
 
-Likewise
+3. client_states
 
-try:
-    gl_backend.geometry.draw_elements(...)
-except Exception as draw_error:
+This is clever
 
-appears repeatedly.
-
-6. Logging duplicated
-
-These are almost identical
-
-Rendered isosurface with ...
-
-vs
-
-Safely rendered isosurface with ...
-
-I'd centralize into
-
-_log_render(vertex_count, face_count)
-7. Contiguous conversion
-
-You have
-
-vertices = np_contiguous_array(vertices)
-faces = np_contiguous_array(faces, dtype=np.uint32)
-
-multiple times.
-
-8. Client-state setup
-
-You have
-
-with legacy_client_states(GLClientState.VERTEX):
-
-and
-
-with legacy_client_states(
+client_states = (
     GLClientState.VERTEX,
     *(GLClientState.NORMAL,) * has_normals,
-    *(GLClientState.COLOR,) * True,
-):
-
-These are really the same operation.
-
-A helper like
-
-_draw_arrays(
-    vertices,
-    normals=None,
-    colors=None,
+    *(GLClientState.COLOR,) * use_color_array,
 )
 
-would eliminate this duplication.
+but I actually think it's less readable.
 
-There are also two bugs
-Bug #1
+I'd probably do
 
-Your helper
+client_states = [GLClientState.VERTEX]
 
-def np_contiguous_array(mesh_data: np.ndarray, dtype=np.float32):
-    return np.ascontiguousarray(mesh_data.colors, dtype=dtype)
+if has_normals:
+    client_states.append(GLClientState.NORMAL)
 
-This is almost certainly wrong.
+if colors is not None:
+    client_states.append(GLClientState.COLOR)
 
-It always returns
+It's a few more lines, but immediately understandable.
 
-mesh_data.colors
+4. _mesh_has_normals()
 
-instead of the object passed in.
+I'd simplify
 
-It should probably be
+return (
+    hasattr(mesh_data, VBOType.NBO)
+    and mesh_data.normals is not None
+    and len(mesh_data.normals) > 0
+)
 
-def np_contiguous_array(array, dtype=np.float32):
-    return np.ascontiguousarray(array, dtype=dtype)
+The hasattr check seems suspicious.
 
-Otherwise this line
+You're already accessing
 
-vertices = np_contiguous_array(vertices)
+mesh_data.normals
 
-will fail because vertices is a NumPy array and has no .colors attribute.
+If that attribute doesn't exist, you'll fail anyway.
 
-Bug #2
+I'd expect
 
-In render_isosurface_mesh_data()
+return bool(mesh_data.normals is not None and len(mesh_data.normals))
 
-color_data = np_contiguous_array(mesh_data)
+or even
 
-Because of the helper bug above, this currently works only by accident—it extracts mesh_data.colors indirectly. If you fix np_contiguous_array(), you'll need to update this to:
+return mesh_data.normals is not None and mesh_data.normals.size > 0
 
-color_data = np_contiguous_array(mesh_data.colors)
+Likewise for colors.
 
-which is much clearer.
+5. context string
 
-Overall structure
+Instead of
 
-I would simplify the module to something like:
+_validate_mesh_arrays(..., context="isosurface mesh")
 
-validate_mesh()
+I'd probably use an enum or simply hard-code the few messages.
 
-_prepare_mesh_data()
+Passing strings around for logging is one of those things that tends to grow over time.
 
-_setup_backend()
+6. alpha
 
-_draw_surface()
+Notice that
 
-render_isosurface_mesh()
+render_isosurface_safe(..., alpha)
 
-render_isosurface_mesh_data()
+uses
 
-render_isosurface_safe()
+rgba = DEFAULT_ISOSURFACE_RGBA.with_alpha(alpha)
 
-Each public renderer should be only about 15–25 lines, with almost all of the OpenGL mechanics encapsulated in shared helpers.
+whereas
 
-Overall, I'd rate the duplication as:
+render_isosurface_mesh_data(...)
 
-Area	Duplication
-Validation	★★★★★
-Drawing	★★★★☆
-Backend setup	★★★☆☆
-Exception handling	★★★☆☆
-Logging	★★☆☆☆
+passes alpha into _prepare_color_data().
 
-The module already shows signs of being refactored (for example, _draw_surface() and _resolve_backend()), but it looks like the refactoring stopped halfway. Finishing that process would make the code noticeably smaller, easier to maintain, and less prone to inconsistencies like the np_contiguous_array() bug.
+Those are slightly different code paths.
+
+It isn't wrong, but I'd ask whether there should be exactly one way alpha is applied.
+
+Minor optimization
+
+Instead of
+
+vertex_count = _position_array_vertex_count(vertices)
+
+inside _draw_surface()
+
+I'd use
+
+validated.vertex_count
+
+You've already computed it once.
+
+Not a performance issue—just avoids recomputing something you already know.
+
+Overall architecture
+
+I think you've naturally converged on a nice layering:
+
+Public API
+    │
+    ▼
+Validation
+    │
+    ▼
+Preparation
+    │
+    ▼
+Drawing
+    │
+    ▼
+OpenGL backend
+
+That's a clean separation of responsibilities.
+
+The only abstraction I'd seriously reconsider is _render_with_error_handling(). Everything else feels like it reduces duplication while keeping the code readable. If you remove the nested _render() closures and perhaps replace use_legacy_color with a constant_color parameter, I'd consider this a very polished implementation.
