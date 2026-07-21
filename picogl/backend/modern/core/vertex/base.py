@@ -36,8 +36,9 @@ import ctypes
 
 import numpy as np
 from OpenGL import error as _gl_err
-from OpenGL.raw.GL.VERSION.GL_1_5 import glBufferSubData, glIsBuffer
 
+from backend.gl.api.buffer.check_is import gl_is_buffer
+from backend.gl.api.buffer.subdata import gl_buffer_subdata
 from picogl.backend.gl.api import gl_bind_buffer, gl_buffer_data
 from picogl.backend.gl.api.vertex.attrib_pointer import \
     gl_vertex_attrib_pointer
@@ -98,7 +99,7 @@ class VertexBuffer(VertexBase):
 
     def unbind(self) -> None:
         """Unbind this buffer, ensuring the handle is valid."""
-        if not glIsBuffer(self.handle):
+        if not gl_is_buffer(self.handle):
             raise RuntimeError(f"Invalid buffer handle: {self.handle}")
         gl_bind_buffer(self.target, 0)
 
@@ -207,7 +208,7 @@ class VertexBuffer(VertexBase):
             f"dtype={self.dtype}, normalized={self.normalized}, data={data_preview})"
         )
 
-    def allocate(self, data: np.ndarray, usage: int = GLUsageHint.STATIC_DRAW):
+    def allocate(self, data: np.ndarray, usage: GLUsageHint = GLUsageHint.STATIC_DRAW):
         """Initial allocation (glBufferData)"""
         self.bind()
         self.buffer_size = data.nbytes
@@ -240,7 +241,7 @@ class VertexBuffer(VertexBase):
             self.buffer_size = data.nbytes
         else:
             try:
-                glBufferSubData(self.target, offset, data.nbytes, data)
+                gl_buffer_subdata(self.target, offset, data.nbytes, data)
             except _gl_err.GLError:
                 gl_buffer_data(
                     target=self.target,
