@@ -22,11 +22,11 @@ from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMessageBox,
 from picogl.backend.geometry import LegacyBinding
 from picogl.backend.gl.api import gl_normal_3f
 from picogl.backend.gl.api.clear import gl_clear, gl_clear_rgba_color
-from picogl.backend.gl.api.color import gl_color_material, gl_color_3f, gl_color_rgb
+from picogl.backend.gl.api.color import gl_color_material, gl_color_rgb
 from picogl.backend.gl.api.enable import gl_enable
 from picogl.backend.gl.api.legacy.matrix import gl_pushed_matrix
 from picogl.backend.gl.api.legacy.rotate import gl_rotate_f
-from picogl.backend.gl.api.legacy.vertex import gl_vertex_3f
+from picogl.backend.gl.api.legacy.vertex import gl_vertex_tuple_3f
 from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.capability import GLMaterialFace, GLPipelineCapability
 from picogl.backend.gl.enums import GLDrawMode, GLBitMask
@@ -60,8 +60,8 @@ def _calculate_normals(lat: float | Any, x: float, y: float) -> tuple[float, flo
 
 def gl_legacy_draw_line(pos1: Sequence[float], pos2: Sequence[float]) -> None:
     """Emit two vertices for a GL_LINES segment."""
-    gl_vertex_3f((pos1[0], pos1[1], pos1[2]))
-    gl_vertex_3f((pos2[0], pos2[1], pos2[2]))
+    gl_vertex_tuple_3f((pos1[0], pos1[1], pos1[2]))
+    gl_vertex_tuple_3f((pos2[0], pos2[1], pos2[2]))
 
 
 class QtLegacyMolecularViewer(QOpenGLWidget):
@@ -296,11 +296,11 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
 
                         # First vertex of the strip
                         gl_normal_3f(nx0, ny0, nz0)
-                        gl_vertex_3f((x * zr0, y * zr0, z0))
+                        gl_vertex_tuple_3f((x * zr0, y * zr0, z0))
 
                         # Second vertex of the strip
                         gl_normal_3f(nx1, ny1, nz1)
-                        gl_vertex_3f((x * zr1, y * zr1, z1))
+                        gl_vertex_tuple_3f((x * zr1, y * zr1, z1))
 
             # Draw wireframe lines for the latitude rings
             with gl_immediate_drawing(GLDrawMode.LINE_LOOP):
@@ -309,7 +309,7 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
                     x = math.cos(lng)
                     y = math.sin(lng)
 
-                    gl_vertex_3f((x * zr0, y * zr0, z0))
+                    gl_vertex_tuple_3f((x * zr0, y * zr0, z0))
 
             # Draw vertical lines connecting the rings
             with gl_immediate_drawing(GLDrawMode.LINES):

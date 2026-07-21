@@ -1,12 +1,27 @@
+"""
+Vertex functions
+"""
+
 from OpenGL import GL as gl
 from OpenGL.raw.GL.VERSION.GL_1_0 import glVertex3f
 
 from picogl.backend.gl.enums import GLNumeric
+from picogl.core.vec3 import Vec3
 
 
-def gl_vertex_3f(v1):
+def gl_vertex_3f(x, y, z) -> None:
     """gl vertex 3f"""
-    glVertex3f(*v1)
+    glVertex3f(x, y, z)
+
+
+def gl_vertex_tuple_3f(v1) -> None:
+    """gl vertex 3f"""
+    gl_vertex_3f(*v1)
+
+
+def gl_vertex_vec3(vec3: Vec3) -> None:
+    """gl vertex vec3"""
+    gl_vertex_3f(vec3.x, vec3.y, vec3.z)
 
 
 def gl_vertex_pointer(size: int, type: GLNumeric, stride: int =0, pointer=None):
