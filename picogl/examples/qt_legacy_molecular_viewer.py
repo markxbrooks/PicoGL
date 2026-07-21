@@ -10,7 +10,7 @@ This example demonstrates how to:
 import math
 import os
 import sys
-from typing import Sequence, Any
+from typing import Any
 
 import numpy as np
 from molib.core.constants import MoLibConstant
@@ -48,8 +48,6 @@ ZOOM_SCALE_FACTOR = -50.0
 
 # Add the examples directory to the path so we can import the PDB loader
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "utils"))
-
-Point3 = Vec3 | Sequence[float]
 
 
 def get_lat_for_stack_no(i: int, stacks) -> float | Any:

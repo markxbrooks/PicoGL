@@ -1,7 +1,10 @@
+from typing import Sequence
+
 from picogl.backend.gl.api.legacy.vertex import gl_vertex_any, gl_vertex_vec3
 from picogl.backend.gl.api.vertex.normal_3f import gl_normal_vec3
 from picogl.core.vec3 import Vec3
-from picogl.examples.qt_legacy_molecular_viewer import Point3
+
+Point3 = Vec3 | Sequence[float]
 
 
 def gl_legacy_draw_line(pos1: Point3, pos2: Point3) -> None:
