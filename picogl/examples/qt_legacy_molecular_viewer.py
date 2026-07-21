@@ -26,7 +26,8 @@ from picogl.backend.gl.api.color import gl_color_material, gl_color_rgb
 from picogl.backend.gl.api.enable import gl_enable
 from picogl.backend.gl.api.legacy.matrix import gl_pushed_matrix
 from picogl.backend.gl.api.legacy.rotate import gl_rotate_f
-from picogl.backend.gl.api.legacy.vertex import gl_vertex_tuple_3f
+from picogl.backend.gl.api.legacy.vertex import gl_vertex_tuple_3f, gl_vertex_vec3
+from picogl.backend.gl.api.vertex.normal_3f import gl_normal_vec3
 from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.capability import GLMaterialFace, GLPipelineCapability
 from picogl.backend.gl.enums import GLDrawMode, GLBitMask
@@ -36,6 +37,7 @@ from picogl.backend.gl.phong import PhongMaterial
 from picogl.backend.gl.state.fill import GLColorMaterialMode, GLCapability, GLLight
 from picogl.backend.gl.state.immediate import gl_immediate_drawing
 from picogl.core.rgbcolor import RGBAColor, RGBColor
+from picogl.core.vec3 import Vec3
 from picogl.core.vec4 import Vec4
 from picogl.examples.utils.pdb_loader import PDBLoader
 from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
@@ -51,17 +53,21 @@ ZOOM_SCALE_FACTOR = -50.0
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "utils"))
 
 
-def _calculate_normals(lat: float | Any, x: float, y: float) -> tuple[float, float, float]:
+def sphere_normal(lat: float | Any, x: float, y: float) -> Vec3:
     nx = x * math.cos(lat)
     ny = y * math.cos(lat)
     nz = math.sin(lat)
-    return nx, ny, nz
+    return Vec3(nx, ny, nz)
 
 
 def gl_legacy_draw_line(pos1: Sequence[float], pos2: Sequence[float]) -> None:
     """Emit two vertices for a GL_LINES segment."""
     gl_vertex_tuple_3f((pos1[0], pos1[1], pos1[2]))
     gl_vertex_tuple_3f((pos2[0], pos2[1], pos2[2]))
+
+
+def sphere_vertex(x: float, y: float, z0: float | Any, zr0: float | Any) -> Vec3:
+    return Vec3(x * zr0, y * zr0, z0)
 
 
 class QtLegacyMolecularViewer(QOpenGLWidget):
@@ -289,18 +295,13 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
                         x = math.cos(lng)
                         y = math.sin(lng)
 
-                        # Calculate normals for proper lighting
-                        nx0, ny0, nz0 = _calculate_normals(lat0, x, y)
-
-                        nx1, ny1, nz1 = _calculate_normals(lat1, x, y)
-
                         # First vertex of the strip
-                        gl_normal_3f(nx0, ny0, nz0)
-                        gl_vertex_tuple_3f((x * zr0, y * zr0, z0))
+                        gl_normal_vec3(sphere_normal(lat0, x, y))
+                        gl_vertex_vec3(sphere_vertex(x, y, z0, zr0))
 
                         # Second vertex of the strip
-                        gl_normal_3f(nx1, ny1, nz1)
-                        gl_vertex_tuple_3f((x * zr1, y * zr1, z1))
+                        gl_normal_vec3(sphere_normal(lat1, x, y))
+                        gl_vertex_vec3(sphere_vertex(x, y, z1, zr1))
 
             # Draw wireframe lines for the latitude rings
             with gl_immediate_drawing(GLDrawMode.LINE_LOOP):
