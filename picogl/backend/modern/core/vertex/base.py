@@ -70,10 +70,10 @@ class VertexBuffer(VertexBase):
         self,
         handle: int = None,
         data: np.ndarray = None,
-        target: int = GLBufferTarget.ARRAY,
+        target: GLBufferTarget = GLBufferTarget.ARRAY,
         size: int = 3,
         stride: int = 0,
-        dtype: int = GLNumeric.FLOAT,
+        dtype: GLNumeric = GLNumeric.FLOAT,
         index: int = None,
         pointer: ctypes.c_void_p = ctypes.c_void_p(0),
     ):
@@ -110,7 +110,7 @@ class VertexBuffer(VertexBase):
     # ----------------------------
     # Data upload
     # ----------------------------
-    def set_data(self, data: np.ndarray, usage: int = GLUsageHint.STATIC_DRAW) -> None:
+    def set_data(self, data: np.ndarray, usage: GLUsageHint = GLUsageHint.STATIC_DRAW) -> None:
         """
         Upload data to the GPU.
 
@@ -139,7 +139,7 @@ class VertexBuffer(VertexBase):
         normalized: bool = False,
         stride: int = 0,
         offset: int = 0,
-        dtype: int = None,
+        dtype: GLNumeric = None,
         pointer: ctypes.c_void_p = None,
     ) -> None:
         """
