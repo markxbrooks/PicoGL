@@ -20,25 +20,22 @@ from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMessageBox,
                                QPushButton, QSplitter, QVBoxLayout, QWidget)
 
 from picogl.backend.geometry import LegacyBinding
-from picogl.backend.gl.api.clear import gl_clear, gl_clear_rgba_color
-from picogl.backend.gl.api.color import gl_color_material, gl_color_rgb
-from picogl.backend.gl.api.enable import gl_enable
+from picogl.backend.gl.api.clear import gl_clear
+from picogl.backend.gl.api.color import gl_color_rgb
 from picogl.backend.gl.api.legacy.matrix import gl_pushed_matrix
-from picogl.backend.gl.api.legacy.rotate import gl_rotate_f, gl_rotate_vec3
-from picogl.backend.gl.api.legacy.vertex import gl_vertex_tuple_3f, gl_vertex_vec3, gl_vertex_any
-from picogl.backend.gl.api.vertex.normal_3f import gl_normal_vec3
+from picogl.backend.gl.api.legacy.rotate import gl_rotate_vec3
+from picogl.backend.gl.api.legacy.vertex import gl_vertex_vec3
 from picogl.backend.gl.backend import GLBackend
-from picogl.backend.gl.capability import GLMaterialFace, GLPipelineCapability
 from picogl.backend.gl.enums import GLDrawMode, GLBitMask
 from picogl.backend.gl.enums.legacy.scale import gl_load_identity, gl_translate_f, gl_scalef, gl_translate_vec3
-from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
-from picogl.backend.gl.lighting import LightSource
-from picogl.backend.gl.phong import PhongMaterial
-from picogl.backend.gl.state.fill import GLColorMaterialMode, GLCapability, GLLight
 from picogl.backend.gl.state.immediate import gl_immediate_drawing
-from picogl.core.rgbcolor import RGBAColor, RGBColor
+from picogl.core.draw.line import gl_legacy_draw_line, gl_legacy_draw_line_with_normal
+from picogl.core.rgbcolor import RGBColor
+from picogl.core.setup.background import gl_setup_background_color
+from picogl.core.setup.depth import gl_setup_depth_test
+from picogl.core.setup.lighting import gl_setup_lighting
+from picogl.core.setup.materials import gl_setup_materials
 from picogl.core.vec3 import Vec3
-from picogl.core.vec4 import Vec4
 from picogl.examples.utils.pdb_loader import PDBLoader
 from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
 
@@ -55,24 +52,13 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "utils"))
 Point3 = Vec3 | Sequence[float]
 
 
-def gl_legacy_draw_line(pos1: Point3, pos2: Point3) -> None:
-    """Emit two vertices for a GL_LINES segment."""
-    gl_vertex_any(pos1)
-    gl_vertex_any(pos2)
-
-
 def get_lat_for_stack_no(i: int, stacks) -> float | Any:
-    lat0 = math.pi * (-0.5 + i / stacks)
-    return lat0
+    """get_lat_for_stack_no"""
+    return math.pi * (-0.5 + i / stacks)
 
 
-def gl_legacy_draw_line_with_normal(vertex0: Vec3, vertex1: Vec3):
-    """gl legacy draw line with normal"""
-    gl_normal_vec3(vertex0.normalized())
-    gl_vertex_vec3(vertex0)
-
-    gl_normal_vec3(vertex1.normalized())
-    gl_vertex_vec3(vertex1)
+def gl_scale_by_zoom(zoom: float):
+    gl_scalef(zoom, zoom, zoom)
 
 
 class QtLegacyMolecularViewer(QOpenGLWidget):
@@ -109,36 +95,10 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
 
     def initializeGL(self):
         """Initialize OpenGL settings"""
-        self._setup_depth_test()
-        self._setup_lighting()
-        self._setup_materials()
-        self._setup_background_color()
-
-    def _setup_background_color(self):
-        gl_clear_rgba_color(RGBAColor.BLACK)
-
-    def _setup_depth_test(self):
-        gl_enable(GLPipelineCapability.DEPTH_TEST)
-
-    def _setup_lighting(self):
-        # Set up lighting
-        gl_enable(GLLight.LIGHTING)
-        gl_enable(GLLight.LIGHT0)
-        light = LightSource(position=Vec4(1.0, 1.0, 1.0, 0.0),
-                            ambient=RGBAColor.WHITE.scaled(0.2),
-                            diffuse=RGBAColor.WHITE.scaled(0.8),
-                            specular=RGBAColor.WHITE.with_alpha(1.0))
-        light.apply(GLLight.LIGHT0)
-
-    def _setup_materials(self):
-        gl_enable(GLCapability.COLOR_MATERIAL)
-        gl_color_material(GLMaterialFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE)
-        # Set material properties
-        material = PhongMaterial(ambient=RGBAColor.WHITE.scaled(0.2),
-                                 diffuse=RGBAColor.WHITE.scaled(0.8),
-                                 specular=RGBAColor.WHITE.with_alpha(1.0),
-                                 shininess=50)
-        material.apply(GLMaterialFace.FRONT_AND_BACK)
+        gl_setup_depth_test()
+        gl_setup_lighting()
+        gl_setup_materials()
+        gl_setup_background_color()
 
     def resizeGL(self, width, height):
         """Handle window resize"""
@@ -237,7 +197,8 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
         gl_rotate_vec3(self.rotation_y, self.y_axis_matrix)
 
     def _apply_zoom(self):
-        gl_scalef(self.zoom, self.zoom, self.zoom)
+        """appy zoom"""
+        gl_scale_by_zoom(self.zoom)
 
     def _render_calpha_atoms(self):
         """Render C-alpha atoms as colored wireframe spheres based on chain"""
