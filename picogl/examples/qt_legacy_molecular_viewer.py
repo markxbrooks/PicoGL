@@ -10,7 +10,7 @@ This example demonstrates how to:
 import math
 import os
 import sys
-from typing import Any, Sequence
+from typing import Sequence
 
 import numpy as np
 from molib.core.constants import MoLibConstant
@@ -20,7 +20,6 @@ from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMessageBox,
                                QPushButton, QSplitter, QVBoxLayout, QWidget)
 
 from picogl.backend.geometry import LegacyBinding
-from picogl.backend.gl.api import gl_normal_3f
 from picogl.backend.gl.api.clear import gl_clear, gl_clear_rgba_color
 from picogl.backend.gl.api.color import gl_color_material, gl_color_rgb
 from picogl.backend.gl.api.enable import gl_enable
@@ -52,22 +51,19 @@ ZOOM_SCALE_FACTOR = -50.0
 # Add the examples directory to the path so we can import the PDB loader
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "utils"))
 
-
-def sphere_normal(lat: float | Any, x: float, y: float) -> Vec3:
-    nx = x * math.cos(lat)
-    ny = y * math.cos(lat)
-    nz = math.sin(lat)
-    return Vec3(nx, ny, nz)
+Point3 = Vec3 | Sequence[float]
 
 
-def gl_legacy_draw_line(pos1: Sequence[float], pos2: Sequence[float]) -> None:
+def gl_legacy_draw_line(pos1: Point3, pos2: Point3) -> None:
     """Emit two vertices for a GL_LINES segment."""
-    gl_vertex_tuple_3f((pos1[0], pos1[1], pos1[2]))
-    gl_vertex_tuple_3f((pos2[0], pos2[1], pos2[2]))
-
-
-def sphere_vertex(x: float, y: float, z0: float | Any, zr0: float | Any) -> Vec3:
-    return Vec3(x * zr0, y * zr0, z0)
+    if isinstance(pos1, Vec3):
+        gl_vertex_vec3(pos1)
+    else:
+        gl_vertex_tuple_3f((pos1[0], pos1[1], pos1[2]))
+    if isinstance(pos2, Vec3):
+        gl_vertex_vec3(pos2)
+    else:
+        gl_vertex_tuple_3f((pos2[0], pos2[1], pos2[2]))
 
 
 class QtLegacyMolecularViewer(QOpenGLWidget):
@@ -280,49 +276,36 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
 
         for i in range(stacks):
             lat0 = math.pi * (-0.5 + i / stacks)
-            z0 = radius * math.sin(lat0)
-            zr0 = radius * math.cos(lat0)
-
             lat1 = math.pi * (-0.5 + (i + 1) / stacks)
-            z1 = radius * math.sin(lat1)
-            zr1 = radius * math.cos(lat1)
 
             if not self.wireframe_mode:
                 # Draw filled triangles between the two latitude rings
                 with gl_immediate_drawing(GLDrawMode.TRIANGLE_STRIP):
                     for j in range(slices + 1):
                         lng = 2 * math.pi * j / slices
-                        x = math.cos(lng)
-                        y = math.sin(lng)
+                        vertex0 = Vec3.sphere(radius, lat0, lng)
+                        vertex1 = Vec3.sphere(radius, lat1, lng)
 
-                        # First vertex of the strip
-                        gl_normal_vec3(sphere_normal(lat0, x, y))
-                        gl_vertex_vec3(sphere_vertex(x, y, z0, zr0))
+                        gl_normal_vec3(vertex0.normalized())
+                        gl_vertex_vec3(vertex0)
 
-                        # Second vertex of the strip
-                        gl_normal_vec3(sphere_normal(lat1, x, y))
-                        gl_vertex_vec3(sphere_vertex(x, y, z1, zr1))
+                        gl_normal_vec3(vertex1.normalized())
+                        gl_vertex_vec3(vertex1)
 
             # Draw wireframe lines for the latitude rings
             with gl_immediate_drawing(GLDrawMode.LINE_LOOP):
                 for j in range(slices + 1):
                     lng = 2 * math.pi * j / slices
-                    x = math.cos(lng)
-                    y = math.sin(lng)
-
-                    gl_vertex_tuple_3f((x * zr0, y * zr0, z0))
+                    vertex0 = Vec3.sphere(radius, lat0, lng)
+                    gl_vertex_vec3(vertex0)
 
             # Draw vertical lines connecting the rings
             with gl_immediate_drawing(GLDrawMode.LINES):
                 for j in range(slices + 1):
                     lng = 2 * math.pi * j / slices
-                    x = math.cos(lng)
-                    y = math.sin(lng)
-
-                    gl_legacy_draw_line(
-                        (x * zr0, y * zr0, z0),
-                        (x * zr1, y * zr1, z1),
-                    )
+                    vertex0 = Vec3.sphere(radius, lat0, lng)
+                    vertex1 = Vec3.sphere(radius, lat1, lng)
+                    gl_legacy_draw_line(vertex0, vertex1)
 
     def mousePressEvent(self, event):
         """Handle mouse press for rotation"""
