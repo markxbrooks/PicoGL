@@ -44,6 +44,7 @@ class RGBColor(Vec3Mixin):
     RED: ClassVar["Self"]
     GREEN: ClassVar["Self"]
     BLUE: ClassVar["Self"]
+    BLUE_ISOSURFACE: ClassVar["Self"]
     YELLOW: ClassVar["Self"]
     MAGENTA: ClassVar["Self"]
     CYAN: ClassVar["Self"]
@@ -99,6 +100,10 @@ class RGBAColor(RGBColor, Vec4Mixin):
     def to_tuple(self) -> Tuple[float, float, float, float]:
         return self.r, self.g, self.b, self.a
 
+    @property
+    def tuple(self) -> Tuple[float, float, float, float]:
+        return self.to_tuple()
+
     def without_alpha(self) -> RGBColor:
         return RGBColor(self.r, self.g, self.b)
 
@@ -117,6 +122,7 @@ _COLOR_VALUES = {
     "RED": (1.0, 0.0, 0.0),
     "GREEN": (0.0, 1.0, 0.0),
     "BLUE": (0.0, 0.0, 1.0),
+    "BLUE_ISOSURFACE": (0.0, 0.0, 0.8),
     "YELLOW": (1.0, 1.0, 0.0),
     "MAGENTA": (1.0, 0.0, 1.0),
     "CYAN": (0.0, 1.0, 1.0),

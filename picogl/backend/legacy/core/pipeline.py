@@ -223,7 +223,7 @@ class GLLegacyPipeline:
         Returns:
             None
         """
-        GLLegacyPipeline.set_color(rgba_color.to_tuple())
+        GLLegacyPipeline.set_color(rgba_color.tuple)
 
     @staticmethod
     def tex_coord2f(coord: TexCoord2f) -> None:
