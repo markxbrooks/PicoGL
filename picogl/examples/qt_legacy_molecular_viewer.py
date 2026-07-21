@@ -248,28 +248,39 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
             lat1 = get_lat_for_stack_no(i + 1, stacks)
 
             if not self.wireframe_mode:
-                # Draw filled triangles between the two latitude rings
-                with gl_immediate_drawing(GLDrawMode.TRIANGLE_STRIP):
-                    for j in range(slices + 1):
-                        lng = 2 * math.pi * j / slices
-                        vertex0 = Vec3.sphere(radius, lat0, lng)
-                        vertex1 = Vec3.sphere(radius, lat1, lng)
-                        gl_legacy_draw_line_with_normal(vertex0, vertex1)
+                self.draw_latitide_ring_filled_triangle(lat0, lat1, radius, slices)
 
-            # Draw wireframe lines for the latitude rings
-            with gl_immediate_drawing(GLDrawMode.LINE_LOOP):
-                for j in range(slices + 1):
-                    lng = 2 * math.pi * j / slices
-                    vertex0 = Vec3.sphere(radius, lat0, lng)
-                    gl_vertex_vec3(vertex0)
+            self.draw_latitude_ring_wireframe_lines(lat0, radius, slices)
 
-            # Draw vertical lines connecting the rings
-            with gl_immediate_drawing(GLDrawMode.LINES):
-                for j in range(slices + 1):
-                    lng = 2 * math.pi * j / slices
-                    vertex0 = Vec3.sphere(radius, lat0, lng)
-                    vertex1 = Vec3.sphere(radius, lat1, lng)
-                    gl_legacy_draw_line(vertex0, vertex1)
+            self.draw_latitude_ring_connecting_line(lat0, lat1, radius, slices)
+
+    def iter_longitudes(self, slices: int):
+        """Yield longitude angles for each slice."""
+        for j in range(slices + 1):
+            yield 2 * math.pi * j / slices
+
+    def draw_latitude_ring_connecting_line(self, lat0: float | Any, lat1: float | Any, radius, slices):
+        """Draw vertical lines connecting the rings"""
+        with gl_immediate_drawing(GLDrawMode.LINES):
+            for lng in self.iter_longitudes(slices):
+                vertex0 = Vec3.sphere(radius, lat0, lng)
+                vertex1 = Vec3.sphere(radius, lat1, lng)
+                gl_legacy_draw_line(vertex0, vertex1)
+
+    def draw_latitude_ring_wireframe_lines(self, lat0: float | Any, radius, slices):
+        """Draw wireframe lines for the latitude rings"""
+        with gl_immediate_drawing(GLDrawMode.LINE_LOOP):
+            for lng in self.iter_longitudes(slices):
+                vertex0 = Vec3.sphere(radius, lat0, lng)
+                gl_vertex_vec3(vertex0)
+
+    def draw_latitide_ring_filled_triangle(self, lat0: float | Any, lat1: float | Any, radius, slices):
+        """Draw filled triangles between the two latitude rings"""
+        with gl_immediate_drawing(GLDrawMode.TRIANGLE_STRIP):
+            for lng in self.iter_longitudes(slices):
+                vertex0 = Vec3.sphere(radius, lat0, lng)
+                vertex1 = Vec3.sphere(radius, lat1, lng)
+                gl_legacy_draw_line_with_normal(vertex0, vertex1)
 
     def mousePressEvent(self, event):
         """Handle mouse press for rotation"""
