@@ -225,7 +225,7 @@ class GLMesh:
             descriptor = self._layout_descriptor
             for attr in descriptor.attributes:
                 data = self._get_buffer_data(attr.vbo_type)
-                if data is None:
+                if data is None or getattr(data, "size", 0) == 0:
                     continue
 
                 vao.add_vbo(
