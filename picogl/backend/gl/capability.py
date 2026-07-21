@@ -16,9 +16,10 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_BACK, GL_BLEND, GL_BLEND_DST,
                                           GL_DEPTH_TEST, GL_FRONT,
                                           GL_FRONT_AND_BACK, GL_LIGHT0,
                                           GL_LIGHT1, GL_LIGHT2, GL_LIGHT3,
-                                          GL_LIGHT4, GL_LIGHTING, GL_LINE_SMOOTH,
-                                          GL_ONE, GL_ONE_MINUS_SRC_ALPHA,
-                                          GL_SRC_ALPHA, GL_ZERO)
+                                          GL_LIGHT4, GL_LIGHTING,
+                                          GL_LINE_SMOOTH, GL_ONE,
+                                          GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA,
+                                          GL_ZERO)
 
 
 class GLPipelineCapability(IntEnum):

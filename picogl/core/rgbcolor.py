@@ -18,13 +18,12 @@ Interoperability**: If you plan to convert to/from common formats (tuples, lists
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Tuple, ClassVar
+from typing import ClassVar, Tuple
 
 from typing_extensions import Self
 
 from picogl.core.mixin.vec3 import Vec3Mixin, clamp01
 from picogl.core.mixin.vec4 import Vec4Mixin
-
 
 # Utility
 

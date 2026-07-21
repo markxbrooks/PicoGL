@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.lighting.driver import disable_light, enable_light
-from picogl.backend.gl.lighting.light import LightSource, GLLightingMode
+from picogl.backend.gl.lighting.light import GLLightingMode, LightSource
 from picogl.backend.gl.lighting.system import GLLightingSystem
 from picogl.core.rgbcolor import RGBAColor
 from picogl.core.vec4 import Vec4

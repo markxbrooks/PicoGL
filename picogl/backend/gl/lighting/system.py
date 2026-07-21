@@ -17,7 +17,7 @@ from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.enums.legacy.scale import gl_load_identity
 from picogl.backend.gl.enums.light import GLLightModel
 from picogl.backend.gl.lighting.driver import enable_light
-from picogl.backend.gl.lighting.light import LightSource, GLLightingMode
+from picogl.backend.gl.lighting.light import GLLightingMode, LightSource
 from picogl.backend.gl.state.fill import GLFace, GLLightParameter
 from picogl.core.rgbcolor import RGBAColor
 

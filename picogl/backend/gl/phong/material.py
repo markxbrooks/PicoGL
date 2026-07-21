@@ -7,8 +7,8 @@ from math import e
 
 from picogl.backend.gl.api.material import gl_material_f, gl_material_fv
 from picogl.backend.gl.capability import GLMaterialFace
-from picogl.core.data_type import rgba_tuple
 from picogl.backend.gl.state.fill import GLLightParameter
+from picogl.core.data_type import rgba_tuple
 from picogl.core.rgbcolor import RGBAColor
 
 

@@ -13,7 +13,6 @@ from OpenGL.raw.GL.VERSION.GL_1_2 import glTexImage3D
 from picogl.backend.gl.enums import GLNumeric
 from picogl.texture.gltexture import GLTexture
 
-
 ConstantType = Union[FloatConstant, IntConstant, LongConstant, StringConstant, Constant]
 CompressedTexData = Union[bytes, bytearray, memoryview, array, np.ndarray]
 

@@ -63,8 +63,8 @@ class LegacyRenderer:
         from picogl.backend.gl.api.enable import gl_enable
         from picogl.backend.gl.capability import GLFixedFunctionCapability
         from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
-        from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode,
-                                                  GLFace)
+        from picogl.backend.gl.state.fill import (GLCapability,
+                                                  GLColorMaterialMode, GLFace)
 
         glClearColor(0.1, 0.1, 0.2, 1.0)  # Dark blue background
         gl_enable(GL_DEPTH_TEST)

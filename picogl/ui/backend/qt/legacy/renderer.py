@@ -9,7 +9,7 @@ from decologr import Decologr as log
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import QWidget
 
-from picogl.backend.gl.api.clear import gl_clear_color, gl_clear
+from picogl.backend.gl.api.clear import gl_clear, gl_clear_color
 from picogl.backend.gl.api.color import gl_color_material
 from picogl.backend.gl.api.enable import gl_enable
 from picogl.backend.gl.api.matrix import gl_matrix_mode

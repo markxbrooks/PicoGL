@@ -18,7 +18,6 @@ from picogl.backend.gl.phong.material import PhongMaterial
 from picogl.core.rgbcolor import RGBAColor
 from picogl.core.vec4 import Vec4
 
-
 DEFAULT_LEGACY_LIGHT = LightSource(
     position=Vec4(1.0, 1.0, 1.0, 0.0),
     ambient=RGBAColor(0.3, 0.3, 0.3, 1.0),

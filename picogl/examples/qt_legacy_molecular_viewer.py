@@ -26,15 +26,16 @@ from picogl.backend.gl.api.legacy.matrix import gl_pushed_matrix
 from picogl.backend.gl.api.legacy.rotate import gl_rotate_vec3
 from picogl.backend.gl.api.legacy.vertex import gl_vertex_vec3
 from picogl.backend.gl.backend import GLBackend
-from picogl.backend.gl.enums import GLDrawMode, GLBitMask
-from picogl.backend.gl.enums.legacy.scale import gl_load_identity, gl_translate_f, gl_scalef, gl_translate_vec3
+from picogl.backend.gl.enums import GLBitMask, GLDrawMode
+from picogl.backend.gl.enums.legacy.scale import (gl_load_identity, gl_scalef,
+                                                  gl_translate_f,
+                                                  gl_translate_vec3)
 from picogl.backend.gl.state.immediate import gl_immediate_drawing
-from picogl.core.draw.line import gl_legacy_draw_line, gl_legacy_draw_line_with_normal
+from picogl.core.draw.line import (gl_legacy_draw_line,
+                                   gl_legacy_draw_line_with_normal)
 from picogl.core.rgbcolor import RGBColor
-from picogl.core.setup.background import gl_setup_background_color
-from picogl.core.setup.depth import gl_setup_depth_test
-from picogl.core.setup.lighting import gl_setup_lighting
-from picogl.core.setup.materials import gl_setup_materials
+from picogl.core.setup import (gl_setup_background_color, gl_setup_depth_test,
+                               gl_setup_lighting, gl_setup_materials)
 from picogl.core.vec3 import Vec3
 from picogl.examples.utils.pdb_loader import PDBLoader
 from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow

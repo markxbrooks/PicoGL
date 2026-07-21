@@ -6,9 +6,10 @@ from dataclasses import dataclass, field
 from enum import Enum
 
 from molib.pdb.materials import Vec3
+
 from picogl.backend.gl.api.light import gl_light_fv
 from picogl.backend.gl.state.fill import GLLightParameter
-from picogl.core.data_type import vec4_tuple, rgba_tuple
+from picogl.core.data_type import rgba_tuple, vec4_tuple
 from picogl.core.rgbcolor import RGBAColor
 from picogl.core.vec4 import Vec4
 

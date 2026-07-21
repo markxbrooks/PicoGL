@@ -27,7 +27,8 @@ from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.enums.legacy.scale import gl_load_identity, gl_viewport
 from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
-from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode, GLFillMode)
+from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode,
+                                          GLFillMode)
 from picogl.backend.glu.lookat import glu_look_at
 from picogl.backend.glut.buffers import glut_swap_buffers
 from picogl.backend.glut.cube import glut_wire_cube

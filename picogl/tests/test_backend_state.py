@@ -14,7 +14,6 @@ from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.capability import (GLBlendFactor,
                                           GLFixedFunctionCapability,
                                           GLMaterialFace, GLPipelineCapability)
-from picogl.backend.gl.phong.material import PhongMaterial
 from picogl.backend.gl.driver.blend import GLBlendDriver
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.gl.driver.depth import GLDepthDriver
@@ -24,6 +23,7 @@ from picogl.backend.gl.driver.raster import (GLRasterDriver,
                                              resolve_polygon_mode_args)
 from picogl.backend.gl.driver.texture import GLTextureSystem
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
+from picogl.backend.gl.phong.material import PhongMaterial
 from picogl.backend.gl.state.client import GLClientState
 from picogl.backend.gl.state.fill import GLFace, GLFillMode, GLLightParameter
 from picogl.backend.legacy.core.attribute_binder import LegacyAttributeBinder

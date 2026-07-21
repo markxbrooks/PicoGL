@@ -14,8 +14,9 @@ Classes:
 # from examples.cube_with_controls import GLCubeWidget
 # rom examples.protein_viewer import GLProteinWidget
 
-from PySide6.QtCore import QTimer, Qt
-from PySide6.QtWidgets import QMainWindow, QWidget, QHBoxLayout, QVBoxLayout, QSlider
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtWidgets import (QHBoxLayout, QMainWindow, QSlider, QVBoxLayout,
+                               QWidget)
 
 
 class GLSliderWindow(QMainWindow):
