@@ -9,12 +9,14 @@ This module provides functionality to:
 
 import os
 from dataclasses import dataclass
-from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 
 import numpy as np
 from elmo.gl.backend.modern.entities.bonds.compute_indices import \
     atoms_should_bond
+from molib.core.constants import MoLibConstant
+from molib.ligand.pdb.layouts.pdb_file import (PDBConectLayout, PDBFileLayout,
+                                               PDBTitleLayout)
 
 
 @dataclass
@@ -89,33 +91,18 @@ class PDBStructure:
         return []
 
 
-"""
-def atoms_should_bond(atom1: Atom, atom2: Atom, distance: float) -> bool:
-    ""Determine if two atoms should be bonded based on distance and element types""
-    # Common covalent bond lengths (in Angstroms)
-    bond_lengths = {
-        ("C", "C"): 1.54,
-        ("C", "N"): 1.47,
-        ("C", "O"): 1.43,
-        ("C", "S"): 1.82,
-        ("N", "N"): 1.45,
-        ("N", "O"): 1.36,
-        ("O", "O"): 1.48,
-        ("S", "S"): 2.05,
-    }
+def _pdb_line(raw_line: str) -> str:
+    """Normalize a PDB text line for fixed-width field parsing."""
+    line = raw_line.rstrip("\n\r")
+    if len(line) < 80:
+        line = line.ljust(80)
+    return line
 
-    # Check if we have a known bond length
-    key = tuple(sorted([atom1.element, atom2.element]))
-    if key in bond_lengths:
-        expected_length = bond_lengths[key]
-        # Allow some tolerance (20%)
-        return distance <= expected_length * 1.2
 
-    # Fallback: use a general rule based on element types
-    if atom1.element in ["C", "N", "O", "S"] and atom2.element in ["C", "N", "O", "S"]:
-        return distance <= 2.0
-
-    return False"""
+def _optional_float(value, default: float) -> float:
+    if value == "" or value is None:
+        return default
+    return float(value)
 
 
 class PDBLoader:
@@ -148,18 +135,18 @@ class PDBLoader:
         current_residue = None
         current_residue_atoms = []
 
-        with open(self.path, "r") as f:
-            for line in f:
-                line = line.strip()
-                if not line:
+        with open(self.path, "r", encoding="utf-8") as f:
+            for raw_line in f:
+                line = _pdb_line(raw_line)
+                if not line.strip():
                     continue
 
-                record_type = line[:6].strip()
+                record_type = PDBFileLayout.record_type.parse(line)
 
                 if record_type == "TITLE":
-                    title = line[10:].strip()
+                    title = PDBTitleLayout.title.parse(line) or title
 
-                elif record_type == "ATOM" or record_type == "HETATM":
+                elif record_type in ("ATOM", "HETATM"):
                     atom = self._parse_atom_line(line)
                     atoms.append(atom)
                     chains.add(atom.chain_id)
@@ -214,30 +201,31 @@ class PDBLoader:
         )
 
     def _parse_atom_line(self, line: str) -> Atom:
-        """Parse an ATOM or HETATM line from PDB format"""
+        """Parse an ATOM or HETATM line from PDB format."""
+        layout = PDBFileLayout
         return Atom(
-            serial=int(line[6:11]),
-            name=line[12:16].strip(),
-            res_name=line[17:20].strip(),
-            chain_id=line[21:22].strip(),
-            res_seq=int(line[22:26]),
-            x=float(line[30:38]),
-            y=float(line[38:46]),
-            z=float(line[46:54]),
-            element=line[76:78].strip(),
-            occupancy=float(line[54:60]) if line[54:60].strip() else 1.0,
-            b_factor=float(line[60:66]) if line[60:66].strip() else 0.0,
+            serial=layout.atom_serial.parse(line),
+            name=layout.atom_name.parse(line),
+            res_name=layout.res_name.parse(line),
+            chain_id=layout.chain_id.parse(line),
+            res_seq=layout.res_seq.parse(line),
+            x=layout.x.parse(line),
+            y=layout.y.parse(line),
+            z=layout.z.parse(line),
+            element=layout.element.parse(line),
+            occupancy=_optional_float(layout.occupancy.parse(line), 1.0),
+            b_factor=_optional_float(layout.temp_factor.parse(line), 0.0),
         )
 
     def _parse_conect_line(self, line: str, atoms: List[Atom]) -> Optional[Bond]:
-        """Parse a CONECT line to extract bond information"""
+        """Parse a CONECT line to extract bond information."""
         try:
-            atom1_idx = int(line[6:11]) - 1  # Convert to 0-based index
-            atom2_idx = int(line[11:16]) - 1
+            atom1_idx = PDBConectLayout.atom1_serial.parse(line) - 1
+            atom2_idx = PDBConectLayout.atom2_serial.parse(line) - 1
 
             if 0 <= atom1_idx < len(atoms) and 0 <= atom2_idx < len(atoms):
                 return Bond(atom1_idx=atom1_idx, atom2_idx=atom2_idx)
-        except (ValueError, IndexError):
+        except (ValueError, IndexError, TypeError):
             pass
         return None
 

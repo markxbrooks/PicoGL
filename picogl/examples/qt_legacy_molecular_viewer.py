@@ -9,6 +9,7 @@ This example demonstrates how to:
 """
 import os
 import sys
+from typing import Any
 
 import numpy as np
 from molib.core.constants import MoLibConstant
@@ -53,6 +54,11 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "utils"))
 
 def gl_scale_by_zoom(zoom: float):
     gl_scalef(zoom, zoom, zoom)
+
+
+def gl_setup_view():
+    gl_clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
+    gl_load_identity()
 
 
 class QtLegacyMolecularViewer(QOpenGLWidget):
@@ -100,10 +106,8 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
 
     def paintGL(self):
         """Main rendering function"""
-        gl_clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
-        gl_load_identity()
-
-        # Render the molecular structure
+        gl_setup_view()
+        self._apply_camera_transformations()
         self._render_molecular_structure()
 
     def _load_pdb_structure(self):
@@ -114,41 +118,44 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
             self.pdb_loader = PDBLoader(self.pdb_path)
             structure = self.pdb_loader.structure
 
-            # Extract C-alpha atoms (CA)
-            self.calpha_atoms = [
-                atom
-                for atom in structure.atoms
-                if atom.name.strip() == MoLibConstant.PEPTIDE_CHAIN_ATOMNAME
-            ]
+            self._extract_calpha_atoms(structure)
 
-            print(f"✓ Found {len(self.calpha_atoms)} C-alpha atoms")
-            print(f"✓ Structure: {structure.title}")
-            print(f"✓ Chains: {structure.chains}")
-
-            # Convert to numpy array for rendering
-            self.calpha_positions = np.array(
-                [[atom.x, atom.y, atom.z] for atom in self.calpha_atoms],
-                dtype=np.float32,
-            )
+            self._convert_calpha_to_np_array()
 
             # Generate bonds between consecutive C-alpha atoms
             self._generate_calpha_bonds()
+
+            self._log_pdb_structure(structure)
 
         except Exception as e:
             print(f"Error loading PDB file: {e}")
             raise
 
+    def _log_pdb_structure(self, structure):
+        print(f"✓ Found {len(self.calpha_atoms)} C-alpha atoms")
+        print(f"✓ Structure: {structure.title}")
+        print(f"✓ Chains: {structure.chains}")
+
+    def _convert_calpha_to_np_array(self):
+        """Convert to numpy array for rendering"""
+        self.calpha_positions = np.array(
+            [[atom.x, atom.y, atom.z] for atom in self.calpha_atoms],
+            dtype=np.float32,
+        )
+
+    def _extract_calpha_atoms(self, structure):
+        """Extract C-alpha atoms (CA)"""
+        self.calpha_atoms = [
+            atom
+            for atom in structure.atoms
+            if atom.name.strip() == MoLibConstant.PEPTIDE_CHAIN_ATOMNAME
+        ]
+
     def _generate_calpha_bonds(self):
         """Generate bonds between consecutive C-alpha atoms in the same chain"""
         self.calpha_bonds = []
 
-        # Group atoms by chain
-        chain_atoms = {}
-        for i, atom in enumerate(self.calpha_atoms):
-            chain_id = atom.chain_id
-            if chain_id not in chain_atoms:
-                chain_atoms[chain_id] = []
-            chain_atoms[chain_id].append((i, atom))
+        chain_atoms = self._group_atoms_by_chain()
 
         # Create bonds between consecutive C-alpha atoms in each chain
         for chain_id, atoms in chain_atoms.items():
@@ -165,24 +172,32 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
 
         print(f"✓ Generated {len(self.calpha_bonds)} C-alpha bonds")
 
+    def _group_atoms_by_chain(self) -> dict[Any, Any]:
+        """Group atoms by chain"""
+        chain_atoms = {}
+        for i, atom in enumerate(self.calpha_atoms):
+            chain_id = atom.chain_id
+            if chain_id not in chain_atoms:
+                chain_atoms[chain_id] = []
+            chain_atoms[chain_id].append((i, atom))
+        return chain_atoms
+
     def _render_molecular_structure(self):
         """Render the molecular structure"""
-        gl_clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
-        gl_load_identity()
-
-        self._apply_camera_transformations()
-
-        # Center the structure
-        if self.calpha_positions is not None and len(self.calpha_positions) > 0:
-            center = np.mean(self.calpha_positions, axis=0)
-            gl_translate_f(
-                -center[0], -center[1], -center[2])
+        self._center_structure()
 
         # Render C-alpha atoms as white wireframe spheres
         self._render_calpha_atoms()
 
         # Render bonds between C-alpha atoms
         self._render_calpha_bonds()
+
+    def _center_structure(self):
+        """Center the structure"""
+        if self.calpha_positions is not None and len(self.calpha_positions) > 0:
+            center = np.mean(self.calpha_positions, axis=0)
+            gl_translate_f(
+                -center[0], -center[1], -center[2])
 
     def _apply_camera_transformations(self):
         """Apply camera transformations"""
