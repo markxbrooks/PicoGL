@@ -7,10 +7,8 @@ This example demonstrates how to:
 3. Display them as a white wireframe model using Qt and legacy OpenGL
 4. Provide interactive controls for rotation and zoom
 """
-import math
 import os
 import sys
-from typing import Any
 
 import numpy as np
 from molib.core.constants import MoLibConstant
@@ -24,15 +22,17 @@ from picogl.backend.gl.api.clear import gl_clear
 from picogl.backend.gl.api.color import gl_color_rgb
 from picogl.backend.gl.api.legacy.matrix import gl_pushed_matrix
 from picogl.backend.gl.api.legacy.rotate import gl_rotate_vec3
-from picogl.backend.gl.api.legacy.vertex import gl_vertex_vec3
 from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.enums import GLBitMask, GLDrawMode
 from picogl.backend.gl.enums.legacy.scale import (gl_load_identity, gl_scalef,
                                                   gl_translate_f,
                                                   gl_translate_vec3)
 from picogl.backend.gl.state.immediate import gl_immediate_drawing
-from picogl.core.draw.line import (gl_legacy_draw_line,
-                                   gl_legacy_draw_line_with_normal)
+from picogl.core.draw.line import gl_legacy_draw_line
+from picogl.core.draw.sphere import (draw_latitude_band_connectors,
+                                     draw_latitude_band_filled,
+                                     draw_latitude_ring_wireframe)
+from picogl.core.geometry.sphere import generate_ring, latitude_for_stack
 from picogl.core.rgbcolor import RGBColor
 from picogl.core.setup import (gl_setup_background_color, gl_setup_depth_test,
                                gl_setup_lighting, gl_setup_materials)
@@ -49,11 +49,6 @@ ZOOM_SCALE_FACTOR = -50.0
 
 # Add the examples directory to the path so we can import the PDB loader
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "utils"))
-
-
-def get_lat_for_stack_no(i: int, stacks) -> float | Any:
-    """get_lat_for_stack_no"""
-    return math.pi * (-0.5 + i / stacks)
 
 
 def gl_scale_by_zoom(zoom: float):
@@ -240,47 +235,18 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
 
                     gl_legacy_draw_line(pos1, pos2)
 
-    def _draw_wireframe_sphere(self, radius, slices, stacks):
-        """Draw a sphere (filled or wireframe) using legacy OpenGL"""
-
-        for i in range(stacks):
-            lat0 = get_lat_for_stack_no(i, stacks)
-            lat1 = get_lat_for_stack_no(i + 1, stacks)
+    def _draw_wireframe_sphere(self, radius: float, slices: int, stacks: int) -> None:
+        """Draw a sphere (filled or wireframe) using legacy OpenGL."""
+        for stack in range(stacks):
+            lat0 = latitude_for_stack(stack, stacks)
+            lat1 = latitude_for_stack(stack + 1, stacks)
+            ring0 = generate_ring(radius, lat0, slices)
+            ring1 = generate_ring(radius, lat1, slices)
 
             if not self.wireframe_mode:
-                self.draw_latitide_ring_filled_triangle(lat0, lat1, radius, slices)
-
-            self.draw_latitude_ring_wireframe_lines(lat0, radius, slices)
-
-            self.draw_latitude_ring_connecting_line(lat0, lat1, radius, slices)
-
-    def iter_longitudes(self, slices: int):
-        """Yield longitude angles for each slice."""
-        for j in range(slices + 1):
-            yield 2 * math.pi * j / slices
-
-    def draw_latitude_ring_connecting_line(self, lat0: float | Any, lat1: float | Any, radius, slices):
-        """Draw vertical lines connecting the rings"""
-        with gl_immediate_drawing(GLDrawMode.LINES):
-            for lng in self.iter_longitudes(slices):
-                vertex0 = Vec3.sphere(radius, lat0, lng)
-                vertex1 = Vec3.sphere(radius, lat1, lng)
-                gl_legacy_draw_line(vertex0, vertex1)
-
-    def draw_latitude_ring_wireframe_lines(self, lat0: float | Any, radius, slices):
-        """Draw wireframe lines for the latitude rings"""
-        with gl_immediate_drawing(GLDrawMode.LINE_LOOP):
-            for lng in self.iter_longitudes(slices):
-                vertex0 = Vec3.sphere(radius, lat0, lng)
-                gl_vertex_vec3(vertex0)
-
-    def draw_latitide_ring_filled_triangle(self, lat0: float | Any, lat1: float | Any, radius, slices):
-        """Draw filled triangles between the two latitude rings"""
-        with gl_immediate_drawing(GLDrawMode.TRIANGLE_STRIP):
-            for lng in self.iter_longitudes(slices):
-                vertex0 = Vec3.sphere(radius, lat0, lng)
-                vertex1 = Vec3.sphere(radius, lat1, lng)
-                gl_legacy_draw_line_with_normal(vertex0, vertex1)
+                draw_latitude_band_filled(ring0, ring1)
+            draw_latitude_ring_wireframe(ring0)
+            draw_latitude_band_connectors(ring0, ring1)
 
     def mousePressEvent(self, event):
         """Handle mouse press for rotation"""
