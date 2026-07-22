@@ -1,20 +1,5 @@
-"""
-Provides functionality for displaying and interacting with a 3D cube using OpenGL and PySide6.
-
-This module defines a custom OpenGL widget `GLCubeWidget` for rendering a 3D cube and provides
-a main application window `MainWindow` that allows the user to manipulate the cube's position,
-rotation, and zoom level via sliders.
-
-Classes:
-    GLCubeWidget: Handles OpenGL initialization, rendering, and transformations for a 3D cube.
-    MainWindow: Main application window containing the OpenGL widget and GUI controls.
-
-Functions:
-    _triangulate_quads: Converts quad face indices to triangle face indices for rendering.
-    _multiply_by_pi: Multiplies the input value by the mathematical constant π.
-
-"""
 import sys
+from dataclasses import dataclass, field
 from typing import Any
 
 import numpy as np
@@ -23,12 +8,17 @@ from PySide6.QtOpenGLWidgets import QOpenGLWidget
 from PySide6.QtWidgets import (QApplication, QHBoxLayout, QMainWindow, QSlider,
                                QVBoxLayout, QWidget)
 
+from backend.gl.api.clear import gl_clear_rgba_color
 from core.rgbcolor import RGBAColor
-from core.setup.view import gl_setup_view
+from picogl.core.setup.view import gl_setup_view
+from picogl.core.vec3 import Vec3
+from picogl.core.zoom.scale import gl_scale_by_zoom
+from molib.pdb.coordinate.coordinate import Coordinates
+from picogl.backend.gl.api.clear import gl_clear_color
 from picogl.backend.gl.api.enable import gl_enable
 from picogl.backend.gl.api.legacy.matrix import gl_pushed_matrix
 from picogl.backend.gl.capability import GLPipelineCapability
-from picogl.backend.gl.enums.legacy.scale import (gl_rotatef, gl_scalef,
+from picogl.backend.gl.enums.legacy.scale import (gl_rotatef,
                                                   gl_translate_f, gl_viewport)
 from picogl.backend.legacy.core.pipeline import LegacyPipeline
 from picogl.renderer import MeshData
@@ -48,14 +38,43 @@ def _multiply_by_pi(val) -> float | Any:
     return np.pi * val
 
 
+@dataclass(frozen=True, slots=True)
+class Axes:
+    """Axes"""
+    x: Vec3 = field(default_factory=lambda: Vec3(1.0, 0.0, 0.0))
+    y: Vec3 = field(default_factory=lambda: Vec3(0.0, 1.0, 0.0))
+    z: Vec3 = field(default_factory=lambda: Vec3(0.0, 0.0, 1.0))
+
+
+def gl_perform_rotations(rotation: Vec3, axes: Axes):
+    """gl perform rotations"""
+    gl_rotatef(rotation.x, *axes.x.tuple)
+    gl_rotatef(rotation.y, *axes.y.tuple)
+    gl_rotatef(rotation.z, *axes.z.tuple)
+
+
+@dataclass(slots=True)
+class GLViewTransform:
+    """View Transform"""
+    zoom: float
+    rotation: Vec3
+    scale: float = 20.0
+    origin: Coordinates = field(default_factory=lambda: Coordinates(0.5, 0.5, 0.5))
+    axes: Axes = field(default_factory=lambda: Axes())
+
+
+    def apply(self) -> None:
+        gl_translate_f(0.0, 0.0, self.zoom)
+        gl_scale_by_zoom(self.scale)
+        gl_perform_rotations(self.rotation, self.axes)
+        gl_translate_f(-self.origin.x, -self.origin.y, -self.origin.z)
+
+
 class GLCubeWidget(QOpenGLWidget):
     def __init__(self, parent=None):
-        self.rot_x = None
-        self.rot_y = None
-        self.rot_z = None
-        self.zoom = None
         self.parent = parent
         self.cube_mesh: LegacyGLMesh | None = None
+        self.view = GLViewTransform(zoom=-50, rotation=Vec3(0.0, 0.0, 0.0))
         QOpenGLWidget.__init__(self, parent)
         self.pdb_data = None
 
@@ -67,35 +86,15 @@ class GLCubeWidget(QOpenGLWidget):
         gl_clear_rgba_color(RGBAColor(0.0, 0.0, 0.0, 1.0))
         gl_enable(GLPipelineCapability.DEPTH_TEST)
         self.init_geometry()
-        self.rot_x = 0.0
-        self.rot_y = 0.0
-        self.rot_z = 0.0
-        self.zoom = -50.0
 
     def resizeGL(self, width, height):
         gl_viewport(0, 0, width, height)
         LegacyPipeline.set_projection(45.0, width / float(height), 1.0, 100.0)
 
     def paintGL(self):
-        """
-        Renders the OpenGL scene for the current frame.
-
-        This method sets up the OpenGL view, applies transformations based on the
-        current zoom, rotation, and translation values, and renders the cube mesh
-        if it is available.
-
-        Raises:
-            Exception: If there is an error during OpenGL rendering.
-
-        """
         gl_setup_view()
         with gl_pushed_matrix():
-            gl_translate_f(0.0, 0.0, float(self.zoom))
-            gl_scalef(20.0, 20.0, 20.0)
-            gl_rotatef(float(self.rot_x), 1.0, 0.0, 0.0)
-            gl_rotatef(float(self.rot_y), 0.0, 1.0, 0.0)
-            gl_rotatef(float(self.rot_z), 0.0, 0.0, 1.0)
-            gl_translate_f(-0.5, -0.5, -0.5)
+            self.view.apply()
 
             if self.cube_mesh is not None:
                 with self.cube_mesh:
@@ -163,16 +162,16 @@ class GLCubeWidget(QOpenGLWidget):
         self.cube_mesh = LegacyGLMesh.from_mesh_data(mesh_data)
 
     def set_rot_x(self, val):
-        self.rot_x = _multiply_by_pi(val)
+        self.view.rotation.x = _multiply_by_pi(val)
 
     def set_rot_y(self, val):
-        self.rot_y = _multiply_by_pi(val)
+        self.view.rotation.y = _multiply_by_pi(val)
 
     def set_rot_z(self, val):
-        self.rot_z = _multiply_by_pi(val)
+        self.view.rotation.z = _multiply_by_pi(val)
 
     def set_zoom(self, val):
-        self.zoom = val
+        self.view.zoom = val
         self.update()
 
 

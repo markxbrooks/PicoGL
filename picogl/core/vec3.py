@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from picogl.core.mixin.vec3 import Vec3Mixin
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=False)
 class Vec3(Vec3Mixin):
     """A three-component vector."""
 
