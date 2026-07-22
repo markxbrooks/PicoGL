@@ -15,6 +15,7 @@ import sys
 
 import numpy as np
 
+from backend.gl.api.legacy.matrix import gl_matrix_mode_context
 from picogl.backend.gl.api.clear import gl_clear, gl_clear_color
 from picogl.backend.gl.api.color import gl_color_3f
 from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
@@ -413,10 +414,8 @@ class LegacyCubeRenderer(GlutRenderer):
         self.width = width
         self.height = height
         gl_viewport(0, 0, width, height)
-        gl_matrix_mode(GLLegacyMatrixMode.PROJECTION)
-        gl_load_identity()
-        glu_perspective(45.0, float(width) / float(height), 0.1, 100.0)
-        gl_matrix_mode(GLLegacyMatrixMode.MODELVIEW)
+        with gl_matrix_mode_context():
+            glu_perspective(45.0, float(width) / float(height), 0.1, 100.0)
 
     def idle(self):
         """Idle callback for animation."""
