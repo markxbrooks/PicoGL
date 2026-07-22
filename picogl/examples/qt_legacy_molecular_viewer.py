@@ -12,6 +12,9 @@ import sys
 from typing import Any
 
 import numpy as np
+
+from core.setup.view import gl_setup_view
+from core.zoom.scale import gl_scale_by_zoom
 from molib.core.constants import MoLibConstant
 from PySide6.QtCore import Qt
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
@@ -19,14 +22,12 @@ from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMessageBox,
                                QPushButton, QSplitter, QVBoxLayout, QWidget)
 
 from picogl.backend.geometry import LegacyBinding
-from picogl.backend.gl.api.clear import gl_clear
 from picogl.backend.gl.api.color import gl_color_rgb
 from picogl.backend.gl.api.legacy.matrix import gl_pushed_matrix
 from picogl.backend.gl.api.legacy.rotate import gl_rotate_vec3
 from picogl.backend.gl.backend import GLBackend
-from picogl.backend.gl.enums import GLBitMask, GLDrawMode
-from picogl.backend.gl.enums.legacy.scale import (gl_load_identity, gl_scalef,
-                                                  gl_translate_f,
+from picogl.backend.gl.enums import GLDrawMode
+from picogl.backend.gl.enums.legacy.scale import (gl_translate_f,
                                                   gl_translate_vec3)
 from picogl.backend.gl.state.immediate import gl_immediate_drawing
 from picogl.core.draw.line import gl_legacy_draw_line
@@ -50,15 +51,6 @@ ZOOM_SCALE_FACTOR = -50.0
 
 # Add the examples directory to the path so we can import the PDB loader
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "utils"))
-
-
-def gl_scale_by_zoom(zoom: float):
-    gl_scalef(zoom, zoom, zoom)
-
-
-def gl_setup_view():
-    gl_clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
-    gl_load_identity()
 
 
 class QtLegacyMolecularViewer(QOpenGLWidget):

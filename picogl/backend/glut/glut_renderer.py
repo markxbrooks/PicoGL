@@ -15,7 +15,9 @@ import sys
 
 import numpy as np
 
-from picogl.backend.gl.api.clear import gl_clear, gl_clear_rgba_color
+from picogl.backend.glu.perspective import glu_perspective
+from picogl.core.setup.view import gl_setup_view
+from picogl.backend.gl.api.clear import gl_clear_rgba_color
 from picogl.backend.gl.api.color import gl_color_3f, gl_color_material
 from picogl.backend.gl.api.matrix import gl_matrix_mode
 from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
@@ -23,13 +25,11 @@ from picogl.backend.gl.api.rotate import gl_rotate_f
 from picogl.backend.gl.capability import (GLFixedFunctionCapability,
                                           GLMaterialFace)
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
-from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.enums.legacy.scale import gl_load_identity, gl_viewport
 from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
 from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode,
                                           GLFillMode)
-from picogl.backend.glu.lookat import glu_look_at
 from picogl.backend.glut.buffers import glut_swap_buffers
 from picogl.backend.glut.cube import glut_wire_cube
 from picogl.backend.glut.cube_data import CUBE_COLORS, CUBE_VERTICES
@@ -157,11 +157,13 @@ class GlutRenderer:
 
     def display(self):
         """Display callback - render the scene."""
-        gl_clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
-        gl_load_identity()
+        gl_setup_view()
 
         # Set up camera
-        glu_look_at(0, 0, self.zoom_distance, 0, 0, 0, 0, 1, 0)
+        eye = Coordinates(0, 0, self.zoom_distance)
+        center = Coordinates(0, 0, 0)
+        up = Coordinates(0, 1, 0)
+        glu_look_at_coords(eye=eye, center=center, up=up)
 
         # Apply rotations
         gl_rotate_f(self.rotation_x, 1, 0, 0)
@@ -210,7 +212,7 @@ class GlutRenderer:
         gl_viewport(0, 0, width, height)
         gl_matrix_mode(GLLegacyMatrixMode.PROJECTION)
         gl_load_identity()
-        gluPerspective(45.0, float(width) / float(height), 0.1, 100.0)
+        glu_perspective(45.0, float(width) / float(height), 0.1, 100.0)
         gl_matrix_mode(GLLegacyMatrixMode.MODELVIEW)
 
     def keyboard(self, key, x, y):

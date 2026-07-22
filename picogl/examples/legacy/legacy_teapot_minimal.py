@@ -16,7 +16,10 @@ Features:
 import os
 import sys
 
-from picogl.backend.gl.api.clear import gl_clear, gl_clear_color
+from core.rgbcolor import RGBAColor
+from core.setup.camera import gl_setup_camera
+from core.setup.view import gl_setup_view
+from picogl.backend.gl.api.clear import gl_clear, gl_clear_color, gl_clear_rgba_color
 from picogl.backend.gl.api.color import gl_color_3f, gl_color_material
 from picogl.backend.gl.api.enable import gl_enable, toggle_capability
 from picogl.backend.gl.api.matrix import gl_matrix_mode
@@ -68,7 +71,7 @@ class MinimalTeapotRenderer(GlutRenderer):
 
     def init_gl(self):
         """Initialize OpenGL state."""
-        gl_clear_color(color=(0.1, 0.1, 0.2, 1.0))  # Dark blue background
+        gl_clear_rgba_color(RGBAColor(0.1, 0.1, 0.2, 1.0))  # Dark blue background
         gl_enable(GLPipelineCapability.DEPTH_TEST)
         gl_enable(GLFixedFunctionCapability.LIGHTING)
         gl_enable(GLFixedFunctionCapability.LIGHT0)
@@ -80,11 +83,10 @@ class MinimalTeapotRenderer(GlutRenderer):
 
     def display(self):
         """Display callback - render the scene."""
-        gl_clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
-        gl_load_identity()
+        gl_setup_view()
 
         # Set up camera
-        glu_look_at(0, 0, self.zoom_distance, 0, 0, 0, 0, 1, 0)
+        gl_setup_camera(self.zoom_distance)
 
         # Apply rotations
         gl_rotate_f(angle=self.rotation_x, x=1, y=0, z=0)

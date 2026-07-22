@@ -12,11 +12,14 @@ Features:
 """
 
 import numpy as np
-# from picogl.examples.glut_renderer import GlutRenderer, gl_legacy_lighting
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 
-from picogl.backend.gl.api.clear import gl_clear, gl_clear_color
+from backend.gl.api.color import gl_color_rgb
+from backend.gl.api.legacy.matrix import gl_matrix_mode_context
+from core.setup.camera import gl_setup_camera
+from core.setup.view import gl_setup_view
+from picogl.backend.gl.api.clear import gl_clear_rgba_color
 from picogl.backend.gl.api.color import gl_color_3f, gl_color_material
 from picogl.backend.gl.api.enable import gl_disable, gl_enable
 from picogl.backend.gl.api.matrix import gl_matrix_mode
@@ -25,20 +28,19 @@ from picogl.backend.gl.api.rotate import gl_rotate_f
 from picogl.backend.gl.api.vertex.vertex_3f import gl_vertex_3f
 from picogl.backend.gl.capability import (GLFixedFunctionCapability,
                                           GLMaterialFace, GLPipelineCapability)
-from picogl.backend.gl.enums import GLBitMask, GLDrawMode
+from picogl.backend.gl.enums import GLDrawMode
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.enums.legacy.scale import gl_load_identity, gl_viewport
 from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
 from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode,
                                           GLFillMode)
 from picogl.backend.gl.state.immediate import gl_immediate_drawing
-from picogl.backend.glu.lookat import glu_look_at
 from picogl.backend.glu.perspective import glu_perspective
 from picogl.backend.glut.buffers import glut_swap_buffers
 from picogl.backend.glut.display import glut_post_redisplay
 from picogl.backend.glut.glut_renderer import GlutRenderer
 from picogl.backend.glut.teapot import glut_solid_teapot
-from picogl.core.rgbcolor import RGBColor
+from picogl.core.rgbcolor import RGBColor, RGBAColor
 
 
 class SimpleTeapotRenderer(GlutRenderer):
@@ -65,8 +67,8 @@ class SimpleTeapotRenderer(GlutRenderer):
     def init_gl(self):
         """Initialize OpenGL state."""
         try:
-            dark_blue_background = (0.1, 0.1, 0.2, 1.0)
-            gl_clear_color(dark_blue_background)  # Dark blue background
+            dark_blue_background = RGBAColor(0.1, 0.1, 0.2, 1.0)
+            gl_clear_rgba_color(dark_blue_background)  # Dark blue background
             gl_enable(GLPipelineCapability.DEPTH_TEST)
             gl_enable(GLFixedFunctionCapability.LIGHTING)
             gl_enable(GLFixedFunctionCapability.LIGHT0)
@@ -83,11 +85,10 @@ class SimpleTeapotRenderer(GlutRenderer):
 
     def display(self):
         """Display callback - render the scene."""
-        gl_clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
-        gl_load_identity()
+        gl_setup_view()
 
         # Set up camera
-        glu_look_at(0, 0, self.zoom_distance, 0, 0, 0, 0, 1, 0)
+        gl_setup_camera(self.zoom_distance)
 
         # Apply rotations
         gl_rotate_f(self.rotation_x, 1, 0, 0)
@@ -102,14 +103,14 @@ class SimpleTeapotRenderer(GlutRenderer):
         """Draw the teapot using built-in OpenGL primitives."""
         # Set polygon mode
         if self.wireframe_mode:
-            gl_polygon_mode(GL_FRONT_AND_BACK, GL_LINE)
+            gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.LINE)
             gl_disable(GLFixedFunctionCapability.LIGHTING)
             red_teapot = RGBColor(1.0, 0.0, 0.0)
             gl_color_3f(*red_teapot.tuple)  # Red wireframe
         else:
-            gl_polygon_mode(GL_FRONT_AND_BACK, GL_FILL)
+            gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.FILL)
             gl_enable(GLFixedFunctionCapability.LIGHTING)
-            gl_color_3f(0.8, 0.2, 0.2)  # Red teapot
+            gl_color_rgb(RGBColor(0.8, 0.2, 0.2))  # Red teapot
 
         # Draw the teapot
         glut_solid_teapot(1.0)
@@ -149,10 +150,8 @@ class SimpleTeapotRenderer(GlutRenderer):
         self.width = width
         self.height = height
         gl_viewport(0, 0, width, height)
-        gl_matrix_mode(GLLegacyMatrixMode.PROJECTION)
-        gl_load_identity()
-        glu_perspective(45.0, float(width) / float(height), 0.1, 100.0)
-        gl_matrix_mode(GLLegacyMatrixMode.MODELVIEW)
+        with gl_matrix_mode_context():
+            glu_perspective(45.0, float(width) / float(height), 0.1, 100.0)
 
     def idle(self):
         """Idle callback for animation."""
