@@ -15,21 +15,21 @@ import sys
 
 import numpy as np
 
+from backend.gl.api.enable import gl_disable
 from backend.gl.api.legacy.matrix import gl_matrix_mode_context
-from picogl.backend.gl.api.clear import gl_clear, gl_clear_color
-from picogl.backend.gl.api.color import gl_color_3f
+from core.rgbcolor import RGBColor, RGBAColor
+from molib.pdb.coordinate.coordinate import Coordinates
+from picogl.backend.gl.api.clear import gl_clear, gl_clear_color, gl_clear_rgba_color
+from picogl.backend.gl.api.color import gl_color_rgb, gl_color_material
 from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
-from picogl.backend.gl.api.rotate import gl_rotate_f
-from picogl.backend.gl.capability import GLFixedFunctionCapability
+from picogl.backend.gl.capability import GLFixedFunctionCapability, GLMaterialFace, GLPipelineCapability
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.gl.enums import GLBitMask
-from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.enums.legacy.scale import (gl_load_identity, gl_rotatef,
                                                   gl_viewport)
 from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
-from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode,
-                                          GLFace, GLFillMode)
-from picogl.backend.glu.lookat import glu_look_at
+from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode, GLFillMode)
+from picogl.backend.glu.lookat import glu_look_at_coords
 from picogl.backend.glu.perspective import glu_perspective
 from picogl.backend.glut.buffers import glut_swap_buffers
 from picogl.backend.glut.cube import glut_wire_cube
@@ -323,12 +323,12 @@ class LegacyCubeRenderer(GlutRenderer):
 
     def init_gl(self):
         """Initialize OpenGL state."""
-        gl_clear_color(color=(0.1, 0.1, 0.2, 1.0))  # Dark blue background
-        GLCapabilityDriver.enable(GL_DEPTH_TEST)
+        gl_clear_rgba_color(RGBAColor(0.1, 0.1, 0.2, 1.0))  # Dark blue background
+        GLCapabilityDriver.enable(GLPipelineCapability.DEPTH_TEST)
         GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHTING)
         GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHT0)
         GLCapabilityDriver.enable(GLCapability.COLOR_MATERIAL)
-        glColorMaterial(GLFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE)
+        gl_color_material(GLMaterialFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE)
 
         gl_legacy_lighting()
 
@@ -367,7 +367,11 @@ class LegacyCubeRenderer(GlutRenderer):
         gl_load_identity()
 
         # Set up camera
-        glu_look_at(0, 0, self.zoom_distance, 0, 0, 0, 0, 1, 0)
+        eye = Coordinates(0, 0, self.zoom_distance)
+        center = Coordinates(0, 0, 0)
+        up = Coordinates(0, 1, 0)
+        # glu_look_at(0, 0, self.zoom_distance, 0, 0, 0, 0, 1, 0)
+        glu_look_at_coords(eye=eye, center=center, up=up)
 
         # Apply rotations
         gl_rotatef(self.rotation_x, 1, 0, 0)
@@ -380,13 +384,13 @@ class LegacyCubeRenderer(GlutRenderer):
                     gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.LINE)
                     gl_disable(GLFixedFunctionCapability.LIGHTING)
                 else:
-                    glPolygonMode(GLFace.FRONT_AND_BACK, GLFillMode.FILL)
+                    gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.FILL)
                     GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHTING)
 
                 self.mesh.draw()
 
                 # Reset polygon mode
-                glPolygonMode(GLFace.FRONT_AND_BACK, GLFillMode.FILL)
+                gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.FILL)
                 GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHTING)
 
             except Exception as e:
@@ -402,8 +406,7 @@ class LegacyCubeRenderer(GlutRenderer):
     def draw_fallback_cube(self):
         """Draw a simple wireframe cube as fallback."""
         gl_disable(GLFixedFunctionCapability.LIGHTING)
-        red_rgb = (1.0, 0.0, 0.0)
-        gl_color_3f(red_rgb)  # Red wireframe
+        gl_color_rgb(RGBColor.RED)  # Red wireframe
         gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.LINE)
         glut_wire_cube(2.0)
         gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.FILL)
