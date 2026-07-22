@@ -1,16 +1,47 @@
+"""Provides functionality for representing spatial coordinates and a camera view in 3D space.
+
+This module defines utility functions and protocols for transforming spatial data into
+(x, y, z) tuples, as well as for setting up a camera view using OpenGL's gluLookAt function.
+It includes support for Coordinates objects, 3-element sequences, and other objects with
+x, y, and z attributes.
+"""
+
 from OpenGL.raw.GLU import gluLookAt
+from typing import Protocol, Union
 
-def _to_xyz(v: Union[Coordinates, Sequence[float], Any]) -> Tuple[float, float, float]:“”“Normalize a Coordinates-like value to a (x, y, z) tuple.”””if isinstance(v, Coordinates):return v.x, v.y, v.z# Sequence-like (tuple, list, numpy array)try:if len(v) == 3:return float(v[0]), float(v[1]), float(v[2])except Exception:pass# Object with x, y, z attributesif hasattr(v, “x”) and hasattr(v, “y”) and hasattr(v, “z”):return float(getattr(v, “x”)), float(getattr(v, “y”)), float(getattr(v, “z”))raise TypeError(“expected Coordinates, a 3-element sequence, or object with x,y,z attributes”)
+from molib.pdb.coordinate.coordinate import Coordinates
+from collections.abc import Sequence
+from typing import Any
 
-def glu_look_at_coords(
-    eye: Union[Coordinates, Sequence[float], Any],
-    center: Union[Coordinates, Sequence[float], Any],
-    up: Union[Coordinates, Sequence[float], Any],) -> None:
-    "Preferred API: pass three Coordinates (or 3-element sequences / objects with x,y,z).”””
-    ex, ey, ez = _to_xyz(eye)
-    cx, cy, cz = _to_xyz(center)
-    ux, uy, uz = _to_xyz(up)
-    gluLookAt(ex, ey, ez, cx, cy, cz, ux, uy, uz)
+
+class SupportsXYZ(Protocol):
+    """Supports XYZ"""
+    x: float
+    y: float
+    z: float
+
+
+def _to_xyz(v: Coordinates | Sequence[float] | Any) -> tuple[float, float, float]:
+    """Return *v* as an ``(x, y, z)`` tuple."""
+
+    if isinstance(v, Coordinates):
+        return v.x, v.y, v.z
+
+    # Sequence-like (tuple, list, numpy array)
+    try:
+        x, y, z = v
+        return float(x), float(y), float(z)
+    except (TypeError, ValueError):
+        pass
+
+    # Object with x, y, z attributes
+    if all(hasattr(v, attr) for attr in ("x", "y", "z")):
+        return float(v.x), float(v.y), float(v.z)
+
+    raise TypeError(
+        "Expected Coordinates, a 3-element sequence, "
+        "or an object with x, y and z attributes."
+    )
 
 
 def glu_look_at(
@@ -27,4 +58,13 @@ def glu_look_at(
     """glu lookat"""
     gluLookAt(eye_x, eye_y, eye_z, center_x, center_y, center_z, up_x, up_y, up_z)
 
-all = [“Coordinates”, “glu_look_at”, “glu_look_at_coords”]
+
+def glu_look_at_coords(
+    eye: Union[Coordinates, Sequence[float], Any],
+    center: Union[Coordinates, Sequence[float], Any],
+    up: Union[Coordinates, Sequence[float], Any],) -> None:
+    """Preferred API: pass three Coordinates (or 3-element sequences / objects with x,y,z)."""
+    ex, ey, ez = _to_xyz(eye)
+    cx, cy, cz = _to_xyz(center)
+    ux, uy, uz = _to_xyz(up)
+    glu_look_at(ex, ey, ez, cx, cy, cz, ux, uy, uz)
