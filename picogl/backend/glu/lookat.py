@@ -6,12 +6,11 @@ It includes support for Coordinates objects, 3-element sequences, and other obje
 x, y, and z attributes.
 """
 
-from OpenGL.raw.GLU import gluLookAt
-from typing import Protocol, Union
+from collections.abc import Sequence
+from typing import Any, Protocol, Union
 
 from molib.pdb.coordinate.coordinate import Coordinates
-from collections.abc import Sequence
-from typing import Any
+from OpenGL.raw.GLU import gluLookAt
 
 
 class SupportsXYZ(Protocol):

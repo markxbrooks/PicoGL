@@ -35,10 +35,10 @@ This base class is abstract and cannot be used directly;
 import ctypes
 
 import numpy as np
-from OpenGL import error as _gl_err
-
 from backend.gl.api.buffer.check_is import gl_is_buffer
 from backend.gl.api.buffer.subdata import gl_buffer_subdata
+from OpenGL import error as _gl_err
+
 from picogl.backend.gl.api import gl_bind_buffer, gl_buffer_data
 from picogl.backend.gl.api.vertex.attrib_pointer import \
     gl_vertex_attrib_pointer

@@ -14,21 +14,22 @@ import os
 import sys
 
 import numpy as np
-
 from backend.gl.api.enable import gl_disable
 from backend.gl.api.legacy.matrix import gl_matrix_mode_context
-from core.rgbcolor import RGBColor, RGBAColor
+from core.rgbcolor import RGBAColor, RGBColor
 from core.setup.camera import gl_setup_camera
 from core.setup.view import gl_setup_view
+
 from picogl.backend.gl.api.clear import gl_clear_rgba_color
-from picogl.backend.gl.api.color import gl_color_rgb, gl_color_material
+from picogl.backend.gl.api.color import gl_color_material, gl_color_rgb
 from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
-from picogl.backend.gl.capability import GLFixedFunctionCapability, GLMaterialFace, GLPipelineCapability
+from picogl.backend.gl.capability import (GLFixedFunctionCapability,
+                                          GLMaterialFace, GLPipelineCapability)
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
-from picogl.backend.gl.enums.legacy.scale import (gl_rotatef,
-                                                  gl_viewport)
+from picogl.backend.gl.enums.legacy.scale import gl_rotatef, gl_viewport
 from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
-from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode, GLFillMode)
+from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode,
+                                          GLFillMode)
 from picogl.backend.glu.perspective import glu_perspective
 from picogl.backend.glut.buffers import glut_swap_buffers
 from picogl.backend.glut.cube import glut_wire_cube

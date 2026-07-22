@@ -15,8 +15,6 @@ import sys
 
 import numpy as np
 
-from picogl.backend.glu.perspective import glu_perspective
-from picogl.core.setup.view import gl_setup_view
 from picogl.backend.gl.api.clear import gl_clear_rgba_color
 from picogl.backend.gl.api.color import gl_color_3f, gl_color_material
 from picogl.backend.gl.api.matrix import gl_matrix_mode
@@ -30,6 +28,7 @@ from picogl.backend.gl.enums.legacy.scale import gl_load_identity, gl_viewport
 from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
 from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode,
                                           GLFillMode)
+from picogl.backend.glu.perspective import glu_perspective
 from picogl.backend.glut.buffers import glut_swap_buffers
 from picogl.backend.glut.cube import glut_wire_cube
 from picogl.backend.glut.cube_data import CUBE_COLORS, CUBE_VERTICES
@@ -42,6 +41,7 @@ from picogl.backend.glut.init import (glut_create_window, glut_init,
                                       glut_init_display_mode,
                                       glut_init_window_size, glut_main_loop)
 from picogl.core.rgbcolor import RGBAColor
+from picogl.core.setup.view import gl_setup_view
 
 # Check for display before importing OpenGL
 if os.environ.get("DISPLAY") is None and os.name != "nt":

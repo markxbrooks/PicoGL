@@ -8,7 +8,7 @@ from contextlib import contextmanager
 from typing import Iterator
 
 from backend.gl.backend import GLBackend
-from backend.gl.state.fill import GLFillMode, GLFace
+from backend.gl.state.fill import GLFace, GLFillMode
 
 
 @contextmanager

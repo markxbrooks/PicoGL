@@ -19,7 +19,9 @@ import sys
 from core.rgbcolor import RGBAColor
 from core.setup.camera import gl_setup_camera
 from core.setup.view import gl_setup_view
-from picogl.backend.gl.api.clear import gl_clear, gl_clear_color, gl_clear_rgba_color
+
+from picogl.backend.gl.api.clear import (gl_clear, gl_clear_color,
+                                         gl_clear_rgba_color)
 from picogl.backend.gl.api.color import gl_color_3f, gl_color_material
 from picogl.backend.gl.api.enable import gl_enable, toggle_capability
 from picogl.backend.gl.api.matrix import gl_matrix_mode

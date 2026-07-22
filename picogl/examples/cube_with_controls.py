@@ -3,24 +3,23 @@ from dataclasses import dataclass, field
 from typing import Any
 
 import numpy as np
+from molib.pdb.coordinate.coordinate import Coordinates
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
 from PySide6.QtWidgets import (QApplication, QHBoxLayout, QMainWindow, QSlider,
                                QVBoxLayout, QWidget)
 
-from backend.gl.api.clear import gl_clear_rgba_color
-from core.rgbcolor import RGBAColor
-from picogl.core.setup.view import gl_setup_view
-from picogl.core.vec3 import Vec3
-from picogl.core.zoom.scale import gl_scale_by_zoom
-from molib.pdb.coordinate.coordinate import Coordinates
-from picogl.backend.gl.api.clear import gl_clear_color
+from picogl.backend.gl.api.clear import gl_clear_rgba_color
 from picogl.backend.gl.api.enable import gl_enable
 from picogl.backend.gl.api.legacy.matrix import gl_pushed_matrix
 from picogl.backend.gl.capability import GLPipelineCapability
-from picogl.backend.gl.enums.legacy.scale import (gl_rotatef,
-                                                  gl_translate_f, gl_viewport)
+from picogl.backend.gl.enums.legacy.scale import (gl_rotatef, gl_translate_f,
+                                                  gl_viewport)
 from picogl.backend.legacy.core.pipeline import LegacyPipeline
+from picogl.core.rgbcolor import RGBAColor
+from picogl.core.setup.view import gl_setup_view
+from picogl.core.vec3 import Vec3
+from picogl.core.zoom.scale import gl_scale_by_zoom
 from picogl.renderer import MeshData
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 

@@ -9,7 +9,7 @@ This module provides functionality to:
 
 import os
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Any
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 from elmo.gl.backend.modern.entities.bonds.compute_indices import \

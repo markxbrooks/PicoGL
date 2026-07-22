@@ -12,13 +12,13 @@ Features:
 """
 
 import numpy as np
-from OpenGL.GL import *
-from OpenGL.GLUT import *
-
 from backend.gl.api.color import gl_color_rgb
 from backend.gl.api.legacy.matrix import gl_matrix_mode_context
 from core.setup.camera import gl_setup_camera
 from core.setup.view import gl_setup_view
+from OpenGL.GL import *
+from OpenGL.GLUT import *
+
 from picogl.backend.gl.api.clear import gl_clear_rgba_color
 from picogl.backend.gl.api.color import gl_color_3f, gl_color_material
 from picogl.backend.gl.api.enable import gl_disable, gl_enable
@@ -40,7 +40,7 @@ from picogl.backend.glut.buffers import glut_swap_buffers
 from picogl.backend.glut.display import glut_post_redisplay
 from picogl.backend.glut.glut_renderer import GlutRenderer
 from picogl.backend.glut.teapot import glut_solid_teapot
-from picogl.core.rgbcolor import RGBColor, RGBAColor
+from picogl.core.rgbcolor import RGBAColor, RGBColor
 
 
 class SimpleTeapotRenderer(GlutRenderer):
