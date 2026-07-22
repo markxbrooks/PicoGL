@@ -5,6 +5,10 @@ LegacyQtObjectRenderer
 from typing import Optional
 
 import numpy as np
+
+from backend.gl.api.legacy.matrix import gl_matrix_mode_context
+from core.setup.camera import gl_setup_camera
+from core.setup.view import gl_setup_view
 from decologr import Decologr as log
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import QWidget
@@ -133,21 +137,19 @@ class LegacyQtObjectRenderer(GLBase):
     def paintGL(self):
         """Render the cube scene"""
         # Clear buffers
-        gl_clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
+        gl_setup_view()
 
         # Set up modelview matrix
-        gl_matrix_mode(GLLegacyMatrixMode.MODELVIEW)
-        gl_load_identity()
+        with gl_matrix_mode_context():
+            # Position camera
+            gl_setup_camera(Self.zoom)
 
-        # Position camera
-        glu_look_at(0, 0, self.zoom, 0, 0, 0, 0, 1, 0)
+            # Apply rotations
+            gl_rotate_f(self.rotation_x, 1, 0, 0)
+            gl_rotate_f(self.rotation_y, 0, 1, 0)
 
-        # Apply rotations
-        gl_rotate_f(self.rotation_x, 1, 0, 0)
-        gl_rotate_f(self.rotation_y, 0, 1, 0)
-
-        # Draw the cube using legacy OpenGL
-        self.draw()
+            # Draw the cube using legacy OpenGL
+            self.draw()
 
     def draw(self):
         """Draw the cube using LegacyGLMesh"""

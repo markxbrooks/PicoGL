@@ -1,3 +1,19 @@
+"""
+Provides functionality for displaying and interacting with a 3D cube using OpenGL and PySide6.
+
+This module defines a custom OpenGL widget `GLCubeWidget` for rendering a 3D cube and provides
+a main application window `MainWindow` that allows the user to manipulate the cube's position,
+rotation, and zoom level via sliders.
+
+Classes:
+    GLCubeWidget: Handles OpenGL initialization, rendering, and transformations for a 3D cube.
+    MainWindow: Main application window containing the OpenGL widget and GUI controls.
+
+Functions:
+    _triangulate_quads: Converts quad face indices to triangle face indices for rendering.
+    _multiply_by_pi: Multiplies the input value by the mathematical constant π.
+
+"""
 import sys
 from typing import Any
 
@@ -7,11 +23,11 @@ from PySide6.QtOpenGLWidgets import QOpenGLWidget
 from PySide6.QtWidgets import (QApplication, QHBoxLayout, QMainWindow, QSlider,
                                QVBoxLayout, QWidget)
 
-from picogl.backend.gl.api.clear import gl_clear, gl_clear_color
+from core.rgbcolor import RGBAColor
+from core.setup.view import gl_setup_view
 from picogl.backend.gl.api.enable import gl_enable
 from picogl.backend.gl.api.legacy.matrix import gl_pushed_matrix
 from picogl.backend.gl.capability import GLPipelineCapability
-from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums.legacy.scale import (gl_rotatef, gl_scalef,
                                                   gl_translate_f, gl_viewport)
 from picogl.backend.legacy.core.pipeline import LegacyPipeline
@@ -48,7 +64,7 @@ class GLCubeWidget(QOpenGLWidget):
         self.update()
 
     def initializeGL(self):
-        gl_clear_color((0.0, 0.0, 0.0, 1.0))
+        gl_clear_rgba_color(RGBAColor(0.0, 0.0, 0.0, 1.0))
         gl_enable(GLPipelineCapability.DEPTH_TEST)
         self.init_geometry()
         self.rot_x = 0.0
@@ -61,7 +77,18 @@ class GLCubeWidget(QOpenGLWidget):
         LegacyPipeline.set_projection(45.0, width / float(height), 1.0, 100.0)
 
     def paintGL(self):
-        gl_clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
+        """
+        Renders the OpenGL scene for the current frame.
+
+        This method sets up the OpenGL view, applies transformations based on the
+        current zoom, rotation, and translation values, and renders the cube mesh
+        if it is available.
+
+        Raises:
+            Exception: If there is an error during OpenGL rendering.
+
+        """
+        gl_setup_view()
         with gl_pushed_matrix():
             gl_translate_f(0.0, 0.0, float(self.zoom))
             gl_scalef(20.0, 20.0, 20.0)
