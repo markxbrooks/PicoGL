@@ -11,6 +11,7 @@ from picogl.backend.glut.cube import glut_wire_cube
 from picogl.core.rgbcolor import RGBColor
 from polygon.mode import gl_polygon_mode_context
 
+
 def draw_fallback_cube(self):
     """Draw a simple wireframe cube as fallback."""
     gl_disable(GLFixedFunctionCapability.LIGHTING)

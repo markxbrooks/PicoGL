@@ -15,6 +15,8 @@ import sys
 
 import numpy as np
 
+from picogl.core.draw.cube import draw_fallback_cube
+from core.draw.mesh.legacy import draw_legacy_mesh
 from picogl.backend.glut.idle import glut_idle_func
 from picogl.core.vec3 import Vec3
 from picogl.examples.cube_with_controls import GLViewTransform
@@ -25,11 +27,9 @@ from picogl.core.setup.camera import gl_setup_camera
 from picogl.core.setup.capabilities import gl_setup_capabilities
 from picogl.backend.gl.api.clear import gl_clear_rgba_color
 from picogl.backend.gl.api.color import gl_color_material
-from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
 from picogl.backend.gl.api.rotate import gl_rotate_f
 from picogl.backend.gl.capability import (GLFixedFunctionCapability,
                                           GLMaterialFace)
-from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.gl.enums.legacy.scale import gl_viewport
 from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
 from picogl.backend.gl.state.fill import (GLColorMaterialMode,
@@ -73,6 +73,15 @@ except ImportError as e:
     print("   Install with: pip install picogl")
     print("   Or use legacy_cube_minimal.py instead")
     sys.exit(1)
+
+"""def draw_fallback_cube(self):
+    ""Draw a simple wireframe cube as fallback.""
+    gl_disable(GLFixedFunctionCapability.LIGHTING)
+    gl_color_rgb(RGBColor.RED)  # Red wireframe
+    with gl_polygon_mode_context(GLFillMode.LINE):
+        glut_wire_cube(2.0)
+    with gl_polygon_mode_context(GLFillMode.FILL):
+        gl_enable(GLFixedFunctionCapability.LIGHTING)"""
 
 
 class GlutRenderer:
@@ -133,11 +142,6 @@ class GlutRenderer:
     def load_cube_data(self):
         """Load cube data using PicoGL LegacyGLMesh."""
         try:
-            # Create mesh data
-            mesh_data = MeshData.from_raw(
-                vertices=self.vertices.flatten(), colors=self.colors.flatten()
-            )
-
             # Create faces array (triangles)
             faces = np.arange(len(self.vertices)).reshape(-1, 3)
 
@@ -166,50 +170,32 @@ class GlutRenderer:
         # Set up camera
         gl_setup_camera(self.zoom_distance)
 
-        # Apply rotations
-        gl_rotate_f(self.rotation_x, 1, 0, 0)
-        gl_rotate_f(self.rotation_y, 0, 1, 0)
+        self.apply_rotations()
 
         self.view.apply()
 
         self.draw_mesh()
 
+    def apply_rotations(self):
+        """Apply rotations"""
+        gl_rotate_f(self.rotation_x, 1, 0, 0)
+        gl_rotate_f(self.rotation_y, 0, 1, 0)
+
     def draw_mesh(self):
         """Draw the cube"""
         if self.mesh:
             try:
-                if self.wireframe_mode:
-                    gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.LINE)
-                    gl_disable(GLFixedFunctionCapability.LIGHTING)
-                else:
-                    gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.FILL)
-                    gl_enable(GLFixedFunctionCapability.LIGHTING)
-
-                self.mesh.draw()
-
-                # Reset polygon mode
-                gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.FILL)
-                GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHTING)
+                draw_legacy_mesh(self.mesh, self.wireframe_mode)
 
             except Exception as e:
                 print(f"Error drawing mesh: {e}")
                 # Fallback: draw a simple wireframe cube
-                self.draw_fallback_cube()
+                draw_fallback_cube()
         else:
             # Fallback: draw a simple wireframe cube
-            self.draw_fallback_cube()
+            draw_fallback_cube()
 
         glut_swap_buffers()
-
-    def draw_fallback_cube(self):
-        """Draw a simple wireframe cube as fallback."""
-        gl_disable(GLFixedFunctionCapability.LIGHTING)
-        red_rgb = RGBColor(1.0, 0.0, 0.0)
-        gl_color_rgb(red_rgb)  # Red wireframe
-        with gl_polygon_mode_context(GLFillMode.LINE):
-            glut_wire_cube(2.0)
-        with gl_polygon_mode_context(GLFillMode.FILL):
-            gl_enable(GLFixedFunctionCapability.LIGHTING)
 
     def update_size(self, height, width):
         self.width = width
