@@ -18,6 +18,7 @@ import numpy as np
 from backend.gl.api.color import gl_color_rgb
 from backend.gl.api.enable import gl_enable
 from core.setup.camera import gl_setup_camera
+from examples.legacy.legacy_teapot_minimal import gl_init_capabilities
 from picogl.backend.gl.api.clear import gl_clear_rgba_color
 from picogl.backend.gl.api.color import gl_color_3f, gl_color_material
 from picogl.backend.gl.api.matrix import gl_matrix_mode
@@ -120,14 +121,10 @@ class GlutRenderer:
     def init_gl(self):
         """Initialize OpenGL state."""
         gl_clear_rgba_color(RGBAColor(0.1, 0.1, 0.2, 1.0))  # Dark blue background
-        GLCapabilityDriver.enable(GLPipelineCapability.DEPTH_TEST)
-        GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHTING)
-        GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHT0)
-        GLCapabilityDriver.enable(GLCapability.COLOR_MATERIAL)
+        gl_init_capabilities()
         gl_color_material(
             GLMaterialFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE
         )
-
         gl_legacy_lighting()
 
     def load_cube_data(self):

@@ -55,6 +55,18 @@ except ImportError as e:
     sys.exit(1)
 
 
+def gl_init_capabilities():
+    """init capabilities"""
+    capabilities_to_enable = [
+        GLPipelineCapability.DEPTH_TEST,
+        GLFixedFunctionCapability.LIGHTING,
+        GLFixedFunctionCapability.LIGHT0,
+        GLCapability.COLOR_MATERIAL
+    ]
+    for capability in capabilities_to_enable:
+        gl_enable(capability)
+
+
 class MinimalTeapotRenderer(GlutRenderer):
     """Minimal teapot renderer using only built-in OpenGL primitives."""
 
@@ -75,14 +87,7 @@ class MinimalTeapotRenderer(GlutRenderer):
     def init_gl(self):
         """Initialize OpenGL state."""
         gl_clear_rgba_color(RGBAColor(0.1, 0.1, 0.2, 1.0))  # Dark blue background
-        capabilities_to_enable = [
-            GLPipelineCapability.DEPTH_TEST,
-            GLFixedFunctionCapability.LIGHTING,
-            GLFixedFunctionCapability.LIGHT0,
-            GLCapability.COLOR_MATERIAL
-        ]
-        for capability in capabilities_to_enable:
-            gl_enable(capability)
+        gl_init_capabilities()
         gl_color_material(
             GLMaterialFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE
         )
