@@ -15,6 +15,9 @@ import sys
 
 import numpy as np
 
+from backend.gl.api.color import gl_color_rgb
+from backend.gl.api.enable import gl_enable
+from core.setup.camera import gl_setup_camera
 from picogl.backend.gl.api.clear import gl_clear_rgba_color
 from picogl.backend.gl.api.color import gl_color_3f, gl_color_material
 from picogl.backend.gl.api.matrix import gl_matrix_mode
@@ -40,8 +43,9 @@ from picogl.backend.glut.enums import GLUTDisplayMode
 from picogl.backend.glut.init import (glut_create_window, glut_init,
                                       glut_init_display_mode,
                                       glut_init_window_size, glut_main_loop)
-from picogl.core.rgbcolor import RGBAColor
+from picogl.core.rgbcolor import RGBAColor, RGBColor
 from picogl.core.setup.view import gl_setup_view
+from polygon.mode import gl_polygon_mode_context
 
 # Check for display before importing OpenGL
 if os.environ.get("DISPLAY") is None and os.name != "nt":
@@ -116,7 +120,7 @@ class GlutRenderer:
     def init_gl(self):
         """Initialize OpenGL state."""
         gl_clear_rgba_color(RGBAColor(0.1, 0.1, 0.2, 1.0))  # Dark blue background
-        GLCapabilityDriver.enable(GL_DEPTH_TEST)
+        GLCapabilityDriver.enable(GLPipelineCapability.DEPTH_TEST)
         GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHTING)
         GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHT0)
         GLCapabilityDriver.enable(GLCapability.COLOR_MATERIAL)
@@ -160,16 +164,16 @@ class GlutRenderer:
         gl_setup_view()
 
         # Set up camera
-        eye = Coordinates(0, 0, self.zoom_distance)
-        center = Coordinates(0, 0, 0)
-        up = Coordinates(0, 1, 0)
-        glu_look_at_coords(eye=eye, center=center, up=up)
+        gl_setup_camera(self.zoom_distance)
 
         # Apply rotations
         gl_rotate_f(self.rotation_x, 1, 0, 0)
         gl_rotate_f(self.rotation_y, 0, 1, 0)
 
-        # Draw the cube
+        self.draw_mesh()
+
+    def draw_mesh(self):
+        """Draw the cube"""
         if self.mesh:
             try:
                 if self.wireframe_mode:
@@ -198,22 +202,20 @@ class GlutRenderer:
     def draw_fallback_cube(self):
         """Draw a simple wireframe cube as fallback."""
         gl_disable(GLFixedFunctionCapability.LIGHTING)
-        red_rgb = (1.0, 0.0, 0.0)
-        gl_color_3f(red_rgb)  # Red wireframe
-        gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.LINE)
-        glut_wire_cube(2.0)
-        gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.FILL)
-        GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHTING)
+        red_rgb = RGBColor(1.0, 0.0, 0.0)
+        gl_color_rgb(red_rgb)  # Red wireframe
+        with gl_polygon_mode_context(GLFillMode.LINE):
+            glut_wire_cube(2.0)
+        with gl_polygon_mode_context(GLFillMode.FILL):
+            gl_enable(GLFixedFunctionCapability.LIGHTING)
 
     def reshape(self, width, height):
         """Reshape callback - handle window resize."""
         self.width = width
         self.height = height
         gl_viewport(0, 0, width, height)
-        gl_matrix_mode(GLLegacyMatrixMode.PROJECTION)
-        gl_load_identity()
-        glu_perspective(45.0, float(width) / float(height), 0.1, 100.0)
-        gl_matrix_mode(GLLegacyMatrixMode.MODELVIEW)
+        with gl_matrix_mode_context():
+            glu_perspective(45.0, float(width) / float(height), 0.1, 100.0)
 
     def keyboard(self, key, x, y):
         """Keyboard callback."""

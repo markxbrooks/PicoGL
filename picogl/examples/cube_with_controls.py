@@ -45,7 +45,7 @@ class Axes:
     z: Vec3 = field(default_factory=lambda: Vec3(0.0, 0.0, 1.0))
 
 
-def gl_perform_rotations(rotation: Vec3, axes: Axes):
+def gl_rotate_axes(rotation: Vec3, axes: Axes):
     """gl perform rotations"""
     gl_rotatef(rotation.x, *axes.x.tuple)
     gl_rotatef(rotation.y, *axes.y.tuple)
@@ -65,7 +65,7 @@ class GLViewTransform:
     def apply(self) -> None:
         gl_translate_f(0.0, 0.0, self.zoom)
         gl_scale_by_zoom(self.scale)
-        gl_perform_rotations(self.rotation, self.axes)
+        gl_rotate_axes(self.rotation, self.axes)
         gl_translate_f(-self.origin.x, -self.origin.y, -self.origin.z)
 
 

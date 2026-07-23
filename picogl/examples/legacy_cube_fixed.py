@@ -371,7 +371,10 @@ class LegacyCubeRenderer(GlutRenderer):
         gl_rotatef(self.rotation_x, 1, 0, 0)
         gl_rotatef(self.rotation_y, 0, 1, 0)
 
-        # Draw the cube
+        self.draw_mesh()
+
+    def draw_mesh(self):
+        """Draw the mesh cube"""
         if self.mesh:
             try:
                 if self.wireframe_mode:

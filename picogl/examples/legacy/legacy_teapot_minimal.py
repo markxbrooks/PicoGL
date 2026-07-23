@@ -16,12 +16,13 @@ Features:
 import os
 import sys
 
-from core.rgbcolor import RGBAColor
-from core.setup.camera import gl_setup_camera
-from core.setup.view import gl_setup_view
+from picogl.core.vec3 import Vec3
+from picogl.examples.cube_with_controls import GLViewTransform
+from picogl.core.rgbcolor import RGBAColor
+from picogl.core.setup.camera import gl_setup_camera
+from picogl.core.setup.view import gl_setup_view
 
-from picogl.backend.gl.api.clear import (gl_clear, gl_clear_color,
-                                         gl_clear_rgba_color)
+from picogl.backend.gl.api.clear import gl_clear_rgba_color
 from picogl.backend.gl.api.color import gl_color_3f, gl_color_material
 from picogl.backend.gl.api.enable import gl_enable, toggle_capability
 from picogl.backend.gl.api.matrix import gl_matrix_mode
@@ -29,13 +30,11 @@ from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
 from picogl.backend.gl.api.rotate import gl_rotate_f
 from picogl.backend.gl.capability import (GLFixedFunctionCapability,
                                           GLMaterialFace, GLPipelineCapability)
-from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.enums.legacy.scale import gl_load_identity, gl_viewport
 from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
 from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode,
                                           GLFillMode)
-from picogl.backend.glu.lookat import glu_look_at
 from picogl.backend.glu.perspective import glu_perspective
 from picogl.backend.glut.buffers import glut_swap_buffers
 from picogl.backend.glut.glut_renderer import GlutRenderer
@@ -70,14 +69,20 @@ class MinimalTeapotRenderer(GlutRenderer):
         self.last_mouse_y = None
         self.zoom_distance = 5.0
         self.wireframe_mode = False
+        # self.view = GLViewTransform(zoom=self.zoom_distance, rotation=Vec3(0.0, 0.0, 0.0))
+        self.view = GLViewTransform(zoom=-50, rotation=Vec3(0.0, 0.0, 0.0))
 
     def init_gl(self):
         """Initialize OpenGL state."""
         gl_clear_rgba_color(RGBAColor(0.1, 0.1, 0.2, 1.0))  # Dark blue background
-        gl_enable(GLPipelineCapability.DEPTH_TEST)
-        gl_enable(GLFixedFunctionCapability.LIGHTING)
-        gl_enable(GLFixedFunctionCapability.LIGHT0)
-        gl_enable(GLCapability.COLOR_MATERIAL)
+        capabilities_to_enable = [
+            GLPipelineCapability.DEPTH_TEST,
+            GLFixedFunctionCapability.LIGHTING,
+            GLFixedFunctionCapability.LIGHT0,
+            GLCapability.COLOR_MATERIAL
+        ]
+        for capability in capabilities_to_enable:
+            gl_enable(capability)
         gl_color_material(
             GLMaterialFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE
         )
