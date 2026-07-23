@@ -15,6 +15,9 @@ import sys
 
 import numpy as np
 
+from picogl.backend.glut.idle import glut_idle_func
+from picogl.core.vec3 import Vec3
+from picogl.examples.cube_with_controls import GLViewTransform
 from picogl.backend.gl.api.legacy.matrix import gl_matrix_mode_context
 from picogl.backend.gl.api.color import gl_color_rgb
 from picogl.backend.gl.api.enable import gl_enable
@@ -96,6 +99,7 @@ class GlutRenderer:
         # Reshape for easier access
         self.vertices = self.vertices.reshape(-1, 3)
         self.colors = self.colors.reshape(-1, 3)
+        self.view = GLViewTransform(zoom=-50, rotation=Vec3(0.0, 0.0, 0.0))
 
     def init_glut(self):
         """Initialize GLUT window."""
@@ -165,6 +169,8 @@ class GlutRenderer:
         # Apply rotations
         gl_rotate_f(self.rotation_x, 1, 0, 0)
         gl_rotate_f(self.rotation_y, 0, 1, 0)
+
+        self.view.apply()
 
         self.draw_mesh()
 
@@ -252,9 +258,11 @@ class GlutRenderer:
                 self.last_mouse_x = None
                 self.last_mouse_y = None
         elif button == 3:  # Mouse wheel up
-            self.zoom_distance = max(1.0, self.zoom_distance - 0.5)
+            self.view.zoom = max(1.0, self.zoom_distance - 0.5)
+            # self.zoom_distance = max(1.0, self.zoom_distance - 0.5)
         elif button == 4:  # Mouse wheel down
-            self.zoom_distance = min(20.0, self.zoom_distance + 0.5)
+            self.view.zoom = min(20.0, self.zoom_distance + 0.5)
+            # self.zoom_distance = min(20.0, self.zoom_distance + 0.5)
         glut_post_redisplay()
 
     def motion(self, x, y):
@@ -325,3 +333,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

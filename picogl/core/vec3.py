@@ -16,6 +16,9 @@ class Vec3(Vec3Mixin):
     y: float
     z: float
 
+    def __str__(self):
+        return f"({self.x}, {self.y}, {self.z})"
+
     def to_tuple(self) -> tuple[float, float, float]:
         """Return the vector components as a tuple."""
         return self.x, self.y, self.z

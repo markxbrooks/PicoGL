@@ -63,6 +63,7 @@ class GLViewTransform:
 
 
     def apply(self) -> None:
+        print(self.rotation)
         gl_translate_f(0.0, 0.0, self.zoom)
         gl_scale_by_zoom(self.scale)
         gl_rotate_axes(self.rotation, self.axes)
