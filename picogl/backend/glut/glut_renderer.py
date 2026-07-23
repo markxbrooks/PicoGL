@@ -181,7 +181,7 @@ class GlutRenderer:
                     gl_disable(GLFixedFunctionCapability.LIGHTING)
                 else:
                     gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.FILL)
-                    GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHTING)
+                    gl_enable(GLFixedFunctionCapability.LIGHTING)
 
                 self.mesh.draw()
 
