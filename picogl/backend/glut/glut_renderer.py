@@ -15,22 +15,21 @@ import sys
 
 import numpy as np
 
-from backend.gl.api.color import gl_color_rgb
-from backend.gl.api.enable import gl_enable
-from core.setup.camera import gl_setup_camera
-from examples.legacy.legacy_teapot_minimal import gl_init_capabilities
+from picogl.backend.gl.api.legacy.matrix import gl_matrix_mode_context
+from picogl.backend.gl.api.color import gl_color_rgb
+from picogl.backend.gl.api.enable import gl_enable
+from picogl.core.setup.camera import gl_setup_camera
+from picogl.core.setup.capabilities import gl_setup_capabilities
 from picogl.backend.gl.api.clear import gl_clear_rgba_color
-from picogl.backend.gl.api.color import gl_color_3f, gl_color_material
-from picogl.backend.gl.api.matrix import gl_matrix_mode
+from picogl.backend.gl.api.color import gl_color_material
 from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
 from picogl.backend.gl.api.rotate import gl_rotate_f
 from picogl.backend.gl.capability import (GLFixedFunctionCapability,
                                           GLMaterialFace)
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
-from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
-from picogl.backend.gl.enums.legacy.scale import gl_load_identity, gl_viewport
+from picogl.backend.gl.enums.legacy.scale import gl_viewport
 from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
-from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode,
+from picogl.backend.gl.state.fill import (GLColorMaterialMode,
                                           GLFillMode)
 from picogl.backend.glu.perspective import glu_perspective
 from picogl.backend.glut.buffers import glut_swap_buffers
@@ -121,7 +120,7 @@ class GlutRenderer:
     def init_gl(self):
         """Initialize OpenGL state."""
         gl_clear_rgba_color(RGBAColor(0.1, 0.1, 0.2, 1.0))  # Dark blue background
-        gl_init_capabilities()
+        gl_setup_capabilities()
         gl_color_material(
             GLMaterialFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE
         )
@@ -206,13 +205,22 @@ class GlutRenderer:
         with gl_polygon_mode_context(GLFillMode.FILL):
             gl_enable(GLFixedFunctionCapability.LIGHTING)
 
-    def reshape(self, width, height):
-        """Reshape callback - handle window resize."""
+    def update_size(self, height, width):
         self.width = width
         self.height = height
-        gl_viewport(0, 0, width, height)
+
+    def reshape(self, width, height):
+        """Reshape callback - handle window resize."""
+        self.update_size(height, width)
+        self.update_viewport(height, width)
+        self.update_perspective(height, width)
+
+    def update_perspective(self, height, width):
         with gl_matrix_mode_context():
             glu_perspective(45.0, float(width) / float(height), 0.1, 100.0)
+
+    def update_viewport(self, height, width):
+        gl_viewport(0, 0, width, height)
 
     def keyboard(self, key, x, y):
         """Keyboard callback."""
