@@ -7,6 +7,8 @@ from dataclasses import dataclass
 
 from picogl.core.mixin.vec3 import Vec3Mixin
 
+EPSILON = 1e-12
+
 
 @dataclass(frozen=False)
 class Vec3(Vec3Mixin):
@@ -29,7 +31,7 @@ class Vec3(Vec3Mixin):
         Near-zero length returns ``Vec3(0, 0, 0)``.
         """
         length = math.sqrt(self.x * self.x + self.y * self.y + self.z * self.z)
-        if length < 1e-12:
+        if length < EPSILON:
             return Vec3(0.0, 0.0, 0.0)
         inv = 1.0 / length
         return Vec3(self.x * inv, self.y * inv, self.z * inv)
