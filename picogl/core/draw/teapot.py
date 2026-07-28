@@ -42,7 +42,7 @@ def draw_teapot(wireframe_mode):
 def draw_normals():
     """Draw normal vectors (simplified)."""
     gl_disable(GLFixedFunctionCapability.LIGHTING)
-    gl_color_3f((0.0, 1.0, 0.0))  # Green normals
+    gl_color_rgb(RGBColor.GREEN)  # Green normals
     with gl_immediate_drawing(GLDrawMode.LINES):
         # Draw a few normal vectors for demonstration
         for i in range(0, 360, 30):
@@ -57,7 +57,7 @@ def draw_normals():
             nz = z
 
             gl_vertex_3f(x, y, z)
-            glVertex3f(x + nx * 0.2, y + ny * 0.2, z + nz * 0.2)
+            gl_vertex_3f(x + nx * 0.2, y + ny * 0.2, z + nz * 0.2)
 
     gl_enable(GLFixedFunctionCapability.LIGHTING)
 
@@ -68,7 +68,7 @@ def draw_teapot_with_normals(wireframe_mode, show_normals):
     if wireframe_mode:
         gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.LINE)
         gl_disable(GLFixedFunctionCapability.LIGHTING)
-        red_teapot = RGBColor(1.0, 0.0, 0.0)
+        red_teapot = RGBColor.RED
         gl_color_3f(*red_teapot.tuple)  # Red wireframe
     else:
         gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.FILL)
