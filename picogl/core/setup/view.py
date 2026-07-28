@@ -1,6 +1,6 @@
-from backend.gl.api.clear import gl_clear
-from backend.gl.enums import GLBitMask
-from backend.gl.enums.legacy.scale import gl_load_identity
+from picogl.backend.gl.api.clear import gl_clear
+from picogl.backend.gl.enums import GLBitMask
+from picogl.backend.gl.enums.legacy.scale import gl_load_identity
 
 
 def gl_setup_view():

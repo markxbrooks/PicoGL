@@ -7,8 +7,8 @@ the matrix state within a given context.
 """
 from contextlib import contextmanager
 
-from backend.gl.api.matrix import gl_matrix_mode
-from backend.gl.enums.legacy import GLLegacyMatrixMode
+from picogl.backend.gl.api.matrix import gl_matrix_mode
+from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 
 from picogl.backend.gl.enums.legacy.scale import (gl_load_identity,
                                                   gl_pop_matrix,

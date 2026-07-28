@@ -4,16 +4,16 @@ Draw the teapot using built-in GLUT primitives.
 import numpy as np
 from OpenGL.raw.GL.VERSION.GL_1_0 import glVertex3f
 
-from backend.gl.api import gl_vertex_3f
-from backend.gl.api.color import gl_color_rgb, gl_color_3f
-from backend.gl.api.enable import toggle_capability, gl_enable, gl_disable
-from backend.gl.api.polygon_mode import gl_polygon_mode
-from backend.gl.capability import GLFixedFunctionCapability, GLMaterialFace
-from backend.gl.enums import GLDrawMode
-from backend.gl.state.fill import GLFillMode
-from backend.gl.state.immediate import gl_immediate_drawing
-from backend.glut import glut_solid_teapot
-from core.rgbcolor import RGBColor
+from picogl.backend.gl.api import gl_vertex_3f
+from picogl.backend.gl.api.color import gl_color_rgb, gl_color_3f
+from picogl.backend.gl.api.enable import toggle_capability, gl_enable, gl_disable
+from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
+from picogl.backend.gl.capability import GLFixedFunctionCapability, GLMaterialFace
+from picogl.backend.gl.enums import GLDrawMode
+from picogl.backend.gl.state.fill import GLFillMode
+from picogl.backend.gl.state.immediate import gl_immediate_drawing
+from picogl.backend.glut import glut_solid_teapot
+from picogl.core.rgbcolor import RGBColor
 
 
 def draw_teapot(wireframe_mode):

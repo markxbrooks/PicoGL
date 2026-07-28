@@ -12,8 +12,8 @@ import sys
 from typing import Any
 
 import numpy as np
-from core.setup.view import gl_setup_view
-from core.zoom.scale import gl_scale_by_zoom
+from picogl.core.setup.view import gl_setup_view
+from picogl.core.zoom.scale import gl_scale_by_zoom
 from molib.core.constants import MoLibConstant
 from PySide6.QtCore import Qt
 from PySide6.QtOpenGLWidgets import QOpenGLWidget

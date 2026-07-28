@@ -5,9 +5,9 @@ LegacyQtObjectRenderer
 from typing import Optional
 
 import numpy as np
-from backend.gl.api.legacy.matrix import gl_matrix_mode_context
-from core.setup.camera import gl_setup_camera
-from core.setup.view import gl_setup_view
+from picogl.backend.gl.api.legacy.matrix import gl_matrix_mode_context
+from picogl.core.setup.camera import gl_setup_camera
+from picogl.core.setup.view import gl_setup_view
 from decologr import Decologr as log
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import QWidget

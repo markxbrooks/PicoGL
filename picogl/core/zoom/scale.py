@@ -1,4 +1,4 @@
-from backend.gl.enums.legacy.scale import gl_scalef
+from picogl.backend.gl.enums.legacy.scale import gl_scalef
 
 
 def gl_scale_by_zoom(zoom: float):
