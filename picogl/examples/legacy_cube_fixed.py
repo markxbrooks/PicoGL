@@ -14,11 +14,11 @@ import os
 import sys
 
 import numpy as np
-from backend.gl.api.enable import gl_disable
-from backend.gl.api.legacy.matrix import gl_matrix_mode_context
-from core.rgbcolor import RGBAColor, RGBColor
-from core.setup.camera import gl_setup_camera
-from core.setup.view import gl_setup_view
+from picogl.backend.gl.api.enable import gl_disable
+from picogl.backend.gl.api.legacy.matrix import gl_matrix_mode_context
+from picogl.core.rgbcolor import RGBAColor, RGBColor
+from picogl.core.setup.camera import gl_setup_camera
+from picogl.core.setup.view import gl_setup_view
 
 from picogl.backend.gl.api.clear import gl_clear_rgba_color
 from picogl.backend.gl.api.color import gl_color_material, gl_color_rgb

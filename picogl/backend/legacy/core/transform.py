@@ -1,3 +1,12 @@
+"""
+This module provides functionality for applying transformations including
+translation, rotation, and scaling to a specific graphical context using OpenGL
+legacy API methods.
+
+The Transform class encapsulates a set of transformation properties which
+can be applied sequentially in the order of translation, rotation, and scaling.
+"""
+
 from dataclasses import dataclass, field
 
 from molib.pdb.coordinate.coordinate import Coordinates

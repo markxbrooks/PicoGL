@@ -1,5 +1,13 @@
 """
-setup capabilities
+Configure and enable specific OpenGL capabilities.
+
+This function sets up and enables a predefined set of OpenGL capabilities,
+which are required for specific rendering behaviors like depth testing
+and lighting.
+
+The function utilizes a list of capabilities from different OpenGL
+subsystems (pipeline, fixed-function, and state) and enables them
+using the `gl_enable` function from the corresponding API.
 """
 
 from picogl.backend.gl.api.enable import gl_enable
