@@ -394,6 +394,23 @@ class VertexArrayObject(VertexBase, GLResource):
         except Exception as ex:
             log.error(f"error {ex} occurred")
 
+    def data_length(self) -> int:
+        """Number of vertices in the position buffer, or indices if no positions."""
+        from picogl.gpu.buffers.length import length_from_vbo
+        from picogl.gpu.buffers.vertex.aliases import VertexBufferRole
+        from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
+
+        for key in (VBOType.VBO, VertexBufferRole.VBO):
+            count = length_from_vbo(self.named_vbos.get(key))
+            if count > 0:
+                return count
+        for vbo in self.vbos:
+            count = length_from_vbo(vbo)
+            if count > 0:
+                return count
+        idx = self.index_count
+        return int(idx) if idx else 0
+
     def draw(
         self,
         index_count: Union[int, None] = None,

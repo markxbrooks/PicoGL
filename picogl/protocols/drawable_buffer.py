@@ -6,7 +6,11 @@ legacy and modern backends, so group-level and draw code can treat them
 uniformly.
 """
 
-from typing import Any, Protocol, runtime_checkable
+from __future__ import annotations
+
+from typing import Any, Mapping, Protocol, TypeAlias, runtime_checkable
+
+import numpy as np
 
 
 @runtime_checkable
@@ -38,6 +42,28 @@ class DrawableBuffer(Protocol):
         """Release GPU resources."""
         ...
 
-        #def data_length(self) -> None:
-        """Get Data Length"""
+    def data_length(self) -> int:
+        """Number of vertices (or drawable elements) in this buffer."""
         ...
+
+
+@runtime_checkable
+class VertexBufferDataSource(Protocol):
+    """Single legacy/modern VBO or EBO with CPU-side ``data``."""
+
+    data: np.ndarray | None
+
+
+@runtime_checkable
+class BufferContainer(Protocol):
+    """Wrapper or group holding nested VAO/VBO handles (e.g. ElMo buffer groups)."""
+
+    vao: DrawableBuffer | int | None
+    vbo: VertexBufferDataSource | int | None
+    named_vbos: Mapping[Any, VertexBufferDataSource]
+    index_count: int
+
+
+DrawableLengthInput: TypeAlias = (
+    DrawableBuffer | BufferContainer | VertexBufferDataSource | None
+)

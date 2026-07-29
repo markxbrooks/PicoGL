@@ -186,8 +186,17 @@ class VertexBuffer(VertexBase):
     # ----------------------------
     @property
     def index_count(self) -> int:
-        """Number of vertices/indices in this buffer."""
+        """Number of elements in this buffer's CPU-side array."""
         return len(self.data) if self.data is not None else 0
+
+    def data_length(self) -> int:
+        """Number of vertices represented by this buffer's data."""
+        from picogl.gpu.buffers.length import length_from_array_data
+
+        return length_from_array_data(
+            self.data,
+            components=int(getattr(self, "components", None) or 1),
+        )
 
     @classmethod
     def _map_dtype_to_gl(cls, dtype) -> int:

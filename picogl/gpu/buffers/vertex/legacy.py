@@ -143,6 +143,20 @@ class VertexBufferGroup(VertexBase):
             raise ValueError("index_count must be non-negative")
         self._index_count = value
 
+    def data_length(self) -> int:
+        """Number of vertices in the position buffer, or indices if no positions."""
+        from picogl.gpu.buffers.length import length_from_vbo
+
+        pos = self.vbo
+        if pos is None:
+            pos = self.named_vbos.get(VBOType.VBO) or self.named_vbos.get(
+                VertexBufferRole.VBO
+            )
+        count = length_from_vbo(pos)
+        if count > 0:
+            return count
+        return int(self.index_count) if self.index_count else 0
+
     def draw(self, index_count: int = 0, mode: GLDrawMode | None = None):
         """
         draw
