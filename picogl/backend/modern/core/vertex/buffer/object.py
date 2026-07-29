@@ -16,7 +16,7 @@ class ModernVBO(VertexBuffer):
         handle: int = None,
         data: np.ndarray = None,
         size: int = 3,
-        target: int = GLBufferTarget.ARRAY,
+        target: GLBufferTarget = GLBufferTarget.ARRAY,
         index: int = None,
     ):
         """ """
