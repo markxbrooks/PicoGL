@@ -37,3 +37,7 @@ class DrawableBuffer(Protocol):
     def delete(self) -> None:
         """Release GPU resources."""
         ...
+
+    def data_length(self) -> None:
+        """Get Data Length"""
+        ...
