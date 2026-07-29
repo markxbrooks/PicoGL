@@ -265,3 +265,156 @@ Factoring the repeated "validate → build → set layout" workflow into a singl
 Moving layout assignment closer to VAO construction so the factory only orchestrates object creation.
 
 These changes would reduce the amount of boilerplate significantly while making it easier to add new drawable types such as surfaces, cylinders, cartoons, and instanced geometry with minimal additional code.
+
+Yes—I actually think MeshData is the better abstraction, and I'd be inclined to use it consistently across all of these methods.
+
+Right now you have two different APIs:
+
+setup_bond_buffers(
+    indices,
+    colors,
+    normals,
+    positions,
+)
+
+versus
+
+setup_ribbon_vbg(data: MeshData)
+
+The second is cleaner because it groups together what is conceptually one object: a mesh.
+
+Why MeshData is preferable
+
+Instead of passing four or five arrays that must always stay synchronized,
+
+setup_bond_buffers(
+    indices=bond_indices,
+    colors=colors,
+    normals=normals,
+    positions=positions,
+)
+
+you pass
+
+mesh = MeshData(
+    vertices=positions,
+    normals=normals,
+    colors=colors,
+    indices=bond_indices,
+)
+
+setup_bond_buffers(mesh)
+
+The advantages are:
+
+fewer parameters
+impossible to accidentally swap colors and normals
+easier to extend (uvs, tangents, bone_ids, etc.)
+simpler function signatures
+validation becomes centralized
+It also matches the OpenGL abstraction
+
+A VAO is created from a mesh.
+
+It isn't really created from:
+
+positions
+colors
+normals
+indices
+
+Those are simply components of a mesh.
+
+So this
+
+def setup_bond_vao(mesh: MeshData) -> BondsVAO:
+
+reads naturally.
+
+Validation becomes much simpler
+
+Instead of
+
+validate_input_data(
+    colors=colors,
+    normals=normals,
+    vertices=positions,
+)
+
+you simply do
+
+validate_mesh_data(mesh)
+
+Exactly as you're already doing for ribbons.
+
+The implementation becomes nearly identical
+
+Ribbon:
+
+def setup_ribbon_vao(mesh: MeshData) -> RibbonVAO:
+    validate_mesh_data(mesh)
+
+    ...
+
+Bond:
+
+def setup_bond_vao(mesh: MeshData) -> BondsVAO:
+    validate_mesh_data(mesh)
+
+    ...
+
+Atom:
+
+def setup_atom_vao(mesh: MeshData) -> AtomVAO:
+    validate_mesh_data(mesh)
+
+    ...
+
+Now every setup function has the same API.
+
+I'd probably go one step further
+
+If MeshData always contains
+
+vertices
+normals
+colors
+indices
+
+then the builder becomes almost trivial:
+
+def build_vao(
+    vao: VertexArrayObject,
+    mesh: MeshData,
+    attribute_order: list[tuple[int, VBOType, np.ndarray]],
+):
+    ...
+
+or even
+
+build_vao(
+    RibbonVAO(),
+    mesh,
+    [
+        (0, VBOType.VBO, mesh.vertices),
+        (1, VBOType.NBO, mesh.normals),
+        (2, VBOType.CBO, mesh.colors),
+    ],
+)
+
+Notice that every setup function now only describes which attributes belong in the VAO.
+
+One thing I'd rename
+
+Since these functions are constructing complete VAOs rather than just vertex buffer groups, I'd consider renaming them for consistency:
+
+setup_atom_vao(mesh)
+setup_bond_vao(mesh)
+setup_calpha_vao(mesh)
+setup_ribbon_vao(mesh)
+
+Then your BufferFactory becomes very simple:
+
+vao = self._try_setup(setup_bond_vao, mesh)
+
+where mesh is a single MeshData instance. This gives you one consistent API across all geometry types, reduces the chance of parameter mismatches, and makes it easier to evolve MeshData in the future without changing every setup function.
