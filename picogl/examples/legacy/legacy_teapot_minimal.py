@@ -16,9 +16,9 @@ Features:
 import os
 import sys
 
-from picogl.core.draw.teapot import draw_teapot
 from picogl.backend.glut.buffers import glut_swap_buffers
 from picogl.backend.glut.glut_renderer import GlutRenderer
+from picogl.core.draw.teapot import draw_teapot
 
 # Check for display before importing OpenGL
 if os.environ.get("DISPLAY") is None and os.name != "nt":

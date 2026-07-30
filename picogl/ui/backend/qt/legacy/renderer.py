@@ -5,9 +5,6 @@ LegacyQtObjectRenderer
 from typing import Optional
 
 import numpy as np
-from picogl.backend.gl.api.legacy.matrix import gl_matrix_mode_context
-from picogl.core.setup.camera import gl_setup_camera
-from picogl.core.setup.view import gl_setup_view
 from decologr import Decologr as log
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import QWidget
@@ -15,6 +12,7 @@ from PySide6.QtWidgets import QWidget
 from picogl.backend.gl.api.clear import gl_clear, gl_clear_color
 from picogl.backend.gl.api.color import gl_color_material
 from picogl.backend.gl.api.enable import gl_enable
+from picogl.backend.gl.api.legacy.matrix import gl_matrix_mode_context
 from picogl.backend.gl.api.matrix import gl_matrix_mode
 from picogl.backend.gl.api.rotate import gl_rotate_f
 from picogl.backend.gl.capability import (GLFixedFunctionCapability,
@@ -28,6 +26,8 @@ from picogl.backend.gl.mode import GLMode
 from picogl.backend.gl.state.fill import GLCapability, GLColorMaterialMode
 from picogl.backend.glu.lookat import glu_look_at
 from picogl.backend.glu.perspective import glu_perspective
+from picogl.core.setup.camera import gl_setup_camera
+from picogl.core.setup.view import gl_setup_view
 from picogl.examples import g_color_buffer_data, g_vertex_buffer_data
 from picogl.renderer import MeshData
 from picogl.renderer.legacy_glmesh import LegacyGLMesh

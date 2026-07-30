@@ -11,7 +11,8 @@ using the `gl_enable` function from the corresponding API.
 """
 
 from picogl.backend.gl.api.enable import gl_enable
-from picogl.backend.gl.capability import GLPipelineCapability, GLFixedFunctionCapability
+from picogl.backend.gl.capability import (GLFixedFunctionCapability,
+                                          GLPipelineCapability)
 from picogl.backend.gl.state.fill import GLCapability
 
 

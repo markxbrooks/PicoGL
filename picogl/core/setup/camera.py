@@ -1,5 +1,6 @@
-from picogl.backend.glu.lookat import glu_look_at_coords
 from molib.pdb.coordinate.coordinate import Coordinates
+
+from picogl.backend.glu.lookat import glu_look_at_coords
 
 
 def gl_setup_camera(zoom_distance: float):

@@ -6,12 +6,9 @@ from typing import cast
 
 from numpy.typing import ArrayLike
 
-from picogl.protocols.drawable_buffer import (
-    BufferContainer,
-    DrawableBuffer,
-    DrawableLengthInput,
-    VertexBufferDataSource,
-)
+from picogl.protocols.drawable_buffer import (BufferContainer, DrawableBuffer,
+                                              DrawableLengthInput,
+                                              VertexBufferDataSource)
 
 
 def length_from_array_data(data: ArrayLike | None, *, components: int = 1) -> int:

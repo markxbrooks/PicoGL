@@ -14,14 +14,11 @@ import os
 import sys
 
 import numpy as np
-from picogl.backend.gl.api.enable import gl_disable
-from picogl.backend.gl.api.legacy.matrix import gl_matrix_mode_context
-from picogl.core.rgbcolor import RGBAColor, RGBColor
-from picogl.core.setup.camera import gl_setup_camera
-from picogl.core.setup.view import gl_setup_view
 
 from picogl.backend.gl.api.clear import gl_clear_rgba_color
 from picogl.backend.gl.api.color import gl_color_material, gl_color_rgb
+from picogl.backend.gl.api.enable import gl_disable
+from picogl.backend.gl.api.legacy.matrix import gl_matrix_mode_context
 from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
 from picogl.backend.gl.capability import (GLFixedFunctionCapability,
                                           GLMaterialFace, GLPipelineCapability)
@@ -35,6 +32,9 @@ from picogl.backend.glut.buffers import glut_swap_buffers
 from picogl.backend.glut.cube import glut_wire_cube
 from picogl.backend.glut.display import glut_post_redisplay
 from picogl.backend.glut.glut_renderer import GlutRenderer
+from picogl.core.rgbcolor import RGBAColor, RGBColor
+from picogl.core.setup.camera import gl_setup_camera
+from picogl.core.setup.view import gl_setup_view
 
 # Check for display before importing OpenGL
 if os.environ.get("DISPLAY") is None and os.name != "nt":

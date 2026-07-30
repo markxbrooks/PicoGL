@@ -15,16 +15,9 @@ import sys
 
 import numpy as np
 
-from picogl.core.draw.cube import draw_fallback_cube
-from picogl.core.draw.mesh.legacy import draw_legacy_mesh
-from picogl.backend.glut.idle import glut_idle_func
-from picogl.core.vec3 import Vec3
-from picogl.examples.cube_with_controls import GLViewTransform
-from picogl.backend.gl.api.legacy.matrix import gl_matrix_mode_context
-from picogl.core.setup.camera import gl_setup_camera
-from picogl.core.setup.capabilities import gl_setup_capabilities
 from picogl.backend.gl.api.clear import gl_clear_rgba_color
 from picogl.backend.gl.api.color import gl_color_material
+from picogl.backend.gl.api.legacy.matrix import gl_matrix_mode_context
 from picogl.backend.gl.api.rotate import gl_rotate_f
 from picogl.backend.gl.capability import GLMaterialFace
 from picogl.backend.gl.enums.legacy.scale import gl_viewport
@@ -38,12 +31,18 @@ from picogl.backend.glut.display import (glut_display_func, glut_idle_func,
                                          glut_mouse_func, glut_post_redisplay,
                                          glut_reshape_func)
 from picogl.backend.glut.enums import GLUTDisplayMode
+from picogl.backend.glut.idle import glut_idle_func
 from picogl.backend.glut.init import (glut_create_window, glut_init,
                                       glut_init_display_mode,
                                       glut_init_window_size, glut_main_loop)
+from picogl.core.draw.cube import draw_fallback_cube
+from picogl.core.draw.mesh.legacy import draw_legacy_mesh
 from picogl.core.rgbcolor import RGBAColor
+from picogl.core.setup.camera import gl_setup_camera
+from picogl.core.setup.capabilities import gl_setup_capabilities
 from picogl.core.setup.view import gl_setup_view
-
+from picogl.core.vec3 import Vec3
+from picogl.examples.cube_with_controls import GLViewTransform
 
 # Check for display before importing OpenGL
 if os.environ.get("DISPLAY") is None and os.name != "nt":

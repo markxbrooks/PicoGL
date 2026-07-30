@@ -1,9 +1,11 @@
+from renderer.legacy_glmesh import LegacyGLMesh
+
 from picogl.backend.gl.api.enable import gl_enable
 from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
-from picogl.backend.gl.capability import GLMaterialFace, GLFixedFunctionCapability
+from picogl.backend.gl.capability import (GLFixedFunctionCapability,
+                                          GLMaterialFace)
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.gl.state.fill import GLFillMode
-from renderer.legacy_glmesh import LegacyGLMesh
 
 
 def draw_legacy_mesh(mesh: LegacyGLMesh, wireframe_mode):

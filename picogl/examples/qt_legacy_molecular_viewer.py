@@ -12,8 +12,6 @@ import sys
 from typing import Any
 
 import numpy as np
-from picogl.core.setup.view import gl_setup_view
-from picogl.core.zoom.scale import gl_scale_by_zoom
 from molib.core.constants import MoLibConstant
 from PySide6.QtCore import Qt
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
@@ -37,7 +35,9 @@ from picogl.core.geometry.sphere import generate_ring, latitude_for_stack
 from picogl.core.rgbcolor import RGBColor
 from picogl.core.setup import (gl_setup_background_color, gl_setup_depth_test,
                                gl_setup_lighting, gl_setup_materials)
+from picogl.core.setup.view import gl_setup_view
 from picogl.core.vec3 import Vec3
+from picogl.core.zoom.scale import gl_scale_by_zoom
 from picogl.examples.utils.pdb_loader import PDBLoader
 from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
 
