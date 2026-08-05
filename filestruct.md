@@ -1,80 +1,343 @@
-Short answer — WaterRenderPass is expensive because it triggers per-pass renderer initialization, color-sync work, GPU buffer rebuilds/flushes, and draws a separate atom subset in a way that forces CPU/GPU syncs. Those steps can enqueue and immediately flush GPU work (or rebuild VAOs) every frame for the water slice, which kills frame rate.
+RamachandranPlotWidget refactoring
 
-What I inspected
 
-elmo/ui/widgets/gl/renderer/passes/water.py
-WaterRenderPass.render simply calls draw_molecular_slice(..., atom_representation=Representation.WATERS, atom_range_key=AtomRangeKey.WATER).
-elmo/ui/widgets/gl/renderer/passes/molecular.py (draw_molecular_slice)
-sync_renderer_color_schemes(...) is called when atom_representation is provided.
-model.ensure_initialized(label) is called before drawing.
-model.draw_molecular_model(**kwargs) is called for the actual draw.
-elmo/ui/widgets/gl/renderer/color_sync.py
-sync_renderer_color_schemes will call model.set_atom_coloring_by_scheme / set_bond_coloring_by_scheme and model.set_bond_coloring_state, then mark dirty color buffers and model.mark_dirty(...). Marking dirty causes the MoleculeRenderer to enqueue GPU work to recompute color VBOs.
-It tries to coalesce duplicate updates via a cached _last_color_sync_signature, but that relies on stable signatures and peers.
-elmo/gl/renderer/molecule/renderer.py (draw_molecular_model path)
-Before drawing it calls self.ensure_initialized("draw_molecular_model") and self.flush_gpu_uploads().
-Buffer rebuild/flush logic lives here: invalidate -> enqueue_gpu_work(...) jobs such as _build_atom_color_buffers, _build_bond_color_buffers, etc.
-Documentation (doc/Performance.md)
-Notes that WaterRenderPass is a call site that can cause initialize() / generate_buffers runs; full rebuilds are expensive and should be avoided.
-Root causes (why water pass slows rendering)
+I think this class is an excellent candidate for decomposition. At ~450 lines, RamachandranPlotWidget is simultaneously acting as:
+View (Qt widgets)
+Controller/Presenter (responding to user actions)
+Plot renderer (Matplotlib)
+Data model
+Interaction manager
+Export service
+Statistics calculator
+UI state manager
+It violates the Single Responsibility Principle in several places. I'd recommend separating what is being displayed from how it is is displayed and how the user interacts with it.
+Overall architecture
+I would lean toward MVP rather than classical MVC.
+Qt widgets already are the View, and Matplotlib is effectively another view component. A Presenter fits naturally between the calculation/model and the widgets.
+                  Gemmi Structure
+                         │
+                         ▼
+              RamachandranCalculator
+                         │
+                         ▼
+                 RamachandranModel
+                         │
+                 (observable model)
+                         │
+        ┌────────────────┴────────────────┐
+        ▼                                 ▼
+RamachandranPresenter          PlotRenderer
+        │                                 │
+        │                         Matplotlib Axes
+        ▼                                 │
+ RamachandranWidget ◄──────── PlotInteraction
+         (Qt View)
+The widget becomes almost entirely wiring.
+1. Model
+The current current_data dictionary should disappear.
+Instead:
+@dataclass
+class RamachandranModel:
+    phi: np.ndarray
+    psi: np.ndarray
+    chain_ids: list[str]
+    residue_numbers: list[int]
+    residue_names: list[str]
+Now you have
+model.phi
+model.psi
+instead of
+current_data["phi"]
+throughout the code.
+I'd also move
+selected_points
+into the model.
+@dataclass
+class SelectionState:
+    selected: list[int]
+2. Presenter
+The Presenter becomes the brains.
+Instead of
+load_structure()
 
-Color sync per pass
+_update_plot()
 
-draw_molecular_slice supplies atom_representation=Representation.WATERS, so sync_renderer_color_schemes runs each render of water.
-If the renderer’s _last_color_sync_signature doesn’t match (or peer handling forces updates), sync will call set_atom_coloring_by_scheme / set_bond_coloring_by_scheme and then mark color buffers dirty → enqueues GPU color-update jobs.
-Enqueuing many jobs per frame is costly and, when flushed, stalls the render loop.
-Per-pass ensure_initialized + flush
+_refresh_plot()
 
-model.ensure_initialized is called in draw_molecular_slice and draw_molecular_model calls self.flush_gpu_uploads() immediately before drawing.
-If the water MoleculeRenderer is not already initialized for the current GL context (or VAOs considered invalid), initialize/force_reinitialize may run (generate_buffers) — an expensive CPU + GL operation.
-flush_gpu_uploads runs pending GPU jobs on the GL thread, which synchronizes CPU/GPU and causes stalls if done per-slice / per-frame.
-Separate renderer / buffer duplication
+_on_click()
 
-Water is handled as a distinct slice (separate renderer instance / atom range). If the implementation rebuilds full atom/bond buffers per-slice rather than drawing a subset from shared buffers, you pay cost for duplicate work.
-Subset drawing not taking advantage of first/count
+_on_hover()
+living inside the widget, they become
+Presenter
+    load_structure()
+    refresh()
+    select_residue()
+    hover()
+The presenter knows
+model
+calculator
+renderer
+widget
+The widget knows none of these.
+3. View (Qt)
+Then the widget becomes very small.
+class RamachandranWidget(QWidget):
 
-The modern draw strategy supports drawing ranges / first-vertex offsets, but if water still forces generation of a separate atom VBO/EBO or recomputes color arrays instead of drawing subset ranges, that’s extra CPU/GPU work.
-What to change (actionable, prioritized)
+    def __init__(...):
 
-Stop flushing GPU uploads per molecular slice (high impact)
+        self.controls = PlotControls()
 
-Avoid calling flush_gpu_uploads() inside draw_molecular_model on each slice. Instead flush once per frame (the renderer already has a mechanism to flush all uploads). This prevents a GPU sync per-water draw.
-Move flush_gpu_uploads call out of per-model draw path and run it once at a safe point (end of frame or before submit).
-Avoid per-frame color sync for waters when not needed (high/medium)
+        self.canvas = PlotCanvas()
 
-If colors for water don’t change per-frame, don’t call sync_renderer_color_schemes every frame:
-Either call draw_molecular_slice with atom_representation=None for the water pass when colors are already in sync, or
-Ensure the view signature stabilizes so sync_renderer_color_schemes returns early via _last_color_sync_signature.
-Make the WaterRenderPass only request a color sync when the view/state actually changed (watch view.get_color_scheme_for(Representation.WATERS) or a per-pass dirty flag).
-Pre-initialize water renderer VAOs / buffers once (medium)
+        self.presenter = RamachandranPresenter(...)
+Almost every slot becomes
+slider.valueChanged.connect(
+    self.presenter.update_point_size
+)
+rather than
+self._update_plot()
+4. Plot Renderer
+This is where most of the drawing code belongs.
+Currently
+_setup_plot()
 
-During GL initialization or model-load, call the water renderer’s ensure_initialized / initialize_modern_gl_buffers so you don’t hit the expensive first-time initialization inside the render loop.
-Use the primitive_vaos_valid_in_current_context() check to skip reinitialization when not necessary.
-Use subset draw path instead of independent buffers (high impact)
+_draw_allowed_regions()
 
-Ensure the renderer draws water as a subset (first vertex + count) from a shared atom buffer rather than building a dedicated water VBO each time.
-The project already has a “draw_atoms” design (docs & strategy) where draw_atoms should accept first_vertex and atom_count and hand these to a GLStrategy.draw_atoms implementation. Implement/enable that path for AtomRangeKey.WATER so water uses the same buffers with a first/count draw.
-Coalesce color buffer updates / debounce enqueueing (medium)
+_draw_molprobity_general_background()
 
-If sync_renderer_color_schemes can mark buffers dirty frequently, attach a debounce or ensure enqueue_gpu_work uses keys to coalesce repeated jobs (enqueue already accepts key e.g., "atom_colors"; verify it deduplicates correctly).
-Prefer updating only BufferType.ATOM_COLORS for water rather than full geometry invalidation.
-Consider merging or sharing the water slice into the primary atom renderer (medium)
+_add_allowed_regions_legend()
 
-If possible, avoid separate molecule renderer instances for water. Sharing buffers and draw calls reduces duplication and lowers init/flush overhead.
-Concrete checks to add (quick diagnostics)
+_add_ramachandran_percentages_box()
 
-Instrument when model.ensure_initialized does work (log when generate_buffers runs) and when flush_gpu_uploads is called — see if these are running per frame for water.
-Check number of enqueued GPU jobs per frame when water visible vs hidden.
-Verify sync_renderer_color_schemes returns early for water signature (inspect model._last_color_sync_signature before/after frame).
-Files and locations I examined (useful reference)
+_redraw_selected_points()
 
-elmo/ui/widgets/gl/renderer/passes/water.py — WaterRenderPass.render
-elmo/ui/widgets/gl/renderer/passes/molecular.py — draw_molecular_slice
-elmo/ui/widgets/gl/renderer/color_sync.py — sync_renderer_color_schemes (buffer marking / signature)
-elmo/gl/renderer/molecule/renderer.py — draw_molecular_model, buffer build/enqueue jobs, flush_gpu_uploads calls
-doc/Performance.md — notes about generate_buffers/initialize hotspots and that WaterRenderPass is a listed caller of initialize()
-If you want, I can:
+_update_plot()
+are all about rendering.
+I'd move them into
+RamachandranRenderer
+Example
+renderer.draw_axes()
 
-Propose a minimal patch that: (A) stops flush_gpu_uploads inside draw_molecular_model and (B) skips sync_renderer_color_schemes for water unless the view signature changed — with exact code edits to the files above.
-Produce a short profiling checklist / small patch you can run to confirm which of the above causes the biggest stall in your environment.
-Which would you prefer: a minimal code patch to test (fast), or a profiling patch + instructions to run in your environment?
+renderer.draw_points()
+
+renderer.draw_background()
+
+renderer.draw_statistics()
+
+renderer.draw_selection()
+Notice there is no widget logic here.
+It receives
+Axes
+
+Model
+
+PlotSettings
+and draws.
+5. Plot Interaction
+This class currently mixes together
+hover
+selection
+tooltip
+nearest-point search
+I'd isolate it.
+RamachandranInteraction
+Responsibilities
+mpl_connect()
+
+closest_point()
+
+show_tooltip()
+
+highlight()
+
+clear_selection()
+The widget doesn't know how hovering works.
+6. Reusable Matplotlib widget
+This is probably the biggest architectural improvement.
+Currently your widget is
+RamachandranWidget
+but 70% of it is actually generic plotting.
+I'd instead have
+MatplotlibPlotWidget
+containing
+Figure
+
+Canvas
+
+Axes
+
+Toolbar
+
+Export
+
+Save
+
+Refresh
+Generic features
+export
+canvas
+figure
+axes
+dpi
+refresh
+toolbar
+resize
+Then
+RamachandranWidget
+inherits
+MatplotlibPlotWidget
+and only provides
+draw_plot()
+This immediately becomes reusable for
+Ramachandran
+B-factor plots
+Distance plots
+RMSD plots
+PCA plots
+Electron-density profiles
+7. Controls widget
+The control panel is already self-contained.
+_create_control_panel()
+should become
+RamachandranControlPanel(QWidget)
+containing
+Show reference
+
+Tooltips
+
+Point size
+
+Export
+
+Refresh
+The widget simply exposes signals.
+pointSizeChanged
+
+exportRequested
+
+refreshRequested
+
+tooltipsChanged
+8. Plot Settings
+Instead of querying UI widgets during drawing
+self.show_allowed_checkbox.isChecked()
+
+slider.value()
+I'd create
+@dataclass
+class RamachandranPlotSettings:
+
+    point_size: int
+
+    show_reference: bool
+
+    show_tooltips: bool
+Now rendering becomes
+renderer.render(
+    model,
+    settings
+)
+which is deterministic and testable.
+9. Statistics service
+This code
+_add_ramachandran_percentages_box()
+actually performs calculations before rendering.
+I'd split that.
+RamachandranStatistics
+
+    calculate()
+
+    percentages()
+
+    summary_text()
+Renderer only draws
+renderer.draw_statistics(statistics)
+10. Nearest-point search
+Currently
+_closest_residue_index()
+performs a linear search every mouse movement.
+That is
+O(n)
+per hover.
+For proteins with thousands of residues this becomes noticeable.
+I'd replace it with
+scipy.spatial.KDTree
+or
+cKDTree
+built once
+tree = KDTree(
+    np.column_stack((phi, psi))
+)
+Then hover becomes
+distance, index = tree.query(...)
+which is
+O(log n)
+instead of
+O(n)
+11. File structure
+A possible organization is:
+ramachandran/
+│
+├── model.py
+│   ├── RamachandranModel
+│   ├── SelectionState
+│   └── PlotSettings
+│
+├── presenter.py
+│   └── RamachandranPresenter
+│
+├── renderer.py
+│   └── RamachandranRenderer
+│
+├── interaction.py
+│   └── RamachandranInteraction
+│
+├── statistics.py
+│   └── RamachandranStatistics
+│
+├── controls.py
+│   └── RamachandranControlPanel
+│
+├── widget.py
+│   └── RamachandranWidget
+│
+└── calculator.py
+12. What RamachandranWidget should look like
+After refactoring, I'd expect the main widget to be around 80–120 lines:
+class RamachandranWidget(MatplotlibPlotWidget):
+
+    residue_selected = Signal(str, int, str)
+
+    def __init__(self):
+        super().__init__()
+
+        self.model = RamachandranModel()
+        self.settings = RamachandranPlotSettings()
+
+        self.controls = RamachandranControlPanel()
+
+        self.renderer = RamachandranRenderer(self.axes)
+
+        self.interaction = RamachandranInteraction(
+            self.canvas,
+            self.axes,
+            self.model,
+        )
+
+        self.presenter = RamachandranPresenter(
+            self.model,
+            self.renderer,
+            self.controls,
+            self.interaction,
+        )
+There is almost no application logic left in the widget itself.
+Refactoring order
+To minimize risk, I'd proceed incrementally:
+Extract RamachandranPlotSettings and eliminate direct reads from checkboxes/sliders inside rendering.
+Replace current_data with a typed RamachandranModel dataclass.
+Extract RamachandranRenderer, moving all Matplotlib drawing code into it while keeping the widget as coordinator.
+Extract RamachandranControlPanel so UI controls become an independent widget emitting signals.
+Extract RamachandranInteraction for hover, selection, tooltips, and nearest-point logic.
+Introduce RamachandranPresenter to mediate between the model, controls, renderer, and interaction, leaving the widget responsible only for composition.
+Generalize MatplotlibPlotWidget once the Ramachandran-specific code is isolated, making it reusable across other scientific plots in ElMo.
+This sequence preserves functionality after each step while steadily improving cohesion, testability, and reuse. I suspect you'll also find that the same MatplotlibPlotWidget and MVP pattern can be applied to your B-factor, RMSD, contact map, and other analysis views, giving ElMo a consistent plotting architecture rather than a collection of specialized widgets.
