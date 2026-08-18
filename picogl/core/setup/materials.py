@@ -1,3 +1,11 @@
+"""
+This module provides functionality to set up materials for rendering using OpenGL.
+
+The module enables OpenGL color material functionality and applies specific material
+properties to control the visual appearance of rendered objects. It utilizes Phong
+shading properties such as ambient, diffuse, specular, and shininess values.
+"""
+
 from picogl.backend.gl.api.color import gl_color_material
 from picogl.backend.gl.api.enable import gl_enable
 from picogl.backend.gl.capability import GLMaterialFace
