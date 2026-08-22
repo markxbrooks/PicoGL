@@ -5,6 +5,7 @@ import numpy as np
 
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.backend.gl.state.immediate import gl_immediate_drawing
+from picogl.ui.backend.glut.mouse import RotationInteraction
 
 # Check for display before importing OpenGL
 if os.environ.get("DISPLAY") is None and os.name != "nt":
@@ -122,31 +123,21 @@ def render_vertex_with_template(v, mvp):
 # -------------------------------
 # Interaction: mouse-driven rotation
 # -------------------------------
-rot_x, rot_y = 0.0, 0.0
-dragging = False
-last_x, last_y = 0, 0
+rotation = RotationInteraction()
 
 
 def mouse(button, state, x, y):
-    global dragging, last_x, last_y
     if button == GLUT_LEFT_BUTTON:
         if state == GLUT_DOWN:
-            dragging = True
-            last_x, last_y = x, y
+            rotation.press(x, y)
         else:
-            dragging = False
+            rotation.release()
 
 
 def motion(x, y):
-    global rot_x, rot_y, last_x, last_y
-    if dragging:
-        dx = x - last_x
-        dy = y - last_y
-        last_x, last_y = x, y
-        # Update rotation angles (sensitivity)
-        rot_y += dx * 0.5
-        rot_x += dy * 0.5
-        glutPostRedisplay()
+    if rotation.drag(x, y) is None:
+        return
+    glutPostRedisplay()
 
 
 def keyboard(key, x, y):
@@ -210,8 +201,8 @@ def display():
     glTranslatef(0.0, 0.0, -8.0)
 
     # Apply rotations from mouse
-    glRotatef(rot_x, 1.0, 0.0, 0.0)
-    glRotatef(rot_y, 0.0, 1.0, 0.0)
+    glRotatef(rotation.x, 1.0, 0.0, 0.0)
+    glRotatef(rotation.y, 0.0, 1.0, 0.0)
 
     # Create MVP matrix for the vertex processor
     # Since we're using fixed-function OpenGL, we'll create a simple identity matrix

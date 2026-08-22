@@ -44,6 +44,7 @@ from picogl.core.setup.capabilities import gl_setup_capabilities
 from picogl.core.setup.view import gl_setup_view
 from picogl.core.vec3 import Vec3
 from picogl.examples.cube_with_controls import GLViewTransform
+from picogl.ui.backend.glut.mouse import RotationInteraction
 
 # Check for display before importing OpenGL
 if os.environ.get("DISPLAY") is None and os.name != "nt":
@@ -80,10 +81,7 @@ class GlutRenderer:
         self.width = width
         self.height = height
         self.title = title
-        self.rotation_x = 0.0
-        self.rotation_y = 0.0
-        self.last_mouse_x = None
-        self.last_mouse_y = None
+        self.rotation = RotationInteraction()
         self.zoom_distance = 5.0
         self.wireframe_mode = False
         self.auto_rotate = False
@@ -167,8 +165,8 @@ class GlutRenderer:
 
     def apply_rotations(self):
         """Apply rotations"""
-        gl_rotate_f(self.rotation_x, 1, 0, 0)
-        gl_rotate_f(self.rotation_y, 0, 1, 0)
+        gl_rotate_f(self.rotation.x, 1, 0, 0)
+        gl_rotate_f(self.rotation.y, 0, 1, 0)
 
     def draw_mesh(self):
         """Draw the cube"""
@@ -215,8 +213,7 @@ class GlutRenderer:
         if key == b"\x1b":  # ESC key
             sys.exit(0)
         elif key == b"r":  # Reset rotation
-            self.rotation_x = 0.0
-            self.rotation_y = 0.0
+            self.rotation.reset()
         elif key == b"w":  # Toggle wireframe mode
             self.wireframe_mode = not self.wireframe_mode
         elif key == b"f":  # Fill mode
@@ -234,11 +231,9 @@ class GlutRenderer:
         """Mouse callback."""
         if button == GLUT_LEFT_BUTTON:
             if state == GLUT_DOWN:
-                self.last_mouse_x = x
-                self.last_mouse_y = y
+                self.rotation.press(x, y)
             else:
-                self.last_mouse_x = None
-                self.last_mouse_y = None
+                self.rotation.release()
         elif button == 3:  # Mouse wheel up
             self.view.zoom = max(1.0, self.zoom_distance - 0.5)
             # self.zoom_distance = max(1.0, self.zoom_distance - 0.5)
@@ -249,24 +244,15 @@ class GlutRenderer:
 
     def motion(self, x, y):
         """Mouse motion callback."""
-        if self.last_mouse_x is not None and self.last_mouse_y is not None:
-            dx = x - self.last_mouse_x
-            dy = y - self.last_mouse_y
-
-            self.rotation_y += dx * 0.5
-            self.rotation_x += dy * 0.5
-
-            # Clamp rotation
-            self.rotation_x = max(-90, min(90, self.rotation_x))
-
-            self.last_mouse_x = x
-            self.last_mouse_y = y
-            glut_post_redisplay()
+        if self.rotation.drag(x, y) is None:
+            return
+        self.rotation.clamp_x()
+        glut_post_redisplay()
 
     def idle(self):
         """Idle callback for animation."""
         if self.auto_rotate:
-            self.rotation_y += 0.5
+            self.rotation.y += 0.5
             glut_post_redisplay()
 
     def run(self):

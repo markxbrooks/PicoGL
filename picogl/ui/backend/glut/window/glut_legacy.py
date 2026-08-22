@@ -14,6 +14,7 @@ from picogl.backend.state import GLViewport
 from picogl.core.camera import ProjectionConfig
 from picogl.renderer import GLResourceRegistry
 from picogl.renderer.object import ObjectRenderer
+from picogl.ui.backend.glut.mouse import RotationInteraction
 from picogl.ui.backend.glut.window.gl import GLWindow
 
 
@@ -38,11 +39,7 @@ class GlutRendererWindow(GLWindow):
         self.projection = GLMProjectionState()
         self.width = width
         self.height = height
-        # Mouse interaction state
-        self.last_mouse_x = None
-        self.last_mouse_y = None
-        self.rotation_x = 0.0
-        self.rotation_y = 0.0
+        self.rotation = RotationInteraction()
         setup_logging()
         self.zoom_fov: float = ProjectionConfig.fovy
         self.zoom_distance: int = 10  # camera backwards in Z
@@ -116,10 +113,14 @@ class GlutRendererWindow(GLWindow):
         self.calculate_mvp_matrix(width, height)
         # Apply rotations
         rotation_matrix = glm.rotate(
-            glm_identity_matrix(), glm.radians(self.rotation_x), glm.vec3(1, 0, 0)
+            glm_identity_matrix(),
+            glm.radians(self.rotation.x),
+            glm.vec3(1, 0, 0),
         )
         rotation_matrix = glm.rotate(
-            rotation_matrix, glm.radians(self.rotation_y), glm.vec3(0, 1, 0)
+            rotation_matrix,
+            glm.radians(self.rotation.y),
+            glm.vec3(0, 1, 0),
         )
         self.context.mvp_matrix = self.context.mvp_matrix * rotation_matrix
         self.update()  # Trigger repaint
@@ -127,20 +128,15 @@ class GlutRendererWindow(GLWindow):
     def mousePressEvent(self, button, state, x, y):
         """mousePressEvent"""
         if state == 0:  # Mouse button pressed
-            self.last_mouse_x = x
-            self.last_mouse_y = y
+            self.rotation.press(x, y)
+        else:
+            self.rotation.release()
 
     def mouseMoveEvent(self, x, y):
         """mouseMoveEvent"""
-        if self.last_mouse_x is not None and self.last_mouse_y is not None:
-            dx = x - self.last_mouse_x
-            dy = y - self.last_mouse_y
-            # Adjust sensitivity as needed
-            self.rotation_x += dy * 0.5
-            self.rotation_y += dx * 0.5
-            self.update_mvp()
-        self.last_mouse_x = x
-        self.last_mouse_y = y
+        if self.rotation.drag(x, y) is None:
+            return
+        self.update_mvp()
 
     def wheelEvent(self, wheel=0, direction=0, x=0, y=0):
         """

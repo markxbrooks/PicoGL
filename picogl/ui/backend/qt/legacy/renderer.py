@@ -61,8 +61,8 @@ class LegacyQtObjectRenderer(GLBase):
         self.rotation_speed = 1.0
 
         # Initialize mvp_parameters to avoid None values
-        self.mvp_parameters.rotation_x = 0.0
-        self.mvp_parameters.rotation_y = 0.0
+        self.mvp_parameters.x = 0.0
+        self.mvp_parameters.y = 0.0
         self.mvp_parameters.pan_x = 0.0
         self.mvp_parameters.pan_y = 0.0
 
@@ -165,8 +165,8 @@ class LegacyQtObjectRenderer(GLBase):
             self.rotation_x = max(-90, min(90, self.rotation_x))
 
             # Update mvp_parameters for compatibility
-            self.mvp_parameters.rotation_x = self.rotation_x
-            self.mvp_parameters.rotation_y = self.rotation_y
+            self.mvp_parameters.x = self.rotation_x
+            self.mvp_parameters.y = self.rotation_y
 
         super().mouseMoveEvent(event)
 
@@ -194,8 +194,8 @@ class LegacyQtObjectRenderer(GLBase):
             self.rotation_x = 0.0
             self.rotation_y = 0.0
             self.zoom = 5.0
-            self.mvp_parameters.rotation_x = 0.0
-            self.mvp_parameters.rotation_y = 0.0
+            self.mvp_parameters.x = 0.0
+            self.mvp_parameters.y = 0.0
             self.mvp_parameters.pan_x = 0.0
             self.mvp_parameters.pan_y = 0.0
             self.camera_parameters.rotation_x_axis = 0.0

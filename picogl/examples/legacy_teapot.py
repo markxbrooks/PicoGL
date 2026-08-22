@@ -20,6 +20,7 @@ from OpenGL.GLUT import *
 from picogl.core.polygon.mode import set_polygon_mode_fill
 from picogl.renderer import MeshData
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
+from picogl.ui.backend.glut.mouse import RotationInteraction
 from picogl.utils.loader.object import ObjectLoader
 
 
@@ -37,10 +38,7 @@ class LegacyRenderer:
         self.height = height
         self.title = title
         self.mesh = None
-        self.rotation_x = 0.0
-        self.rotation_y = 0.0
-        self.last_mouse_x = None
-        self.last_mouse_y = None
+        self.rotation = RotationInteraction()
         self.zoom_distance = 5.0
         self.object_file_name = object_file_name
 
@@ -121,8 +119,8 @@ class LegacyRenderer:
         gluLookAt(0, 0, self.zoom_distance, 0, 0, 0, 0, 1, 0)
 
         # Apply rotations
-        glRotatef(self.rotation_x, 1, 0, 0)
-        glRotatef(self.rotation_y, 0, 1, 0)
+        glRotatef(self.rotation.x, 1, 0, 0)
+        glRotatef(self.rotation.y, 0, 1, 0)
 
         # Draw the teapot
         if self.mesh:
@@ -162,8 +160,7 @@ class LegacyRenderer:
         if key == b"\x1b":  # ESC key
             sys.exit(0)
         elif key == b"r":  # Reset rotation
-            self.rotation_x = 0.0
-            self.rotation_y = 0.0
+            self.rotation.reset()
         elif key == b"w":  # Wireframe mode
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
         elif key == b"f":  # Fill mode
@@ -175,11 +172,9 @@ class LegacyRenderer:
         """Mouse callback."""
         if button == GLUT_LEFT_BUTTON:
             if state == GLUT_DOWN:
-                self.last_mouse_x = x
-                self.last_mouse_y = y
+                self.rotation.press(x, y)
             else:
-                self.last_mouse_x = None
-                self.last_mouse_y = None
+                self.rotation.release()
         elif button == 3:  # Mouse wheel up
             self.zoom_distance = max(1.0, self.zoom_distance - 0.5)
         elif button == 4:  # Mouse wheel down
@@ -188,19 +183,10 @@ class LegacyRenderer:
 
     def motion(self, x, y):
         """Mouse motion callback."""
-        if self.last_mouse_x is not None and self.last_mouse_y is not None:
-            dx = x - self.last_mouse_x
-            dy = y - self.last_mouse_y
-
-            self.rotation_y += dx * 0.5
-            self.rotation_x += dy * 0.5
-
-            # Clamp rotation
-            self.rotation_x = max(-90, min(90, self.rotation_x))
-
-            self.last_mouse_x = x
-            self.last_mouse_y = y
-            glutPostRedisplay()
+        if self.rotation.drag(x, y) is None:
+            return
+        self.rotation.clamp_x()
+        glutPostRedisplay()
 
     def run(self):
         """Run the application."""

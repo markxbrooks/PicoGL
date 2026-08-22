@@ -1,6 +1,8 @@
-from renderer.legacy_glmesh import LegacyGLMesh
-
-from picogl.backend.gl.api.enable import gl_enable
+"""
+draw legacy mesh
+"""
+from picogl.renderer.legacy_glmesh import LegacyGLMesh
+from picogl.backend.gl.api.enable import gl_enable, gl_disable
 from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
 from picogl.backend.gl.capability import (GLFixedFunctionCapability,
                                           GLMaterialFace)

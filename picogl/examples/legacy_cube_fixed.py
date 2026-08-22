@@ -74,10 +74,6 @@ class LegacyCubeRenderer(GlutRenderer):
         self.width = width
         self.height = height
         self.title = title
-        self.rotation_x = 0.0
-        self.rotation_y = 0.0
-        self.last_mouse_x = None
-        self.last_mouse_y = None
         self.zoom_distance = 5.0
         self.wireframe_mode = False
         self.auto_rotate = False
@@ -368,8 +364,8 @@ class LegacyCubeRenderer(GlutRenderer):
         gl_setup_camera(self.zoom_distance)
 
         # Apply rotations
-        gl_rotatef(self.rotation_x, 1, 0, 0)
-        gl_rotatef(self.rotation_y, 0, 1, 0)
+        gl_rotatef(self.rotation.x, 1, 0, 0)
+        gl_rotatef(self.rotation.y, 0, 1, 0)
 
         self.draw_mesh()
 
@@ -420,7 +416,7 @@ class LegacyCubeRenderer(GlutRenderer):
     def idle(self):
         """Idle callback for animation."""
         if self.auto_rotate:
-            self.rotation_y += 0.5
+            self.rotation.y += 0.5
             glut_post_redisplay()
 
 

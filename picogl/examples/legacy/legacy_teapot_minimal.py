@@ -42,10 +42,6 @@ class MinimalTeapotRenderer(GlutRenderer):
         super().__init__(width, height, title)
         self.update_size(height, width)
         self.title = title
-        self.rotation_x = 0.0
-        self.rotation_y = 0.0
-        self.last_mouse_x = None
-        self.last_mouse_y = None
         self.zoom_distance = 5.0
         self.wireframe_mode = False
 

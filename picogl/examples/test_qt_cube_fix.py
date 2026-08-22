@@ -86,14 +86,14 @@ def test_qt_cube_initialization():
             renderer = QtObjectRenderer(mock_parent)
 
             # Check that mvp_parameters are initialized
-            assert renderer.mvp_parameters.rotation_x == 0.0, "rotation_x should be 0.0"
-            assert renderer.mvp_parameters.rotation_y == 0.0, "rotation_y should be 0.0"
+            assert renderer.mvp_parameters.x == 0.0, "rotation_x should be 0.0"
+            assert renderer.mvp_parameters.y == 0.0, "rotation_y should be 0.0"
             assert renderer.mvp_parameters.pan_x == 0.0, "pan_x should be 0.0"
             assert renderer.mvp_parameters.pan_y == 0.0, "pan_y should be 0.0"
 
             # Check local rotation values
-            assert renderer.rotation_x == 0.0, "local rotation_x should be 0.0"
-            assert renderer.rotation_y == 0.0, "local rotation_y should be 0.0"
+            assert renderer.x == 0.0, "local rotation_x should be 0.0"
+            assert renderer.y == 0.0, "local rotation_y should be 0.0"
 
             print("  ✅ QtCubeRenderer initialization test passed!")
             return True
@@ -124,26 +124,26 @@ def test_rotation_operations():
             renderer = QtObjectRenderer()
 
             # Test rotation updates
-            renderer.rotation_x += 15.5
-            renderer.rotation_y += 25.3
+            renderer.x += 15.5
+            renderer.y += 25.3
 
             # Update mvp_parameters
-            renderer.mvp_parameters.rotation_x = renderer.rotation_x
-            renderer.mvp_parameters.rotation_y = renderer.rotation_y
+            renderer.mvp_parameters.x = renderer.x
+            renderer.mvp_parameters.y = renderer.y
 
             # Verify values
             assert (
-                renderer.rotation_x == 15.5
-            ), f"Expected 15.5, got {renderer.rotation_x}"
+                    renderer.x == 15.5
+            ), f"Expected 15.5, got {renderer.x}"
             assert (
-                renderer.rotation_y == 25.3
-            ), f"Expected 25.3, got {renderer.rotation_y}"
+                    renderer.y == 25.3
+            ), f"Expected 25.3, got {renderer.y}"
             assert (
-                renderer.mvp_parameters.rotation_x == 15.5
-            ), f"Expected 15.5, got {renderer.mvp_parameters.rotation_x}"
+                    renderer.mvp_parameters.x == 15.5
+            ), f"Expected 15.5, got {renderer.mvp_parameters.x}"
             assert (
-                renderer.mvp_parameters.rotation_y == 25.3
-            ), f"Expected 25.3, got {renderer.mvp_parameters.rotation_y}"
+                    renderer.mvp_parameters.y == 25.3
+            ), f"Expected 25.3, got {renderer.mvp_parameters.y}"
 
             print("  ✅ Rotation operations test passed!")
             return True

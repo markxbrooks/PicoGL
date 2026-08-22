@@ -70,8 +70,8 @@ class LegacyQtObjectWindow(QMainWindow):
         self.gl_widget.rotation_x = 0.0
         self.gl_widget.rotation_y = 0.0
         self.gl_widget.zoom = 5.0
-        self.gl_widget.mvp_parameters.rotation_x = 0.0
-        self.gl_widget.mvp_parameters.rotation_y = 0.0
+        self.gl_widget.mvp_parameters.x = 0.0
+        self.gl_widget.mvp_parameters.y = 0.0
         self.gl_widget.mvp_parameters.pan_x = 0.0
         self.gl_widget.mvp_parameters.pan_y = 0.0
         self.gl_widget.camera_parameters.rotation_x_axis = 0.0
