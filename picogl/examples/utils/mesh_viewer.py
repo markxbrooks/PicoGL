@@ -3,9 +3,9 @@ from OpenGL.GL import *  # pylint: disable=W0614
 from OpenGL.GLUT import *  # pylint: disable=W0614
 from pyglm import glm
 
-from picogl.backend.gl.api.clear import gl_clear_color
-from picogl.backend.gl.api.depth import gl_depth_func
-from picogl.backend.gl.api.enable import gl_enable
+from picogl.backend.gl.api.enable import gl_enable_capability_list
+from picogl.backend.modern.core.setup.lighting import gl_initialize_background
+from picogl.core.rgbcolor import RGBAColor
 from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.glm.glm import glm_identity_matrix
@@ -24,9 +24,7 @@ class MeshViewWindow(GLWindow):
 
     def initializeGL(self):
         """initializeGL"""
-        gl_clear_color(0.1, 0.1, 0.1, 0.8)
-        gl_depth_func(GLDepthFunc.LESS)
-        gl_enable(GLPipelineCapability.DEPTH_TEST)
+        gl_initialize_background(RGBAColor(0.1, 0.1, 0.1, 0.8))
 
     def add_mesh(self, mesh_with_render: object):
         """add_mesh"""

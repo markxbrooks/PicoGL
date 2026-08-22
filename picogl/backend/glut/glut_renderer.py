@@ -15,12 +15,13 @@ import sys
 
 import numpy as np
 
-from picogl.backend.gl.api.clear import gl_clear_rgba_color
 from picogl.backend.gl.api.color import gl_color_material
+from picogl.backend.gl.api.enable import gl_enable_capability_list
 from picogl.backend.gl.api.rotate import gl_rotate_f
-from picogl.backend.gl.capability import GLMaterialFace
+from picogl.backend.gl.capability import GLFixedFunctionCapability, GLMaterialFace
 from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
-from picogl.backend.gl.state.fill import GLColorMaterialMode
+from picogl.backend.gl.state.fill import GLCapability, GLColorMaterialMode
+from picogl.backend.modern.core.setup.lighting import gl_initialize_background
 from picogl.backend.glut.buffers import glut_swap_buffers
 from picogl.backend.glut.cube_data import CUBE_COLORS, CUBE_VERTICES
 from picogl.backend.glut.display import (glut_display_func, glut_idle_func,
@@ -40,7 +41,6 @@ from picogl.core.draw.cube import draw_fallback_cube
 from picogl.core.draw.mesh.legacy import draw_legacy_mesh
 from picogl.core.rgbcolor import RGBAColor
 from picogl.core.setup.camera import gl_setup_camera
-from picogl.core.setup.capabilities import gl_setup_capabilities
 from picogl.core.setup.view import gl_setup_view
 from picogl.core.vec3 import Vec3
 from picogl.examples.cube_with_controls import GLViewTransform
@@ -119,8 +119,14 @@ class GlutRenderer:
 
     def init_gl(self):
         """Initialize OpenGL state."""
-        gl_clear_rgba_color(RGBAColor(0.1, 0.1, 0.2, 1.0))  # Dark blue background
-        gl_setup_capabilities()
+        gl_initialize_background(RGBAColor(0.1, 0.1, 0.2, 1.0))
+        gl_enable_capability_list(
+            [
+                GLFixedFunctionCapability.LIGHTING,
+                GLFixedFunctionCapability.LIGHT0,
+                GLCapability.COLOR_MATERIAL,
+            ]
+        )
         gl_color_material(
             GLMaterialFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE
         )

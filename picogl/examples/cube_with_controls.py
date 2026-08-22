@@ -9,10 +9,8 @@ from PySide6.QtOpenGLWidgets import QOpenGLWidget
 from PySide6.QtWidgets import (QApplication, QHBoxLayout, QMainWindow, QSlider,
                                QVBoxLayout, QWidget)
 
-from picogl.backend.gl.api.clear import gl_clear_rgba_color
-from picogl.backend.gl.api.enable import gl_enable
+from picogl.backend.modern.core.setup.lighting import gl_initialize_background
 from picogl.backend.gl.api.legacy.matrix import gl_pushed_matrix
-from picogl.backend.gl.capability import GLPipelineCapability
 from picogl.backend.gl.enums.legacy.scale import (gl_rotatef, gl_translate_f,
                                                   gl_viewport)
 from picogl.backend.legacy.core.pipeline import LegacyPipeline
@@ -83,8 +81,7 @@ class GLCubeWidget(QOpenGLWidget):
         self.update()
 
     def initializeGL(self):
-        gl_clear_rgba_color(RGBAColor(0.0, 0.0, 0.0, 1.0))
-        gl_enable(GLPipelineCapability.DEPTH_TEST)
+        gl_initialize_background(RGBAColor(0.0, 0.0, 0.0, 1.0))
         self.init_geometry()
 
     def resizeGL(self, width, height):

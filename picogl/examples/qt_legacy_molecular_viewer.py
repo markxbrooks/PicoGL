@@ -32,9 +32,9 @@ from picogl.core.draw.sphere import (draw_latitude_band_connectors,
                                      draw_latitude_band_filled,
                                      draw_latitude_ring_wireframe)
 from picogl.core.geometry.sphere import generate_ring, latitude_for_stack
-from picogl.core.rgbcolor import RGBColor
-from picogl.core.setup import (gl_setup_background_color, gl_setup_depth_test,
-                               gl_setup_lighting, gl_setup_materials)
+from picogl.core.rgbcolor import RGBAColor, RGBColor
+from picogl.backend.modern.core.setup.lighting import gl_initialize_background, RGBColor
+from picogl.core.setup import gl_setup_lighting, gl_setup_materials
 from picogl.core.setup.view import gl_setup_view
 from picogl.core.vec3 import Vec3
 from picogl.core.zoom.scale import gl_scale_by_zoom
@@ -86,10 +86,9 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
 
     def initializeGL(self):
         """Initialize OpenGL settings"""
-        gl_setup_depth_test()
+        gl_initialize_background(RGBAColor.BLACK)
         gl_setup_lighting()
         gl_setup_materials()
-        gl_setup_background_color()
 
     def resizeGL(self, width, height):
         """Handle window resize"""

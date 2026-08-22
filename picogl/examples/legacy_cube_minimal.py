@@ -18,8 +18,9 @@ import sys
 
 import numpy as np
 
+from molib.pdb.coordinate.coordinate import Coordinates
 from picogl.backend.gl.api.color import gl_color_3f, gl_color_rgb
-from picogl.backend.gl.api.vertex.vertex_3f import gl_vertex_3f
+from picogl.backend.gl.api.vertex.vertex_3f import gl_vertex_coord, gl_vertex_line
 from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.backend.gl.state.fill import GLFillMode
@@ -78,19 +79,15 @@ class MinimalCubeRenderer(LegacyRenderer):
                     color = self.colors[vertex_idx]
                     gl_color_rgb(RGBColor(color[0], color[1], color[2]))
                 vertex = self.vertices[vertex_idx]
-                gl_vertex_3f(float(vertex[0]), float(vertex[1]), float(vertex[2]))
+                gl_vertex_coord(Coordinates.from_array(vertex))
 
     def draw_normals(self) -> None:
         """Draw simplified triangle normal vectors."""
         with disabled(GLFixedFunctionCapability.LIGHTING):
             gl_color_rgb(RGBColor.GREEN)
             with gl_immediate_drawing(GLDrawMode.LINES):
-                for i in range(0, len(self.vertices), 6):
-                    if i + 2 >= len(self.vertices):
-                        continue
-                    v1 = self.vertices[i]
-                    v2 = self.vertices[i + 1]
-                    v3 = self.vertices[i + 2]
+                for i in range(0, len(self.vertices), 3):
+                    v1, v2, v3 = self.vertices[i:i + 3]
 
                     edge1 = v2 - v1
                     edge2 = v3 - v1
@@ -98,15 +95,13 @@ class MinimalCubeRenderer(LegacyRenderer):
                     norm = np.linalg.norm(normal)
                     if norm == 0.0:
                         continue
-                    normal = normal / norm
-                    center = (v1 + v2 + v3) / 3.0
 
-                    gl_vertex_3f(float(center[0]), float(center[1]), float(center[2]))
-                    gl_vertex_3f(
-                        float(center[0] + normal[0] * 0.5),
-                        float(center[1] + normal[1] * 0.5),
-                        float(center[2] + normal[2] * 0.5),
-                    )
+                    normal /= norm
+                    center = (v1 + v2 + v3) / 3.0
+                    endpoint = center + normal * 0.5
+                    coord_start = Coordinates.from_array(center)
+                    coord_end = Coordinates.from_array(endpoint)
+                    gl_vertex_line(coord_end, coord_start)
 
     def handle_key(self, key: bytes) -> None:
         if key == b"w":

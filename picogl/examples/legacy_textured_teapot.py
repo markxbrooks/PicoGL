@@ -28,7 +28,7 @@ from PySide6.QtWidgets import (QApplication, QComboBox, QLabel, QPushButton,
 
 from picogl.backend.gl.api import gl_bind_texture
 from picogl.backend.gl.api.clear import gl_clear
-from picogl.backend.gl.api.enable import gl_enable_capability_list
+from picogl.backend.gl.api.enable import gl_disable, gl_enable_capability_list
 from picogl.backend.modern.core.setup.lighting import gl_initialize_background
 from picogl.core.rgbcolor import RGBAColor
 from picogl.texture.gltexture import GLTexture

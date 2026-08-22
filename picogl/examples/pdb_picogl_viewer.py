@@ -15,7 +15,7 @@ from pathlib import Path
 
 import numpy as np
 
-from picogl.backend.gl.api.enable import gl_enable
+from picogl.backend.gl.api.enable import gl_enable, gl_enable_capability_list
 from picogl.backend.gl.enums.point_size import (GLLegacyPointCapability,
                                                 GLPointCapability)
 from picogl.backend.modern.core.setup.lighting import gl_initialize_background

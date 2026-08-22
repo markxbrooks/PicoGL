@@ -15,6 +15,7 @@ from picogl.backend.legacy.core.camera.projection_state import (
     GLUProjectionState)
 from picogl.backend.state import GLViewport
 from picogl.core.camera import ProjectionConfig
+from picogl.backend.modern.core.setup.lighting import gl_initialize_background
 from picogl.ui.abc_window import AbstractGLWindow
 
 
@@ -87,9 +88,7 @@ class GLWindow(AbstractGLWindow):
 
     def initializeGL(self):
         """initialize_gl"""
-        GL.glClearColor(0.0, 0, 0.4, 0)
-        GL.glDepthFunc(GL.GL_LESS)
-        GL.gl_enable(GL.GL_DEPTH_TEST)
+        gl_initialize_background()
 
     def paintGL(self):
         """paintGL"""

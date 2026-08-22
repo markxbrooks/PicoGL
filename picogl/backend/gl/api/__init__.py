@@ -28,7 +28,7 @@ from picogl.backend.gl.api.vertex.enable_array import gl_enable_vertex_array
 from picogl.backend.gl.api.vertex.generate_array import \
     gl_generate_vertex_array
 from picogl.backend.gl.api.vertex.normal_3f import gl_normal_3f
-from picogl.backend.gl.api.vertex.vertex_3f import gl_vertex_3f
+from picogl.backend.gl.api.vertex.vertex_3f import gl_vertex_3f, gl_vertex_coord, gl_vertex_line
 
 from .buffer.bind import gl_bind_buffer
 from .get_integerv import gl_get_integerv
@@ -69,6 +69,8 @@ __all__ = [
     "gl_normal_pointer_from_spec",
     "gl_texcoord_array_pointer",
     "gl_vertex_3f",
+    "gl_vertex_coord",
+    "gl_vertex_line",
     "gl_vertex_array_pointer",
     "gl_vertex_pointer_from_spec",
     "gl_vertex_attrib_pointer",

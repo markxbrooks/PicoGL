@@ -3,8 +3,9 @@ Draw the teapot using built-in GLUT primitives.
 """
 import numpy as np
 
-from picogl.backend.gl.api import gl_vertex_3f
+from molib.pdb.coordinate.coordinate import Coordinates
 from picogl.backend.gl.api.color import gl_color_3f, gl_color_rgb
+from picogl.backend.gl.api.vertex.vertex_3f import gl_vertex_line
 from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.backend.gl.state.fill import GLFillMode
@@ -43,8 +44,9 @@ def draw_normals():
                 ny = y
                 nz = z
 
-                gl_vertex_3f(x, y, z)
-                gl_vertex_3f(x + nx * 0.2, y + ny * 0.2, z + nz * 0.2)
+                start = Coordinates(x, y, z)
+                end = Coordinates(x + nx * 0.2, y + ny * 0.2, z + nz * 0.2)
+                gl_vertex_line(end, start)
 
 
 def draw_teapot_with_normals(wireframe_mode, show_normals):
