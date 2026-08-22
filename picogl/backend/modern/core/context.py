@@ -12,6 +12,8 @@ from picogl.backend.gl.capability import GLPipelineCapability
 from picogl.backend.gl.enums import (GLBitMask, GLBufferTarget, GLNumeric,
                                      GLUsageHint)
 from picogl.backend.glm.glm import glm_identity_matrix
+from picogl.backend.state import GLViewport
+from picogl.core.camera import FOVY, ProjectionConfig
 from picogl.boolean import GLBoolean
 from picogl.examples.utils.shader_loader import Shader
 from picogl.examples.utils.test_window import GLWindow
@@ -61,7 +63,10 @@ class GLContext(GObject):
     def calculate_mvp(self, width=1920, height=1080):
         """Calculate the Model-View-Projection matrix."""
         self.Projection = glm.perspective(
-            glm.radians(45.0), float(width) / float(height), 0.1, 1000.0
+            glm.radians(FOVY),
+            float(width) / float(height),
+            ProjectionConfig.near,
+            ProjectionConfig.far,
         )
         self.View = glm.lookAt(
             glm.vec3(4, 3, -3),  # Camera is at (4,3,-3), in World Space
@@ -96,7 +101,7 @@ class Tu01Win(GLWindow):
         self.context.calculate_mvp(width, height)
 
     def resizeGL(self, Width, Height):
-        glViewport(0, 0, Width, Height)
+        GLViewport(width=Width, height=Height).apply()
         self.calc_MVP(Width, Height)
 
     def paintGL(self):

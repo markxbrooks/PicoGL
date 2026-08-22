@@ -2,6 +2,8 @@ import math
 
 from pyglm import glm
 
+from picogl.core.camera import ProjectionConfig
+
 
 class MVPControl:
     """Encapsulates camera position, orientation, and MVP matrix handling."""
@@ -78,8 +80,8 @@ class MVPControl:
         self.projection_matrix = glm.perspective(
             glm.radians(self.fov),
             self.screen_width / float(self.screen_height),
-            0.1,
-            1000.0,
+            ProjectionConfig.near,
+            ProjectionConfig.far,
         )
         self.view_matrix = glm.lookAt(self.position, self.look_pos, self.up)
 

@@ -521,9 +521,15 @@ class TestDrawCommand(unittest.TestCase):
         )
 
         with (
-            patch("picogl.backend.legacy.core.pipeline.gl_matrix_mode") as matrix_mode,
-            patch("picogl.backend.legacy.core.pipeline.gl_load_identity") as load_identity,
-            patch("picogl.backend.legacy.core.pipeline.glu_perspective") as perspective,
+            patch(
+                "picogl.backend.legacy.core.camera.projection_state.gl_matrix_mode"
+            ) as matrix_mode,
+            patch(
+                "picogl.backend.legacy.core.camera.projection_state.gl_load_identity"
+            ) as load_identity,
+            patch(
+                "picogl.backend.legacy.core.camera.projection_state.glu_perspective"
+            ) as perspective,
             patch("picogl.backend.legacy.core.pipeline.gl_translatef") as translate,
             patch("picogl.backend.legacy.core.pipeline.gl_light_fv") as lightfv,
             patch("picogl.backend.legacy.core.pipeline.gl_material_fv") as materialfv,
@@ -827,19 +833,23 @@ class TestDrawCommand(unittest.TestCase):
         backend = GLBackend(binding=FakeBinding())
 
         with (
-            patch("picogl.backend.legacy.core.pipeline.glMatrixMode") as matrix_mode,
             patch(
-                "picogl.backend.legacy.core.pipeline.glLoadIdentity"
+                "picogl.backend.legacy.core.camera.projection_state.gl_matrix_mode"
+            ) as matrix_mode,
+            patch(
+                "picogl.backend.legacy.core.camera.projection_state.gl_load_identity"
             ) as load_identity,
-            patch("picogl.backend.legacy.core.pipeline.gluPerspective") as perspective,
+            patch(
+                "picogl.backend.legacy.core.camera.projection_state.glu_perspective"
+            ) as perspective,
         ):
             backend.legacy.set_projection(45.0, 1.5, 0.1, 1000.0)
 
         self.assertEqual(
             matrix_mode.call_args_list,
             [
-                call(GL_PROJECTION),
-                call(GL_MODELVIEW),
+                call(GLLegacyMatrixMode.PROJECTION),
+                call(GLLegacyMatrixMode.MODELVIEW),
             ],
         )
         load_identity.assert_called_once_with()

@@ -66,9 +66,6 @@ class GLResourceRegistry:
         glsl_dir: str | Path | None = None,
     ) -> None:
         """Compile and store a vertex/fragment shader program on this registry."""
-        # Use init_shader_from_glsl_files rather than ShaderProgram.__init__'s
-        # ShaderCompiler.compile_shader_files path (that double-joins ShaderFiles
-        # paths and has a broken static/instance init_shader call).
         self.shader = ShaderProgram(
             shader_name=f"{vertex_source_file}+{fragment_source_file}",
         )

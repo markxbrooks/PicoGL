@@ -12,13 +12,16 @@ from picogl.backend.gl.api.vertex.vertex_3f import gl_vertex_3f
 from picogl.backend.gl.capability import FACE_MAP
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.enums.legacy.scale import (gl_load_identity,
-                                                  gl_translate_f, gl_viewport)
+                                                  gl_translate_f)
 from picogl.backend.gl.phong.material import PhongMaterial
 from picogl.backend.gl.state.fill import (GLColorMaterialMode, GLFace, GLLight,
                                           GLLightParameter)
 from picogl.backend.gl.state.texture import TexCoord2f, Vertex3f
 from picogl.backend.glu.perspective import glu_perspective
-from picogl.backend.state import gl_value
+from picogl.backend.legacy.core.camera.projection_state import (
+    GLUProjectionState)
+from picogl.backend.state import GLViewport, gl_value
+from picogl.core.camera import ProjectionConfig
 from picogl.core.rgbcolor import RGBAColor
 from picogl.texture.coord import gl_tex_coord2f
 
@@ -90,21 +93,24 @@ class GLLegacyPipeline:
 
     @staticmethod
     def set_view(height, width):
-        gl_viewport(0, 0, width, height)
-        gl_matrix_mode(GLLegacyMatrixMode.PROJECTION)
-        gl_load_identity()
-        glu_perspective(45.0, width / height, 0.1, 100.0)
-        gl_matrix_mode(GLLegacyMatrixMode.MODELVIEW)
+        GLViewport(width=width, height=height).apply()
+        GLUProjectionState().apply(
+            ProjectionConfig(aspect=width / max(height, 1))
+        )
 
     @staticmethod
     def set_projection(fovy: float, aspect: float, znear: float, zfar: float):
         """
         set projection
         """
-        gl_matrix_mode(GLLegacyMatrixMode.PROJECTION)
-        gl_load_identity()
-        glu_perspective(float(fovy), float(aspect), float(znear), float(zfar))
-        gl_matrix_mode(GLLegacyMatrixMode.MODELVIEW)
+        GLUProjectionState().apply(
+            ProjectionConfig(
+                fovy=float(fovy),
+                aspect=float(aspect),
+                near=float(znear),
+                far=float(zfar),
+            )
+        )
 
     @staticmethod
     def translate(x: float, y: float, z: float) -> None:

@@ -5,6 +5,7 @@ ABC Window
 from abc import ABC, abstractmethod
 from typing import Optional
 
+import picogl.ui.backend.glut.prefer_apple_glut  # noqa: F401
 from OpenGL.GLUT import glutMainLoop, glutSwapBuffers
 
 

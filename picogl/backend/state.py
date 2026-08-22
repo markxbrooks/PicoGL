@@ -26,6 +26,7 @@ from picogl.backend.gl.enums.point_size import GLPointCapability
 from picogl.backend.gl.state.client import GLClientState
 from picogl.backend.gl.state.fill import GLCapability, GLFace, GLFillMode
 from picogl.backend.value import gl_value
+from picogl.core.protocol.applicable import Applicable
 from picogl.texture.gltexture_driver import GLTextureDriver
 
 
@@ -535,7 +536,7 @@ class GLAttributeArray:
 
 
 @dataclass
-class GLViewport:
+class GLViewport(Applicable):
     """
     Represents a viewport in OpenGL with specified position and dimensions.
 
@@ -555,12 +556,12 @@ class GLViewport:
             The height of the viewport in pixels.
     """
 
-    x: int
-    y: int
-    width: int
-    height: int
+    x: int = 0
+    y: int = 0
+    width: int = 0
+    height: int = 0
 
-    def apply(self):
+    def apply(self, *args):
         """
         Adjusts the viewport to the specified dimensions and coordinates.
 
@@ -574,6 +575,10 @@ class GLViewport:
         parameters are used.
         """
         gl_viewport(self.x, self.y, self.width, self.height)
+
+    @property
+    def size(self) -> tuple[int, int]:
+        return self.width, self.height
 
 
 class TestGLMesh:

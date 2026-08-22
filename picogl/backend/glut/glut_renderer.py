@@ -17,13 +17,10 @@ import numpy as np
 
 from picogl.backend.gl.api.clear import gl_clear_rgba_color
 from picogl.backend.gl.api.color import gl_color_material
-from picogl.backend.gl.api.legacy.matrix import gl_matrix_mode_context
 from picogl.backend.gl.api.rotate import gl_rotate_f
 from picogl.backend.gl.capability import GLMaterialFace
-from picogl.backend.gl.enums.legacy.scale import gl_viewport
 from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
 from picogl.backend.gl.state.fill import GLColorMaterialMode
-from picogl.backend.glu.perspective import glu_perspective
 from picogl.backend.glut.buffers import glut_swap_buffers
 from picogl.backend.glut.cube_data import CUBE_COLORS, CUBE_VERTICES
 from picogl.backend.glut.display import (glut_display_func, glut_idle_func,
@@ -35,6 +32,10 @@ from picogl.backend.glut.idle import glut_idle_func
 from picogl.backend.glut.init import (glut_create_window, glut_init,
                                       glut_init_display_mode,
                                       glut_init_window_size, glut_main_loop)
+from picogl.backend.legacy.core.camera.projection_state import (
+    GLUProjectionState)
+from picogl.backend.state import GLViewport
+from picogl.core.camera import ProjectionConfig
 from picogl.core.draw.cube import draw_fallback_cube
 from picogl.core.draw.mesh.legacy import draw_legacy_mesh
 from picogl.core.rgbcolor import RGBAColor
@@ -73,6 +74,9 @@ class GlutRenderer:
     """Legacy cube renderer using PicoGL LegacyGLMesh."""
 
     def __init__(self, width=800, height=600, title="Legacy Glut Renderer"):
+        self.viewport = GLViewport(width=width, height=height)
+        self.projection_config = ProjectionConfig()
+        self.projection = GLUProjectionState()
         self.width = width
         self.height = height
         self.title = title
@@ -183,21 +187,28 @@ class GlutRenderer:
         glut_swap_buffers()
 
     def update_size(self, height, width):
+        self.viewport.width = width
+        self.viewport.height = height
         self.width = width
         self.height = height
 
     def reshape(self, width, height):
         """Reshape callback - handle window resize."""
         self.update_size(height, width)
-        self.update_viewport(height, width)
+        self.update_viewport()
         self.update_perspective(height, width)
 
     def update_perspective(self, height, width):
-        with gl_matrix_mode_context():
-            glu_perspective(45.0, float(width) / float(height), 0.1, 100.0)
+        self.projection.apply(
+            self.projection_config.with_size(width, height)
+        )
 
-    def update_viewport(self, height, width):
-        gl_viewport(0, 0, width, height)
+    def update_viewport(self, height=None, width=None):
+        if width is not None:
+            self.viewport.width = width
+        if height is not None:
+            self.viewport.height = height
+        self.viewport.apply()
 
     def keyboard(self, key, x, y):
         """Keyboard callback."""

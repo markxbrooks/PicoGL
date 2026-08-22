@@ -1,10 +1,14 @@
 # import os,sys
 # sys.path.append(os.path.abspath(os.path.dirname(__file__)))
+from pathlib import Path
+
+import picogl.ui.backend.glut.prefer_apple_glut  # noqa: F401
 from decologr import Decologr as log
 from OpenGL.GL import *  # pylint: disable=W0614
 from pyglm import glm
 
 from picogl.backend.gl.api import gl_bind_texture, gl_get_active_texture0
+from picogl.backend.gl.api.enable import gl_enable
 from picogl.backend.glm.glm import glm_identity_matrix
 from picogl.backend.modern.core.shader.files import ShaderFiles
 from picogl.backend.modern.core.shader.program import ShaderProgram
@@ -76,7 +80,7 @@ class Tu01Win(GlutRendererWindow):
         *args,
         **kwargs,
     ):
-        super().__init__(width, height, title, context, args, kwargs)
+        super().__init__(width, height, title, context, *args, **kwargs)
         self.shader = None
 
     def initializeGL(self):
@@ -99,10 +103,12 @@ class Tu01Win(GlutRendererWindow):
 
         self.shader = shader = ShaderProgram()
         shader_files = ShaderFiles(
-            vertex="vertex.glsl", fragment="fragment.glsl", glsl_dir="glsl/tu02"
+            vertex="vertex.glsl",
+            fragment="fragment.glsl",
+            glsl_dir=Path(__file__).resolve().parent / "glsl" / "tu02",
         )
 
-        shader.compiler.compile_shader_files(shader_files)
+        shader.program = shader.compiler.compile_shader_files(shader_files)
         # shader var ids
         self.context.mvp_id = glGetUniformLocation(shader.program, "mvp_matrix")
         self.context.texture_id = glGetUniformLocation(

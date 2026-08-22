@@ -15,6 +15,8 @@ import numpy as np
 from pyglm import glm
 from pyglm.glm import vec4
 
+from picogl.core.camera import ProjectionConfig
+
 Mat4 = glm.mat4
 
 
@@ -62,9 +64,15 @@ def glm_mat4_to_np(m) -> np.ndarray:
 def glm_compute_projection_matrix(
     aspect: float,
     *,
-    fov_deg: float = 45.0,
-    near: float = 0.1,
-    far: float = 500.0,
+    fov_deg: float = ProjectionConfig.fovy,
+    near: float = ProjectionConfig.near,
+    far: float = ProjectionConfig.far,
+    config: ProjectionConfig | None = None,
 ) -> glm.mat4:
     """glm_compute_projection_matrix"""
+    if config is not None:
+        fov_deg = config.fovy
+        aspect = config.aspect
+        near = config.near
+        far = config.far
     return glm.perspective(glm.radians(fov_deg), float(aspect), near, far)

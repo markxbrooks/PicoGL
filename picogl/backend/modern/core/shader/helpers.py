@@ -40,18 +40,30 @@ def read_shader_source(
     """
     Read shader source from a file.
 
-    :param shader_file_name: Name of the shader file
-    :param glsl_dir: Base directory (str or Path). Defaults to project root.
+    :param shader_file_name: Shader filename or already-joined path
+    :param glsl_dir: Optional directory to join with a bare filename.
+        Ignored when ``shader_file_name`` is absolute or already under
+        ``glsl_dir`` (as ``ShaderFiles`` produces).
     :return: Shader source as a string
     """
-    if glsl_dir is None or glsl_dir == "":
-        glsl_dir = Path(__file__).resolve().parent.parent
+    shader_path = Path(shader_file_name)
+    if shader_path.is_absolute() or glsl_dir in (None, ""):
+        abs_path = shader_path
     else:
-        glsl_dir = Path(glsl_dir)
-
-    abs_path = glsl_dir / shader_file_name
+        base = Path(glsl_dir)
+        if _path_already_under(shader_path, base):
+            abs_path = shader_path
+        else:
+            abs_path = base / shader_path
 
     try:
         return abs_path.read_text()
     except FileNotFoundError as ex:
         raise FileNotFoundError(f"Shader file not found: {abs_path}") from ex
+
+
+def _path_already_under(path: Path, base: Path) -> bool:
+    try:
+        return path.is_relative_to(base)
+    except (ValueError, TypeError):
+        return False

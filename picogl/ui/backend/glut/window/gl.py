@@ -4,13 +4,17 @@ Glut Window
 
 import sys
 
+# Must run before OpenGL.GLUT: Homebrew freeglut shadows Apple GLUT on macOS.
+import picogl.ui.backend.glut.prefer_apple_glut  # noqa: F401
 import OpenGL.GL as GL
 import OpenGL.GLU as GLU
 import OpenGL.GLUT as GLUT
 from OpenGL import platform as gl_platform
 
-# Must run before OpenGL.GLUT: Homebrew freeglut shadows Apple GLUT on macOS.
-import picogl.ui.backend.glut.prefer_apple_glut  # noqa: F401
+from picogl.backend.legacy.core.camera.projection_state import (
+    GLUProjectionState)
+from picogl.backend.state import GLViewport
+from picogl.core.camera import ProjectionConfig
 from picogl.ui.abc_window import AbstractGLWindow
 
 
@@ -21,6 +25,9 @@ class GLWindow(AbstractGLWindow):
         """__init__"""
         super().__init__()
         self.window = None
+        self.viewport = GLViewport()
+        self.projection_config = ProjectionConfig()
+        self.projection = GLUProjectionState()
         self.width = None
         self.height = None
         self.title = title
@@ -109,10 +116,13 @@ class GLWindow(AbstractGLWindow):
     def resizeGL(self, width: int, height: int):
         """resize"""
         print("please override resize")
+        self.viewport.width = width
+        self.viewport.height = height
         self.width = width
         self.height = height
-        GL.glViewport(0, 0, width, height)
-        GLU.gluPerspective(45.0, float(width) / float(height), 0.1, 1000.0)
+        self.viewport.apply()
+        aspect = float(width) / float(max(height, 1))
+        self.projection.apply(self.projection_config.with_aspect(aspect))
 
     def keyPressEvent(self, key, x, y):
         """on_keyboard"""

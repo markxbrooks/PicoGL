@@ -1,6 +1,8 @@
 import numpy as np
 from pyrr import Matrix44
 
+from picogl.core.camera import FOVY, ProjectionConfig
+
 
 def calculate_projection_matrix(width: int, height: int) -> Matrix44:
     """
@@ -12,5 +14,8 @@ def calculate_projection_matrix(width: int, height: int) -> Matrix44:
     """
     aspect = width / height if height != 0 else 1
     return Matrix44.perspective_projection(
-        fovy=45.0, aspect=aspect, near=0.1, far=1000.0
+        fovy=FOVY,
+        aspect=aspect,
+        near=ProjectionConfig.near,
+        far=ProjectionConfig.far,
     ).astype(np.float32)

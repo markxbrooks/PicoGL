@@ -1,13 +1,20 @@
+"""
+GlutRendererWindow
+"""
+
+import picogl.ui.backend.glut.prefer_apple_glut  # noqa: F401
 import numpy as np
-from decologr import Decologr as log
-from decologr import setup_logging
-from OpenGL.raw.GL.VERSION.GL_1_0 import glViewport
+from decologr import Decologr as log, setup_logging
 from pyglm import glm
 
 from picogl.backend.geometry import LegacyBinding
 from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.task.gl_init import legacy_init_gl_list, paint_gl_list
 from picogl.backend.glm.glm import glm_identity_matrix
+from picogl.backend.modern.core.camera.projection_state import (
+    GLMProjectionState)
+from picogl.backend.state import GLViewport
+from picogl.core.camera import ProjectionConfig
 from picogl.renderer import GLResourceRegistry
 from picogl.ui.backend.glut.window.gl import GLWindow
 
@@ -24,10 +31,13 @@ class GlutRendererWindow(GLWindow):
         *args,
         **kwargs,
     ):
-        super().__init__(*args, **kwargs)
+        super().__init__(title=title, *args, **kwargs)
         self.context = GLResourceRegistry() if context is None else context
         self.title = title
         self.renderer = None
+        self.viewport = GLViewport(width=width, height=height)
+        self.projection_config = ProjectionConfig()
+        self.projection = GLMProjectionState()
         self.width = width
         self.height = height
         # Mouse interaction state
@@ -36,7 +46,7 @@ class GlutRendererWindow(GLWindow):
         self.rotation_x = 0.0
         self.rotation_y = 0.0
         setup_logging()
-        self.zoom_fov: int = 45  # field of view
+        self.zoom_fov: float = ProjectionConfig.fovy
         self.zoom_distance: int = 10  # camera backwards in Z
         self.distance_threshold: float = 5.0
         self.backend = GLBackend(binding=LegacyBinding())
@@ -48,11 +58,20 @@ class GlutRendererWindow(GLWindow):
         self.renderer.initialize_shaders()
         self.renderer.initialize()
 
-    def calculate_mvp_matrix(self, width: int = 1920, height: int = 1080):
+    def calculate_mvp_matrix(
+        self, width: int | None = None, height: int | None = None
+    ):
         """calculate_mvp_matrix"""
-        self.context.projection = glm.perspective(
-            glm.radians(self.zoom_fov), float(width) / float(height), 0.1, 1000.0
+        width = self.viewport.width if width is None else width
+        height = self.viewport.height if height is None else height
+        config = ProjectionConfig(
+            fovy=self.zoom_fov,
+            aspect=float(width) / float(max(height, 1)),
+            near=self.projection_config.near,
+            far=self.projection_config.far,
         )
+        self.projection.apply(config)
+        self.context.projection = self.projection.matrix
         self.context.eye = glm.vec3(4, 3, self.zoom_distance)
         self.context.center = glm.vec3(0, 0, 0)
         self.context.up = glm.vec3(0, 1, 0)
@@ -72,10 +91,12 @@ class GlutRendererWindow(GLWindow):
     def resizeGL(self, width, height):
         """resizeGL"""
         log.message(f"Resizing viewport to {width}x{height}...")
+        self.viewport.width = width
+        self.viewport.height = height
         self.width = width
         self.height = height
-        glViewport(0, 0, width, height)
-        self.calculate_mvp_matrix(width, height)
+        self.viewport.apply()
+        self.calculate_mvp_matrix(self.viewport.width, self.viewport.height)
 
     def paintGL(self):
         """paintGL"""
@@ -134,7 +155,7 @@ class GlutRendererWindow(GLWindow):
         self.update_mvp()
 
     def get_size(self):
-        return self.width, self.height
+        return self.viewport.size
 
 
 if __name__ == "__main__":

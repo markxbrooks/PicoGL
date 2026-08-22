@@ -57,14 +57,10 @@ class ShaderCompiler:
             raise FileNotFoundError(
                 f"{shader_files.vertex} or {shader_files.fragment} not found"
             )
-        vertex_sources = read_shader_source(
-            shader_files.vertex, glsl_dir=shader_files.glsl_dir
-        )
-        fragment_sources = read_shader_source(
-            shader_files.fragment, glsl_dir=shader_files.glsl_dir
-        )
-        program = ShaderCompiler.init_shader(vertex_sources, fragment_sources)
-        return program
+        # ShaderFiles already joins glsl_dir onto vertex/fragment.
+        vertex_sources = read_shader_source(shader_files.vertex)
+        fragment_sources = read_shader_source(shader_files.fragment)
+        return ShaderCompiler.init_shader(vertex_sources, fragment_sources)
 
     @staticmethod
     def compile_glsl_files(
@@ -86,29 +82,24 @@ class ShaderCompiler:
             )
         vertex_sources = read_shader_source(vertex_source_file, glsl_dir=glsl_dir)
         fragment_sources = read_shader_source(fragment_source_file, glsl_dir=glsl_dir)
-        program = ShaderCompiler.init_shader(vertex_sources, fragment_sources)
-        return program
+        return ShaderCompiler.init_shader(vertex_sources, fragment_sources)
 
-    def init_shader(self, vertex_source: str, fragment_source: str) -> int:
+    @staticmethod
+    def init_shader(vertex_source: str, fragment_source: str) -> int:
         """
         init_shader
 
-        :param vertex_source: list of paths to vertex shaders
-        :param fragment_source: list of paths to fragment shaders
-        :return: None
-
-        Create, compile, and link shaders into a program.
+        :param vertex_source: GLSL vertex shader source
+        :param fragment_source: GLSL fragment shader source
+        :return: Linked OpenGL program id
         """
         program = ShaderCompiler.create_shader_program()
         log.parameter("self.program", program, silent=True)
         log.parameter("vertex_source", vertex_source, silent=True)
         log.parameter("fragment_source", fragment_source, silent=True)
-        vertex_shader = compile_shader(program, GLShader.VERTEX_SHADER, vertex_source)
-        fragment_shader = compile_shader(
-            program, GLShader.FRAGMENT_SHADER, fragment_source
-        )
-        program = ShaderCompiler.link_shader_program()
-        return program
+        compile_shader(program, GLShader.VERTEX_SHADER, vertex_source)
+        compile_shader(program, GLShader.FRAGMENT_SHADER, fragment_source)
+        return ShaderCompiler.link_shader_program(program)
 
     @staticmethod
     def create_shader_program() -> int:
@@ -197,12 +188,9 @@ class ShaderProgram:
             raise FileNotFoundError(
                 f"{shader_files.vertex} or {shader_files.fragment} not found"
             )
-        vertex_sources = read_shader_source(
-            shader_files.vertex, glsl_dir=shader_files.glsl_dir
-        )
-        fragment_sources = read_shader_source(
-            shader_files.fragment, glsl_dir=shader_files.glsl_dir
-        )
+        # ShaderFiles already joins glsl_dir onto vertex/fragment.
+        vertex_sources = read_shader_source(shader_files.vertex)
+        fragment_sources = read_shader_source(shader_files.fragment)
         self.init_shader_from_glsl(vertex_sources, fragment_sources)
 
     def init_shader_from_glsl_files(
