@@ -15,13 +15,15 @@ from picogl.backend.glut.display import glut_post_redisplay
 from picogl.backend.glut.glut_renderer import GlutRenderer
 from picogl.backend.glut.idle import glut_idle_func
 from picogl.core.draw.teapot import draw_teapot_with_normals
+from picoui.dimensions import Dimensions
 
 
 class SimpleTeapotRenderer(GlutRenderer):
     """Simple teapot renderer using only built-in OpenGL primitives."""
 
     def __init__(self, width=800, height=600, title="Simple Legacy Teapot"):
-        super().__init__(width, height, title)
+        self.dimensions = Dimensions(width=800, height=600)
+        super().__init__(self.dimensions.width, self.dimensions.height, title)
         self.width = width
         self.height = height
         self.title = title
