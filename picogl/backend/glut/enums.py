@@ -1,8 +1,9 @@
 """GLUT display-mode and related constants."""
 
-from enum import IntFlag
+from enum import IntEnum, IntFlag
 
-from OpenGL.GLUT import GLUT_DEPTH, GLUT_DOUBLE, GLUT_RGBA
+from OpenGL.GLUT import (GLUT_DEPTH, GLUT_DOUBLE, GLUT_DOWN, GLUT_LEFT_BUTTON,
+                         GLUT_RGBA, GLUT_UP)
 
 
 class GLUTDisplayMode(IntFlag):
@@ -11,3 +12,16 @@ class GLUTDisplayMode(IntFlag):
     RGBA = int(GLUT_RGBA)
     DOUBLE = int(GLUT_DOUBLE)
     DEPTH = int(GLUT_DEPTH)
+
+
+class GLUTMouseButton(IntEnum):
+    """GLUT mouse button identifiers."""
+
+    LEFT = int(GLUT_LEFT_BUTTON)
+
+
+class GLUTMouseState(IntEnum):
+    """GLUT mouse button press/release state."""
+
+    DOWN = int(GLUT_DOWN)
+    UP = int(GLUT_UP)

@@ -9,15 +9,39 @@ The renderer uses LegacyGLMesh which bypasses modern VAO/VBO requirements
 and uses legacy client states and immediate mode rendering.
 """
 
+from __future__ import annotations
+
+import sys
 from pathlib import Path
 from typing import Optional
 
 import numpy as np
-from OpenGL.GL import *
-from OpenGL.GLU import *
-from OpenGL.GLUT import *
 
-from picogl.core.polygon.mode import set_polygon_mode_fill
+from picogl.backend.gl.api.clear import gl_clear, gl_clear_rgba_color
+from picogl.backend.gl.api.color import gl_color_3f, gl_color_material
+from picogl.backend.gl.api.enable import gl_disable, gl_enable
+from picogl.backend.gl.api.matrix import gl_matrix_mode
+from picogl.backend.gl.api.rotate import gl_rotate_f
+from picogl.backend.gl.capability import (GLFixedFunctionCapability,
+                                          GLMaterialFace, GLPipelineCapability)
+from picogl.backend.gl.enums import GLBitMask
+from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
+from picogl.backend.gl.enums.legacy.scale import gl_load_identity, gl_viewport
+from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
+from picogl.backend.gl.state.fill import GLCapability, GLColorMaterialMode
+from picogl.backend.glu.lookat import glu_look_at
+from picogl.backend.glu.perspective import glu_perspective
+from picogl.backend.glut import (GLUTDisplayMode, GLUTMouseButton,
+                                 GLUTMouseState, glut_create_window,
+                                 glut_display_func, glut_init,
+                                 glut_init_display_mode, glut_init_window_size,
+                                 glut_keyboard_func, glut_main_loop,
+                                 glut_motion_func, glut_mouse_func,
+                                 glut_post_redisplay, glut_reshape_func,
+                                 glut_swap_buffers, glut_wire_teapot)
+from picogl.core.polygon.mode import (set_polygon_mode_fill,
+                                      set_polygon_mode_line)
+from picogl.core.rgbcolor import RGBAColor
 from picogl.renderer import MeshData
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.ui.backend.glut.mouse import RotationInteraction
@@ -40,36 +64,36 @@ class LegacyRenderer:
         self.mesh = None
         self.rotation = RotationInteraction()
         self.zoom_distance = 5.0
-        self.object_file_name = object_file_name
+        self.object_file_name = (
+            Path(object_file_name) if object_file_name is not None else None
+        )
 
     def init_glut(self):
         """Initialize GLUT window."""
-        glutInit()
-        glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH)
-        glutInitWindowSize(self.width, self.height)
-        glutCreateWindow(self.title.encode("utf-8"))
+        glut_init()
+        glut_init_display_mode(
+            GLUTDisplayMode.RGBA | GLUTDisplayMode.DOUBLE | GLUTDisplayMode.DEPTH
+        )
+        glut_init_window_size(self.width, self.height)
+        glut_create_window(self.title)
 
         # Set callbacks
-        glutDisplayFunc(self.display)
-        glutReshapeFunc(self.reshape)
-        glutKeyboardFunc(self.keyboard)
-        glutMouseFunc(self.mouse)
-        glutMotionFunc(self.motion)
+        glut_display_func(self.display)
+        glut_reshape_func(self.reshape)
+        glut_keyboard_func(self.keyboard)
+        glut_mouse_func(self.mouse)
+        glut_motion_func(self.motion)
 
     def init_gl(self):
         """Initialize OpenGL state."""
-        from picogl.backend.gl.api.enable import gl_enable
-        from picogl.backend.gl.capability import GLFixedFunctionCapability
-        from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
-        from picogl.backend.gl.state.fill import (GLCapability,
-                                                  GLColorMaterialMode, GLFace)
-
-        glClearColor(0.1, 0.1, 0.2, 1.0)  # Dark blue background
-        gl_enable(GL_DEPTH_TEST)
+        gl_clear_rgba_color(RGBAColor(0.1, 0.1, 0.2, 1.0))
+        gl_enable(GLPipelineCapability.DEPTH_TEST)
         gl_enable(GLFixedFunctionCapability.LIGHTING)
         gl_enable(GLFixedFunctionCapability.LIGHT0)
         gl_enable(GLCapability.COLOR_MATERIAL)
-        glColorMaterial(GLFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE)
+        gl_color_material(
+            GLMaterialFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE
+        )
         gl_legacy_lighting()
 
     def load_object_data(self, obj_file_path):
@@ -112,15 +136,15 @@ class LegacyRenderer:
 
     def display(self):
         """Display callback - render the scene."""
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-        glLoadIdentity()
+        gl_clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
+        gl_load_identity()
 
         # Set up camera
-        gluLookAt(0, 0, self.zoom_distance, 0, 0, 0, 0, 1, 0)
+        glu_look_at(0, 0, self.zoom_distance, 0, 0, 0, 0, 1, 0)
 
         # Apply rotations
-        glRotatef(self.rotation.x, 1, 0, 0)
-        glRotatef(self.rotation.y, 0, 1, 0)
+        gl_rotate_f(self.rotation.x, 1, 0, 0)
+        gl_rotate_f(self.rotation.y, 0, 1, 0)
 
         # Draw the teapot
         if self.mesh:
@@ -128,32 +152,30 @@ class LegacyRenderer:
                 self.mesh.draw()
             except Exception as e:
                 print(f"Error drawing mesh: {e}")
-                # Fallback: draw a simple wireframe teapot
                 self.draw_fallback_teapot()
         else:
-            # Fallback: draw a simple wireframe teapot
             self.draw_fallback_teapot()
 
-        glutSwapBuffers()
+        glut_swap_buffers()
 
     def draw_fallback_teapot(self):
         """Draw a simple wireframe teapot as fallback."""
-        glDisable(GL_LIGHTING)
-        glColor3f(1.0, 0.0, 0.0)  # Red wireframe
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
-        glutWireTeapot(1.0)
+        gl_disable(GLFixedFunctionCapability.LIGHTING)
+        gl_color_3f((1.0, 0.0, 0.0))  # Red wireframe
+        set_polygon_mode_line()
+        glut_wire_teapot(1.0)
         set_polygon_mode_fill()
-        gl_enable(GL_LIGHTING)
+        gl_enable(GLFixedFunctionCapability.LIGHTING)
 
     def reshape(self, width, height):
         """Reshape callback - handle window resize."""
         self.width = width
         self.height = height
-        glViewport(0, 0, width, height)
-        glMatrixMode(GL_PROJECTION)
-        glLoadIdentity()
-        gluPerspective(45.0, float(width) / float(height), 0.1, 100.0)
-        glMatrixMode(GL_MODELVIEW)
+        gl_viewport(0, 0, width, height)
+        gl_matrix_mode(GLLegacyMatrixMode.PROJECTION)
+        gl_load_identity()
+        glu_perspective(45.0, float(width) / float(height), 0.1, 100.0)
+        gl_matrix_mode(GLLegacyMatrixMode.MODELVIEW)
 
     def keyboard(self, key, x, y):
         """Keyboard callback."""
@@ -162,16 +184,15 @@ class LegacyRenderer:
         elif key == b"r":  # Reset rotation
             self.rotation.reset()
         elif key == b"w":  # Wireframe mode
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+            set_polygon_mode_line()
         elif key == b"f":  # Fill mode
             set_polygon_mode_fill()
-            # glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
-        glutPostRedisplay()
+        glut_post_redisplay()
 
     def mouse(self, button, state, x, y):
         """Mouse callback."""
-        if button == GLUT_LEFT_BUTTON:
-            if state == GLUT_DOWN:
+        if button == GLUTMouseButton.LEFT:
+            if state == GLUTMouseState.DOWN:
                 self.rotation.press(x, y)
             else:
                 self.rotation.release()
@@ -179,26 +200,26 @@ class LegacyRenderer:
             self.zoom_distance = max(1.0, self.zoom_distance - 0.5)
         elif button == 4:  # Mouse wheel down
             self.zoom_distance = min(20.0, self.zoom_distance + 0.5)
-        glutPostRedisplay()
+        glut_post_redisplay()
 
     def motion(self, x, y):
         """Mouse motion callback."""
         if self.rotation.drag(x, y) is None:
             return
         self.rotation.clamp_x()
-        glutPostRedisplay()
+        glut_post_redisplay()
 
     def run(self):
         """Run the application."""
         self.init_glut()
         self.init_gl()
 
-        if not self.object_file_name.exists():
-            print(f"❌ Teapot OBJ file not found at {obj_file_path}")
+        if self.object_file_name is None or not self.object_file_name.exists():
+            path = self.object_file_name or "(none)"
+            print(f"❌ Teapot OBJ file not found at {path}")
             print("   Using fallback wireframe teapot instead.")
-        else:
-            if not self.load_object_data(str(self.object_file_name)):
-                print("   Using fallback wireframe teapot instead.")
+        elif not self.load_object_data(str(self.object_file_name)):
+            print("   Using fallback wireframe teapot instead.")
 
         print("\n🎮 Controls:")
         print("   Mouse: Rotate view")
@@ -209,13 +230,12 @@ class LegacyRenderer:
         print("   ESC: Exit")
         print("\n🚀 Starting legacy teapot renderer...")
 
-        glutMainLoop()
+        glut_main_loop()
 
 
 def main():
     """Main function."""
     try:
-        # Load teapot data
         base_dir = Path(__file__).resolve().parent
         obj_file_path = base_dir / "data" / "teapot.obj"
         renderer = LegacyRenderer(

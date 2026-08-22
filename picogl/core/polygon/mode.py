@@ -15,3 +15,8 @@ def gl_polygon_mode(face: GLFace, mode: GLFillMode):
 def set_polygon_mode_fill() -> None:
     """Ensure secondary structure is always rendered as filled polygons"""
     gl_polygon_mode(GLFace.FRONT_AND_BACK, GLFillMode.FILL)
+
+
+def set_polygon_mode_line() -> None:
+    """Render polygons as wireframe outlines."""
+    gl_polygon_mode(GLFace.FRONT_AND_BACK, GLFillMode.LINE)

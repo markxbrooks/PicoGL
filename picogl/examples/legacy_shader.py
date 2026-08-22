@@ -3,6 +3,7 @@ import sys
 
 import numpy as np
 
+from picogl.backend.gl.api.enable import gl_enable
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.backend.gl.state.immediate import gl_immediate_drawing
 from picogl.ui.backend.glut.mouse import RotationInteraction
