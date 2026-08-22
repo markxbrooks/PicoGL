@@ -27,7 +27,7 @@ from picogl.backend.glut.display import (glut_display_func, glut_idle_func,
                                          glut_keyboard_func, glut_motion_func,
                                          glut_mouse_func, glut_post_redisplay,
                                          glut_reshape_func)
-from picogl.backend.glut.enums import GLUTDisplayMode
+from picogl.backend.glut.enums import GLUTDisplayMode, GLUTMouseButton, GLUTMouseState
 from picogl.backend.glut.idle import glut_idle_func
 from picogl.backend.glut.init import (glut_create_window, glut_init,
                                       glut_init_display_mode,
@@ -229,15 +229,15 @@ class GlutRenderer:
 
     def mouse(self, button, state, x, y):
         """Mouse callback."""
-        if button == GLUT_LEFT_BUTTON:
-            if state == GLUT_DOWN:
+        if button == GLUTMouseButton.LEFT:
+            if state == GLUTMouseState.DOWN:
                 self.rotation.press(x, y)
             else:
                 self.rotation.release()
-        elif button == 3:  # Mouse wheel up
+        elif button == GLUTMouseButton.WHEEL_UP:  # Mouse wheel up
             self.view.zoom = max(1.0, self.zoom_distance - 0.5)
             # self.zoom_distance = max(1.0, self.zoom_distance - 0.5)
-        elif button == 4:  # Mouse wheel down
+        elif button == GLUTMouseButton.WHEEL_DOWN:  # Mouse wheel down
             self.view.zoom = min(20.0, self.zoom_distance + 0.5)
             # self.zoom_distance = min(20.0, self.zoom_distance + 0.5)
         glut_post_redisplay()

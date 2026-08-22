@@ -522,7 +522,7 @@ class GLAttributeArray:
         handlers = {
             GLClientState.VERTEX: gl_vertex_array_pointer,
             GLClientState.NORMAL: gl_normal_array_pointer,
-            GLClientState.COLOR_ARRAY: gl_color_array_pointer,
+            GLClientState.COLOR: gl_color_array_pointer,
         }
         handler = handlers.get(kind, None)
         if handler is None:
@@ -561,7 +561,7 @@ class GLViewport(Applicable):
     width: int = 0
     height: int = 0
 
-    def apply(self, *args):
+    def apply(self):
         """
         Adjusts the viewport to the specified dimensions and coordinates.
 
