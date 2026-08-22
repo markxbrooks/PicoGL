@@ -15,26 +15,25 @@ import sys
 
 import numpy as np
 
-from picogl.backend.gl.api.clear import gl_clear_rgba_color
-from picogl.backend.gl.api.color import gl_color_material, gl_color_rgb
-from picogl.backend.gl.api.enable import gl_disable
+from picogl.backend.gl.api.color import gl_color_material
+from picogl.backend.gl.api.enable import gl_enable_capability_list
 from picogl.backend.gl.api.legacy.matrix import gl_matrix_mode_context
-from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
-from picogl.backend.gl.capability import (GLFixedFunctionCapability,
-                                          GLMaterialFace, GLPipelineCapability)
-from picogl.backend.gl.driver.capability import GLCapabilityDriver
+from picogl.backend.gl.capability import GLFixedFunctionCapability, GLMaterialFace
 from picogl.backend.gl.enums.legacy.scale import gl_rotatef, gl_viewport
 from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
 from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode,
                                           GLFillMode)
+from picogl.backend.gl.state.scoped import disabled
+from picogl.backend.modern.core.setup.lighting import gl_initialize_background
 from picogl.backend.glu.perspective import glu_perspective
 from picogl.backend.glut.buffers import glut_swap_buffers
-from picogl.backend.glut.cube import glut_wire_cube
 from picogl.backend.glut.display import glut_post_redisplay
 from picogl.backend.glut.glut_renderer import GlutRenderer
-from picogl.core.rgbcolor import RGBAColor, RGBColor
+from picogl.core.draw.cube import draw_fallback_cube
+from picogl.core.rgbcolor import RGBAColor
 from picogl.core.setup.camera import gl_setup_camera
 from picogl.core.setup.view import gl_setup_view
+from picogl.polygon.mode import polygon_mode
 
 # Check for display before importing OpenGL
 if os.environ.get("DISPLAY") is None and os.name != "nt":
@@ -319,11 +318,14 @@ class LegacyCubeRenderer(GlutRenderer):
 
     def init_gl(self):
         """Initialize OpenGL state."""
-        gl_clear_rgba_color(RGBAColor(0.1, 0.1, 0.2, 1.0))  # Dark blue background
-        GLCapabilityDriver.enable(GLPipelineCapability.DEPTH_TEST)
-        GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHTING)
-        GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHT0)
-        GLCapabilityDriver.enable(GLCapability.COLOR_MATERIAL)
+        gl_initialize_background(RGBAColor(0.1, 0.1, 0.2, 1.0))
+        gl_enable_capability_list(
+            [
+                GLFixedFunctionCapability.LIGHTING,
+                GLFixedFunctionCapability.LIGHT0,
+                GLCapability.COLOR_MATERIAL,
+            ]
+        )
         gl_color_material(GLMaterialFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE)
 
         gl_legacy_lighting()
@@ -374,36 +376,23 @@ class LegacyCubeRenderer(GlutRenderer):
         if self.mesh:
             try:
                 if self.wireframe_mode:
-                    gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.LINE)
-                    gl_disable(GLFixedFunctionCapability.LIGHTING)
+                    with disabled(GLFixedFunctionCapability.LIGHTING):
+                        with polygon_mode(GLFillMode.LINE):
+                            self.mesh.draw()
                 else:
-                    gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.FILL)
-                    GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHTING)
-
-                self.mesh.draw()
-
-                # Reset polygon mode
-                gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.FILL)
-                GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHTING)
+                    self.mesh.draw()
 
             except Exception as e:
                 print(f"Error drawing mesh: {e}")
-                # Fallback: draw a simple wireframe cube
                 self.draw_fallback_cube()
         else:
-            # Fallback: draw a simple wireframe cube
             self.draw_fallback_cube()
 
         glut_swap_buffers()
 
     def draw_fallback_cube(self):
         """Draw a simple wireframe cube as fallback."""
-        gl_disable(GLFixedFunctionCapability.LIGHTING)
-        gl_color_rgb(RGBColor.RED)  # Red wireframe
-        gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.LINE)
-        glut_wire_cube(2.0)
-        gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.FILL)
-        GLCapabilityDriver.enable(GLFixedFunctionCapability.LIGHTING)
+        draw_fallback_cube(self)
 
     def reshape(self, width, height):
         """Reshape callback - handle window resize."""

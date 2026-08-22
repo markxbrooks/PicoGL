@@ -15,13 +15,11 @@ from pathlib import Path
 
 import numpy as np
 
-from picogl.backend.gl.api.clear import gl_clear_color
-from picogl.backend.gl.api.depth import gl_depth_func
 from picogl.backend.gl.api.enable import gl_enable
-from picogl.backend.gl.capability import GLPipelineCapability
 from picogl.backend.gl.enums.point_size import (GLLegacyPointCapability,
                                                 GLPointCapability)
-from picogl.backend.gl.glfunc import GLDepthFunc
+from picogl.backend.modern.core.setup.lighting import gl_initialize_background
+from picogl.core.rgbcolor import RGBAColor
 from picogl.examples.utils.pdb_loader import PDBLoader
 
 # Add the current directory to the path to find pdb_loader.py
@@ -129,8 +127,12 @@ class MolecularRenderWindow(RenderWindow):
     def _setup_molecular_rendering(self):
         """Set up molecular visualization specific rendering"""
         # Enable point sprites for atoms
-        gl_enable(GLLegacyPointCapability.POINT_SPRITE)
-        gl_enable(GLPointCapability.PROGRAM_POINT_SIZE)
+        gl_enable_capability_list(
+            [
+                GLLegacyPointCapability.POINT_SPRITE,
+                GLPointCapability.PROGRAM_POINT_SIZE,
+            ]
+        )
 
         # Set point size for atoms
         glPointSize(8.0)
@@ -140,12 +142,8 @@ class MolecularRenderWindow(RenderWindow):
         glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
         glLineWidth(2.0)
 
-        # Enable depth testing
-        gl_enable(GLPipelineCapability.DEPTH_TEST)
-        gl_depth_func(GLDepthFunc.LESS)
-
-        # Set background colour
-        gl_clear_color((0.1, 0.1, 0.2, 1.0))
+        # Enable depth testing and background colour
+        gl_initialize_background(RGBAColor(0.1, 0.1, 0.2, 1.0))
 
     def _create_vaos(self):
         """Create Vertex Array Objects for efficient rendering"""

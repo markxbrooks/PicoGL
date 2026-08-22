@@ -25,7 +25,9 @@ from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMessageBox,
 
 from picogl.backend.gl.api.clear import gl_clear
 from picogl.backend.gl.api.color import gl_color_material
-from picogl.backend.gl.api.enable import gl_enable
+from picogl.backend.gl.api.enable import gl_enable_capability_list
+from picogl.backend.gl.capability import GLFixedFunctionCapability, GLPipelineCapability
+from picogl.backend.gl.state.fill import GLCapability
 from picogl.backend.gl.api.matrix import gl_matrix_mode
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.enums.legacy.scale import gl_load_identity, gl_viewport
@@ -76,10 +78,14 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
 
     def initializeGL(self):
         """Initialize OpenGL settings"""
-        gl_enable(GL_DEPTH_TEST)
-        gl_enable(GL_LIGHTING)
-        gl_enable(GL_LIGHT0)
-        gl_enable(GL_COLOR_MATERIAL)
+        gl_enable_capability_list(
+            [
+                GLPipelineCapability.DEPTH_TEST,
+                GLFixedFunctionCapability.LIGHTING,
+                GLFixedFunctionCapability.LIGHT0,
+                GLCapability.COLOR_MATERIAL,
+            ]
+        )
         glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
 
         glClearColor(0.0, 0.0, 0.0, 1.0)
@@ -106,9 +112,13 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
 
         # Set up lighting conditionally
         if self.lighting_enabled:
-            gl_enable(GL_LIGHTING)
-            gl_enable(GL_LIGHT0)
-            gl_enable(GL_COLOR_MATERIAL)
+            gl_enable_capability_list(
+                [
+                    GLFixedFunctionCapability.LIGHTING,
+                    GLFixedFunctionCapability.LIGHT0,
+                    GLCapability.COLOR_MATERIAL,
+                ]
+            )
             gl_color_material(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
 
             # Set up lighting in world space (before transformations)

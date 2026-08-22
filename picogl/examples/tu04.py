@@ -8,7 +8,9 @@ from OpenGL.GL import *  # pylint: disable=W0614
 from pyglm import glm
 
 from picogl.backend.gl.api import gl_bind_texture, gl_get_active_texture0
-from picogl.backend.gl.api.enable import gl_enable
+from picogl.backend.gl.api.enable import gl_enable_capability_list
+from picogl.backend.gl.capability import GLPipelineCapability
+from picogl.backend.modern.core.setup.lighting import gl_initialize_background
 from picogl.backend.glm.glm import glm_identity_matrix
 from picogl.backend.modern.core.shader.files import ShaderFiles
 from picogl.backend.modern.core.shader.program import ShaderProgram
@@ -84,10 +86,8 @@ class Tu01Win(GlutRendererWindow):
         self.shader = None
 
     def initializeGL(self):
-        glClearColor(0.0, 0, 0.4, 0)
-        glDepthFunc(GL_LESS)
-        gl_enable(GL_DEPTH_TEST)
-        gl_enable(GL_CULL_FACE)
+        gl_initialize_background()
+        gl_enable_capability_list([GLPipelineCapability.CULL_FACE])
 
     def keyPressEvent(self, key, x, y):
         pass

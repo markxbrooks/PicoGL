@@ -15,7 +15,7 @@ import numpy as np
 from OpenGL.GL import *
 from utils.pdb_loader import PDBLoader
 
-from picogl.backend.gl.api.enable import gl_enable
+from picogl.backend.gl.api.enable import gl_enable_capability_list
 from picogl.backend.gl.enums.point_size import (GLLegacyPointCapability,
                                                 GLPointCapability)
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
@@ -152,8 +152,12 @@ class MolecularRenderWindow(RenderWindow):
     def _setup_molecular_rendering(self):
         """Set up molecular visualization specific rendering"""
         # Enable point sprites for atoms
-        gl_enable(GLLegacyPointCapability.POINT_SPRITE)
-        gl_enable(GLPointCapability.PROGRAM_POINT_SIZE)
+        gl_enable_capability_list(
+            [
+                GLLegacyPointCapability.POINT_SPRITE,
+                GLPointCapability.PROGRAM_POINT_SIZE,
+            ]
+        )
 
         # Set point size for atoms
         glPointSize(8.0)

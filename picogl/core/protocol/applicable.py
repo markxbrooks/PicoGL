@@ -8,5 +8,8 @@ from typing import Protocol
 
 
 class Applicable(Protocol):
-    def apply(self, *args) -> None:
+    """Apply the object's current state."""
+
+    def apply(self) -> None:
+        """Apply the object's current state."""
         ...

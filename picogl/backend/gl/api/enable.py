@@ -27,30 +27,35 @@ GLCapabilities = Union[
 
 
 def gl_enable(
-    cap: GLCapabilities,
+        cap: GLCapabilities,
 ):
     """enable gl_enable capability"""
     glEnable(cap)
 
 
-def gl_disable(
-    cap: GLCapabilities,
-):
+def gl_enable_capability_list(capabilities: list[GLCapabilities]):
+    """GL enable capabilities"""
+    for cap in capabilities:
+        gl_enable(cap)
+
+
+def gl_disable(cap: GLCapabilities):
     """disable gl capability"""
     glDisable(cap)
 
 
-def gl_is_enabled(
-    cap: Union[GLCapability, GLFixedFunctionCapability, GLPipelineCapability],
-):
+def gl_disable_capability_list(capabilities: list[GLCapabilities]):
+    """gl disable capabilities"""
+    for cap in capabilities:
+        gl_disable(cap)
+
+
+def gl_is_enabled(cap: GLCapabilities):
     """check if gl_is_enabled capability is enabled"""
     return glIsEnabled(cap)
 
 
-def toggle_capability(
-    enabled: bool,
-    capability: Union[GLCapability, GLFixedFunctionCapability, GLPipelineCapability],
-):
+def toggle_capability(enabled: bool,capability: GLCapabilities):
     """toggle gl_is_enabled capability"""
     if enabled:
         gl_enable(capability)

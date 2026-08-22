@@ -41,24 +41,6 @@ def gl_color_material(face: GLMaterialFace, mode: GLColorMaterialMode) -> None:
     glColorMaterial(face, mode)
 
 
-def gl_color_rgb(rgb_color: RGBColor) -> None:
-    """
-    Sets the current OpenGL color using the RGB values provided.
-
-    The function takes a color represented as a tuple of three float values
-    in the range [0.0, 1.0] corresponding to the red, green, and blue components
-    and applies it using the OpenGL `glColor3f` function.
-
-    Args:
-        rgb_color (tuple[float, float, float]): RGB obect containing the red, green,
-                                            and blue components of the color.
-
-    Returns:
-        None
-    """
-    glColor3f(*rgb_color.to_tuple())
-
-
 def gl_color_4f(color: tuple[float, float, float, float]) -> None:
     glColor4f(*color)
 
@@ -79,3 +61,21 @@ def gl_color_3f(color: tuple[float, float, float]) -> None:
         None
     """
     glColor3f(*color)
+
+
+def gl_color_rgb(rgb_color: RGBColor) -> None:
+    """
+    Sets the current OpenGL color using the RGB values provided.
+
+    The function takes a color represented as a tuple of three float values
+    in the range [0.0, 1.0] corresponding to the red, green, and blue components
+    and applies it using the OpenGL `glColor3f` function.
+
+    Args:
+        rgb_color (tuple[float, float, float]): RGB obect containing the red, green,
+                                            and blue components of the color.
+
+    Returns:
+        None
+    """
+    gl_color_3f(*rgb_color.to_tuple())

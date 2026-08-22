@@ -4,11 +4,12 @@ from pyglm import glm
 from picogl.backend.gl.api import (gl_bind_buffer, gl_buffer_data,
                                    gl_disable_vertex_array, gl_draw_arrays)
 from picogl.backend.gl.api.buffer.generate import gl_generate_buffers
-from picogl.backend.gl.api.enable import gl_enable
+from picogl.backend.gl.api.enable import gl_enable_capability_list
 from picogl.backend.gl.api.enable_vertex_array import gl_enable_vertex_array
 from picogl.backend.gl.api.vertex.attrib_pointer import \
     gl_vertex_attrib_pointer
 from picogl.backend.gl.capability import GLPipelineCapability
+from picogl.backend.modern.core.setup.lighting import gl_initialize_background
 from picogl.backend.gl.enums import (GLBitMask, GLBufferTarget, GLNumeric,
                                      GLUsageHint)
 from picogl.backend.glm.glm import glm_identity_matrix
@@ -85,10 +86,8 @@ class Tu01Win(GLWindow):
         self.shader = None
 
     def initializeGL(self):
-        glClearColor(0.0, 0, 0.4, 0)
-        glDepthFunc(GL_LESS)
-        gl_enable(GLPipelineCapability.DEPTH_TEST)
-        gl_enable(GLPipelineCapability.CULL_FACE)
+        gl_initialize_background()
+        gl_enable_capability_list([GLPipelineCapability.CULL_FACE])
 
     def init_context(self):
         self.shader = Shader()

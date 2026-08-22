@@ -2,6 +2,9 @@ from OpenGL.GL import *  # pylint: disable=W0614
 from pyglm import glm
 from utils.shader_loader import Shader
 
+from picogl.backend.gl.api.enable import gl_enable_capability_list
+from picogl.backend.gl.capability import GLPipelineCapability
+from picogl.backend.modern.core.setup.lighting import gl_initialize_background
 from picogl.backend.glm.glm import glm_identity_matrix
 from picogl.examples.data.cube_data import (g_color_buffer_data,
                                             g_vertex_buffer_data)
@@ -13,10 +16,8 @@ class Tu01Win(GLWindow):
         pass
 
     def initializeGL(self):
-        glClearColor(0.0, 0, 0.4, 0)
-        glDepthFunc(GL_LESS)
-        gl_enable(GL_DEPTH_TEST)
-        gl_enable(GL_CULL_FACE)
+        gl_initialize_background()
+        gl_enable_capability_list([GLPipelineCapability.CULL_FACE])
 
     def init_context(self):
         self.context = self.GLContext()

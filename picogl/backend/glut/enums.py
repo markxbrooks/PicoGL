@@ -18,6 +18,9 @@ class GLUTMouseButton(IntEnum):
     """GLUT mouse button identifiers."""
 
     LEFT = int(GLUT_LEFT_BUTTON)
+    # Common freeglut / scroll-button values (not in Apple GLUT.framework).
+    WHEEL_UP = 3
+    WHEEL_DOWN = 4
 
 
 class GLUTMouseState(IntEnum):

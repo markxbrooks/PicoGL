@@ -1,8 +1,9 @@
 from contextlib import contextmanager
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import GL_CLIP_PLANE0, GL_CLIP_PLANE1
-
-from picogl.backend.gl.api.enable import gl_disable, gl_enable
+from picogl.backend.gl.api.enable import (
+    gl_disable_capability_list,
+    gl_enable_capability_list,
+)
 from picogl.backend.gl.enums.legacy import GLLegacyClipPlane
 
 
@@ -15,13 +16,15 @@ def gl_clipping_planes(enabled: bool):
     """
     try:
         if enabled:
-            gl_enable(GLLegacyClipPlane.CLIP_PLANE0)
-            gl_enable(GLLegacyClipPlane.CLIP_PLANE1)
+            gl_enable_capability_list(
+                [GLLegacyClipPlane.CLIP_PLANE0, GLLegacyClipPlane.CLIP_PLANE1]
+            )
         else:
-            gl_disable(GLLegacyClipPlane.CLIP_PLANE0)
-            gl_disable(GLLegacyClipPlane.CLIP_PLANE1)
+            gl_disable_capability_list(
+                [GLLegacyClipPlane.CLIP_PLANE0, GLLegacyClipPlane.CLIP_PLANE1]
+            )
         yield
     finally:
-        # Optional: ensure a known safe state after use
-        gl_disable(GL_CLIP_PLANE0)
-        gl_disable(GL_CLIP_PLANE1)
+        gl_disable_capability_list(
+            [GLLegacyClipPlane.CLIP_PLANE0, GLLegacyClipPlane.CLIP_PLANE1]
+        )

@@ -11,7 +11,7 @@ from PySide6.QtWidgets import QWidget
 
 from picogl.backend.gl.api.clear import gl_clear_color
 from picogl.backend.gl.api.color import gl_color_material
-from picogl.backend.gl.api.enable import gl_enable
+from picogl.backend.gl.api.enable import gl_enable, gl_enable_capability_list
 from picogl.backend.gl.api.legacy.matrix import gl_matrix_mode_context
 from picogl.backend.gl.api.matrix import gl_matrix_mode
 from picogl.backend.gl.api.rotate import gl_rotate_f
@@ -108,9 +108,13 @@ class LegacyQtObjectRenderer(GLBase):
         DEFAULT_LEGACY_MATERIAL.apply(GLMaterialFace.FRONT_AND_BACK)
 
     def initialize_lighting(self):
-        gl_enable(GLFixedFunctionCapability.LIGHTING)
-        gl_enable(GLFixedFunctionCapability.LIGHT0)
-        gl_enable(GLCapability.COLOR_MATERIAL)
+        gl_enable_capability_list(
+            [
+                GLFixedFunctionCapability.LIGHTING,
+                GLFixedFunctionCapability.LIGHT0,
+                GLCapability.COLOR_MATERIAL,
+            ]
+        )
         gl_color_material(GLMaterialFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE)
         gl_legacy_lighting()
 

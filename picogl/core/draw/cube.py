@@ -4,20 +4,17 @@ draw fallback cube
 
 
 from picogl.backend.gl.api.color import gl_color_rgb
-from picogl.backend.gl.api.enable import gl_enable, gl_disable
 from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.state.fill import GLFillMode
+from picogl.backend.gl.state.scoped import disabled
 from picogl.backend.glut.cube import glut_wire_cube
 from picogl.core.rgbcolor import RGBColor
-from picogl.polygon.mode import gl_polygon_mode_context
+from picogl.polygon.mode import polygon_mode
 
 
 def draw_fallback_cube(self):
     """Draw a simple wireframe cube as fallback."""
-    gl_disable(GLFixedFunctionCapability.LIGHTING)
-    red_rgb = RGBColor(1.0, 0.0, 0.0)
-    gl_color_rgb(red_rgb)  # Red wireframe
-    with gl_polygon_mode_context(GLFillMode.LINE):
-        glut_wire_cube(2.0)
-    with gl_polygon_mode_context(GLFillMode.FILL):
-        gl_enable(GLFixedFunctionCapability.LIGHTING)
+    with disabled(GLFixedFunctionCapability.LIGHTING):
+        with polygon_mode(GLFillMode.LINE):
+            gl_color_rgb(RGBColor(1.0, 0.0, 0.0))
+            glut_wire_cube(2.0)
