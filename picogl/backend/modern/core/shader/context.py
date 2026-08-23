@@ -15,14 +15,19 @@ def clear_gl_errors(max_clear: int = 8) -> None:
 
 def gl_context_available() -> bool:
     """True when a gl context is current and ``glGetString(GL_VERSION)`` works."""
-    try:
-        from PySide6.QtGui import QOpenGLContext
+    # Only touch Qt if it is already imported — importing PySide6 here pulls
+    # shiboken into GLUT-only apps and can hard-fail on NumPy ABI mismatches.
+    import sys
 
-        ctx = QOpenGLContext.currentContext()
-        if ctx is not None and ctx.isValid():
-            return True
-    except Exception:
-        pass
+    if "PySide6.QtGui" in sys.modules:
+        try:
+            from PySide6.QtGui import QOpenGLContext
+
+            ctx = QOpenGLContext.currentContext()
+            if ctx is not None and ctx.isValid():
+                return True
+        except Exception:
+            pass
     try:
         return gl.glGetString(gl.GL_VERSION) is not None
     except Exception:

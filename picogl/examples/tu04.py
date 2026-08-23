@@ -59,14 +59,7 @@ def rotate_model(rotation: RotationInteraction, model_matrix):
     return model_matrix
 
 
-@contextmanager
-def gl_shader_bound(shader: ShaderProgram):
-    """Bind *shader* for the duration of the with-block."""
-    try:
-        shader.begin()
-        yield
-    finally:
-        shader.end()
+from picogl.backend.gl.state.shader import gl_shader_bound
 
 
 class ObjectRendererExample(GlutRendererWindow):

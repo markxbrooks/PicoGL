@@ -15,6 +15,9 @@ import os
 import sys
 from pathlib import Path
 
+from hint import gl_hint
+from picogl.line import gl_line_width
+
 # freeglut creates GLX contexts; under Wayland PyOpenGL may pick EGL first.
 # Must be set before any OpenGL / picogl import.
 if sys.platform.startswith("linux"):
@@ -161,8 +164,8 @@ class MolecularRenderWindow(RenderWindow):
 
         # Enable line smoothing for bonds
         gl_enable(GLPipelineCapability.LINE_SMOOTH)
-        glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
-        glLineWidth(2.0)
+        gl_hint(GL_LINE_SMOOTH_HINT, GL_NICEST)
+        gl_line_width(2.0)
 
         # Enable depth testing and background colour
         gl_initialize_background(RGBAColor(0.1, 0.1, 0.2, 1.0))

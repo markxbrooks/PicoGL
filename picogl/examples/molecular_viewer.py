@@ -1,10 +1,10 @@
 """
 Molecular Viewer with PDB Support and MolViewSpec Integration
 
-This example demonstrates how to:
-1. Load PDB files using the PDBLoader
-2. Visualize molecular structures with PicoGL
-3. Export to MolViewSpec format for portable viewing
+Demonstrates:
+1. Loading PDB files via PDBLoader
+2. Drawing atoms (points) and bonds (lines) with PicoGL / GLUT
+3. Exporting MolViewSpec JSON
 """
 
 from __future__ import annotations
@@ -12,6 +12,12 @@ from __future__ import annotations
 import os
 import sys
 from pathlib import Path
+
+# freeglut creates GLX contexts; under Wayland PyOpenGL may pick EGL first.
+if sys.platform.startswith("linux"):
+    os.environ.setdefault("PYOPENGL_PLATFORM", "glx")
+
+import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
 
 # Repo roots on sys.path before any OpenGL / picogl imports.
 _EXAMPLES_DIR = Path(__file__).resolve().parent
@@ -28,33 +34,41 @@ _ELMO_ROOT = next(
 _ELMO_GLSL = _ELMO_ROOT / "elmo" / "glsl" / "src"
 if str(_PICOGL_ROOT) not in sys.path:
     sys.path.insert(0, str(_PICOGL_ROOT))
-# examples/ so ``utils.pdb_loader`` resolves
 if str(_EXAMPLES_DIR) not in sys.path:
     sys.path.insert(0, str(_EXAMPLES_DIR))
 # ElMo GLSL is read from disk only — do not add ElMo to sys.path (avoids PySide6).
 
-# freeglut creates GLX contexts; under Wayland PyOpenGL may pick EGL first.
-if sys.platform.startswith("linux"):
-    os.environ.setdefault("PYOPENGL_PLATFORM", "glx")
-
-import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
-
 import numpy as np
-from OpenGL.GL import *
 from utils.pdb_loader import PDBLoader
 
-from picogl.backend.gl.api.enable import gl_enable, gl_enable_capability_list
-from picogl.backend.gl.capability import GLPipelineCapability
+from picogl.backend.gl.api.blending import gl_blend_func
+from picogl.backend.gl.api.clear import gl_clear_color
+from picogl.backend.gl.api.draw.array import gl_draw_arrays
+from picogl.backend.gl.api.enable import gl_disable, gl_enable
+from picogl.backend.gl.api.hint import gl_hint
+from picogl.backend.gl.api.line import gl_line_width
+from picogl.backend.gl.api.point import gl_point_size
+from picogl.backend.gl.capability import GLBlendFactor, GLPipelineCapability
+from picogl.backend.gl.enums import GLDrawMode
+from picogl.backend.gl.enums.hint import GLHintMode, GLHintTarget
 from picogl.backend.gl.enums.point_size import (
     GLLegacyPointCapability,
     GLPointCapability,
 )
+from picogl.backend.gl.state.scoped import gl_capability
+from picogl.backend.gl.state.shader import gl_shader_bound
+from picogl.backend.gl.task.gl_init import paint_gl_list
+from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.globals import PICOGL_SHADER_SRC_DIRECTORY
 from picogl.renderer import MeshData
 from picogl.shaders.registry import ShaderRegistry
 from picogl.shaders.type import ShaderType
 from picogl.ui.backend.glut.window.object import RenderWindow
+
+# Pixel size for atom points.
+_ATOM_POINT_SIZE = 6.0
+_MOLECULAR_GLSL_DIR = _EXAMPLES_DIR / "glsl" / "molecular"
 
 
 def _molecular_shader_directory() -> Path:
@@ -65,18 +79,18 @@ def _molecular_shader_directory() -> Path:
 
 
 class MolecularViewer:
-    """Molecular structure viewer with PDB support"""
+    """Load a PDB and expose PicoGL meshes + optional molecular shaders."""
 
     def __init__(self, pdb_path: str):
         self.pdb_path = pdb_path
         self.pdb_loader = None
         self.atom_data = None
         self.bond_data = None
+        self._center = np.zeros(3, dtype=np.float32)
+        self._extent = 50.0
 
-        # Load the PDB structure
         self._load_structure()
 
-        # Initialize shaders (needs GL context for compile — deferred until window)
         self.shader_registry = ShaderRegistry(
             shader_directory=_molecular_shader_directory()
         )
@@ -89,16 +103,20 @@ class MolecularViewer:
         self._load_shaders()
         self._shaders_loaded = True
 
-    def _load_structure(self):
-        """Load PDB structure and convert to PicoGL format"""
+    def _load_structure(self) -> None:
         print(f"Loading PDB structure from: {self.pdb_path}")
         self.pdb_loader = PDBLoader(self.pdb_path)
-
-        # Convert to PicoGL data
         picogl_data = self.pdb_loader.to_picogl_data()
 
         self.atom_data = picogl_data["atoms"]
         self.bond_data = picogl_data["bonds"]
+
+        positions = np.asarray(self.atom_data["positions"], dtype=np.float32).reshape(
+            -1, 3
+        )
+        self._center = positions.mean(axis=0).astype(np.float32)
+        half = float(np.max(np.linalg.norm(positions - self._center, axis=1)))
+        self._extent = max(half, 1.0)
 
         print(
             f"Loaded {self.atom_data['count']} atoms and {self.bond_data['count']} bonds"
@@ -106,12 +124,10 @@ class MolecularViewer:
         print(f"Residues: {len(picogl_data['residues'])}")
         print(f"Chains: {picogl_data['chains']}")
 
-    def _load_shaders(self):
-        """Load molecular visualization shaders"""
+    def _load_shaders(self) -> None:
         print("Loading molecular visualization shaders...")
         print(f"Shader directory: {self.shader_registry.shader_directory}")
-
-        for shader_type in ShaderType:
+        for shader_type in (ShaderType.ATOMS, ShaderType.BONDS):
             program = self.shader_registry.load_and_add(shader_type)
             if program is not None:
                 print(f"Loaded shader: {shader_type}")
@@ -119,201 +135,213 @@ class MolecularViewer:
                 print(f"Warning: Could not load shader {shader_type}")
 
     def create_atom_mesh(self) -> MeshData:
-        """Create mesh data for atoms (spheres)"""
         if not self.atom_data:
             raise ValueError("No atom data loaded")
-
-        # For now, we'll represent atoms as points
-        # In a full implementation, you'd generate sphere meshdata
-        vertices = np.array(self.atom_data["positions"], dtype=np.float32).reshape(
+        vertices = np.asarray(self.atom_data["positions"], dtype=np.float32).reshape(
             -1, 3
         )
-        colors = np.array(self.atom_data["colors"], dtype=np.float32).reshape(-1, 3)
-
-        # Create indices for point rendering
-        indices = np.arange(len(vertices), dtype=np.uint32)
-
+        vertices = vertices - self._center
+        colors = np.asarray(self.atom_data["colors"], dtype=np.float32).reshape(-1, 3)
         return MeshData.from_raw(
-            vertices=vertices.flatten().tolist(),
-            colors=colors.flatten().tolist(),
-            indices=indices.tolist(),
+            vertices=vertices.reshape(-1),
+            colors=colors.reshape(-1),
         )
 
     def create_bond_mesh(self) -> MeshData:
-        """Create mesh data for bonds (lines)"""
         if not self.bond_data:
             raise ValueError("No bond data loaded")
-
-        # Bonds are already in line format (pairs of vertices)
-        vertices = np.array(self.bond_data["positions"], dtype=np.float32).reshape(
+        vertices = np.asarray(self.bond_data["positions"], dtype=np.float32).reshape(
             -1, 3
         )
-        colors = np.array(self.bond_data["colors"], dtype=np.float32).reshape(-1, 3)
-
-        # Create indices for line rendering
-        indices = np.arange(len(vertices), dtype=np.uint32)
-
+        vertices = vertices - self._center
+        colors = np.asarray(self.bond_data["colors"], dtype=np.float32).reshape(-1, 3)
         return MeshData.from_raw(
-            vertices=vertices.flatten().tolist(),
-            colors=colors.flatten().tolist(),
-            indices=indices.tolist(),
+            vertices=vertices.reshape(-1),
+            colors=colors.reshape(-1),
         )
 
-    def export_molviewspec(self, output_path: str):
-        """Export the structure to MolViewSpec format"""
-        if self.pdb_loader:
-            molviewspec = self.pdb_loader.to_molviewspec()
-
-            import json
-
-            with open(output_path, "w") as f:
-                json.dump(molviewspec, f, indent=2)
-
-            print(f"Exported MolViewSpec to: {output_path}")
-        else:
+    def export_molviewspec(self, output_path: str) -> None:
+        if not self.pdb_loader:
             print("No PDB structure loaded to export")
+            return
+        import json
+
+        with open(output_path, "w") as f:
+            json.dump(self.pdb_loader.to_molviewspec(), f, indent=2)
+        print(f"Exported MolViewSpec to: {output_path}")
+
+
+def _mesh_vertex_count(mesh: MeshData) -> int:
+    if mesh.vertex_count:
+        return int(mesh.vertex_count)
+    return int(len(np.asarray(mesh.vertices).reshape(-1, 3)))
+
+
+def _build_mesh_vao(mesh: MeshData) -> VertexArrayObject:
+    """Upload positions + colours for non-indexed glDrawArrays."""
+    # Sequential atom/bond verts: use glDrawArrays. An EBO created while the VAO
+    # is unbound often fails to associate; indexed draws then show an empty frame.
+    vao = VertexArrayObject()
+    vao.add_vbo(
+        index=0,
+        data=np.ascontiguousarray(mesh.vertices, dtype=np.float32),
+        size=3,
+    )
+    if mesh.colors is not None and len(mesh.colors):
+        vao.add_vbo(
+            index=1,
+            data=np.ascontiguousarray(mesh.colors, dtype=np.float32),
+            size=3,
+        )
+    return vao
+
+
+def _enable_blending() -> None:
+    """Soft circular points need blending for the smoothstep rim."""
+    gl_enable(GLPipelineCapability.BLEND)
+    gl_blend_func(GLBlendFactor.SRC_ALPHA, GLBlendFactor.ONE_MINUS_SRC_ALPHA)
 
 
 class MolecularRenderWindow(RenderWindow):
-    """Specialized render window for molecular visualization"""
+    """GLUT window that draws atoms as points and bonds as lines."""
 
     def __init__(self, molecular_viewer: MolecularViewer, **kwargs):
         self.molecular_viewer = molecular_viewer
-        self.atom_mesh = None
-        self.bond_mesh = None
-
-        # Create meshes
         self.atom_mesh = molecular_viewer.create_atom_mesh()
         self.bond_mesh = molecular_viewer.create_bond_mesh()
+        self.atom_vao: VertexArrayObject | None = None
+        self.bond_vao: VertexArrayObject | None = None
+        self.atom_point_shader: ShaderProgram | None = None
 
+        # ObjectRenderer still needs mesh data to compile tu01 shaders, but must
+        # not draw that mesh as GL_TRIANGLES (that produced the triangle soup).
+        kwargs.setdefault("data", self.atom_mesh)
         super().__init__(**kwargs)
+        self.renderer.show_model = False
 
-    def initialize(self):
-        """Initialize the molecular viewer"""
+        self.zoom_distance = max(molecular_viewer._extent * 2.5, 20.0)
+        self.distance_threshold = max(molecular_viewer._extent * 0.5, 5.0)
+        self.sync_zoom_to_context()
+
+    def initialize(self) -> None:
         super().initialize()
         self.molecular_viewer.ensure_shaders_loaded()
-
-        # Set up molecular-specific rendering
+        self.atom_vao = _build_mesh_vao(self.atom_mesh)
+        self.bond_vao = _build_mesh_vao(self.bond_mesh)
+        self._load_atom_point_shader()
         self._setup_molecular_rendering()
 
-    def _setup_molecular_rendering(self):
-        """Set up molecular visualization specific rendering"""
-        # Enable point sprites for atoms
-        gl_enable_capability_list(
-            [
-                GLLegacyPointCapability.POINT_SPRITE,
-                GLPointCapability.PROGRAM_POINT_SIZE,
-            ]
+    def _load_atom_point_shader(self) -> None:
+        """Circular point sprites (gl_PointCoord discard + soft edge)."""
+        self.atom_point_shader = ShaderProgram(
+            shader_name="molecular_atom_points",
+            vertex_source_file="vertex.glsl",
+            fragment_source_file="fragment.glsl",
+            glsl_dir=_MOLECULAR_GLSL_DIR,
         )
 
-        # Set point size for atoms
-        glPointSize(8.0)
-
-        # Enable line smoothing for bonds
+    def _setup_molecular_rendering(self) -> None:
         gl_enable(GLPipelineCapability.LINE_SMOOTH)
-        glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
-        glLineWidth(2.0)
+        gl_hint(GLHintTarget.LINE_SMOOTH, GLHintMode.NICEST)
+        gl_line_width(1.5)
+        _enable_blending()
+        # Compatibility profile: round rasterized points when not using sprites.
+        gl_enable(GLLegacyPointCapability.POINT_SMOOTH)
+        gl_hint(GLHintTarget.POINT_SMOOTH, GLHintMode.NICEST)
+        # Carbon CPK is (0.2, 0.2, 0.2); the legacy clear gray matched it and hid atoms.
+        gl_clear_color((0.05, 0.05, 0.08, 1.0))
 
-    def render(self):
-        """Render the molecular structure"""
-        # Clear buffers
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-
-        # Render bonds first (so they appear behind atoms)
-        if self.bond_mesh:
+    def paintGL(self) -> None:
+        """Clear, then bonds (lines) and atoms (points) — never triangles."""
+        self.backend.execute_gl_tasks(paint_gl_list)
+        if self.bond_vao is not None:
             self._render_bonds()
-
-        # Render atoms on top
-        if self.atom_mesh:
+        if self.atom_vao is not None:
             self._render_atoms()
 
-    def _render_atoms(self):
-        """Render atoms as points"""
-        if not self.atom_mesh:
+    def _bond_shader(self):
+        """Prefer ObjectRenderer tu01; fall back to ElMo bonds if needed."""
+        tu01 = getattr(self.context, "shader", None)
+        if tu01 is not None:
+            return tu01, "tu01"
+        bonds = self.molecular_viewer.shader_registry.get(ShaderType.BONDS)
+        if bonds is not None:
+            return bonds, "elmo"
+        return None, None
+
+    def _bind_uniforms(self, shader, kind: str | None) -> None:
+        mvp = self.context.mvp_matrix
+        if kind == "elmo":
+            model = self.context.model_matrix
+            view = self.context.view
+            shader.uniform("mvp", mvp)
+            shader.uniform("model", model)
+            shader.uniform("modelView", view * model)
+            shader.uniform("viewPos", self.context.eye_np)
+            extent = max(self.molecular_viewer._extent, 1.0)
+            zoom_scale = max(self.zoom_distance / (extent * 2.5), 0.25)
+            shader.uniform("zoom_scale", float(zoom_scale))
+        else:
+            shader.uniform("mvp_matrix", mvp)
+
+    def _render_atoms(self) -> None:
+        """Draw atoms as smooth circular GL_POINTS."""
+        if self.atom_vao is None:
+            return
+        count = _mesh_vertex_count(self.atom_mesh)
+        if count <= 0:
             return
 
-        # Use the atoms shader if available
-        atoms_shader = self.molecular_viewer.shader_registry.get(ShaderType.ATOMS)
-        if atoms_shader:
-            atoms_shader.bind()
-
-            # Set uniforms
-            atoms_shader.uniform("mvp_matrix", self.context.mvp_matrix)
-            atoms_shader.uniform("point_size", 8.0)
-
-            # Render atoms
-            self._render_mesh(self.atom_mesh, GL_POINTS)
-
-            atoms_shader.unbind()
-        else:
-            # Fallback to basic rendering
-            self._render_mesh(self.atom_mesh, GL_POINTS)
-
-    def _render_bonds(self):
-        """Render bonds as lines"""
-        if not self.bond_mesh:
+        shader = self.atom_point_shader
+        if shader is None:
+            # Fallback: tu01 squares with fixed glPointSize.
+            shader, kind = self._bond_shader()
+            if shader is None:
+                return
+            with gl_shader_bound(shader):
+                self._bind_uniforms(shader, kind)
+                gl_disable(GLPointCapability.PROGRAM_POINT_SIZE)
+                gl_point_size(_ATOM_POINT_SIZE)
+                with self.atom_vao.bound():
+                    gl_draw_arrays(count, GLDrawMode.POINTS, first=0)
             return
 
-        # Use the bonds shader if available
-        bonds_shader = self.molecular_viewer.shader_registry.get(ShaderType.BONDS)
-        if bonds_shader:
-            bonds_shader.bind()
+        with gl_shader_bound(shader):
+            with gl_capability(GLPointCapability.PROGRAM_POINT_SIZE, True):
+                shader.uniform("mvp_matrix", self.context.mvp_matrix)
+                shader.uniform("point_size", float(_ATOM_POINT_SIZE))
+                _enable_blending()
+                with self.atom_vao.bound():
+                    gl_draw_arrays(count, GLDrawMode.POINTS, first=0)
 
-            # Set uniforms
-            bonds_shader.uniform("mvp_matrix", self.context.mvp_matrix)
-            bonds_shader.uniform("line_width", 2.0)
-
-            # Render bonds
-            self._render_mesh(self.bond_mesh, GL_LINES)
-
-            bonds_shader.unbind()
-        else:
-            # Fallback to basic rendering
-            self._render_mesh(self.bond_mesh, GL_LINES)
-
-    def _render_mesh(self, mesh: MeshData, mode: int):
-        """Render a mesh with the given OpenGL mode"""
-        # Create VAO for this mesh
-        vao = VertexArrayObject()
-
-        # Add vertex buffer
-        vao.add_vbo(index=0, data=np.array(mesh.vertices, dtype=np.float32), size=3)
-
-        # Add colour buffer if available
-        if hasattr(mesh, "colors") and mesh.colors:
-            vao.add_vbo(index=1, data=np.array(mesh.colors, dtype=np.float32), size=3)
-
-        # Add index buffer if available
-        if hasattr(mesh, "indices") and mesh.indices:
-            vao.add_vbo(index=2, data=np.array(mesh.indices, dtype=np.uint32), size=1)
-            vao.draw(mode=mode, index_count=len(mesh.indices))
-        else:
-            vao.draw(mode=mode, index_count=len(mesh.vertices) // 3)
+    def _render_bonds(self) -> None:
+        shader, kind = self._bond_shader()
+        if shader is None or self.bond_vao is None:
+            return
+        with gl_shader_bound(shader):
+            self._bind_uniforms(shader, kind)
+            # Use arrays path (no EBO) — VAO.draw with POINTS enables
+            # PROGRAM_POINT_SIZE; LINES is fine via draw().
+            self.bond_vao.draw(
+                mode=GLDrawMode.LINES,
+                index_count=_mesh_vertex_count(self.bond_mesh),
+            )
 
 
-def main():
-    """Main function to demonstrate molecular viewing"""
-    # Example PDB file path - you'll need to provide your own PDB file
+def main() -> None:
     pdb_path = str(_EXAMPLES_DIR / "data" / "2VUG.pdb")
 
     try:
-        # Create molecular viewer
         viewer = MolecularViewer(pdb_path)
-
-        # Export to MolViewSpec
         viewer.export_molviewspec("output.molviewspec")
 
-        # Create render window
         render_window = MolecularRenderWindow(
             molecular_viewer=viewer,
             width=1024,
             height=768,
             title="Molecular Viewer - PDB Structure",
-            data=viewer.create_atom_mesh(),  # Create atom mesh for base data
-            glsl_dir=Path(__file__).parent / "glsl" / "tu01",
+            glsl_dir=_EXAMPLES_DIR / "glsl" / "tu01",
         )
-
-        # Initialize and run
         render_window.initialize()
         render_window.run()
 
