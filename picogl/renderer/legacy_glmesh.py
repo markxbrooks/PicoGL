@@ -14,6 +14,7 @@ LegacyGLMesh
 """
 
 from typing import Optional
+import contextlib
 
 import numpy as np
 
@@ -192,9 +193,21 @@ class LegacyGLMesh:
             if not self.vao:
                 raise RuntimeError("GLMesh not uploaded. Call upload() first.")
 
-            # Use legacy client states and individual VBOs to bypass the problematic bind() method
-            with legacy_client_states(GLClientState.VERTEX, GLClientState.COLOR):
-                with self.vao.vbo, self.vao.cbo, self.vao.ebo:
+            client_states = [GLClientState.VERTEX]
+            buffers = [self.vao.vbo]
+            if self.vao.nbo is not None:
+                client_states.append(GLClientState.NORMAL)
+                buffers.append(self.vao.nbo)
+            if self.vao.cbo is not None:
+                client_states.append(GLClientState.COLOR)
+                buffers.append(self.vao.cbo)
+            buffers.append(self.vao.ebo)
+
+            with legacy_client_states(*client_states):
+                with contextlib.ExitStack() as stack:
+                    for buf in buffers:
+                        if buf is not None:
+                            stack.enter_context(buf)
                     gl_draw_elements(
                         int(self.index_count),
                         GLNumeric.UNSIGNED_INT,

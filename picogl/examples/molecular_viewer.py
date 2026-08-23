@@ -7,24 +7,62 @@ This example demonstrates how to:
 3. Export to MolViewSpec format for portable viewing
 """
 
+from __future__ import annotations
+
 import os
 import sys
 from pathlib import Path
+
+# Repo roots on sys.path before any OpenGL / picogl imports.
+_EXAMPLES_DIR = Path(__file__).resolve().parent
+_PICOGL_ROOT = _EXAMPLES_DIR.parents[1]
+_ELMO_ROOT_CANDIDATES = (
+    Path(os.environ["ELMO_ROOT"]) if os.environ.get("ELMO_ROOT") else None,
+    _PICOGL_ROOT.parent / "ElMo",
+    Path.home() / "projects" / "ElMo",
+)
+_ELMO_ROOT = next(
+    (p for p in _ELMO_ROOT_CANDIDATES if p is not None and p.is_dir()),
+    Path.home() / "projects" / "ElMo",
+)
+_ELMO_GLSL = _ELMO_ROOT / "elmo" / "glsl" / "src"
+if _ELMO_ROOT.is_dir() and str(_ELMO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_ELMO_ROOT))
+if str(_PICOGL_ROOT) not in sys.path:
+    sys.path.insert(0, str(_PICOGL_ROOT))
+# examples/ so ``utils.pdb_loader`` resolves
+if str(_EXAMPLES_DIR) not in sys.path:
+    sys.path.insert(0, str(_EXAMPLES_DIR))
+
+# freeglut creates GLX contexts; under Wayland PyOpenGL may pick EGL first.
+if sys.platform.startswith("linux"):
+    os.environ.setdefault("PYOPENGL_PLATFORM", "glx")
+
+import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
 
 import numpy as np
 from OpenGL.GL import *
 from utils.pdb_loader import PDBLoader
 
-from picogl.backend.gl.api.enable import gl_enable_capability_list
-from picogl.backend.gl.enums.point_size import (GLLegacyPointCapability,
-                                                GLPointCapability)
+from picogl.backend.gl.api.enable import gl_enable, gl_enable_capability_list
+from picogl.backend.gl.capability import GLPipelineCapability
+from picogl.backend.gl.enums.point_size import (
+    GLLegacyPointCapability,
+    GLPointCapability,
+)
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
+from picogl.globals import PICOGL_SHADER_SRC_DIRECTORY
 from picogl.renderer import MeshData
 from picogl.shaders.registry import ShaderRegistry
 from picogl.shaders.type import ShaderType
 from picogl.ui.backend.glut.window.object import RenderWindow
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+
+def _molecular_shader_directory() -> Path:
+    """Prefer ElMo molecular GLSL tree when present; else PicoGL shader src."""
+    if _ELMO_GLSL.is_dir() and (_ELMO_GLSL / "atoms" / "vertex.glsl").is_file():
+        return _ELMO_GLSL
+    return Path(PICOGL_SHADER_SRC_DIRECTORY)
 
 
 class MolecularViewer:
@@ -39,9 +77,18 @@ class MolecularViewer:
         # Load the PDB structure
         self._load_structure()
 
-        # Initialize shaders
-        self.shader_registry = ShaderRegistry()
+        # Initialize shaders (needs GL context for compile — deferred until window)
+        self.shader_registry = ShaderRegistry(
+            shader_directory=_molecular_shader_directory()
+        )
+        self._shaders_loaded = False
+
+    def ensure_shaders_loaded(self) -> None:
+        """Compile shaders once an OpenGL context exists."""
+        if self._shaders_loaded:
+            return
         self._load_shaders()
+        self._shaders_loaded = True
 
     def _load_structure(self):
         """Load PDB structure and convert to PicoGL format"""
@@ -63,14 +110,14 @@ class MolecularViewer:
     def _load_shaders(self):
         """Load molecular visualization shaders"""
         print("Loading molecular visualization shaders...")
+        print(f"Shader directory: {self.shader_registry.shader_directory}")
 
-        # Load all available shader types
         for shader_type in ShaderType:
-            try:
-                self.shader_registry.load_and_add(shader_type)
+            program = self.shader_registry.load_and_add(shader_type)
+            if program is not None:
                 print(f"Loaded shader: {shader_type}")
-            except Exception as e:
-                print(f"Warning: Could not load shader {shader_type}: {e}")
+            else:
+                print(f"Warning: Could not load shader {shader_type}")
 
     def create_atom_mesh(self) -> MeshData:
         """Create mesh data for atoms (spheres)"""
@@ -145,6 +192,7 @@ class MolecularRenderWindow(RenderWindow):
     def initialize(self):
         """Initialize the molecular viewer"""
         super().initialize()
+        self.molecular_viewer.ensure_shaders_loaded()
 
         # Set up molecular-specific rendering
         self._setup_molecular_rendering()
@@ -163,7 +211,7 @@ class MolecularRenderWindow(RenderWindow):
         glPointSize(8.0)
 
         # Enable line smoothing for bonds
-        gl_enable(GL_LINE_SMOOTH)
+        gl_enable(GLPipelineCapability.LINE_SMOOTH)
         glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
         glLineWidth(2.0)
 
@@ -247,7 +295,7 @@ class MolecularRenderWindow(RenderWindow):
 def main():
     """Main function to demonstrate molecular viewing"""
     # Example PDB file path - you'll need to provide your own PDB file
-    pdb_path = "data/2VUG.pdb"
+    pdb_path = str(_EXAMPLES_DIR / "data" / "2VUG.pdb")
 
     try:
         # Create molecular viewer

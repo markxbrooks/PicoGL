@@ -10,7 +10,7 @@ from picogl.backend.legacy.core.camera.projection_state import (
     GLUProjectionState)
 from picogl.backend.modern.core.camera.projection_state import (
     GLMProjectionState)
-from picogl.core.camera import FOVY, ProjectionConfig
+from picogl.core.camera import FOVY, CameraParameters, ProjectionConfig
 
 
 def test_projection_config_is_instantiable_and_equal():
@@ -25,6 +25,27 @@ def test_projection_config_is_instantiable_and_equal():
     assert FOVY == 45.0
     assert ProjectionConfig().with_size(800, 400).aspect == 2.0
     assert ProjectionConfig.fovy == 45.0
+
+
+def test_projection_config_matrix_matches_glm_perspective():
+    cfg = ProjectionConfig(fovy=45.0, aspect=1.5, near=1.0, far=1000.0)
+    got = glm_mat4_to_np(cfg.matrix())
+    want = glm_mat4_to_np(glm.perspective(glm.radians(45.0), 1.5, 1.0, 1000.0))
+    np.testing.assert_allclose(got, want, rtol=1e-5)
+    # Optional aspect override must not mutate the config.
+    got_override = glm_mat4_to_np(cfg.matrix(aspect=2.0))
+    want_override = glm_mat4_to_np(glm.perspective(glm.radians(45.0), 2.0, 1.0, 1000.0))
+    np.testing.assert_allclose(got_override, want_override, rtol=1e-5)
+    assert cfg.aspect == 1.5
+
+
+def test_camera_parameters_view_matrix_matches_look_at():
+    camera = CameraParameters(eye=glm.vec3(4, 3, 5))
+    got = glm_mat4_to_np(camera.view_matrix())
+    want = glm_mat4_to_np(
+        glm.lookAt(glm.vec3(4, 3, 5), glm.vec3(0, 0, 0), glm.vec3(0, 1, 0))
+    )
+    np.testing.assert_allclose(got, want, rtol=1e-5)
 
 
 def test_glu_projection_apply_is_cached():

@@ -1,5 +1,8 @@
 """GLUT backend wrappers for window init, callbacks, and primitives."""
 
+# Must run before OpenGL.GLUT is imported (GLX vs EGL / Apple vs freeglut).
+import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
+
 from picogl.backend.glut.buffers import glut_swap_buffers
 from picogl.backend.glut.cube import glut_wire_cube
 from picogl.backend.glut.display import (glut_display_func, glut_idle_func,

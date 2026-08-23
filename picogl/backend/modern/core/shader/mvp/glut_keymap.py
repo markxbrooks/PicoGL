@@ -1,4 +1,4 @@
-from elmo.gl.backend.modern.shaders.mvp.key import Key
+from picogl.backend.modern.core.shader.mvp.key import Key
 
 GLUT_TO_KEY = {
     27: Key.ESCAPE,  # ASCII Escape

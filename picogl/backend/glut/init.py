@@ -5,6 +5,9 @@ from __future__ import annotations
 import sys
 from typing import Sequence
 
+# Before OpenGL.GLUT: prefer Apple GLUT (macOS) / GLX (Linux+Wayland).
+import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
+
 from OpenGL.GLUT import (glutCreateWindow, glutInit, glutInitDisplayMode,
                          glutInitWindowSize, glutMainLoop)
 

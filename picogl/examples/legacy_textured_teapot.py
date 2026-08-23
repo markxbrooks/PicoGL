@@ -26,9 +26,10 @@ from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import (QApplication, QComboBox, QLabel, QPushButton,
                                QVBoxLayout, QWidget)
 
+from picogl.backend.gl.api.matrix import gl_matrix_mode
 from picogl.backend.gl.api import gl_bind_texture
 from picogl.backend.gl.api.clear import gl_clear
-from picogl.backend.gl.api.enable import gl_disable, gl_enable_capability_list
+from picogl.backend.gl.api.enable import gl_disable, gl_enable_capability_list, gl_enable
 from picogl.backend.modern.core.setup.lighting import gl_initialize_background
 from picogl.core.rgbcolor import RGBAColor
 from picogl.texture.gltexture import GLTexture

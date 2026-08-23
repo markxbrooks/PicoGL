@@ -78,4 +78,4 @@ def gl_color_rgb(rgb_color: RGBColor) -> None:
     Returns:
         None
     """
-    gl_color_3f(*rgb_color.to_tuple())
+    gl_color_3f(rgb_color.to_tuple())

@@ -25,7 +25,7 @@ from picogl.backend.legacy.core.camera.perspective import perspective
 from picogl.backend.modern.core.shader.rotation_matrix import \
     create_rotation_matrix
 from picogl.boolean import GLBoolean
-from picogl.core.camera import ProjectionConfig
+from picogl.core.camera import CameraParameters, ProjectionConfig
 
 
 def setup_mvp(angle_x: float, angle_y: float, zoom: float, aspect: float) -> glm.mat4:
@@ -44,23 +44,14 @@ def setup_mvp(angle_x: float, angle_y: float, zoom: float, aspect: float) -> glm
     :rtype: glm.mat4
 
     """
-    eye = glm.vec3(0, 0, 3 / zoom)
-    center = glm.vec3(0, 0, 0)
-    up = glm.vec3(0, 1, 0)
-
-    # view and projection matrices
-    view = glm.lookAt(eye, center, up)
+    camera = CameraParameters(eye=glm.vec3(0, 0, 3 / zoom))
+    view = camera.view_matrix()
 
     # Apply orbit rotation (same as Rx * Ry in numpy)
     view = glm.rotate(view, angle_x, glm.vec3(1, 0, 0))
     view = glm.rotate(view, angle_y, glm.vec3(0, 1, 0))
 
-    projection = glm.perspective(
-        glm.radians(ProjectionConfig.fovy),
-        aspect,
-        ProjectionConfig.near,
-        ProjectionConfig.far,
-    )
+    projection = ProjectionConfig().matrix(aspect=aspect)
 
     return projection * view
 
@@ -73,11 +64,12 @@ def np_setup_mvp(shader: int, width: int, height: int, angle_x: float, angle_y: 
     """
     target = np.array([0, 0, 0], dtype=np.float32)
     aspect = width / height if height > 0 else 1
+    defaults = ProjectionConfig()
     proj = perspective(
-        ProjectionConfig.fovy,
+        defaults.fovy,
         aspect,
-        ProjectionConfig.near,
-        ProjectionConfig.far,
+        defaults.near,
+        defaults.far,
     )
     # Camera orbit rotation
     rotation = create_rotation_matrix(angle_x, angle_y)

@@ -10,17 +10,17 @@ from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.backend.gl.state.fill import GLFillMode
 from picogl.backend.gl.state.immediate import gl_immediate_drawing
-from picogl.backend.gl.state.scoped import disabled
+from picogl.backend.gl.state.scoped import gl_disabled
 from picogl.backend.glut import glut_solid_teapot
 from picogl.core.rgbcolor import RGBColor
-from picogl.polygon.mode import polygon_mode
+from picogl.polygon.mode import gl_polygon_mode
 
 
 def draw_teapot(wireframe_mode):
     """Draw the teapot using built-in OpenGL primitives."""
     if wireframe_mode:
-        with disabled(GLFixedFunctionCapability.LIGHTING):
-            with polygon_mode(GLFillMode.LINE):
+        with gl_disabled(GLFixedFunctionCapability.LIGHTING):
+            with gl_polygon_mode(GLFillMode.LINE):
                 gl_color_rgb(RGBColor.RED)
                 glut_solid_teapot(1.0)
         return
@@ -31,7 +31,7 @@ def draw_teapot(wireframe_mode):
 
 def draw_normals():
     """Draw normal vectors (simplified)."""
-    with disabled(GLFixedFunctionCapability.LIGHTING):
+    with gl_disabled(GLFixedFunctionCapability.LIGHTING):
         gl_color_rgb(RGBColor.GREEN)
         with gl_immediate_drawing(GLDrawMode.LINES):
             for i in range(0, 360, 30):
@@ -52,8 +52,8 @@ def draw_normals():
 def draw_teapot_with_normals(wireframe_mode, show_normals):
     """Draw the teapot using built-in OpenGL primitives."""
     if wireframe_mode:
-        with disabled(GLFixedFunctionCapability.LIGHTING):
-            with polygon_mode(GLFillMode.LINE):
+        with gl_disabled(GLFixedFunctionCapability.LIGHTING):
+            with gl_polygon_mode(GLFillMode.LINE):
                 gl_color_3f(*RGBColor.RED.tuple)
                 glut_solid_teapot(1.0)
         return

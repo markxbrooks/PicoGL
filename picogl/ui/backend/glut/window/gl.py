@@ -5,7 +5,7 @@ Glut Window
 import sys
 
 # Must run before OpenGL.GLUT: Homebrew freeglut shadows Apple GLUT on macOS.
-import picogl.ui.backend.glut.prefer_apple_glut  # noqa: F401
+import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
 import OpenGL.GL as GL
 import OpenGL.GLU as GLU
 import OpenGL.GLUT as GLUT
@@ -22,6 +22,11 @@ from picogl.ui.abc_window import AbstractGLWindow
 class GLWindow(AbstractGLWindow):
     """GLWindow"""
 
+    # Default zoom camera state (also mirrored onto ``self.context`` when present).
+    DEFAULT_ZOOM_FOV: float = float(ProjectionConfig.fovy)
+    DEFAULT_ZOOM_DISTANCE: float = 10.0
+    DEFAULT_DISTANCE_THRESHOLD: float = 5.0
+
     def __init__(self, title: str = "window", *args, **kwargs):
         """__init__"""
         super().__init__()
@@ -32,9 +37,24 @@ class GLWindow(AbstractGLWindow):
         self.width = None
         self.height = None
         self.title = title
+        # Zoom state used by wheelEvent; subclasses may override defaults.
+        self.zoom_fov: float = self.DEFAULT_ZOOM_FOV
+        self.zoom_distance: float = self.DEFAULT_ZOOM_DISTANCE
+        self.distance_threshold: float = self.DEFAULT_DISTANCE_THRESHOLD
+        self.context = None
         self.init_glut()
         self.controller = None
         self.update_if = GLUT.glutPostRedisplay
+        self.sync_zoom_to_context()
+
+    def sync_zoom_to_context(self) -> None:
+        """Copy window zoom fields onto ``self.context`` when it exists."""
+        ctx = getattr(self, "context", None)
+        if ctx is None:
+            return
+        ctx.zoom_fov = self.zoom_fov
+        ctx.zoom_distance = self.zoom_distance
+        ctx.distance_threshold = self.distance_threshold
 
     def wheelEvent(self, wheel=0, direction=0, x=0, y=0):
         """
@@ -49,11 +69,28 @@ class GLWindow(AbstractGLWindow):
         else:
             # FOV zoom
             self.zoom_fov = max(10.0, min(90.0, self.zoom_fov - zoom_step))
+        self.sync_zoom_to_context()
         print(
             f"Zoom mode: {'distance' if self.zoom_distance > self.distance_threshold else 'fov'} "
             f"| Distance: {self.zoom_distance:.2f} | FOV: {self.zoom_fov:.2f}"
         )
         self.update_mvp()
+
+    def update_mvp(self) -> None:
+        """Refresh MVP from current zoom/viewport and request a redraw.
+
+        Subclasses with a richer camera (e.g. GlutRendererWindow) should
+        override this. Default path calls ``calculate_mvp`` when present.
+        """
+        self.sync_zoom_to_context()
+        width = self.width or getattr(self.viewport, "width", None) or 800
+        height = self.height or getattr(self.viewport, "height", None) or 480
+        calculate = getattr(self, "calculate_mvp", None) or getattr(
+            self, "calculate_mvp_matrix", None
+        )
+        if callable(calculate):
+            calculate(width, height)
+        self.update()
 
     def init_glut(self):
         """init_glut"""

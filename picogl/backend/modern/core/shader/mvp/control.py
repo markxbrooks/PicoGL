@@ -2,7 +2,7 @@ import math
 
 from pyglm import glm
 
-from picogl.core.camera import ProjectionConfig
+from picogl.core.camera import CameraParameters, ProjectionConfig
 
 
 class MVPControl:
@@ -77,13 +77,15 @@ class MVPControl:
         self.up = glm.cross(self.right, self.direction)
         self.look_pos = self.position + self.direction
 
-        self.projection_matrix = glm.perspective(
-            glm.radians(self.fov),
-            self.screen_width / float(self.screen_height),
-            ProjectionConfig.near,
-            ProjectionConfig.far,
-        )
-        self.view_matrix = glm.lookAt(self.position, self.look_pos, self.up)
+        self.projection_matrix = ProjectionConfig(
+            fovy=self.fov,
+            aspect=self.screen_width / float(max(self.screen_height, 1)),
+            near=ProjectionConfig().near,
+            far=ProjectionConfig().far,
+        ).matrix()
+        self.view_matrix = CameraParameters(
+            eye=self.position, center=self.look_pos, up=self.up
+        ).view_matrix()
 
     def resize(self, width: int, height: int) -> None:
         """Resize the viewport and update projection matrix."""

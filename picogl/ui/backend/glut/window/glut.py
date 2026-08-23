@@ -2,7 +2,7 @@
 GlutRendererWindow
 """
 
-import picogl.ui.backend.glut.prefer_apple_glut  # noqa: F401
+import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
 import numpy as np
 from decologr import Decologr as log, setup_logging
 from pyglm import glm
@@ -14,7 +14,7 @@ from picogl.backend.glm.glm import glm_identity_matrix
 from picogl.backend.modern.core.camera.projection_state import (
     GLMProjectionState)
 from picogl.backend.state import GLViewport
-from picogl.core.camera import ProjectionConfig
+from picogl.core.camera import CameraParameters, ProjectionConfig
 from picogl.renderer import GLResourceRegistry
 from picogl.ui.backend.glut.mouse import RotationInteraction
 from picogl.ui.backend.glut.window.gl import GLWindow
@@ -44,8 +44,9 @@ class GlutRendererWindow(GLWindow):
         self.rotation = RotationInteraction()
         setup_logging()
         self.zoom_fov: float = ProjectionConfig.fovy
-        self.zoom_distance: int = 10  # camera backwards in Z
+        self.zoom_distance: float = 10.0  # camera backwards in Z
         self.distance_threshold: float = 5.0
+        self.sync_zoom_to_context()
         self.backend = GLBackend(binding=LegacyBinding())
 
     def initializeGL(self):
@@ -69,13 +70,11 @@ class GlutRendererWindow(GLWindow):
         )
         self.projection.apply(config)
         self.context.projection = self.projection.matrix
-        self.context.eye = glm.vec3(4, 3, self.zoom_distance)
-        self.context.center = glm.vec3(0, 0, 0)
-        self.context.up = glm.vec3(0, 1, 0)
-
-        self.context.view = glm.lookAt(
-            self.context.eye, self.context.center, self.context.up
-        )
+        camera = CameraParameters(eye=glm.vec3(4, 3, self.zoom_distance))
+        self.context.eye = camera.eye
+        self.context.center = camera.center
+        self.context.up = camera.up
+        self.context.view = camera.view_matrix()
         self.context.model_matrix = glm_identity_matrix()
 
         # The camera position in world space is just the eye
@@ -102,6 +101,7 @@ class GlutRendererWindow(GLWindow):
 
     def update_mvp(self):
         """Base perspective matrix from your existing method"""
+        self.sync_zoom_to_context()
         width, height = self.get_size()
         self.calculate_mvp_matrix(width, height)
         # Apply rotations
@@ -129,25 +129,6 @@ class GlutRendererWindow(GLWindow):
         """mouseMoveEvent"""
         if self.rotation.drag(x, y) is None:
             return
-        self.update_mvp()
-
-    def wheelEvent(self, wheel=0, direction=0, x=0, y=0):
-        """
-        Mouse wheel zoom: adjusts distance if far, FOV if close.
-        Positive direction -> zoom in, Negative -> zoom out.
-        """
-        zoom_step = direction * 0.5
-
-        if self.zoom_distance > self.distance_threshold:
-            # Distance zoom
-            self.zoom_distance = max(1.0, self.zoom_distance - zoom_step)
-        else:
-            # FOV zoom
-            self.zoom_fov = max(10.0, min(90.0, self.zoom_fov - zoom_step))
-        print(
-            f"Zoom mode: {'distance' if self.zoom_distance > self.distance_threshold else 'fov'} "
-            f"| Distance: {self.zoom_distance:.2f} | FOV: {self.zoom_fov:.2f}"
-        )
         self.update_mvp()
 
     def get_size(self):

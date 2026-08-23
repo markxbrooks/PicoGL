@@ -1,7 +1,14 @@
 """Minimal PicoGL Teapot."""
-
+import os
+import sys
 from pathlib import Path
 
+# freeglut creates GLX contexts; under Wayland PyOpenGL may pick EGL first.
+# Must be set before any OpenGL / picogl import.
+if sys.platform.startswith("linux"):
+    os.environ.setdefault("PYOPENGL_PLATFORM", "glx")
+
+import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
 from picogl.renderer import MeshData
 from picogl.ui.backend.glut.window.object import RenderWindow
 from picogl.utils.loader.object import ObjectLoader

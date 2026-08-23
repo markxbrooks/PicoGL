@@ -1,213 +1,371 @@
-# import os,sys
-# sys.path.append(os.path.abspath(os.path.dirname(__file__)))
+"""
+Tutorial 04 — Textured Suzanne (PicoGL).
+
+Uses PicoGL loaders, shaders, and GL wrappers throughout.
+Left-drag rotates, wheel zooms, R resets.
+"""
+
+from __future__ import annotations
+
+import os
+import sys
+from contextlib import contextmanager
 from pathlib import Path
 
+from pyglm.glm import mat4x4
+
+from backend.glut import GLUTMouseButton, GLUTMouseState
+from picoui.dimensions import Dimensions
+
+# freeglut creates GLX contexts; under Wayland PyOpenGL may pick EGL first.
+# Must be set before any OpenGL / picogl import.
+if sys.platform.startswith("linux"):
+    os.environ.setdefault("PYOPENGL_PLATFORM", "glx")
+
+import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
 import picogl.ui.backend.glut.prefer_apple_glut  # noqa: F401
+
+from OpenGL.GL import GLfloat, GLushort
 from decologr import Decologr as log
-from OpenGL.GL import *  # pylint: disable=W0614
 from pyglm import glm
 
-from picogl.backend.gl.api import gl_bind_texture, gl_get_active_texture0
+from picogl.backend.gl.api import (
+    gl_bind_buffer,
+    gl_bind_texture,
+    gl_buffer_data,
+    gl_draw_elements,
+    gl_generate_buffers,
+    gl_get_active_texture0,
+)
+from picogl.backend.gl.api.clear import gl_clear
 from picogl.backend.gl.api.enable import gl_enable_capability_list
+from picogl.backend.gl.api.shader import gl_get_uniform_location, gl_uniform_matrix_4fv
+from picogl.backend.gl.api.vertex.attrib_array.disable import (
+    gl_disable_vertex_attrib_array,
+)
+from picogl.backend.gl.api.vertex.attrib_array.generate import (
+    gl_enable_vertex_attrib_array,
+)
+from picogl.backend.gl.api.vertex.attrib_array.pointer import gl_vertex_attrib_pointer
 from picogl.backend.gl.capability import GLPipelineCapability
-from picogl.backend.modern.core.setup.lighting import gl_initialize_background
+from picogl.backend.gl.enums import (
+    GLBitMask,
+    GLBufferTarget,
+    GLDrawMode,
+    GLNumeric,
+    GLUsageHint,
+)
+from picogl.backend.gl.enums.legacy.scale import gl_viewport
 from picogl.backend.glm.glm import glm_identity_matrix
+from picogl.backend.modern.core.setup.lighting import gl_initialize_background
 from picogl.backend.modern.core.shader.files import ShaderFiles
 from picogl.backend.modern.core.shader.program import ShaderProgram
+from picogl.boolean import GLBoolean
+from picogl.core.camera import CameraParameters, ProjectionConfig
 from picogl.core.uniform import gl_uniform1i
-# from picogl.gpu.buffers.vertex import data
+from picogl.texture.gltexture import GLTexture
+from picogl.ui.backend.glut.mouse import RotationInteraction
 from picogl.ui.backend.glut.window.glut import GlutRendererWindow
+from picogl.utils.loader.object import ObjectLoader
 from picogl.utils.loader.texture import TextureLoader
 
-# from utils.objLoader import objLoader
-# from utils.textureLoader import textureLoader
+_EXAMPLES_DIR = Path(__file__).resolve().parent
+_DEFAULT_MESH = _EXAMPLES_DIR / "resources" / "tu04" / "suzanne.obj"
+_DEFAULT_TEXTURE = _EXAMPLES_DIR / "resources" / "tu04" / "uvmap.DDS"
+_GLSL_DIR = _EXAMPLES_DIR / "glsl" / "tu04"
 
 
-class MeshUE4:
+def _flip_texcoord_v(texcoords: list[float]) -> list[float]:
+    """Invert V for DDS/top-left origin (TextureLoader.inversed_v_coords)."""
+    flipped = list(texcoords)
+    for i in range(1, len(flipped), 2):
+        flipped[i] = 1.0 - flipped[i]
+    return flipped
 
-    def __init__(self):
-        self.tangent_xz = None
-        self.texcoords = None
-        self.vertices = None
-        self.indices = None
+
+@contextmanager
+def gl_bound_vertex_attrib_arrays(vertex_attrib_arrays: list[int]):
+    """enabling/disabling vertex_attrib_arrays"""
+    try:
+        for vertex_attrib_array in vertex_attrib_arrays:
+            gl_enable_vertex_attrib_array(vertex_attrib_array)
+
+        yield
+    finally:
+        for vertex_attrib_array in reversed(vertex_attrib_arrays):
+            gl_disable_vertex_attrib_array(vertex_attrib_array)
+
+
+def gl_bind_array_buffer(buffer, index: int = 0, size: int = 3, stride: int = 0) -> None:
+    """gl bind buffer"""
+    gl_bind_buffer(GLBufferTarget.ARRAY, buffer)
+    gl_vertex_attrib_pointer(index, size, GLNumeric.FLOAT, GLBoolean.FALSE, stride, None)
+
+
+def gl_bind_elements(index_buffer, size):
+    """gl_bind_elements"""
+    gl_bind_buffer(GLBufferTarget.ELEMENT, index_buffer)
+    # PicoGL: (index_count, dtype, mode) — not raw GL (mode, count, type).
+    gl_draw_elements(
+        size,
+        GLNumeric.UNSIGNED_SHORT,
+        GLDrawMode.TRIANGLES,
+    )
+
+
+def gl_upload_float_buffer(
+    data: list[float],
+    buffer_target: GLBufferTarget = GLBufferTarget.ARRAY,
+) -> None:
+    """Upload float vertex/attribute data to the bound buffer."""
+    gl_buffer_data(
+        buffer_target,
+        len(data) * 4,
+        (GLfloat * len(data))(*data),
+        GLUsageHint.STATIC_DRAW,
+    )
+
+
+def gl_upload_ushort_buffer(
+    data: list[int],
+    buffer_target: GLBufferTarget = GLBufferTarget.ELEMENT,
+) -> None:
+    """Upload unsigned-short index data to the bound element buffer."""
+    gl_buffer_data(
+        buffer_target,
+        len(data) * 2,
+        (GLushort * len(data))(*data),
+        GLUsageHint.STATIC_DRAW,
+    )
+
+
+class MeshObject:
+    """Local OBJ mesh with GPU buffer upload helpers."""
+
+    def __init__(self, path: Path | str = _DEFAULT_MESH):
+        self.path = Path(path)
+        self.vertices: list[float] | None = None
+        self.texcoords: list[float] | None = None
+        self.indices: list[int] | None = None
+        self.vertex_buffer: int | None = None
+        self.uv_buffer: int | None = None
+        self.index_buffer: int | None = None
+        self.indices_size: int = 0
 
     def load_mesh(self):
-        from ue4reader import uasset
+        if not self.path.is_file():
+            raise FileNotFoundError(f"OBJ mesh not found: {self.path}")
+        return ObjectLoader(str(self.path)).to_single_index_style()
 
-        ArchiveName = "D:/unpack/objects/Weapon/Rifles/AK-47/Meshes/AK-47_01.uasset"
-        # ArchiveName = "D:/unpack/objects/Weapon/Rifles/AWM/Meshes/AWM_01.uasset"
-        asset = uasset.UAssetReader(ArchiveName, forceUE4Ver=513)
-        mesh_obj = asset.ExportsMap[1].GetObject()
-        mesh_obj.Serialize(asset)
-        mesh_obj.properties[1].to_dict()
-        return mesh_obj.RenderData.LODResources[0]
-
-    def getMesh(self):
-        ue4LOD = self.load_mesh()
-        self.vertices = vertex_data.VertexData.to_array()
-        self.indices = ue4LOD.IndexBuffer.to_array()
+    def get_mesh(self, *, flip_v: bool = False) -> MeshObject:
+        mesh = self.load_mesh()
+        self.vertices = mesh.vertices
         self.texcoords = (
-            ue4LOD.VertexBuffers.StaticMeshVertexBuffer.TexcoordData.to_array()
+            _flip_texcoord_v(mesh.texcoords) if flip_v else list(mesh.texcoords)
         )
-        self.tangent_xz = (
-            ue4LOD.VertexBuffers.StaticMeshVertexBuffer.TangentsData.to_array()
-        )
-        # self.texcoords= []
-        # for i in range(0,len(self._texcoords),2):
-        # 	print "."
-        # 	self.texcoords.append(float(self._texcoords[i]))
-        # 	self.texcoords.append(1.0 - float(self._texcoords[i+1]))
+        self.indices = mesh.indices
+        self.indices_size = len(self.indices)
         return self
 
+    def _upload_vertices(self) -> None:
+        gl_upload_float_buffer(self.vertices)
 
-def bind_active_texture0():
-    """bind active texture (0)"""
-    gl_get_active_texture0()
-    gl_bind_texture(target=GL_TEXTURE_2D, tex_id=self.context.texture_buffer)
-    gl_uniform1i(
-        self.context.texture_id, 0
-    )  # // Set  "myTextureSampler" sampler to use Texture Unit 0
+    def _upload_texcoords(self) -> None:
+        gl_upload_float_buffer(self.texcoords)
+
+    def _upload_indices(self) -> None:
+        # Must be GLushort to match gl_draw_elements(..., UNSIGNED_SHORT, ...).
+        gl_upload_ushort_buffer(self.indices)
+
+    def upload(self) -> None:
+        self.vertex_buffer = gl_generate_buffers(1)
+        gl_bind_buffer(GLBufferTarget.ARRAY, self.vertex_buffer)
+        self._upload_vertices()
+
+        self.uv_buffer = gl_generate_buffers(1)
+        gl_bind_buffer(GLBufferTarget.ARRAY, self.uv_buffer)
+        self._upload_texcoords()
+
+        self.index_buffer = gl_generate_buffers(1)
+        # Draw-element count — not the GL buffer name from gl_generate_buffers.
+        self.indices_size = len(self.indices)
+        gl_bind_buffer(GLBufferTarget.ELEMENT, self.index_buffer)
+        self._upload_indices()
+
+    def draw(self):
+        """draw the mesh"""
+        with gl_bound_vertex_attrib_arrays([0, 1]):
+            self._draw_vertices(index=0)
+            self._draw_uvs(index=1)
+            self._draw_indices()
+
+    def _draw_vertices(self, index: int=0):
+        gl_bind_array_buffer(self.vertex_buffer, index=index)
+
+    def _draw_uvs(self, index: int=1):
+        gl_bind_array_buffer(self.uv_buffer, index=index, size=2, stride=0)
+
+    def _draw_indices(self):
+        gl_bind_elements(index_buffer=self.index_buffer, size=self.indices_size)
 
 
-class Tu01Win(GlutRendererWindow):
-    class GLContext(object):
-        pass
+def rotate_model(rotation: RotationInteraction, model_matrix):
+    """Apply x/y drag rotation to *model_matrix* and return it."""
+    model_matrix = glm.rotate(model_matrix, glm.radians(rotation.x), glm.vec3(1, 0, 0))
+    model_matrix = glm.rotate(model_matrix, glm.radians(rotation.y), glm.vec3(0, 1, 0))
+    return model_matrix
+
+
+@contextmanager
+def gl_shader_bound(shader: ShaderProgram):
+    """Bind *shader* for the duration of the with-block."""
+    try:
+        shader.begin()
+        yield
+    finally:
+        shader.end()
+
+
+class ObjectRendererExample(GlutRendererWindow):
+    """Textured Suzanne tutorial window."""
+
+    class GLContext:
+        def __init__(self) -> None:
+            self.mvp_id: int | None = None
+            self.texture_id: int | None = None
+            self.texture_buffer: int | None = None
+            self.model: MeshObject | None = None
+            self.projection_matrix = None
+            self.view_matrix = None
+            self.model_matrix = None
+            self.mvp_matrix = None
 
     def __init__(
         self,
-        width,
-        height,
-        title: str = None,
-        context: GLContext = None,
+        width: int = 400,
+        height: int = 300,
+        title: str = "Tutorial 04 - Textured Model",
         *args,
         **kwargs,
     ):
-        super().__init__(width, height, title, context, *args, **kwargs)
-        self.shader = None
+        super().__init__(width=width, height=height, title=title, *args, **kwargs)
+        self.shader: ShaderProgram | None = None
+        if not hasattr(self, "rotation") or self.rotation is None:
+            self.rotation = RotationInteraction()
+        self.zoom_distance = 5.0
+        self.distance_threshold = 2.0
+        self.sync_zoom_to_context()
 
-    def initializeGL(self):
+    def initializeGL(self) -> None:
+        # Avoid GlutRendererWindow.initializeGL — it expects an ObjectRenderer.
         gl_initialize_background()
         gl_enable_capability_list([GLPipelineCapability.CULL_FACE])
 
-    def keyPressEvent(self, key, x, y):
-        pass
+    def keyPressEvent(self, key, x, y) -> None:
+        if key in (b"r", b"R"):
+            self.rotation.reset()
+            self.update_mvp()
 
-    def mousePressEvent(self, *args, **kwargs):
-        pass
+    def mousePressEvent(self, button, state, x, y) -> None:
+        if button != GLUTMouseButton.LEFT:
+            return
+        if state == GLUTMouseState.DOWN:
+            self.rotation.press(x, y)
+        else:
+            self.rotation.release()
 
-    def mouseMoveEvent(self, *args, **kwargs):
-        pass
+    def mouseMoveEvent(self, x, y) -> None:
+        if self.rotation.drag(x, y) is None:
+            return
+        self.rotation.clamp_x()
+        self.update_mvp()
 
-    def initialize(self):
+    def bind_active_texture0(self) -> None:
+        gl_get_active_texture0()
+        gl_bind_texture(self.context.texture_buffer, GLTexture.TEXTURE_2D)
+        gl_uniform1i(self.context.texture_id, 0)
+
+    def initialize(self) -> None:
         self.context = self.GLContext()
+        self.sync_zoom_to_context()
 
-        self.shader = shader = ShaderProgram()
-        shader_files = ShaderFiles(
-            vertex="vertex.glsl",
-            fragment="fragment.glsl",
-            glsl_dir=Path(__file__).resolve().parent / "glsl" / "tu02",
+        self.shader = ShaderProgram()
+        self.shader.init_shader_from_shader_files(
+            ShaderFiles(
+                vertex="vertex.glsl",
+                fragment="fragment.glsl",
+                glsl_dir=_GLSL_DIR,
+            )
+        )
+        if not isinstance(self.shader.program, int):
+            raise TypeError("shader.program must be a GL program id (int)")
+
+        self.context.mvp_id = gl_get_uniform_location(self.shader.program, "MVP")
+        self.context.texture_id = gl_get_uniform_location(
+            self.shader.program, "texture0"
         )
 
-        shader.program = shader.compiler.compile_shader_files(shader_files)
-        # shader var ids
-        self.context.mvp_id = glGetUniformLocation(shader.program, "mvp_matrix")
-        self.context.texture_id = glGetUniformLocation(
-            shader.program, "myTextureSampler"
-        )
-
-        texture = TextureLoader("resources/tu05/AK-47_01_D_Fix.png")
+        texture = TextureLoader(str(_DEFAULT_TEXTURE))
         self.context.texture_buffer = texture.texture_gl_id
-
-        model = MeshUE4().getMesh()
-        self.context.vertex_buffer = glGenBuffers(1)
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.context.vertex_buffer)
-        glBufferData(
-            GL_ELEMENT_ARRAY_BUFFER,
-            len(model.vertices) * 4,
-            (GLfloat * len(model.vertices))(*model.vertices),
-            GL_STATIC_DRAW,
+        self.context.model = MeshObject().get_mesh(
+            flip_v=bool(texture.inversed_v_coords)
         )
+        self.context.model.upload()
+        self.calc_mvp(self.width or 400, self.height or 300)
 
-        self.context.uv_buffer = glGenBuffers(1)
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.context.uv_buffer)
-        glBufferData(
-            GL_ELEMENT_ARRAY_BUFFER,
-            len(model.texcoords) * 4,
-            (GLfloat * len(model.texcoords))(*model.texcoords),
-            GL_STATIC_DRAW,
-        )
+    def calc_mvp(self, width: int = 1920, height: int = 1080) -> None:
+        """Calc MVP"""
+        self.sync_zoom_to_context()
+        aspect = float(width) / float(max(height, 1))
+        self.context.projection_matrix = ProjectionConfig(
+            fovy=self.zoom_fov, aspect=aspect, near=0.1, far=1000.0
+        ).matrix()
+        camera = CameraParameters(eye=glm.vec3(4, 3, self.zoom_distance))
+        self.context.view_matrix = camera.view_matrix()
 
-        self.context.indices = glGenBuffers(1)
-        self.context.indices_size = len(model.indices)
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.context.indices)
-        glBufferData(
-            GL_ELEMENT_ARRAY_BUFFER,
-            len(model.indices) * 2,
-            (GLushort * len(model.indices))(*model.indices),
-            GL_STATIC_DRAW,
-        )
-
-    def calc_mvp(self, width=1920, height=1080):
-        self.context.projection_matrix = glm.perspective(
-            glm.radians(45.0), float(width) / float(height), 0.1, 1000.0
-        )
-        self.context.View = glm.lookAt(
-            glm.vec3(80, 80, 80),  # Camera is at (4,3,-3), in World Space
-            glm.vec3(0, 0, 0),  # and looks at the (0.0.0))
-            glm.vec3(0, 1, 0),
-        )  # Head is up (set to 0,-1,0 to look upside-down)
-
-        self.context.model_matrix = glm_identity_matrix()
-        # print self.context.model_matrix
+        self.context.model_matrix = rotate_model(self.rotation, glm_identity_matrix())
         self.context.mvp_matrix = (
             self.context.projection_matrix
             * self.context.view_matrix
             * self.context.model_matrix
         )
 
-    def resizeGL(self, width, height):
-        """resizeGL"""
-        log.message("resizetGL")
-        glViewport(0, 0, width, height)
+    def update_mvp(self) -> None:
+        """ update mvp """
+        width = getattr(self, "width", None) or 400
+        height = getattr(self, "height", None) or 300
+        viewport = getattr(self, "viewport", None)
+        if viewport is not None:
+            width = getattr(viewport, "width", None) or width
+            height = getattr(viewport, "height", None) or height
+        self.calc_mvp(width, height)
+        self.update()
+
+    def resizeGL(self, width, height) -> None:
+        """resize gl"""
+        log.message("resizeGL")
+        self.width = width
+        self.height = height
+        gl_viewport(0, 0, width, height)
         self.calc_mvp(width, height)
 
-    def paintGL(self):
-        """paintGL"""
-        log.message("paintGL")
-        # print self.context.mvp_matrix
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+    def paintGL(self) -> None:
+        """paint GL"""
+        gl_clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
 
-        self.shader.begin()
-        glUniformMatrix4fv(
-            self.context.mvp_id, 1, GL_FALSE, glm.value_ptr(self.context.mvp_matrix)
-        )
-
-        bind_active_texture0()
-
-        gl_enableVertexAttribArray(0)
-        glBindBuffer(GL_ARRAY_BUFFER, self.context.vertex_buffer)
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, None)
-
-        gl_enableVertexAttribArray(1)
-        glBindBuffer(GL_ARRAY_BUFFER, self.context.uv_buffer)
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, None)
-
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.context.indices)
-
-        glDrawElements(
-            GL_TRIANGLES,  # mode
-            self.context.indices_size,  # // count
-            GL_UNSIGNED_SHORT,  # // type
-            None,  # // element array buffer offset
-        )
-
-        glDisableVertexAttribArray(0)
-        glDisableVertexAttribArray(1)
-        self.shader.end()
+        with gl_shader_bound(self.shader):
+            gl_uniform_matrix_4fv(
+                self.context.mvp_id,
+                1,
+                GLBoolean.FALSE,
+                glm.value_ptr(self.context.mvp_matrix),
+            )
+            self.bind_active_texture0()
+            self.context.model.draw()
 
 
 if __name__ == "__main__":
-    win = Tu01Win(width=400, height=300)
+    win = ObjectRendererExample(*Dimensions(width=400, height=300).to_tuple())
     win.initializeGL()
     win.initialize()
     win.run()
