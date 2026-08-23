@@ -11,9 +11,10 @@ and uses legacy client states and immediate mode rendering.
 
 from __future__ import annotations
 
-import sys
+
 from pathlib import Path
 
+from decologr import logger as log
 from picogl.backend.gl.api.color import gl_color_rgb
 from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.state.fill import GLFillMode
@@ -89,7 +90,7 @@ def main() -> None:
         else:
             try:
                 renderer.mesh = load_legacy_mesh(obj_file_path)
-                print(f"✅ Loaded teapot from {obj_file_path}")
+                log.message(f"✅ Loaded teapot from {obj_file_path}")
             except Exception as exc:
                 print(f"❌ Error loading teapot data: {exc}")
                 print("   Using fallback wireframe teapot instead.")
