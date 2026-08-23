@@ -18,6 +18,8 @@ from typing import Any
 
 from numpy import dtype, generic, ndarray
 
+from backend.modern.core.vertex.array.object import VertexArrayObject
+
 # freeglut creates GLX contexts; under Wayland PyOpenGL may pick EGL first.
 # Must be set before any OpenGL / picogl import.
 if sys.platform.startswith("linux"):
@@ -59,7 +61,7 @@ from picogl.renderer import MeshData
 from picogl.ui.backend.glut.window.object import RenderWindow
 
 
-def create_vao(mesh: MeshData) -> None:
+def create_vao(mesh: MeshData) -> VertexArrayObject:
     """create VAO"""
     vao = VertexArrayObject()
     vao.add_vbo(index=0, data=get_array(mesh.vertices), size=3)
