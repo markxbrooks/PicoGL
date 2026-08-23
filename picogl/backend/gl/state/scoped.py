@@ -31,7 +31,7 @@ def gl_capability(capability: GLCapabilities, enabled: bool) -> Iterator[None]:
 
 
 @contextmanager
-def disabled(capability: GLCapabilities) -> Iterator[None]:
+def gl_disabled(capability: GLCapabilities) -> Iterator[None]:
     """Temporarily disable an OpenGL capability and restore the previous state on exit."""
     with gl_capability(capability, False):
         yield

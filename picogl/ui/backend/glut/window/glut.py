@@ -2,7 +2,7 @@
 GlutRendererWindow
 """
 
-import picogl.ui.backend.glut.prefer_apple_glut  # noqa: F401
+import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
 import numpy as np
 from decologr import Decologr as log, setup_logging
 from pyglm import glm

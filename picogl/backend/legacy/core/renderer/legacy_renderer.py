@@ -5,6 +5,9 @@ from __future__ import annotations
 import sys
 from abc import ABC, abstractmethod
 
+# Before any OpenGL import: GLX under Wayland, Apple GLUT on macOS.
+import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
+
 from picogl.backend.gl.api.clear import gl_clear
 from picogl.backend.gl.api.color import gl_color_material
 from picogl.backend.gl.api.enable import gl_enable_capability_list

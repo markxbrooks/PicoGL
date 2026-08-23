@@ -13,6 +13,9 @@ and uses legacy client states and immediate mode rendering.
 import os
 import sys
 
+# Before any OpenGL import: GLX under Wayland, Apple GLUT on macOS.
+import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
+
 import numpy as np
 
 from picogl.backend.gl.api.color import gl_color_material
@@ -290,9 +293,7 @@ def main():
     print("=" * 40)
 
     try:
-        from picogl.examples.legacy_cube_fixed import LegacyCubeRenderer
-
-        renderer = LegacyCubeRenderer(
+        renderer = GlutRenderer(
             width=800,
             height=600,
             title="Legacy PicoGL Cube (OpenGL 1.x/2.x Compatible)",
@@ -301,8 +302,9 @@ def main():
     except Exception as e:
         print(f"❌ Error running legacy cube renderer: {e}")
         print("   This might be due to OpenGL context issues.")
-        print("   Try running with different OpenGL settings or drivers.")
+        print("   On Linux/Wayland, try: PYOPENGL_PLATFORM=glx python ...")
         print("   On macOS, try running from Terminal.app or iTerm2.")
+        raise SystemExit(1) from e
 
 
 if __name__ == "__main__":

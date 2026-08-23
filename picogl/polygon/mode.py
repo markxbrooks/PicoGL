@@ -27,4 +27,4 @@ def gl_polygon_mode_context(mode: GLFillMode) -> Iterator[None]:
         gl_polygon_mode(GLFace.BACK, prev_back_mode)
 
 
-polygon_mode = gl_polygon_mode_context
+gl_polygon_mode = gl_polygon_mode_context

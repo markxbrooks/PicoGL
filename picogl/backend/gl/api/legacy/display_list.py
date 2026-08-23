@@ -2,16 +2,11 @@
 
 from __future__ import annotations
 
-from enum import IntEnum
+from OpenGL.raw.GL.VERSION.GL_1_0 import glEndList, glGenLists, glNewList
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_COMPILE, glEndList, glGenLists,
-                                          glNewList)
+from picogl.backend.gl.enums.legacy.list_mode import GLLegacyListMode
 
-
-class GLLegacyListMode(IntEnum):
-    """Display list compilation mode."""
-
-    COMPILE = GL_COMPILE
+__all__ = ["GLLegacyListMode", "gl_end_list", "gl_gen_lists", "gl_new_list"]
 
 
 def gl_gen_lists(range_: int = 1) -> int:
@@ -19,7 +14,9 @@ def gl_gen_lists(range_: int = 1) -> int:
     return glGenLists(range_)
 
 
-def gl_new_list(list_: int, mode: GLLegacyListMode | int = GLLegacyListMode.COMPILE) -> None:
+def gl_new_list(
+    list_: int, mode: GLLegacyListMode | int = GLLegacyListMode.COMPILE
+) -> None:
     """Begin compiling a display list."""
     glNewList(list_, int(mode))
 

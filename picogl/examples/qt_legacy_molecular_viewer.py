@@ -33,7 +33,7 @@ from picogl.core.draw.sphere import (draw_latitude_band_connectors,
                                      draw_latitude_ring_wireframe)
 from picogl.core.geometry.sphere import generate_ring, latitude_for_stack
 from picogl.core.rgbcolor import RGBAColor, RGBColor
-from picogl.backend.modern.core.setup.lighting import gl_initialize_background, RGBColor
+from picogl.backend.modern.core.setup.lighting import gl_initialize_background
 from picogl.core.setup import gl_setup_lighting, gl_setup_materials
 from picogl.core.setup.view import gl_setup_view
 from picogl.core.vec3 import Vec3
