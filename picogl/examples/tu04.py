@@ -20,37 +20,16 @@ if sys.platform.startswith("linux"):
 import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
 import picogl.ui.backend.glut.prefer_apple_glut  # noqa: F401
 
-from OpenGL.GL import GLfloat, GLushort
 from OpenGL.GLUT import GLUT_DOWN, GLUT_LEFT_BUTTON
 from decologr import Decologr as log
 from pyglm import glm
 
-from picogl.backend.gl.api import (
-    gl_bind_buffer,
-    gl_bind_texture,
-    gl_buffer_data,
-    gl_draw_elements,
-    gl_generate_buffers,
-    gl_get_active_texture0,
-)
+from picogl.backend.gl.api import gl_bind_texture, gl_get_active_texture0
 from picogl.backend.gl.api.clear import gl_clear
 from picogl.backend.gl.api.enable import gl_enable_capability_list
 from picogl.backend.gl.api.shader import gl_get_uniform_location, gl_uniform_matrix_4fv
-from picogl.backend.gl.api.vertex.attrib_array.disable import (
-    gl_disable_vertex_attrib_array,
-)
-from picogl.backend.gl.api.vertex.attrib_array.generate import (
-    gl_enable_vertex_attrib_array,
-)
-from picogl.backend.gl.api.vertex.attrib_array.pointer import gl_vertex_attrib_pointer
 from picogl.backend.gl.capability import GLPipelineCapability
-from picogl.backend.gl.enums import (
-    GLBitMask,
-    GLBufferTarget,
-    GLDrawMode,
-    GLNumeric,
-    GLUsageHint,
-)
+from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums.legacy.scale import gl_viewport
 from picogl.backend.glm.glm import glm_identity_matrix
 from picogl.backend.modern.core.setup.lighting import gl_initialize_background
@@ -62,142 +41,13 @@ from picogl.core.uniform import gl_uniform1i
 from picogl.texture.gltexture import GLTexture
 from picogl.ui.backend.glut.mouse import RotationInteraction
 from picogl.ui.backend.glut.window.glut import GlutRendererWindow
-from picogl.utils.loader.object import ObjectLoader
 from picogl.utils.loader.texture import TextureLoader
+from picogl.utils.mesh import MeshObject
 
 _EXAMPLES_DIR = Path(__file__).resolve().parent
 _DEFAULT_MESH = _EXAMPLES_DIR / "resources" / "tu04" / "suzanne.obj"
 _DEFAULT_TEXTURE = _EXAMPLES_DIR / "resources" / "tu04" / "uvmap.DDS"
 _GLSL_DIR = _EXAMPLES_DIR / "glsl" / "tu04"
-
-
-def _flip_texcoord_v(texcoords: list[float]) -> list[float]:
-    """Invert V for DDS/top-left origin (TextureLoader.inversed_v_coords)."""
-    flipped = list(texcoords)
-    for i in range(1, len(flipped), 2):
-        flipped[i] = 1.0 - flipped[i]
-    return flipped
-
-
-@contextmanager
-def gl_bound_vertex_attrib_arrays(vertex_attrib_arrays: list[int]):
-    """Enable vertex attrib arrays for the block, then disable them."""
-    try:
-        for vertex_attrib_array in vertex_attrib_arrays:
-            gl_enable_vertex_attrib_array(vertex_attrib_array)
-        yield
-    finally:
-        for vertex_attrib_array in reversed(vertex_attrib_arrays):
-            gl_disable_vertex_attrib_array(vertex_attrib_array)
-
-
-def gl_bind_array_buffer(buffer, index: int = 0, size: int = 3, stride: int = 0) -> None:
-    """Bind an ARRAY buffer and set its vertex attrib pointer."""
-    gl_bind_buffer(GLBufferTarget.ARRAY, buffer)
-    gl_vertex_attrib_pointer(index, size, GLNumeric.FLOAT, GLBoolean.FALSE, stride, None)
-
-
-def gl_bind_elements(index_buffer, size: int) -> None:
-    """Bind ELEMENT buffer and draw triangles (ushort indices)."""
-    gl_bind_buffer(GLBufferTarget.ELEMENT, index_buffer)
-    # PicoGL: (index_count, dtype, mode) — not raw GL (mode, count, type).
-    gl_draw_elements(size, GLNumeric.UNSIGNED_SHORT, GLDrawMode.TRIANGLES)
-
-
-def gl_upload_float_buffer(
-    data: list[float],
-    buffer_target: GLBufferTarget = GLBufferTarget.ARRAY,
-) -> None:
-    """Upload float vertex/attribute data to the bound buffer."""
-    gl_buffer_data(
-        buffer_target,
-        len(data) * 4,
-        (GLfloat * len(data))(*data),
-        GLUsageHint.STATIC_DRAW,
-    )
-
-
-def gl_upload_ushort_buffer(
-    data: list[int],
-    buffer_target: GLBufferTarget = GLBufferTarget.ELEMENT,
-) -> None:
-    """Upload unsigned-short index data to the bound element buffer."""
-    gl_buffer_data(
-        buffer_target,
-        len(data) * 2,
-        (GLushort * len(data))(*data),
-        GLUsageHint.STATIC_DRAW,
-    )
-
-
-class MeshObject:
-    """Local OBJ mesh with GPU buffer upload helpers."""
-
-    def __init__(self, path: Path | str = _DEFAULT_MESH):
-        self.path = Path(path)
-        self.vertices: list[float] | None = None
-        self.texcoords: list[float] | None = None
-        self.indices: list[int] | None = None
-        self.vertex_buffer: int | None = None
-        self.uv_buffer: int | None = None
-        self.index_buffer: int | None = None
-        self.indices_size: int = 0
-
-    def load_mesh(self):
-        if not self.path.is_file():
-            raise FileNotFoundError(f"OBJ mesh not found: {self.path}")
-        return ObjectLoader(str(self.path)).to_single_index_style()
-
-    def get_mesh(self, *, flip_v: bool = False) -> MeshObject:
-        mesh = self.load_mesh()
-        self.vertices = mesh.vertices
-        self.texcoords = (
-            _flip_texcoord_v(mesh.texcoords) if flip_v else list(mesh.texcoords)
-        )
-        self.indices = mesh.indices
-        self.indices_size = len(self.indices)
-        return self
-
-    def _upload_vertices(self) -> None:
-        gl_upload_float_buffer(self.vertices)
-
-    def _upload_texcoords(self) -> None:
-        gl_upload_float_buffer(self.texcoords)
-
-    def _upload_indices(self) -> None:
-        # Must be GLushort to match gl_draw_elements(..., UNSIGNED_SHORT, ...).
-        gl_upload_ushort_buffer(self.indices)
-
-    def upload(self) -> None:
-        self.vertex_buffer = gl_generate_buffers(1)
-        gl_bind_buffer(GLBufferTarget.ARRAY, self.vertex_buffer)
-        self._upload_vertices()
-
-        self.uv_buffer = gl_generate_buffers(1)
-        gl_bind_buffer(GLBufferTarget.ARRAY, self.uv_buffer)
-        self._upload_texcoords()
-
-        self.index_buffer = gl_generate_buffers(1)
-        # Draw-element count — not the GL buffer name from gl_generate_buffers.
-        self.indices_size = len(self.indices)
-        gl_bind_buffer(GLBufferTarget.ELEMENT, self.index_buffer)
-        self._upload_indices()
-
-    def draw(self) -> None:
-        """Draw the mesh."""
-        with gl_bound_vertex_attrib_arrays([0, 1]):
-            self._draw_vertices(index=0)
-            self._draw_uvs(index=1)
-            self._draw_indices()
-
-    def _draw_vertices(self, index: int = 0) -> None:
-        gl_bind_array_buffer(self.vertex_buffer, index=index)
-
-    def _draw_uvs(self, index: int = 1) -> None:
-        gl_bind_array_buffer(self.uv_buffer, index=index, size=2, stride=0)
-
-    def _draw_indices(self) -> None:
-        gl_bind_elements(index_buffer=self.index_buffer, size=self.indices_size)
 
 
 def rotate_model(rotation: RotationInteraction, model_matrix):
@@ -235,7 +85,7 @@ class ObjectRendererExample(GlutRendererWindow):
         self,
         width: int = 400,
         height: int = 300,
-        title: str = "Tutorial 04 - Textured Model",
+        title: str = "Suzanne - Textured Model",
         *args,
         **kwargs,
     ):
@@ -298,7 +148,7 @@ class ObjectRendererExample(GlutRendererWindow):
 
         texture = TextureLoader(str(_DEFAULT_TEXTURE))
         self.context.texture_buffer = texture.texture_gl_id
-        self.context.model = MeshObject().get_mesh(
+        self.context.model = MeshObject(_DEFAULT_MESH).get_mesh(
             flip_v=bool(texture.inversed_v_coords)
         )
         self.context.model.upload()
