@@ -14,6 +14,9 @@ import json
 import os
 import sys
 from pathlib import Path
+from typing import Any
+
+from numpy import dtype, generic, ndarray
 
 # freeglut creates GLX contexts; under Wayland PyOpenGL may pick EGL first.
 # Must be set before any OpenGL / picogl import.
@@ -56,26 +59,30 @@ from picogl.renderer import MeshData
 from picogl.ui.backend.glut.window.object import RenderWindow
 
 
-def create_vao(mesh):
+def create_vao(mesh: MeshData) -> None:
+    """create VAO"""
     vao = VertexArrayObject()
-    atom_vertices = np.array(mesh.vertices, dtype=np.float32).reshape(-1, 3)
-    atom_colors = np.array(mesh.colors, dtype=np.float32).reshape(-1, 3)
-
-    vao.add_vbo(index=0, data=atom_vertices, size=3)
-    vao.add_vbo(index=1, data=atom_colors, size=3)
+    vao.add_vbo(index=0, data=get_array(mesh.vertices), size=3)
+    vao.add_vbo(index=1, data=get_array(mesh.colors), size=3)
     return vao
+
+
+def get_array(data) -> ndarray:
+    """get array"""
+    atom_vertices = np.array(data, dtype=np.float32).reshape(-1, 3)
+    return atom_vertices
 
 
 class MolecularRenderWindow(RenderWindow):
     """Specialized render window for molecular visualization with PicoGL"""
 
     def __init__(self, pdb_path: str, **kwargs):
-        self.pdb_path = pdb_path
-        self.pdb_loader = None
-        self.atom_mesh = None
-        self.bond_mesh = None
-        self.atom_vao = None
-        self.bond_vao = None
+        self.pdb_path : Path | None = pdb_path
+        self.pdb_loader: PDBLoader | None = None
+        self.atom_mesh: MeshData | None = None
+        self.bond_mesh: MeshData | None = None
+        self.atom_vao: VertexArrayObject | None = None
+        self.bond_vao: VertexArrayObject | None = None
 
         # Load the PDB structure
         self._load_molecular_data()
@@ -160,7 +167,7 @@ class MolecularRenderWindow(RenderWindow):
         )
 
         # Set point size for atoms
-        glPointSize(8.0)
+        gl_point_size(8.0)
 
         # Enable line smoothing for bonds
         gl_enable(GLPipelineCapability.LINE_SMOOTH)
