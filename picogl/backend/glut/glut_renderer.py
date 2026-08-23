@@ -46,7 +46,7 @@ from picogl.core.rgbcolor import RGBAColor
 from picogl.core.setup.camera import gl_setup_camera
 from picogl.core.setup.view import gl_setup_view
 from picogl.core.vec3 import Vec3
-from picogl.examples.cube_with_controls import GLViewTransform
+from core.view.transform import GLViewTransform
 from picogl.ui.backend.glut.mouse import RotationInteraction
 
 # Check for display before importing OpenGL

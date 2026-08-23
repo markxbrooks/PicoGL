@@ -12,6 +12,8 @@ import sys
 from contextlib import contextmanager
 from pathlib import Path
 
+from backend.glut import GLUTMouseButton, GLUTMouseState
+
 # freeglut creates GLX contexts; under Wayland PyOpenGL may pick EGL first.
 # Must be set before any OpenGL / picogl import.
 if sys.platform.startswith("linux"):
@@ -108,9 +110,9 @@ class ObjectRendererExample(GlutRendererWindow):
             self.update_mvp()
 
     def mousePressEvent(self, button, state, x, y) -> None:
-        if button != GLUT_LEFT_BUTTON:
+        if button != GLUTMouseButton.LEFT:
             return
-        if state == GLUT_DOWN:
+        if state == GLUTMouseState.DOWN:
             self.rotation.press(x, y)
         else:
             self.rotation.release()
@@ -127,6 +129,7 @@ class ObjectRendererExample(GlutRendererWindow):
         gl_uniform1i(self.context.texture_id, 0)
 
     def initialize(self) -> None:
+        """initialize"""
         self.context = self.GLContext()
         self.sync_zoom_to_context()
 
@@ -155,6 +158,7 @@ class ObjectRendererExample(GlutRendererWindow):
         self.calc_mvp(self.width or 400, self.height or 300)
 
     def calc_mvp(self, width: int = 1920, height: int = 1080) -> None:
+        """calculate mvp"""
         self.sync_zoom_to_context()
         aspect = float(width) / float(max(height, 1))
         self.context.projection_matrix = ProjectionConfig(

@@ -12,11 +12,11 @@ from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
 import numpy as np
-from elmo.gl.backend.modern.entities.bonds.compute_indices import \
-    atoms_should_bond
 from molib.core.constants import MoLibConstant
 from molib.ligand.pdb.layouts.pdb_file import (PDBConectLayout, PDBFileLayout,
                                                PDBTitleLayout)
+
+from utils.bond_detection import atoms_should_bond
 
 
 @dataclass

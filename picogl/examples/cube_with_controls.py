@@ -3,7 +3,8 @@ from dataclasses import dataclass, field
 from typing import Any
 
 import numpy as np
-from molib.pdb.coordinate.coordinate import Coordinates
+
+from core.view.transform import GLViewTransform
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
 from PySide6.QtWidgets import (QApplication, QHBoxLayout, QMainWindow, QSlider,
@@ -11,13 +12,11 @@ from PySide6.QtWidgets import (QApplication, QHBoxLayout, QMainWindow, QSlider,
 
 from picogl.backend.modern.core.setup.lighting import gl_initialize_background
 from picogl.backend.gl.api.legacy.matrix import gl_pushed_matrix
-from picogl.backend.gl.enums.legacy.scale import (gl_rotatef, gl_translate_f,
-                                                  gl_viewport)
+from picogl.backend.gl.enums.legacy.scale import (gl_rotatef, gl_viewport)
 from picogl.backend.legacy.core.pipeline import LegacyPipeline
 from picogl.core.rgbcolor import RGBAColor
 from picogl.core.setup.view import gl_setup_view
 from picogl.core.vec3 import Vec3
-from picogl.core.zoom.scale import gl_scale_by_zoom
 from picogl.renderer import MeshData
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 
@@ -48,24 +47,6 @@ def gl_rotate_axes(rotation: Vec3, axes: Axes):
     gl_rotatef(rotation.x, *axes.x.tuple)
     gl_rotatef(rotation.y, *axes.y.tuple)
     gl_rotatef(rotation.z, *axes.z.tuple)
-
-
-@dataclass(slots=True)
-class GLViewTransform:
-    """View Transform"""
-    zoom: float
-    rotation: Vec3
-    scale: float = 20.0
-    origin: Coordinates = field(default_factory=lambda: Coordinates(0.5, 0.5, 0.5))
-    axes: Axes = field(default_factory=lambda: Axes())
-
-
-    def apply(self) -> None:
-        print(self.rotation)
-        gl_translate_f(0.0, 0.0, self.zoom)
-        gl_scale_by_zoom(self.scale)
-        gl_rotate_axes(self.rotation, self.axes)
-        gl_translate_f(-self.origin.x, -self.origin.y, -self.origin.z)
 
 
 class GLCubeWidget(QOpenGLWidget):

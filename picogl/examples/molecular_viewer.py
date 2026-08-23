@@ -26,13 +26,12 @@ _ELMO_ROOT = next(
     Path.home() / "projects" / "ElMo",
 )
 _ELMO_GLSL = _ELMO_ROOT / "elmo" / "glsl" / "src"
-if _ELMO_ROOT.is_dir() and str(_ELMO_ROOT) not in sys.path:
-    sys.path.insert(0, str(_ELMO_ROOT))
 if str(_PICOGL_ROOT) not in sys.path:
     sys.path.insert(0, str(_PICOGL_ROOT))
 # examples/ so ``utils.pdb_loader`` resolves
 if str(_EXAMPLES_DIR) not in sys.path:
     sys.path.insert(0, str(_EXAMPLES_DIR))
+# ElMo GLSL is read from disk only — do not add ElMo to sys.path (avoids PySide6).
 
 # freeglut creates GLX contexts; under Wayland PyOpenGL may pick EGL first.
 if sys.platform.startswith("linux"):
