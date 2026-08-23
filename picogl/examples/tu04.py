@@ -12,11 +12,6 @@ import sys
 from contextlib import contextmanager
 from pathlib import Path
 
-from pyglm.glm import mat4x4
-
-from backend.glut import GLUTMouseButton, GLUTMouseState
-from picoui.dimensions import Dimensions
-
 # freeglut creates GLX contexts; under Wayland PyOpenGL may pick EGL first.
 # Must be set before any OpenGL / picogl import.
 if sys.platform.startswith("linux"):
@@ -26,6 +21,7 @@ import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
 import picogl.ui.backend.glut.prefer_apple_glut  # noqa: F401
 
 from OpenGL.GL import GLfloat, GLushort
+from OpenGL.GLUT import GLUT_DOWN, GLUT_LEFT_BUTTON
 from decologr import Decologr as log
 from pyglm import glm
 
@@ -85,11 +81,10 @@ def _flip_texcoord_v(texcoords: list[float]) -> list[float]:
 
 @contextmanager
 def gl_bound_vertex_attrib_arrays(vertex_attrib_arrays: list[int]):
-    """enabling/disabling vertex_attrib_arrays"""
+    """Enable vertex attrib arrays for the block, then disable them."""
     try:
         for vertex_attrib_array in vertex_attrib_arrays:
             gl_enable_vertex_attrib_array(vertex_attrib_array)
-
         yield
     finally:
         for vertex_attrib_array in reversed(vertex_attrib_arrays):
@@ -97,20 +92,16 @@ def gl_bound_vertex_attrib_arrays(vertex_attrib_arrays: list[int]):
 
 
 def gl_bind_array_buffer(buffer, index: int = 0, size: int = 3, stride: int = 0) -> None:
-    """gl bind buffer"""
+    """Bind an ARRAY buffer and set its vertex attrib pointer."""
     gl_bind_buffer(GLBufferTarget.ARRAY, buffer)
     gl_vertex_attrib_pointer(index, size, GLNumeric.FLOAT, GLBoolean.FALSE, stride, None)
 
 
-def gl_bind_elements(index_buffer, size):
-    """gl_bind_elements"""
+def gl_bind_elements(index_buffer, size: int) -> None:
+    """Bind ELEMENT buffer and draw triangles (ushort indices)."""
     gl_bind_buffer(GLBufferTarget.ELEMENT, index_buffer)
     # PicoGL: (index_count, dtype, mode) — not raw GL (mode, count, type).
-    gl_draw_elements(
-        size,
-        GLNumeric.UNSIGNED_SHORT,
-        GLDrawMode.TRIANGLES,
-    )
+    gl_draw_elements(size, GLNumeric.UNSIGNED_SHORT, GLDrawMode.TRIANGLES)
 
 
 def gl_upload_float_buffer(
@@ -192,20 +183,20 @@ class MeshObject:
         gl_bind_buffer(GLBufferTarget.ELEMENT, self.index_buffer)
         self._upload_indices()
 
-    def draw(self):
-        """draw the mesh"""
+    def draw(self) -> None:
+        """Draw the mesh."""
         with gl_bound_vertex_attrib_arrays([0, 1]):
             self._draw_vertices(index=0)
             self._draw_uvs(index=1)
             self._draw_indices()
 
-    def _draw_vertices(self, index: int=0):
+    def _draw_vertices(self, index: int = 0) -> None:
         gl_bind_array_buffer(self.vertex_buffer, index=index)
 
-    def _draw_uvs(self, index: int=1):
+    def _draw_uvs(self, index: int = 1) -> None:
         gl_bind_array_buffer(self.uv_buffer, index=index, size=2, stride=0)
 
-    def _draw_indices(self):
+    def _draw_indices(self) -> None:
         gl_bind_elements(index_buffer=self.index_buffer, size=self.indices_size)
 
 
@@ -267,9 +258,9 @@ class ObjectRendererExample(GlutRendererWindow):
             self.update_mvp()
 
     def mousePressEvent(self, button, state, x, y) -> None:
-        if button != GLUTMouseButton.LEFT:
+        if button != GLUT_LEFT_BUTTON:
             return
-        if state == GLUTMouseState.DOWN:
+        if state == GLUT_DOWN:
             self.rotation.press(x, y)
         else:
             self.rotation.release()
@@ -314,7 +305,6 @@ class ObjectRendererExample(GlutRendererWindow):
         self.calc_mvp(self.width or 400, self.height or 300)
 
     def calc_mvp(self, width: int = 1920, height: int = 1080) -> None:
-        """Calc MVP"""
         self.sync_zoom_to_context()
         aspect = float(width) / float(max(height, 1))
         self.context.projection_matrix = ProjectionConfig(
@@ -331,7 +321,7 @@ class ObjectRendererExample(GlutRendererWindow):
         )
 
     def update_mvp(self) -> None:
-        """ update mvp """
+        """Refresh MVP from zoom/viewport and request a redraw."""
         width = getattr(self, "width", None) or 400
         height = getattr(self, "height", None) or 300
         viewport = getattr(self, "viewport", None)
@@ -342,7 +332,6 @@ class ObjectRendererExample(GlutRendererWindow):
         self.update()
 
     def resizeGL(self, width, height) -> None:
-        """resize gl"""
         log.message("resizeGL")
         self.width = width
         self.height = height
@@ -350,7 +339,6 @@ class ObjectRendererExample(GlutRendererWindow):
         self.calc_mvp(width, height)
 
     def paintGL(self) -> None:
-        """paint GL"""
         gl_clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
 
         with gl_shader_bound(self.shader):
@@ -365,7 +353,7 @@ class ObjectRendererExample(GlutRendererWindow):
 
 
 if __name__ == "__main__":
-    win = ObjectRendererExample(*Dimensions(width=400, height=300).to_tuple())
+    win = ObjectRendererExample(width=400, height=300)
     win.initializeGL()
     win.initialize()
     win.run()

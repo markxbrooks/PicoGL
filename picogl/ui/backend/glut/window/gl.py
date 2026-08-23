@@ -34,8 +34,9 @@ class GLWindow(AbstractGLWindow):
         self.viewport = GLViewport()
         self.projection_config = ProjectionConfig()
         self.projection = GLUProjectionState()
-        self.width = None
-        self.height = None
+        # Optional initial size (used by glutInitWindowSize before subclasses run).
+        self.width = kwargs.pop("width", None)
+        self.height = kwargs.pop("height", None)
         self.title = title
         # Zoom state used by wheelEvent; subclasses may override defaults.
         self.zoom_fov: float = self.DEFAULT_ZOOM_FOV
@@ -96,7 +97,10 @@ class GLWindow(AbstractGLWindow):
         """init_glut"""
         GLUT.glutInit(sys.argv)
         GLUT.glutInitDisplayMode(GLUT.GLUT_RGBA | GLUT.GLUT_DOUBLE | GLUT.GLUT_DEPTH)
-        GLUT.glutInitWindowSize(800, 480)
+        # Prefer the size set by subclasses (e.g. GlutRendererWindow); fall back to 800x480.
+        init_w = getattr(self, "width", None) or 800
+        init_h = getattr(self, "height", None) or 480
+        GLUT.glutInitWindowSize(int(init_w), int(init_h))
         if self.title is not None:
             title_bytes = self.title.encode("utf-8")
         else:

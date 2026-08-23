@@ -32,7 +32,7 @@ class GlutRendererWindow(GLWindow):
         *args,
         **kwargs,
     ):
-        super().__init__(title=title, *args, **kwargs)
+        super().__init__(title=title, width=width, height=height, *args, **kwargs)
         self.context = GLResourceRegistry() if context is None else context
         self.title = title
         self.renderer = None
