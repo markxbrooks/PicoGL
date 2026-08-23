@@ -4,7 +4,7 @@ from typing import Any
 
 import numpy as np
 
-from core.view.transform import GLViewTransform
+
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
 from PySide6.QtWidgets import (QApplication, QHBoxLayout, QMainWindow, QSlider,
@@ -51,6 +51,7 @@ def gl_rotate_axes(rotation: Vec3, axes: Axes):
 
 class GLCubeWidget(QOpenGLWidget):
     def __init__(self, parent=None):
+        from picogl.core.view.transform import GLViewTransform
         self.parent = parent
         self.cube_mesh: LegacyGLMesh | None = None
         self.view = GLViewTransform(zoom=-50, rotation=Vec3(0.0, 0.0, 0.0))

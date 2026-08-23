@@ -15,14 +15,14 @@ import os
 import sys
 from pathlib import Path
 
-from hint import gl_hint
-from picogl.line import gl_line_width
-
 # freeglut creates GLX contexts; under Wayland PyOpenGL may pick EGL first.
 # Must be set before any OpenGL / picogl import.
 if sys.platform.startswith("linux"):
     os.environ.setdefault("PYOPENGL_PLATFORM", "glx")
 
+
+from picogl.backend.gl.api.hint import gl_hint
+from picogl.backend.gl.api.line import gl_line_width
 import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
 
 import numpy as np
