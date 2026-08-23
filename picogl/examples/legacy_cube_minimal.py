@@ -15,22 +15,37 @@ from __future__ import annotations
 
 import os
 import sys
+from pathlib import Path
+from typing import Sequence
+
+# Allow ``python path/to/legacy_cube_minimal.py`` without installing picogl.
+_ROOT = Path(__file__).resolve().parents[2]
+if str(_ROOT) not in sys.path:
+    sys.path.insert(0, str(_ROOT))
+
+# freeglut creates GLX contexts; under Wayland PyOpenGL may pick EGL and then
+# fail on glutDisplayFunc with "Attempt to retrieve context when no valid context".
+# Must be set before any OpenGL import (including via picogl).
+if sys.platform.startswith("linux"):
+    os.environ.setdefault("PYOPENGL_PLATFORM", "glx")
+
+import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
 
 import numpy as np
 
 from molib.pdb.coordinate.coordinate import Coordinates
-from picogl.backend.gl.api.color import gl_color_3f, gl_color_rgb
+from picogl.backend.gl.api.color import gl_color_rgb
 from picogl.backend.gl.api.vertex.vertex_3f import gl_vertex_coord, gl_vertex_line
 from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.backend.gl.state.fill import GLFillMode
 from picogl.backend.gl.state.immediate import gl_immediate_drawing
-from picogl.backend.gl.state.scoped import disabled
+from picogl.backend.gl.state.scoped import gl_disabled
 from picogl.backend.glut import glut_post_redisplay
 from picogl.backend.glut.cube_data import CUBE_COLORS, CUBE_VERTICES
 from picogl.backend.legacy.core.renderer import LegacyRenderer
 from picogl.core.rgbcolor import RGBColor
-from picogl.polygon.mode import polygon_mode
+from picogl.polygon.mode import gl_polygon_mode
 
 # Check for display before initializing GLUT
 if os.environ.get("DISPLAY") is None and os.name != "nt":
@@ -62,8 +77,8 @@ class MinimalCubeRenderer(LegacyRenderer):
     def draw_cube(self) -> None:
         """Draw the cube using immediate mode via PicoGL wrappers."""
         if self.wireframe_mode:
-            with disabled(GLFixedFunctionCapability.LIGHTING):
-                with polygon_mode(GLFillMode.LINE):
+            with gl_disabled(GLFixedFunctionCapability.LIGHTING):
+                with gl_polygon_mode(GLFillMode.LINE):
                     gl_color_rgb(RGBColor.RED)
                     self._emit_triangles(colored=False)
             return
@@ -76,14 +91,19 @@ class MinimalCubeRenderer(LegacyRenderer):
         with gl_immediate_drawing(GLDrawMode.TRIANGLES):
             for vertex_idx in range(len(self.vertices)):
                 if colored:
-                    color = self.colors[vertex_idx]
+                    color = self.get_color(vertex_idx)
                     gl_color_rgb(RGBColor(color[0], color[1], color[2]))
                 vertex = self.vertices[vertex_idx]
                 gl_vertex_coord(Coordinates.from_array(vertex))
 
+    def get_color(self, vertex_idx: int) -> Sequence:
+        """get color"""
+        color = self.colors[vertex_idx]
+        return color
+
     def draw_normals(self) -> None:
         """Draw simplified triangle normal vectors."""
-        with disabled(GLFixedFunctionCapability.LIGHTING):
+        with gl_disabled(GLFixedFunctionCapability.LIGHTING):
             gl_color_rgb(RGBColor.GREEN)
             with gl_immediate_drawing(GLDrawMode.LINES):
                 for i in range(0, len(self.vertices), 3):
@@ -154,8 +174,9 @@ def main() -> None:
     except Exception as exc:
         print(f"❌ Error running minimal cube renderer: {exc}")
         print("   This might be due to OpenGL context issues.")
-        print("   Try running with different OpenGL settings or drivers.")
+        print("   On Linux/Wayland, try: PYOPENGL_PLATFORM=glx python ...")
         print("   On macOS, try running from Terminal.app or iTerm2.")
+        raise SystemExit(1) from exc
 
 
 if __name__ == "__main__":

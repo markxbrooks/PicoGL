@@ -142,7 +142,7 @@ class ShaderProgram:
         self.base_dir = glsl_dir
         self.vertex_shader = None
         self.fragment_shader = None
-        self.program = None
+        self.program: int | None = None
         self.uniforms = {}
         self._uniform_state = {}
         self.compiler = ShaderCompiler()

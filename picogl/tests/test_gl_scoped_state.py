@@ -7,7 +7,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POLYGON_MODE
 
 from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.state.fill import GLFace, GLFillMode
-from picogl.backend.gl.state.scoped import disabled, gl_capability
+from picogl.backend.gl.state.scoped import gl_disabled, gl_capability
 from picogl.polygon.mode import gl_polygon_mode_context
 
 
@@ -21,7 +21,7 @@ class ScopedCapabilityTests(TestCase):
         ) as gl_disable, patch(
             "picogl.backend.gl.state.scoped.gl_enable",
         ) as gl_enable:
-            with disabled(GLFixedFunctionCapability.LIGHTING):
+            with gl_disabled(GLFixedFunctionCapability.LIGHTING):
                 pass
 
         is_enabled.assert_called_once_with(GLFixedFunctionCapability.LIGHTING)
@@ -37,7 +37,7 @@ class ScopedCapabilityTests(TestCase):
         ) as gl_disable, patch(
             "picogl.backend.gl.state.scoped.gl_enable",
         ) as gl_enable:
-            with disabled(GLFixedFunctionCapability.LIGHTING):
+            with gl_disabled(GLFixedFunctionCapability.LIGHTING):
                 pass
 
         gl_disable.assert_has_calls(

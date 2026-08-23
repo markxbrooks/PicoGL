@@ -30,8 +30,8 @@ from OpenGL.raw.GL.VERSION.GL_1_2 import GL_TEXTURE_3D, GL_TEXTURE_WRAP_R
 from OpenGL.raw.GL.VERSION.GL_1_3 import GL_ACTIVE_TEXTURE, GL_TEXTURE0
 from OpenGL.raw.GL.VERSION.GL_4_5 import GL_TEXTURE_BINDING_2D
 
-from picogl.backend.gl.state.param import GLParam
-from picogl.backend.gl.state.query import GLStateQuery
+# Do not import picogl.backend.gl.state here at module level: state.scoped pulls
+# backend.gl.api, which imports GLTexture and would circular-import this file.
 
 
 class GLTexture(IntEnum):
@@ -102,6 +102,9 @@ class GLTexture(IntEnum):
         """
         Bind a texture to a specific unit, restoring previous state.
         """
+        # Lazy: avoids circular import with backend.gl.api ↔ this module.
+        from picogl.backend.gl.state.param import GLParam
+        from picogl.backend.gl.state.query import GLStateQuery
 
         state = GLStateQuery()
 

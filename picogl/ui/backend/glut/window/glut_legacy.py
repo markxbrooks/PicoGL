@@ -1,4 +1,4 @@
-import picogl.ui.backend.glut.prefer_apple_glut  # noqa: F401
+import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
 import numpy as np
 from decologr import Decologr as log
 from decologr import setup_logging
@@ -42,8 +42,9 @@ class GlutRendererWindow(GLWindow):
         self.rotation = RotationInteraction()
         setup_logging()
         self.zoom_fov: float = ProjectionConfig.fovy
-        self.zoom_distance: int = 10  # camera backwards in Z
+        self.zoom_distance: float = 10.0  # camera backwards in Z
         self.distance_threshold: float = 5.0
+        self.sync_zoom_to_context()
         self.backend = GLBackend(binding=LegacyBinding())
 
     def initializeGL(self):
@@ -69,15 +70,11 @@ class GlutRendererWindow(GLWindow):
         self.projection.apply(config)
         self.context.projection = self.projection.matrix
 
-        self.context.eye = camera.position
-        self.context.center = camera.target
-        self.context.up = camera.up
-
-        self.context.view = glm.lookAt(
-            self.context.eye,
-            self.context.center,
-            self.context.up,
-        )
+        camera_params = camera.camera_parameters()
+        self.context.eye = camera_params.eye
+        self.context.center = camera_params.center
+        self.context.up = camera_params.up
+        self.context.view = camera_params.view_matrix()
 
         self.context.model_matrix = glm_identity_matrix()
 
@@ -109,6 +106,7 @@ class GlutRendererWindow(GLWindow):
 
     def update_mvp(self):
         """Base perspective matrix from your existing method"""
+        self.sync_zoom_to_context()
         width, height = self.get_size()
         self.calculate_mvp_matrix(width, height)
         # Apply rotations
@@ -136,25 +134,6 @@ class GlutRendererWindow(GLWindow):
         """mouseMoveEvent"""
         if self.rotation.drag(x, y) is None:
             return
-        self.update_mvp()
-
-    def wheelEvent(self, wheel=0, direction=0, x=0, y=0):
-        """
-        Mouse wheel zoom: adjusts distance if far, FOV if close.
-        Positive direction -> zoom in, Negative -> zoom out.
-        """
-        zoom_step = direction * 0.5
-
-        if self.zoom_distance > self.distance_threshold:
-            # Distance zoom
-            self.zoom_distance = max(1.0, self.zoom_distance - zoom_step)
-        else:
-            # FOV zoom
-            self.zoom_fov = max(10.0, min(90.0, self.zoom_fov - zoom_step))
-        print(
-            f"Zoom mode: {'distance' if self.zoom_distance > self.distance_threshold else 'fov'} "
-            f"| Distance: {self.zoom_distance:.2f} | FOV: {self.zoom_fov:.2f}"
-        )
         self.update_mvp()
 
     def get_size(self):

@@ -12,11 +12,9 @@ from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
 import numpy as np
-from elmo.gl.backend.modern.entities.bonds.compute_indices import \
-    atoms_should_bond
-from molib.core.constants import MoLibConstant
-from molib.ligand.pdb.layouts.pdb_file import (PDBConectLayout, PDBFileLayout,
-                                               PDBTitleLayout)
+from molib.ligand.pdb.layouts.pdb_file import PDBFileLayout, PDBTitleLayout
+
+from utils.bond_detection import atoms_should_bond
 
 
 @dataclass
@@ -123,82 +121,120 @@ def _parse_atom_line(line: str) -> Atom:
     )
 
 
-def _parse_conect_line(line: str, atoms: List[Atom]) -> Optional[Bond]:
-    """Parse a CONECT line to extract bond information."""
-    try:
-        atom1_idx = PDBConectLayout.atom1_serial.parse(line) - 1
-        atom2_idx = PDBConectLayout.atom2_serial.parse(line) - 1
+def _bond_key(i: int, j: int) -> tuple[int, int]:
+    return (i, j) if i < j else (j, i)
 
-        if 0 <= atom1_idx < len(atoms) and 0 <= atom2_idx < len(atoms):
-            return Bond(atom1_idx=atom1_idx, atom2_idx=atom2_idx)
+
+def _atom_distance(a: Atom, b: Atom) -> float:
+    return float(
+        np.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2 + (a.z - b.z) ** 2)
+    )
+
+
+def _parse_conect_line(
+    line: str, serial_to_idx: Dict[int, int]
+) -> List[Bond]:
+    """Parse a CONECT line into bonds (central atom → up to four partners)."""
+    bonds: List[Bond] = []
+    try:
+        # Columns 7-11 central; 12-16, 17-21, 22-26, 27-31 bonded serials.
+        fields = [line[i : i + 5] for i in range(6, 31, 5)]
+        serials = []
+        for field in fields:
+            text = field.strip()
+            if text:
+                serials.append(int(text))
+        if len(serials) < 2:
+            return bonds
+        center = serial_to_idx.get(serials[0])
+        if center is None:
+            return bonds
+        for partner_serial in serials[1:]:
+            partner = serial_to_idx.get(partner_serial)
+            if partner is not None and partner != center:
+                bonds.append(
+                    Bond(
+                        atom1_idx=center,
+                        atom2_idx=partner,
+                        bond_type=BondType.SINGLE,
+                    )
+                )
     except (ValueError, IndexError, TypeError):
         pass
+    return bonds
+
+
+def _find_named_atom(residue: Residue, name: str) -> Optional[Atom]:
+    for atom in residue.atoms:
+        if atom.name.strip() == name:
+            return atom
     return None
 
 
 def _generate_bonds(atoms: List[Atom], residues: List[Residue]) -> List[Bond]:
-    """Generate bonds based on residue connectivity and distance"""
-    bonds = []
+    """Infer covalent bonds from geometry (protein/ligand sticks).
 
-    # Add peptide bonds between consecutive residues
+    PDB ``CONECT`` records usually cover ligands only. Protein connectivity
+    must be rebuilt from residue geometry.
+    """
+    bonds: List[Bond] = []
+    atom_index = {id(atom): i for i, atom in enumerate(atoms)}
+
+    # Intra-residue bonds from distance + element heuristics.
+    for residue in residues:
+        res_atoms = residue.atoms
+        for i in range(len(res_atoms)):
+            for j in range(i + 1, len(res_atoms)):
+                atom1 = res_atoms[i]
+                atom2 = res_atoms[j]
+                dist = _atom_distance(atom1, atom2)
+                if atoms_should_bond(atom1, atom2, dist):
+                    bonds.append(
+                        Bond(
+                            atom1_idx=atom_index[id(atom1)],
+                            atom2_idx=atom_index[id(atom2)],
+                            bond_type=BondType.SINGLE,
+                        )
+                    )
+
+    # Peptide bonds: carbonyl C of residue i to amide N of residue i+1.
     for i in range(len(residues) - 1):
         curr_res = residues[i]
         next_res = residues[i + 1]
-
         if (
-            curr_res.chain_id == next_res.chain_id
-            and next_res.seq_num == curr_res.seq_num + 1
+            curr_res.chain_id != next_res.chain_id
+            or next_res.seq_num != curr_res.seq_num + 1
         ):
-            # Find C-alpha atoms
-            ca1 = None
-            ca2 = None
-
-            for atom in curr_res.atoms:
-                if atom.name.strip() == MoLibConstant.PEPTIDE_CHAIN_ATOMNAME:
-                    ca1 = atom
-                    break
-
-            for atom in next_res.atoms:
-                if atom.name.strip() == MoLibConstant.PEPTIDE_CHAIN_ATOMNAME:
-                    ca2 = atom
-                    break
-
-            if ca1 and ca2:
-                # Find the indices
-                idx1 = atoms.index(ca1)
-                idx2 = atoms.index(ca2)
-                bonds.append(
-                    Bond(atom1_idx=idx1, atom2_idx=idx2, bond_type="single")
+            continue
+        carbon = _find_named_atom(curr_res, "C")
+        nitrogen = _find_named_atom(next_res, "N")
+        if carbon is None or nitrogen is None:
+            continue
+        dist = _atom_distance(carbon, nitrogen)
+        if dist <= 2.0:  # typical peptide bond ~1.33 Å
+            bonds.append(
+                Bond(
+                    atom1_idx=atom_index[id(carbon)],
+                    atom2_idx=atom_index[id(nitrogen)],
+                    bond_type=BondType.SINGLE,
                 )
-
-    # Add bonds within residues based on distance and element types
-    for i, atom1 in enumerate(atoms):
-        for j, atom2 in enumerate(atoms[i + 1 :], i + 1):
-            # Check if atoms are in the same residue
-            atom1_res = None
-            atom2_res = None
-
-            for res in residues:
-                if atom1 in res.atoms:
-                    atom1_res = res
-                if atom2 in res.atoms:
-                    atom2_res = res
-
-            if atom1_res and atom2_res and atom1_res == atom2_res:
-                # Calculate distance
-                dist = np.sqrt(
-                    (atom1.x - atom2.x) ** 2
-                    + (atom1.y - atom2.y) ** 2
-                    + (atom1.z - atom2.z) ** 2
-                )
-
-                # Simple bond detection based on distance and element types
-                if atoms_should_bond(atom1, atom2, dist):
-                    bonds.append(
-                        Bond(atom1_idx=i, atom2_idx=j, bond_type=BondType.SINGLE)
-                    )
+            )
 
     return bonds
+
+
+def _merge_bonds(*bond_lists: List[Bond]) -> List[Bond]:
+    """Union bond lists, dropping duplicate undirected pairs."""
+    seen: set[tuple[int, int]] = set()
+    merged: List[Bond] = []
+    for bond_list in bond_lists:
+        for bond in bond_list:
+            key = _bond_key(bond.atom1_idx, bond.atom2_idx)
+            if key in seen:
+                continue
+            seen.add(key)
+            merged.append(bond)
+    return merged
 
 
 class PDBLoader:
@@ -222,16 +258,17 @@ class PDBLoader:
 
     def _load_pdb(self):
         """Load and parse the PDB file"""
-        atoms, bonds, chains, current_residue, current_residue_atoms, residues, title = self.open_file()
+        atoms, conect_bonds, chains, current_residue, current_residue_atoms, residues, title = self.open_file()
 
         # Add the last residue
         if current_residue is not None:
             current_residue.atoms = current_residue_atoms
             residues.append(current_residue)
 
-        # Generate missing bonds based on distance and residue connectivity
-        if not bonds:
-            bonds = _generate_bonds(atoms, residues)
+        # CONECT usually lists ligands only; always infer protein/ligand sticks
+        # from geometry and merge with any explicit CONECT pairs.
+        inferred = _generate_bonds(atoms, residues)
+        bonds = _merge_bonds(conect_bonds, inferred)
 
         self.structure = PDBStructure(
             title=title,
@@ -292,9 +329,16 @@ class PDBLoader:
                     current_residue_atoms.append(atom)
 
                 elif record_type == "CONECT":
-                    bond = _parse_conect_line(line, atoms)
-                    if bond:
-                        bonds.append(bond)
+                    # Serial→index map once atoms are complete; CONECT is at EOF.
+                    if not hasattr(self, "_serial_to_idx") or len(
+                        getattr(self, "_serial_to_idx", {})
+                    ) != len(atoms):
+                        self._serial_to_idx = {
+                            atom.serial: i for i, atom in enumerate(atoms)
+                        }
+                    bonds.extend(
+                        _parse_conect_line(line, self._serial_to_idx)
+                    )
 
                 elif record_type == "END":
                     break

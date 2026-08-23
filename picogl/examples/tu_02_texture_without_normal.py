@@ -9,6 +9,7 @@ from picogl.backend.gl.api.enable import gl_enable_capability_list
 from picogl.backend.gl.capability import GLPipelineCapability
 from picogl.backend.modern.core.setup.lighting import gl_initialize_background
 from picogl.backend.gl.enums import GLBufferTarget, GLUsageHint
+from picogl.core.camera import CameraParameters, ProjectionConfig
 from picogl.core.uniform import gl_uniform1i
 from picogl.globals import PROJECT_ROOT
 from picogl.ui.backend.glut.window.gl import GLWindow
@@ -270,14 +271,14 @@ class Tu01Win(GLWindow):
         glBindVertexArray(0)
 
     def calc_MVP(self, width=1920, height=1080):
-        self.context.Projection = glm.perspective(
-            glm.radians(45.0), float(width) / float(height), 0.1, 1000.0
-        )
-        self.context.View = glm.lookAt(
-            glm.vec3(4, 3, -3),  # Camera is at (4,3,-3), in World Space
-            glm.vec3(0, 0, 0),  # and looks at the (0.0.0))
-            glm.vec3(0, 1, 0),
-        )  # Head is up (set to 0,-1,0 to look upside-down)
+        self.context.Projection = ProjectionConfig(
+            fovy=45.0,
+            aspect=float(width) / float(max(height, 1)),
+            near=0.1,
+            far=1000.0,
+        ).matrix()
+        camera = CameraParameters(eye=glm.vec3(4, 3, -3))
+        self.context.View = camera.view_matrix()
         # fixed Cube Size
         self.context.Model = identity_matrix()
         # print(self.context.Model

@@ -34,13 +34,33 @@ Intended for OpenGL 3.0+ with VAO support.
 """
 
 import ctypes
+import sys
 from contextlib import contextmanager, nullcontext
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 import numpy as np
 from decologr import Decologr as log
-from elmo.log.silence import SILENT_VAO
-from PySide6.QtGui import QOpenGLContext
+
+# PicoGL must not import ElMo or PySide6 at module load (GLUT examples stay Qt-free).
+SILENT_VAO = True
+
+
+def _qopengl_context_class() -> Any | None:
+    """Return QOpenGLContext only if PySide6.QtGui is already imported."""
+    qtgui = sys.modules.get("PySide6.QtGui")
+    if qtgui is None:
+        return None
+    return getattr(qtgui, "QOpenGLContext", None)
+
+
+def _current_qt_gl_context() -> Any | None:
+    qctx = _qopengl_context_class()
+    if qctx is None:
+        return None
+    try:
+        return qctx.currentContext()
+    except Exception:
+        return None
 
 from picogl.backend.gl.api import (gl_bind_buffer, gl_draw_arrays,
                                    gl_draw_elements)
@@ -65,12 +85,10 @@ from picogl.gpu.buffers.vertex.aliases import NAME_ALIASES
 from picogl.safe import gl_gen_safe
 
 
-def current_gl_context() -> int:
+def current_gl_context() -> int | None:
     try:
-        from PySide6.QtGui import QOpenGLContext
-
-        # return QOpenGLContext.currentContext()
-        return id(QOpenGLContext.currentContext())
+        ctx = _current_qt_gl_context()
+        return id(ctx) if ctx is not None else None
     except Exception:
         return None
 
@@ -79,7 +97,7 @@ class GLResource:
     """Base class for all gl-owned objects."""
 
     def __init__(self, handle):
-        self._creation_context = QOpenGLContext.currentContext()
+        self._creation_context = _current_qt_gl_context()
         self._deleted = False
         self._handle = None
 
@@ -88,7 +106,9 @@ class GLResource:
         return self._creation_context
 
     def validate_context(self):
-        ctx = QOpenGLContext.currentContext()
+        if _qopengl_context_class() is None:
+            return
+        ctx = _current_qt_gl_context()
 
         if ctx is None:
             raise RuntimeError("No current gl context")
@@ -115,7 +135,7 @@ class VertexArrayObject(VertexBase, GLResource):
         :param registry_label: Optional custom label for :func:`store_in_gl_registry`
             (defaults to ``self.__class__.__name__``).
         """
-        self._creation_context = QOpenGLContext.currentContext()
+        self._creation_context = _current_qt_gl_context()
         log.message(
             f"VAO context :{id(self._creation_context)}",
             scope="VertexArrayObject",
@@ -142,7 +162,14 @@ class VertexArrayObject(VertexBase, GLResource):
         self.bind()
 
     def is_valid_in_current_context(self) -> bool:
-        ctx = QOpenGLContext.currentContext()
+        if _qopengl_context_class() is None:
+            return True
+        ctx = _current_qt_gl_context()
+
+        # GLUT / non-Qt: PySide6 may be installed but no QOpenGLContext is current.
+        # Resources created and used there have _creation_context is None.
+        if self._creation_context is None and ctx is None:
+            return True
 
         if ctx is None:
             return False

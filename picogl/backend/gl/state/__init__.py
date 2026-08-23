@@ -1,5 +1,22 @@
 """OpenGL state helpers and scoped context managers."""
 
-from picogl.backend.gl.state.scoped import disabled, enabled, gl_capability
+from __future__ import annotations
 
-__all__ = ["disabled", "enabled", "gl_capability"]
+from typing import Any
+
+# Eager imports of scoped pull backend.gl.api, which imports GLTexture and can
+# circular-import picogl.texture.gltexture. Expose helpers lazily instead.
+
+__all__ = ["gl_disabled", "enabled", "gl_capability", "gl_shader_bound"]
+
+
+def __getattr__(name: str) -> Any:
+    if name in ("gl_disabled", "enabled", "gl_capability"):
+        from picogl.backend.gl.state import scoped
+
+        return getattr(scoped, name)
+    if name == "gl_shader_bound":
+        from picogl.backend.gl.state.shader import gl_shader_bound
+
+        return gl_shader_bound
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

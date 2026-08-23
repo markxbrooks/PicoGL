@@ -8,16 +8,32 @@ This script demonstrates how to:
 4. Display atoms and bonds in 3D space
 """
 
+from __future__ import annotations
+
 import json
 import os
 import sys
 from pathlib import Path
 
+from hint import gl_hint
+from picogl.line import gl_line_width
+
+# freeglut creates GLX contexts; under Wayland PyOpenGL may pick EGL first.
+# Must be set before any OpenGL / picogl import.
+if sys.platform.startswith("linux"):
+    os.environ.setdefault("PYOPENGL_PLATFORM", "glx")
+
+import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
+
 import numpy as np
 
 from picogl.backend.gl.api.enable import gl_enable, gl_enable_capability_list
-from picogl.backend.gl.enums.point_size import (GLLegacyPointCapability,
-                                                GLPointCapability)
+from picogl.backend.gl.capability import GLPipelineCapability
+from picogl.backend.gl.enums.point_size import (
+    GLLegacyPointCapability,
+    GLPointCapability,
+)
+from picogl.backend.gl.task.gl_init import paint_gl_list
 from picogl.backend.modern.core.setup.lighting import gl_initialize_background
 from picogl.core.rgbcolor import RGBAColor
 from picogl.examples.utils.pdb_loader import PDBLoader
@@ -67,7 +83,16 @@ class MolecularRenderWindow(RenderWindow):
         # Create meshes
         self._create_meshes()
 
+        # Parent ObjectRenderer needs MeshData for shader init; we draw via paintGL.
+        if kwargs.get("data") is None:
+            kwargs["data"] = self.atom_mesh
+        kwargs.setdefault(
+            "glsl_dir", Path(__file__).resolve().parent / "glsl" / "tu01"
+        )
+        kwargs.setdefault("base_dir", Path(__file__).resolve().parent)
+
         super().__init__(**kwargs)
+        self.renderer.show_model = False
 
     def _load_molecular_data(self):
         """Load PDB structure and convert to PicoGL data"""
@@ -138,9 +163,9 @@ class MolecularRenderWindow(RenderWindow):
         glPointSize(8.0)
 
         # Enable line smoothing for bonds
-        gl_enable(GL_LINE_SMOOTH)
-        glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
-        glLineWidth(2.0)
+        gl_enable(GLPipelineCapability.LINE_SMOOTH)
+        gl_hint(GL_LINE_SMOOTH_HINT, GL_NICEST)
+        gl_line_width(2.0)
 
         # Enable depth testing and background colour
         gl_initialize_background(RGBAColor(0.1, 0.1, 0.2, 1.0))
@@ -155,10 +180,14 @@ class MolecularRenderWindow(RenderWindow):
             self.bond_vao = create_vao(self.bond_mesh)
         print("✓ Created VAOs for molecular rendering")
 
+    def paintGL(self):
+        """Clear and draw atoms/bonds (bypass ObjectRenderer mesh draw)."""
+        self.backend.execute_gl_tasks(paint_gl_list)
+        self.render()
+
     def render(self):
         """Render the molecular structure"""
-        # Clear buffers
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        # Clear is handled in paintGL via paint_gl_list; draw geometry only.
 
         # Render bonds first (so they appear behind atoms)
         if self.bond_vao:
@@ -173,19 +202,14 @@ class MolecularRenderWindow(RenderWindow):
         if not self.atom_vao:
             return
 
-        # Use the shader program
         if hasattr(self, "context") and self.context.shader:
             shader = self.context.shader
-
-            # Set uniforms
-            if hasattr(self.context, "mvp_matrix"):
-                shader.uniform("mvp_matrix", self.context.mvp_matrix)
-
-            # Render atoms
-            with self.atom_vao:
-                glDrawArrays(GL_POINTS, 0, len(self.atom_mesh.vertices) // 3)
+            with shader:
+                if hasattr(self.context, "mvp_matrix"):
+                    shader.uniform("mvp_matrix", self.context.mvp_matrix)
+                with self.atom_vao:
+                    glDrawArrays(GL_POINTS, 0, len(self.atom_mesh.vertices) // 3)
         else:
-            # Fallback rendering without shader
             with self.atom_vao:
                 glDrawArrays(GL_POINTS, 0, len(self.atom_mesh.vertices) // 3)
 
@@ -194,19 +218,14 @@ class MolecularRenderWindow(RenderWindow):
         if not self.bond_vao:
             return
 
-        # Use the shader program
         if hasattr(self, "context") and self.context.shader:
             shader = self.context.shader
-
-            # Set uniforms
-            if hasattr(self.context, "mvp_matrix"):
-                shader.uniform("mvp_matrix", self.context.mvp_matrix)
-
-            # Render bonds
-            with self.bond_vao:
-                glDrawArrays(GL_LINES, 0, len(self.bond_mesh.vertices) // 3)
+            with shader:
+                if hasattr(self.context, "mvp_matrix"):
+                    shader.uniform("mvp_matrix", self.context.mvp_matrix)
+                with self.bond_vao:
+                    glDrawArrays(GL_LINES, 0, len(self.bond_mesh.vertices) // 3)
         else:
-            # Fallback rendering without shader
             with self.bond_vao:
                 glDrawArrays(GL_LINES, 0, len(self.bond_mesh.vertices) // 3)
 
@@ -260,12 +279,12 @@ class MolecularRenderWindow(RenderWindow):
 
 def main():
     """Main function to run the molecular viewer"""
+    examples_dir = Path(__file__).resolve().parent
     # Check for PDB file argument
     if len(sys.argv) > 1:
         pdb_path = sys.argv[1]
     else:
-        # Default to example PDB file
-        pdb_path = "data/example.pdb"
+        pdb_path = str(examples_dir / "data" / "example.pdb")
 
     # Check if PDB file exists
     if not os.path.exists(pdb_path):
@@ -283,9 +302,6 @@ def main():
             width=1024,
             height=768,
             title=f"Molecular Viewer - {os.path.basename(pdb_path)}",
-            data=None,  # We'll handle the data ourselves
-            glsl_dir=Path(__file__).parent / "glsl" / "molecular",
-            base_dir=Path(__file__).parent,
         )
 
         # Initialize and run

@@ -14,7 +14,7 @@ from picogl.backend.gl.enums import (GLBitMask, GLBufferTarget, GLNumeric,
                                      GLUsageHint)
 from picogl.backend.glm.glm import glm_identity_matrix
 from picogl.backend.state import GLViewport
-from picogl.core.camera import FOVY, ProjectionConfig
+from picogl.core.camera import FOVY, CameraParameters, ProjectionConfig
 from picogl.boolean import GLBoolean
 from picogl.examples.utils.shader_loader import Shader
 from picogl.examples.utils.test_window import GLWindow
@@ -63,17 +63,14 @@ class GLContext(GObject):
 
     def calculate_mvp(self, width=1920, height=1080):
         """Calculate the Model-View-Projection matrix."""
-        self.Projection = glm.perspective(
-            glm.radians(FOVY),
-            float(width) / float(height),
-            ProjectionConfig.near,
-            ProjectionConfig.far,
-        )
-        self.View = glm.lookAt(
-            glm.vec3(4, 3, -3),  # Camera is at (4,3,-3), in World Space
-            glm.vec3(0, 0, 0),  # and looks at the (0.0.0))
-            glm.vec3(0, 1, 0),  # Head is up (set to 0,-1,0 to look upside-down)
-        )
+        self.Projection = ProjectionConfig(
+            fovy=FOVY,
+            aspect=float(width) / float(max(height, 1)),
+            near=ProjectionConfig().near,
+            far=ProjectionConfig().far,
+        ).matrix()
+        camera = CameraParameters(eye=glm.vec3(4, 3, -3))
+        self.View = camera.view_matrix()
         self.Model = glm_identity_matrix()
 
         self.MVP = self.Projection * self.View * self.Model

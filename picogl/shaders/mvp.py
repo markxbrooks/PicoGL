@@ -4,7 +4,7 @@ from OpenGL.raw.GL._types import GL_FALSE
 from pyglm import glm
 
 from picogl.backend.glm.glm import glm_identity_matrix
-from picogl.core.camera import FOVY, ProjectionConfig
+from picogl.core.camera import FOVY, CameraParameters, ProjectionConfig
 from picogl.backend.modern.core.shader.helpers import log_gl_error
 
 
@@ -16,17 +16,15 @@ def calculate_mvp_matrix(context: object, width: int = 1920, height: int = 1080)
     :param width: int
     :param height: int
     """
-    context.projection = glm.perspective(
-        glm.radians(FOVY),
-        float(width) / float(height),
-        ProjectionConfig.near,
-        ProjectionConfig.far,
-    )
-    context.view = glm.lookAt(
-        glm.vec3(4, 3, -3),  # Camera is at (4,3,-3), in World Space
-        glm.vec3(0, 0, 0),  # and looks at the (0.0.0))
-        glm.vec3(0, 1, 0),
-    )  # Head is up (set to 0,-1,0 to look upside-down)
+    context.projection = ProjectionConfig(
+        fovy=FOVY,
+        aspect=float(width) / float(max(height, 1)),
+        near=ProjectionConfig().near,
+        far=ProjectionConfig().far,
+    ).matrix()
+    # Tutorial default: eye at (4, 3, -3), looking at origin.
+    camera = CameraParameters(eye=glm.vec3(4, 3, -3))
+    context.view = camera.view_matrix()
     context.model = glm_identity_matrix()
     context.mvp_matrix = context.projection * context.view * context.model
 

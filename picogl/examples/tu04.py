@@ -1,213 +1,206 @@
-# import os,sys
-# sys.path.append(os.path.abspath(os.path.dirname(__file__)))
+"""
+Tutorial 04 — Textured Suzanne (PicoGL).
+
+Uses PicoGL loaders, shaders, and GL wrappers throughout.
+Left-drag rotates, wheel zooms, R resets.
+"""
+
+from __future__ import annotations
+
+import os
+import sys
+from contextlib import contextmanager
 from pathlib import Path
 
+from backend.glut import GLUTMouseButton, GLUTMouseState
+
+# freeglut creates GLX contexts; under Wayland PyOpenGL may pick EGL first.
+# Must be set before any OpenGL / picogl import.
+if sys.platform.startswith("linux"):
+    os.environ.setdefault("PYOPENGL_PLATFORM", "glx")
+
+import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
 import picogl.ui.backend.glut.prefer_apple_glut  # noqa: F401
+
+from OpenGL.GLUT import GLUT_DOWN, GLUT_LEFT_BUTTON
 from decologr import Decologr as log
-from OpenGL.GL import *  # pylint: disable=W0614
 from pyglm import glm
 
 from picogl.backend.gl.api import gl_bind_texture, gl_get_active_texture0
+from picogl.backend.gl.api.clear import gl_clear
 from picogl.backend.gl.api.enable import gl_enable_capability_list
+from picogl.backend.gl.api.shader import gl_get_uniform_location, gl_uniform_matrix_4fv
 from picogl.backend.gl.capability import GLPipelineCapability
-from picogl.backend.modern.core.setup.lighting import gl_initialize_background
+from picogl.backend.gl.enums import GLBitMask
+from picogl.backend.gl.enums.legacy.scale import gl_viewport
 from picogl.backend.glm.glm import glm_identity_matrix
+from picogl.backend.modern.core.setup.lighting import gl_initialize_background
 from picogl.backend.modern.core.shader.files import ShaderFiles
 from picogl.backend.modern.core.shader.program import ShaderProgram
+from picogl.boolean import GLBoolean
+from picogl.core.camera import CameraParameters, ProjectionConfig
 from picogl.core.uniform import gl_uniform1i
-# from picogl.gpu.buffers.vertex import data
+from picogl.texture.gltexture import GLTexture
+from picogl.ui.backend.glut.mouse import RotationInteraction
 from picogl.ui.backend.glut.window.glut import GlutRendererWindow
 from picogl.utils.loader.texture import TextureLoader
+from picogl.utils.mesh import MeshObject
 
-# from utils.objLoader import objLoader
-# from utils.textureLoader import textureLoader
-
-
-class MeshUE4:
-
-    def __init__(self):
-        self.tangent_xz = None
-        self.texcoords = None
-        self.vertices = None
-        self.indices = None
-
-    def load_mesh(self):
-        from ue4reader import uasset
-
-        ArchiveName = "D:/unpack/objects/Weapon/Rifles/AK-47/Meshes/AK-47_01.uasset"
-        # ArchiveName = "D:/unpack/objects/Weapon/Rifles/AWM/Meshes/AWM_01.uasset"
-        asset = uasset.UAssetReader(ArchiveName, forceUE4Ver=513)
-        mesh_obj = asset.ExportsMap[1].GetObject()
-        mesh_obj.Serialize(asset)
-        mesh_obj.properties[1].to_dict()
-        return mesh_obj.RenderData.LODResources[0]
-
-    def getMesh(self):
-        ue4LOD = self.load_mesh()
-        self.vertices = vertex_data.VertexData.to_array()
-        self.indices = ue4LOD.IndexBuffer.to_array()
-        self.texcoords = (
-            ue4LOD.VertexBuffers.StaticMeshVertexBuffer.TexcoordData.to_array()
-        )
-        self.tangent_xz = (
-            ue4LOD.VertexBuffers.StaticMeshVertexBuffer.TangentsData.to_array()
-        )
-        # self.texcoords= []
-        # for i in range(0,len(self._texcoords),2):
-        # 	print "."
-        # 	self.texcoords.append(float(self._texcoords[i]))
-        # 	self.texcoords.append(1.0 - float(self._texcoords[i+1]))
-        return self
+_EXAMPLES_DIR = Path(__file__).resolve().parent
+_DEFAULT_MESH = _EXAMPLES_DIR / "resources" / "tu04" / "suzanne.obj"
+_DEFAULT_TEXTURE = _EXAMPLES_DIR / "resources" / "tu04" / "uvmap.DDS"
+_GLSL_DIR = _EXAMPLES_DIR / "glsl" / "tu04"
 
 
-def bind_active_texture0():
-    """bind active texture (0)"""
-    gl_get_active_texture0()
-    gl_bind_texture(target=GL_TEXTURE_2D, tex_id=self.context.texture_buffer)
-    gl_uniform1i(
-        self.context.texture_id, 0
-    )  # // Set  "myTextureSampler" sampler to use Texture Unit 0
+def rotate_model(rotation: RotationInteraction, model_matrix):
+    """Apply x/y drag rotation to *model_matrix* and return it."""
+    model_matrix = glm.rotate(model_matrix, glm.radians(rotation.x), glm.vec3(1, 0, 0))
+    model_matrix = glm.rotate(model_matrix, glm.radians(rotation.y), glm.vec3(0, 1, 0))
+    return model_matrix
 
 
-class Tu01Win(GlutRendererWindow):
-    class GLContext(object):
-        pass
+from picogl.backend.gl.state.shader import gl_shader_bound
+
+
+class ObjectRendererExample(GlutRendererWindow):
+    """Textured Suzanne tutorial window."""
+
+    class GLContext:
+        def __init__(self) -> None:
+            self.mvp_id: int | None = None
+            self.texture_id: int | None = None
+            self.texture_buffer: int | None = None
+            self.model: MeshObject | None = None
+            self.projection_matrix = None
+            self.view_matrix = None
+            self.model_matrix = None
+            self.mvp_matrix = None
 
     def __init__(
         self,
-        width,
-        height,
-        title: str = None,
-        context: GLContext = None,
+        width: int = 400,
+        height: int = 300,
+        title: str = "Suzanne - Textured Model",
         *args,
         **kwargs,
     ):
-        super().__init__(width, height, title, context, *args, **kwargs)
-        self.shader = None
+        super().__init__(width=width, height=height, title=title, *args, **kwargs)
+        self.shader: ShaderProgram | None = None
+        if not hasattr(self, "rotation") or self.rotation is None:
+            self.rotation = RotationInteraction()
+        self.zoom_distance = 5.0
+        self.distance_threshold = 2.0
+        self.sync_zoom_to_context()
 
-    def initializeGL(self):
+    def initializeGL(self) -> None:
+        # Avoid GlutRendererWindow.initializeGL — it expects an ObjectRenderer.
         gl_initialize_background()
         gl_enable_capability_list([GLPipelineCapability.CULL_FACE])
 
-    def keyPressEvent(self, key, x, y):
-        pass
+    def keyPressEvent(self, key, x, y) -> None:
+        if key in (b"r", b"R"):
+            self.rotation.reset()
+            self.update_mvp()
 
-    def mousePressEvent(self, *args, **kwargs):
-        pass
+    def mousePressEvent(self, button, state, x, y) -> None:
+        if button != GLUTMouseButton.LEFT:
+            return
+        if state == GLUTMouseState.DOWN:
+            self.rotation.press(x, y)
+        else:
+            self.rotation.release()
 
-    def mouseMoveEvent(self, *args, **kwargs):
-        pass
+    def mouseMoveEvent(self, x, y) -> None:
+        if self.rotation.drag(x, y) is None:
+            return
+        self.rotation.clamp_x()
+        self.update_mvp()
 
-    def initialize(self):
+    def bind_active_texture0(self) -> None:
+        gl_get_active_texture0()
+        gl_bind_texture(self.context.texture_buffer, GLTexture.TEXTURE_2D)
+        gl_uniform1i(self.context.texture_id, 0)
+
+    def initialize(self) -> None:
+        """initialize"""
         self.context = self.GLContext()
+        self.sync_zoom_to_context()
 
-        self.shader = shader = ShaderProgram()
-        shader_files = ShaderFiles(
-            vertex="vertex.glsl",
-            fragment="fragment.glsl",
-            glsl_dir=Path(__file__).resolve().parent / "glsl" / "tu02",
+        self.shader = ShaderProgram()
+        self.shader.init_shader_from_shader_files(
+            ShaderFiles(
+                vertex="vertex.glsl",
+                fragment="fragment.glsl",
+                glsl_dir=_GLSL_DIR,
+            )
+        )
+        if not isinstance(self.shader.program, int):
+            raise TypeError("shader.program must be a GL program id (int)")
+
+        self.context.mvp_id = gl_get_uniform_location(self.shader.program, "MVP")
+        self.context.texture_id = gl_get_uniform_location(
+            self.shader.program, "texture0"
         )
 
-        shader.program = shader.compiler.compile_shader_files(shader_files)
-        # shader var ids
-        self.context.mvp_id = glGetUniformLocation(shader.program, "mvp_matrix")
-        self.context.texture_id = glGetUniformLocation(
-            shader.program, "myTextureSampler"
-        )
-
-        texture = TextureLoader("resources/tu05/AK-47_01_D_Fix.png")
+        texture = TextureLoader(str(_DEFAULT_TEXTURE))
         self.context.texture_buffer = texture.texture_gl_id
-
-        model = MeshUE4().getMesh()
-        self.context.vertex_buffer = glGenBuffers(1)
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.context.vertex_buffer)
-        glBufferData(
-            GL_ELEMENT_ARRAY_BUFFER,
-            len(model.vertices) * 4,
-            (GLfloat * len(model.vertices))(*model.vertices),
-            GL_STATIC_DRAW,
+        self.context.model = MeshObject(_DEFAULT_MESH).get_mesh(
+            flip_v=bool(texture.inversed_v_coords)
         )
+        self.context.model.upload()
+        self.calc_mvp(self.width or 400, self.height or 300)
 
-        self.context.uv_buffer = glGenBuffers(1)
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.context.uv_buffer)
-        glBufferData(
-            GL_ELEMENT_ARRAY_BUFFER,
-            len(model.texcoords) * 4,
-            (GLfloat * len(model.texcoords))(*model.texcoords),
-            GL_STATIC_DRAW,
-        )
+    def calc_mvp(self, width: int = 1920, height: int = 1080) -> None:
+        """calculate mvp"""
+        self.sync_zoom_to_context()
+        aspect = float(width) / float(max(height, 1))
+        self.context.projection_matrix = ProjectionConfig(
+            fovy=self.zoom_fov, aspect=aspect, near=0.1, far=1000.0
+        ).matrix()
+        camera = CameraParameters(eye=glm.vec3(4, 3, self.zoom_distance))
+        self.context.view_matrix = camera.view_matrix()
 
-        self.context.indices = glGenBuffers(1)
-        self.context.indices_size = len(model.indices)
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.context.indices)
-        glBufferData(
-            GL_ELEMENT_ARRAY_BUFFER,
-            len(model.indices) * 2,
-            (GLushort * len(model.indices))(*model.indices),
-            GL_STATIC_DRAW,
-        )
-
-    def calc_mvp(self, width=1920, height=1080):
-        self.context.projection_matrix = glm.perspective(
-            glm.radians(45.0), float(width) / float(height), 0.1, 1000.0
-        )
-        self.context.View = glm.lookAt(
-            glm.vec3(80, 80, 80),  # Camera is at (4,3,-3), in World Space
-            glm.vec3(0, 0, 0),  # and looks at the (0.0.0))
-            glm.vec3(0, 1, 0),
-        )  # Head is up (set to 0,-1,0 to look upside-down)
-
-        self.context.model_matrix = glm_identity_matrix()
-        # print self.context.model_matrix
+        self.context.model_matrix = rotate_model(self.rotation, glm_identity_matrix())
         self.context.mvp_matrix = (
             self.context.projection_matrix
             * self.context.view_matrix
             * self.context.model_matrix
         )
 
-    def resizeGL(self, width, height):
-        """resizeGL"""
-        log.message("resizetGL")
-        glViewport(0, 0, width, height)
+    def update_mvp(self) -> None:
+        """Refresh MVP from zoom/viewport and request a redraw."""
+        width = getattr(self, "width", None) or 400
+        height = getattr(self, "height", None) or 300
+        viewport = getattr(self, "viewport", None)
+        if viewport is not None:
+            width = getattr(viewport, "width", None) or width
+            height = getattr(viewport, "height", None) or height
+        self.calc_mvp(width, height)
+        self.update()
+
+    def resizeGL(self, width, height) -> None:
+        log.message("resizeGL")
+        self.width = width
+        self.height = height
+        gl_viewport(0, 0, width, height)
         self.calc_mvp(width, height)
 
-    def paintGL(self):
-        """paintGL"""
-        log.message("paintGL")
-        # print self.context.mvp_matrix
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+    def paintGL(self) -> None:
+        gl_clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
 
-        self.shader.begin()
-        glUniformMatrix4fv(
-            self.context.mvp_id, 1, GL_FALSE, glm.value_ptr(self.context.mvp_matrix)
-        )
-
-        bind_active_texture0()
-
-        gl_enableVertexAttribArray(0)
-        glBindBuffer(GL_ARRAY_BUFFER, self.context.vertex_buffer)
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, None)
-
-        gl_enableVertexAttribArray(1)
-        glBindBuffer(GL_ARRAY_BUFFER, self.context.uv_buffer)
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, None)
-
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.context.indices)
-
-        glDrawElements(
-            GL_TRIANGLES,  # mode
-            self.context.indices_size,  # // count
-            GL_UNSIGNED_SHORT,  # // type
-            None,  # // element array buffer offset
-        )
-
-        glDisableVertexAttribArray(0)
-        glDisableVertexAttribArray(1)
-        self.shader.end()
+        with gl_shader_bound(self.shader):
+            gl_uniform_matrix_4fv(
+                self.context.mvp_id,
+                1,
+                GLBoolean.FALSE,
+                glm.value_ptr(self.context.mvp_matrix),
+            )
+            self.bind_active_texture0()
+            self.context.model.draw()
 
 
 if __name__ == "__main__":
-    win = Tu01Win(width=400, height=300)
+    win = ObjectRendererExample(width=400, height=300)
     win.initializeGL()
     win.initialize()
     win.run()

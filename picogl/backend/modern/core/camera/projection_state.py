@@ -19,12 +19,7 @@ class GLMProjectionState(ApplicableState):
         prev: ProjectionConfig | None,
     ) -> None:
         del prev
-        self.matrix = glm.perspective(
-            glm.radians(state.fovy),
-            float(state.aspect),
-            float(state.near),
-            float(state.far),
-        )
+        self.matrix = state.matrix()
 
     def _is_same(self, old: ProjectionConfig, new: ProjectionConfig) -> bool:
         return old == new

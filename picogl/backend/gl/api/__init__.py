@@ -10,9 +10,14 @@ vertex and texture handling, and client state management.
 
 from picogl.backend.gl.api.buffer.data import gl_buffer_data
 from picogl.backend.gl.api.buffer.generate import gl_generate_buffers
+from picogl.backend.gl.api.buffer.upload import (
+    gl_upload_float_buffer,
+    gl_upload_ushort_buffer,
+)
 from picogl.backend.gl.api.client_state import (gl_disable_legacy_client_state,
                                                 gl_enable_legacy_client_state)
 from picogl.backend.gl.api.draw import gl_draw_arrays, gl_draw_elements
+from picogl.backend.gl.api.draw.indexed import gl_bind_elements
 from picogl.backend.gl.api.flush import gl_flush
 from picogl.backend.gl.api.pointer import (gl_color_array_pointer,
                                            gl_color_pointer_from_spec,
@@ -22,6 +27,10 @@ from picogl.backend.gl.api.pointer import (gl_color_array_pointer,
                                            gl_vertex_array_pointer,
                                            gl_vertex_pointer_from_spec)
 from picogl.backend.gl.api.vertex.arrays.bind import gl_bind_vertex_array
+from picogl.backend.gl.api.vertex.attrib_array.bind import gl_bind_array_buffer
+from picogl.backend.gl.api.vertex.attrib_array.bound import (
+    gl_bound_vertex_attrib_arrays,
+)
 from picogl.backend.gl.api.vertex.attrib_pointer import \
     gl_vertex_attrib_pointer
 from picogl.backend.gl.api.vertex.enable_array import gl_enable_vertex_array
@@ -41,7 +50,10 @@ from .texture.mipmap import gl_generate_mipmap
 from .texture.parameter import gl_tex_parameter
 
 __all__ = [
+    "gl_bind_array_buffer",
     "gl_bind_buffer",
+    "gl_bind_elements",
+    "gl_bound_vertex_attrib_arrays",
     "gl_buffer_data",
     "gl_disable_legacy_client_state",
     "gl_enable_legacy_client_state",
@@ -68,6 +80,8 @@ __all__ = [
     "gl_normal_array_pointer",
     "gl_normal_pointer_from_spec",
     "gl_texcoord_array_pointer",
+    "gl_upload_float_buffer",
+    "gl_upload_ushort_buffer",
     "gl_vertex_3f",
     "gl_vertex_coord",
     "gl_vertex_line",

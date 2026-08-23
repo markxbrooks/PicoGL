@@ -48,7 +48,7 @@ class _RecordingRaster:
 
     def apply(self, state):
         self.set_line_width(state.line_width)
-        self.set_polygon_mode(GLFace.FRONT_AND_BACK, gl_value(state.polygon_mode))
+        self.set_polygon_mode(GLFace.FRONT_AND_BACK, gl_value(state.gl_polygon_mode))
         if state.polygon_offset != (0.0, 0.0):
             self.calls.append(("polygon_offset", state.polygon_offset))
         if state.point_size is not None:

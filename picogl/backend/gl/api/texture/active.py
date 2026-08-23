@@ -1,15 +1,18 @@
 from __future__ import annotations
 
-from OpenGL.raw.GL.VERSION.GL_1_3 import glActiveTexture
+from typing import TYPE_CHECKING
 
-from picogl.texture.gltexture import GLTexture
+from OpenGL.raw.GL.VERSION.GL_1_3 import GL_TEXTURE0, glActiveTexture
+
+if TYPE_CHECKING:
+    from picogl.texture.gltexture import GLTexture
 
 
-def gl_active_texture(texture: GLTexture) -> None:
+def gl_active_texture(texture: int | GLTexture) -> None:
     """Issue ``glActiveTexture``."""
-    glActiveTexture(texture)
+    glActiveTexture(int(texture))
 
 
 def gl_get_active_texture0() -> None:
     """Select texture unit 0."""
-    gl_active_texture(GLTexture.TEXTURE0)
+    gl_active_texture(GL_TEXTURE0)
