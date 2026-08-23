@@ -214,10 +214,10 @@ class MolecularRenderWindow(RenderWindow):
                 if hasattr(self.context, "mvp_matrix"):
                     shader.uniform("mvp_matrix", self.context.mvp_matrix)
                 with self.atom_vao:
-                    glDrawArrays(GL_POINTS, 0, len(self.atom_mesh.vertices) // 3)
+                    gl_draw_arrays(GLDrawMode.POINTS, 0, len(self.atom_mesh.vertices) // 3)
         else:
             with self.atom_vao:
-                glDrawArrays(GL_POINTS, 0, len(self.atom_mesh.vertices) // 3)
+                gl_draw_arrays(GLDrawMode.POINTS, 0, len(self.atom_mesh.vertices) // 3)
 
     def _render_bonds(self):
         """Render bonds as lines"""
@@ -230,10 +230,10 @@ class MolecularRenderWindow(RenderWindow):
                 if hasattr(self.context, "mvp_matrix"):
                     shader.uniform("mvp_matrix", self.context.mvp_matrix)
                 with self.bond_vao:
-                    glDrawArrays(GL_LINES, 0, len(self.bond_mesh.vertices) // 3)
+                    gl_draw_arrays(GLDrawMode.LINES, 0, len(self.bond_mesh.vertices) // 3)
         else:
             with self.bond_vao:
-                glDrawArrays(GL_LINES, 0, len(self.bond_mesh.vertices) // 3)
+                gl_draw_arrays(GLDrawMode.LINES, 0, len(self.bond_mesh.vertices) // 3)
 
     def keyPressEvent(self, key, x, y):
         """Handle keyboard input"""
