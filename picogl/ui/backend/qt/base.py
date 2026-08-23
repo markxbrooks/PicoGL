@@ -22,11 +22,11 @@ from picogl.backend.gl.mode import GLMode
 from picogl.backend.gl.task.gl_init import (legacy_init_gl_list,
                                             modern_init_gl_list)
 from picogl.backend.legacy.core.camera.lighting import set_background_color
-from picogl.backend.legacy.core.camera.projection_state import (
-    GLUProjectionState)
+from picogl.backend.legacy.core.camera.projection_state import \
+    GLUProjectionState
 from picogl.backend.legacy.core.camera.setup import calculate_aspect_ratio
-from picogl.backend.modern.core.camera.projection_state import (
-    GLMProjectionState)
+from picogl.backend.modern.core.camera.projection_state import \
+    GLMProjectionState
 from picogl.core.camera import ProjectionConfig
 from picogl.core.viewport import Viewport
 

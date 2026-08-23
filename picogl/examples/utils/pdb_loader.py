@@ -13,7 +13,6 @@ from typing import Any, Dict, List, Optional
 
 import numpy as np
 from molib.ligand.pdb.layouts.pdb_file import PDBFileLayout, PDBTitleLayout
-
 from utils.bond_detection import atoms_should_bond
 
 

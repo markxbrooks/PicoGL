@@ -6,10 +6,10 @@ import numpy as np
 from pyglm import glm
 
 from picogl.backend.glm.glm import glm_mat4_to_np
-from picogl.backend.legacy.core.camera.projection_state import (
-    GLUProjectionState)
-from picogl.backend.modern.core.camera.projection_state import (
-    GLMProjectionState)
+from picogl.backend.legacy.core.camera.projection_state import \
+    GLUProjectionState
+from picogl.backend.modern.core.camera.projection_state import \
+    GLMProjectionState
 from picogl.core.camera import FOVY, CameraParameters, ProjectionConfig
 
 

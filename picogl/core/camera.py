@@ -12,7 +12,7 @@ class ProjectionConfig:
 
     fovy: float = 45.0
     aspect: float = 1.0
-    near: float = 1.0
+    near: float = 5.0
     far: float = 1000.0
 
     def with_aspect(self, aspect: float) -> ProjectionConfig:

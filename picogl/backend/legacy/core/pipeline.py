@@ -18,8 +18,8 @@ from picogl.backend.gl.state.fill import (GLColorMaterialMode, GLFace, GLLight,
                                           GLLightParameter)
 from picogl.backend.gl.state.texture import TexCoord2f, Vertex3f
 from picogl.backend.glu.perspective import glu_perspective
-from picogl.backend.legacy.core.camera.projection_state import (
-    GLUProjectionState)
+from picogl.backend.legacy.core.camera.projection_state import \
+    GLUProjectionState
 from picogl.backend.state import GLViewport, gl_value
 from picogl.core.camera import ProjectionConfig
 from picogl.core.rgbcolor import RGBAColor

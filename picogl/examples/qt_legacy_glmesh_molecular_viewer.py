@@ -26,11 +26,12 @@ from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMessageBox,
 from picogl.backend.gl.api.clear import gl_clear
 from picogl.backend.gl.api.color import gl_color_material
 from picogl.backend.gl.api.enable import gl_enable_capability_list
-from picogl.backend.gl.capability import GLFixedFunctionCapability, GLPipelineCapability
-from picogl.backend.gl.state.fill import GLCapability
 from picogl.backend.gl.api.matrix import gl_matrix_mode
+from picogl.backend.gl.capability import (GLFixedFunctionCapability,
+                                          GLPipelineCapability)
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.enums.legacy.scale import gl_load_identity, gl_viewport
+from picogl.backend.gl.state.fill import GLCapability
 from picogl.backend.glu.perspective import glu_perspective
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.renderer.meshdata import MeshData

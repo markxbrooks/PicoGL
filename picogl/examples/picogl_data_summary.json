@@ -1,10 +1,10 @@
 {
   "summary": {
     "atoms_count": 9,
-    "bonds_count": 9,
+    "bonds_count": 10,
     "residues_count": 2,
     "chains_count": 1,
-    "total_vertices": 27
+    "total_vertices": 29
   },
   "metadata": {
     "file_type": "PicoGL Molecular Data",

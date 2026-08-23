@@ -23,18 +23,15 @@ if sys.platform.startswith("linux"):
     os.environ.setdefault("PYOPENGL_PLATFORM", "glx")
 
 
-from picogl.backend.gl.api.hint import gl_hint
-from picogl.backend.gl.api.line import gl_line_width
-import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
-
 import numpy as np
 
+import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
 from picogl.backend.gl.api.enable import gl_enable, gl_enable_capability_list
+from picogl.backend.gl.api.hint import gl_hint
+from picogl.backend.gl.api.line import gl_line_width
 from picogl.backend.gl.capability import GLPipelineCapability
-from picogl.backend.gl.enums.point_size import (
-    GLLegacyPointCapability,
-    GLPointCapability,
-)
+from picogl.backend.gl.enums.point_size import (GLLegacyPointCapability,
+                                                GLPointCapability)
 from picogl.backend.gl.task.gl_init import paint_gl_list
 from picogl.backend.modern.core.setup.lighting import gl_initialize_background
 from picogl.core.rgbcolor import RGBAColor

@@ -27,18 +27,19 @@ if sys.platform.startswith("linux"):
     os.environ.setdefault("PYOPENGL_PLATFORM", "glx")
 
 import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
-
 from picogl.backend.gl.api.color import gl_color_rgb
 from picogl.backend.gl.api.enable import gl_disable
-from picogl.backend.gl.capability import GLFixedFunctionCapability, GLMaterialFace
+from picogl.backend.gl.capability import (GLFixedFunctionCapability,
+                                          GLMaterialFace)
 from picogl.backend.gl.phong.material import PhongMaterial
 from picogl.backend.gl.state.fill import GLCapability, GLFillMode
 from picogl.backend.gl.state.scoped import gl_disabled
 from picogl.backend.glut import glut_wire_teapot
 from picogl.backend.legacy.core.renderer import LegacyRenderer
-from picogl.core.polygon.mode import set_polygon_mode_fill, set_polygon_mode_line
-from picogl.core.rgbcolor import RGBColor, RGBAColor
-from picogl.polygon.mode import gl_polygon_mode
+from picogl.core.polygon.mode import (set_polygon_mode_fill,
+                                      set_polygon_mode_line)
+from picogl.core.rgbcolor import RGBAColor, RGBColor
+from picogl.polygon.mode import gl_polygon_mode_context
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.renderer.legacy_mesh_loader import load_legacy_mesh
 
@@ -90,7 +91,7 @@ class LegacyTeapotRenderer(LegacyRenderer):
     def draw_fallback_teapot(self) -> None:
         """Draw a simple wireframe teapot as fallback."""
         with gl_disabled(GLFixedFunctionCapability.LIGHTING):
-            with gl_polygon_mode(GLFillMode.LINE):
+            with gl_polygon_mode_context(GLFillMode.LINE):
                 gl_color_rgb(RGBColor(1.0, 0.0, 0.0))
                 glut_wire_teapot(1.0)
 

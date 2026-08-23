@@ -21,19 +21,15 @@ def main() -> None:
     """Set up the teapot object and show it."""
     object_file_name = "data/teapot.obj"
     obj_loader = ObjectLoader(object_file_name)
-    teapot_data = obj_loader.to_array_style()
-    data = MeshData.from_raw(
-        vertices=teapot_data.vertices,
-        normals=teapot_data.normals,
-        colors=([[1.0, 0.0, 0.0]] * (len(teapot_data.vertices) // 3)),
-    )
+    teapot_object_data = obj_loader.to_array_style()
+    teapot_mesh_data = MeshData.from_object_data(teapot_object_data)
     render_window = RenderWindow(
         width=800,
         height=600,
         title="Newell Teapot",
         glsl_dir=GLSL_DIR,
         base_dir=BASE_DIR,
-        data=data,
+        data=teapot_mesh_data,
     )
     render_window.initialize()
     render_window.run()

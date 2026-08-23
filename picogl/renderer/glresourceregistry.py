@@ -23,7 +23,8 @@ from picogl.shaders import ShaderType
 
 if TYPE_CHECKING:
     from picogl.backend.modern.core.shader.program import ShaderProgram
-    from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
+    from picogl.backend.modern.core.vertex.array.object import \
+        VertexArrayObject
 
 T = TypeVar("T")
 

@@ -2,13 +2,9 @@
 
 from enum import IntEnum
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import (
-    GL_DONT_CARE,
-    GL_FASTEST,
-    GL_LINE_SMOOTH_HINT,
-    GL_NICEST,
-    GL_POINT_SMOOTH_HINT,
-)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_DONT_CARE, GL_FASTEST,
+                                          GL_LINE_SMOOTH_HINT, GL_NICEST,
+                                          GL_POINT_SMOOTH_HINT)
 
 
 class GLHintTarget(IntEnum):

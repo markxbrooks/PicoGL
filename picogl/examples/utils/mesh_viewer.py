@@ -1,15 +1,17 @@
+from typing import Optional
+
 from decologr import Decologr as log
 from OpenGL.GL import *  # pylint: disable=W0614
 from OpenGL.GLUT import *  # pylint: disable=W0614
-from pyglm import glm
 
-from picogl.backend.gl.api.enable import gl_enable_capability_list
-from picogl.backend.modern.core.setup.lighting import gl_initialize_background
-from picogl.core.rgbcolor import RGBAColor
 from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
+from picogl.backend.gl.capability import GLMaterialFace
 from picogl.backend.gl.enums import GLBitMask
+from picogl.backend.gl.state.fill import GLFillMode
 from picogl.backend.glm.glm import glm_identity_matrix
+from picogl.backend.modern.core.setup.lighting import gl_initialize_background
 from picogl.backend.modern.core.shader.mvp.controller import MVPController
+from picogl.core.rgbcolor import RGBAColor
 from picogl.examples.utils.world_sheet import WorldSheet
 from picogl.ui.backend.glut.window.gl import GLWindow
 
@@ -65,10 +67,10 @@ class MeshViewWindow(GLWindow):
             self.controller.reset()
             self.update_if()
         if action == 2:
-            gl_polygon_mode(GLFace.FRONT_AND_BACK, GLDrawMode.LINE)
+            gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.LINE)
             self.update_if()
         if action == 4:
-            gl_polygon_mode(GLFace.FRONT_AND_BACK, GLDrawMode.FILL)
+            gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.FILL)
             self.update_if()
         return 0
 

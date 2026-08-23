@@ -20,8 +20,10 @@ from picogl.backend.gl.api.pointer import (gl_color_array_pointer,
 from picogl.backend.gl.enums import GLDrawMode, GLIndexType, GLNumeric
 from picogl.backend.gl.state.client import GLClientState
 from picogl.backend.gl.state.fill import GLFace, GLFillMode
+from picogl.core.rgbcolor import RGBColor
 from picogl.gpu.buffers.attributes import CanonicalVertexAttrs
 from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
+from picogl.utils.loader.object_data import ObjectData
 
 
 class MeshData:
@@ -119,6 +121,15 @@ class MeshData:
         if uvs is not None:
             uvs = np.asarray(uvs, dtype=np.float32)
             self.uvs = uvs if self.uvs is None else np.vstack([self.uvs, uvs])
+
+    @staticmethod
+    def from_object_data(object_data: ObjectData) -> "MeshData":
+        data: MeshData = MeshData.from_raw(
+            vertices=object_data.vertices,
+            normals=object_data.normals,
+            colors=object_data.generate_solid_color(color=RGBColor.RED),
+        )
+        return data
 
     def extend_from_mesh(self, other: "MeshData"):
         self.extend(
@@ -265,7 +276,7 @@ class MeshData:
         vertices: Union[np.ndarray, list[float]],
         normals: Optional[Union[np.ndarray, list[float]]] = None,
         uvs: Optional[Union[np.ndarray, list[float]]] = None,
-        colors: Optional[Union[np.ndarray, list[float]]] = None,
+        colors: Optional[Union[np.ndarray, list[float],list[tuple|int]]] = None,
         indices: Optional[Union[np.ndarray, list[float]]] = None,
         color_per_vertex: Optional[Union[np.ndarray, list[float]]] = None,
     ):
@@ -330,7 +341,7 @@ class MeshData:
 
     def draw(
         self,
-        color: tuple = None,
+        color: tuple | None = None,
         line_width: float = 1.0,
         mode: int = GLDrawMode.TRIANGLES,
         fill: bool = False,

@@ -17,6 +17,8 @@ self.data = ObjectData(
 from dataclasses import dataclass, field
 from typing import List, Optional
 
+from picogl.core.rgbcolor import RGBColor
+
 
 @dataclass
 class ObjectData:
@@ -36,3 +38,8 @@ class ObjectData:
         if self.indices is None:
             vertex_count = len(self.vertices) // 3
             self.indices = list(range(vertex_count))
+
+    def generate_solid_color(self, color: RGBColor = RGBColor.RED) -> list[
+        tuple[float | int]]:
+        """generate solid color"""
+        return [*color.to_tuple()] * (len(self.vertices) // 3)

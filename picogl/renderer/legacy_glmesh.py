@@ -13,8 +13,8 @@ LegacyGLMesh
     for an indexed triangle mesh.
 """
 
-from typing import Optional
 import contextlib
+from typing import Optional
 
 import numpy as np
 

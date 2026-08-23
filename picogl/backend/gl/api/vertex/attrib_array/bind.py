@@ -3,9 +3,8 @@
 from __future__ import annotations
 
 from picogl.backend.gl.api.buffer.bind import gl_bind_buffer
-from picogl.backend.gl.api.vertex.attrib_array.pointer import (
-    gl_vertex_attrib_pointer,
-)
+from picogl.backend.gl.api.vertex.attrib_array.pointer import \
+    gl_vertex_attrib_pointer
 from picogl.backend.gl.enums import GLBufferTarget, GLNumeric
 from picogl.boolean import GLBoolean
 

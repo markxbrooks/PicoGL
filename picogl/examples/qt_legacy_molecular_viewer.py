@@ -15,39 +15,28 @@ import numpy as np
 from molib.core.constants import MoLibConstant
 from PySide6.QtCore import Qt
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
-from PySide6.QtWidgets import (
-    QApplication,
-    QHBoxLayout,
-    QLabel,
-    QMessageBox,
-    QPushButton,
-    QSplitter,
-    QVBoxLayout,
-    QWidget,
-)
+from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMessageBox,
+                               QPushButton, QSplitter, QVBoxLayout, QWidget)
 
 from picogl.backend.geometry import LegacyBinding
 from picogl.backend.gl.api.color import gl_color_rgb
 from picogl.backend.gl.api.legacy.callist import gl_call_list
-from picogl.backend.gl.api.legacy.display_list import (
-    GLLegacyListMode,
-    gl_end_list,
-    gl_gen_lists,
-    gl_new_list,
-)
+from picogl.backend.gl.api.legacy.display_list import (GLLegacyListMode,
+                                                       gl_end_list,
+                                                       gl_gen_lists,
+                                                       gl_new_list)
 from picogl.backend.gl.api.legacy.matrix import gl_pushed_matrix
 from picogl.backend.gl.api.legacy.rotate import gl_rotate_vec3
 from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.enums import GLDrawMode
-from picogl.backend.gl.enums.legacy.scale import gl_translate_f, gl_translate_vec3
+from picogl.backend.gl.enums.legacy.scale import (gl_translate_f,
+                                                  gl_translate_vec3)
 from picogl.backend.gl.state.immediate import gl_immediate_drawing
 from picogl.backend.modern.core.setup.lighting import gl_initialize_background
 from picogl.core.draw.line import gl_legacy_draw_line
-from picogl.core.draw.sphere import (
-    draw_latitude_band_connectors,
-    draw_latitude_band_filled,
-    draw_latitude_ring_wireframe,
-)
+from picogl.core.draw.sphere import (draw_latitude_band_connectors,
+                                     draw_latitude_band_filled,
+                                     draw_latitude_ring_wireframe)
 from picogl.core.geometry.sphere import generate_ring, latitude_for_stack
 from picogl.core.rgbcolor import RGBAColor, RGBColor
 from picogl.core.setup import gl_setup_lighting, gl_setup_materials

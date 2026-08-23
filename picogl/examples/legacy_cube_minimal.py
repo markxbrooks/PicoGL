@@ -29,13 +29,13 @@ if str(_ROOT) not in sys.path:
 if sys.platform.startswith("linux"):
     os.environ.setdefault("PYOPENGL_PLATFORM", "glx")
 
-import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
-
 import numpy as np
-
 from molib.pdb.coordinate.coordinate import Coordinates
+
+import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
 from picogl.backend.gl.api.color import gl_color_rgb
-from picogl.backend.gl.api.vertex.vertex_3f import gl_vertex_coord, gl_vertex_line
+from picogl.backend.gl.api.vertex.vertex_3f import (gl_vertex_coord,
+                                                    gl_vertex_line)
 from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.backend.gl.state.fill import GLFillMode
@@ -45,7 +45,6 @@ from picogl.backend.glut import glut_post_redisplay
 from picogl.backend.glut.cube_data import CUBE_COLORS, CUBE_VERTICES
 from picogl.backend.legacy.core.renderer import LegacyRenderer
 from picogl.core.rgbcolor import RGBColor
-from picogl.polygon.mode import gl_polygon_mode
 
 # Check for display before initializing GLUT
 if os.environ.get("DISPLAY") is None and os.name != "nt":
@@ -78,7 +77,7 @@ class MinimalCubeRenderer(LegacyRenderer):
         """Draw the cube using immediate mode via PicoGL wrappers."""
         if self.wireframe_mode:
             with gl_disabled(GLFixedFunctionCapability.LIGHTING):
-                with gl_polygon_mode(GLFillMode.LINE):
+                with gl_polygon_mode_context(GLFillMode.LINE):
                     gl_color_rgb(RGBColor.RED)
                     self._emit_triangles(colored=False)
             return

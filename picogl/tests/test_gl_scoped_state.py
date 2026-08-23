@@ -7,7 +7,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POLYGON_MODE
 
 from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.state.fill import GLFace, GLFillMode
-from picogl.backend.gl.state.scoped import gl_disabled, gl_capability
+from picogl.backend.gl.state.scoped import gl_capability, gl_disabled
 from picogl.polygon.mode import gl_polygon_mode_context
 
 
@@ -90,13 +90,13 @@ class ScopedPolygonModeTests(TestCase):
             "picogl.polygon.mode.gl_get_integerv",
             return_value=[GLFillMode.LINE, GLFillMode.FILL],
         ) as gl_get_integerv, patch(
-            "picogl.polygon.mode.gl_polygon_mode",
-        ) as gl_polygon_mode:
+            "picogl.polygon.mode._set_polygon_mode",
+        ) as set_polygon_mode:
             with gl_polygon_mode_context(GLFillMode.FILL):
                 pass
 
         gl_get_integerv.assert_called_once_with(GL_POLYGON_MODE)
-        gl_polygon_mode.assert_has_calls(
+        set_polygon_mode.assert_has_calls(
             [
                 call(GLFace.FRONT_AND_BACK, GLFillMode.FILL),
                 call(GLFace.FRONT, GLFillMode.LINE),

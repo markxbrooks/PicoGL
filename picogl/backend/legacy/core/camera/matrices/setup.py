@@ -8,8 +8,8 @@ the modelview or projection matrix and returns them in a GLSL-compatible
 format.
 """
 
-from picogl.backend.legacy.core.camera.projection_state import (
-    GLUProjectionState)
+from picogl.backend.legacy.core.camera.projection_state import \
+    GLUProjectionState
 from picogl.core.camera import ProjectionConfig
 
 

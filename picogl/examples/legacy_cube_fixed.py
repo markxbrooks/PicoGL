@@ -28,7 +28,6 @@ if sys.platform.startswith("linux"):
     os.environ.setdefault("PYOPENGL_PLATFORM", "glx")
 
 import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
-
 from picogl.backend.glut.glut_renderer import GlutRenderer
 
 

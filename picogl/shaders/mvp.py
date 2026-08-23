@@ -4,8 +4,8 @@ from OpenGL.raw.GL._types import GL_FALSE
 from pyglm import glm
 
 from picogl.backend.glm.glm import glm_identity_matrix
-from picogl.core.camera import FOVY, CameraParameters, ProjectionConfig
 from picogl.backend.modern.core.shader.helpers import log_gl_error
+from picogl.core.camera import FOVY, CameraParameters, ProjectionConfig
 
 
 def calculate_mvp_matrix(context: object, width: int = 1920, height: int = 1080):

@@ -3,17 +3,15 @@ from dataclasses import dataclass, field
 from typing import Any
 
 import numpy as np
-
-
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
 from PySide6.QtWidgets import (QApplication, QHBoxLayout, QMainWindow, QSlider,
                                QVBoxLayout, QWidget)
 
-from picogl.backend.modern.core.setup.lighting import gl_initialize_background
 from picogl.backend.gl.api.legacy.matrix import gl_pushed_matrix
-from picogl.backend.gl.enums.legacy.scale import (gl_rotatef, gl_viewport)
+from picogl.backend.gl.enums.legacy.scale import gl_rotatef, gl_viewport
 from picogl.backend.legacy.core.pipeline import LegacyPipeline
+from picogl.backend.modern.core.setup.lighting import gl_initialize_background
 from picogl.core.rgbcolor import RGBAColor
 from picogl.core.setup.view import gl_setup_view
 from picogl.core.vec3 import Vec3
