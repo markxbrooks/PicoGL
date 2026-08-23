@@ -14,11 +14,8 @@ import json
 import os
 import sys
 from pathlib import Path
-from typing import Any
 
-from numpy import dtype, generic, ndarray
-
-from backend.modern.core.vertex.array.object import VertexArrayObject
+from numpy import ndarray
 
 # freeglut creates GLX contexts; under Wayland PyOpenGL may pick EGL first.
 # Must be set before any OpenGL / picogl import.
