@@ -1,31 +1,30 @@
 """
-Demonstrating texture - compare to tu02_texture_without_normal.py
+Demonstrating texture — same pipeline as tu_02_texture_without_normal.py.
+
+Uses TexturedMeshRenderer instead of the legacy TextureWindow / TextureRenderer path.
 """
 
-from pathlib import Path
+from __future__ import annotations
 
-from examples import g_uv_buffer_data, g_vertex_buffer_data
-from picogl.renderer import MeshData
-from picogl.ui.backend.glut.window.texture import TextureWindow
+import os
+import sys
 
-BASE_DIR = Path(__file__).resolve().parent
-GLSL_DIR = BASE_DIR / "glsl" / "tu02"
+from examples.tu_02_texture_without_normal import CUBE_SPEC
 
+if sys.platform.startswith("linux"):
+    os.environ.setdefault("PYOPENGL_PLATFORM", "glx")
+from dataclasses import replace
+import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
+from picogl.ui.backend.glut.window.textured_mesh import TexturedMeshRenderer
+
+# Same assets as CUBE_SPEC; used by examples/texture.py (legacy TextureWindow demo).
+TEXTURE_DEMO_SPEC = replace(CUBE_SPEC, title="texture window")
 
 def main() -> None:
-    """Set up the cube and draw it with texture."""
-    mesh_data = MeshData.from_raw(vertices=g_vertex_buffer_data, uvs=g_uv_buffer_data)
-    render_window = TextureWindow(
-        width=800,
-        height=600,
-        title="texture window",
-        data=mesh_data,
-        base_dir=BASE_DIR,
-        glsl_dir=GLSL_DIR,
-        use_texture=True,
-    )
-    render_window.initializeGL()
-    render_window.run()
+    win = TexturedMeshRenderer(TEXTURE_DEMO_SPEC)
+    win.initializeGL()
+    win.initialize()
+    win.run()
 
 
 if __name__ == "__main__":

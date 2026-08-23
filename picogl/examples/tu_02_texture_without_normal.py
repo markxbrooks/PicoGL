@@ -9,16 +9,28 @@ from __future__ import annotations
 import os
 import sys
 
+from examples.simple_textured_teapot import _TU02_TEXTURE, _TU02_GLSL
+
 # freeglut creates GLX contexts; under Wayland PyOpenGL may pick EGL first.
 if sys.platform.startswith("linux"):
     os.environ.setdefault("PYOPENGL_PLATFORM", "glx")
 
+from picogl.examples.textured_specs import create_cube_mesh
+from picogl.ui.backend.glut.window.textured_mesh import TexturedRendererSpec
 import picogl.ui.backend.glut.prefer_apple_glut  # noqa: F401
 import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
-from picogl.examples.textured_specs import CUBE_SPEC
 from picogl.ui.backend.glut.window.textured_mesh import TexturedMeshRenderer
 
-
+CUBE_SPEC = TexturedRendererSpec(
+    width=800,
+    height=600,
+    title="Tutorial 02 - Textured Cube",
+    zoom_distance=3.0,
+    distance_threshold=1.5,
+    texture_path=_TU02_TEXTURE,
+    glsl_dir=_TU02_GLSL,
+    create_mesh=create_cube_mesh,
+)
 if __name__ == "__main__":
     win = TexturedMeshRenderer(CUBE_SPEC)
     win.initializeGL()
