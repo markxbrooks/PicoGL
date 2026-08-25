@@ -27,6 +27,6 @@ def set_uniform_name_value(
     """
     location = get_uniform_location(shader_program, uniform_name)
     if location == -1:
-        log.warning(f"Uniform '{uniform_name}' not found in shader.")
+        log.warning(f"Uniform '{uniform_name}' not found in shader {shader_program}.")
         return
     set_uniform_location_value(location, uniform_value)

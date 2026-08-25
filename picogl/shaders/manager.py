@@ -57,6 +57,8 @@ from picogl.shaders.load import (load_fragment_and_vertex_for_shader_type,
                                  load_shader_source_string)
 from picogl.shaders.type import ShaderType
 
+SILENT_SHADER = True
+
 
 def _progress_iter(
     pairs: Iterable[Tuple[int, ShaderType]], *, desc: str, total: int
@@ -232,6 +234,7 @@ class ShaderManager:
             uniform_name=uniform_name,
             uniform_value=uniform_value,
         )
+        log.message(f"setting {self.current_shader.shader_name} uniform {uniform_name} to value {uniform_value}", silent=SILENT_SHADER)
 
     def use_default_shader(self, mvp_matrix: np.ndarray | glm.mat4 = None) -> None:
         """
