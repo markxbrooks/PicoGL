@@ -1,3 +1,10 @@
+"""
+This module provides functionality to interact with shader programs, enabling the
+setting of uniform variables in the shader.
+
+The module integrates external dependencies to manage uniform variable locations
+and their respective values in an OpenGL-like environment.
+"""
 from typing import Union
 
 import numpy as np

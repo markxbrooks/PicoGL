@@ -89,6 +89,27 @@ def _progress_iter(
 
 @dataclass
 class ShaderManager:
+    """
+    Manages shader programs and their interaction with the rendering pipeline.
+
+    The ShaderManager class is responsible for managing multiple shader programs,
+    including their initialization, binding, and usage. It keeps track of the current
+    shader being used, ensures shaders are properly loaded, and provides utilities
+    to set shader-specific uniform values. Fallback mechanisms are implemented to
+    handle cases where a desired shader cannot be loaded. The manager also supports
+    default shaders and updates to the model-view-projection (MVP) matrix uniforms
+    to match rendering requirements.
+
+    Attributes:
+        shaders: A dictionary of loaded shader programs mapped by ShaderType.
+        fallback_shader: An optional fallback shader loaded when a specific shader type cannot be initialized.
+        default_shader_type: The default shader type used when no specific type is requested.
+        current_shader_type: The currently active shader type.
+        current_shader: The currently active shader program.
+        current_shader_program: The OpenGL Program ID of the current shader program.
+        shader_directory: The directory path containing shader source files.
+        fallback_shader_directory: The directory path for fallback shader source files.
+    """
     shaders: Dict[ShaderType, ShaderProgram] = field(default_factory=dict)
     fallback_shader: Optional[ShaderProgram] = None
     default_shader_type: ShaderType = ShaderType.DEFAULT
