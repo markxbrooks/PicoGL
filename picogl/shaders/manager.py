@@ -2,26 +2,19 @@
 ShaderManager
 =============
 
-Example Usage
-=============
-Illustrative only (needs an OpenGL context, loaded shader sources, ``my_mvp_matrix``,
-and ``set_common_uniforms`` in scope)::
+Manages ``ShaderType → ShaderProgram`` lookup, optional eager warm-up, and the
+currently bound program. Compilation is lazy on :meth:`get`; call
+:meth:`initialize_shaders` during ``initializeGL`` for startup diagnostics.
+
+Example::
 
     shader_manager = ShaderManager()
+    shader_manager.initialize_shaders()
 
-    for shader_type_value in ShaderType:
-        shader_manager.load_shader_source_string(shader_type_value)
-
-    if shader_manager.use_shader_type(ShaderType.ATOMS):
-        shader_manager.current_shader_program = shader_manager.get(ShaderType.ATOMS)
-        set_common_uniforms(
-            shader_manager.current_shader_program,
-            mvp_matrix=my_mvp_matrix,
-            point_size=15.0,
-            highlight=True,
-            highlight_color=(1.0, 1.0, 0.0),
-        )
-
+    shader = shader_manager.use(ShaderType.ATOMS)
+    if shader is not None:
+        shader.set_mvp(my_mvp_matrix)
+        shader.set_uniform("point_size", 15.0)
 
 File naming convention:
 =======================
@@ -33,9 +26,11 @@ bonds_vert.glsl
 bonds_frag.glsl
 """
 
-import os
+from __future__ import annotations
+
+import warnings
 from dataclasses import dataclass, field
-from pathlib import Path
+from enum import Enum, auto
 from typing import Callable, Dict, Iterable, Optional, Tuple, Union
 
 import numpy as np
@@ -44,30 +39,29 @@ from pyglm import glm
 
 from picogl.backend.modern.core.shader.context import gl_context_available
 from picogl.backend.modern.core.shader.program import ShaderProgram
-from picogl.backend.modern.core.uniform.location import get_uniform_location
-from picogl.backend.modern.core.uniform.location_value import \
-    set_uniform_location_value
-from picogl.backend.modern.core.uniform.mvp import shader_uniform_set_mvp
-from picogl.backend.modern.core.uniform.set_location import \
-    set_uniform_name_value
-from picogl.globals import PICOGL_SHADER_SRC_DIRECTORY, SHADER_SRC_DIRECTORY
-from picogl.shaders.compile import compile_shaders
-from picogl.shaders.generate import generate_shader_programs
-from picogl.shaders.load import (load_fragment_and_vertex_for_shader_type,
-                                 load_shader_source_string)
+from picogl.globals import PICOGL_SHADER_SRC_DIRECTORY
+from picogl.shaders.loader import ShaderLoader
 from picogl.shaders.type import ShaderType
+from picogl.backend.gl.api.shader import gl_use_program
 
 SILENT_SHADER = True
+
+
+class ShaderManagerState(Enum):
+    """Lifecycle of optional eager warm-up (lazy load works in any state)."""
+
+    UNINITIALIZED = auto()
+    WARMING = auto()
+    READY = auto()
+    RELEASED = auto()
 
 
 def _progress_iter(
     pairs: Iterable[Tuple[int, ShaderType]], *, desc: str, total: int
 ) -> Iterable[Tuple[int, ShaderType]]:
-    """Optional tqdm in real terminals only; GUI apps use plain iteration (no monitor thread)."""
+    """Optional tqdm in real terminals only; GUI apps use plain iteration."""
     import sys
 
-    # tqdm spawns a background monitor thread; mixing that with Qt + gl init has
-    # caused segfaults when stderr is not a TTY (IDE / GUI runs).
     if not sys.stderr.isatty():
         return pairs
     try:
@@ -90,151 +84,156 @@ def _progress_iter(
 @dataclass
 class ShaderManager:
     """
-    Manages shader programs and their interaction with the rendering pipeline.
+    Repository and binding state for modern shader programs.
 
-    The ShaderManager class is responsible for managing multiple shader programs,
-    including their initialization, binding, and usage. It keeps track of the current
-    shader being used, ensures shaders are properly loaded, and provides utilities
-    to set shader-specific uniform values. Fallback mechanisms are implemented to
-    handle cases where a desired shader cannot be loaded. The manager also supports
-    default shaders and updates to the model-view-projection (MVP) matrix uniforms
-    to match rendering requirements.
-
-    Attributes:
-        shaders: A dictionary of loaded shader programs mapped by ShaderType.
-        fallback_shader: An optional fallback shader loaded when a specific shader type cannot be initialized.
-        default_shader_type: The default shader type used when no specific type is requested.
-        current_shader_type: The currently active shader type.
-        current_shader: The currently active shader program.
-        current_shader_program: The OpenGL Program ID of the current shader program.
-        shader_directory: The directory path containing shader source files.
-        fallback_shader_directory: The directory path for fallback shader source files.
+    ``shaders`` holds only successfully compiled programs. Failed types are
+    tracked in ``_failed`` and resolved via :meth:`resolve` using the fallback
+    program.
     """
+
     shaders: Dict[ShaderType, ShaderProgram] = field(default_factory=dict)
-    fallback_shader: Optional[ShaderProgram] = None
     default_shader_type: ShaderType = ShaderType.DEFAULT
     current_shader_type: ShaderType = ShaderType.DEFAULT
-    current_shader: Optional[ShaderProgram] = None
-    current_shader_program: Optional[int] = None
-    _initialized: bool = False
-    _initializing: bool = False
+    current_shader: ShaderProgram | None = None
     shader_directory: str = ""
     fallback_shader_directory: str = ""
+    _state: ShaderManagerState = field(default=ShaderManagerState.UNINITIALIZED, repr=False)
+    _failed: set[ShaderType] = field(default_factory=set, repr=False)
+    _loader: ShaderLoader | None = field(default=None, repr=False)
 
-    def use_shader_program(self, shader_program: ShaderProgram) -> None:
-        """
-        use_shader_program
+    @property
+    def current_shader_program(self) -> int | None:
+        """OpenGL program id of :attr:`current_shader`, or ``None``."""
+        if self.current_shader is None:
+            return None
+        return self.current_shader.program_id()
 
-        :param shader_program: PicoGLShader
-        :return: None
-        Bind the given shader shader_program and update current_shader/shader_program ID
-        """
-        if not self._initialized and not self._initializing:
-            self.initialize_shaders()
-        if not shader_program:
-            log.error(
-                "❌ Cannot bind: shader_program is None or invalid", scope="load_shader"
+    @property
+    def fallback_shader(self) -> ShaderProgram | None:
+        """Shared fallback program (compiled lazily)."""
+        loader = self._ensure_loader()
+        return loader.fallback.program()
+
+    @property
+    def _initialized(self) -> bool:
+        return self._state == ShaderManagerState.READY
+
+    @_initialized.setter
+    def _initialized(self, value: bool) -> None:
+        if value:
+            self._state = ShaderManagerState.READY
+        elif self._state == ShaderManagerState.READY:
+            self._state = ShaderManagerState.UNINITIALIZED
+
+    @property
+    def _initializing(self) -> bool:
+        return self._state == ShaderManagerState.WARMING
+
+    def _ensure_loader(self) -> ShaderLoader:
+        if self._loader is None:
+            self._loader = ShaderLoader(
+                self.shader_directory or str(PICOGL_SHADER_SRC_DIRECTORY)
             )
+        return self._loader
+
+    def bind(self, shader: ShaderProgram) -> None:
+        """Bind *shader* and record it as current (no loading or warm-up)."""
+        if not shader:
+            log.error("Cannot bind: shader is None or invalid", scope="ShaderManager")
             return
         try:
-            shader_program.bind()
-            self.current_shader = shader_program
-            self.current_shader_program = shader_program.program_id()
+            shader.bind()
+            self.current_shader = shader
         except RuntimeError as ex:
-            log.warning(
-                f"Shader bind skipped: {ex}",
-                scope="load_shader",
-            )
+            log.warning(f"Shader bind skipped: {ex}", scope="ShaderManager")
         except Exception as ex:
-            log.error(
-                f"❌ Failed to bind shader shader_program: {ex}", scope="load_shader"
-            )
+            log.error(f"Failed to bind shader: {ex}", scope="ShaderManager")
 
-    def bind(self, shader_program: ShaderProgram) -> None:
-        """
-        bind
-
-        :param shader_program: ShaderProgram
-        :return: None
-        """
-        shader_program.bind()
-        self.current_shader = shader_program
-        self.current_shader_program = shader_program.program_id()
+    def use_shader_program(self, shader_program: ShaderProgram) -> None:
+        """Deprecated alias for :meth:`bind`."""
+        self.bind(shader_program)
 
     def unbind(self) -> None:
-        """
-        unbind
-
-        :return: None
-        """
-        from OpenGL.GL import glUseProgram
-
-        glUseProgram(0)
+        """Unbind the active program."""
+        gl_use_program(0)
         self.current_shader = None
-        self.current_shader_program = None
 
-    def get_shader_type(
-        self, shader_type: ShaderType
-    ) -> Optional[ShaderProgram | ShaderProgram]:
-        """
-        Return the shader shader_program for the given ShaderType, loading if necessary.
-        """
+    def get(self, shader_type: ShaderType) -> ShaderProgram | None:
+        """Return a compiled program for *shader_type*, loading on cache miss."""
         cached = self.shaders.get(shader_type)
         if cached is not None:
             return cached
-        if shader_type not in self.shaders:
-            shader_number = list(ShaderType).index(shader_type)
-            self.load_shader(shader_type, shader_number)
-            return self.shaders.get(shader_type)
-        return None
+        if shader_type in self._failed:
+            return None
+        if not gl_context_available():
+            return None
+        return self._load(shader_type)
+
+    def get_shader_type(self, shader_type: ShaderType) -> ShaderProgram | None:
+        """Deprecated alias for :meth:`get`."""
+        return self.get(shader_type)
+
+    def resolve(self, shader_type: ShaderType) -> ShaderProgram | None:
+        """Return the program for *shader_type*, or the fallback if load failed."""
+        return self.get(shader_type) or self._fallback_program()
+
+    def used_fallback_for(self, shader_type: ShaderType) -> bool:
+        """``True`` when *shader_type* failed to compile and fallback would be used."""
+        return shader_type in self._failed
+
+    def failed_types(self) -> frozenset[ShaderType]:
+        """Shader types that failed compilation during warm-up or lazy load."""
+        return frozenset(self._failed)
+
+    def use(self, shader_type: ShaderType) -> ShaderProgram | None:
+        """Resolve, bind, and return the program for *shader_type*."""
+        shader = self.resolve(shader_type)
+        if shader is None:
+            log.error(
+                f"Shader type {shader_type} could not be loaded or bound.",
+                scope=self.__class__.__name__,
+            )
+            return None
+        self.bind(shader)
+        if self.current_shader is not shader:
+            return None
+        self.current_shader_type = shader_type
+        return shader
 
     def use_shader_type(
         self,
         shader_type: ShaderType,
-        mvp_matrix: np.ndarray | glm.mat4 = None,
-        zoom_scale: int | float = None,
+        mvp_matrix: np.ndarray | glm.mat4 | None = None,
+        zoom_scale: int | float | None = None,
     ) -> bool:
         """
-        Load (if needed) and bind the shader of the given type.
+        Resolve and bind *shader_type*.
 
-        Returns True when the program is bound in the current gl context.
+        ``mvp_matrix`` and ``zoom_scale`` are deprecated; set uniforms on the
+        returned :class:`ShaderProgram` via :meth:`use` instead.
         """
-        if not self._initialized and not self._initializing:
-            self.initialize_shaders()
-        shader = self.get_shader_type(shader_type)
-        if not shader:
-            log.error(
-                f"❌ Shader type {shader_type} could not be loaded or bound.",
-                scope=self.__class__.__name__,
+        if mvp_matrix is not None or zoom_scale is not None:
+            warnings.warn(
+                "use_shader_type(mvp_matrix=..., zoom_scale=...) is deprecated; "
+                "use shader_manager.use(type) then shader.set_mvp(...) / "
+                "set_uniform(...)",
+                DeprecationWarning,
+                stacklevel=2,
             )
+        shader = self.use(shader_type)
+        if shader is None:
             return False
-        self.use_shader_program(shader)
-        if self.current_shader is not shader:
-            return False
-        self.current_shader_type = shader_type
         if mvp_matrix is not None:
             self.update_mvp_uniform(mvp_matrix=mvp_matrix)
         if zoom_scale is not None:
-            if self.current_shader_type == ShaderType.ATOMS:
-                loc = get_uniform_location(
-                    self.current_shader.program_id(), "zoom_scale"
-                )
-                if loc != -1:
-                    set_uniform_location_value(loc, zoom_scale)
+            shader.set_uniform("zoom_scale", zoom_scale)
         return True
 
     def update_mvp_uniform(self, mvp_matrix: np.ndarray | glm.mat4) -> None:
-        """
-        update_mvp_uniform
-
-        :param mvp_matrix: np.ndarray | glm.mat4:
-        :return: None
-        """
+        """Deprecated: delegate to :attr:`current_shader`."""
         if self.current_shader is None:
             return
-        shader_uniform_set_mvp(
-            shader_program=self.current_shader.program_id(), mvp_matrix=mvp_matrix
-        )
+        self.current_shader.set_mvp(mvp_matrix)
 
     def set_uniform_value(
         self,
@@ -243,43 +242,34 @@ class ShaderManager:
             float, int, glm.vec2, glm.vec3, glm.vec4, glm.mat4, np.ndarray
         ],
     ) -> None:
-        """
-        set_uniform_value
-
-        :param uniform_name: str
-        :param uniform_value: Union[float, int, glm.vec2, glm.vec3, glm.vec4, glm.mat4, np.ndarray]
-        :return: None
-        """
-        set_uniform_name_value(
-            shader_program=self.current_shader.program_id(),
-            uniform_name=uniform_name,
-            uniform_value=uniform_value,
+        """Deprecated: delegate to :attr:`current_shader`."""
+        if self.current_shader is None:
+            return
+        self.current_shader.set_uniform(uniform_name, uniform_value)
+        log.message(
+            f"setting {self.current_shader.shader_name} uniform {uniform_name} "
+            f"to value {uniform_value}",
+            silent=SILENT_SHADER,
         )
-        log.message(f"setting {self.current_shader.shader_name} uniform {uniform_name} to value {uniform_value}", silent=SILENT_SHADER)
 
-    def use_default_shader(self, mvp_matrix: np.ndarray | glm.mat4 = None) -> None:
-        """
-        use_default_shader
-
-        :param mvp_matrix: np.ndarray | glm.mat4
-        :return:
-        Bind the default shader type.
-        """
-        if not self._initialized and not self._initializing:
-            self.initialize_shaders()
-        self.use_shader_type(
-            shader_type=self.default_shader_type, mvp_matrix=mvp_matrix
-        )
+    def use_default_shader(
+        self, mvp_matrix: np.ndarray | glm.mat4 | None = None
+    ) -> None:
+        """Bind the default shader type."""
+        if mvp_matrix is not None:
+            self.use_shader_type(
+                shader_type=self.default_shader_type, mvp_matrix=mvp_matrix
+            )
+        else:
+            self.use(self.default_shader_type)
 
     def initialize_shaders(
         self,
-        shader_dir: str = None,
+        shader_dir: str | None = None,
         *,
-        on_shader_loaded: Optional[Callable[[int, int, ShaderType], None]] = None,
-    ):
-        """Initialize src and mark gl state as ready."""
-        # Load src into the manager. If caller does not provide a directory,
-        # keep an existing shader_directory or default to PicoGL's packaged src root.
+        on_shader_loaded: Callable[[int, int, ShaderType], None] | None = None,
+    ) -> None:
+        """Eager warm-up: compile all :class:`ShaderType` values when GL context exists."""
         if shader_dir:
             target_dir = str(shader_dir)
         elif self.shader_directory:
@@ -287,175 +277,117 @@ class ShaderManager:
         else:
             target_dir = str(PICOGL_SHADER_SRC_DIRECTORY)
 
-        if self._initialized:
+        if self._state == ShaderManagerState.READY:
             if target_dir == str(self.shader_directory):
                 return
             self.release_shaders()
-            self._initialized = False
 
         if not gl_context_available():
             log.warning(
                 "ShaderManager.initialize_shaders deferred: no current OpenGL context. "
                 "Load shaders from initializeGL / paintGL after the gl widget context is current.",
-                scope="load_shader",
+                scope="ShaderManager",
             )
             return
 
-        if self._initializing:
+        if self._state == ShaderManagerState.WARMING:
             return
 
-        self._initializing = True
+        self._state = ShaderManagerState.WARMING
         try:
             self.shader_directory = target_dir
+            loader = self._ensure_loader()
+            loader.set_directory(target_dir)
+            self._warm_up_all(on_shader_loaded=on_shader_loaded)
 
-            failed = []
-            shader_pairs = list(enumerate(ShaderType))
-            n = len(shader_pairs)
-            for shader_number, shader_type in _progress_iter(
-                shader_pairs, desc="Shader programs", total=n
-            ):
-                log.message(
-                    f"Loading shader type: '{shader_type.value} from {self.shader_directory}'",
-                    silent=True,
-                    scope="load_shader",
-                )
-                self.load_shader(shader_type, shader_number)
-                if on_shader_loaded is not None:
-                    try:
-                        on_shader_loaded(shader_number, n, shader_type)
-                    except Exception:
-                        pass
-                if self.shaders[shader_type] is self.fallback_shader:
-                    failed.append(shader_type)
-
+            failed = [st for st in ShaderType if st in self._failed]
             if failed:
                 log.warning(
-                    f"⚠️ Shader fallback used for: {', '.join(st.value for st in failed)}",
-                    scope="load_shader",
+                    f"Shader fallback will be used for: "
+                    f"{', '.join(st.value for st in failed)}",
+                    scope="ShaderManager",
                 )
 
             log.message(
-                "✅ Shader sources loaded (including fallback where needed).",
-                scope="load_shader",
+                "Shader sources loaded (fallback available for failed types).",
+                scope="ShaderManager",
                 silent=True,
             )
-            default_shader = self.shaders.get(self.default_shader_type)
-            if default_shader is None:
-                default_shader = self.get_shader_type(self.default_shader_type)
+            default_shader = self.resolve(self.default_shader_type)
             if default_shader:
-                self.use_shader_program(default_shader)
+                self.bind(default_shader)
                 if self.current_shader is default_shader:
                     self.current_shader_type = self.default_shader_type
-                    self._initialized = True
-            if not self._initialized:
+                    self._state = ShaderManagerState.READY
+            if self._state != ShaderManagerState.READY:
                 log.error(
                     "ShaderManager: default shader could not be bound; "
                     "modern rendering will stay disabled until gl init succeeds.",
-                    scope="load_shader",
+                    scope="ShaderManager",
                 )
         finally:
-            self._initializing = False
+            if self._state == ShaderManagerState.WARMING:
+                self._state = ShaderManagerState.UNINITIALIZED
 
-    def load_shader(self, shader_type: str, shader_number: int) -> None:
-        """
-        load_shader
-
-        :param shader_number: Shader Number
-        :param shader_type: ShaderType
-        :return: None
-        """
-        if not gl_context_available():
-            log.warning(
-                f"Cannot compile shader {shader_type}: no current OpenGL context",
-                scope="load_shader",
-            )
-            return
-        try:
+    def _warm_up_all(
+        self,
+        *,
+        on_shader_loaded: Callable[[int, int, ShaderType], None] | None = None,
+    ) -> None:
+        shader_pairs = list(enumerate(ShaderType))
+        n = len(shader_pairs)
+        for shader_number, shader_type in _progress_iter(
+            shader_pairs, desc="Shader programs", total=n
+        ):
             log.message(
-                f"Loading shaders from {self.shader_directory}",
+                f"Loading shader type: '{shader_type.value}' from {self.shader_directory}",
                 silent=True,
-                scope="load_shader",
+                scope="ShaderManager",
             )
-            vertex_src, fragment_src = load_fragment_and_vertex_for_shader_type(
-                shader_type.value, self.shader_directory
-            )
-            picogl_shader_program = generate_shader_programs(
-                vertex_src, fragment_src, shader_type
-            )
-            if picogl_shader_program:
-                log.message(
-                    f"[{shader_number}/{len(ShaderType)}] ✅ Shader type `{shader_type}` compiled and registered",
-                    scope=self.__class__.__name__,
-                    silent=True,
-                )
-                self.shaders[shader_type] = picogl_shader_program
-            else:
-                log.warning(f"⚠️ Falling back for {shader_type}", scope="load_shader")
-                self._ensure_fallback()
-                self.shaders[shader_type] = self.fallback_shader
-        except Exception as ex:
-            log.warning(
-                f"⚠️ Shader load failed for shader number {shader_number}, type {shader_type} directory {self.shader_directory}: {ex}", scope="load_shader"
-            )
-            self._ensure_fallback()
-            self.shaders[shader_type] = self.fallback_shader
+            self._load(shader_type)
+            if on_shader_loaded is not None:
+                try:
+                    on_shader_loaded(shader_number, n, shader_type)
+                except Exception:
+                    pass
 
-    def _fallback_shader_sources(self) -> tuple[str, str]:
-        """Resolve fallback GLSL from the active shader root, then PicoGL defaults."""
+    def load_shader(self, shader_type: ShaderType, shader_number: int = 0) -> None:
+        """Public compile hook (used by warm-up and tests)."""
+        self._load(shader_type)
+
+    def _load(self, shader_type: ShaderType) -> ShaderProgram | None:
+        if shader_type in self.shaders:
+            return self.shaders[shader_type]
+        if shader_type in self._failed:
+            return None
+        if not gl_context_available():
+            return None
         if self.shader_directory:
-            base = Path(self.shader_directory)
-            root = base / "src" if (base / "src").is_dir() else base
-            fallback_dir = root / "fallback"
-            vert_path = fallback_dir / "vertex.glsl"
-            frag_path = fallback_dir / "fragment.glsl"
-            if vert_path.is_file() and frag_path.is_file():
-                return (
-                    load_shader_source_string(str(vert_path)),
-                    load_shader_source_string(str(frag_path)),
-                )
-        return (
-            load_shader_source_string("fallback_vertex.glsl", SHADER_SRC_DIRECTORY),
-            load_shader_source_string("fallback_fragment.glsl", SHADER_SRC_DIRECTORY),
-        )
+            self._ensure_loader().set_directory(self.shader_directory)
+        result = self._ensure_loader().load(shader_type)
+        if result.shader is not None:
+            self.shaders[shader_type] = result.shader
+            return result.shader
+        self._failed.add(shader_type)
+        return None
 
-    def _ensure_fallback(self):
-        """
-        _ensure_fallback
+    def _fallback_program(self) -> ShaderProgram | None:
+        loader = self._ensure_loader()
+        if self.shader_directory:
+            loader.set_directory(self.shader_directory)
+        return loader.fallback.program()
 
-        :return: None
-        """
-        if self.fallback_shader is None:
-            try:
-                vert, frag = self._fallback_shader_sources()
-                self.fallback_shader = compile_shaders(vert, frag, "fallback")
-                log.message(
-                    "✅ Fallback shader_manager.current_shader_program compiled",
-                    silent=True,
-                    scope="load_shader",
-                )
-            except Exception as ex:
-                log.error(
-                    f"❌ Fallback shader_manager.current_shader_program setup failed: {ex}"
-                )
-
-    def get(self, shader_type: ShaderType) -> Optional[ShaderProgram | ShaderProgram]:
-        return self.shaders.get(shader_type)
-
-    def release_shaders(self):
-        """
-        release_shaders
-
-        :return: None
-        """
-        for key, shader in self.shaders.items():
+    def release_shaders(self) -> None:
+        """Release all compiled programs and reset manager state."""
+        for shader in self.shaders.values():
             try:
                 shader.release()
-            except (Exception,):
+            except Exception:
                 pass
         self.shaders.clear()
-        if self.fallback_shader:
-            try:
-                self.fallback_shader.release()
-            except (Exception,):
-                pass
-            self.fallback_shader = None
+        self._failed.clear()
+        if self._loader is not None:
+            self._loader.fallback.release()
+        self._loader = None
+        self.current_shader = None
+        self._state = ShaderManagerState.RELEASED

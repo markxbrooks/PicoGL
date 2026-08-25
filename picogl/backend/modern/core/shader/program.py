@@ -10,6 +10,7 @@ from pathlib import Path
 import numpy as np
 from decologr import Decologr as log
 from OpenGL.raw.GL.VERSION.GL_2_0 import GL_LINK_STATUS
+from pyglm import glm
 
 from picogl.backend.gl.api.shader import (GLShader, gl_get_program_info_log,
                                           gl_link_program, gl_use_program)
@@ -281,6 +282,18 @@ class ShaderProgram:
         set_uniform_location_value(loc, value)
         self._uniform_state[name] = value
         return self
+
+    def set_uniform(self, name: str, value) -> "ShaderProgram":
+        """Upload a uniform on this program (alias for :meth:`uniform`)."""
+        return self.uniform(name, value)
+
+    def set_mvp(self, mvp_matrix: np.ndarray | glm.mat4) -> None:
+        """Set the ``mvp_matrix`` uniform on this program."""
+        from picogl.backend.modern.core.uniform.mvp import shader_uniform_set_mvp
+
+        shader_uniform_set_mvp(
+            shader_program=self.program_id(), mvp_matrix=mvp_matrix
+        )
 
     def get_uniform_location(self, uniform_name: str) -> int:
         if uniform_name in self.uniforms:
