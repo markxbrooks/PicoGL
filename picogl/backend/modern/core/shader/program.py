@@ -6,8 +6,11 @@ compiling and linking shaders, and setting uniform values.
 """
 
 from pathlib import Path
+from typing import Union
 
 import numpy as np
+from pyglm import glm
+
 from decologr import Decologr as log
 from OpenGL.raw.GL.VERSION.GL_2_0 import GL_LINK_STATUS
 
@@ -171,6 +174,36 @@ class ShaderProgram:
 
     def program_id(self):
         return self.program
+
+    def set_uniform_name_value(
+            self,
+            uniform_name: str,
+            uniform_value: Union[
+                float, int, glm.vec2, glm.vec3, glm.vec4, glm.mat4, np.ndarray
+            ],
+    ):
+        """
+        set_uniform_name_value
+
+        :param uniform_name: Name of the uniform variable
+        :param uniform_value: Value to set (supports float, int, vec2, vec3, vec4, mat4, or np.ndarray)
+
+        Set a uniform variable in a shader program
+        """
+        if not self.program:
+            raise RuntimeError(f"program not set")
+        location = self.get_location_for_uniform_name(uniform_name)
+        if location == -1:
+            log.warning(f"Uniform '{uniform_name}' not found in shader {self.shader_name}.")
+            return
+        set_uniform_location_value(location, uniform_value)
+
+    def get_location_for_uniform_name(self, uniform_name: str) -> int:
+        """get location for uniform variable"""
+        if not self.program:
+            raise RuntimeError(f"program not set")
+        location = get_uniform_location(self.program, uniform_name)
+        return location
 
     def init_shader_from_shader_files(
         self,

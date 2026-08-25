@@ -223,6 +223,16 @@ class ShaderManager:
                     set_uniform_location_value(loc, zoom_scale)
         return True
 
+    def use(self, shader_type: ShaderType) -> Optional[ShaderProgram]:
+        """
+        Bind *shader_type* without uploading MVP or other draw uniforms.
+
+        Returns the bound program, or ``None`` if bind failed.
+        """
+        if self.use_shader_type(shader_type):
+            return self.current_shader
+        return None
+
     def update_mvp_uniform(self, mvp_matrix: np.ndarray | glm.mat4) -> None:
         """
         update_mvp_uniform
@@ -250,8 +260,9 @@ class ShaderManager:
         :param uniform_value: Union[float, int, glm.vec2, glm.vec3, glm.vec4, glm.mat4, np.ndarray]
         :return: None
         """
-        set_uniform_name_value(
-            shader_program=self.current_shader.program_id(),
+        if not self.current_shader:
+            raise RuntimeError("No current shader")
+        self.current_shader.set_uniform_name_value(
             uniform_name=uniform_name,
             uniform_value=uniform_value,
         )
