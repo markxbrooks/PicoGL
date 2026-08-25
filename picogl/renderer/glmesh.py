@@ -208,17 +208,44 @@ class GLMesh:
             registry_label=registry_label,
         )
 
+    def _color_attrib_index(self) -> int:
+        """Vertex attribute index for the color buffer in this mesh layout."""
+        from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
+
+        for attr in self._layout_descriptor.attributes:
+            if attr.vbo_type == VBOType.CBO:
+                return int(attr.index)
+        return 1
+
     def update_colors(self, colors: np.ndarray):
         self.colors = colors.astype(np.float32)
 
-        if self.vao:
-            self.vao.update_vbo(index=1, data=self.colors)  # CBO slot
+        if not self.vao:
+            return
+
+        color_index = self._color_attrib_index()
+        has_color_vbo = False
+        modern_vbo_for = getattr(self.vao, "_modern_vbo_for_attrib", None)
+        if callable(modern_vbo_for):
+            has_color_vbo = modern_vbo_for(color_index) is not None
+
+        if not has_color_vbo:
+            # VAO was uploaded before colors existed (MeshData defaults colours to
+            # zero); drop GPU state so the next upload() includes the colour VBO.
+            self.delete()
+            return
+
+        self.vao.update_vbo(index=color_index, data=self.colors)
 
     def upload(self) -> None:
         """Allocate & fill GPU buffers."""
 
         if self.vao:
-            return  # already uploaded
+            is_valid = getattr(self.vao, "is_valid_in_current_context", None)
+            if callable(is_valid) and not is_valid():
+                self.delete()
+            else:
+                return  # already uploaded
         vao: Optional[VertexArrayObject] = None
         try:
             vao = VertexArrayObject(registry_label=self._registry_label)

@@ -20,18 +20,10 @@ def load_shader(shader_type: ShaderType):
             Expected original signature (after any container like RibbonChainGroup):
                 func(ribbon_buffers, shader_manager, mvp_matrix, zoom_scale=None, ...)
             """
-            # Prefer explicit keyword arguments when provided
             shader_manager = kwargs.get("shader_manager")
             mvp_matrix = kwargs.get("mvp_matrix")
             zoom_scale = kwargs.get("zoom_scale")
 
-            # Backwards compatibility: allow positional shader_manager / mvp_matrix
-            #
-            # args layout for draw_ribbon_vao:
-            #   0: ribbon_buffers (RibbonChainGroup)
-            #   1: shader_manager (ShaderManager)
-            #   2: mvp_matrix (glm.mat4 / np.ndarray)
-            #   3: optional zoom_scale (float)
             if shader_manager is None and len(args) >= 2:
                 shader_manager = args[1]
             if mvp_matrix is None and len(args) >= 3:
@@ -45,12 +37,12 @@ def load_shader(shader_type: ShaderType):
                     "either as keyword arguments or positional parameters."
                 )
 
-            # Use the shader and set the MVP matrix
-            shader_manager.use_shader_type(
-                shader_type=shader_type, mvp_matrix=mvp_matrix, zoom_scale=zoom_scale
-            )
+            shader = shader_manager.use(shader_type)
+            if shader is not None:
+                shader.set_mvp(mvp_matrix)
+                if zoom_scale is not None:
+                    shader.set_uniform("zoom_scale", float(zoom_scale))
 
-            # Execute the original function
             return func(*args, **kwargs)
 
         return wrapper
