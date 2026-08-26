@@ -24,7 +24,9 @@ if sys.platform.startswith("linux"):
 
 
 import numpy as np
-
+from picogl.backend.gl.api.point import gl_point_size
+from picogl.backend.draw import gl_draw_arrays
+from picogl.backend.gl.enums import GLDrawMode
 import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
 from picogl.backend.gl.api.enable import gl_enable, gl_enable_capability_list
 from picogl.backend.gl.api.hint import gl_hint
