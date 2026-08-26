@@ -28,7 +28,6 @@ from picogl.backend.gl.api.shader import (gl_attach_shader, gl_compile_shader,
                                           gl_get_shader_info_log,
                                           gl_get_shader_iv, gl_shader_source)
 from picogl.backend.modern.core.shader.helpers import log_gl_error
-# from picogl.backend.modern.core.shader.program import GLShader
 from picogl.boolean import GLBoolean
 
 
