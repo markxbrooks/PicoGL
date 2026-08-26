@@ -194,15 +194,3 @@ def gl_teximage3d(
         num_type,
         data,
     )
-
-
-def gl_compressed_tex_image_old(
-    byte_array: CompressedTexData,
-    gl_format: FloatConstant | IntConstant | LongConstant | StringConstant | Constant,
-    h: int,
-    level: int,
-    size: int,
-    w: int,
-) -> None:
-    """Alias for :func:`gl_compressed_tex_image`."""
-    gl_compressed_tex_image(byte_array, gl_format, h, level, size, w)

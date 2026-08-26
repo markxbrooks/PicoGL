@@ -75,7 +75,7 @@ class ShaderUniform:
         Upload the current value to the bound gl program using PyOpenGL-like calls.
         If location < 0 (gl returns -1 when not found/used), this is a no-op.
 
-        - gl_module: optional OpenGL.gl-like module. If None, will try to import PyOpenGL
+        - gl_module: optional OpenGL.GL-like module. If None, will try to import PyOpenGL
           (from OpenGL import gl as gl) at call time.
         """
         # Resolve gl module (PyOpenGL)

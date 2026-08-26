@@ -70,8 +70,8 @@ class TestVertexBufferGroup(unittest.TestCase):
             patch("picogl.gpu.buffers.vertex.legacy.gl_enableClientState"),
             patch("picogl.gpu.buffers.vertex.legacy.legacy_client_states"),
             patch("picogl.gpu.buffers.vertex.legacy.delete_buffer_object"),
-            patch("OpenGL.gl.glGenBuffers", return_value=1),
-            patch("OpenGL.gl.glBufferData"),
+            patch("OpenGL.GL.glGenBuffers", return_value=1),
+            patch("OpenGL.GL.glBufferData"),
         ]
 
         # Start all patches

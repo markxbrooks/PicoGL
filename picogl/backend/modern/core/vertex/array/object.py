@@ -20,7 +20,7 @@ Features:
 
 Dependencies:
 - numpy
-- PyOpenGL (OpenGL.gl and OpenGL.raw.gl)
+- PyOpenGL (OpenGL.GL and OpenGL.raw.GL)
 
 Example usage:
 ==============

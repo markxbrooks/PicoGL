@@ -73,7 +73,7 @@ def test_qt_cube_initialization():
         with mock.patch("PySide6.QtWidgets.QApplication"), mock.patch(
             "PySide6.QtCore.QTimer"
         ), mock.patch("PySide6.QtOpenGLWidgets.QOpenGLWidget"), mock.patch(
-            "OpenGL.gl"
+            "OpenGL.GL"
         ), mock.patch(
             "OpenGL.GLU"
         ):
@@ -114,7 +114,7 @@ def test_rotation_operations():
         with mock.patch("PySide6.QtWidgets.QApplication"), mock.patch(
             "PySide6.QtCore.QTimer"
         ), mock.patch("PySide6.QtOpenGLWidgets.QOpenGLWidget"), mock.patch(
-            "OpenGL.gl"
+            "OpenGL.GL"
         ), mock.patch(
             "OpenGL.GLU"
         ):
