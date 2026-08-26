@@ -23,7 +23,7 @@ def generate_shader_programs(
     if picogl_shader_program is None:
         return None
     shader_program = (
-        picogl_shader_program.program_id()
+        picogl_shader_program.program
     )  # ✅ This is safe for glUseProgram
     if shader_program is None:
         log.error(

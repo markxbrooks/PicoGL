@@ -146,7 +146,7 @@ class ShaderProgram:
         self.base_dir = glsl_dir
         self.vertex_shader = None
         self.fragment_shader = None
-        self.program: int | None = None
+        self._program: int | None = None
         self.uniforms = {}
         self._uniform_state = {}
         self.compiler = ShaderCompiler()
@@ -156,7 +156,7 @@ class ShaderProgram:
             and fragment_source_file is not None
             and glsl_dir is not None
         ):
-            self.program = self.compiler.compile_shader_files(
+            self._program = self.compiler.compile_shader_files(
                 ShaderFiles(
                     vertex=vertex_source_file,
                     fragment=fragment_source_file,
@@ -173,8 +173,19 @@ class ShaderProgram:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.unbind()
 
+    @property
+    def program(self):
+        return self._program
+
+    @program.setter
+    def program(self, value: int):
+        self._program = value
+        log.message(f"Set shader program {value}", silent=True)
+        log_gl_error()
+
+    @property
     def program_id(self):
-        return self.program
+        return self._program
 
     def set_uniform_name_value(
             self,
@@ -325,7 +336,7 @@ class ShaderProgram:
         from picogl.backend.modern.core.uniform.mvp import shader_uniform_set_mvp
 
         shader_uniform_set_mvp(
-            shader_program=self.program_id(), mvp_matrix=mvp_matrix
+            shader_program=self.program, mvp_matrix=mvp_matrix
         )
 
     def get_uniform_location(self, uniform_name: str) -> int:

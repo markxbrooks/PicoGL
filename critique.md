@@ -1,5 +1,5 @@
-# ShaderManager Critique
 
+# ShaderManager Critique
 Overall, I think this is a substantial improvement over a typical ad-hoc shader loader, but I would not keep it in its current form. The main issue is that ShaderManager is currently doing too many jobs: resource discovery, compilation, fallback policy, OpenGL context lifecycle, program binding, current-state tracking, uniform management, progress reporting, and error recovery.
 
 The good news is that the underlying design is quite salvageable.

@@ -139,7 +139,7 @@ class ShaderManager:
         try:
             shader_program.bind()
             self.current_shader = shader_program
-            self.current_shader_program = shader_program.program_id()
+            self.current_shader_program = shader_program.program
         except RuntimeError as ex:
             log.warning(
                 f"Shader bind skipped: {ex}",
@@ -159,7 +159,7 @@ class ShaderManager:
         """
         shader_program.bind()
         self.current_shader = shader_program
-        self.current_shader_program = shader_program.program_id()
+        self.current_shader_program = shader_program.program
 
     def unbind(self) -> None:
         """
@@ -217,7 +217,7 @@ class ShaderManager:
         if zoom_scale is not None:
             if self.current_shader_type == ShaderType.ATOMS:
                 loc = get_uniform_location(
-                    self.current_shader.program_id(), "zoom_scale"
+                    self.current_shader.program, "zoom_scale"
                 )
                 if loc != -1:
                     set_uniform_location_value(loc, zoom_scale)
@@ -243,7 +243,7 @@ class ShaderManager:
         if self.current_shader is None:
             return
         shader_uniform_set_mvp(
-            shader_program=self.current_shader.program_id(), mvp_matrix=mvp_matrix
+            shader_program=self.current_shader.program, mvp_matrix=mvp_matrix
         )
 
     def set_uniform_value(
