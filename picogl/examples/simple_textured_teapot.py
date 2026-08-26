@@ -9,14 +9,14 @@ from __future__ import annotations
 import os
 import sys
 
-
 if sys.platform.startswith("linux"):
     os.environ.setdefault("PYOPENGL_PLATFORM", "glx")
 
 import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
-from picogl.ui.backend.glut.window.textured_mesh import TexturedMeshRenderer
 from picogl.examples.textured_specs import _EXAMPLES_DIR, create_teapot_mesh
-from picogl.ui.backend.glut.window.textured_mesh import TexturedRendererSpec
+from picogl.ui.backend.glut.window.textured_mesh import (TexturedMeshRenderer,
+                                                         TexturedRendererSpec)
+
 # Same assets as CUBE_SPEC; used by examples/texture.py (legacy TextureWindow demo).
 _TU02_TEXTURE = _EXAMPLES_DIR / "resources" / "tu02" / "uvtemplate.tga"
 _TU02_GLSL = _EXAMPLES_DIR / "glsl" / "tu02"

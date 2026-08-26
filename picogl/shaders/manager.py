@@ -42,14 +42,12 @@ import numpy as np
 from decologr import Decologr as log
 from pyglm import glm
 
+from picogl.backend.gl.api.shader import gl_get_uniform_location
 from picogl.backend.modern.core.shader.context import gl_context_available
 from picogl.backend.modern.core.shader.program import ShaderProgram
-from picogl.backend.modern.core.uniform.location import get_uniform_location
 from picogl.backend.modern.core.uniform.location_value import \
     set_uniform_location_value
 from picogl.backend.modern.core.uniform.mvp import shader_uniform_set_mvp
-from picogl.backend.modern.core.uniform.set_location import \
-    set_uniform_name_value
 from picogl.globals import PICOGL_SHADER_SRC_DIRECTORY, SHADER_SRC_DIRECTORY
 from picogl.shaders.compile import compile_shaders
 from picogl.shaders.generate import generate_shader_programs
@@ -216,7 +214,7 @@ class ShaderManager:
             self.update_mvp_uniform(mvp_matrix=mvp_matrix)
         if zoom_scale is not None:
             if self.current_shader_type == ShaderType.ATOMS:
-                loc = get_uniform_location(
+                loc = gl_get_uniform_location(
                     self.current_shader.program, "zoom_scale"
                 )
                 if loc != -1:

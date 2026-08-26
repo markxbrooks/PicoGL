@@ -18,8 +18,8 @@ from picogl.backend.gl.capability import GLPipelineCapability
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums.legacy.scale import gl_viewport
 from picogl.backend.gl.state.shader import gl_shader_bound
-from picogl.backend.glut import GLUTMouseButton, GLUTMouseState
 from picogl.backend.glm.glm import glm_identity_matrix
+from picogl.backend.glut import GLUTMouseButton, GLUTMouseState
 from picogl.backend.modern.core.setup.lighting import gl_initialize_background
 from picogl.backend.modern.core.shader.files import ShaderFiles
 from picogl.backend.modern.core.shader.program import ShaderProgram

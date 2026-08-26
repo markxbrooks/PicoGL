@@ -14,12 +14,11 @@ if sys.platform.startswith("linux"):
     os.environ.setdefault("PYOPENGL_PLATFORM", "glx")
 
 import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
-from picogl.examples.data.cube_data import g_uv_buffer_data, g_vertex_buffer_data
+from picogl.examples.data.cube_data import (g_uv_buffer_data,
+                                            g_vertex_buffer_data)
 from picogl.renderer import MeshData
-from picogl.ui.backend.glut.window.textured_mesh import (
-    TexturedMeshRenderer,
-    TexturedRendererSpec,
-)
+from picogl.ui.backend.glut.window.textured_mesh import (TexturedMeshRenderer,
+                                                         TexturedRendererSpec)
 from picogl.utils.mesh import meshdata_factory
 
 _EXAMPLES_DIR = Path(__file__).resolve().parent

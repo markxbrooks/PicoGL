@@ -9,8 +9,6 @@ from pathlib import Path
 from typing import Union
 
 import numpy as np
-from pyglm import glm
-
 from decologr import Decologr as log
 from OpenGL.raw.GL.VERSION.GL_2_0 import GL_LINK_STATUS
 from pyglm import glm
@@ -333,7 +331,8 @@ class ShaderProgram:
 
     def set_mvp(self, mvp_matrix: np.ndarray | glm.mat4) -> None:
         """Set the ``mvp_matrix`` uniform on this program."""
-        from picogl.backend.modern.core.uniform.mvp import shader_uniform_set_mvp
+        from picogl.backend.modern.core.uniform.mvp import \
+            shader_uniform_set_mvp
 
         shader_uniform_set_mvp(
             shader_program=self.program, mvp_matrix=mvp_matrix
