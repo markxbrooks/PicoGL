@@ -33,22 +33,23 @@ bonds_vert.glsl
 bonds_frag.glsl
 """
 
+import os
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable, Dict, Iterable, Optional, Tuple, Union
 
 import numpy as np
-
-from backend.gl.api.shader import gl_use_program
 from decologr import Decologr as log
 from pyglm import glm
 
 from picogl.backend.modern.core.shader.context import gl_context_available
 from picogl.backend.modern.core.shader.program import ShaderProgram
-from picogl.backend.modern.core.uniform.location import gl_get_uniform_location
+from picogl.backend.modern.core.uniform.location import get_uniform_location
 from picogl.backend.modern.core.uniform.location_value import \
     set_uniform_location_value
 from picogl.backend.modern.core.uniform.mvp import shader_uniform_set_mvp
+from picogl.backend.modern.core.uniform.set_location import \
+    set_uniform_name_value
 from picogl.globals import PICOGL_SHADER_SRC_DIRECTORY, SHADER_SRC_DIRECTORY
 from picogl.shaders.compile import compile_shaders
 from picogl.shaders.generate import generate_shader_programs
@@ -166,8 +167,9 @@ class ShaderManager:
 
         :return: None
         """
+        from OpenGL.GL import glUseProgram
 
-        gl_use_program(0)
+        glUseProgram(0)
         self.current_shader = None
         self.current_shader_program = None
 
@@ -214,12 +216,22 @@ class ShaderManager:
             self.update_mvp_uniform(mvp_matrix=mvp_matrix)
         if zoom_scale is not None:
             if self.current_shader_type == ShaderType.ATOMS:
-                loc = gl_get_uniform_location(
+                loc = get_uniform_location(
                     self.current_shader.program, "zoom_scale"
                 )
                 if loc != -1:
                     set_uniform_location_value(loc, zoom_scale)
         return True
+
+    def use(self, shader_type: ShaderType) -> Optional[ShaderProgram]:
+        """
+        Bind *shader_type* without uploading MVP or other draw uniforms.
+
+        Returns the bound program, or ``None`` if bind failed.
+        """
+        if self.use_shader_type(shader_type):
+            return self.current_shader
+        return None
 
     def update_mvp_uniform(self, mvp_matrix: np.ndarray | glm.mat4) -> None:
         """
@@ -248,14 +260,13 @@ class ShaderManager:
         :param uniform_value: Union[float, int, glm.vec2, glm.vec3, glm.vec4, glm.mat4, np.ndarray]
         :return: None
         """
-        if self.current_shader is None:
-            return None
+        if not self.current_shader:
+            raise RuntimeError("No current shader")
         self.current_shader.set_uniform_name_value(
             uniform_name=uniform_name,
             uniform_value=uniform_value,
         )
         log.message(f"setting {self.current_shader.shader_name} uniform {uniform_name} to value {uniform_value}", silent=SILENT_SHADER)
-        return None
 
     def use_default_shader(self, mvp_matrix: np.ndarray | glm.mat4 = None) -> None:
         """

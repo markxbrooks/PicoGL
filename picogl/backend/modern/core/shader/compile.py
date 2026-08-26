@@ -28,18 +28,20 @@ from picogl.backend.gl.api.shader import (gl_attach_shader, gl_compile_shader,
                                           gl_get_shader_info_log,
                                           gl_get_shader_iv, gl_shader_source)
 from picogl.backend.modern.core.shader.helpers import log_gl_error
-# from picogl.backend.modern.core.shader.program import GLShader
 from picogl.boolean import GLBoolean
 
 
-def compile_shader(shader_program: int, shader_type: "GLShader", source: str):
+def compile_shader(shader_program: int, shader_type: "GLShader", source: str) -> int:
     """
     compile_vertex_shader
 
     :param shader_program: int shader program
     :param shader_type: int shader type e.g. GL_VERTEX_SHADER GL_FRAGMENT_SHADER
     :param source: shader source string
+    :return int
     """
+    if not shader_program:
+        raise RuntimeError("shader_program cannot be None")
     shader = gl_create_shader(shader_type)  # pylint: disable=E1111
     gl_shader_source(shader, source)
     gl_compile_shader(shader)
