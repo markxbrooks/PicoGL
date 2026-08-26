@@ -1,3 +1,17 @@
+"""
+Provides functionality for setting a uniform variable in a shader program.
+
+This module contains a single function that allows setting various types of
+uniform variables (e.g., float, int, vectors, matrices, numpy arrays, and
+sequences) for use in OpenGL shader programs. The function dynamically
+handles different data types and ensures correctness when passing values
+to the shader.
+
+Function:
+- set_uniform_location_value: Sets the value of a specified uniform variable
+  in an OpenGL shader program.
+"""
+
 from typing import Sequence, Union
 
 import numpy as np

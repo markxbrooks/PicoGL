@@ -6,15 +6,18 @@ compiling and linking shaders, and setting uniform values.
 """
 
 from pathlib import Path
+from typing import Union, Any
 
 import numpy as np
+from pyglm import glm
+
 from decologr import Decologr as log
 from OpenGL.raw.GL.VERSION.GL_2_0 import GL_LINK_STATUS
 
 from picogl.backend.gl.api.shader import (GLShader, gl_get_program_info_log,
                                           gl_link_program, gl_use_program)
 from picogl.backend.gl.api.shader.create import gl_create_program
-from picogl.backend.gl.api.shader.getter import gl_get_program_iv
+from picogl.backend.gl.api.shader.getter import gl_get_program_iv, gl_get_uniform_location
 from picogl.backend.modern.core.shader.compile import compile_shader
 from picogl.backend.modern.core.shader.context import (clear_gl_errors,
                                                        gl_context_available,
@@ -26,7 +29,6 @@ from picogl.backend.modern.core.shader.helpers import (log_gl_error,
 from picogl.backend.modern.core.uniform.location_value import \
     set_uniform_location_value
 from picogl.boolean import GLBoolean
-from picogl.shaders.uniform import get_uniform_location
 
 
 class ShaderCompiler:
@@ -37,9 +39,6 @@ class ShaderCompiler:
 
     def __str__(self):
         return f"ShaderCompiler(name={self.shader_name}, program={self.program})"
-
-    def program_id(self):
-        return self.program
 
     @staticmethod
     def compile_shader_files(
@@ -142,7 +141,7 @@ class ShaderProgram:
         self.base_dir = glsl_dir
         self.vertex_shader = None
         self.fragment_shader = None
-        self.program: int | None = None
+        self._program: int | None = None
         self.uniforms = {}
         self._uniform_state = {}
         self.compiler = ShaderCompiler()
@@ -152,7 +151,7 @@ class ShaderProgram:
             and fragment_source_file is not None
             and glsl_dir is not None
         ):
-            self.program = self.compiler.compile_shader_files(
+            self._program = self.compiler.compile_shader_files(
                 ShaderFiles(
                     vertex=vertex_source_file,
                     fragment=fragment_source_file,
@@ -169,8 +168,13 @@ class ShaderProgram:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.unbind()
 
-    def program_id(self):
-        return self.program
+    @property
+    def program(self):
+        return self._program
+
+    @program.setter
+    def program(self, value):
+        self._program = value
 
     def init_shader_from_shader_files(
         self,
@@ -282,16 +286,45 @@ class ShaderProgram:
         self._uniform_state[name] = value
         return self
 
-    def get_uniform_location(self, uniform_name: str) -> int:
+    def set_uniform_name_value(
+            self,
+            uniform_name: str,
+            uniform_value: Union[
+                float, int, glm.vec2, glm.vec3, glm.vec4, glm.mat4, np.ndarray
+            ],
+    ):
+        """
+        set_uniform_name_value
+
+        :param uniform_name: Name of the uniform variable
+        :param uniform_value: Value to set (supports float, int, vec2, vec3, vec4, mat4, or np.ndarray)
+
+        Set a uniform variable in a shader program
+        """
+        location = self.get_uniform_location(uniform_name)
+        if location == -1 or location is None:
+            log.warning(f"Uniform '{uniform_name}' not found in shader {self.name}.")
+            return
+        set_uniform_location_value(location, uniform_value)
+
+    def get_location_for_uniform_name(self, uniform_name: str) -> Any:
+        location = gl_get_uniform_location(self.program, uniform_name)
+        return location
+
+    def get_uniform_location(self, uniform_name: str) -> Any | None:
         if uniform_name in self.uniforms:
             return self.uniforms[uniform_name]
-
-        loc = get_uniform_location(
-            shader_program=self.program, uniform_name=uniform_name
+        if self.program is None:
+            return None
+        loc = gl_get_uniform_location(
+            program=self.program, name=uniform_name
         )
 
-        self.uniforms[uniform_name] = loc
+        self.set_uniform_location_name(loc, uniform_name)
         return loc
+
+    def set_uniform_location_name(self, loc: Any | None, uniform_name: str):
+        self.uniforms[uniform_name] = loc
 
     def begin(self):
         """begin"""
