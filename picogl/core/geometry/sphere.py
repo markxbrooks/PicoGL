@@ -21,7 +21,4 @@ def latitude_for_stack(stack: int, stacks: int) -> float:
 
 def generate_ring(radius: float, latitude: float, slices: int) -> list[Vec3]:
     """Vertices on one latitude circle of a sphere centered at the origin."""
-    return [
-        Vec3.sphere(radius, latitude, lng)
-        for lng in iter_longitudes(slices)
-    ]
+    return [Vec3.sphere(radius, latitude, lng) for lng in iter_longitudes(slices)]

@@ -4,8 +4,7 @@ gl Cull Face
 
 from contextlib import contextmanager
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_CULL_FACE, glDisable, glEnable,
-                                          glIsEnabled)
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_CULL_FACE, glDisable, glEnable, glIsEnabled
 
 
 class GLCullFace:

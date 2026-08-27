@@ -2,13 +2,15 @@
 
 from unittest.mock import call, patch
 
-from picogl.backend.gl.capability import (GLFixedFunctionCapability,
-                                          GLMaterialFace)
-from picogl.backend.gl.legacy.lighting import (DEFAULT_LEGACY_LIGHT,
-                                               gl_legacy_lighting)
-from picogl.backend.gl.lighting import (EYE_SPACE_LIGHTING, SECONDARY_LIGHTS,
-                                        LightSource, apply_light,
-                                        set_secondary_lights)
+from picogl.backend.gl.capability import GLFixedFunctionCapability, GLMaterialFace
+from picogl.backend.gl.legacy.lighting import DEFAULT_LEGACY_LIGHT, gl_legacy_lighting
+from picogl.backend.gl.lighting import (
+    EYE_SPACE_LIGHTING,
+    SECONDARY_LIGHTS,
+    LightSource,
+    apply_light,
+    set_secondary_lights,
+)
 from picogl.backend.gl.phong.material import PhongMaterial
 from picogl.backend.gl.state.fill import GLLightParameter
 from picogl.core.rgbcolor import RGBAColor

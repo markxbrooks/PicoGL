@@ -2,7 +2,6 @@
 draw fallback cube
 """
 
-
 from picogl.backend.gl.api.color import gl_color_rgb
 from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.state.fill import GLFillMode

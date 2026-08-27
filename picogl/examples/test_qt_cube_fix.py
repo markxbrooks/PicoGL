@@ -132,17 +132,13 @@ def test_rotation_operations():
             renderer.mvp_parameters.y = renderer.y
 
             # Verify values
+            assert renderer.x == 15.5, f"Expected 15.5, got {renderer.x}"
+            assert renderer.y == 25.3, f"Expected 25.3, got {renderer.y}"
             assert (
-                    renderer.x == 15.5
-            ), f"Expected 15.5, got {renderer.x}"
-            assert (
-                    renderer.y == 25.3
-            ), f"Expected 25.3, got {renderer.y}"
-            assert (
-                    renderer.mvp_parameters.x == 15.5
+                renderer.mvp_parameters.x == 15.5
             ), f"Expected 15.5, got {renderer.mvp_parameters.x}"
             assert (
-                    renderer.mvp_parameters.y == 25.3
+                renderer.mvp_parameters.y == 25.3
             ), f"Expected 25.3, got {renderer.mvp_parameters.y}"
 
             print("  ✅ Rotation operations test passed!")

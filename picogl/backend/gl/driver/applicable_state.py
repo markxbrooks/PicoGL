@@ -10,9 +10,9 @@ T = TypeVar("T")
 class ApplicableState(Generic[T]):
     """Apply a new state value, distinct from ``Applicable``.
 
-    ``Applicable`` objects apply their own current fields via ``apply()``.
-  ``ApplicableState`` subclasses receive an explicit ``state`` argument and
-    may cache the last applied value to skip redundant driver calls.
+      ``Applicable`` objects apply their own current fields via ``apply()``.
+    ``ApplicableState`` subclasses receive an explicit ``state`` argument and
+      may cache the last applied value to skip redundant driver calls.
     """
 
     def __init__(self) -> None:

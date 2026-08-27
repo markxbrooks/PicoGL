@@ -17,8 +17,10 @@ from picogl.core.vec4 import Vec4
 def gl_setup_lighting():
     """Set up lighting"""
     gl_enable_capability_list([GLLight.LIGHTING, GLLight.LIGHT0])
-    light = LightSource(position=Vec4(1.0, 1.0, 1.0, 0.0),
-                        ambient=RGBAColor.WHITE.scaled(0.2),
-                        diffuse=RGBAColor.WHITE.scaled(0.8),
-                        specular=RGBAColor.WHITE.with_alpha(1.0))
+    light = LightSource(
+        position=Vec4(1.0, 1.0, 1.0, 0.0),
+        ambient=RGBAColor.WHITE.scaled(0.2),
+        diffuse=RGBAColor.WHITE.scaled(0.8),
+        specular=RGBAColor.WHITE.with_alpha(1.0),
+    )
     light.apply(GLLight.LIGHT0)

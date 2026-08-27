@@ -11,15 +11,17 @@ from picogl.backend.gl.api.matrix import gl_matrix_mode
 from picogl.backend.gl.api.vertex.vertex_3f import gl_vertex_3f
 from picogl.backend.gl.capability import FACE_MAP
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
-from picogl.backend.gl.enums.legacy.scale import (gl_load_identity,
-                                                  gl_translate_f)
+from picogl.backend.gl.enums.legacy.scale import gl_load_identity, gl_translate_f
 from picogl.backend.gl.phong.material import PhongMaterial
-from picogl.backend.gl.state.fill import (GLColorMaterialMode, GLFace, GLLight,
-                                          GLLightParameter)
+from picogl.backend.gl.state.fill import (
+    GLColorMaterialMode,
+    GLFace,
+    GLLight,
+    GLLightParameter,
+)
 from picogl.backend.gl.state.texture import TexCoord2f, Vertex3f
 from picogl.backend.glu.perspective import glu_perspective
-from picogl.backend.legacy.core.camera.projection_state import \
-    GLUProjectionState
+from picogl.backend.legacy.core.camera.projection_state import GLUProjectionState
 from picogl.backend.state import GLViewport, gl_value
 from picogl.core.camera import ProjectionConfig
 from picogl.core.rgbcolor import RGBAColor
@@ -94,9 +96,7 @@ class GLLegacyPipeline:
     @staticmethod
     def set_view(height, width):
         GLViewport(width=width, height=height).apply()
-        GLUProjectionState().apply(
-            ProjectionConfig(aspect=width / max(height, 1))
-        )
+        GLUProjectionState().apply(ProjectionConfig(aspect=width / max(height, 1)))
 
     @staticmethod
     def set_projection(fovy: float, aspect: float, znear: float, zfar: float):

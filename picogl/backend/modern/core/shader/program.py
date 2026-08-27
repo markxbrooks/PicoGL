@@ -11,24 +11,27 @@ from typing import Union
 import numpy as np
 from decologr import Decologr as log
 from OpenGL.raw.GL.VERSION.GL_2_0 import GL_LINK_STATUS
-from pyglm import glm
-
-from picogl.backend.gl.api.shader import (GLShader, gl_get_program_info_log,
-                                          gl_link_program, gl_use_program)
+from picogl.backend.gl.api.shader import (
+    GLShader,
+    gl_get_program_info_log,
+    gl_link_program,
+    gl_use_program,
+)
 from picogl.backend.gl.api.shader.create import gl_create_program
 from picogl.backend.gl.api.shader.getter import gl_get_program_iv
 from picogl.backend.modern.core.shader.compile import compile_shader
-from picogl.backend.modern.core.shader.context import (clear_gl_errors,
-                                                       gl_context_available,
-                                                       program_is_valid,
-                                                       require_gl_context)
+from picogl.backend.modern.core.shader.context import (
+    clear_gl_errors,
+    gl_context_available,
+    program_is_valid,
+    require_gl_context,
+)
 from picogl.backend.modern.core.shader.files import ShaderFiles
-from picogl.backend.modern.core.shader.helpers import (log_gl_error,
-                                                       read_shader_source)
-from picogl.backend.modern.core.uniform.location_value import \
-    set_uniform_location_value
+from picogl.backend.modern.core.shader.helpers import log_gl_error, read_shader_source
+from picogl.backend.modern.core.uniform.location_value import set_uniform_location_value
 from picogl.boolean import GLBoolean
 from picogl.shaders.uniform import get_uniform_location
+from pyglm import glm
 
 
 class ShaderCompiler:
@@ -186,11 +189,11 @@ class ShaderProgram:
         return self._program
 
     def set_uniform_name_value(
-            self,
-            uniform_name: str,
-            uniform_value: Union[
-                float, int, glm.vec2, glm.vec3, glm.vec4, glm.mat4, np.ndarray
-            ],
+        self,
+        uniform_name: str,
+        uniform_value: Union[
+            float, int, glm.vec2, glm.vec3, glm.vec4, glm.mat4, np.ndarray
+        ],
     ):
         """
         set_uniform_name_value
@@ -204,7 +207,9 @@ class ShaderProgram:
             raise RuntimeError(f"program not set")
         location = self.get_location_for_uniform_name(uniform_name)
         if location == -1:
-            log.warning(f"Uniform '{uniform_name}' not found in shader {self.shader_name}.")
+            log.warning(
+                f"Uniform '{uniform_name}' not found in shader {self.shader_name}."
+            )
             return
         set_uniform_location_value(location, uniform_value)
 
@@ -331,12 +336,9 @@ class ShaderProgram:
 
     def set_mvp(self, mvp_matrix: np.ndarray | glm.mat4) -> None:
         """Set the ``mvp_matrix`` uniform on this program."""
-        from picogl.backend.modern.core.uniform.mvp import \
-            shader_uniform_set_mvp
+        from picogl.backend.modern.core.uniform.mvp import shader_uniform_set_mvp
 
-        shader_uniform_set_mvp(
-            shader_program=self.program, mvp_matrix=mvp_matrix
-        )
+        shader_uniform_set_mvp(shader_program=self.program, mvp_matrix=mvp_matrix)
 
     def get_uniform_location(self, uniform_name: str) -> int:
         if uniform_name in self.uniforms:

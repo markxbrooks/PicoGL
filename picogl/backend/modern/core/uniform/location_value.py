@@ -18,9 +18,13 @@ import numpy as np
 from decologr import Decologr as log
 from OpenGL.GL import glUniformMatrix4fv
 from OpenGL.raw.GL._types import GL_FALSE
-from OpenGL.raw.GL.VERSION.GL_2_0 import (glUniform1f, glUniform1i,
-                                          glUniform2fv, glUniform3fv,
-                                          glUniform4fv)
+from OpenGL.raw.GL.VERSION.GL_2_0 import (
+    glUniform1f,
+    glUniform1i,
+    glUniform2fv,
+    glUniform3fv,
+    glUniform4fv,
+)
 from pyglm import glm
 
 

@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from molib.pdb.coordinate.coordinate import Coordinates
-
 from picogl.backend.gl.api.rotate import gl_rotate_f
 from picogl.backend.gl.enums.legacy.scale import gl_load_identity
 from picogl.backend.glu.lookat import glu_look_at_coords

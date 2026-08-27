@@ -3,14 +3,11 @@
 from unittest.mock import patch
 
 import numpy as np
-from pyglm import glm
-
 from picogl.backend.glm.glm import glm_mat4_to_np
-from picogl.backend.legacy.core.camera.projection_state import \
-    GLUProjectionState
-from picogl.backend.modern.core.camera.projection_state import \
-    GLMProjectionState
+from picogl.backend.legacy.core.camera.projection_state import GLUProjectionState
+from picogl.backend.modern.core.camera.projection_state import GLMProjectionState
 from picogl.core.camera import FOVY, CameraParameters, ProjectionConfig
+from pyglm import glm
 
 
 def test_projection_config_is_instantiable_and_equal():
@@ -19,9 +16,7 @@ def test_projection_config_is_instantiable_and_equal():
     assert cfg.near == 1.0
     assert cfg.far == 1000.0
     assert cfg.aspect == 16 / 9
-    assert cfg == ProjectionConfig(
-        fovy=45.0, aspect=16 / 9, near=1.0, far=1000.0
-    )
+    assert cfg == ProjectionConfig(fovy=45.0, aspect=16 / 9, near=1.0, far=1000.0)
     assert FOVY == 45.0
     assert ProjectionConfig().with_size(800, 400).aspect == 2.0
     assert ProjectionConfig.fovy == 45.0
@@ -56,12 +51,10 @@ def test_glu_projection_apply_is_cached():
             "picogl.backend.legacy.core.camera.projection_state.gl_matrix_mode"
         ) as matrix_mode,
         patch(
-            "picogl.backend.legacy.core.camera.projection_state."
-            "gl_load_identity"
+            "picogl.backend.legacy.core.camera.projection_state." "gl_load_identity"
         ) as load_identity,
         patch(
-            "picogl.backend.legacy.core.camera.projection_state."
-            "glu_perspective"
+            "picogl.backend.legacy.core.camera.projection_state." "glu_perspective"
         ) as perspective,
     ):
         state.apply(cfg)

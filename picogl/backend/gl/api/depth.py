@@ -3,9 +3,12 @@ depth functions
 """
 
 from OpenGL.GL import glGetBooleanv
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_DEPTH_WRITEMASK, glClearDepth,
-                                          glDepthFunc, glDepthMask)
-
+from OpenGL.raw.GL.VERSION.GL_1_0 import (
+    GL_DEPTH_WRITEMASK,
+    glClearDepth,
+    glDepthFunc,
+    glDepthMask,
+)
 from picogl.boolean import GLBoolean
 
 

@@ -36,15 +36,12 @@ import ctypes
 
 import numpy as np
 from OpenGL import error as _gl_err
-
 from picogl.backend.gl.api import gl_bind_buffer, gl_buffer_data
 from picogl.backend.gl.api.buffer.check_is import gl_is_buffer
 from picogl.backend.gl.api.buffer.subdata import gl_buffer_subdata
-from picogl.backend.gl.api.vertex.attrib_pointer import \
-    gl_vertex_attrib_pointer
+from picogl.backend.gl.api.vertex.attrib_pointer import gl_vertex_attrib_pointer
 from picogl.backend.gl.api.vertex.enable_array import gl_enable_vertex_array
-from picogl.backend.gl.enums import (GLBufferTarget, GLIndexType, GLNumeric,
-                                     GLUsageHint)
+from picogl.backend.gl.enums import GLBufferTarget, GLIndexType, GLNumeric, GLUsageHint
 from picogl.boolean import GLBoolean
 from picogl.gpu.buffers.base import VertexBase
 
@@ -111,7 +108,9 @@ class VertexBuffer(VertexBase):
     # ----------------------------
     # Data upload
     # ----------------------------
-    def set_data(self, data: np.ndarray, usage: GLUsageHint = GLUsageHint.STATIC_DRAW) -> None:
+    def set_data(
+        self, data: np.ndarray, usage: GLUsageHint = GLUsageHint.STATIC_DRAW
+    ) -> None:
         """
         Upload data to the GPU.
 

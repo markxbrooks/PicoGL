@@ -40,20 +40,20 @@ from typing import Callable, Dict, Iterable, Optional, Tuple, Union
 
 import numpy as np
 from decologr import Decologr as log
-from pyglm import glm
-
 from picogl.backend.gl.api.shader import gl_get_uniform_location
 from picogl.backend.modern.core.shader.context import gl_context_available
 from picogl.backend.modern.core.shader.program import ShaderProgram
-from picogl.backend.modern.core.uniform.location_value import \
-    set_uniform_location_value
+from picogl.backend.modern.core.uniform.location_value import set_uniform_location_value
 from picogl.backend.modern.core.uniform.mvp import shader_uniform_set_mvp
 from picogl.globals import PICOGL_SHADER_SRC_DIRECTORY, SHADER_SRC_DIRECTORY
 from picogl.shaders.compile import compile_shaders
 from picogl.shaders.generate import generate_shader_programs
-from picogl.shaders.load import (load_fragment_and_vertex_for_shader_type,
-                                 load_shader_source_string)
+from picogl.shaders.load import (
+    load_fragment_and_vertex_for_shader_type,
+    load_shader_source_string,
+)
 from picogl.shaders.type import ShaderType
+from pyglm import glm
 
 SILENT_SHADER = True
 
@@ -108,6 +108,7 @@ class ShaderManager:
         shader_directory: The directory path containing shader source files.
         fallback_shader_directory: The directory path for fallback shader source files.
     """
+
     shaders: Dict[ShaderType, ShaderProgram] = field(default_factory=dict)
     fallback_shader: Optional[ShaderProgram] = None
     default_shader_type: ShaderType = ShaderType.DEFAULT
@@ -214,9 +215,7 @@ class ShaderManager:
             self.update_mvp_uniform(mvp_matrix=mvp_matrix)
         if zoom_scale is not None:
             if self.current_shader_type == ShaderType.ATOMS:
-                loc = gl_get_uniform_location(
-                    self.current_shader.program, "zoom_scale"
-                )
+                loc = gl_get_uniform_location(self.current_shader.program, "zoom_scale")
                 if loc != -1:
                     set_uniform_location_value(loc, zoom_scale)
         return True
@@ -264,7 +263,10 @@ class ShaderManager:
             uniform_name=uniform_name,
             uniform_value=uniform_value,
         )
-        log.message(f"setting {self.current_shader.shader_name} uniform {uniform_name} to value {uniform_value}", silent=SILENT_SHADER)
+        log.message(
+            f"setting {self.current_shader.shader_name} uniform {uniform_name} to value {uniform_value}",
+            silent=SILENT_SHADER,
+        )
 
     def use_default_shader(self, mvp_matrix: np.ndarray | glm.mat4 = None) -> None:
         """
@@ -404,7 +406,8 @@ class ShaderManager:
                 self.shaders[shader_type] = self.fallback_shader
         except Exception as ex:
             log.warning(
-                f"⚠️ Shader load failed for shader number {shader_number}, type {shader_type} directory {self.shader_directory}: {ex}", scope="load_shader"
+                f"⚠️ Shader load failed for shader number {shader_number}, type {shader_type} directory {self.shader_directory}: {ex}",
+                scope="load_shader",
             )
             self._ensure_fallback()
             self.shaders[shader_type] = self.fallback_shader

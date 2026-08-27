@@ -6,8 +6,9 @@ from picogl.backend.gl.api import gl_bind_buffer, gl_generate_buffers
 from picogl.backend.gl.api.buffer.upload import gl_upload_float_buffer
 from picogl.backend.gl.api.draw.array import gl_draw_arrays
 from picogl.backend.gl.api.vertex.attrib_array.bind import gl_bind_array_buffer
-from picogl.backend.gl.api.vertex.attrib_array.bound import \
-    gl_bound_vertex_attrib_arrays
+from picogl.backend.gl.api.vertex.attrib_array.bound import (
+    gl_bound_vertex_attrib_arrays,
+)
 from picogl.backend.gl.enums import GLBufferTarget, GLDrawMode
 from picogl.utils.mesh.object_mesh import flip_texcoord_v
 

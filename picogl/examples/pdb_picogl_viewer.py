@@ -24,16 +24,18 @@ if sys.platform.startswith("linux"):
 
 
 import numpy as np
-from picogl.backend.gl.api.point import gl_point_size
-from picogl.backend.draw import gl_draw_arrays
-from picogl.backend.gl.enums import GLDrawMode
 import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
+from picogl.backend.draw import gl_draw_arrays
 from picogl.backend.gl.api.enable import gl_enable, gl_enable_capability_list
 from picogl.backend.gl.api.hint import gl_hint
 from picogl.backend.gl.api.line import gl_line_width
+from picogl.backend.gl.api.point import gl_point_size
 from picogl.backend.gl.capability import GLPipelineCapability
-from picogl.backend.gl.enums.point_size import (GLLegacyPointCapability,
-                                                GLPointCapability)
+from picogl.backend.gl.enums import GLDrawMode
+from picogl.backend.gl.enums.point_size import (
+    GLLegacyPointCapability,
+    GLPointCapability,
+)
 from picogl.backend.gl.task.gl_init import paint_gl_list
 from picogl.backend.modern.core.setup.lighting import gl_initialize_background
 from picogl.core.rgbcolor import RGBAColor
@@ -51,7 +53,6 @@ except ImportError as e:
     sys.exit(1)
 
 from OpenGL.GL import *
-
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.renderer import MeshData
 from picogl.ui.backend.glut.window.object import RenderWindow
@@ -75,7 +76,7 @@ class MolecularRenderWindow(RenderWindow):
     """Specialized render window for molecular visualization with PicoGL"""
 
     def __init__(self, pdb_path: str, **kwargs):
-        self.pdb_path : Path | None = pdb_path
+        self.pdb_path: Path | None = pdb_path
         self.pdb_loader: PDBLoader | None = None
         self.atom_mesh: MeshData | None = None
         self.bond_mesh: MeshData | None = None
@@ -91,9 +92,7 @@ class MolecularRenderWindow(RenderWindow):
         # Parent ObjectRenderer needs MeshData for shader init; we draw via paintGL.
         if kwargs.get("data") is None:
             kwargs["data"] = self.atom_mesh
-        kwargs.setdefault(
-            "glsl_dir", Path(__file__).resolve().parent / "glsl" / "tu01"
-        )
+        kwargs.setdefault("glsl_dir", Path(__file__).resolve().parent / "glsl" / "tu01")
         kwargs.setdefault("base_dir", Path(__file__).resolve().parent)
 
         super().__init__(**kwargs)
@@ -213,7 +212,9 @@ class MolecularRenderWindow(RenderWindow):
                 if hasattr(self.context, "mvp_matrix"):
                     shader.uniform("mvp_matrix", self.context.mvp_matrix)
                 with self.atom_vao:
-                    gl_draw_arrays(GLDrawMode.POINTS, 0, len(self.atom_mesh.vertices) // 3)
+                    gl_draw_arrays(
+                        GLDrawMode.POINTS, 0, len(self.atom_mesh.vertices) // 3
+                    )
         else:
             with self.atom_vao:
                 gl_draw_arrays(GLDrawMode.POINTS, 0, len(self.atom_mesh.vertices) // 3)
@@ -229,7 +230,9 @@ class MolecularRenderWindow(RenderWindow):
                 if hasattr(self.context, "mvp_matrix"):
                     shader.uniform("mvp_matrix", self.context.mvp_matrix)
                 with self.bond_vao:
-                    gl_draw_arrays(GLDrawMode.LINES, 0, len(self.bond_mesh.vertices) // 3)
+                    gl_draw_arrays(
+                        GLDrawMode.LINES, 0, len(self.bond_mesh.vertices) // 3
+                    )
         else:
             with self.bond_vao:
                 gl_draw_arrays(GLDrawMode.LINES, 0, len(self.bond_mesh.vertices) // 3)

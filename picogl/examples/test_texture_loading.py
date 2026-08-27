@@ -38,7 +38,9 @@ def test_texture_loader():
                     print(f"   📏 File size: {texture_path.stat().st_size} bytes")
                     print(f"   🆔 Texture ID: {loader.texture_gl_id}")
                 except Exception as e:
-                    print(f"   ⚠️  TextureLoader created but OpenGL context needed: {e}")
+                    print(
+                        f"   ⚠️  TextureLoader created but OpenGL context needed: {e}"
+                    )
                     # This is expected without a display context
                     print(f"   ✅ Constructor works correctly")
 

@@ -12,17 +12,18 @@ Functions:
 - shader_uniform_set_mvp: Assigns the MVP matrix uniform in the shader
   program using either numpy or pyglm matrix formats.
 """
+
 from typing import Union
 
 import numpy as np
 from decologr import Decologr as log
-from elmo.gl.shader import LegacyShaderUniformName, ShaderUniformName
-from pyglm import glm
-
 from picogl.backend.gl.api.shader import gl_uniform_matrix_4fv
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.backend.modern.core.uniform.location import gl_get_uniform_location
 from picogl.boolean import GLBoolean
+from pyglm import glm
+
+from elmo.gl.shader import LegacyShaderUniformName, ShaderUniformName
 
 
 def set_mvp_uniform(shader: ShaderProgram = None, mvp: glm.mat4 = None) -> None:
@@ -34,11 +35,15 @@ def set_mvp_uniform(shader: ShaderProgram = None, mvp: glm.mat4 = None) -> None:
     :return: None
     Set the model_matrix-view-projection matrix uniform in the shader program.
     """
-    mvp_loc = gl_get_uniform_location(shader.program, LegacyShaderUniformName.MVP_MATRIX)
+    mvp_loc = gl_get_uniform_location(
+        shader.program, LegacyShaderUniformName.MVP_MATRIX
+    )
     gl_uniform_matrix_4fv(mvp_loc, 1, GLBoolean.FALSE, glm.value_ptr(mvp))
 
 
-def shader_uniform_set_mvp(shader_program: int, mvp_matrix: Union[np.ndarray, glm.mat4]):
+def shader_uniform_set_mvp(
+    shader_program: int, mvp_matrix: Union[np.ndarray, glm.mat4]
+):
     """
     shader_uniform_set_mvp
 
@@ -56,4 +61,6 @@ def shader_uniform_set_mvp(shader_program: int, mvp_matrix: Union[np.ndarray, gl
                 mvp_loc, 1, GLBoolean.FALSE, mvp_matrix.astype(np.float32).flatten()
             )
         else:
-            gl_uniform_matrix_4fv(mvp_loc, 1, GLBoolean.FALSE, glm.value_ptr(mvp_matrix))
+            gl_uniform_matrix_4fv(
+                mvp_loc, 1, GLBoolean.FALSE, glm.value_ptr(mvp_matrix)
+            )

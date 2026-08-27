@@ -6,7 +6,6 @@ from typing import Sequence
 
 import numpy as np
 from OpenGL.raw.GL.VERSION.GL_1_0 import glClipPlane
-
 from picogl.backend.gl.enums.legacy import GLLegacyClipPlane
 
 

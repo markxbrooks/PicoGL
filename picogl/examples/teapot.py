@@ -1,4 +1,5 @@
 """Minimal PicoGL Teapot."""
+
 import os
 import sys
 from pathlib import Path

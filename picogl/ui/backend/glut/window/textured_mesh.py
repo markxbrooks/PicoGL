@@ -7,13 +7,10 @@ from pathlib import Path
 from typing import Callable
 
 from decologr import Decologr as log
-from pyglm import glm
-
 from picogl.backend.gl.api import gl_bind_texture, gl_get_active_texture0
 from picogl.backend.gl.api.clear import gl_clear
 from picogl.backend.gl.api.enable import gl_enable_capability_list
-from picogl.backend.gl.api.shader import (gl_get_uniform_location,
-                                          gl_uniform_matrix_4fv)
+from picogl.backend.gl.api.shader import gl_get_uniform_location, gl_uniform_matrix_4fv
 from picogl.backend.gl.capability import GLPipelineCapability
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums.legacy.scale import gl_viewport
@@ -31,21 +28,16 @@ from picogl.ui.backend.glut.mouse import RotationInteraction
 from picogl.ui.backend.glut.window.glut import GlutRendererWindow
 from picogl.utils.loader.texture import TextureLoader
 from picogl.utils.mesh.protocol import MeshProtocol
+from pyglm import glm
 
 _MVP_UNIFORM = "mvp_matrix"
 _TEXTURE_UNIFORM = "texture0"
 
 
-def rotate_model(
-    rotation: RotationInteraction, model_matrix: glm.mat4
-) -> glm.mat4:
+def rotate_model(rotation: RotationInteraction, model_matrix: glm.mat4) -> glm.mat4:
     """Apply x/y drag rotation to *model_matrix* and return it."""
-    model_matrix = glm.rotate(
-        model_matrix, glm.radians(rotation.x), glm.vec3(1, 0, 0)
-    )
-    model_matrix = glm.rotate(
-        model_matrix, glm.radians(rotation.y), glm.vec3(0, 1, 0)
-    )
+    model_matrix = glm.rotate(model_matrix, glm.radians(rotation.x), glm.vec3(1, 0, 0))
+    model_matrix = glm.rotate(model_matrix, glm.radians(rotation.y), glm.vec3(0, 1, 0))
     return model_matrix
 
 
@@ -129,9 +121,7 @@ class TexturedMeshRenderer(GlutRendererWindow):
 
     def initialize(self) -> None:
         if self.spec.require_texture and not self.spec.texture_path.is_file():
-            raise FileNotFoundError(
-                f"Texture not found: {self.spec.texture_path}"
-            )
+            raise FileNotFoundError(f"Texture not found: {self.spec.texture_path}")
 
         self.context = TexturedRendererContext()
         self.sync_zoom_to_context()
@@ -147,9 +137,7 @@ class TexturedMeshRenderer(GlutRendererWindow):
         if not isinstance(self.shader.program, int):
             raise TypeError("shader.program must be a GL program id (int)")
 
-        self.context.mvp_id = gl_get_uniform_location(
-            self.shader.program, _MVP_UNIFORM
-        )
+        self.context.mvp_id = gl_get_uniform_location(self.shader.program, _MVP_UNIFORM)
         self.context.texture_id = gl_get_uniform_location(
             self.shader.program, _TEXTURE_UNIFORM
         )

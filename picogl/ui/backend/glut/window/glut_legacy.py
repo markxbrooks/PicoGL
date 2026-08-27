@@ -1,14 +1,11 @@
 import numpy as np
+import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
 from decologr import Decologr as log
 from decologr import setup_logging
-from pyglm import glm
-
-import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
 from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.task.gl_init import legacy_init_gl_list, paint_gl_list
 from picogl.backend.glm.glm import glm_identity_matrix
-from picogl.backend.modern.core.camera.projection_state import \
-    GLMProjectionState
+from picogl.backend.modern.core.camera.projection_state import GLMProjectionState
 from picogl.backend.opengl import LegacyBinding
 from picogl.backend.state import GLViewport
 from picogl.core.camera import ProjectionConfig
@@ -16,6 +13,7 @@ from picogl.renderer import GLResourceRegistry
 from picogl.renderer.object import ObjectRenderer
 from picogl.ui.backend.glut.mouse import RotationInteraction
 from picogl.ui.backend.glut.window.gl import GLWindow
+from pyglm import glm
 
 
 class GlutRendererWindow(GLWindow):
@@ -55,18 +53,16 @@ class GlutRendererWindow(GLWindow):
         self.renderer.initialize()
 
     def calculate_mvp_matrix(
-            self,
-            width: int | None = None,
-            height: int | None = None,
+        self,
+        width: int | None = None,
+        height: int | None = None,
     ) -> None:
         """Calculate the model-view-projection matrix."""
         width = self.viewport.width if width is None else width
         height = self.viewport.height if height is None else height
 
         camera = self.camera_config
-        config = camera.projection.with_aspect(
-            float(width) / float(max(height, 1))
-        )
+        config = camera.projection.with_aspect(float(width) / float(max(height, 1)))
         self.projection.apply(config)
         self.context.projection = self.projection.matrix
 
@@ -84,9 +80,7 @@ class GlutRendererWindow(GLWindow):
         )
 
         self.context.mvp_matrix = (
-                self.context.projection
-                * self.context.view
-                * self.context.model_matrix
+            self.context.projection * self.context.view * self.context.model_matrix
         )
 
     def resizeGL(self, width, height):

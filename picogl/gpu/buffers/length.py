@@ -5,10 +5,12 @@ from __future__ import annotations
 from typing import cast
 
 from numpy.typing import ArrayLike
-
-from picogl.protocols.drawable_buffer import (BufferContainer, DrawableBuffer,
-                                              DrawableLengthInput,
-                                              VertexBufferDataSource)
+from picogl.protocols.drawable_buffer import (
+    BufferContainer,
+    DrawableBuffer,
+    DrawableLengthInput,
+    VertexBufferDataSource,
+)
 
 
 def length_from_array_data(data: ArrayLike | None, *, components: int = 1) -> int:
@@ -36,7 +38,9 @@ def _is_mock(obj: object) -> bool:
     return mod.startswith("unittest.mock")
 
 
-def _has_measurable_data(obj: VertexBufferDataSource | BufferContainer | object) -> bool:
+def _has_measurable_data(
+    obj: VertexBufferDataSource | BufferContainer | object,
+) -> bool:
     data = getattr(obj, "data", None)
     if data is None:
         return False
@@ -52,11 +56,7 @@ def length_from_vbo(vbo: VertexBufferDataSource | None) -> int:
         return 0
     data = getattr(vbo, "data", None)
     if data is not None:
-        components = (
-            getattr(vbo, "components", None)
-            or getattr(vbo, "size", None)
-            or 1
-        )
+        components = getattr(vbo, "components", None) or getattr(vbo, "size", None) or 1
         return length_from_array_data(data, components=int(components))
     if _implements_data_length(vbo):
         return int(cast(DrawableBuffer, vbo).data_length())

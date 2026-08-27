@@ -10,12 +10,12 @@ from molib.pdb.coordinate.coordinate import Coordinates
 @dataclass(slots=True)
 class GLViewTransform:
     """View Transform"""
+
     zoom: float
     rotation: Vec3
     scale: float = 20.0
     origin: Coordinates = field(default_factory=lambda: Coordinates(0.5, 0.5, 0.5))
     axes: Axes = field(default_factory=lambda: Axes())
-
 
     def apply(self) -> None:
         print(self.rotation)

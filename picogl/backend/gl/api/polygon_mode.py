@@ -8,12 +8,13 @@ a convenient interface for its usage.
 """
 
 from OpenGL.GL import glPolygonMode
-
 from picogl.backend.gl.capability import GLMaterialFace
 from picogl.backend.gl.state.fill import GLFillMode
 
 
-def gl_polygon_mode(face: GLMaterialFace = GLMaterialFace.FRONT_AND_BACK, mode=GLFillMode.LINE):
+def gl_polygon_mode(
+    face: GLMaterialFace = GLMaterialFace.FRONT_AND_BACK, mode=GLFillMode.LINE
+):
     """
     Sets the polygon rasterization mode for the specified face(s). This function
     specifies how polygons will be rendered by OpenGL, either as filled, lines,

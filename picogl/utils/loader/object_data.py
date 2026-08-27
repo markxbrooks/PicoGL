@@ -39,7 +39,8 @@ class ObjectData:
             vertex_count = len(self.vertices) // 3
             self.indices = list(range(vertex_count))
 
-    def generate_solid_color(self, color: RGBColor = RGBColor.RED) -> list[
-        tuple[float | int]]:
+    def generate_solid_color(
+        self, color: RGBColor = RGBColor.RED
+    ) -> list[tuple[float | int]]:
         """generate solid color"""
         return [*color.to_tuple()] * (len(self.vertices) // 3)

@@ -17,10 +17,11 @@ Constants:
     be performed on both sides of polygons.
 """
 
-
-from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_LIGHT_MODEL_AMBIENT,
-                                          GL_LIGHT_MODEL_LOCAL_VIEWER,
-                                          GL_LIGHT_MODEL_TWO_SIDE)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (
+    GL_LIGHT_MODEL_AMBIENT,
+    GL_LIGHT_MODEL_LOCAL_VIEWER,
+    GL_LIGHT_MODEL_TWO_SIDE,
+)
 
 
 class GLLightModel:
@@ -33,6 +34,7 @@ class GLLightModel:
     light model. It is intended to be used as part of a larger graphics
     pipeline rendering system.
     """
+
     AMBIENT = GL_LIGHT_MODEL_AMBIENT
     LOCAL_VIEWER = GL_LIGHT_MODEL_LOCAL_VIEWER
     TWO_SIDE = GL_LIGHT_MODEL_TWO_SIDE

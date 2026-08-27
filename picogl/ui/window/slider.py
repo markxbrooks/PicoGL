@@ -15,8 +15,7 @@ Classes:
 # rom examples.protein_viewer import GLProteinWidget
 
 from PySide6.QtCore import Qt, QTimer
-from PySide6.QtWidgets import (QHBoxLayout, QMainWindow, QSlider, QVBoxLayout,
-                               QWidget)
+from PySide6.QtWidgets import QHBoxLayout, QMainWindow, QSlider, QVBoxLayout, QWidget
 
 
 class GLSliderWindow(QMainWindow):
@@ -25,7 +24,7 @@ class GLSliderWindow(QMainWindow):
         QMainWindow.__init__(self)  # call the init for the parent class
 
         self.resize(600, 600)
-        self.setWindowTitle('OpenGL App')
+        self.setWindowTitle("OpenGL App")
 
         self.gl_widget = widget
         self.init_gui()

@@ -17,6 +17,7 @@ Available texture:
 - resources/tu09/Holstein.DDS - Holstein pattern
 - resources/tu10/diffuse.DDS - Diffuse texture
 """
+
 import os
 import sys
 from pathlib import Path

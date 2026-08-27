@@ -5,7 +5,6 @@ from __future__ import annotations
 from pathlib import Path
 
 import numpy as np
-
 from picogl.renderer import MeshData
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.utils.loader.object import ObjectLoader
@@ -35,7 +34,10 @@ def load_legacy_mesh(
     vertices = np.asarray(object_data.vertices, dtype=np.float32).reshape(-1, 3)
     vertex_count = int(vertices.shape[0])
 
-    if getattr(object_data, "indices", None) is not None and len(object_data.indices) > 0:
+    if (
+        getattr(object_data, "indices", None) is not None
+        and len(object_data.indices) > 0
+    ):
         faces = np.asarray(object_data.indices, dtype=np.uint32).reshape(-1, 3)
     else:
         if vertex_count % 3 != 0:
@@ -45,7 +47,10 @@ def load_legacy_mesh(
         faces = np.arange(vertex_count, dtype=np.uint32).reshape(-1, 3)
 
     normals = None
-    if getattr(object_data, "normals", None) is not None and len(object_data.normals) > 0:
+    if (
+        getattr(object_data, "normals", None) is not None
+        and len(object_data.normals) > 0
+    ):
         normals = np.asarray(object_data.normals, dtype=np.float32).reshape(-1, 3)
 
     mesh_data = MeshData.from_raw(

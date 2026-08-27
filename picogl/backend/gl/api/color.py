@@ -14,7 +14,6 @@ Functions:
 
 from OpenGL.GL import glColorMaterial
 from OpenGL.raw.GL.VERSION.GL_1_0 import glColor3f, glColor4f
-
 from picogl.backend.gl.capability import GLMaterialFace
 from picogl.backend.gl.state.fill import GLColorMaterialMode
 from picogl.core.rgbcolor import RGBColor

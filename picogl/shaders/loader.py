@@ -6,14 +6,15 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from decologr import Decologr as log
-
 from picogl.backend.modern.core.shader.context import gl_context_available
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.globals import SHADER_SRC_DIRECTORY
 from picogl.shaders.compile import compile_shaders
 from picogl.shaders.generate import generate_shader_programs
-from picogl.shaders.load import (load_fragment_and_vertex_for_shader_type,
-                                 load_shader_source_string)
+from picogl.shaders.load import (
+    load_fragment_and_vertex_for_shader_type,
+    load_shader_source_string,
+)
 from picogl.shaders.type import ShaderType
 
 
@@ -101,7 +102,9 @@ class ShaderLoader:
             program = generate_shader_programs(vertex_src, fragment_src, shader_type)
             if program:
                 return ShaderLoadResult(shader=program)
-            log.warning(f"Compile returned None for {shader_type}", scope="ShaderLoader")
+            log.warning(
+                f"Compile returned None for {shader_type}", scope="ShaderLoader"
+            )
         except Exception as ex:
             log.warning(
                 f"Shader load failed for {shader_type} in {self.shader_directory}: {ex}",

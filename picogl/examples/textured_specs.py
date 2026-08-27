@@ -8,8 +8,7 @@ from typing import Callable
 
 """from examples.tu04 import _TU04_MESH
 from examples.tu_02_texture_without_normal import CUBE_SPEC"""
-from picogl.examples.data.cube_data import (g_uv_buffer_data,
-                                            g_vertex_buffer_data)
+from picogl.examples.data.cube_data import g_uv_buffer_data, g_vertex_buffer_data
 from picogl.utils.mesh.cube_mesh import CubeMesh
 from picogl.utils.mesh.object_mesh import MeshObject
 from picogl.utils.mesh.protocol import MeshProtocol
@@ -26,9 +25,6 @@ def create_cube_mesh(flip_v: bool) -> CubeMesh:
     return mesh
 
 
-
-
-
 def create_teapot_mesh(flip_v: bool) -> MeshObject:
     return MeshObject(_TEAPOT_MESH).get_mesh(flip_v=flip_v)
 
@@ -42,7 +38,3 @@ def obj_mesh_factory(path: Path | str) -> Callable[[bool], MeshProtocol]:
         return MeshObject(obj_path).get_mesh(flip_v=flip_v)
 
     return create_mesh
-
-
-
-

@@ -11,8 +11,7 @@ Functions:
 
 """
 
-from picogl.backend.gl.capability import (GLFixedFunctionCapability,
-                                          GLMaterialFace)
+from picogl.backend.gl.capability import GLFixedFunctionCapability, GLMaterialFace
 from picogl.backend.gl.lighting import LightSource, enable_light
 from picogl.backend.gl.phong.material import PhongMaterial
 from picogl.core.rgbcolor import RGBAColor

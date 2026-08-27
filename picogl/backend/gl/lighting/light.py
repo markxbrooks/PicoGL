@@ -6,7 +6,6 @@ from dataclasses import dataclass, field
 from enum import Enum
 
 from molib.pdb.materials import Vec3
-
 from picogl.backend.gl.api.light import gl_light_fv
 from picogl.backend.gl.state.fill import GLLightParameter
 from picogl.core.data_type import rgba_tuple, vec4_tuple
@@ -32,20 +31,14 @@ class LightSource:
     """
 
     position: Vec4 = field(default_factory=lambda: Vec4(10.0, 10.0, 10.0, 1.0))
-    ambient: RGBAColor = field(
-        default_factory=lambda: RGBAColor(0.18, 0.18, 0.18, 1.0)
-    )
-    diffuse: RGBAColor = field(
-        default_factory=lambda: RGBAColor(0.55, 0.55, 0.55, 1.0)
-    )
-    specular: RGBAColor = field(
-        default_factory=lambda: RGBAColor(0.2, 0.2, 0.2, 1.0)
-    )
+    ambient: RGBAColor = field(default_factory=lambda: RGBAColor(0.18, 0.18, 0.18, 1.0))
+    diffuse: RGBAColor = field(default_factory=lambda: RGBAColor(0.55, 0.55, 0.55, 1.0))
+    specular: RGBAColor = field(default_factory=lambda: RGBAColor(0.2, 0.2, 0.2, 1.0))
 
     @classmethod
     def directional(
-            cls,
-            direction: Vec3,
+        cls,
+        direction: Vec3,
     ) -> "LightSource":
         return cls(
             position=Vec4(direction, 0.0),
@@ -56,11 +49,11 @@ class LightSource:
 
     @classmethod
     def from_raw(
-            cls,
-            position: vec4_tuple,
-            ambient: rgba_tuple,
-            diffuse: rgba_tuple,
-            specular: rgba_tuple,
+        cls,
+        position: vec4_tuple,
+        ambient: rgba_tuple,
+        diffuse: rgba_tuple,
+        specular: rgba_tuple,
     ) -> "LightSource":
         return cls(
             position=Vec4(*position),

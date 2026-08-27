@@ -10,13 +10,13 @@ Features:
 - Works with OpenGL 1.x/2.x
 - Interactive rotation and zoom
 """
-from picoui.dimensions import Dimensions
 
 from picogl.backend.glut.buffers import glut_swap_buffers
 from picogl.backend.glut.display import glut_post_redisplay
 from picogl.backend.glut.glut_renderer import GlutRenderer
 from picogl.backend.glut.idle import glut_idle_func
 from picogl.core.draw.teapot import draw_teapot_with_normals
+from picoui.dimensions import Dimensions
 
 
 class SimpleTeapotRenderer(GlutRenderer):

@@ -3,14 +3,21 @@ Setup lighting (compatibility shim).
 
 Prefer ``picogl.backend.gl.lighting`` for new code.
 """
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from picogl.backend.gl.lighting import (EYE_SPACE_LIGHTING, LIGHTING_PRESETS,
-                                        GLLightingMode, LightSource,
-                                        apply_light, disable_light,
-                                        enable_light, set_secondary_lights)
+from picogl.backend.gl.lighting import (
+    EYE_SPACE_LIGHTING,
+    LIGHTING_PRESETS,
+    GLLightingMode,
+    LightSource,
+    apply_light,
+    disable_light,
+    enable_light,
+    set_secondary_lights,
+)
 from picogl.core.rgbcolor import RGBAColor
 from picogl.gpu.buffers.glframe import GLFramebuffer
 

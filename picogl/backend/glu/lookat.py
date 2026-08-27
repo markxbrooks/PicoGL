@@ -15,6 +15,7 @@ from OpenGL.raw.GLU import gluLookAt
 
 class SupportsXYZ(Protocol):
     """Supports XYZ"""
+
     x: float
     y: float
     z: float
@@ -61,7 +62,8 @@ def glu_look_at(
 def glu_look_at_coords(
     eye: Union[Coordinates, Sequence[float], Any],
     center: Union[Coordinates, Sequence[float], Any],
-    up: Union[Coordinates, Sequence[float], Any],) -> None:
+    up: Union[Coordinates, Sequence[float], Any],
+) -> None:
     """Preferred API: pass three Coordinates (or 3-element sequences / objects with x,y,z)."""
     ex, ey, ez = _to_xyz(eye)
     cx, cy, cz = _to_xyz(center)

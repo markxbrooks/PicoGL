@@ -3,7 +3,6 @@ from typing import Optional
 from decologr import Decologr as log
 from OpenGL.GL import *  # pylint: disable=W0614
 from OpenGL.GLUT import *  # pylint: disable=W0614
-
 from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
 from picogl.backend.gl.capability import GLMaterialFace
 from picogl.backend.gl.enums import GLBitMask

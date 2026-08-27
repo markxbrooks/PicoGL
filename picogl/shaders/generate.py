@@ -9,7 +9,6 @@ ShaderProgram object for use in graphics applications.
 from typing import Optional
 
 from decologr import Decologr as log
-
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.shaders.compile import compile_shaders
 
@@ -30,9 +29,7 @@ def generate_shader_programs(
     )
     if picogl_shader_program is None:
         return None
-    shader_program = (
-        picogl_shader_program.program
-    )  # ✅ This is safe for glUseProgram
+    shader_program = picogl_shader_program.program  # ✅ This is safe for glUseProgram
     if shader_program is None:
         log.error(
             "❌ Shader shader_program could not be created. Aborting scene initialization."

@@ -5,7 +5,6 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_UNPACK_ALIGNMENT
-
 from picogl.backend.gl.api.legacy.matrix import gl_pushed_matrix
 from picogl.backend.gl.api.legacy.pixel_store import gl_pixel_store_i
 from picogl.backend.gl.api.light.model import gl_light_model_fv
@@ -27,9 +26,7 @@ class GLLightingSystem:
     """Configuration for fixed-function lighting state."""
 
     mode: GLLightingMode = GLLightingMode.EYE_SPACE
-    ambient: RGBAColor = field(
-        default_factory=lambda: RGBAColor(0.12, 0.12, 0.12, 1.0)
-    )
+    ambient: RGBAColor = field(default_factory=lambda: RGBAColor(0.12, 0.12, 0.12, 1.0))
     lights: dict[GLFixedFunctionCapability, LightSource] = field(default_factory=dict)
     material_shininess: float | None = None
     set_unpack_alignment: bool = False

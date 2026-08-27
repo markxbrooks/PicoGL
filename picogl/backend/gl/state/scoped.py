@@ -5,8 +5,12 @@ from __future__ import annotations
 from contextlib import contextmanager
 from typing import Iterator
 
-from picogl.backend.gl.api.enable import (GLCapabilities, gl_disable,
-                                          gl_enable, gl_is_enabled)
+from picogl.backend.gl.api.enable import (
+    GLCapabilities,
+    gl_disable,
+    gl_enable,
+    gl_is_enabled,
+)
 
 
 @contextmanager

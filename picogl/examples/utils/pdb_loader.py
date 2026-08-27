@@ -125,14 +125,10 @@ def _bond_key(i: int, j: int) -> tuple[int, int]:
 
 
 def _atom_distance(a: Atom, b: Atom) -> float:
-    return float(
-        np.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2 + (a.z - b.z) ** 2)
-    )
+    return float(np.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2 + (a.z - b.z) ** 2))
 
 
-def _parse_conect_line(
-    line: str, serial_to_idx: Dict[int, int]
-) -> List[Bond]:
+def _parse_conect_line(line: str, serial_to_idx: Dict[int, int]) -> List[Bond]:
     """Parse a CONECT line into bonds (central atom → up to four partners)."""
     bonds: List[Bond] = []
     try:
@@ -257,7 +253,15 @@ class PDBLoader:
 
     def _load_pdb(self):
         """Load and parse the PDB file"""
-        atoms, conect_bonds, chains, current_residue, current_residue_atoms, residues, title = self.open_file()
+        (
+            atoms,
+            conect_bonds,
+            chains,
+            current_residue,
+            current_residue_atoms,
+            residues,
+            title,
+        ) = self.open_file()
 
         # Add the last residue
         if current_residue is not None:
@@ -277,7 +281,11 @@ class PDBLoader:
             chains=list(chains),
         )
 
-    def open_file(self) -> tuple[list[Atom], list[Any], list[Any], list[Any], list[Atom], list[Residue], str]:
+    def open_file(
+        self,
+    ) -> tuple[
+        list[Atom], list[Any], list[Any], list[Any], list[Atom], list[Residue], str
+    ]:
         atoms: list[Atom] = []
         bonds = []
         residues = []
@@ -305,10 +313,10 @@ class PDBLoader:
 
                     # Group atoms by residue
                     if (
-                            current_residue is None
-                            or current_residue.name != atom.res_name
-                            or current_residue.chain_id != atom.chain_id
-                            or current_residue.seq_num != atom.res_seq
+                        current_residue is None
+                        or current_residue.name != atom.res_name
+                        or current_residue.chain_id != atom.chain_id
+                        or current_residue.seq_num != atom.res_seq
                     ):
                         # Save previous residue
                         if current_residue is not None:
@@ -335,13 +343,19 @@ class PDBLoader:
                         self._serial_to_idx = {
                             atom.serial: i for i, atom in enumerate(atoms)
                         }
-                    bonds.extend(
-                        _parse_conect_line(line, self._serial_to_idx)
-                    )
+                    bonds.extend(_parse_conect_line(line, self._serial_to_idx))
 
                 elif record_type == "END":
                     break
-        return atoms, bonds, chains, current_residue, current_residue_atoms, residues, title
+        return (
+            atoms,
+            bonds,
+            chains,
+            current_residue,
+            current_residue_atoms,
+            residues,
+            title,
+        )
 
     def to_molviewspec(self) -> Dict:
         """Convert PDB structure to MolViewSpec format"""

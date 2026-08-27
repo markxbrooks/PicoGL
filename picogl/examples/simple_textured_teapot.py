@@ -14,8 +14,10 @@ if sys.platform.startswith("linux"):
 
 import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
 from picogl.examples.textured_specs import _EXAMPLES_DIR, create_teapot_mesh
-from picogl.ui.backend.glut.window.textured_mesh import (TexturedMeshRenderer,
-                                                         TexturedRendererSpec)
+from picogl.ui.backend.glut.window.textured_mesh import (
+    TexturedMeshRenderer,
+    TexturedRendererSpec,
+)
 
 # Same assets as CUBE_SPEC; used by examples/texture.py (legacy TextureWindow demo).
 _TU02_TEXTURE = _EXAMPLES_DIR / "resources" / "tu02" / "uvtemplate.tga"
@@ -30,6 +32,8 @@ TEAPOT_SPEC = TexturedRendererSpec(
     glsl_dir=_TU02_GLSL,
     create_mesh=create_teapot_mesh,
 )
+
+
 def main() -> None:
     win = TexturedMeshRenderer(TEAPOT_SPEC)
     win.initializeGL()
@@ -39,4 +43,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

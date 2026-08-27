@@ -1,11 +1,11 @@
 """
 Vertex functions
 """
+
 from typing import Sequence
 
 from OpenGL import GL as gl
 from OpenGL.raw.GL.VERSION.GL_1_0 import glVertex3f
-
 from picogl.backend.gl.enums import GLNumeric
 from picogl.core.vec3 import Vec3
 
@@ -33,7 +33,7 @@ def gl_vertex_any(pos1: Vec3 | Sequence[float]):
         gl_vertex_tuple_3f((pos1[0], pos1[1], pos1[2]))
 
 
-def gl_vertex_pointer(size: int, type: GLNumeric, stride: int =0, pointer=None):
+def gl_vertex_pointer(size: int, type: GLNumeric, stride: int = 0, pointer=None):
     """gl vertex pointer"""
     gl.glVertexPointer(size, type, stride, pointer)
 

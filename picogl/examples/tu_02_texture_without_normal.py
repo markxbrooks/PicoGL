@@ -18,8 +18,10 @@ if sys.platform.startswith("linux"):
 import picogl.ui.backend.glut.prefer_apple_glut  # noqa: F401
 import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
 from picogl.examples.textured_specs import create_cube_mesh
-from picogl.ui.backend.glut.window.textured_mesh import (TexturedMeshRenderer,
-                                                         TexturedRendererSpec)
+from picogl.ui.backend.glut.window.textured_mesh import (
+    TexturedMeshRenderer,
+    TexturedRendererSpec,
+)
 
 CUBE_SPEC = TexturedRendererSpec(
     width=800,

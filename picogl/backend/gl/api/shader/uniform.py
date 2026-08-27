@@ -14,7 +14,6 @@ from typing import Any
 import numpy as np
 from OpenGL.GL import glUniformMatrix4fv
 from OpenGL.raw.GL.VERSION.GL_2_0 import GL_FRAGMENT_SHADER, GL_VERTEX_SHADER
-
 from picogl.backend.gl.api.shader import gl_get_uniform_location
 from picogl.boolean import GLBoolean
 
@@ -68,8 +67,13 @@ class GLShader(IntEnum):
     FRAGMENT_SHADER = GL_FRAGMENT_SHADER
 
 
-def gl_set_uniform_matrix(shader_program: int, shader_uniform_name: str, matrix: np.ndarray):
+def gl_set_uniform_matrix(
+    shader_program: int, shader_uniform_name: str, matrix: np.ndarray
+):
     """gl set uniform matrix"""
     gl_uniform_matrix_4fv(
-        gl_get_uniform_location(shader_program, shader_uniform_name), 1, GLBoolean.FALSE, matrix
+        gl_get_uniform_location(shader_program, shader_uniform_name),
+        1,
+        GLBoolean.FALSE,
+        matrix,
     )
