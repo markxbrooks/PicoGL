@@ -140,8 +140,12 @@ class TestVertexArrayObject(unittest.TestCase):
     def test_delete(self):
         """Test delete method."""
         vao = VertexArrayObject(handle=self.mock_handle)
-        vao.delete()
-        # The delete call is already mocked in setUp
+        with patch(
+            "picogl.backend.modern.core.vertex.array.object.gl_delete_vertex_arrays"
+        ) as mock_delete:
+            vao.delete()
+            mock_delete.assert_called_once_with(self.mock_handle)
+            self.assertEqual(vao.handle, 0)
 
     def test_add_vbo(self):
         """Test add_vbo method."""

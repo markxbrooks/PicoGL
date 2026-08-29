@@ -260,7 +260,9 @@ class VertexArrayObject(VertexBase, GLResource):
         """
         Delete the VAO from GPU memory.
         """
-        gl_delete_vertex_arrays(1, [self.handle])
+        if self.handle is not None and int(self.handle) > 0:
+            gl_delete_vertex_arrays(int(self.handle))
+            self.handle = 0
 
     def configure(self):
         """set layout"""

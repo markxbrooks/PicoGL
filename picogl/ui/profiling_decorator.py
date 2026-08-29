@@ -1,3 +1,7 @@
+"""
+function profiler
+"""
+
 import cProfile
 import io
 import pstats

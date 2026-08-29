@@ -1,7 +1,6 @@
 from typing import Optional
 
-from OpenGL.GL import glDeleteVertexArrays
-from picogl.backend.gl.api import gl_bind_buffer
+from picogl.backend.gl.api.glcleanup import gl_delete_buffers, gl_delete_vertex_arrays
 from picogl.backend.gl.api.enable_vertex_array import gl_enable_vertex_array
 from picogl.backend.gl.api.glcleanup import gl_delete_buffers
 from picogl.backend.gl.api.vertex.attrib_pointer import gl_vertex_attrib_pointer
@@ -84,7 +83,13 @@ class ModernVertexArrayGroup(VertexBase):
 
     def delete(self) -> None:
         if self.vao:
-            glDeleteVertexArrays([self.vao])
+            handle = getattr(self.vao, "handle", self.vao)
+            try:
+                hid = int(handle)
+            except (TypeError, ValueError):
+                hid = 0
+            if hid > 0:
+                gl_delete_vertex_arrays(hid)
             self.vao = 0
         gl_delete_buffers(self.nbo)
         gl_delete_buffers(self.cbo)
