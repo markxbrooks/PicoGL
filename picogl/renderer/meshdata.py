@@ -7,6 +7,8 @@ handle OpenGL-related state objects and simplify rendering workflows.
 from typing import Optional, Union
 
 import numpy as np
+
+from picogl.backend.gl.legacy.setup_vbg import VertexBufferGroup
 from decologr import Decologr as log
 from OpenGL import GL
 from picogl.backend.gl.api import (
@@ -23,6 +25,7 @@ from picogl.backend.gl.api.pointer import (
 from picogl.backend.gl.enums import GLDrawMode, GLIndexType, GLNumeric
 from picogl.backend.gl.state.client import GLClientState
 from picogl.backend.gl.state.fill import GLFace, GLFillMode
+from picogl.backend.gl.legacy.setup_vbg import setup_vbg
 from picogl.core.rgbcolor import RGBColor
 from picogl.gpu.buffers.attributes import CanonicalVertexAttrs
 from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
@@ -124,6 +127,17 @@ class MeshData:
         if uvs is not None:
             uvs = np.asarray(uvs, dtype=np.float32)
             self.uvs = uvs if self.uvs is None else np.vstack([self.uvs, uvs])
+
+    def setup_vbg(self, draw_mode: int = GLDrawMode.TRIANGLE_STRIP
+    ) -> VertexBufferGroup:
+        from picogl.gpu.buffers.helper import as_vec3_array
+
+        return setup_vbg(
+            colors=as_vec3_array(self.colors),
+            normals=as_vec3_array(self.normals),
+            positions=as_vec3_array(self.vertices),
+            draw_mode=draw_mode,
+        )
 
     @staticmethod
     def from_object_data(object_data: ObjectData) -> "MeshData":
