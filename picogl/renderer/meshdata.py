@@ -128,7 +128,7 @@ class MeshData:
             uvs = np.asarray(uvs, dtype=np.float32)
             self.uvs = uvs if self.uvs is None else np.vstack([self.uvs, uvs])
 
-    def setup_vbg(self, draw_mode: int = GLDrawMode.TRIANGLE_STRIP
+    def setup_vbg(self, draw_mode: int | GLDrawMode = GLDrawMode.TRIANGLE_STRIP
     ) -> VertexBufferGroup:
         from picogl.gpu.buffers.helper import as_vec3_array
 
