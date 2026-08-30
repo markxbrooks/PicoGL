@@ -31,10 +31,10 @@ from PySide6.QtWidgets import QWidget
 class MvpParameters:
     """MVP Parameters"""
 
-    rotation_x = None
-    rotation_y = None
-    pan_x = None
-    pan_y = None
+    rotation_x = 0.0
+    rotation_y = 0.0
+    pan_x = 0.0
+    pan_y = 0.0
 
 
 @dataclass
