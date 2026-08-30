@@ -15,7 +15,7 @@ def gl_upload_float_buffer(
     gl_buffer_data(
         buffer_target,
         len(data) * 4,
-        (GLfloat * len(data))(*data),
+        (GLfloat * len(data)),
         GLUsageHint.STATIC_DRAW,
     )
 
@@ -28,6 +28,6 @@ def gl_upload_ushort_buffer(
     gl_buffer_data(
         buffer_target,
         len(data) * 2,
-        (GLushort * len(data))(*data),
+        (GLushort * len(data)),
         GLUsageHint.STATIC_DRAW,
     )
