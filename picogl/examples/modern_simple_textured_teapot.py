@@ -1,7 +1,7 @@
 """
 Simple Textured PicoGL Teapot — position + UV, tu02 flat texture shader.
 
-For Phong-lit texture + vertex-color mixing, use textured_teapot.py (RenderWindow).
+For Phong-lit texture + vertex-color mixing, use modern_textured_teapot.py (RenderWindow).
 """
 
 from __future__ import annotations
@@ -19,7 +19,7 @@ from picogl.ui.backend.glut.window.textured_mesh import (
     TexturedRendererSpec,
 )
 
-# Same assets as CUBE_SPEC; used by examples/texture.py (legacy TextureWindow demo).
+# Same assets as CUBE_SPEC; used by examples/modern_texture_example.py (legacy TextureWindow demo).
 _TU02_TEXTURE = _EXAMPLES_DIR / "resources" / "tu02" / "uvtemplate.tga"
 _TU02_GLSL = _EXAMPLES_DIR / "glsl" / "tu02"
 TEAPOT_SPEC = TexturedRendererSpec(

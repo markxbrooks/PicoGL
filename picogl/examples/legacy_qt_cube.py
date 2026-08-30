@@ -19,12 +19,12 @@ Requirements:
 - PicoGL
 
 Usage:
-    python examples/qt_cube.py
+    python examples/legacy_qt_cube.py
 """
 
 import sys
 
-from picogl.examples.qt_cube_simple import SimpleQtCubeWidget
+from picogl.examples.legacy_qt_cube_simple import SimpleQtCubeWidget
 from PySide6.QtWidgets import QApplication
 
 # OpenGL imports

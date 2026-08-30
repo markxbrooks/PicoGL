@@ -23,7 +23,7 @@ This directory contains Qt-based cube renderer examples for PicoGL, designed for
 
 **Usage:**
 ```bash
-python examples/qt_cube.py
+python examples/legacy_qt_cube.py
 ```
 
 ### 2. `qt_cube_simple.py` - Minimal Qt Cube Renderer
@@ -44,7 +44,7 @@ python examples/qt_cube.py
 
 **Usage:**
 ```bash
-python examples/qt_cube_simple.py
+python examples/legacy_qt_cube_simple.py
 ```
 
 ## Controls

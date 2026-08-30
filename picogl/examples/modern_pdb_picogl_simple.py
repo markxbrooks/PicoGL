@@ -2,7 +2,7 @@
 Simple PDB PicoGL Viewer
 
 Loads a PDB and displays atoms (smooth points) and bonds (lines) using the
-same render path as ``molecular_viewer.py`` — not as a single triangle mesh.
+same render path as ``modern_molecular_viewer.py`` — not as a single triangle mesh.
 """
 
 from __future__ import annotations

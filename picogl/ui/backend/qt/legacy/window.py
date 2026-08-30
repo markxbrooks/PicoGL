@@ -19,7 +19,7 @@ Requirements:
 - PicoGL
 
 Usage:
-    python examples/qt_cube.py
+    python examples/legacy_qt_cube.py
 """
 
 import sys

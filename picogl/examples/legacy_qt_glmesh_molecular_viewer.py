@@ -46,7 +46,7 @@ from PySide6.QtWidgets import (
 # Add the examples directory to the path so we can import the PDB loader
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "utils"))
 
-from pdb_loader import Atom, PDBLoader
+from picogl.examples.utils.pdb_loader import PDBLoader, Atom
 
 
 class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):

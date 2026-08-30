@@ -1,9 +1,9 @@
 from dataclasses import dataclass, field
 
-from backend.gl.enums.legacy.scale import gl_translate_f
-from core.vec3 import Vec3
-from core.zoom.scale import gl_scale_by_zoom
-from examples.cube_with_controls import Axes, gl_rotate_axes
+from picogl.backend.gl.enums.legacy.scale import gl_translate_f
+from picogl.core.vec3 import Vec3
+from picogl.core.zoom.scale import gl_scale_by_zoom
+from picogl.examples.legacy_cube_with_controls import Axes, gl_rotate_axes
 from molib.pdb.coordinate.coordinate import Coordinates
 
 

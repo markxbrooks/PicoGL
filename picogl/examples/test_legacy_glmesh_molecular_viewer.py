@@ -33,7 +33,7 @@ def test_imports():
         print("✅ Successfully imported PySide6 components")
 
         # Test molecular viewer import
-        from qt_legacy_glmesh_molecular_viewer import (
+        from legacy_qt_glmesh_molecular_viewer import (
             LegacyGLMeshMolecularViewerWindow,
             QtLegacyGLMeshMolecularViewer,
         )
@@ -224,7 +224,7 @@ def main():
     if passed == total:
         print("🎉 All tests passed! The LegacyGLMesh molecular viewer is ready to use.")
         print("\n🚀 To run the molecular viewer:")
-        print("   python qt_legacy_glmesh_molecular_viewer.py")
+        print("   python legacy_qt_glmesh_molecular_viewer.py")
         print("")
         print("🎮 Controls:")
         print("   • Left mouse: Rotate")

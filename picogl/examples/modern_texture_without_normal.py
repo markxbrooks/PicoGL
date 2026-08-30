@@ -9,7 +9,7 @@ from __future__ import annotations
 import os
 import sys
 
-from examples.simple_textured_teapot import _TU02_GLSL, _TU02_TEXTURE
+from picogl.examples.modern_simple_textured_teapot import _TU02_GLSL, _TU02_TEXTURE
 
 # freeglut creates GLX contexts; under Wayland PyOpenGL may pick EGL first.
 if sys.platform.startswith("linux"):

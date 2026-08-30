@@ -1,7 +1,7 @@
 """
 Shared GLUT molecular viewer: atoms as points, bonds as lines.
 
-Used by ``molecular_viewer.py`` and ``pdb_picogl_simple.py``. Never draws atom
+Used by ``modern_molecular_viewer.py`` and ``modern_pdb_picogl_simple.py``. Never draws atom
 positions through ObjectRenderer / GL_TRIANGLES (that produces triangle soup).
 """
 
