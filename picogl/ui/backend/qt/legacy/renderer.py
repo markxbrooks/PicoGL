@@ -60,7 +60,7 @@ class LegacyQtObjectRenderer(GLBase):
         # Animation and control state
         self.rotation_x = 0.0
         self.rotation_y = 0.0
-        self.zoom = 5.0
+        self.zoom = 20.0
         self.auto_rotate = True
         self.rotation_speed = 1.0
 

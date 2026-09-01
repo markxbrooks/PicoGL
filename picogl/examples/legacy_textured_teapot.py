@@ -59,6 +59,8 @@ from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.utils.loader.object import ObjectLoader
 from picogl.utils.loader.texture import TextureLoader
 
+INITIAL_ZOOM = 20
+
 BASE_DIR = Path(__file__).resolve().parent
 
 window_geometry = WindowGeometry(
@@ -166,6 +168,10 @@ class LegacyTexturedTeapotRenderer(LegacyQtObjectRenderer):
 
         # Create and upload mesh data
         self.initialize()
+        self.init_zoom()
+
+    def init_zoom(self):
+        self.zoom = INITIAL_ZOOM
 
     def initialize_state(self):
         """Set up basic OpenGL state"""
