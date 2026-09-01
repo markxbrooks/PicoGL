@@ -51,6 +51,8 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from picoui.helpers import create_layout_with_items
+
 # OpenGL imports
 try:
     from OpenGL.GL import *
@@ -257,18 +259,17 @@ class LegacyTexturedTeapotWindow(LegacyQtObjectWindow):
             """)
         info_label.setMaximumHeight(180)
         layout.addWidget(info_label)
-
-        # Create texture selection
-        texture_layout = QVBoxLayout()
         texture_label = QLabel("Select Texture:")
-        texture_layout.addWidget(texture_label)
-
         self.texture_combo = QComboBox()
         self.texture_combo.addItems(
             ["UV Template", "UV Map", "Holstein", "Diffuse", "AK-47"]
         )
         self.texture_combo.currentTextChanged.connect(self.change_texture)
-        texture_layout.addWidget(self.texture_combo)
+
+        # Create texture selection
+
+        texture_layout_items = [texture_label, self.texture_combo]
+        texture_layout = create_layout_with_items(items=texture_layout_items)
 
         layout.addLayout(texture_layout)
 
