@@ -53,15 +53,6 @@ from PySide6.QtWidgets import (
 
 from picoui.helpers import create_layout_with_items
 
-# OpenGL imports
-try:
-    from OpenGL.GL import *
-    from OpenGL.GLU import *
-except ImportError as e:
-    print("❌ Error: PyOpenGL not available")
-    print("Please install PyOpenGL: pip install PyOpenGL PyOpenGL_accelerate")
-    sys.exit(1)
-
 from picogl.renderer import MeshData
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.utils.loader.object import ObjectLoader
