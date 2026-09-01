@@ -51,6 +51,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from picoui.dimensions import Dimensions, Point, WindowGeometry
 from picoui.helpers import create_layout_with_items
 
 from picogl.renderer import MeshData
@@ -59,6 +60,11 @@ from picogl.utils.loader.object import ObjectLoader
 from picogl.utils.loader.texture import TextureLoader
 
 BASE_DIR = Path(__file__).resolve().parent
+
+window_geometry = WindowGeometry(
+    position=Point(x=100, y=100),
+    dimensions=Dimensions(width=800, height=600),
+)
 
 
 class LegacyTexturedTeapotRenderer(LegacyQtObjectRenderer):
@@ -224,7 +230,7 @@ class LegacyTexturedTeapotWindow(LegacyQtObjectWindow):
     def __init__(self):
         super().__init__(parent=self, gl_mode=GLMode.LEGACY)
         self.setWindowTitle("PicoGL Legacy Textured Teapot - OpenGL 1.x/2.x")
-        self.setGeometry(100, 100, 800, 600)
+        self.setGeometry(*window_geometry.to_tuple())
 
         # Create central widget
         central_widget = QWidget()
@@ -307,7 +313,7 @@ def main():
     window.show()
 
     print("✅ Legacy Textured Teapot started successfully!")
-    print("   - Window: 800x600")
+    print(f"   - Window: {window_geometry.dimensions.width}x{window_geometry.dimensions.height}")
     print("   - Rendering: Legacy OpenGL with texture mapping")
     print("   - Controls: Mouse drag, wheel, keyboard, texture selection")
 
