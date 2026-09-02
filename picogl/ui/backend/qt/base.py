@@ -70,6 +70,13 @@ class CameraParameters:
         self.translation_zoom = 0.0
 
 
+@dataclass
+class Rotation:
+    """Rotation"""
+    self.x = 0.0
+    self.y = 0.0
+
+
 class GLBase(QOpenGLWidget, QOpenGLFunctions):
     """
     OpenGL Qt Widget
@@ -127,9 +134,12 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
         self.backend.execute_gl_tasks(init_list)
 
     def initialize(self):
+        self.initialize_rotation()
+        self.zoom = 20.0
+
+    def initialize_rotation(self):
         self.rotation_x = 0.0
         self.rotation_y = 0.0
-        self.zoom = 20.0
 
     def resizeGL(self, w: int, h: int) -> None:
         """

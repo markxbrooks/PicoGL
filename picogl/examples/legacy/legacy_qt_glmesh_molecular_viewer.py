@@ -66,6 +66,8 @@ from PySide6.QtWidgets import (
 )
 
 from picoui.dimensions import WindowGeometry, Point, Dimensions
+from picoui.helpers import create_layout_with_items
+from picogl.ui.backend.qt.base import Rotation
 
 _EXAMPLES_PATH = Path(__file__).resolve().parent.parent
 _EXAMPLES_DIR = str(_EXAMPLES_PATH)
@@ -106,7 +108,7 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         self.calpha_atoms = []
         self.calpha_positions = None
         self.calpha_bonds = []
-
+        self.rotation = Rotation()
         self.rotation_x = 0.0
         self.rotation_y = 0.0
         self.zoom = 1.0
@@ -348,38 +350,40 @@ class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
         self.gl_widget = QtLegacyGLMeshMolecularViewer(pdb_path)
         lower_layout.addWidget(self.gl_widget)
 
-        controls_layout = QHBoxLayout()
         reset_button = QPushButton("Reset View (R)")
         reset_button.clicked.connect(self.reset_view)
-        controls_layout.addWidget(reset_button)
 
         info_button = QPushButton("Show Info")
         info_button.clicked.connect(self.show_info)
-        controls_layout.addWidget(info_button)
 
+        self.create_lighting_button()
+        controls_layout_items = [reset_button, info_button, self.lighting_button]
+        controls_layout = create_layout_with_items(controls_layout_items,start_stretch=False,  end_stretch=True)
+
+        instructions_label = self.create_instructions_label()
+
+        upper_layout.addLayout(controls_layout)
+        upper_layout.addWidget(instructions_label)
+
+    def create_instructions_label(self) -> QLabel:
+        instructions_text = "Controls:\n"
+        "• Left mouse: Rotate\n"
+        "• Mouse wheel: Zoom\n"
+        "• R key: Reset view\n"
+        "• W key: Toggle wireframe/filled\n"
+        "• L/T key: Toggle lighting\n"
+        "• ESC: Exit\n"
+        "• Chain A: Green, Chain B: Blue\n"
+        "• Using LegacyGLMesh for rendering"
+        instructions_style = "color: black; font-size: 12px; padding: 10px; background-color: #f0f0f0;"
+        instructions_label = QLabel(instructions_text)
+        instructions_label.setStyleSheet(instructions_style)
+        return instructions_label
+
+    def create_lighting_button(self):
         self.lighting_button = QPushButton("Lighting: OFF")
         self.lighting_button.clicked.connect(self.toggle_lighting)
         self.lighting_button.setEnabled(False)
-        controls_layout.addWidget(self.lighting_button)
-
-        controls_layout.addStretch()
-        upper_layout.addLayout(controls_layout)
-
-        instructions = QLabel(
-            "Controls:\n"
-            "• Left mouse: Rotate\n"
-            "• Mouse wheel: Zoom\n"
-            "• R key: Reset view\n"
-            "• W key: Toggle wireframe/filled\n"
-            "• L/T key: Toggle lighting\n"
-            "• ESC: Exit\n"
-            "• Chain A: Green, Chain B: Blue\n"
-            "• Using LegacyGLMesh for rendering"
-        )
-        instructions.setStyleSheet(
-            "color: black; font-size: 12px; padding: 10px; background-color: #f0f0f0;"
-        )
-        upper_layout.addWidget(instructions)
 
     def reset_view(self):
         """Reset the view to default."""
