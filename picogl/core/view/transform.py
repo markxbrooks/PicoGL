@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 from picogl.backend.gl.enums.legacy.scale import gl_translate_f
 from picogl.core.vec3 import Vec3
 from picogl.core.zoom.scale import gl_scale_by_zoom
-from picogl.examples.legacy_cube_with_controls import Axes, gl_rotate_axes
+from picogl.examples.legacy.legacy_cube_with_controls import Axes, gl_rotate_axes
 from molib.pdb.coordinate.coordinate import Coordinates
 
 
