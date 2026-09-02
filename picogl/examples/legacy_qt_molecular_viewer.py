@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import os
 import sys
+from pathlib import Path
 from typing import Any
 
 import numpy as np
@@ -391,9 +392,7 @@ class LegacyMolecularViewerWindow(LegacyQtObjectWindow):
 
 def main() -> int:
     app = QApplication(sys.argv)
-    pdb_path = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "data", "2VUG.pdb")
-    )
+    pdb_path = Path(__file__).resolve().parent / "data" / "2VUG.pdb"
     print(pdb_path)
     if not os.path.exists(pdb_path):
         print(f"Error: PDB file not found at {pdb_path}")

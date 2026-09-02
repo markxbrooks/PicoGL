@@ -13,6 +13,8 @@ from __future__ import annotations
 
 import os
 import sys
+from pathlib import Path
+
 from molib.core.constants import MoLibConstant
 from picogl.backend.gl.api.clear import gl_clear, gl_clear_color, gl_clear_rgba_color
 from picogl.backend.gl.api.color import gl_color_material
@@ -62,7 +64,10 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-_EXAMPLES_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+from picoui.dimensions import WindowGeometry, Point, Dimensions
+
+_EXAMPLES_PATH = Path(__file__).resolve().parent.parent
+_EXAMPLES_DIR = str(_EXAMPLES_PATH)
 if _EXAMPLES_DIR not in sys.path:
     sys.path.insert(0, _EXAMPLES_DIR)
 
@@ -307,6 +312,11 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
 class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
     """Main window for the LegacyGLMesh molecular viewer."""
 
+    window_geometry = WindowGeometry(
+        position=Point(x=100, y=100),
+        dimensions=Dimensions(width=1200, height=800),
+    )
+
     def __init__(self, object_file_path: str = None):
         self._pdb_path = object_file_path
         super().__init__(parent=None)
@@ -324,7 +334,7 @@ class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
         self.setWindowTitle(
             "Qt Legacy GLMesh Molecular Viewer - 2VUG C-alpha (Chain A: Green, Chain B: Blue)"
         )
-        self.setGeometry(100, 100, 1200, 800)
+        self.setGeometry(*window_geometry.to_tuple())
 
     def set_layout(self, layout):
         """Build the window layout and GL widget."""
@@ -437,7 +447,7 @@ Using: LegacyGLMesh
 def main():
     """Main function to run the molecular viewer."""
     app = QApplication(sys.argv)
-    pdb_path = os.path.join(_EXAMPLES_DIR, "data", "2VUG.pdb")
+    pdb_path = pdb_path = Path(_EXAMPLES_DIR) / "data" / "2VUG.pdb"
     pdb_path = os.path.abspath(pdb_path)
     print(pdb_path)
 
