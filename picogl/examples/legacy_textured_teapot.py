@@ -285,7 +285,7 @@ class LegacyTexturedTeapotWindow(LegacyQtObjectWindow):
         button_layout_items = [auto_rotate_btn, reset_btn]
 
         button_layout = create_layout_with_items(items=button_layout_items)
-        
+
         layout_items = [info_label, texture_layout, self.gl_widget, button_layout]
         add_items_to_layout(layout, layout_items)
 
