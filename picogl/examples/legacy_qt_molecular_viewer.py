@@ -294,6 +294,26 @@ class QtLegacyMolecularViewer(QOpenGLWidget):
             self.close()
 
 
+def create_molecule_viewer_layout(info_label: QLabel, layout) -> tuple[QVBoxLayout, QHBoxLayout]:
+    info_label.setStyleSheet("font-size: 14px; font-weight: bold; padding: 10px;")
+
+    splitter = QSplitter(Qt.Vertical)
+    layout.addWidget(splitter)
+
+    upper_widget = QWidget()
+    upper_layout = QHBoxLayout()
+    upper_widget.setLayout(upper_layout)
+    upper_layout.addWidget(info_label)
+
+    lower_widget = QWidget()
+    lower_layout = QVBoxLayout()
+    splitter.addWidget(upper_widget)
+    splitter.addWidget(lower_widget)
+    splitter.setSizes([200, 800])
+    lower_widget.setLayout(lower_layout)
+    return lower_layout, upper_layout
+
+
 class LegacyMolecularViewerWindow(LegacyQtObjectWindow):
     """Main window hosting the Cα OpenGL widget."""
 
@@ -320,22 +340,7 @@ class LegacyMolecularViewerWindow(LegacyQtObjectWindow):
         info_label = QLabel(
             "2VUG PDB Structure - C-alpha Atoms " "(Chain A: Green, Chain B: Blue)"
         )
-        info_label.setStyleSheet("font-size: 14px; font-weight: bold; padding: 10px;")
-
-        splitter = QSplitter(Qt.Vertical)
-        layout.addWidget(splitter)
-
-        upper_widget = QWidget()
-        upper_layout = QHBoxLayout()
-        upper_widget.setLayout(upper_layout)
-        upper_layout.addWidget(info_label)
-
-        lower_widget = QWidget()
-        lower_layout = QVBoxLayout()
-        splitter.addWidget(upper_widget)
-        splitter.addWidget(lower_widget)
-        splitter.setSizes([200, 800])
-        lower_widget.setLayout(lower_layout)
+        lower_layout, upper_layout = create_molecule_viewer_layout(info_label, layout)
 
         controls_layout = QHBoxLayout()
         reset_button = QPushButton("Reset View (R)")

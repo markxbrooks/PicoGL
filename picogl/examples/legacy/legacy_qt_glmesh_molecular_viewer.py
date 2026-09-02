@@ -15,6 +15,7 @@ import os
 import sys
 from pathlib import Path
 
+from examples.legacy_qt_molecular_viewer import create_molecule_viewer_layout
 from molib.core.constants import MoLibConstant
 from picogl.backend.gl.api.clear import gl_clear, gl_clear_color, gl_clear_rgba_color
 from picogl.backend.gl.api.color import gl_color_material
@@ -341,20 +342,7 @@ class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
         info_label = QLabel(
             "PDB Structure - C-alpha Atoms (Chain A: Green, Chain B: Blue)"
         )
-        info_label.setStyleSheet("font-size: 14px; font-weight: bold; padding: 10px;")
-
-        splitter = QSplitter(Qt.Vertical)
-        layout.addWidget(splitter)
-        upper_widget = QWidget()
-        upper_layout = QHBoxLayout()
-        upper_widget.setLayout(upper_layout)
-        upper_layout.addWidget(info_label)
-        lower_widget = QWidget()
-        lower_layout = QVBoxLayout()
-        splitter.addWidget(upper_widget)
-        splitter.addWidget(lower_widget)
-        splitter.setSizes([200, 800])
-        lower_widget.setLayout(lower_layout)
+        lower_layout, upper_layout = create_molecule_viewer_layout(info_label, layout)
 
         pdb_path = getattr(self, "_pdb_path", None) or self.object_file_path
         self.gl_widget = QtLegacyGLMeshMolecularViewer(pdb_path)
