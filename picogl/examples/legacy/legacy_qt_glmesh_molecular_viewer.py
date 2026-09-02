@@ -14,7 +14,7 @@ from __future__ import annotations
 import os
 import sys
 from molib.core.constants import MoLibConstant
-from picogl.backend.gl.api.clear import gl_clear, gl_clear_color
+from picogl.backend.gl.api.clear import gl_clear, gl_clear_color, gl_clear_rgba_color
 from picogl.backend.gl.api.color import gl_color_material
 from picogl.backend.gl.api.enable import (
     gl_disable_capability_list,
@@ -79,7 +79,7 @@ _VIEWER_MATERIAL = PhongMaterial(
     ambient=RGBAColor(0.3, 0.3, 0.3, 1.0),
     diffuse=RGBAColor(0.7, 0.7, 0.7, 1.0),
     specular=RGBAColor(0.1, 0.1, 0.1, 1.0),
-    shininess=10.0,
+    shininess=50.0,
 )
 
 _LIGHTING_CAPS = [
@@ -129,7 +129,7 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         gl_color_material(
             GLMaterialFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE
         )
-        gl_clear_color((0.0, 0.0, 0.0, 1.0))
+        gl_clear_rgba_color(RGBAColor.BLACK)
 
         self._create_mesh_data()
         self._initialized = True
