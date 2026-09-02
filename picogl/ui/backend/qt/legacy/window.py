@@ -22,11 +22,11 @@ Usage:
     python examples/legacy_qt_cube.py
 """
 
-import sys
 from typing import Optional
 
 from picogl.backend.gl.mode import GLMode
 from picogl.ui.backend.qt.base import GLBase
+from picoui.dimensions import Dimensions, Point, WindowGeometry
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget
 
@@ -36,6 +36,11 @@ class LegacyQtObjectWindow(QMainWindow):
     Main window for the Qt Object renderer
     """
 
+    window_geometry = WindowGeometry(
+        position=Point(x=100, y=100),
+        dimensions=Dimensions(width=800, height=600),
+    )
+
     def __init__(self, parent, gl_mode: GLMode = GLMode.LEGACY):
         super().__init__()
         self.parent = parent
@@ -43,7 +48,7 @@ class LegacyQtObjectWindow(QMainWindow):
         self.layout: Optional[QVBoxLayout] = None
         self.gl_widget: Optional[GLBase] = None
         self.setWindowTitle("PicoGL Qt Object Renderer - Legacy OpenGL")
-        self.setGeometry(100, 100, 800, 600)
+        self.setGeometry(*self.window_geometry.to_tuple())
         self.object_file_path = None
         self.ui_init()
 
@@ -66,20 +71,19 @@ class LegacyQtObjectWindow(QMainWindow):
 
     def reset_view(self):
         """Reset the view"""
-        self.gl_widget.rotation_x = 0.0
-        self.gl_widget.rotation_y = 0.0
-        self.gl_widget.zoom = 5.0
-        self.gl_widget.mvp_parameters.x = 0.0
-        self.gl_widget.mvp_parameters.y = 0.0
-        self.gl_widget.mvp_parameters.pan_x = 0.0
-        self.gl_widget.mvp_parameters.pan_y = 0.0
-        self.gl_widget.camera_parameters.rotation_x_axis = 0.0
-        self.gl_widget.camera_parameters.rotation_y_axis = 0.0
-        self.gl_widget.camera_parameters.rotation_z_axis = 0.0
-        self.gl_widget.camera_parameters.translation_x_axis = 0.0
-        self.gl_widget.camera_parameters.translation_y_axis = 0.0
-        self.gl_widget.camera_parameters.translation_zoom = 0.0
+        self.initialize_gl_widget()
+        self.initialize_mvp()
+        self.initialize_camera()
         print("View reset")
+
+    def initialize_gl_widget(self):
+        self.gl_widget.initialize()
+
+    def initialize_camera(self):
+        self.gl_widget.camera_parameters.initialize()
+
+    def initialize_mvp(self):
+        self.gl_widget.mvp_parameters.initialize()
 
     def keyPressEvent(self, event):
         """Handle keyboard input at window level"""
