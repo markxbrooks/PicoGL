@@ -11,11 +11,8 @@ This example demonstrates how to:
 
 from __future__ import annotations
 
-import math
 import os
 import sys
-
-import numpy as np
 from molib.core.constants import MoLibConstant
 from picogl.backend.gl.api.clear import gl_clear, gl_clear_color
 from picogl.backend.gl.api.color import gl_color_material
@@ -29,7 +26,7 @@ from picogl.backend.gl.capability import (
     GLMaterialFace,
     GLPipelineCapability,
 )
-from picogl.backend.gl.enums import GLBitMask, GLDrawMode
+from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.enums.legacy.scale import (
     gl_load_identity,
@@ -48,10 +45,9 @@ from picogl.backend.gl.state.fill import (
 )
 from picogl.backend.glu.perspective import glu_perspective
 from picogl.core.polygon.mode import gl_polygon_mode
-from picogl.core.rgbcolor import RGBAColor, RGBColor
+from picogl.core.rgbcolor import RGBAColor
 from picogl.core.vec4 import Vec4
-from picogl.renderer.legacy_glmesh import LegacyGLMesh
-from picogl.renderer.meshdata import MeshData
+from picogl.renderer.molecular import AtomsMesh, BondsMesh, chain_rgb
 from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
@@ -72,11 +68,6 @@ if _EXAMPLES_DIR not in sys.path:
 
 from utils.pdb_loader import PDBLoader  # noqa: E402
 
-_CHAIN_RGB = {
-    "A": RGBColor.GREEN.to_tuple(),
-    "B": RGBColor.BLUE.to_tuple(),
-}
-
 _VIEWER_LIGHT = LightSource(
     position=Vec4(1.0, 1.0, 1.0, 0.0),
     ambient=RGBAColor(0.4, 0.4, 0.4, 1.0),
@@ -96,10 +87,6 @@ _LIGHTING_CAPS = [
     GLFixedFunctionCapability.LIGHT0,
     GLCapability.COLOR_MATERIAL,
 ]
-
-
-def _chain_rgb(chain_id: str) -> tuple[float, float, float]:
-    return _CHAIN_RGB.get(chain_id, RGBColor.WHITE.to_tuple())
 
 
 class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
@@ -222,106 +209,20 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         return bonds
 
     def _create_mesh_data(self):
-        """Create MeshData for atoms and bonds using PicoGL."""
+        """Create molecular meshes and upload legacy GPU buffers."""
         if self._initialized:
             return
-        atom_vertices, atom_normals, atom_colors_rgba, atom_indices = (
-            self._create_sphere_mesh_data()
-        )
-        bond_vertices, bond_colors, bond_indices = self._create_bond_mesh_data()
 
-        if atom_vertices is not None and len(atom_vertices) > 0:
-            mesh_data = MeshData.from_raw(
-                vertices=atom_vertices,
-                indices=atom_indices,
-                colors=atom_colors_rgba[:, :3],
-                normals=atom_normals,
-            )
-            self.atoms_mesh = LegacyGLMesh.from_mesh_data(mesh_data)
-            self.atoms_mesh.upload()
+        if self.calpha_atoms:
+            self.atoms_mesh = AtomsMesh(self.calpha_atoms, color_fn=chain_rgb)
+            self.atoms_mesh.to_legacy_glmesh(upload=True)
 
-        if bond_vertices is not None and len(bond_vertices) > 0:
-            self.bonds_mesh = LegacyGLMesh(
-                vertices=bond_vertices,
-                faces=bond_indices,
-                colors=bond_colors[:, :3],
-            )
-            self.bonds_mesh.upload()
-
-    def _create_sphere_mesh_data(self, radius=0.2, slices=16, stacks=16):
-        """Create sphere mesh data for C-alpha atoms."""
-        vertices = []
-        normals = []
-        indices = []
-
-        for i in range(stacks + 1):
-            lat = math.pi * (-0.5 + i / stacks)
-            z = radius * math.sin(lat)
-            zr = radius * math.cos(lat)
-
-            for j in range(slices + 1):
-                lng = 2 * math.pi * j / slices
-                x = math.cos(lng) * zr
-                y = math.sin(lng) * zr
-                vertices.append([x, y, z])
-                normals.append([x / radius, y / radius, z / radius])
-
-        for i in range(stacks):
-            for j in range(slices):
-                v1 = i * (slices + 1) + j
-                v2 = v1 + 1
-                v3 = (i + 1) * (slices + 1) + j
-                v4 = v3 + 1
-                indices.extend([v1, v2, v3])
-                indices.extend([v2, v4, v3])
-
-        atom_vertices = []
-        atom_normals = []
-        atom_colors = []
-        atom_indices = []
-        vertex_offset = 0
-
-        for atom in self.calpha_atoms:
-            color = (*_chain_rgb(atom.chain_id), 1.0)
-            for vertex in vertices:
-                atom_vertices.append(
-                    [vertex[0] + atom.x, vertex[1] + atom.y, vertex[2] + atom.z]
-                )
-                atom_colors.append(color)
-            atom_normals.extend(normals)
-            for idx in indices:
-                atom_indices.append(idx + vertex_offset)
-            vertex_offset += len(vertices)
-
-        return (
-            np.array(atom_vertices, dtype=np.float32),
-            np.array(atom_normals, dtype=np.float32),
-            np.array(atom_colors, dtype=np.float32),
-            np.array(atom_indices, dtype=np.uint32),
-        )
-
-    def _create_bond_mesh_data(self):
-        """Create line mesh data for C-alpha bonds."""
-        vertices = []
-        colors = []
-        indices = []
-
-        for atom1, atom2 in self.calpha_bonds:
-            color = (*_chain_rgb(atom1.chain_id), 1.0)
-            start_idx = len(vertices)
-            vertices.append([atom1.x, atom1.y, atom1.z])
-            vertices.append([atom2.x, atom2.y, atom2.z])
-            colors.extend([color, color])
-            indices.extend([start_idx, start_idx + 1])
-
-        return (
-            np.array(vertices, dtype=np.float32),
-            np.array(colors, dtype=np.float32),
-            np.array(indices, dtype=np.uint32),
-        )
+        if self.calpha_bonds:
+            self.bonds_mesh = BondsMesh(self.calpha_bonds, color_fn=chain_rgb)
+            self.bonds_mesh.to_legacy_glmesh(upload=True)
 
     def _render_molecular_structure(self):
-        """Render the molecular structure using LegacyGLMesh."""
+        """Render the molecular structure using molecular mesh adapters."""
         if self.atoms_mesh is None and self.bonds_mesh is None:
             return
 
@@ -331,11 +232,11 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
             gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.FILL)
 
         if self.atoms_mesh is not None:
-            self.atoms_mesh.draw()
+            self.atoms_mesh.draw_legacy()
 
         gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.LINE)
         if self.bonds_mesh is not None:
-            self.bonds_mesh.draw(GLDrawMode.LINES)
+            self.bonds_mesh.draw_legacy()
 
     def _enable_controls(self):
         """Enable control buttons by finding the main window."""
