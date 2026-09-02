@@ -9,7 +9,7 @@ This module provides functionality to:
 
 import os
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from typing import Dict, List, Optional
 
 import numpy as np
 from molib.ligand.pdb.layouts.pdb_file import PDBFileLayout, PDBTitleLayout
@@ -59,6 +59,9 @@ class Residue:
     seq_num: int
     atoms: List[Atom]
     start_idx: int  # Index in the main atom list
+
+
+
 
 
 @dataclass
@@ -232,6 +235,37 @@ def _merge_bonds(*bond_lists: List[Bond]) -> List[Bond]:
     return merged
 
 
+@dataclass
+class PDBLoaderResults:
+    """Raw PDB parse output before bond inference and residue finalization."""
+
+    atoms: List[Atom]
+    conect_bonds: List[Bond]
+    chains: set[str]
+    current_residue: Optional[Residue]
+    current_residue_atoms: List[Atom]
+    residues: List[Residue]
+    title: str = "Unknown Structure"
+
+    def to_structure(self) -> PDBStructure:
+        """Append the last residue, infer bonds, and return the public structure."""
+        residues = list(self.residues)
+        if self.current_residue is not None:
+            self.current_residue.atoms = list(self.current_residue_atoms)
+            residues.append(self.current_residue)
+
+        inferred = _generate_bonds(self.atoms, residues)
+        bonds = _merge_bonds(self.conect_bonds, inferred)
+
+        return PDBStructure(
+            title=self.title,
+            atoms=self.atoms,
+            bonds=bonds,
+            residues=residues,
+            chains=sorted(self.chains),
+        )
+
+
 class PDBLoader:
     """Loads and parses PDB files"""
 
@@ -251,41 +285,12 @@ class PDBLoader:
         self.structure = None
         self._load_pdb()
 
-    def _load_pdb(self):
-        """Load and parse the PDB file"""
-        (
-            atoms,
-            conect_bonds,
-            chains,
-            current_residue,
-            current_residue_atoms,
-            residues,
-            title,
-        ) = self.open_file()
+    def _load_pdb(self) -> None:
+        """Load and parse the PDB file."""
+        results = self.open_file()
+        self.structure = results.to_structure()
 
-        # Add the last residue
-        if current_residue is not None:
-            current_residue.atoms = current_residue_atoms
-            residues.append(current_residue)
-
-        # CONECT usually lists ligands only; always infer protein/ligand sticks
-        # from geometry and merge with any explicit CONECT pairs.
-        inferred = _generate_bonds(atoms, residues)
-        bonds = _merge_bonds(conect_bonds, inferred)
-
-        self.structure = PDBStructure(
-            title=title,
-            atoms=atoms,
-            bonds=bonds,
-            residues=residues,
-            chains=list(chains),
-        )
-
-    def open_file(
-        self,
-    ) -> tuple[
-        list[Atom], list[Any], list[Any], list[Any], list[Atom], list[Residue], str
-    ]:
+    def open_file(self) -> PDBLoaderResults:
         atoms: list[Atom] = []
         bonds = []
         residues = []
@@ -347,14 +352,14 @@ class PDBLoader:
 
                 elif record_type == "END":
                     break
-        return (
-            atoms,
-            bonds,
-            chains,
-            current_residue,
-            current_residue_atoms,
-            residues,
-            title,
+        return PDBLoaderResults(
+            atoms=atoms,
+            conect_bonds=bonds,
+            chains=chains,
+            current_residue=current_residue,
+            current_residue_atoms=current_residue_atoms,
+            residues=residues,
+            title=title,
         )
 
     def to_molviewspec(self) -> Dict:

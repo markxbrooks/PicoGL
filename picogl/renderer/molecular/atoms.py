@@ -14,6 +14,22 @@ from picogl.renderer.molecular.base import MolecularMesh
 from picogl.renderer.molecular.colors import chain_rgb
 
 
+def atom_to_vertex(atom, vertex: list) -> list[Any]:
+    """add atom coords to vertex"""
+    return [
+        vertex[0] + atom.x,
+        vertex[1] + atom.y,
+        vertex[2] + atom.z,
+    ]
+
+
+def add_atom_to_vertices(atom_vertices: list[list[float]], atom, vertex):
+    """add atom to vertices"""
+    atom_vertices.append(
+        atom_to_vertex(atom, vertex)
+    )
+
+
 class AtomsMesh(MolecularMesh):
     """
     Build triangle meshes by instancing a sphere template at each atom position.
@@ -63,13 +79,7 @@ class AtomsMesh(MolecularMesh):
         for atom in self.atoms:
             color = self.color_fn(atom.chain_id)
             for vertex in template_vertices:
-                atom_vertices.append(
-                    [
-                        vertex[0] + atom.x,
-                        vertex[1] + atom.y,
-                        vertex[2] + atom.z,
-                    ]
-                )
+                add_atom_to_vertices(atom_vertices, atom, vertex)
                 atom_colors.append(color)
             atom_normals.extend(template_normals.tolist())
             for idx in template_indices:

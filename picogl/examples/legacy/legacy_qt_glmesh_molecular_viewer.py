@@ -66,7 +66,7 @@ _EXAMPLES_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if _EXAMPLES_DIR not in sys.path:
     sys.path.insert(0, _EXAMPLES_DIR)
 
-from utils.pdb_loader import PDBLoader  # noqa: E402
+from picogl.examples.utils.pdb_loader import PDBLoader  # noqa: E402
 
 _VIEWER_LIGHT = LightSource(
     position=Vec4(1.0, 1.0, 1.0, 0.0),

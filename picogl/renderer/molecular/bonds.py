@@ -13,6 +13,17 @@ from picogl.renderer.molecular.base import MolecularMesh
 from picogl.renderer.molecular.colors import chain_rgb
 
 
+def add_bond_to_vertices(atom1, atom2, vertices: list[list[float]]):
+    """add bond to vertices"""
+    add_atom_vertex_to_vertices(atom1, vertices)
+    add_atom_vertex_to_vertices(atom2, vertices)
+
+
+def add_atom_vertex_to_vertices(atom, vertices: list[list[float]]):
+    """add atom to vertices"""
+    vertices.append([atom.x, atom.y, atom.z])
+
+
 class BondsMesh(MolecularMesh):
     """
     Build line meshes connecting pairs of atoms.
@@ -48,8 +59,7 @@ class BondsMesh(MolecularMesh):
         for atom1, atom2 in self.bonds:
             color = self.color_fn(atom1.chain_id)
             start_idx = len(vertices)
-            vertices.append([atom1.x, atom1.y, atom1.z])
-            vertices.append([atom2.x, atom2.y, atom2.z])
+            add_bond_to_vertices(atom1, atom2, vertices)
             colors.extend([color, color])
             indices.extend([start_idx, start_idx + 1])
 
