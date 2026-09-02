@@ -17,7 +17,7 @@ from pathlib import Path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "utils"))
 
 try:
-    from pdb_loader import PDBLoader, save_molviewspec
+    from picogl.examples.pdb_loader import PDBLoader, save_molviewspec
 except ImportError as e:
     print(f"Error importing PDB loader: {e}")
     print("Make sure you're running this from the examples directory")

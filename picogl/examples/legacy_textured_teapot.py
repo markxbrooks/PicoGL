@@ -51,19 +51,16 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-# OpenGL imports
-try:
-    from OpenGL.GL import *
-    from OpenGL.GLU import *
-except ImportError as e:
-    print("❌ Error: PyOpenGL not available")
-    print("Please install PyOpenGL: pip install PyOpenGL PyOpenGL_accelerate")
-    sys.exit(1)
+from picoui.dimensions import Dimensions, Point, WindowGeometry
+from picoui.helpers import create_layout_with_items, create_layout
 
 from picogl.renderer import MeshData
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.utils.loader.object import ObjectLoader
 from picogl.utils.loader.texture import TextureLoader
+from picoui.helpers.layout import add_items_to_layout
+
+INITIAL_ZOOM = 20
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -167,6 +164,10 @@ class LegacyTexturedTeapotRenderer(LegacyQtObjectRenderer):
 
         # Create and upload mesh data
         self.initialize()
+        self.init_zoom()
+
+    def init_zoom(self):
+        self.zoom = INITIAL_ZOOM
 
     def initialize_state(self):
         """Set up basic OpenGL state"""
@@ -228,17 +229,22 @@ class LegacyTexturedTeapotWindow(LegacyQtObjectWindow):
     Main window for the legacy textured teapot renderer
     """
 
+    window_geometry = WindowGeometry(
+        position=Point(x=100, y=100),
+        dimensions=Dimensions(width=800, height=600),
+    )
+
     def __init__(self):
         super().__init__(parent=self, gl_mode=GLMode.LEGACY)
         self.setWindowTitle("PicoGL Legacy Textured Teapot - OpenGL 1.x/2.x")
-        self.setGeometry(100, 100, 800, 600)
+        self.setGeometry(*self.window_geometry.to_tuple())
 
         # Create central widget
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
 
         # Create layout
-        layout = QVBoxLayout(central_widget)
+        layout = create_layout(parent=central_widget)
         self.set_layout(layout)
 
     def set_layout(self, layout):
@@ -256,39 +262,36 @@ class LegacyTexturedTeapotWindow(LegacyQtObjectWindow):
             <p><b>Rendering:</b> Legacy OpenGL with texture mapping</p>
             """)
         info_label.setMaximumHeight(180)
-        layout.addWidget(info_label)
 
         # Create texture selection
-        texture_layout = QVBoxLayout()
         texture_label = QLabel("Select Texture:")
-        texture_layout.addWidget(texture_label)
-
         self.texture_combo = QComboBox()
         self.texture_combo.addItems(
             ["UV Template", "UV Map", "Holstein", "Diffuse", "AK-47"]
         )
         self.texture_combo.currentTextChanged.connect(self.change_texture)
-        texture_layout.addWidget(self.texture_combo)
+        texture_layout_items = [texture_label, self.texture_combo]
+        texture_layout = create_layout_with_items(items=texture_layout_items)
 
-        layout.addLayout(texture_layout)
-
-        # Create OpenGL widget
-        self.gl_widget = LegacyTexturedTeapotRenderer()
-        layout.addWidget(self.gl_widget)
+        self.create_gl_widget()
 
         # Create control buttons
-        button_layout = QVBoxLayout()
-
         auto_rotate_btn = QPushButton("Toggle Auto-Rotation")
         auto_rotate_btn.clicked.connect(self.toggle_auto_rotate)
-        button_layout.addWidget(auto_rotate_btn)
 
         reset_btn = QPushButton("Reset View")
         reset_btn.clicked.connect(self.reset_view)
-        button_layout.addWidget(reset_btn)
 
-        layout.addLayout(button_layout)
+        button_layout_items = [auto_rotate_btn, reset_btn]
 
+        button_layout = create_layout_with_items(items=button_layout_items)
+
+        layout_items = [info_label, texture_layout, self.gl_widget, button_layout]
+        add_items_to_layout(layout, layout_items)
+
+    def create_gl_widget(self):
+        """Create OpenGL widget"""
+        self.gl_widget = LegacyTexturedTeapotRenderer()
         # Set focus to OpenGL widget for keyboard input
         self.gl_widget.setFocusPolicy(Qt.StrongFocus)
         self.gl_widget.setFocus()
@@ -315,7 +318,7 @@ def main():
     window.show()
 
     print("✅ Legacy Textured Teapot started successfully!")
-    print("   - Window: 800x600")
+    print(f"   - Window: {window.window_geometry}")
     print("   - Rendering: Legacy OpenGL with texture mapping")
     print("   - Controls: Mouse drag, wheel, keyboard, texture selection")
 

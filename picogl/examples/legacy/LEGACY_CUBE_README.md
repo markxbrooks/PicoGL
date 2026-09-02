@@ -63,7 +63,7 @@ python legacy_cube_fixed.py
 ### Original Cube (Modern OpenGL)
 ```bash
 cd examples
-python cube_with_controls.py
+python legacy_cube_with_controls.py
 ```
 
 ## Controls

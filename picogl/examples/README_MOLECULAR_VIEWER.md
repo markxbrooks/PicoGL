@@ -41,7 +41,7 @@ pip install PyOpenGL numpy
 
 ```bash
 cd examples
-python qt_legacy_molecular_viewer.py
+python legacy_qt_molecular_viewer.py
 ```
 
 ### Test the Functionality

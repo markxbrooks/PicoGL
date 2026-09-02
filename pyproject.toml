@@ -21,6 +21,7 @@ dependencies = [
     "numpy",
     "pyglm",
     "tqdm",
+    "typing_extensions",
 ]
 
 [project.urls]

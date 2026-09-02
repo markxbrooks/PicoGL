@@ -11,7 +11,7 @@ Features:
 - Minimal dependencies beyond Qt, PyOpenGL, NumPy, and PicoGL
 
 Usage:
-    python examples/qt_cube_simple.py
+    python examples/legacy_qt_cube_simple.py
 """
 
 import sys
@@ -138,7 +138,7 @@ class SimpleQtCubeWidget(QOpenGLWidget):
         self.gl_mesh.upload()
         self._gl_ready = True
 
-        print(f"Simple Qt Cube Widget initialized (using {QT_VERSION}, PicoGL API)")
+        print(f"Simple Legacy Qt Cube Widget initialized (using {QT_VERSION}, PicoGL API)")
 
     def resizeGL(self, w: int, h: int):
         """Resize viewport and projection via PicoGL drivers."""

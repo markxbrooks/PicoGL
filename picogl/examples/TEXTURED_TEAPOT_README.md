@@ -20,7 +20,7 @@ This directory contains examples demonstrating how to add textures to the classi
 
 **Usage:**
 ```bash
-python examples/textured_teapot.py
+python examples/modern_textured_teapot.py
 ```
 
 ### 2. `legacy_textured_teapot.py` - Legacy Textured Teapot
@@ -59,7 +59,7 @@ python examples/legacy_textured_teapot.py
 
 **Usage:**
 ```bash
-python examples/simple_textured_teapot.py
+python examples/modern_simple_textured_teapot.py
 ```
 
 ## Available Textures

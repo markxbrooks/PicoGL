@@ -62,7 +62,7 @@ bond_positions = picogl_data['bonds']['positions']
 
 ```bash
 cd examples
-python3 molecular_viewer.py
+python3 modern_molecular_viewer.py
 ```
 
 ## PDB File Format Support

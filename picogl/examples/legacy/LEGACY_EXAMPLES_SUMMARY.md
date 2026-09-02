@@ -103,7 +103,7 @@ python legacy_cube_fixed.py
 
 # Try original versions (modern OpenGL)
 python legacy_teapot.py
-python cube_with_controls.py
+python legacy_cube_with_controls.py
 ```
 
 ### Installation

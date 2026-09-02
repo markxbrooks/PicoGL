@@ -129,7 +129,7 @@ def test_molecular_viewer_import():
 
     try:
         # Try to import the molecular viewer
-        from qt_legacy_molecular_viewer import (
+        from legacy_qt_molecular_viewer import (
             LegacyMolecularViewerWindow,
             QtLegacyMolecularViewer,
         )
@@ -171,7 +171,7 @@ def main():
     if passed == total:
         print("🎉 All tests passed! The molecular viewer is ready to use.")
         print("\n🚀 To run the molecular viewer:")
-        print("   python qt_legacy_molecular_viewer.py")
+        print("   python legacy_qt_molecular_viewer.py")
         print("")
         print("🎮 Controls:")
         print("   • Left mouse: Rotate")

@@ -113,7 +113,7 @@ class GLWindow(AbstractGLWindow):
                 f"(GLUT library: {glut_name}). On macOS, Homebrew freeglut "
                 "(X11/Mesa) often shadows Apple GLUT.framework — ensure "
                 "picogl.ui.backend.glut.prefer_apple_glut loads first, or use "
-                "the Qt examples (e.g. picogl/examples/qt_cube_simple.py)."
+                "the Qt examples (e.g. picogl/examples/legacy_qt_cube_simple.py)."
             )
         GLUT.glutDisplayFunc(self.display)
         GLUT.glutReshapeFunc(self.resizeGL)

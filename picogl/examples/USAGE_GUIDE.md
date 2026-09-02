@@ -75,7 +75,7 @@ python read_picogl_data_simple.py [path/to/picogl_data.json]
 
 **Usage**:
 ```bash
-python pdb_picogl_simple.py [path/to/structure.pdb]
+python modern_pdb_picogl_simple.py [path/to/structure.pdb]
 ```
 
 **Features**:
@@ -95,7 +95,7 @@ python pdb_picogl_simple.py [path/to/structure.pdb]
 
 **Usage**:
 ```bash
-python pdb_picogl_viewer.py [path/to/structure.pdb]
+python modern_pdb_picogl_viewer.py [path/to/structure.pdb]
 ```
 
 **Features**:
@@ -129,7 +129,7 @@ python pdb_picogl_viewer.py [path/to/structure.pdb]
 
 3. **View Structure**:
    ```bash
-   python pdb_picogl_simple.py data/my_structure.pdb
+   python modern_pdb_picogl_simple.py data/my_structure.pdb
    ```
 
 ### Advanced Workflow
@@ -146,7 +146,7 @@ python pdb_picogl_viewer.py [path/to/structure.pdb]
 
 3. **Advanced Visualization**:
    ```bash
-   python pdb_picogl_viewer.py data/protein.pdb
+   python modern_pdb_picogl_viewer.py data/protein.pdb
    ```
 
 ## 📊 Data Formats

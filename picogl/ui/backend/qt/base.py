@@ -31,10 +31,16 @@ from PySide6.QtWidgets import QWidget
 class MvpParameters:
     """MVP Parameters"""
 
-    rotation_x = None
-    rotation_y = None
-    pan_x = None
-    pan_y = None
+    rotation_x = 0.0
+    rotation_y = 0.0
+    pan_x = 0.0
+    pan_y = 0.0
+
+    def initialize(self):
+        self.x = 0.0
+        self.y = 0.0
+        self.pan_x = 0.0
+        self.pan_y = 0.0
 
 
 @dataclass
@@ -54,6 +60,14 @@ class CameraParameters:
         default_factory=lambda: np.array([0.0, 0.0], dtype=np.float32)
     )  # x_pan, y_pan
     # zoom: CameraParameterZoom = field(default_factory=CameraParameterZoom)
+
+    def initialize(self):
+        self.rotation_x_axis = 0.0
+        self.rotation_y_axis = 0.0
+        self.rotation_z_axis = 0.0
+        self.translation_x_axis = 0.0
+        self.translation_y_axis = 0.0
+        self.translation_zoom = 0.0
 
 
 class GLBase(QOpenGLWidget, QOpenGLFunctions):
@@ -111,6 +125,11 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
             else legacy_init_gl_list
         )
         self.backend.execute_gl_tasks(init_list)
+
+    def initialize(self):
+        self.rotation_x = 0.0
+        self.rotation_y = 0.0
+        self.zoom = 20.0
 
     def resizeGL(self, w: int, h: int) -> None:
         """

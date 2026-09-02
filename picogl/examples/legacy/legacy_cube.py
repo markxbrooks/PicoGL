@@ -1,4 +1,4 @@
-"""Minimal PicoGL Cube. Compare to tu_01_color_cube.py"""
+"""Minimal PicoGL Cube. Compare to modern_colored_cube.py"""
 
 from pathlib import Path
 
