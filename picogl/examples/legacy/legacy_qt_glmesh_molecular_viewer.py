@@ -56,18 +56,19 @@ from PySide6.QtCore import Qt, QTimer
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
 from PySide6.QtWidgets import (
     QApplication,
-    QHBoxLayout,
     QLabel,
     QMessageBox,
     QPushButton,
-    QSplitter,
     QVBoxLayout,
     QWidget,
 )
 
+# from picoui.dialogs.preferences.helper import create_button_from_spec
 from picoui.dimensions import WindowGeometry, Point, Dimensions
 from picoui.helpers import create_layout_with_items
 from picogl.ui.backend.qt.base import Rotation
+from picoui.specs.widgets import ButtonSpec
+from picoui.widget.helper import create_button_from_spec
 
 _EXAMPLES_PATH = Path(__file__).resolve().parent.parent
 _EXAMPLES_DIR = str(_EXAMPLES_PATH)
@@ -350,13 +351,11 @@ class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
         self.gl_widget = QtLegacyGLMeshMolecularViewer(pdb_path)
         lower_layout.addWidget(self.gl_widget)
 
-        reset_button = QPushButton("Reset View (R)")
-        reset_button.clicked.connect(self.reset_view)
+        info_button_spec, lighting_button_spec, reset_button_spec = self.build_button_specs()
 
-        info_button = QPushButton("Show Info")
-        info_button.clicked.connect(self.show_info)
-
-        self.create_lighting_button()
+        reset_button = create_button_from_spec(reset_button_spec)
+        info_button = create_button_from_spec(info_button_spec)
+        self.lighting_button = create_button_from_spec(lighting_button_spec)
         controls_layout_items = [reset_button, info_button, self.lighting_button]
         controls_layout = create_layout_with_items(controls_layout_items,start_stretch=False,  end_stretch=True)
 
@@ -364,6 +363,11 @@ class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
 
         upper_layout.addLayout(controls_layout)
         upper_layout.addWidget(instructions_label)
+
+    def build_button_specs(self) -> tuple[ButtonSpec, ButtonSpec, ButtonSpec]:
+        return {"reset_button": ButtonSpec(label="Reset View (R)", slot=self.reset_view),
+        "info_button_spec": ButtonSpec(label="Show Info", slot=self.show_info),
+        "lighting_button_spec": ButtonSpec(label="Lighting: OFF", slot=self.toggle_lighting, enabled=False) }
 
     def create_instructions_label(self) -> QLabel:
         instructions_text = "Controls:\n"
@@ -379,11 +383,6 @@ class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
         instructions_label = QLabel(instructions_text)
         instructions_label.setStyleSheet(instructions_style)
         return instructions_label
-
-    def create_lighting_button(self):
-        self.lighting_button = QPushButton("Lighting: OFF")
-        self.lighting_button.clicked.connect(self.toggle_lighting)
-        self.lighting_button.setEnabled(False)
 
     def reset_view(self):
         """Reset the view to default."""
