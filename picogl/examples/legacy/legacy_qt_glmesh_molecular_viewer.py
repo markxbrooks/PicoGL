@@ -208,21 +208,13 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         gl_clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
         gl_load_identity()
         self._apply_lighting()
-
         self._apply_zoom(self.translation, value=-5.0)
-        self._apply_rotation()
-        self.rescale()
-
-        self._render_molecular_structure()
-
-    def _apply_rotation(self):
         self.rotation.apply()
+        self._zoom.rescale()
+        self._render_molecular_structure()
 
     def _apply_zoom(self, translation, value: float = 0.01):
         self._zoom.apply_translation_and_zoom(translation, value)
-
-    def rescale(self):
-        self._zoom.rescale()
 
     def _apply_lighting(self) -> None:
         """Enable or disable fixed-function lighting for this frame."""
