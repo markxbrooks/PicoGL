@@ -17,7 +17,7 @@ from pathlib import Path
 
 from examples.legacy_qt_molecular_viewer import create_molecule_viewer_layout
 from molib.core.constants import MoLibConstant
-from picogl.backend.gl.api.clear import gl_clear, gl_clear_color, gl_clear_rgba_color
+from picogl.backend.gl.api.clear import gl_clear, gl_clear_rgba_color
 from picogl.backend.gl.api.color import gl_color_material
 from picogl.backend.gl.api.enable import (
     gl_disable_capability_list,
