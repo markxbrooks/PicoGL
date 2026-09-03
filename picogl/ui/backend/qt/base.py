@@ -6,6 +6,9 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 import numpy as np
+
+from backend.gl.api.matrix import gl_matrix_mode
+from backend.gl.enums.legacy.scale import gl_load_identity, gl_rotatef
 from decologr import Decologr as log
 from OpenGL.raw.GL.ARB.viewport_array import GL_VIEWPORT
 from OpenGL.raw.GL.VERSION.GL_1_0 import glLoadIdentity, glMatrixMode
@@ -69,12 +72,52 @@ class CameraParameters:
         self.translation_y_axis = 0.0
         self.translation_zoom = 0.0
 
-
 @dataclass
-class Rotation:
-    """Rotation"""
+class ScreenParameters:
+    """Screen Parameters Base class for rotation and translation"""
     x = 0.0
     y = 0.0
+
+    def initialize(self):
+        self.x = 0.0
+        self.y = 0.0
+
+class GLTranslation:
+    """Translation Parameters"""
+    x: float = 0.0
+    y: float = 0.0
+    z: float = 0.0
+
+    def apply(self):
+        gl_translate_f(self.x, self.y, self.z)
+
+    def _apply_zoom(self, value: float = 0.01):
+        gl_translate_f(self.translation.x, self.translation.y, value)
+
+
+@dataclass
+class GLZoom:
+    """Zoom parameters."""
+
+    value: float = -5.0
+
+    def apply(self):
+        gl_translate_f(0.0, 0.0, self.value)
+
+
+class RotationParameters(ScreenParameters):
+    """Rotation Parameters"""
+
+@dataclass
+class GLRotation:
+    x: float = 0.0
+    y: float = 0.0
+    z: float = 0.0
+
+    def apply(self):
+        gl_rotatef(self.x, 1.0, 0.0, 0.0)
+        gl_rotatef(self.y, 0.0, 1.0, 0.0)
+        gl_rotatef(self.z, 0.0, 0.0, 1.0)
 
 
 class GLBase(QOpenGLWidget, QOpenGLFunctions):
@@ -109,6 +152,47 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
         binding = ModernBinding() if self.gl_mode == GLMode.MODERN else LegacyBinding()
         self.backend = GLBackend(binding)
 
+        # Set up view
+        self.zoom = 1.0
+        self.rotation = GLRotation()
+        self.translation = GLTranslation()
+
+    @property
+    def rotation_x(self):
+        return self.rotation.x
+
+    @rotation_x.setter
+    def rotation_x(self, value):
+        self.rotation.x = value
+        self.update()
+
+    @property
+    def rotation_y(self):
+        return self.rotation.y
+
+    @rotation_y.setter
+    def rotation_y(self, value):
+        self.rotation.y = value
+        self.update()
+
+    @property
+    def translation_x(self):
+        return self.translation.x
+
+    @translation_x.setter
+    def translation_x(self, value):
+        self.translation.x = value
+        self.update()
+
+    @property
+    def translation_y(self):
+        return self.translation.y
+
+    @translation_y.setter
+    def translation_y(self, value):
+        self.translation.y = value
+        self.update()
+
     def initializeGL(self):
         """
         initializeGL
@@ -138,8 +222,7 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
         self.zoom = 20.0
 
     def initialize_rotation(self):
-        self.rotation_x = 0.0
-        self.rotation_y = 0.0
+        self.rotation.initialize()
 
     def resizeGL(self, w: int, h: int) -> None:
         """
@@ -159,8 +242,8 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
         self.backend.frame.set_viewport(Viewport(0, 0, w, h))
         self.aspect_ratio = calculate_aspect_ratio(h, w)
         self.projection.apply(self.projection_config.with_aspect(self.aspect_ratio))
-        glMatrixMode(GLLegacyMatrixMode.MODELVIEW)
-        glLoadIdentity()
+        gl_matrix_mode(GLLegacyMatrixMode.MODELVIEW)
+        gl_load_identity()
         # Update camera matrix using legacy pipeline
         log.message(
             f"✅ Resized OpenGL viewport to {w}x{h}, aspect {self.aspect_ratio:.2f}"

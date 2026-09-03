@@ -58,15 +58,13 @@ from PySide6.QtWidgets import (
     QApplication,
     QLabel,
     QMessageBox,
-    QPushButton,
     QVBoxLayout,
     QWidget,
 )
 
-# from picoui.dialogs.preferences.helper import create_button_from_spec
 from picoui.dimensions import WindowGeometry, Point, Dimensions
 from picoui.helpers import create_layout_with_items
-from picogl.ui.backend.qt.base import Rotation
+from picogl.ui.backend.qt.base import GLTranslation, GLRotation, GLZoom
 from picoui.specs.widgets import ButtonSpec
 from picoui.widget.helper import create_button_from_spec
 
@@ -109,12 +107,6 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         self.calpha_atoms = []
         self.calpha_positions = None
         self.calpha_bonds = []
-        self.rotation = Rotation()
-        self.rotation_x = 0.0
-        self.rotation_y = 0.0
-        self.zoom = 1.0
-        self.translation_x = 0.0
-        self.translation_y = 0.0
 
         self.last_mouse_pos = None
         self.mouse_pressed = False
@@ -125,7 +117,61 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         self.atoms_mesh = None
         self.bonds_mesh = None
 
+        # Set up view
+        self._zoom = GLZoom(value=1.0)
+        self.rotation = GLRotation()
+        self.translation = GLTranslation()
+
         self._load_pdb_structure()
+
+    @property
+    def zoom(self):
+        return self._zoom.value
+
+    @zoom.setter
+    def zoom(self, value):
+        self._zoom.value = value
+        self.update()
+
+    @property
+    def rotation_x(self):
+        return self.rotation.x
+
+    @rotation_x.setter
+    def rotation_x(self, value):
+        self.rotation.x = value
+        self.rotation.apply()
+        self.update()
+
+    @property
+    def rotation_y(self):
+        return self.rotation.y
+
+    @rotation_y.setter
+    def rotation_y(self, value):
+        self.rotation.y = value
+        self.rotation.apply()
+        self.update()
+
+    @property
+    def translation_x(self):
+        return self.translation.x
+
+    @translation_x.setter
+    def translation_x(self, value):
+        self.translation.x = value
+        self.translation.apply()
+        self.update()
+
+    @property
+    def translation_y(self):
+        return self.translation.y
+
+    @translation_y.setter
+    def translation_y(self, value):
+        self.translation.y = value
+        self.update()
+
 
     def initializeGL(self):
         """Initialize OpenGL settings via PicoGL wrappers."""
@@ -158,12 +204,20 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         gl_load_identity()
         self._apply_lighting()
 
-        gl_translate_f(self.translation_x, self.translation_y, -5.0)
-        gl_rotatef(self.rotation_x, 1.0, 0.0, 0.0)
-        gl_rotatef(self.rotation_y, 0.0, 1.0, 0.0)
-        gl_scalef(self.zoom, self.zoom, self.zoom)
+        self._apply_translation(value=-5.0)
+        self._apply_rotation()
+        self.rescale()
 
         self._render_molecular_structure()
+
+    def _apply_rotation(self):
+        self.rotation.apply()
+
+    def _apply_translation(self, value: float = 0.01):
+        gl_translate_f(self.translation.x, self.translation.y, value)
+
+    def rescale(self):
+        gl_scalef(self.zoom, self.zoom, self.zoom)
 
     def _apply_lighting(self) -> None:
         """Enable or disable fixed-function lighting for this frame."""
@@ -269,8 +323,8 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
             current_pos = event.position().toPoint()
             dx = current_pos.x() - self.last_mouse_pos.x()
             dy = current_pos.y() - self.last_mouse_pos.y()
-            self.rotation_y += dx * 0.5
-            self.rotation_x += dy * 0.5
+            self.rotation.y += dx * 0.5
+            self.rotation.x += dy * 0.5
             self.last_mouse_pos = current_pos
             self.update()
 
@@ -290,8 +344,8 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
     def keyPressEvent(self, event):
         """Handle keyboard input."""
         if event.key() == Qt.Key_R:
-            self.rotation_x = 0.0
-            self.rotation_y = 0.0
+            self.rotation.x = 0.0
+            self.rotation.y = 0.0
             self.zoom = 1.0
             self.translation_x = 0.0
             self.translation_y = 0.0
@@ -389,8 +443,8 @@ class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
         if self.gl_widget is None:
             print("OpenGL widget not yet initialized")
             return
-        self.gl_widget.rotation_x = 0.0
-        self.gl_widget.rotation_y = 0.0
+        self.gl_widget.rotation.x = 0.0
+        self.gl_widget.rotation.y = 0.0
         self.gl_widget.zoom = 1.0
         self.gl_widget.translation_x = 0.0
         self.gl_widget.translation_y = 0.0
