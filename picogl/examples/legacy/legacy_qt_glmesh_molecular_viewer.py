@@ -15,6 +15,7 @@ import os
 import sys
 from pathlib import Path
 
+from picogl.backend.gl.api.legacy.matrix import gl_matrix_mode_context
 from picogl.core.viewport import GLViewport
 from picogl.examples.legacy_qt_molecular_viewer import create_molecule_viewer_layout
 from molib.core.constants import MoLibConstant
@@ -41,11 +42,10 @@ from picogl.backend.gl.phong.material import PhongMaterial
 from picogl.backend.gl.state.fill import (
     GLCapability,
     GLColorMaterialMode,
-    GLFillMode,
     GLLight,
 )
 from picogl.backend.glu.perspective import glu_perspective
-from picogl.core.polygon.mode import gl_polygon_mode
+from picogl.core.polygon.mode import gl_set_line_mode, gl_set_polygon_mode
 from picogl.core.rgbcolor import RGBAColor
 from picogl.core.vec4 import Vec4
 from picogl.renderer.molecular import AtomsMesh, BondsMesh, chain_rgb
@@ -65,6 +65,12 @@ from picoui.helpers import create_layout_with_items
 from picogl.ui.backend.qt.base import GLTranslation, GLRotation, GLZoom
 from picoui.specs.widgets import ButtonSpec
 from picoui.widget.helper import create_button_from_spec
+
+DEFAULT_FAR = 100.0
+
+DEFAULT_NEAR = 0.1
+
+DEFAULT_FOVY = 45.0
 
 _EXAMPLES_PATH = Path(__file__).resolve().parent.parent
 _EXAMPLES_DIR = str(_EXAMPLES_PATH)
@@ -194,10 +200,8 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
     def resizeGL(self, width, height):
         """Handle window resize."""
         self.viewport.update(0, 0, width, height)
-        gl_matrix_mode(GLLegacyMatrixMode.PROJECTION)
-        gl_load_identity()
-        glu_perspective(45.0, width / max(height, 1), 0.1, 100.0)
-        gl_matrix_mode(GLLegacyMatrixMode.MODELVIEW)
+        with gl_matrix_mode_context():
+            glu_perspective(DEFAULT_FOVY, width / max(height, 1), DEFAULT_NEAR, DEFAULT_FAR)
 
     def paintGL(self):
         """Main rendering function."""
@@ -291,14 +295,14 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
             return
 
         if self.wireframe_mode:
-            gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.LINE)
+            gl_set_polygon_mode()
         else:
-            gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.FILL)
+            gl_set_line_mode()
 
         if self.atoms_mesh is not None:
             self.atoms_mesh.draw_legacy()
 
-        gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.LINE)
+        gl_set_polygon_mode()
         if self.bonds_mesh is not None:
             self.bonds_mesh.draw_legacy()
 

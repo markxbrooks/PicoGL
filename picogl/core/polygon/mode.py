@@ -20,3 +20,10 @@ def set_polygon_mode_fill() -> None:
 def set_polygon_mode_line() -> None:
     """Render polygons as wireframe outlines."""
     gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.LINE)
+
+def gl_set_line_mode():
+    gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.FILL)
+
+
+def gl_set_polygon_mode():
+    gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.LINE)

@@ -68,7 +68,7 @@ class RasterState:
             backend.raster.apply(self)
             return
         if hasattr(backend, "set_line_width"):
-            backend.set_polygon_mode(GLFace.FRONT_AND_BACK, gl_value(self.polygon_mode))
+            backend.gl_set_polygon_mode(GLFace.FRONT_AND_BACK, gl_value(self.polygon_mode))
             backend.set_line_width(self.line_width)
 
 

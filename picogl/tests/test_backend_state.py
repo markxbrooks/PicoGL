@@ -525,7 +525,7 @@ class TestDrawCommand(unittest.TestCase):
             patch.object(backend.raster, "set_polygon_offset") as set_polygon_offset,
         ):
             backend.raster.set_line_width(2.0)
-            backend.raster.set_polygon_mode(GLFace.FRONT_AND_BACK, GL_LINE)
+            gl_set_polygon_mode(GLFace.FRONT_AND_BACK, GL_LINE)
             backend.raster.set_point_size(3.0)
             backend.raster.set_clamped_point_size(4.0)
             backend.raster.set_polygon_offset(-1.0, -1.0)
