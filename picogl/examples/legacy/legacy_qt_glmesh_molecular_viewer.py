@@ -14,6 +14,7 @@ from __future__ import annotations
 import os
 import sys
 from pathlib import Path
+from dataclasses import dataclass, field
 
 from picogl.backend.gl.api.legacy.matrix import gl_matrix_mode_context
 from picogl.core.viewport import GLViewport
@@ -127,7 +128,7 @@ class GLFixedFunctionLightingModel:
         """disable"""
         gl_disable_capability_list(self.CAPABILITIES)
 
-from dataclasses import dataclass, field
+
 
 
 @dataclass
