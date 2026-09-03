@@ -33,7 +33,6 @@ from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.enums.legacy.scale import (
     gl_load_identity,
-    gl_rotatef,
     gl_scalef,
     gl_translate_f,
     gl_viewport,
