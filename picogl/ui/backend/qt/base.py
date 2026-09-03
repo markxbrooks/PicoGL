@@ -8,7 +8,7 @@ from typing import Optional
 import numpy as np
 
 from backend.gl.api.matrix import gl_matrix_mode
-from backend.gl.enums.legacy.scale import gl_load_identity, gl_rotatef
+from backend.gl.enums.legacy.scale import gl_load_identity, gl_rotatef, gl_scalef, gl_translate_f
 from decologr import Decologr as log
 from OpenGL.raw.GL.ARB.viewport_array import GL_VIEWPORT
 from OpenGL.raw.GL.VERSION.GL_1_0 import glLoadIdentity, glMatrixMode
@@ -98,11 +98,17 @@ class GLTranslation:
 @dataclass
 class GLZoom:
     """Zoom parameters."""
-
+    # translation: GLTranslation = None
     value: float = -5.0
 
-    def apply(self):
-        gl_translate_f(0.0, 0.0, self.value)
+    """def apply(self):
+        self.apply_translation_and_zoom(self.translation, self.value)"""
+
+    def apply_translation_and_zoom(self, translation, zoom):
+        gl_translate_f(translation.x, translation.y, zoom)
+
+    def rescale(self):
+        gl_scalef(self.value, self.value, self.value)
 
 
 class RotationParameters(ScreenParameters):

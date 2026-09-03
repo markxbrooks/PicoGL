@@ -117,9 +117,11 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         self.bonds_mesh = None
 
         # Set up view
-        self._zoom = GLZoom(value=1.0)
+
         self.rotation = GLRotation()
         self.translation = GLTranslation()
+        self._zoom = GLZoom(value=1.0)
+        # self._zoom = GLZoom(value=1.0, translation=self.translation)
 
         self._load_pdb_structure()
 
@@ -203,7 +205,7 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         gl_load_identity()
         self._apply_lighting()
 
-        self._apply_translation(value=-5.0)
+        self._apply_zoom(self.translation, value=-5.0)
         self._apply_rotation()
         self.rescale()
 
@@ -212,11 +214,11 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
     def _apply_rotation(self):
         self.rotation.apply()
 
-    def _apply_translation(self, value: float = 0.01):
-        gl_translate_f(self.translation.x, self.translation.y, value)
+    def _apply_zoom(self, translation, value: float = 0.01):
+        self._zoom.apply_translation_and_zoom(translation, value)
 
     def rescale(self):
-        gl_scalef(self.zoom, self.zoom, self.zoom)
+        self._zoom.rescale()
 
     def _apply_lighting(self) -> None:
         """Enable or disable fixed-function lighting for this frame."""
