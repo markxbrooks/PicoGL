@@ -79,26 +79,6 @@ if _EXAMPLES_DIR not in sys.path:
 
 from picogl.examples.utils.pdb_loader import PDBLoader  # noqa: E402
 
-_VIEWER_LIGHT = LightSource(
-    position=Vec4(1.0, 1.0, 1.0, 0.0),
-    ambient=RGBAColor(0.4, 0.4, 0.4, 1.0),
-    diffuse=RGBAColor(0.6, 0.6, 0.6, 1.0),
-    specular=RGBAColor(0.2, 0.2, 0.2, 1.0),
-)
-
-_VIEWER_MATERIAL = PhongMaterial(
-    ambient=RGBAColor(0.3, 0.3, 0.3, 1.0),
-    diffuse=RGBAColor(0.7, 0.7, 0.7, 1.0),
-    specular=RGBAColor(0.1, 0.1, 0.1, 1.0),
-    shininess=50.0,
-)
-
-_LIGHTING_CAPS = [
-    GLFixedFunctionCapability.LIGHTING,
-    GLFixedFunctionCapability.LIGHT0,
-    GLCapability.COLOR_MATERIAL,
-]
-
 
 class GLFixedFunctionLightingModel:
     """GLLightingModel"""
@@ -277,7 +257,6 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         self.transform.translation.y = value
         self.update()
 
-
     def initializeGL(self):
         """Initialize OpenGL settings via PicoGL wrappers."""
         self.enable_depth_test()
@@ -297,6 +276,7 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         )
 
     def setup_background(self):
+        """setup background"""
         gl_clear_rgba_color(RGBAColor.BLACK)
 
     def resizeGL(self, width, height):
@@ -307,18 +287,24 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
 
     def paintGL(self):
         """Main rendering function."""
-        gl_clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
-        gl_load_identity()
+        self.setup_view()
         self._apply_lighting()
         self.apply_zoom(value=-5.0)
         self.transform.rotation.apply()
         self.transform.zoom.rescale()
         self._render_molecular_structure()
 
-    def apply_zoom(self, value: float = 1.0):
-        self._apply_zoom(self.transform.translation, value=value)
+    def setup_view(self):
+        """setup view"""
+        gl_clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
+        gl_load_identity()
 
-    def _apply_zoom(self, translation, value: float = 0.01):
+    def apply_zoom(self, value: float = 1.0):
+        """apply zoom"""
+        self._apply_zoom_with_translation(self.transform.translation, value=value)
+
+    def _apply_zoom_with_translation(self, translation, value: float = 0.01):
+        """apply zoom with translation"""
         self.transform.zoom.apply_translation_and_zoom(translation, value)
 
     def _apply_lighting(self) -> None:
@@ -326,7 +312,7 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         if self.lighting_enabled:
             self.light.apply()
             return
-        gl_disable_capability_list(_LIGHTING_CAPS)
+        self.light.disable()
 
     def _load_pdb_structure(self):
         """Load PDB structure and extract C-alpha atoms."""
