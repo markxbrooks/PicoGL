@@ -64,12 +64,6 @@ from picogl.ui.backend.qt.base import GLTranslation, GLRotation, GLZoom
 from picoui.specs.widgets import ButtonSpec
 from picoui.widget.helper import create_button_from_spec
 
-DEFAULT_FAR = 100.0
-
-DEFAULT_NEAR = 0.1
-
-DEFAULT_FOVY = 45.0
-
 @dataclass
 class CameraPerspective:
     """
