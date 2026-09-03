@@ -351,11 +351,11 @@ class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
         self.gl_widget = QtLegacyGLMeshMolecularViewer(pdb_path)
         lower_layout.addWidget(self.gl_widget)
 
-        info_button_spec, lighting_button_spec, reset_button_spec = self.build_button_specs()
+        self.specs = self.build_button_specs()
 
-        reset_button = create_button_from_spec(reset_button_spec)
-        info_button = create_button_from_spec(info_button_spec)
-        self.lighting_button = create_button_from_spec(lighting_button_spec)
+        reset_button = create_button_from_spec(self.specs["reset_button"])
+        info_button = create_button_from_spec(self.specs["info_button"])
+        self.lighting_button = create_button_from_spec(self.specs["lighting_button"])
         controls_layout_items = [reset_button, info_button, self.lighting_button]
         controls_layout = create_layout_with_items(controls_layout_items,start_stretch=False,  end_stretch=True)
 
@@ -364,10 +364,10 @@ class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
         upper_layout.addLayout(controls_layout)
         upper_layout.addWidget(instructions_label)
 
-    def build_button_specs(self) -> tuple[ButtonSpec, ButtonSpec, ButtonSpec]:
+    def build_button_specs(self) -> dict[str, ButtonSpec]:
         return {"reset_button": ButtonSpec(label="Reset View (R)", slot=self.reset_view),
-        "info_button_spec": ButtonSpec(label="Show Info", slot=self.show_info),
-        "lighting_button_spec": ButtonSpec(label="Lighting: OFF", slot=self.toggle_lighting, enabled=False) }
+        "info_button": ButtonSpec(label="Show Info", slot=self.show_info),
+        "lighting_button": ButtonSpec(label="Lighting: OFF", slot=self.toggle_lighting, enabled=False) }
 
     def create_instructions_label(self) -> QLabel:
         instructions_text = "Controls:\n"

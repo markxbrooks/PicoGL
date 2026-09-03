@@ -73,8 +73,8 @@ class CameraParameters:
 @dataclass
 class Rotation:
     """Rotation"""
-    self.x = 0.0
-    self.y = 0.0
+    x = 0.0
+    y = 0.0
 
 
 class GLBase(QOpenGLWidget, QOpenGLFunctions):
