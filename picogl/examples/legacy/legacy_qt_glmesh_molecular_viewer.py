@@ -15,7 +15,8 @@ import os
 import sys
 from pathlib import Path
 
-from examples.legacy_qt_molecular_viewer import create_molecule_viewer_layout
+from picogl.core.viewport import GLViewport
+from picogl.examples.legacy_qt_molecular_viewer import create_molecule_viewer_layout
 from molib.core.constants import MoLibConstant
 from picogl.backend.gl.api.clear import gl_clear, gl_clear_rgba_color
 from picogl.backend.gl.api.color import gl_color_material
@@ -33,8 +34,6 @@ from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.enums.legacy.scale import (
     gl_load_identity,
-    gl_scalef,
-    gl_translate_f,
     gl_viewport,
 )
 from picogl.backend.gl.lighting.light import LightSource
@@ -120,6 +119,7 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
 
         self.rotation = GLRotation()
         self.translation = GLTranslation()
+        self.viewport = GLViewport(0, 0, self.width(), self.height())
         self._zoom = GLZoom(value=1.0)
         # self._zoom = GLZoom(value=1.0, translation=self.translation)
 
@@ -193,7 +193,7 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
 
     def resizeGL(self, width, height):
         """Handle window resize."""
-        gl_viewport(0, 0, width, height)
+        self.viewport.update(0, 0, width, height)
         gl_matrix_mode(GLLegacyMatrixMode.PROJECTION)
         gl_load_identity()
         glu_perspective(45.0, width / max(height, 1), 0.1, 100.0)

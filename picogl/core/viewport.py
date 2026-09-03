@@ -12,9 +12,9 @@ from typing import Any
 import numpy as np
 from numpy import dtype, generic, ndarray
 from pyglm import glm
+from picogl.backend.gl.enums.legacy.scale import gl_viewport
 
-
-@dataclass(frozen=True, slots=True)
+@dataclass
 class Viewport:
     """Represents a rectangular viewport with position and dimensions."""
 
@@ -109,3 +109,15 @@ class Viewport:
             self.width,
             self.height,
         )
+
+class GLViewport(Viewport):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def apply(self):
+        self.update(*self.rect)
+
+    def update(self, x: int, y: int, width: int, height: int):
+        gl_viewport(0, 0, width, height)
+
