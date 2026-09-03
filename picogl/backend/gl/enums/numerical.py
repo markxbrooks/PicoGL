@@ -10,16 +10,9 @@ Classes:
 
 from enum import IntEnum
 
-from OpenGL.raw.GL._types import (
-    GL_BYTE,
-    GL_DOUBLE,
-    GL_FLOAT,
-    GL_INT,
-    GL_SHORT,
-    GL_UNSIGNED_BYTE,
-    GL_UNSIGNED_INT,
-    GL_UNSIGNED_SHORT,
-)
+from OpenGL.raw.GL._types import (GL_BYTE, GL_DOUBLE, GL_FLOAT, GL_INT,
+                                  GL_SHORT, GL_UNSIGNED_BYTE, GL_UNSIGNED_INT,
+                                  GL_UNSIGNED_SHORT)
 
 _SUPPORTED_VERTEX_POINTER_TYPES = {
     GL_FLOAT,

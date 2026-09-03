@@ -8,8 +8,9 @@ import sys
 if sys.platform.startswith("linux"):
     os.environ.setdefault("PYOPENGL_PLATFORM", "glx")
 
-import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
 from examples.tu_02_texture_without_normal import CUBE_SPEC
+
+import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
 from picogl.ui.backend.glut.window.textured_mesh import TexturedMeshRenderer
 
 if __name__ == "__main__":

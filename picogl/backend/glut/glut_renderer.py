@@ -17,34 +17,27 @@ import numpy as np
 
 # Before any OpenGL import: GLX under Wayland, Apple GLUT on macOS.
 import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
-from picogl.core.view.transform import GLViewTransform
 from picogl.backend.gl.api.color import gl_color_material
 from picogl.backend.gl.api.enable import gl_enable_capability_list
 from picogl.backend.gl.api.rotate import gl_rotate_f
-from picogl.backend.gl.capability import GLFixedFunctionCapability, GLMaterialFace
+from picogl.backend.gl.capability import (GLFixedFunctionCapability,
+                                          GLMaterialFace)
 from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
 from picogl.backend.gl.state.fill import GLCapability, GLColorMaterialMode
 from picogl.backend.glut.buffers import glut_swap_buffers
 from picogl.backend.glut.cube_data import CUBE_COLORS, CUBE_VERTICES
-from picogl.backend.glut.display import (
-    glut_display_func,
-    glut_idle_func,
-    glut_keyboard_func,
-    glut_motion_func,
-    glut_mouse_func,
-    glut_post_redisplay,
-    glut_reshape_func,
-)
-from picogl.backend.glut.enums import GLUTDisplayMode, GLUTMouseButton, GLUTMouseState
+from picogl.backend.glut.display import (glut_display_func, glut_idle_func,
+                                         glut_keyboard_func, glut_motion_func,
+                                         glut_mouse_func, glut_post_redisplay,
+                                         glut_reshape_func)
+from picogl.backend.glut.enums import (GLUTDisplayMode, GLUTMouseButton,
+                                       GLUTMouseState)
 from picogl.backend.glut.idle import glut_idle_func
-from picogl.backend.glut.init import (
-    glut_create_window,
-    glut_init,
-    glut_init_display_mode,
-    glut_init_window_size,
-    glut_main_loop,
-)
-from picogl.backend.legacy.core.camera.projection_state import GLUProjectionState
+from picogl.backend.glut.init import (glut_create_window, glut_init,
+                                      glut_init_display_mode,
+                                      glut_init_window_size, glut_main_loop)
+from picogl.backend.legacy.core.camera.projection_state import \
+    GLUProjectionState
 from picogl.backend.modern.core.setup.lighting import gl_initialize_background
 from picogl.backend.state import GLViewport
 from picogl.core.camera import ProjectionConfig
@@ -54,6 +47,7 @@ from picogl.core.rgbcolor import RGBAColor
 from picogl.core.setup.camera import gl_setup_camera
 from picogl.core.setup.view import gl_setup_view
 from picogl.core.vec3 import Vec3
+from picogl.core.view.transform import GLViewTransform
 from picogl.ui.backend.glut.mouse import RotationInteraction
 
 # Check for display before importing OpenGL

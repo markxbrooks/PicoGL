@@ -6,19 +6,18 @@ from typing import Callable
 
 import numpy as np
 from OpenGL.GL import GLuint
+
 from picogl.backend.gl.api import gl_bind_buffer, gl_generate_buffers
 from picogl.backend.gl.api.buffer.data import gl_buffer_data
-from picogl.backend.gl.api.buffer.upload import (
-    gl_upload_float_buffer,
-    gl_upload_ushort_buffer,
-)
+from picogl.backend.gl.api.buffer.upload import (gl_upload_float_buffer,
+                                                 gl_upload_ushort_buffer)
 from picogl.backend.gl.api.draw.array import gl_draw_arrays
 from picogl.backend.gl.api.draw.elements import gl_draw_elements
 from picogl.backend.gl.api.vertex.attrib_array.bind import gl_bind_array_buffer
-from picogl.backend.gl.api.vertex.attrib_array.bound import (
-    gl_bound_vertex_attrib_arrays,
-)
-from picogl.backend.gl.enums import GLBufferTarget, GLDrawMode, GLNumeric, GLUsageHint
+from picogl.backend.gl.api.vertex.attrib_array.bound import \
+    gl_bound_vertex_attrib_arrays
+from picogl.backend.gl.enums import (GLBufferTarget, GLDrawMode, GLNumeric,
+                                     GLUsageHint)
 from picogl.renderer.meshdata import MeshData
 from picogl.utils.mesh.object_mesh import flip_texcoord_v
 from picogl.utils.mesh.protocol import MeshProtocol

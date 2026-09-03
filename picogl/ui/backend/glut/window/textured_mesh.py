@@ -7,10 +7,13 @@ from pathlib import Path
 from typing import Callable
 
 from decologr import Decologr as log
+from pyglm import glm
+
 from picogl.backend.gl.api import gl_bind_texture, gl_get_active_texture0
 from picogl.backend.gl.api.clear import gl_clear
 from picogl.backend.gl.api.enable import gl_enable_capability_list
-from picogl.backend.gl.api.shader import gl_get_uniform_location, gl_uniform_matrix_4fv
+from picogl.backend.gl.api.shader import (gl_get_uniform_location,
+                                          gl_uniform_matrix_4fv)
 from picogl.backend.gl.capability import GLPipelineCapability
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums.legacy.scale import gl_viewport
@@ -28,7 +31,6 @@ from picogl.ui.backend.glut.mouse import RotationInteraction
 from picogl.ui.backend.glut.window.glut import GlutRendererWindow
 from picogl.utils.loader.texture import TextureLoader
 from picogl.utils.mesh.protocol import MeshProtocol
-from pyglm import glm
 
 _MVP_UNIFORM = "mvp_matrix"
 _TEXTURE_UNIFORM = "texture0"

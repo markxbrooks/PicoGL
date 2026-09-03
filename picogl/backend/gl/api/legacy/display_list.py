@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import glEndList, glGenLists, glNewList
+
 from picogl.backend.gl.enums.legacy.list_mode import GLLegacyListMode
 
 __all__ = ["GLLegacyListMode", "gl_end_list", "gl_gen_lists", "gl_new_list"]

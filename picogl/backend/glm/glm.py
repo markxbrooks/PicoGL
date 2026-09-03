@@ -12,9 +12,10 @@ commonly used in graphics programming.
 from __future__ import annotations
 
 import numpy as np
-from picogl.core.camera import ProjectionConfig
 from pyglm import glm
 from pyglm.glm import vec4
+
+from picogl.core.camera import ProjectionConfig
 
 Mat4 = glm.mat4
 

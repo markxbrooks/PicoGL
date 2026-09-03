@@ -8,6 +8,7 @@ of OpenGL buffer operations by abstracting certain details.
 """
 
 from OpenGL.GL import glBufferData
+
 from picogl.backend.gl.enums import GLBufferTarget, GLUsageHint
 
 

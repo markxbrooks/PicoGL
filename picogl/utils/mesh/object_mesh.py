@@ -5,15 +5,12 @@ from __future__ import annotations
 from pathlib import Path
 
 from picogl.backend.gl.api import gl_bind_buffer, gl_generate_buffers
-from picogl.backend.gl.api.buffer.upload import (
-    gl_upload_float_buffer,
-    gl_upload_ushort_buffer,
-)
+from picogl.backend.gl.api.buffer.upload import (gl_upload_float_buffer,
+                                                 gl_upload_ushort_buffer)
 from picogl.backend.gl.api.draw.indexed import gl_bind_elements
 from picogl.backend.gl.api.vertex.attrib_array.bind import gl_bind_array_buffer
-from picogl.backend.gl.api.vertex.attrib_array.bound import (
-    gl_bound_vertex_attrib_arrays,
-)
+from picogl.backend.gl.api.vertex.attrib_array.bound import \
+    gl_bound_vertex_attrib_arrays
 from picogl.backend.gl.enums import GLBufferTarget
 from picogl.utils.loader.object import ObjectLoader
 

@@ -5,12 +5,10 @@ from __future__ import annotations
 from collections.abc import Iterator
 from contextlib import contextmanager
 
-from picogl.backend.gl.api.vertex.attrib_array.disable import (
-    gl_disable_vertex_attrib_array,
-)
-from picogl.backend.gl.api.vertex.attrib_array.generate import (
-    gl_enable_vertex_attrib_array,
-)
+from picogl.backend.gl.api.vertex.attrib_array.disable import \
+    gl_disable_vertex_attrib_array
+from picogl.backend.gl.api.vertex.attrib_array.generate import \
+    gl_enable_vertex_attrib_array
 
 
 @contextmanager

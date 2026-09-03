@@ -14,71 +14,33 @@ from __future__ import annotations
 import os
 import sys
 from pathlib import Path
-from dataclasses import dataclass, field
 
-from picogl.backend.gl.api.legacy.matrix import gl_matrix_mode_context
-from picogl.core.viewport import GLViewport
-from picogl.examples.legacy_qt_molecular_viewer import create_molecule_viewer_layout
+from backend.gl.legacy.lighting import GLFixedFunctionLightingModel
+from backend.gl.legacy.view import LegacyGLViewTransform, CameraPerspective
 from molib.core.constants import MoLibConstant
+from picoui.dimensions import Dimensions, Point, WindowGeometry
+from picoui.helpers import create_layout_with_items
+from picoui.specs.widgets import ButtonSpec, LabelSpec
+from picoui.widget.helper import create_button_from_spec, create_label_from_spec
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtOpenGLWidgets import QOpenGLWidget
+from PySide6.QtWidgets import (QApplication, QLabel, QMessageBox, QVBoxLayout,
+                               QWidget)
+
 from picogl.backend.gl.api.clear import gl_clear, gl_clear_rgba_color
-from picogl.backend.gl.api.color import gl_color_material
-from picogl.backend.gl.api.enable import (
-    gl_disable_capability_list,
-    gl_enable_capability_list,
-)
-from picogl.backend.gl.capability import (
-    GLFixedFunctionCapability,
-    GLMaterialFace,
-    GLPipelineCapability,
-)
+from picogl.backend.gl.api.enable import gl_enable_capability_list
+from picogl.backend.gl.api.legacy.matrix import gl_matrix_mode_context
+from picogl.backend.gl.capability import GLPipelineCapability
 from picogl.backend.gl.enums import GLBitMask
-from picogl.backend.gl.enums.legacy.scale import (
-    gl_load_identity,
-)
-from picogl.backend.gl.lighting.light import LightSource
-from picogl.backend.gl.phong.material import PhongMaterial
-from picogl.backend.gl.state.fill import (
-    GLCapability,
-    GLColorMaterialMode,
-    GLLight,
-)
+from picogl.backend.gl.enums.legacy.scale import gl_load_identity
 from picogl.backend.glu.perspective import glu_perspective
 from picogl.core.polygon.mode import gl_set_line_mode, gl_set_polygon_mode
 from picogl.core.rgbcolor import RGBAColor
-from picogl.core.vec4 import Vec4
+from picogl.core.viewport import GLViewport
+from picogl.examples.legacy_qt_molecular_viewer import \
+    create_molecule_viewer_layout
 from picogl.renderer.molecular import AtomsMesh, BondsMesh, chain_rgb
 from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
-from PySide6.QtCore import Qt, QTimer
-from PySide6.QtOpenGLWidgets import QOpenGLWidget
-from PySide6.QtWidgets import (
-    QApplication,
-    QLabel,
-    QMessageBox,
-    QVBoxLayout,
-    QWidget,
-)
-
-from picoui.dimensions import WindowGeometry, Point, Dimensions
-from picoui.helpers import create_layout_with_items
-from picogl.ui.backend.qt.base import GLTranslation, GLRotation, GLZoom
-from picoui.specs.widgets import ButtonSpec
-from picoui.widget.helper import create_button_from_spec
-
-@dataclass
-class CameraPerspective:
-    """
-    Represents parameters required to define a camera perspective.
-
-    This class provides default values for the far clipping plane, near clipping
-    plane, and field of view in the y-direction (fovy) for a perspective camera.
-    These parameters can be used to set up a perspective projection for 3D rendering.
-    """
-    FAR: float = 100.0
-
-    NEAR: float = 0.1
-
-    FOVY: float = 45.0
-
 
 _EXAMPLES_PATH = Path(__file__).resolve().parent.parent
 _EXAMPLES_DIR = str(_EXAMPLES_PATH)
@@ -86,111 +48,6 @@ if _EXAMPLES_DIR not in sys.path:
     sys.path.insert(0, _EXAMPLES_DIR)
 
 from picogl.examples.utils.pdb_loader import PDBLoader  # noqa: E402
-
-
-class GLFixedFunctionLightingModel:
-    """GLLightingModel"""
-
-    LIGHT = LightSource(
-        position=Vec4(1.0, 1.0, 1.0, 0.0),
-        ambient=RGBAColor(0.4, 0.4, 0.4, 1.0),
-        diffuse=RGBAColor(0.6, 0.6, 0.6, 1.0),
-        specular=RGBAColor(0.2, 0.2, 0.2, 1.0),
-    )
-    MATERIAL = PhongMaterial(
-        ambient=RGBAColor(0.3, 0.3, 0.3, 1.0),
-        diffuse=RGBAColor(0.7, 0.7, 0.7, 1.0),
-        specular=RGBAColor(0.1, 0.1, 0.1, 1.0),
-        shininess=50.0,
-    )
-    CAPABILITIES = [
-        GLFixedFunctionCapability.LIGHTING,
-        GLFixedFunctionCapability.LIGHT0,
-        GLCapability.COLOR_MATERIAL,
-    ]
-
-    def apply(self) -> None:
-        """Enable or disable fixed-function lighting for this frame."""
-        self.enable()
-        self.setup_color_materials()
-        self.setup_light_source()
-        self.setup_materials()
-
-    def setup_color_materials(self):
-        """setup color materials"""
-        gl_color_material(
-            GLMaterialFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE
-        )
-
-    def setup_materials(self):
-        """setup materials"""
-        self.MATERIAL.apply(GLMaterialFace.FRONT_AND_BACK)
-
-    def setup_light_source(self):
-        """setup light source"""
-        self.LIGHT.apply(GLLight.LIGHT0)
-
-    def enable(self):
-        """enable"""
-        gl_enable_capability_list(self.CAPABILITIES)
-
-    def disable(self):
-        """disable"""
-        gl_disable_capability_list(self.CAPABILITIES)
-
-
-
-
-@dataclass
-class LegacyGLViewTransform:
-    """Encapsulates legacy OpenGL view rotation, translation, and zoom."""
-
-    rotation: GLRotation = field(default_factory=GLRotation)
-    translation: GLTranslation = field(default_factory=GLTranslation)
-    zoom: GLZoom = field(default_factory=lambda: GLZoom(value=1.0))
-
-    @property
-    def rotation_x(self) -> float:
-        return self.rotation.x
-
-    @rotation_x.setter
-    def rotation_x(self, value: float) -> None:
-        self.rotation.x = value
-
-    @property
-    def rotation_y(self) -> float:
-        return self.rotation.y
-
-    @rotation_y.setter
-    def rotation_y(self, value: float) -> None:
-        self.rotation.y = value
-
-    @property
-    def translation_x(self) -> float:
-        return self.translation.x
-
-    @translation_x.setter
-    def translation_x(self, value: float) -> None:
-        self.translation.x = value
-
-    @property
-    def translation_y(self) -> float:
-        return self.translation.y
-
-    @translation_y.setter
-    def translation_y(self, value: float) -> None:
-        self.translation.y = value
-
-    def apply(self) -> None:
-        """Apply the view transform using the legacy OpenGL matrix stack."""
-        self.translation.apply()
-        self.rotation.apply()
-
-    def reset(self) -> None:
-        """Reset view transformation to defaults."""
-        self.rotation = GLRotation()
-        self.translation = GLTranslation()
-        self.zoom = GLZoom(value=1.0)
 
 
 class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
@@ -287,7 +144,7 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         """setup background"""
         gl_clear_rgba_color(RGBAColor.BLACK)
 
-    def resizeGL(self, width, height):
+    def resizeGL(self, width: int, height: int):
         """Handle window resize."""
         self.viewport.update(0, 0, width, height)
         with gl_matrix_mode_context():
@@ -493,7 +350,7 @@ class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
         lower_layout, upper_layout = create_molecule_viewer_layout(info_label, layout)
 
         pdb_path = getattr(self, "_pdb_path", None) or self.object_file_path
-        self.gl_widget = QtLegacyGLMeshMolecularViewer(pdb_path)
+        self.gl_widget: QtLegacyGLMeshMolecularViewer = QtLegacyGLMeshMolecularViewer(pdb_path)
         lower_layout.addWidget(self.gl_widget)
 
         self.specs = self.build_button_specs()
@@ -525,8 +382,7 @@ class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
         "• Chain A: Green, Chain B: Blue\n"
         "• Using LegacyGLMesh for rendering"
         instructions_style = "color: black; font-size: 12px; padding: 10px; background-color: #f0f0f0;"
-        instructions_label = QLabel(instructions_text)
-        instructions_label.setStyleSheet(instructions_style)
+        instructions_label = create_label_from_spec(LabelSpec(style=instructions_style, label=instructions_text))
         return instructions_label
 
     def reset_view(self):

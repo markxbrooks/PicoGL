@@ -6,15 +6,14 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from decologr import Decologr as log
+
 from picogl.backend.modern.core.shader.context import gl_context_available
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.globals import SHADER_SRC_DIRECTORY
 from picogl.shaders.compile import compile_shaders
 from picogl.shaders.generate import generate_shader_programs
-from picogl.shaders.load import (
-    load_fragment_and_vertex_for_shader_type,
-    load_shader_source_string,
-)
+from picogl.shaders.load import (load_fragment_and_vertex_for_shader_type,
+                                 load_shader_source_string)
 from picogl.shaders.type import ShaderType
 
 

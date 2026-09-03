@@ -13,11 +13,8 @@ from typing import TYPE_CHECKING
 
 from picogl.backend.gl.api import gl_get_integerv
 from picogl.backend.gl.api.blending import gl_blend_func
-from picogl.backend.gl.capability import (
-    GLBlendFactor,
-    GLBlendTarget,
-    GLPipelineCapability,
-)
+from picogl.backend.gl.capability import (GLBlendFactor, GLBlendTarget,
+                                          GLPipelineCapability)
 from picogl.backend.gl.driver.applicable_state import ApplicableState
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.state import gl_value

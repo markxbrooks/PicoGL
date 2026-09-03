@@ -12,7 +12,9 @@ from typing import Any
 import numpy as np
 from numpy import dtype, generic, ndarray
 from pyglm import glm
+
 from picogl.backend.gl.enums.legacy.scale import gl_viewport
+
 
 @dataclass
 class Viewport:

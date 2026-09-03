@@ -4,6 +4,7 @@ from unittest import TestCase
 from unittest.mock import call, patch
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POLYGON_MODE
+
 from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.state.fill import GLFace, GLFillMode
 from picogl.backend.gl.state.scoped import gl_capability, gl_disabled

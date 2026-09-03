@@ -3,11 +3,9 @@
 import unittest
 
 import numpy as np
-from picogl.gpu.buffers.length import (
-    drawable_data_length,
-    length_from_array_data,
-    length_from_vbo,
-)
+
+from picogl.gpu.buffers.length import (drawable_data_length,
+                                       length_from_array_data, length_from_vbo)
 from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
 
 

@@ -6,6 +6,7 @@ from dataclasses import dataclass
 
 import numpy as np
 import pytest
+
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.core.geometry.sphere import unit_sphere_mesh
 from picogl.renderer.molecular import AtomsMesh, BondsMesh

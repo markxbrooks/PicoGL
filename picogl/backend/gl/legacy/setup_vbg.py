@@ -14,6 +14,7 @@ import os
 from typing import TYPE_CHECKING
 
 import numpy as np
+
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.gpu.buffers.vertex.aliases import VertexBufferRole
 from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
@@ -119,13 +120,11 @@ if _HEADLESS:
             self.named_vbos.clear()
 
 else:
-    from picogl.gpu.buffers.attributes import (
-        AttributeSpec,
-        LayoutDescriptor,
-        legacy_attribute_spec,
-    )
+    from picogl.gpu.buffers.attributes import (AttributeSpec, LayoutDescriptor,
+                                               legacy_attribute_spec)
     from picogl.gpu.buffers.vertex.aliases import NAME_ALIASES
-    from picogl.gpu.buffers.vertex.legacy import VertexBufferGroup as VertexBufferGroup
+    from picogl.gpu.buffers.vertex.legacy import \
+        VertexBufferGroup as VertexBufferGroup
 
 # VertexBufferGroup is defined above based on _HEADLESS
 

@@ -6,28 +6,31 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 import numpy as np
-
-from backend.gl.api.matrix import gl_matrix_mode
-from backend.gl.enums.legacy.scale import gl_load_identity, gl_rotatef, gl_scalef, gl_translate_f
 from decologr import Decologr as log
 from OpenGL.raw.GL.ARB.viewport_array import GL_VIEWPORT
-from OpenGL.raw.GL.VERSION.GL_1_0 import glLoadIdentity, glMatrixMode
-from picogl.backend.geometry.factory import LegacyBinding, ModernBinding
-from picogl.backend.gl.api import gl_get_integerv
-from picogl.backend.gl.api.error import gl_check_errors
-from picogl.backend.gl.backend import GLBackend
-from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
-from picogl.backend.gl.mode import GLMode
-from picogl.backend.gl.task.gl_init import legacy_init_gl_list, modern_init_gl_list
-from picogl.backend.legacy.core.camera.lighting import set_background_color
-from picogl.backend.legacy.core.camera.projection_state import GLUProjectionState
-from picogl.backend.legacy.core.camera.setup import calculate_aspect_ratio
-from picogl.backend.modern.core.camera.projection_state import GLMProjectionState
-from picogl.core.camera import ProjectionConfig
-from picogl.core.viewport import Viewport
 from PySide6.QtGui import QMouseEvent, QOpenGLFunctions, Qt, QWheelEvent
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
 from PySide6.QtWidgets import QWidget
+
+from picogl.backend.geometry.factory import LegacyBinding, ModernBinding
+from picogl.backend.gl.api import gl_get_integerv
+from picogl.backend.gl.api.error import gl_check_errors
+from picogl.backend.gl.api.matrix import gl_matrix_mode
+from picogl.backend.gl.backend import GLBackend
+from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
+from picogl.backend.gl.enums.legacy.scale import gl_load_identity
+from picogl.backend.gl.legacy.view import GLRotation, GLTranslation
+from picogl.backend.gl.mode import GLMode
+from picogl.backend.gl.task.gl_init import (legacy_init_gl_list,
+                                            modern_init_gl_list)
+from picogl.backend.legacy.core.camera.lighting import set_background_color
+from picogl.backend.legacy.core.camera.projection_state import \
+    GLUProjectionState
+from picogl.backend.legacy.core.camera.setup import calculate_aspect_ratio
+from picogl.backend.modern.core.camera.projection_state import \
+    GLMProjectionState
+from picogl.core.camera import ProjectionConfig
+from picogl.core.viewport import Viewport
 
 
 @dataclass
@@ -71,59 +74,6 @@ class CameraParameters:
         self.translation_x_axis = 0.0
         self.translation_y_axis = 0.0
         self.translation_zoom = 0.0
-
-@dataclass
-class ScreenParameters:
-    """Screen Parameters Base class for rotation and translation"""
-    x = 0.0
-    y = 0.0
-
-    def initialize(self):
-        self.x = 0.0
-        self.y = 0.0
-
-class GLTranslation:
-    """Translation Parameters"""
-    x: float = 0.0
-    y: float = 0.0
-    z: float = 0.0
-
-    def apply(self):
-        gl_translate_f(self.x, self.y, self.z)
-
-    def _apply_zoom(self, value: float = 0.01):
-        gl_translate_f(self.translation.x, self.translation.y, value)
-
-
-@dataclass
-class GLZoom:
-    """Zoom parameters."""
-    # translation: GLTranslation = None
-    value: float = -5.0
-
-    """def apply(self):
-        self.apply_translation_and_zoom(self.translation, self.value)"""
-
-    def apply_translation_and_zoom(self, translation, zoom):
-        gl_translate_f(translation.x, translation.y, zoom)
-
-    def rescale(self):
-        gl_scalef(self.value, self.value, self.value)
-
-
-class RotationParameters(ScreenParameters):
-    """Rotation Parameters"""
-
-@dataclass
-class GLRotation:
-    x: float = 0.0
-    y: float = 0.0
-    z: float = 0.0
-
-    def apply(self):
-        gl_rotatef(self.x, 1.0, 0.0, 0.0)
-        gl_rotatef(self.y, 0.0, 1.0, 0.0)
-        gl_rotatef(self.z, 0.0, 0.0, 1.0)
 
 
 class GLBase(QOpenGLWidget, QOpenGLFunctions):

@@ -12,8 +12,8 @@ from dataclasses import dataclass
 from typing import Dict, List, Optional
 
 import numpy as np
-
 from molib.ligand.pdb.layouts.pdb_file import PDBFileLayout, PDBTitleLayout
+
 from picogl.examples.utils.bond_detection import atoms_should_bond
 
 
