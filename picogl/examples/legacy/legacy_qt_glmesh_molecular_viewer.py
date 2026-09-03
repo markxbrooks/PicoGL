@@ -25,17 +25,14 @@ from picogl.backend.gl.api.enable import (
     gl_disable_capability_list,
     gl_enable_capability_list,
 )
-from picogl.backend.gl.api.matrix import gl_matrix_mode
 from picogl.backend.gl.capability import (
     GLFixedFunctionCapability,
     GLMaterialFace,
     GLPipelineCapability,
 )
 from picogl.backend.gl.enums import GLBitMask
-from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.enums.legacy.scale import (
     gl_load_identity,
-    gl_viewport,
 )
 from picogl.backend.gl.lighting.light import LightSource
 from picogl.backend.gl.phong.material import PhongMaterial
