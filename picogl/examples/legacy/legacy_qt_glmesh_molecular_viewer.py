@@ -25,7 +25,7 @@ from picoui.widget.helper import create_button_from_spec, create_label_from_spec
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
 from PySide6.QtWidgets import (QApplication, QLabel, QMessageBox, QVBoxLayout,
-                               QWidget)
+                               QWidget, QSplitter)
 
 from picogl.backend.gl.api.clear import gl_clear, gl_clear_rgba_color
 from picogl.backend.gl.api.enable import gl_enable_capability_list
@@ -344,27 +344,64 @@ class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
 
     def set_layout(self, layout):
         """Build the window layout and GL widget."""
-        info_label = QLabel(
-            "PDB Structure - C-alpha Atoms (Chain A: Green, Chain B: Blue)"
-        )
-        lower_layout, upper_layout = create_molecule_viewer_layout(info_label, layout)
-
         pdb_path = getattr(self, "_pdb_path", None) or self.object_file_path
+
+        self.label_specs = self._build_label_specs()
+        self.button_specs = self.build_button_specs()
+
+        info_label = create_label_from_spec(self.label_specs["info_label_spec"])
+        instructions_label = create_label_from_spec(self.label_specs["instructions_spec"])
+        reset_button = create_button_from_spec(self.button_specs["reset_button"])
+        info_button = create_button_from_spec(self.button_specs["info_button"])
+
+        #lower_layout, upper_layout = create_molecule_viewer_layout(info_label, layout)
+        info_label.setStyleSheet("font-size: 14px; font-weight: bold; padding: 10px;")
+
+        upper_layout = create_layout_with_items([info_label], start_stretch=False,  end_stretch=True, vertical=False)
+        upper_widget = QWidget()
+        upper_widget.setLayout(upper_layout)
+
+        lower_widget = QWidget()
+        lower_layout = QVBoxLayout()
+
+        splitter = self.create_splitter_with_items(items=[upper_widget, lower_widget], sizes=[200, 800])
+        layout.addWidget(splitter)
+        lower_widget.setLayout(lower_layout)
+
         self.gl_widget: QtLegacyGLMeshMolecularViewer = QtLegacyGLMeshMolecularViewer(pdb_path)
         lower_layout.addWidget(self.gl_widget)
 
-        self.specs = self.build_button_specs()
+        self.lighting_button = create_button_from_spec(self.button_specs["lighting_button"])
 
-        reset_button = create_button_from_spec(self.specs["reset_button"])
-        info_button = create_button_from_spec(self.specs["info_button"])
-        self.lighting_button = create_button_from_spec(self.specs["lighting_button"])
         controls_layout_items = [reset_button, info_button, self.lighting_button]
         controls_layout = create_layout_with_items(controls_layout_items,start_stretch=False,  end_stretch=True)
 
-        instructions_label = self.create_instructions_label()
-
         upper_layout.addLayout(controls_layout)
         upper_layout.addWidget(instructions_label)
+
+    def create_splitter_with_items(self, items: list[QWidget], sizes) -> QSplitter:
+        splitter = QSplitter(Qt.Vertical)
+        for item in items:
+            splitter.addWidget(item)
+        splitter.setSizes(sizes)
+        return splitter
+
+    def _build_label_specs(self) -> dict[str, LabelSpec]:
+        instructions_text = "Controls:\n"
+        "• Left mouse: Rotate\n"
+        "• Mouse wheel: Zoom\n"
+        "• R key: Reset view\n"
+        "• W key: Toggle wireframe/filled\n"
+        "• L/T key: Toggle lighting\n"
+        "• ESC: Exit\n"
+        "• Chain A: Green, Chain B: Blue\n"
+        "• Using LegacyGLMesh for rendering"
+        instructions_style = "color: black; font-size: 12px; padding: 10px; background-color: #f0f0f0;"
+        return {
+        "info_label_spec": LabelSpec(label="PDB Structure - C-alpha Atoms (Chain A: Green, Chain B: Blue)",
+            style="font-size: 14px; font-weight: bold; padding: 10px;"),
+        "instructions_spec": LabelSpec(style=instructions_style, label=instructions_text)
+        }
 
     def build_button_specs(self) -> dict[str, ButtonSpec]:
         return {"reset_button": ButtonSpec(label="Reset View (R)", slot=self.reset_view),
