@@ -100,6 +100,111 @@ _LIGHTING_CAPS = [
 ]
 
 
+class GLFixedFunctionLightingModel:
+    """GLLightingModel"""
+
+    LIGHT = LightSource(
+        position=Vec4(1.0, 1.0, 1.0, 0.0),
+        ambient=RGBAColor(0.4, 0.4, 0.4, 1.0),
+        diffuse=RGBAColor(0.6, 0.6, 0.6, 1.0),
+        specular=RGBAColor(0.2, 0.2, 0.2, 1.0),
+    )
+    MATERIAL = PhongMaterial(
+        ambient=RGBAColor(0.3, 0.3, 0.3, 1.0),
+        diffuse=RGBAColor(0.7, 0.7, 0.7, 1.0),
+        specular=RGBAColor(0.1, 0.1, 0.1, 1.0),
+        shininess=50.0,
+    )
+    CAPABILITIES = [
+        GLFixedFunctionCapability.LIGHTING,
+        GLFixedFunctionCapability.LIGHT0,
+        GLCapability.COLOR_MATERIAL,
+    ]
+
+    def apply(self) -> None:
+        """Enable or disable fixed-function lighting for this frame."""
+        self.enable()
+        self.setup_color_materials()
+        self.setup_light_source()
+        self.setup_materials()
+
+    def setup_color_materials(self):
+        """setup color materials"""
+        gl_color_material(
+            GLMaterialFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE
+        )
+
+    def setup_materials(self):
+        """setup materials"""
+        self.MATERIAL.apply(GLMaterialFace.FRONT_AND_BACK)
+
+    def setup_light_source(self):
+        """setup light source"""
+        self.LIGHT.apply(GLLight.LIGHT0)
+
+    def enable(self):
+        """enable"""
+        gl_enable_capability_list(self.CAPABILITIES)
+
+    def disable(self):
+        """disable"""
+        gl_disable_capability_list(self.CAPABILITIES)
+
+from dataclasses import dataclass, field
+
+
+@dataclass
+class GLViewTransform:
+    """Encapsulates legacy OpenGL view rotation, translation, and zoom."""
+
+    rotation: GLRotation = field(default_factory=GLRotation)
+    translation: GLTranslation = field(default_factory=GLTranslation)
+    zoom: GLZoom = field(default_factory=lambda: GLZoom(value=1.0))
+
+    @property
+    def rotation_x(self) -> float:
+        return self.rotation.x
+
+    @rotation_x.setter
+    def rotation_x(self, value: float) -> None:
+        self.rotation.x = value
+
+    @property
+    def rotation_y(self) -> float:
+        return self.rotation.y
+
+    @rotation_y.setter
+    def rotation_y(self, value: float) -> None:
+        self.rotation.y = value
+
+    @property
+    def translation_x(self) -> float:
+        return self.translation.x
+
+    @translation_x.setter
+    def translation_x(self, value: float) -> None:
+        self.translation.x = value
+
+    @property
+    def translation_y(self) -> float:
+        return self.translation.y
+
+    @translation_y.setter
+    def translation_y(self, value: float) -> None:
+        self.translation.y = value
+
+    def apply(self) -> None:
+        """Apply the view transform using the legacy OpenGL matrix stack."""
+        self.translation.apply()
+        self.rotation.apply()
+
+    def reset(self) -> None:
+        """Reset view transformation to defaults."""
+        self.rotation = GLRotation()
+        self.translation = GLTranslation()
+        self.zoom = GLZoom(value=1.0)
+
+
 class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
     """Qt OpenGL widget for displaying molecular structures using LegacyGLMesh."""
 
@@ -122,7 +227,8 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         self.bonds_mesh = None
 
         # Set up view
-
+        self.light = GLFixedFunctionLightingModel()
+        self.transform = GLViewTransform()
         self.rotation = GLRotation()
         self.translation = GLTranslation()
         self.viewport = GLViewport(0, 0, self.width(), self.height())
@@ -133,69 +239,70 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
 
     @property
     def zoom(self):
-        return self._zoom.value
+        return self.transform.zoom.value
 
     @zoom.setter
     def zoom(self, value):
-        self._zoom.value = value
+        self.transform.zoom.value = value
         self.update()
 
     @property
     def rotation_x(self):
-        return self.rotation.x
+        return self.transform.rotation.x
 
     @rotation_x.setter
     def rotation_x(self, value):
-        self.rotation.x = value
-        self.rotation.apply()
+        self.transform.rotation.x = value
         self.update()
 
     @property
     def rotation_y(self):
-        return self.rotation.y
+        return self.transform.rotation.y
 
     @rotation_y.setter
     def rotation_y(self, value):
-        self.rotation.y = value
-        self.rotation.apply()
+        self.transform.rotation.y = value
         self.update()
 
     @property
     def translation_x(self):
-        return self.translation.x
+        return self.transform.translation.x
 
     @translation_x.setter
     def translation_x(self, value):
-        self.translation.x = value
-        self.translation.apply()
+        self.transform.translation.x = value
         self.update()
 
     @property
     def translation_y(self):
-        return self.translation.y
+        return self.transform.translation.y
 
     @translation_y.setter
     def translation_y(self, value):
-        self.translation.y = value
+        self.transform.translation.y = value
         self.update()
 
 
     def initializeGL(self):
         """Initialize OpenGL settings via PicoGL wrappers."""
-        gl_enable_capability_list(
-            [
-                GLPipelineCapability.DEPTH_TEST,
-                *_LIGHTING_CAPS,
-            ]
-        )
-        gl_color_material(
-            GLMaterialFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE
-        )
-        gl_clear_rgba_color(RGBAColor.BLACK)
-
+        self.enable_depth_test()
+        self.light.enable()
+        self.light.setup_color_materials()
+        self.setup_background()
         self._create_mesh_data()
         self._initialized = True
         QTimer.singleShot(100, self._enable_controls)
+
+    def enable_depth_test(self):
+        """enable depth test"""
+        gl_enable_capability_list(
+            [
+                GLPipelineCapability.DEPTH_TEST
+            ]
+        )
+
+    def setup_background(self):
+        gl_clear_rgba_color(RGBAColor.BLACK)
 
     def resizeGL(self, width, height):
         """Handle window resize."""
@@ -208,23 +315,21 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         gl_clear(GLBitMask.COLOR_BUFFER | GLBitMask.DEPTH_BUFFER)
         gl_load_identity()
         self._apply_lighting()
-        self._apply_zoom(self.translation, value=-5.0)
-        self.rotation.apply()
-        self._zoom.rescale()
+        self.apply_zoom(value=-5.0)
+        self.transform.rotation.apply()
+        self.transform.zoom.rescale()
         self._render_molecular_structure()
 
+    def apply_zoom(self, value: float = 1.0):
+        self._apply_zoom(self.transform.translation, value=value)
+
     def _apply_zoom(self, translation, value: float = 0.01):
-        self._zoom.apply_translation_and_zoom(translation, value)
+        self.transform.zoom.apply_translation_and_zoom(translation, value)
 
     def _apply_lighting(self) -> None:
         """Enable or disable fixed-function lighting for this frame."""
         if self.lighting_enabled:
-            gl_enable_capability_list(_LIGHTING_CAPS)
-            gl_color_material(
-                GLMaterialFace.FRONT_AND_BACK, GLColorMaterialMode.AMBIENT_AND_DIFFUSE
-            )
-            _VIEWER_LIGHT.apply(GLLight.LIGHT0)
-            _VIEWER_MATERIAL.apply(GLMaterialFace.FRONT_AND_BACK)
+            self.light.apply()
             return
         gl_disable_capability_list(_LIGHTING_CAPS)
 
@@ -320,8 +425,8 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
             current_pos = event.position().toPoint()
             dx = current_pos.x() - self.last_mouse_pos.x()
             dy = current_pos.y() - self.last_mouse_pos.y()
-            self.rotation.y += dx * 0.5
-            self.rotation.x += dy * 0.5
+            self.transform.rotation.y += dx * 0.5
+            self.transform.rotation.x += dy * 0.5
             self.last_mouse_pos = current_pos
             self.update()
 
@@ -334,18 +439,18 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         """Handle mouse wheel for zooming."""
         delta = event.angleDelta().y()
         zoom_factor = 1.1 if delta > 0 else 0.9
-        self.zoom *= zoom_factor
-        self.zoom = max(0.01, min(30.0, self.zoom))
+        self.transform.zoom.value *= zoom_factor
+        self.transform.zoom.value = max(0.01, min(30.0, self.zoom))
         self.update()
 
     def keyPressEvent(self, event):
         """Handle keyboard input."""
         if event.key() == Qt.Key_R:
-            self.rotation.x = 0.0
-            self.rotation.y = 0.0
-            self.zoom = 1.0
-            self.translation_x = 0.0
-            self.translation_y = 0.0
+            self.transform.rotation.x = 0.0
+            self.transform.rotation.y = 0.0
+            self.transform.zoom.value = 1.0
+            self.transform.translation.x = 0.0
+            self.transform.translation.y = 0.0
             self.update()
         elif event.key() == Qt.Key_W:
             self.wireframe_mode = not self.wireframe_mode
