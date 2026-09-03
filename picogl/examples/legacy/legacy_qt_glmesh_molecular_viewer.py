@@ -534,8 +534,8 @@ class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
         if self.gl_widget is None:
             print("OpenGL widget not yet initialized")
             return
-        self.gl_widget.rotation.x = 0.0
-        self.gl_widget.rotation.y = 0.0
+        self.gl_widget.rotation_x = 0.0
+        self.gl_widget.rotation_y = 0.0
         self.gl_widget.zoom = 1.0
         self.gl_widget.translation_x = 0.0
         self.gl_widget.translation_y = 0.0
