@@ -70,6 +70,22 @@ DEFAULT_NEAR = 0.1
 
 DEFAULT_FOVY = 45.0
 
+@dataclass
+class CameraPerspective:
+    """
+    Represents parameters required to define a camera perspective.
+
+    This class provides default values for the far clipping plane, near clipping
+    plane, and field of view in the y-direction (fovy) for a perspective camera.
+    These parameters can be used to set up a perspective projection for 3D rendering.
+    """
+    FAR: float = 100.0
+
+    NEAR: float = 0.1
+
+    FOVY: float = 45.0
+
+
 _EXAMPLES_PATH = Path(__file__).resolve().parent.parent
 _EXAMPLES_DIR = str(_EXAMPLES_PATH)
 if _EXAMPLES_DIR not in sys.path:
@@ -281,7 +297,7 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         """Handle window resize."""
         self.viewport.update(0, 0, width, height)
         with gl_matrix_mode_context():
-            glu_perspective(DEFAULT_FOVY, width / max(height, 1), DEFAULT_NEAR, DEFAULT_FAR)
+            glu_perspective(CameraPerspective.FOVY, width / max(height, 1), CameraPerspective.NEAR, CameraPerspective.FAR)
 
     def paintGL(self):
         """Main rendering function."""
