@@ -154,7 +154,7 @@ from dataclasses import dataclass, field
 
 
 @dataclass
-class GLViewTransform:
+class LegacyGLViewTransform:
     """Encapsulates legacy OpenGL view rotation, translation, and zoom."""
 
     rotation: GLRotation = field(default_factory=GLRotation)
@@ -228,13 +228,8 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
 
         # Set up view
         self.light = GLFixedFunctionLightingModel()
-        self.transform = GLViewTransform()
-        self.rotation = GLRotation()
-        self.translation = GLTranslation()
+        self.transform = LegacyGLViewTransform()
         self.viewport = GLViewport(0, 0, self.width(), self.height())
-        self._zoom = GLZoom(value=1.0)
-        # self._zoom = GLZoom(value=1.0, translation=self.translation)
-
         self._load_pdb_structure()
 
     @property
