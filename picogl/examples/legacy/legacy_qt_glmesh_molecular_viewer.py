@@ -315,6 +315,14 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
             self.close()
 
 
+def create_splitter_with_items(items: list[QWidget], sizes) -> QSplitter:
+    splitter = QSplitter(Qt.Vertical)
+    for item in items:
+        splitter.addWidget(item)
+    splitter.setSizes(sizes)
+    return splitter
+
+
 class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
     """Main window for the LegacyGLMesh molecular viewer."""
 
@@ -364,7 +372,7 @@ class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
         lower_widget = QWidget()
         lower_layout = QVBoxLayout()
 
-        splitter = self.create_splitter_with_items(items=[upper_widget, lower_widget], sizes=[200, 800])
+        splitter = create_splitter_with_items(items=[upper_widget, lower_widget], sizes=[200, 800])
         layout.addWidget(splitter)
         lower_widget.setLayout(lower_layout)
 
@@ -378,13 +386,6 @@ class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
 
         upper_layout.addLayout(controls_layout)
         upper_layout.addWidget(instructions_label)
-
-    def create_splitter_with_items(self, items: list[QWidget], sizes) -> QSplitter:
-        splitter = QSplitter(Qt.Vertical)
-        for item in items:
-            splitter.addWidget(item)
-        splitter.setSizes(sizes)
-        return splitter
 
     def _build_label_specs(self) -> dict[str, LabelSpec]:
         instructions_text = "Controls:\n"
