@@ -38,6 +38,7 @@ from picogl.backend.gl.mode import GLMode
 from picogl.backend.glu.lookat import glu_look_at
 from picogl.backend.modern.core.setup.lighting import gl_initialize_background
 from picogl.core.rgbcolor import RGBAColor
+from picogl.globals import PICOGL_EXAMPLES_DIR
 from picogl.renderer import MeshData
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.texture.gltexture import GLTexture
@@ -97,7 +98,7 @@ class LegacyTexturedTeapotRenderer(LegacyQtObjectRenderer):
         """Load teapot data with UV coordinates"""
         print("📁 Loading teapot data...")
 
-        object_file_name = str(BASE_DIR / "data" / "teapot2.obj")
+        object_file_name = str(PICOGL_EXAMPLES_DIR / "data" / "teapot2.obj")
         obj_loader = ObjectLoader(object_file_name)
         teapot_data = obj_loader.to_array_style()
 
@@ -128,7 +129,7 @@ class LegacyTexturedTeapotRenderer(LegacyQtObjectRenderer):
             return False
 
         subdir, filename = self.texture_options[texture_name]
-        texture_path = BASE_DIR / "resources" / subdir / filename
+        texture_path = PICOGL_EXAMPLES_DIR / "resources" / subdir / filename
 
         print(f"🎨 Loading texture: {texture_path}")
 

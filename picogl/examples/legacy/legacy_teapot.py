@@ -2,16 +2,17 @@
 
 from pathlib import Path
 
+from picogl.globals import PICOGL_EXAMPLES_DIR
 from picogl.renderer import MeshData
 from picogl.ui.backend.glut.window.glut import GlutRendererWindow
 from picogl.utils.loader.object import ObjectLoader
 
-BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 def main() -> None:
     """Set up the teapot object and show it."""
-    object_file_name = "data/teapot.obj"
+    object_file_name = PICOGL_EXAMPLES_DIR / "data" / "teapot.obj"
     obj_loader = ObjectLoader(object_file_name)
     teapot_data = obj_loader.to_array_style()
     data = MeshData.from_raw(
