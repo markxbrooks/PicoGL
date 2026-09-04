@@ -24,24 +24,39 @@ from numpy import dtype, generic, ndarray
 try:
     from PySide6.QtCore import Qt, QTimer
     from PySide6.QtOpenGLWidgets import QOpenGLWidget
-    from PySide6.QtWidgets import (QApplication, QLabel, QMainWindow,
-                                   QVBoxLayout, QWidget)
+    from PySide6.QtWidgets import (
+        QApplication,
+        QLabel,
+        QMainWindow,
+        QVBoxLayout,
+        QWidget,
+    )
 
     QT_VERSION = "PySide6"
 except ImportError:
     try:
         from PyQt5.QtCore import Qt, QTimer
         from PyQt5.QtOpenGL import QGLWidget as QOpenGLWidget
-        from PyQt5.QtWidgets import (QApplication, QLabel, QMainWindow,
-                                     QVBoxLayout, QWidget)
+        from PyQt5.QtWidgets import (
+            QApplication,
+            QLabel,
+            QMainWindow,
+            QVBoxLayout,
+            QWidget,
+        )
 
         QT_VERSION = "PyQt5"
     except ImportError:
         try:
             from PyQt6.QtCore import Qt, QTimer
             from PyQt6.QtOpenGLWidgets import QOpenGLWidget
-            from PyQt6.QtWidgets import (QApplication, QLabel, QMainWindow,
-                                         QVBoxLayout, QWidget)
+            from PyQt6.QtWidgets import (
+                QApplication,
+                QLabel,
+                QMainWindow,
+                QVBoxLayout,
+                QWidget,
+            )
 
             QT_VERSION = "PyQt6"
         except ImportError:
@@ -62,11 +77,9 @@ from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
-from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode,
-                                          GLFace)
+from picogl.backend.gl.state.fill import GLCapability, GLColorMaterialMode, GLFace
 from picogl.core.viewport import Viewport
-from picogl.examples.data.cube_data import (g_color_buffer_data,
-                                            g_vertex_buffer_data)
+from picogl.examples.data.cube_data import g_color_buffer_data, g_vertex_buffer_data
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 
 
@@ -125,7 +138,9 @@ class SimpleQtCubeWidget(QOpenGLWidget):
         self.gl_mesh.upload()
         self._gl_ready = True
 
-        print(f"Simple Legacy Qt Cube Widget initialized (using {QT_VERSION}, PicoGL API)")
+        print(
+            f"Simple Legacy Qt Cube Widget initialized (using {QT_VERSION}, PicoGL API)"
+        )
 
     def resizeGL(self, w: int, h: int):
         """Resize viewport and projection via PicoGL drivers."""

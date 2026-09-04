@@ -22,17 +22,13 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-from picoui.dimensions import Dimensions, Point, WindowGeometry
-from picoui.helpers import create_layout, create_layout_with_items
-from picoui.helpers.layout import add_items_to_layout
-from PySide6.QtCore import Qt, QTimer
-from PySide6.QtWidgets import (QApplication, QComboBox, QLabel, QPushButton,
-                               QVBoxLayout, QWidget)
-
 from picogl.backend.gl.api import gl_bind_texture
 from picogl.backend.gl.api.clear import gl_clear
-from picogl.backend.gl.api.enable import (gl_disable, gl_enable,
-                                          gl_enable_capability_list)
+from picogl.backend.gl.api.enable import (
+    gl_disable,
+    gl_enable,
+    gl_enable_capability_list,
+)
 from picogl.backend.gl.api.matrix import gl_matrix_mode
 from picogl.backend.gl.api.rotate import gl_rotate_f
 from picogl.backend.gl.enums import GLBitMask
@@ -49,6 +45,18 @@ from picogl.ui.backend.qt.legacy.renderer import LegacyQtObjectRenderer
 from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
 from picogl.utils.loader.object import ObjectLoader
 from picogl.utils.loader.texture import TextureLoader
+from picoui.dimensions import Dimensions, Point, WindowGeometry
+from picoui.helpers import create_layout, create_layout_with_items
+from picoui.helpers.layout import add_items_to_layout
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtWidgets import (
+    QApplication,
+    QComboBox,
+    QLabel,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
+)
 
 INITIAL_ZOOM = 20
 
@@ -239,7 +247,8 @@ class LegacyTexturedTeapotWindow(LegacyQtObjectWindow):
 
     def set_layout(self, layout):
         # Create info label
-        info_label = QLabel("""
+        info_label = QLabel(
+            """
             <h3>PicoGL Legacy Textured Teapot</h3>
             <p><b>Controls:</b></p>
             <ul>
@@ -250,7 +259,8 @@ class LegacyTexturedTeapotWindow(LegacyQtObjectWindow):
             <li><b>Escape:</b> Close application</li>
             </ul>
             <p><b>Rendering:</b> Legacy OpenGL with texture mapping</p>
-            """)
+            """
+        )
         info_label.setMaximumHeight(180)
 
         # Create texture selection

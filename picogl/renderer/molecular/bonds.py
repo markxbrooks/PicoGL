@@ -6,7 +6,6 @@ from collections.abc import Callable, Sequence
 from typing import Any
 
 import numpy as np
-
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.renderer.meshdata import MeshData
 from picogl.renderer.molecular.base import MolecularMesh

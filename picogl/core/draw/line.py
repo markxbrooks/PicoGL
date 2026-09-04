@@ -1,7 +1,6 @@
 from typing import Sequence
 
 from molib.pdb.coordinate.coordinate import Coordinates
-
 from picogl.backend.gl.api.legacy.vertex import gl_vertex_vec3
 from picogl.backend.gl.api.vertex.normal_3f import gl_normal_vec3
 from picogl.backend.gl.api.vertex.vertex_3f import gl_vertex_line

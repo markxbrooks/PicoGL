@@ -40,20 +40,20 @@ from typing import Callable, Dict, Iterable, Optional, Tuple, Union
 
 import numpy as np
 from decologr import Decologr as log
-from pyglm import glm
-
 from picogl.backend.gl.api.shader import gl_get_uniform_location
 from picogl.backend.modern.core.shader.context import gl_context_available
 from picogl.backend.modern.core.shader.program import ShaderProgram
-from picogl.backend.modern.core.uniform.location_value import \
-    set_uniform_location_value
+from picogl.backend.modern.core.uniform.location_value import set_uniform_location_value
 from picogl.backend.modern.core.uniform.mvp import shader_uniform_set_mvp
 from picogl.globals import PICOGL_SHADER_SRC_DIRECTORY, SHADER_SRC_DIRECTORY
 from picogl.shaders.compile import compile_shaders
 from picogl.shaders.generate import generate_shader_programs
-from picogl.shaders.load import (load_fragment_and_vertex_for_shader_type,
-                                 load_shader_source_string)
+from picogl.shaders.load import (
+    load_fragment_and_vertex_for_shader_type,
+    load_shader_source_string,
+)
 from picogl.shaders.type import ShaderType
+from pyglm import glm
 
 SILENT_SHADER = True
 

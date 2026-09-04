@@ -8,10 +8,6 @@ from typing import Optional
 import numpy as np
 from decologr import Decologr as log
 from OpenGL.raw.GL.ARB.viewport_array import GL_VIEWPORT
-from PySide6.QtGui import QMouseEvent, QOpenGLFunctions, Qt, QWheelEvent
-from PySide6.QtOpenGLWidgets import QOpenGLWidget
-from PySide6.QtWidgets import QWidget
-
 from picogl.backend.geometry.factory import LegacyBinding, ModernBinding
 from picogl.backend.gl.api import gl_get_integerv
 from picogl.backend.gl.api.error import gl_check_errors
@@ -21,16 +17,16 @@ from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.enums.legacy.scale import gl_load_identity
 from picogl.backend.gl.legacy.view import GLRotation, GLTranslation
 from picogl.backend.gl.mode import GLMode
-from picogl.backend.gl.task.gl_init import (legacy_init_gl_list,
-                                            modern_init_gl_list)
+from picogl.backend.gl.task.gl_init import legacy_init_gl_list, modern_init_gl_list
 from picogl.backend.legacy.core.camera.lighting import set_background_color
-from picogl.backend.legacy.core.camera.projection_state import \
-    GLUProjectionState
+from picogl.backend.legacy.core.camera.projection_state import GLUProjectionState
 from picogl.backend.legacy.core.camera.setup import calculate_aspect_ratio
-from picogl.backend.modern.core.camera.projection_state import \
-    GLMProjectionState
+from picogl.backend.modern.core.camera.projection_state import GLMProjectionState
 from picogl.core.camera import ProjectionConfig
 from picogl.core.viewport import Viewport
+from PySide6.QtGui import QMouseEvent, QOpenGLFunctions, Qt, QWheelEvent
+from PySide6.QtOpenGLWidgets import QOpenGLWidget
+from PySide6.QtWidgets import QWidget
 
 
 @dataclass

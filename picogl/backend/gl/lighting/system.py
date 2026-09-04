@@ -5,7 +5,6 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_UNPACK_ALIGNMENT
-
 from picogl.backend.gl.api.legacy.matrix import gl_pushed_matrix
 from picogl.backend.gl.api.legacy.pixel_store import gl_pixel_store_i
 from picogl.backend.gl.api.light.model import gl_light_model_fv

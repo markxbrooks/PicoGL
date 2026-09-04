@@ -2,8 +2,14 @@
 
 from enum import IntEnum, IntFlag
 
-from OpenGL.GLUT import (GLUT_DEPTH, GLUT_DOUBLE, GLUT_DOWN, GLUT_LEFT_BUTTON,
-                         GLUT_RGBA, GLUT_UP)
+from OpenGL.GLUT import (
+    GLUT_DEPTH,
+    GLUT_DOUBLE,
+    GLUT_DOWN,
+    GLUT_LEFT_BUTTON,
+    GLUT_RGBA,
+    GLUT_UP,
+)
 
 
 class GLUTDisplayMode(IntFlag):

@@ -11,8 +11,6 @@ import os
 from pathlib import Path
 
 import numpy as np
-from utils.pdb_loader import PDBLoader
-
 from picogl.backend.gl.api.blending import gl_blend_func
 from picogl.backend.gl.api.clear import gl_clear_color
 from picogl.backend.gl.api.draw.array import gl_draw_arrays
@@ -23,8 +21,10 @@ from picogl.backend.gl.api.point import gl_point_size
 from picogl.backend.gl.capability import GLBlendFactor, GLPipelineCapability
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.backend.gl.enums.hint import GLHintMode, GLHintTarget
-from picogl.backend.gl.enums.point_size import (GLLegacyPointCapability,
-                                                GLPointCapability)
+from picogl.backend.gl.enums.point_size import (
+    GLLegacyPointCapability,
+    GLPointCapability,
+)
 from picogl.backend.gl.state.scoped import gl_capability
 from picogl.backend.gl.state.shader import gl_shader_bound
 from picogl.backend.gl.task.gl_init import legacy_init_gl_list, paint_gl_list
@@ -35,6 +35,7 @@ from picogl.renderer import MeshData
 from picogl.shaders.registry import ShaderRegistry
 from picogl.shaders.type import ShaderType
 from picogl.ui.backend.glut.window.object import RenderWindow
+from utils.pdb_loader import PDBLoader
 
 _EXAMPLES_DIR = Path(__file__).resolve().parent.parent
 _PICOGL_ROOT = _EXAMPLES_DIR.parents[1]

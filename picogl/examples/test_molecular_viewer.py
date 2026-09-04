@@ -129,8 +129,10 @@ def test_molecular_viewer_import():
 
     try:
         # Try to import the molecular viewer
-        from legacy_qt_molecular_viewer import (LegacyMolecularViewerWindow,
-                                                QtLegacyMolecularViewer)
+        from legacy_qt_molecular_viewer import (
+            LegacyMolecularViewerWindow,
+            QtLegacyMolecularViewer,
+        )
 
         print("✅ Successfully imported QtLegacyMolecularViewer")
         print("✅ Successfully imported LegacyMolecularViewerWindow")

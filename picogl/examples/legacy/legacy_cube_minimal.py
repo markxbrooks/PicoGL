@@ -30,12 +30,10 @@ if sys.platform.startswith("linux"):
     os.environ.setdefault("PYOPENGL_PLATFORM", "glx")
 
 import numpy as np
-from molib.pdb.coordinate.coordinate import Coordinates
-
 import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
+from molib.pdb.coordinate.coordinate import Coordinates
 from picogl.backend.gl.api.color import gl_color_rgb
-from picogl.backend.gl.api.vertex.vertex_3f import (gl_vertex_coord,
-                                                    gl_vertex_line)
+from picogl.backend.gl.api.vertex.vertex_3f import gl_vertex_coord, gl_vertex_line
 from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.backend.gl.state.fill import GLFillMode

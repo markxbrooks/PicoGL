@@ -3,7 +3,6 @@ gl Polygon Mode
 """
 
 from OpenGL.GL import glPolygonMode
-
 from picogl.backend.gl.capability import GLMaterialFace
 from picogl.backend.gl.state.fill import GLFillMode
 
@@ -21,6 +20,7 @@ def set_polygon_mode_fill() -> None:
 def set_polygon_mode_line() -> None:
     """Render polygons as wireframe outlines."""
     gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.LINE)
+
 
 def gl_set_line_mode():
     gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.FILL)

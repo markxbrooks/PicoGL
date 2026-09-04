@@ -7,6 +7,7 @@ from picogl.backend.gl.enums.legacy.scale import gl_rotatef, gl_scalef, gl_trans
 
 class GLTranslation:
     """Translation Parameters"""
+
     x: float = 0.0
     y: float = 0.0
     z: float = 0.0
@@ -21,6 +22,7 @@ class GLTranslation:
 @dataclass
 class GLZoom:
     """Zoom parameters."""
+
     # translation: GLTranslation = None
     value: float = -5.0
 
@@ -55,6 +57,7 @@ class CameraPerspective:
     plane, and field of view in the y-direction (fovy) for a perspective camera.
     These parameters can be used to set up a perspective projection for 3D rendering.
     """
+
     FAR: float = 100.0
     NEAR: float = 0.1
     FOVY: float = 45.0

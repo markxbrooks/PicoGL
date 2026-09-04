@@ -12,9 +12,8 @@ from typing import Optional, Union
 
 import numpy as np
 from OpenGL.raw.GL.VERSION.GL_1_0 import glLoadMatrixf, glMatrixMode
-from pyglm import glm
-
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
+from pyglm import glm
 
 
 def gl_matrix_mode(mode: GLLegacyMatrixMode):

@@ -4,9 +4,7 @@ GL Depth Driver
 
 from typing import TYPE_CHECKING, Any
 
-from OpenGL.GL import (GL_DEPTH_WRITEMASK, glDepthFunc, glDepthMask,
-                       glGetBooleanv)
-
+from OpenGL.GL import GL_DEPTH_WRITEMASK, glDepthFunc, glDepthMask, glGetBooleanv
 from picogl.backend.gl.capability import GLPipelineCapability
 from picogl.backend.gl.driver.applicable_state import ApplicableState
 from picogl.backend.gl.driver.capability import GLCapabilityDriver

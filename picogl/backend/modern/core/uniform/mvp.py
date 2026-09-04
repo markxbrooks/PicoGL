@@ -17,13 +17,13 @@ from typing import Union
 
 import numpy as np
 from decologr import Decologr as log
-from elmo.gl.shader import LegacyShaderUniformName, ShaderUniformName
-from pyglm import glm
-
 from picogl.backend.gl.api.shader import gl_uniform_matrix_4fv
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.backend.modern.core.uniform.location import gl_get_uniform_location
 from picogl.boolean import GLBoolean
+from pyglm import glm
+
+from elmo.gl.shader import LegacyShaderUniformName, ShaderUniformName
 
 
 def set_mvp_uniform(shader: ShaderProgram = None, mvp: glm.mat4 = None) -> None:

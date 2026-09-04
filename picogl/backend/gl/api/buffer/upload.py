@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from OpenGL.GL import GLfloat, GLushort
-
 from picogl.backend.gl.api.buffer.data import gl_buffer_data
 from picogl.backend.gl.enums import GLBufferTarget, GLUsageHint
 

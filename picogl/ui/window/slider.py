@@ -15,8 +15,7 @@ Classes:
 # rom examples.protein_viewer import GLProteinWidget
 
 from PySide6.QtCore import Qt, QTimer
-from PySide6.QtWidgets import (QHBoxLayout, QMainWindow, QSlider, QVBoxLayout,
-                               QWidget)
+from PySide6.QtWidgets import QHBoxLayout, QMainWindow, QSlider, QVBoxLayout, QWidget
 
 
 class GLSliderWindow(QMainWindow):

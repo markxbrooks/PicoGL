@@ -34,7 +34,9 @@ def test_imports():
 
         # Test molecular viewer import
         from legacy_qt_glmesh_molecular_viewer import (
-            LegacyGLMeshMolecularViewerWindow, QtLegacyGLMeshMolecularViewer)
+            LegacyGLMeshMolecularViewerWindow,
+            QtLegacyGLMeshMolecularViewer,
+        )
 
         print("✅ Successfully imported QtLegacyGLMeshMolecularViewer")
         print("✅ Successfully imported LegacyGLMeshMolecularViewerWindow")

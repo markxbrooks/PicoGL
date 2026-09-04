@@ -1,7 +1,6 @@
 import numpy as np
-from pyrr import Matrix44
-
 from picogl.core.camera import FOVY, ProjectionConfig
+from pyrr import Matrix44
 
 
 def calculate_projection_matrix(width: int, height: int) -> Matrix44:

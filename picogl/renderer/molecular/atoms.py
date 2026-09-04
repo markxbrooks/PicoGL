@@ -6,7 +6,6 @@ from collections.abc import Callable, Sequence
 from typing import Any
 
 import numpy as np
-
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.core.geometry.sphere import unit_sphere_mesh
 from picogl.renderer.meshdata import MeshData
@@ -25,9 +24,7 @@ def atom_to_vertex(atom, vertex: list) -> list[Any]:
 
 def add_atom_to_vertices(atom_vertices: list[list[float]], atom, vertex):
     """add atom to vertices"""
-    atom_vertices.append(
-        atom_to_vertex(atom, vertex)
-    )
+    atom_vertices.append(atom_to_vertex(atom, vertex))
 
 
 class AtomsMesh(MolecularMesh):

@@ -24,9 +24,8 @@ Usage:
 
 import sys
 
-from PySide6.QtWidgets import QApplication
-
 from picogl.examples.legacy_qt_cube_simple import SimpleQtCubeWidget
+from PySide6.QtWidgets import QApplication
 
 # OpenGL imports
 try:

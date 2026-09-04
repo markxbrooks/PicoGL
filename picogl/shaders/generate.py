@@ -9,7 +9,6 @@ ShaderProgram object for use in graphics applications.
 from typing import Optional
 
 from decologr import Decologr as log
-
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.shaders.compile import compile_shaders
 

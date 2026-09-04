@@ -8,8 +8,7 @@ from typing import Callable
 
 """from examples.tu04 import _TU04_MESH
 from examples.tu_02_texture_without_normal import CUBE_SPEC"""
-from picogl.examples.data.cube_data import (g_uv_buffer_data,
-                                            g_vertex_buffer_data)
+from picogl.examples.data.cube_data import g_uv_buffer_data, g_vertex_buffer_data
 from picogl.utils.mesh.cube_mesh import CubeMesh
 from picogl.utils.mesh.object_mesh import MeshObject
 from picogl.utils.mesh.protocol import MeshProtocol

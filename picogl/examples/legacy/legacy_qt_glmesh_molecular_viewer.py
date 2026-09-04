@@ -15,32 +15,35 @@ import os
 import sys
 from pathlib import Path
 
-from backend.gl.legacy.lighting import GLFixedFunctionLightingModel
-from backend.gl.legacy.view import LegacyGLViewTransform, CameraPerspective
 from molib.core.constants import MoLibConstant
-from picoui.dimensions import Dimensions, Point, WindowGeometry
-from picoui.helpers import create_layout_with_items
-from picoui.specs.widgets import ButtonSpec, LabelSpec
-from picoui.widget.helper import create_button_from_spec, create_label_from_spec
-from PySide6.QtCore import Qt, QTimer
-from PySide6.QtOpenGLWidgets import QOpenGLWidget
-from PySide6.QtWidgets import (QApplication, QLabel, QMessageBox, QVBoxLayout,
-                               QWidget, QSplitter)
-
 from picogl.backend.gl.api.clear import gl_clear, gl_clear_rgba_color
 from picogl.backend.gl.api.enable import gl_enable_capability_list
 from picogl.backend.gl.api.legacy.matrix import gl_matrix_mode_context
 from picogl.backend.gl.capability import GLPipelineCapability
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums.legacy.scale import gl_load_identity
+from picogl.backend.gl.legacy.lighting import GLFixedFunctionLightingModel
+from picogl.backend.gl.legacy.view import CameraPerspective, LegacyGLViewTransform
 from picogl.backend.glu.perspective import glu_perspective
 from picogl.core.polygon.mode import gl_set_line_mode, gl_set_polygon_mode
 from picogl.core.rgbcolor import RGBAColor
 from picogl.core.viewport import GLViewport
-from picogl.examples.legacy_qt_molecular_viewer import \
-    create_molecule_viewer_layout
 from picogl.renderer.molecular import AtomsMesh, BondsMesh, chain_rgb
 from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
+from picoui.dimensions import Dimensions, Point, WindowGeometry
+from picoui.helpers import create_layout_with_items
+from picoui.specs.widgets import ButtonSpec, LabelSpec
+from picoui.widget.helper import create_button_from_spec, create_label_from_spec
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtOpenGLWidgets import QOpenGLWidget
+from PySide6.QtWidgets import (
+    QApplication,
+    QLabel,
+    QMessageBox,
+    QSplitter,
+    QVBoxLayout,
+    QWidget,
+)
 
 _EXAMPLES_PATH = Path(__file__).resolve().parent.parent
 _EXAMPLES_DIR = str(_EXAMPLES_PATH)
@@ -134,11 +137,7 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
 
     def enable_depth_test(self):
         """enable depth test"""
-        gl_enable_capability_list(
-            [
-                GLPipelineCapability.DEPTH_TEST
-            ]
-        )
+        gl_enable_capability_list([GLPipelineCapability.DEPTH_TEST])
 
     def setup_background(self):
         """setup background"""
@@ -148,7 +147,12 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         """Handle window resize."""
         self.viewport.update(0, 0, width, height)
         with gl_matrix_mode_context():
-            glu_perspective(CameraPerspective.FOVY, width / max(height, 1), CameraPerspective.NEAR, CameraPerspective.FAR)
+            glu_perspective(
+                CameraPerspective.FOVY,
+                width / max(height, 1),
+                CameraPerspective.NEAR,
+                CameraPerspective.FAR,
+            )
 
     def paintGL(self):
         """Main rendering function."""
@@ -358,31 +362,43 @@ class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
         self.button_specs = self.build_button_specs()
 
         info_label = create_label_from_spec(self.label_specs["info_label_spec"])
-        instructions_label = create_label_from_spec(self.label_specs["instructions_spec"])
+        instructions_label = create_label_from_spec(
+            self.label_specs["instructions_spec"]
+        )
         reset_button = create_button_from_spec(self.button_specs["reset_button"])
         info_button = create_button_from_spec(self.button_specs["info_button"])
 
-        #lower_layout, upper_layout = create_molecule_viewer_layout(info_label, layout)
+        # lower_layout, upper_layout = create_molecule_viewer_layout(info_label, layout)
         info_label.setStyleSheet("font-size: 14px; font-weight: bold; padding: 10px;")
 
-        upper_layout = create_layout_with_items([info_label], start_stretch=False,  end_stretch=True, vertical=False)
+        upper_layout = create_layout_with_items(
+            [info_label], start_stretch=False, end_stretch=True, vertical=False
+        )
         upper_widget = QWidget()
         upper_widget.setLayout(upper_layout)
 
         lower_widget = QWidget()
         lower_layout = QVBoxLayout()
 
-        splitter = create_splitter_with_items(items=[upper_widget, lower_widget], sizes=[200, 800])
+        splitter = create_splitter_with_items(
+            items=[upper_widget, lower_widget], sizes=[200, 800]
+        )
         layout.addWidget(splitter)
         lower_widget.setLayout(lower_layout)
 
-        self.gl_widget: QtLegacyGLMeshMolecularViewer = QtLegacyGLMeshMolecularViewer(pdb_path)
+        self.gl_widget: QtLegacyGLMeshMolecularViewer = QtLegacyGLMeshMolecularViewer(
+            pdb_path
+        )
         lower_layout.addWidget(self.gl_widget)
 
-        self.lighting_button = create_button_from_spec(self.button_specs["lighting_button"])
+        self.lighting_button = create_button_from_spec(
+            self.button_specs["lighting_button"]
+        )
 
         controls_layout_items = [reset_button, info_button, self.lighting_button]
-        controls_layout = create_layout_with_items(controls_layout_items,start_stretch=False,  end_stretch=True)
+        controls_layout = create_layout_with_items(
+            controls_layout_items, start_stretch=False, end_stretch=True
+        )
 
         upper_layout.addLayout(controls_layout)
         upper_layout.addWidget(instructions_label)
@@ -397,17 +413,27 @@ class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
         "• ESC: Exit\n"
         "• Chain A: Green, Chain B: Blue\n"
         "• Using LegacyGLMesh for rendering"
-        instructions_style = "color: black; font-size: 12px; padding: 10px; background-color: #f0f0f0;"
+        instructions_style = (
+            "color: black; font-size: 12px; padding: 10px; background-color: #f0f0f0;"
+        )
         return {
-        "info_label_spec": LabelSpec(label="PDB Structure - C-alpha Atoms (Chain A: Green, Chain B: Blue)",
-            style="font-size: 14px; font-weight: bold; padding: 10px;"),
-        "instructions_spec": LabelSpec(style=instructions_style, label=instructions_text)
+            "info_label_spec": LabelSpec(
+                label="PDB Structure - C-alpha Atoms (Chain A: Green, Chain B: Blue)",
+                style="font-size: 14px; font-weight: bold; padding: 10px;",
+            ),
+            "instructions_spec": LabelSpec(
+                style=instructions_style, label=instructions_text
+            ),
         }
 
     def build_button_specs(self) -> dict[str, ButtonSpec]:
-        return {"reset_button": ButtonSpec(label="Reset View (R)", slot=self.reset_view),
-        "info_button": ButtonSpec(label="Show Info", slot=self.show_info),
-        "lighting_button": ButtonSpec(label="Lighting: OFF", slot=self.toggle_lighting, enabled=False) }
+        return {
+            "reset_button": ButtonSpec(label="Reset View (R)", slot=self.reset_view),
+            "info_button": ButtonSpec(label="Show Info", slot=self.show_info),
+            "lighting_button": ButtonSpec(
+                label="Lighting: OFF", slot=self.toggle_lighting, enabled=False
+            ),
+        }
 
     def create_instructions_label(self) -> QLabel:
         instructions_text = "Controls:\n"
@@ -419,8 +445,12 @@ class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
         "• ESC: Exit\n"
         "• Chain A: Green, Chain B: Blue\n"
         "• Using LegacyGLMesh for rendering"
-        instructions_style = "color: black; font-size: 12px; padding: 10px; background-color: #f0f0f0;"
-        instructions_label = create_label_from_spec(LabelSpec(style=instructions_style, label=instructions_text))
+        instructions_style = (
+            "color: black; font-size: 12px; padding: 10px; background-color: #f0f0f0;"
+        )
+        instructions_label = create_label_from_spec(
+            LabelSpec(style=instructions_style, label=instructions_text)
+        )
         return instructions_label
 
     def reset_view(self):

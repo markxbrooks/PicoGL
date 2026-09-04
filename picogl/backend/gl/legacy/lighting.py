@@ -10,22 +10,18 @@ Functions:
   for a default scene.
 
 """
+
 from __future__ import annotations
 
-from backend.gl.api.color import gl_color_material
-from backend.gl.api.enable import (gl_disable_capability_list,
-                                   gl_enable_capability_list)
-from backend.gl.capability import GLFixedFunctionCapability, GLMaterialFace
-from backend.gl.lighting import LightSource
-from backend.gl.phong import PhongMaterial
-from backend.gl.state.fill import GLCapability, GLColorMaterialMode, GLLight
-from core.rgbcolor import RGBAColor
-from core.vec4 import Vec4
-
-from picogl.backend.gl.capability import (GLFixedFunctionCapability,
-                                          GLMaterialFace)
+from picogl.backend.gl.api.color import gl_color_material
+from picogl.backend.gl.api.enable import (
+    gl_disable_capability_list,
+    gl_enable_capability_list,
+)
+from picogl.backend.gl.capability import GLFixedFunctionCapability, GLMaterialFace
 from picogl.backend.gl.lighting import LightSource, enable_light
 from picogl.backend.gl.phong.material import PhongMaterial
+from picogl.backend.gl.state.fill import GLCapability, GLColorMaterialMode, GLLight
 from picogl.core.rgbcolor import RGBAColor
 from picogl.core.vec4 import Vec4
 
