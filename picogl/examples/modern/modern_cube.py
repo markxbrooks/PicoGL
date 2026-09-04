@@ -3,17 +3,18 @@
 from pathlib import Path
 
 from picogl.examples.data.cube_data import g_color_buffer_data, g_vertex_buffer_data
+from picogl.globals import PICOGL_EXAMPLES_DIR
 from picogl.renderer import MeshData
-from picogl.ui.backend.glut.window.object import GlutRendererWindow
+from picogl.ui.backend.glut.window.object import RenderWindow
 
 BASE_DIR = Path(__file__).resolve().parent
-GLSL_DIR = Path(__file__).parent / "glsl" / "tu01"
+GLSL_DIR = PICOGL_EXAMPLES_DIR / "glsl" / "tu01"
 
 
 def main() -> None:
-    """Set up the colored object dat and show it"""
+    """Set up the colored cube mesh and show it."""
     data = MeshData.from_raw(vertices=g_vertex_buffer_data, colors=g_color_buffer_data)
-    render_window = GlutRendererWindow(
+    render_window = RenderWindow(
         width=800,
         height=600,
         title="Cube window",
@@ -21,7 +22,7 @@ def main() -> None:
         glsl_dir=GLSL_DIR,
         base_dir=BASE_DIR,
     )
-    render_window.initializeGL()
+    render_window.initialize()
     render_window.run()
 
 

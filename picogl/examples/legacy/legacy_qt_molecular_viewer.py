@@ -41,6 +41,7 @@ from picogl.core.rgbcolor import RGBAColor, RGBColor
 from picogl.core.setup import gl_setup_lighting, gl_setup_materials
 from picogl.core.setup.view import gl_setup_view
 from picogl.core.vec3 import Vec3
+from picogl.globals import PICOGL_EXAMPLES_DIR
 from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
 from PySide6.QtCore import Qt
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
@@ -55,9 +56,8 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-_EXAMPLES_DIR = os.path.dirname(os.path.abspath(__file__))
-if _EXAMPLES_DIR not in sys.path:
-    sys.path.insert(0, _EXAMPLES_DIR)
+if str(PICOGL_EXAMPLES_DIR) not in sys.path:
+    sys.path.insert(0, PICOGL_EXAMPLES_DIR)
 
 from utils.pdb_loader import PDBLoader  # noqa: E402
 
