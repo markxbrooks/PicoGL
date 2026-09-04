@@ -4,6 +4,7 @@ Draw the teapot using built-in GLUT primitives.
 
 import numpy as np
 from molib.pdb.coordinate.coordinate import Coordinates
+
 from picogl.backend.gl.api.color import gl_color_3f, gl_color_rgb
 from picogl.backend.gl.api.vertex.vertex_3f import gl_vertex_line
 from picogl.backend.gl.capability import GLFixedFunctionCapability

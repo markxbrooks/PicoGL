@@ -7,11 +7,12 @@ import sys
 import OpenGL.GL as GL
 import OpenGL.GLU as GLU
 import OpenGL.GLUT as GLUT
+from OpenGL import platform as gl_platform
 
 # Must run before OpenGL.GLUT: Homebrew freeglut shadows Apple GLUT on macOS.
 import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
-from OpenGL import platform as gl_platform
-from picogl.backend.legacy.core.camera.projection_state import GLUProjectionState
+from picogl.backend.legacy.core.camera.projection_state import \
+    GLUProjectionState
 from picogl.backend.modern.core.setup.lighting import gl_initialize_background
 from picogl.backend.state import GLViewport
 from picogl.core.camera import ProjectionConfig

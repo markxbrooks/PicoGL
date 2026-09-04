@@ -3,6 +3,7 @@ GL Clear commands
 """
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import glClear, glClearColor
+
 from picogl.backend.gl.enums import GLBitMask
 from picogl.core.rgbcolor import RGBAColor
 

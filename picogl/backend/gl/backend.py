@@ -14,6 +14,7 @@ import warnings
 from typing import Callable, Optional
 
 from decologr import Decologr as log
+
 from picogl.backend.gl.driver.blend import GLBlendDriver
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.gl.driver.depth import GLDepthDriver
@@ -25,16 +26,13 @@ from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums.point_size import GLPointCapability
 from picogl.backend.gl.task.gl_init import GLTask
 from picogl.backend.legacy.core.attribute_binder import LegacyAttributeBinder
-from picogl.backend.legacy.core.pipeline import GLLegacyPipeline, LegacyPipeline
+from picogl.backend.legacy.core.pipeline import (GLLegacyPipeline,
+                                                 LegacyPipeline)
 from picogl.backend.modern.core.pipeline import ShaderPipeline
 from picogl.backend.opengl import GLBindingStrategy
-from picogl.backend.state import (
-    DrawCommand,
-    GLClipPlaneState,
-    GLStateManager,
-    RenderState,
-    RenderStateApplier,
-)
+from picogl.backend.state import (DrawCommand, GLClipPlaneState,
+                                  GLStateManager, RenderState,
+                                  RenderStateApplier)
 from picogl.core.viewport import Viewport
 from picogl.gpu.buffers.glframe import GLFramebuffer
 from picogl.renderer.readback import GLReadback

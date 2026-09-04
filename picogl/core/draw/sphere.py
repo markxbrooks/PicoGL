@@ -3,7 +3,8 @@
 from picogl.backend.gl.api.legacy.vertex import gl_vertex_vec3
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.backend.gl.state.immediate import gl_immediate_drawing
-from picogl.core.draw.line import gl_legacy_draw_line, gl_legacy_draw_line_with_normal
+from picogl.core.draw.line import (gl_legacy_draw_line,
+                                   gl_legacy_draw_line_with_normal)
 from picogl.core.vec3 import Vec3
 
 

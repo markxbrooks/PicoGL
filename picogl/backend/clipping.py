@@ -1,9 +1,7 @@
 from contextlib import contextmanager
 
-from picogl.backend.gl.api.enable import (
-    gl_disable_capability_list,
-    gl_enable_capability_list,
-)
+from picogl.backend.gl.api.enable import (gl_disable_capability_list,
+                                          gl_enable_capability_list)
 from picogl.backend.gl.enums.legacy import GLLegacyClipPlane
 
 

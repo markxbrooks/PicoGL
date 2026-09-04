@@ -20,9 +20,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import ClassVar, Tuple
 
+from typing_extensions import Self
+
 from picogl.core.mixin.vec3 import Vec3Mixin, clamp01
 from picogl.core.mixin.vec4 import Vec4Mixin
-from typing_extensions import Self
 
 # Utility
 

@@ -10,11 +10,9 @@ from contextlib import contextmanager
 
 from picogl.backend.gl.api.matrix import gl_matrix_mode
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
-from picogl.backend.gl.enums.legacy.scale import (
-    gl_load_identity,
-    gl_pop_matrix,
-    gl_push_matrix,
-)
+from picogl.backend.gl.enums.legacy.scale import (gl_load_identity,
+                                                  gl_pop_matrix,
+                                                  gl_push_matrix)
 
 
 @contextmanager

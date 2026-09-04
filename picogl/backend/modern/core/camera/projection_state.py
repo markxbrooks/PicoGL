@@ -1,8 +1,9 @@
 """Cached GLM perspective projection (no GL matrix stack)."""
 
+from pyglm import glm
+
 from picogl.backend.gl.driver.applicable_state import ApplicableState
 from picogl.core.camera import ProjectionConfig
-from pyglm import glm
 
 
 class GLMProjectionState(ApplicableState):

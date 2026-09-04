@@ -5,15 +5,11 @@ from dataclasses import dataclass
 from typing import Union
 
 import numpy as np
-from OpenGL.constant import (
-    Constant,
-    FloatConstant,
-    IntConstant,
-    LongConstant,
-    StringConstant,
-)
+from OpenGL.constant import (Constant, FloatConstant, IntConstant,
+                             LongConstant, StringConstant)
 from OpenGL.GL import glCompressedTexImage2D, glTexImage2D
 from OpenGL.raw.GL.VERSION.GL_1_2 import glTexImage3D
+
 from picogl.backend.gl.enums import GLNumeric
 from picogl.texture.gltexture import GLTexture
 

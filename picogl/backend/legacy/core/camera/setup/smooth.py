@@ -3,13 +3,10 @@ Enable Smoothing
 """
 
 from OpenGL import error as gl_error
-from OpenGL.raw.GL.VERSION.GL_1_0 import (
-    GL_LINE_SMOOTH,
-    GL_LINE_SMOOTH_HINT,
-    GL_NICEST,
-    GL_POINT_SMOOTH,
-    GL_POINT_SMOOTH_HINT,
-)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_LINE_SMOOTH, GL_LINE_SMOOTH_HINT,
+                                          GL_NICEST, GL_POINT_SMOOTH,
+                                          GL_POINT_SMOOTH_HINT)
+
 from picogl.backend.gl.api.enable import gl_enable_capability_list
 from picogl.backend.gl.api.error import gl_check_errors
 from picogl.backend.gl.api.hint import gl_hint

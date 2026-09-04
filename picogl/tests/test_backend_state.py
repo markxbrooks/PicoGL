@@ -3,42 +3,24 @@
 import unittest
 from unittest.mock import call, patch
 
-from OpenGL.GL import (
-    GL_BLEND,
-    GL_CULL_FACE,
-    GL_DEPTH_TEST,
-    GL_FLOAT,
-    GL_LIGHT0,
-    GL_LIGHTING,
-    GL_LINE,
-    GL_MODELVIEW,
-    GL_ONE,
-    GL_POSITION,
-    GL_TEXTURE_2D,
-    GL_UNSIGNED_INT,
-    GL_ZERO,
-)
-from OpenGL.raw.GL.VERSION.GL_1_0 import (
-    GL_AMBIENT,
-    GL_DIFFUSE,
-    GL_FRONT_AND_BACK,
-    GL_PROJECTION,
-    GL_SHININESS,
-    GL_SPECULAR,
-)
+from OpenGL.GL import (GL_BLEND, GL_CULL_FACE, GL_DEPTH_TEST, GL_FLOAT,
+                       GL_LIGHT0, GL_LIGHTING, GL_LINE, GL_MODELVIEW, GL_ONE,
+                       GL_POSITION, GL_TEXTURE_2D, GL_UNSIGNED_INT, GL_ZERO)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (GL_AMBIENT, GL_DIFFUSE,
+                                          GL_FRONT_AND_BACK, GL_PROJECTION,
+                                          GL_SHININESS, GL_SPECULAR)
+
 from picogl.backend.gl.backend import GLBackend
-from picogl.backend.gl.capability import (
-    GLBlendFactor,
-    GLFixedFunctionCapability,
-    GLMaterialFace,
-    GLPipelineCapability,
-)
+from picogl.backend.gl.capability import (GLBlendFactor,
+                                          GLFixedFunctionCapability,
+                                          GLMaterialFace, GLPipelineCapability)
 from picogl.backend.gl.driver.blend import GLBlendDriver
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.backend.gl.driver.depth import GLDepthDriver
 from picogl.backend.gl.driver.frame import GLFrameDriver
 from picogl.backend.gl.driver.geometry import GLGeometryDriver
-from picogl.backend.gl.driver.raster import GLRasterDriver, resolve_polygon_mode_args
+from picogl.backend.gl.driver.raster import (GLRasterDriver,
+                                             resolve_polygon_mode_args)
 from picogl.backend.gl.driver.texture import GLTextureSystem
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.phong.material import PhongMaterial
@@ -46,16 +28,9 @@ from picogl.backend.gl.state.client import GLClientState
 from picogl.backend.gl.state.fill import GLFace, GLFillMode, GLLightParameter
 from picogl.backend.legacy.core.attribute_binder import LegacyAttributeBinder
 from picogl.backend.legacy.core.pipeline import GLLegacyPipeline
-from picogl.backend.state import (
-    BlendState,
-    DepthState,
-    DrawCommand,
-    GLClipPlaneState,
-    RasterState,
-    RenderState,
-    RenderStateApplier,
-    gl_value,
-)
+from picogl.backend.state import (BlendState, DepthState, DrawCommand,
+                                  GLClipPlaneState, RasterState, RenderState,
+                                  RenderStateApplier, gl_value)
 from picogl.core.polygon.mode import PolygonMode
 from picogl.core.rgbcolor import RGBAColor
 from picogl.core.viewport import Viewport
@@ -525,7 +500,7 @@ class TestDrawCommand(unittest.TestCase):
             patch.object(backend.raster, "set_polygon_offset") as set_polygon_offset,
         ):
             backend.raster.set_line_width(2.0)
-            backend.raster.set_polygon_mode(GLFace.FRONT_AND_BACK, GL_LINE)
+            gl_set_polygon_mode(GLFace.FRONT_AND_BACK, GL_LINE)
             backend.raster.set_point_size(3.0)
             backend.raster.set_clamped_point_size(4.0)
             backend.raster.set_polygon_offset(-1.0, -1.0)

@@ -1,9 +1,12 @@
 from typing import Optional
 
 from picogl.backend.gl.api.enable_vertex_array import gl_enable_vertex_array
-from picogl.backend.gl.api.glcleanup import gl_delete_buffers, gl_delete_vertex_arrays
-from picogl.backend.gl.api.vertex.attrib_pointer import gl_vertex_attrib_pointer
-from picogl.backend.gl.api.vertex.generate_array import gl_generate_vertex_array
+from picogl.backend.gl.api.glcleanup import (gl_delete_buffers,
+                                             gl_delete_vertex_arrays)
+from picogl.backend.gl.api.vertex.attrib_pointer import \
+    gl_vertex_attrib_pointer
+from picogl.backend.gl.api.vertex.generate_array import \
+    gl_generate_vertex_array
 from picogl.backend.gl.api.vertex.vertex_array import gl_bind_vertex_array
 from picogl.backend.gl.enums import GLBufferTarget
 from picogl.gpu.buffers.attributes import LayoutDescriptor

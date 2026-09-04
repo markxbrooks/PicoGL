@@ -10,30 +10,22 @@ import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
 from picogl.backend.gl.api.clear import gl_clear
 from picogl.backend.gl.api.color import gl_color_material
 from picogl.backend.gl.api.enable import gl_enable_capability_list
-from picogl.backend.gl.capability import GLFixedFunctionCapability, GLMaterialFace
+from picogl.backend.gl.capability import (GLFixedFunctionCapability,
+                                          GLMaterialFace)
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.legacy.lighting import gl_legacy_lighting
 from picogl.backend.gl.state.fill import GLCapability, GLColorMaterialMode
-from picogl.backend.glut import (
-    GLUTDisplayMode,
-    GLUTMouseButton,
-    GLUTMouseState,
-    glut_create_window,
-    glut_display_func,
-    glut_idle_func,
-    glut_init,
-    glut_init_display_mode,
-    glut_init_window_size,
-    glut_keyboard_func,
-    glut_main_loop,
-    glut_motion_func,
-    glut_mouse_func,
-    glut_post_redisplay,
-    glut_reshape_func,
-    glut_swap_buffers,
-)
+from picogl.backend.glut import (GLUTDisplayMode, GLUTMouseButton,
+                                 GLUTMouseState, glut_create_window,
+                                 glut_display_func, glut_idle_func, glut_init,
+                                 glut_init_display_mode, glut_init_window_size,
+                                 glut_keyboard_func, glut_main_loop,
+                                 glut_motion_func, glut_mouse_func,
+                                 glut_post_redisplay, glut_reshape_func,
+                                 glut_swap_buffers)
 from picogl.backend.legacy.core.camera.legacy_camera import LegacyCamera
-from picogl.backend.legacy.core.camera.projection_state import GLUProjectionState
+from picogl.backend.legacy.core.camera.projection_state import \
+    GLUProjectionState
 from picogl.backend.modern.core.setup.lighting import gl_initialize_background
 from picogl.backend.state import GLViewport
 from picogl.core.camera import ProjectionConfig

@@ -8,23 +8,29 @@ from typing import Optional
 import numpy as np
 from decologr import Decologr as log
 from OpenGL.raw.GL.ARB.viewport_array import GL_VIEWPORT
-from OpenGL.raw.GL.VERSION.GL_1_0 import glLoadIdentity, glMatrixMode
-from picogl.backend.geometry.factory import LegacyBinding, ModernBinding
-from picogl.backend.gl.api import gl_get_integerv
-from picogl.backend.gl.api.error import gl_check_errors
-from picogl.backend.gl.backend import GLBackend
-from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
-from picogl.backend.gl.mode import GLMode
-from picogl.backend.gl.task.gl_init import legacy_init_gl_list, modern_init_gl_list
-from picogl.backend.legacy.core.camera.lighting import set_background_color
-from picogl.backend.legacy.core.camera.projection_state import GLUProjectionState
-from picogl.backend.legacy.core.camera.setup import calculate_aspect_ratio
-from picogl.backend.modern.core.camera.projection_state import GLMProjectionState
-from picogl.core.camera import ProjectionConfig
-from picogl.core.viewport import Viewport
 from PySide6.QtGui import QMouseEvent, QOpenGLFunctions, Qt, QWheelEvent
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
 from PySide6.QtWidgets import QWidget
+
+from picogl.backend.geometry.factory import LegacyBinding, ModernBinding
+from picogl.backend.gl.api import gl_get_integerv
+from picogl.backend.gl.api.error import gl_check_errors
+from picogl.backend.gl.api.matrix import gl_matrix_mode
+from picogl.backend.gl.backend import GLBackend
+from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
+from picogl.backend.gl.enums.legacy.scale import gl_load_identity
+from picogl.backend.gl.legacy.view import GLRotation, GLTranslation
+from picogl.backend.gl.mode import GLMode
+from picogl.backend.gl.task.gl_init import (legacy_init_gl_list,
+                                            modern_init_gl_list)
+from picogl.backend.legacy.core.camera.lighting import set_background_color
+from picogl.backend.legacy.core.camera.projection_state import \
+    GLUProjectionState
+from picogl.backend.legacy.core.camera.setup import calculate_aspect_ratio
+from picogl.backend.modern.core.camera.projection_state import \
+    GLMProjectionState
+from picogl.core.camera import ProjectionConfig
+from picogl.core.viewport import Viewport
 
 
 @dataclass
@@ -102,6 +108,47 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
         binding = ModernBinding() if self.gl_mode == GLMode.MODERN else LegacyBinding()
         self.backend = GLBackend(binding)
 
+        # Set up view
+        self.zoom = 1.0
+        self.rotation = GLRotation()
+        self.translation = GLTranslation()
+
+    @property
+    def rotation_x(self):
+        return self.rotation.x
+
+    @rotation_x.setter
+    def rotation_x(self, value):
+        self.rotation.x = value
+        self.update()
+
+    @property
+    def rotation_y(self):
+        return self.rotation.y
+
+    @rotation_y.setter
+    def rotation_y(self, value):
+        self.rotation.y = value
+        self.update()
+
+    @property
+    def translation_x(self):
+        return self.translation.x
+
+    @translation_x.setter
+    def translation_x(self, value):
+        self.translation.x = value
+        self.update()
+
+    @property
+    def translation_y(self):
+        return self.translation.y
+
+    @translation_y.setter
+    def translation_y(self, value):
+        self.translation.y = value
+        self.update()
+
     def initializeGL(self):
         """
         initializeGL
@@ -127,9 +174,11 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
         self.backend.execute_gl_tasks(init_list)
 
     def initialize(self):
-        self.rotation_x = 0.0
-        self.rotation_y = 0.0
+        self.initialize_rotation()
         self.zoom = 20.0
+
+    def initialize_rotation(self):
+        self.rotation.initialize()
 
     def resizeGL(self, w: int, h: int) -> None:
         """
@@ -149,8 +198,8 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
         self.backend.frame.set_viewport(Viewport(0, 0, w, h))
         self.aspect_ratio = calculate_aspect_ratio(h, w)
         self.projection.apply(self.projection_config.with_aspect(self.aspect_ratio))
-        glMatrixMode(GLLegacyMatrixMode.MODELVIEW)
-        glLoadIdentity()
+        gl_matrix_mode(GLLegacyMatrixMode.MODELVIEW)
+        gl_load_identity()
         # Update camera matrix using legacy pipeline
         log.message(
             f"✅ Resized OpenGL viewport to {w}x{h}, aspect {self.aspect_ratio:.2f}"

@@ -2,15 +2,10 @@
 GL Push Matrix
 """
 
-from OpenGL.raw.GL.VERSION.GL_1_0 import (
-    glLoadIdentity,
-    glPopMatrix,
-    glPushMatrix,
-    glRotatef,
-    glScalef,
-    glTranslatef,
-    glViewport,
-)
+from OpenGL.raw.GL.VERSION.GL_1_0 import (glLoadIdentity, glPopMatrix,
+                                          glPushMatrix, glRotatef, glScalef,
+                                          glTranslatef, glViewport)
+
 from picogl.core.vec3 import Vec3
 
 

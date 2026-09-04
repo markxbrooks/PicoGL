@@ -9,11 +9,9 @@ framebuffer, and general framebuffer targets.
 
 from enum import IntEnum
 
-from OpenGL.raw.GL.VERSION.GL_3_0 import (
-    GL_FRAMEBUFFER,
-    GL_FRAMEBUFFER_COMPLETE,
-    GL_READ_FRAMEBUFFER,
-)
+from OpenGL.raw.GL.VERSION.GL_3_0 import (GL_FRAMEBUFFER,
+                                          GL_FRAMEBUFFER_COMPLETE,
+                                          GL_READ_FRAMEBUFFER)
 
 
 class GLFrameBufferTarget(IntEnum):

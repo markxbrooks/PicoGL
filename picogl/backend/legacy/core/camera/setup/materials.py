@@ -7,7 +7,8 @@ from __future__ import annotations
 from picogl.backend.gl.api.enable import gl_enable
 from picogl.backend.gl.capability import GLMaterialFace
 from picogl.backend.gl.phong.material import PhongMaterial
-from picogl.backend.gl.state.fill import GLCapability, GLColorMaterialMode, GLFace
+from picogl.backend.gl.state.fill import (GLCapability, GLColorMaterialMode,
+                                          GLFace)
 from picogl.backend.legacy.core.pipeline import GLLegacyPipeline
 from picogl.core.rgbcolor import RGBAColor
 
