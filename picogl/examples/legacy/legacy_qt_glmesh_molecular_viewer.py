@@ -31,7 +31,8 @@ from picogl.core.viewport import GLViewport
 from picogl.renderer.molecular import AtomsMesh, BondsMesh, chain_rgb
 from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
 from picoui.dimensions import Dimensions, Point, WindowGeometry
-from picoui.helpers import create_layout_with_items
+from picoui.helpers import create_layout_with_items, create_widget_with_layout
+from picoui.helpers.layout import create_splitter_with_items, create_widget_layout
 from picoui.specs.widgets import ButtonSpec, LabelSpec
 from picoui.widget.helper import create_button_from_spec, create_label_from_spec
 from PySide6.QtCore import Qt, QTimer
@@ -42,8 +43,7 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QSplitter,
     QVBoxLayout,
-    QWidget, QPushButton, QHBoxLayout,
-)
+    QWidget, QPushButton, )
 
 _EXAMPLES_PATH = Path(__file__).resolve().parent.parent
 _EXAMPLES_DIR = str(_EXAMPLES_PATH)
@@ -319,14 +319,6 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
             self.close()
 
 
-def create_splitter_with_items(items: list[QWidget], sizes) -> QSplitter:
-    splitter = QSplitter(Qt.Vertical)
-    for item in items:
-        splitter.addWidget(item)
-    splitter.setSizes(sizes)
-    return splitter
-
-
 class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
     """Main window for the LegacyGLMesh molecular viewer."""
 
@@ -378,7 +370,7 @@ class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
         instructions_label = create_label_from_spec(
             self.label_specs["instructions_spec"]
         )
-        lower_layout = self.create_gl_widget_layout()
+        lower_layout = create_widget_layout(self.gl_widget)
         controls_layout_items = self.create_controls_layout_items()
         controls_layout = create_layout_with_items(
             controls_layout_items, start_stretch=False, end_stretch=True
@@ -386,20 +378,10 @@ class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
         upper_layout = create_layout_with_items(
             [info_label, controls_layout, instructions_label], start_stretch=False, end_stretch=True, vertical=False
         )
-        upper_widget = self.create_widget_with_layout(upper_layout)
-        lower_widget = self.create_widget_with_layout(lower_layout)
+        upper_widget = create_widget_with_layout(upper_layout)
+        lower_widget = create_widget_with_layout(lower_layout)
         splitter_items = [upper_widget, lower_widget]
         return splitter_items
-
-    def create_widget_with_layout(self, layout: QHBoxLayout | QVBoxLayout) -> QWidget:
-        widget = QWidget()
-        widget.setLayout(layout)
-        return widget
-
-    def create_gl_widget_layout(self) -> QVBoxLayout:
-        lower_layout = QVBoxLayout()
-        lower_layout.addWidget(self.gl_widget)
-        return lower_layout
 
     def create_controls_layout_items(self) -> list[QPushButton]:
         reset_button = create_button_from_spec(self.button_specs["reset_button"])
