@@ -363,35 +363,45 @@ class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
         self.gl_widget: QtLegacyGLMeshMolecularViewer = QtLegacyGLMeshMolecularViewer(
             pdb_path
         )
+        splitter = self.create_splitter()
+        layout.addWidget(splitter)
 
+    def create_splitter(self) -> QSplitter:
         splitter_items = self.create_splitter_items()
         splitter = create_splitter_with_items(
             items=splitter_items, sizes=[200, 800]
         )
-        layout.addWidget(splitter)
+        return splitter
 
     def create_splitter_items(self) -> list[QWidget]:
         info_label = create_label_from_spec(self.label_specs["info_label_spec"])
         instructions_label = create_label_from_spec(
             self.label_specs["instructions_spec"]
         )
-        lower_layout = QVBoxLayout()
-        lower_layout.addWidget(self.gl_widget)
-        controls_layout_items = self.create_crontrols_layout_items()
+        lower_layout = self.create_gl_widget_layout()
+        controls_layout_items = self.create_controls_layout_items()
         controls_layout = create_layout_with_items(
             controls_layout_items, start_stretch=False, end_stretch=True
         )
         upper_layout = create_layout_with_items(
             [info_label, controls_layout, instructions_label], start_stretch=False, end_stretch=True, vertical=False
         )
-        upper_widget = QWidget()
-        upper_widget.setLayout(upper_layout)
-        lower_widget = QWidget()
-        lower_widget.setLayout(lower_layout)
+        upper_widget = self.create_widget_with_layout(upper_layout)
+        lower_widget = self.create_widget_with_layout(lower_layout)
         splitter_items = [upper_widget, lower_widget]
         return splitter_items
 
-    def create_crontrols_layout_items(self) -> list[QPushButton]:
+    def create_widget_with_layout(self, layout: QHBoxLayout | QVBoxLayout) -> QWidget:
+        widget = QWidget()
+        widget.setLayout(layout)
+        return widget
+
+    def create_gl_widget_layout(self) -> QVBoxLayout:
+        lower_layout = QVBoxLayout()
+        lower_layout.addWidget(self.gl_widget)
+        return lower_layout
+
+    def create_controls_layout_items(self) -> list[QPushButton]:
         reset_button = create_button_from_spec(self.button_specs["reset_button"])
         info_button = create_button_from_spec(self.button_specs["info_button"])
         self.lighting_button = create_button_from_spec(
