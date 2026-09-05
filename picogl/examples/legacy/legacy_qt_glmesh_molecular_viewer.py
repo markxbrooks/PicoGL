@@ -42,7 +42,7 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QSplitter,
     QVBoxLayout,
-    QWidget,
+    QWidget, QPushButton, QHBoxLayout,
 )
 
 _EXAMPLES_PATH = Path(__file__).resolve().parent.parent
@@ -360,48 +360,45 @@ class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
 
         self.label_specs = self._build_label_specs()
         self.button_specs = self.build_button_specs()
+        self.gl_widget: QtLegacyGLMeshMolecularViewer = QtLegacyGLMeshMolecularViewer(
+            pdb_path
+        )
 
+        splitter_items = self.create_splitter_items()
+        splitter = create_splitter_with_items(
+            items=splitter_items, sizes=[200, 800]
+        )
+        layout.addWidget(splitter)
+
+    def create_splitter_items(self) -> list[QWidget]:
         info_label = create_label_from_spec(self.label_specs["info_label_spec"])
         instructions_label = create_label_from_spec(
             self.label_specs["instructions_spec"]
         )
-        reset_button = create_button_from_spec(self.button_specs["reset_button"])
-        info_button = create_button_from_spec(self.button_specs["info_button"])
-
-        # lower_layout, upper_layout = create_molecule_viewer_layout(info_label, layout)
-        info_label.setStyleSheet("font-size: 14px; font-weight: bold; padding: 10px;")
-
-        upper_layout = create_layout_with_items(
-            [info_label], start_stretch=False, end_stretch=True, vertical=False
-        )
-        upper_widget = QWidget()
-        upper_widget.setLayout(upper_layout)
-
-        lower_widget = QWidget()
         lower_layout = QVBoxLayout()
-
-        splitter = create_splitter_with_items(
-            items=[upper_widget, lower_widget], sizes=[200, 800]
-        )
-        layout.addWidget(splitter)
-        lower_widget.setLayout(lower_layout)
-
-        self.gl_widget: QtLegacyGLMeshMolecularViewer = QtLegacyGLMeshMolecularViewer(
-            pdb_path
-        )
         lower_layout.addWidget(self.gl_widget)
-
-        self.lighting_button = create_button_from_spec(
-            self.button_specs["lighting_button"]
-        )
-
-        controls_layout_items = [reset_button, info_button, self.lighting_button]
+        controls_layout_items = self.create_crontrols_layout_items()
         controls_layout = create_layout_with_items(
             controls_layout_items, start_stretch=False, end_stretch=True
         )
+        upper_layout = create_layout_with_items(
+            [info_label, controls_layout, instructions_label], start_stretch=False, end_stretch=True, vertical=False
+        )
+        upper_widget = QWidget()
+        upper_widget.setLayout(upper_layout)
+        lower_widget = QWidget()
+        lower_widget.setLayout(lower_layout)
+        splitter_items = [upper_widget, lower_widget]
+        return splitter_items
 
-        upper_layout.addLayout(controls_layout)
-        upper_layout.addWidget(instructions_label)
+    def create_crontrols_layout_items(self) -> list[QPushButton]:
+        reset_button = create_button_from_spec(self.button_specs["reset_button"])
+        info_button = create_button_from_spec(self.button_specs["info_button"])
+        self.lighting_button = create_button_from_spec(
+            self.button_specs["lighting_button"]
+        )
+        controls_layout_items = [reset_button, info_button, self.lighting_button]
+        return controls_layout_items
 
     def _build_label_specs(self) -> dict[str, LabelSpec]:
         instructions_text = "Controls:\n"
