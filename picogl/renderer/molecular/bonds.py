@@ -8,22 +8,10 @@ from typing import Any
 import numpy as np
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.renderer.meshdata import MeshData
+from picogl.renderer.molecular.atoms import atom_xyz
 from picogl.renderer.molecular.base import MolecularMesh
 from picogl.renderer.molecular.colors import chain_rgb
-
-
-def add_bond_to_vertices(atom1, atom2, vertices: list[list[float]]):
-    """add bond to vertices"""
-    add_atom_vertex_to_vertices(atom1, vertices)
-    add_atom_vertex_to_vertices(atom2, vertices)
-
-
-def add_atom_vertex_to_vertices(atom, vertices: list[list[float]]):
-    """add atom to vertices"""
-    from picogl.renderer.molecular.atoms import atom_xyz
-
-    x, y, z = atom_xyz(atom)
-    vertices.append([x, y, z])
+from picogl.renderer.molecular.pnc_buffer import PNCBuffer
 
 
 class BondsMesh(MolecularMesh):
@@ -54,19 +42,18 @@ class BondsMesh(MolecularMesh):
                 indices=np.zeros((0,), dtype=np.uint32),
             )
 
-        vertices: list[list[float]] = []
-        colors: list[tuple[float, float, float]] = []
-        indices: list[int] = []
-
+        buf = PNCBuffer()
+        zero_n = (0.0, 0.0, 1.0)
         for atom1, atom2 in self.bonds:
             color = self.color_fn(atom1.chain_id)
-            start_idx = len(vertices)
-            add_bond_to_vertices(atom1, atom2, vertices)
-            colors.extend([color, color])
-            indices.extend([start_idx, start_idx + 1])
+            x1, y1, z1 = atom_xyz(atom1)
+            x2, y2, z2 = atom_xyz(atom2)
+            buf.extend_direct(
+                positions=((x1, y1, z1), (x2, y2, z2)),
+                normals=(zero_n, zero_n),
+                colors=(color, color),
+                indices=(0, 1),
+            )
 
-        return MeshData.from_raw(
-            vertices=np.array(vertices, dtype=np.float32),
-            colors=np.array(colors, dtype=np.float32),
-            indices=np.array(indices, dtype=np.uint32),
-        )
+        verts, _norms, cols, idxs = buf.to_arrays()
+        return MeshData.from_raw(vertices=verts, colors=cols, indices=idxs)
