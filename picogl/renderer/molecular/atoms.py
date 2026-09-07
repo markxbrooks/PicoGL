@@ -145,8 +145,33 @@ class AtomsMesh(MolecularMesh):
         self.radius = radius
         self.slices = slices
         self.stacks = stacks
-
+        
     def build_mesh_data(self) -> MeshData:
+    if not self.atoms:
+        return MeshData.from_raw(
+            vertices=np.zeros((0, 3), dtype=np.float32),
+            indices=np.zeros((0,), dtype=np.uint32),
+        )
+
+    template_vertices, template_normals, template_indices = unit_sphere_mesh(
+        self.radius, self.slices, self.stacks
+    )
+    # template_normals might be numpy array; make sure we can iterate it
+    template_vertices = list(template_vertices)
+    template_normals = list(template_normals)
+    template_indices = list(template_indices)
+
+    buf = PNCBuffer()
+
+    for atom in self.atoms:
+        color = self.color_fn(atom)
+        t = atom_xyz(atom)
+        buf.add_instance(t, template_vertices, template_normals, template_indices, color)
+
+    verts, norms, cols, idxs = buf.to_arrays()
+    return MeshData.from_raw(vertices=verts, normals=norms, colors=cols, indices=idxs)
+
+    def build_mesh_data_old(self) -> MeshData:
         """Instanciate sphere geometry at each atom and assign per-atom colors."""
         if not self.atoms:
             return MeshData.from_raw(
