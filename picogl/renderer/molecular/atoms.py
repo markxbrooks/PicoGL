@@ -39,6 +39,84 @@ def add_atom_to_vertices(atom_vertices: list[list[float]], atom, vertex):
 def _default_atom_color(atom: Any) -> tuple[float, float, float]:
     """Default color from atom ``chain_id`` (compatible with :func:`chain_rgb`)."""
     return chain_rgb(getattr(atom, "chain_id", ""))
+    
+
+from typing import Iterable, List, Tuple
+import numpy as np
+
+class PNCBuffer:
+    """Hold and build arrays of positions, normals, colors and indices.
+
+    Usage:
+      buf = PNCBuffer()
+      buf.add_instance(translation, template_vertices, template_normals, template_indices, color)
+      vertices, normals, colors, indices = buf.to_arrays()
+    """
+
+    def __init__(self) -> None:
+        self.positions: List[List[float]] = []
+        self.normals: List[List[float]] = []
+        self.colors: List[Tuple[float, float, float]] = []
+        self.indices: List[int] = []
+        self.vertex_offset: int = 0
+
+    def add_instance(
+        self,
+        translation: Iterable[float],
+        template_vertices: Iterable[Iterable[float]],
+        template_normals: Iterable[Iterable[float]],
+        template_indices: Iterable[int],
+        color: Tuple[float, float, float],
+    ) -> None:
+        """Translate template_vertices by translation, add normals/colors,
+        and add indices with the current vertex offset."""
+        tx, ty, tz = translation
+
+        # append translated vertices and per-vertex colors
+        for v in template_vertices:
+            # assume v is (x,y,z)
+            self.positions.append([v[0] + tx, v[1] + ty, v[2] + tz])
+            self.colors.append(color)
+
+        # append normals (assume same order / length as vertices)
+        # template_normals may be numpy array or list
+        for n in template_normals:
+            self.normals.append([float(n[0]), float(n[1]), float(n[2])])
+
+        # append indices, shifted by current offset
+        for idx in template_indices:
+            self.indices.append(int(idx) + self.vertex_offset)
+
+        # update offset
+        self.vertex_offset += sum(1 for _ in template_vertices)
+
+    def extend_direct(
+        self,
+        positions: Iterable[Iterable[float]],
+        normals: Iterable[Iterable[float]],
+        colors: Iterable[Tuple[float, float, float]],
+        indices: Iterable[int],
+    ) -> None:
+        """Add raw arrays (used if you already have global vertex positions)."""
+        n_new = 0
+        for p in positions:
+            self.positions.append([float(p[0]), float(p[1]), float(p[2])])
+            n_new += 1
+        for n in normals:
+            self.normals.append([float(n[0]), float(n[1]), float(n[2])])
+        for c in colors:
+            self.colors.append(tuple(c))
+        for idx in indices:
+            self.indices.append(int(idx) + self.vertex_offset)
+        self.vertex_offset += n_new
+
+    def to_arrays(self, dtype=np.float32):
+        """Return numpy arrays suitable for MeshData.from_raw."""
+        vertices = np.array(self.positions, dtype=dtype) if self.positions else np.zeros((0, 3), dtype=dtype)
+        normals = np.array(self.normals, dtype=dtype) if self.normals else np.zeros((0, 3), dtype=dtype)
+        colors = np.array(self.colors, dtype=dtype) if self.colors else np.zeros((0, 3), dtype=dtype)
+        indices = np.array(self.indices, dtype=np.uint32) if self.indices else np.zeros((0,), dtype=np.uint32)
+        return vertices, normals, colors, indices
 
 
 class AtomsMesh(MolecularMesh):
