@@ -229,7 +229,9 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
             return
 
         if self.calpha_atoms:
-            self.atoms_mesh = AtomsMesh(self.calpha_atoms, color_fn=chain_rgb)
+            self.atoms_mesh = AtomsMesh(
+                self.calpha_atoms, color_fn=lambda a: chain_rgb(a.chain_id)
+            )
             self.atoms_mesh.to_legacy_glmesh(upload=True)
 
         if self.calpha_bonds:

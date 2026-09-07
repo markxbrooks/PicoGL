@@ -20,7 +20,10 @@ def add_bond_to_vertices(atom1, atom2, vertices: list[list[float]]):
 
 def add_atom_vertex_to_vertices(atom, vertices: list[list[float]]):
     """add atom to vertices"""
-    vertices.append([atom.x, atom.y, atom.z])
+    from picogl.renderer.molecular.atoms import atom_xyz
+
+    x, y, z = atom_xyz(atom)
+    vertices.append([x, y, z])
 
 
 class BondsMesh(MolecularMesh):

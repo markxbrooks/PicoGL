@@ -40,6 +40,36 @@ def test_atoms_mesh_single_atom_counts() -> None:
     assert mesh.draw_mode == GLDrawMode.TRIANGLES
 
 
+@dataclass
+class _AtomCoords:
+    coords: tuple[float, float, float]
+    chain_id: str
+
+
+def test_atoms_mesh_accepts_coords_attribute() -> None:
+    """MoLib Atom3D-style objects expose coords, not x/y/z."""
+    atom = _AtomCoords((1.0, 2.0, 3.0), "A")
+    data = AtomsMesh([atom], radius=0.2, slices=4, stacks=4).to_mesh_data()
+    template_vertices, _, _ = unit_sphere_mesh(0.2, 4, 4)
+    assert data.vertices[0, 0] == pytest.approx(1.0 + template_vertices[0, 0])
+
+
+def test_atoms_mesh_color_fn_receives_atom() -> None:
+    atom = _Atom(0.0, 0.0, 0.0, "X")
+    seen: list[object] = []
+
+    def color_fn(a: object) -> tuple[float, float, float]:
+        seen.append(a)
+        return (0.1, 0.2, 0.3)
+
+    data = AtomsMesh(
+        [atom], color_fn=color_fn, radius=0.2, slices=4, stacks=4
+    ).to_mesh_data()
+    assert seen == [atom]
+    assert data.colors.shape[0] == data.vertices.shape[0]
+    np.testing.assert_allclose(data.colors[0], (0.1, 0.2, 0.3))
+
+
 def test_bonds_mesh_single_bond() -> None:
     atom1 = _Atom(0.0, 0.0, 0.0, "A")
     atom2 = _Atom(1.0, 0.0, 0.0, "A")

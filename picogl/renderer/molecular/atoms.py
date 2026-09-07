@@ -13,12 +13,21 @@ from picogl.renderer.molecular.base import MolecularMesh
 from picogl.renderer.molecular.colors import chain_rgb
 
 
+def atom_xyz(atom: Any) -> tuple[float, float, float]:
+    """Return ``(x, y, z)`` from ``atom.x/y/z`` or ``atom.coords`` (e.g. Atom3D)."""
+    coords = getattr(atom, "coords", None)
+    if coords is not None:
+        return float(coords[0]), float(coords[1]), float(coords[2])
+    return float(atom.x), float(atom.y), float(atom.z)
+
+
 def atom_to_vertex(atom, vertex: list) -> list[Any]:
     """add atom coords to vertex"""
+    x, y, z = atom_xyz(atom)
     return [
-        vertex[0] + atom.x,
-        vertex[1] + atom.y,
-        vertex[2] + atom.z,
+        vertex[0] + x,
+        vertex[1] + y,
+        vertex[2] + z,
     ]
 
 
@@ -27,11 +36,18 @@ def add_atom_to_vertices(atom_vertices: list[list[float]], atom, vertex):
     atom_vertices.append(atom_to_vertex(atom, vertex))
 
 
+def _default_atom_color(atom: Any) -> tuple[float, float, float]:
+    """Default color from atom ``chain_id`` (compatible with :func:`chain_rgb`)."""
+    return chain_rgb(getattr(atom, "chain_id", ""))
+
+
 class AtomsMesh(MolecularMesh):
     """
     Build triangle meshes by instancing a sphere template at each atom position.
 
-    Atoms must expose ``x``, ``y``, ``z``, and ``chain_id`` attributes.
+    Atoms must expose either ``x``, ``y``, ``z`` or a ``coords`` sequence
+    (as in MoLib ``Atom3D``). The default color function colors by ``chain_id``;
+    pass a custom ``color_fn(atom)`` for other schemes.
     """
 
     draw_mode = GLDrawMode.TRIANGLES
@@ -40,7 +56,7 @@ class AtomsMesh(MolecularMesh):
         self,
         atoms: Sequence[Any],
         *,
-        color_fn: Callable[[str], tuple[float, float, float]] = chain_rgb,
+        color_fn: Callable[[Any], tuple[float, float, float]] = _default_atom_color,
         radius: float = 0.2,
         slices: int = 16,
         stacks: int = 16,
@@ -53,7 +69,7 @@ class AtomsMesh(MolecularMesh):
         self.stacks = stacks
 
     def build_mesh_data(self) -> MeshData:
-        """Instanciate sphere geometry at each atom and assign chain colors."""
+        """Instanciate sphere geometry at each atom and assign per-atom colors."""
         if not self.atoms:
             return MeshData.from_raw(
                 vertices=np.zeros((0, 3), dtype=np.float32),
@@ -74,7 +90,7 @@ class AtomsMesh(MolecularMesh):
         vertex_offset = 0
 
         for atom in self.atoms:
-            color = self.color_fn(atom.chain_id)
+            color = self.color_fn(atom)
             for vertex in template_vertices:
                 add_atom_to_vertices(atom_vertices, atom, vertex)
                 atom_colors.append(color)
