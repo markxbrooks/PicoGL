@@ -50,6 +50,7 @@ def unit_sphere_mesh(
     """
     vertices: list[list[float]] = []
     normals: list[list[float]] = []
+    indices: list[int] = []
 
     for stack in range(stacks + 1):
         lat = latitude_for_stack(stack, stacks)
@@ -62,7 +63,6 @@ def unit_sphere_mesh(
             vertices.append([x, y, z])
             normals.append([x / radius, y / radius, z / radius])
 
-    indices: list[int] = []
     for stack in range(stacks):
         for j in range(slices):
             v1 = stack * (slices + 1) + j
