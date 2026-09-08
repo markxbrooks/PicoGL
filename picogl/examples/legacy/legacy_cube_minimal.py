@@ -18,6 +18,8 @@ import sys
 from pathlib import Path
 from typing import Sequence
 
+from polygon.mode import gl_polygon_mode_context
+
 # Allow ``python path/to/legacy_cube_minimal.py`` without installing picogl.
 _ROOT = Path(__file__).resolve().parents[2]
 if str(_ROOT) not in sys.path:

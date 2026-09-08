@@ -139,7 +139,7 @@ class LegacyQtObjectRenderer(GLBase):
         # Set up modelview matrix
         with gl_matrix_mode_context():
             # Position camera
-            gl_setup_camera(Self.zoom)
+            gl_setup_camera(self.zoom)
 
             # Apply rotations
             gl_rotate_f(self.rotation_x, 1, 0, 0)

@@ -348,7 +348,7 @@ class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
         )
         self.setGeometry(*window_geometry.to_tuple())
 
-    def set_layout(self, layout):
+    def set_layout(self, layout: QLayout | None):
         """Build the window layout and GL widget."""
         pdb_path = getattr(self, "_pdb_path", None) or self.object_file_path
 
