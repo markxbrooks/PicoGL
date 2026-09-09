@@ -22,8 +22,8 @@ from __future__ import annotations
 
 import numpy as np
 
-from backend.modern.core.vertex.array.object import VertexArrayObject
-from backend.modern.core.vertex.attribute import VertexAttribute
+from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
+from picogl.backend.modern.core.vertex.attribute import VertexAttribute
 
 
 def build_vao(
