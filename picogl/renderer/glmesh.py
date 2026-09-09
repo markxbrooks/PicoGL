@@ -33,7 +33,7 @@ class GLMesh:
     def __init__(
         self,
         vertices: np.ndarray,
-        faces: np.ndarray,
+        faces: Optional[np.ndarray],
         colors: Optional[np.ndarray] = None,
         normals: Optional[np.ndarray] = None,
         uvs: Optional[np.ndarray] = None,
@@ -52,18 +52,16 @@ class GLMesh:
         self.vertices = as_vec3_array(vertices)
 
         # If using indices, expect a flat array of indices
-        self.indices = np.asarray(faces, dtype=np.uint32).reshape(-1)
+        if faces is not None:
+            self.indices = np.asarray(faces, dtype=np.uint32).reshape(-1)
+            if self.indices.size == 0:
+                raise ValueError("GLMesh requires non-empty faces")
+            # Validate that we have a multiple of 3 indices for triangles
+            if self.indices.size % 3 != 0:
+                raise ValueError(
+                    "GLMesh: faces must define a multiple of 3 indices (triangles)"
+                )
         nverts = self.vertices.shape[0]
-
-        if self.indices.size == 0:
-            raise ValueError("GLMesh requires non-empty faces")
-
-        # Validate that we have a multiple of 3 indices for triangles
-        if self.indices.size % 3 != 0:
-            raise ValueError(
-                "GLMesh: faces must define a multiple of 3 indices (triangles)"
-            )
-
         self.use_indices = (
             use_indices  # present for compatibility and potential path changes
         )
