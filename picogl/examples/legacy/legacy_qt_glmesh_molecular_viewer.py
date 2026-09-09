@@ -54,7 +54,7 @@ from picogl.examples.utils.pdb_loader import PDBLoader  # noqa: E402
 class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
     """Qt OpenGL widget for displaying molecular structures using LegacyGLMesh."""
 
-    def __init__(self, pdb_path: str, parent=None):
+    def __init__(self, pdb_path: str, parent: QWidget | None = None):
         super().__init__(parent)
         self._initialized = False
         self.pdb_path = pdb_path
@@ -143,13 +143,13 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         """setup background"""
         gl_clear_rgba_color(RGBAColor.BLACK)
 
-    def resizeGL(self, width: int, height: int):
+    def resizeGL(self, w: int, h: int):
         """Handle window resize."""
-        self.viewport.update(0, 0, width, height)
+        self.viewport.update(0, 0, w, h)
         with gl_matrix_mode_context():
             glu_perspective(
                 CameraPerspective.FOVY,
-                width / max(height, 1),
+                w / max(h, 1),
                 CameraPerspective.NEAR,
                 CameraPerspective.FAR,
             )
