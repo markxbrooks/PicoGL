@@ -57,5 +57,7 @@ class BondsMesh(MolecularMesh):
                 segments=self.segments,
             )
 
-        verts, _norms, cols, idxs = buf.to_arrays()
-        return MeshData.from_raw(vertices=verts, colors=cols, indices=idxs)
+        verts, norms, cols, idxs = buf.to_arrays()
+        return MeshData.from_raw(
+            vertices=verts, normals=norms, colors=cols, indices=idxs
+        )
