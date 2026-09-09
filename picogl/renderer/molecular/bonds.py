@@ -9,8 +9,8 @@ import numpy as np
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.renderer.meshdata import MeshData
 from picogl.renderer.molecular.atoms import atom_xyz
+from picogl.renderer.molecular.atoms import _default_atom_color
 from picogl.renderer.molecular.base import MolecularMesh
-from picogl.renderer.molecular.colors import chain_rgb
 from picogl.renderer.molecular.pnc_buffer import PNCBuffer
 
 
@@ -19,7 +19,8 @@ class BondsMesh(MolecularMesh):
     Build cylinder meshes connecting pairs of atoms.
 
     Each bond is a pair ``(atom1, atom2)`` with ``x``, ``y``, ``z``, and
-    ``chain_id`` on each atom. Color is taken from the first atom's chain.
+    ``chain_id`` on each atom. Color is taken from the first atom, mirroring
+    :class:`picogl.renderer.molecular.atoms.AtomsMesh` semantics.
     """
 
     draw_mode = GLDrawMode.TRIANGLES
@@ -28,7 +29,7 @@ class BondsMesh(MolecularMesh):
         self,
         bonds: Sequence[tuple["Atom3D", "Atom3D"]],
         *,
-        color_fn: Callable[[str], tuple[float, float, float]] = chain_rgb,
+        color_fn: Callable[[Any], tuple[float, float, float]] = _default_atom_color,
         radius: float = 0.06,
         segments: int = 8,
     ) -> None:
@@ -51,7 +52,7 @@ class BondsMesh(MolecularMesh):
             buf.add_cylinder(
                 start=atom_xyz(atom1),
                 end=atom_xyz(atom2),
-                color=self.color_fn(atom1.chain_id),
+                color=self.color_fn(atom1),
                 radius=self.radius,
                 segments=self.segments,
             )

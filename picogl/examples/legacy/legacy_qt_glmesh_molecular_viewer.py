@@ -239,7 +239,7 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         if self.calpha_bonds:
             self.bonds_mesh = BondsMesh(
                 self.calpha_bonds,
-                color_fn=chain_rgb,
+                color_fn=lambda a: chain_rgb(a.chain_id),
                 radius=self.bond_radius,
                 segments=self.bond_segments,
             )
