@@ -502,15 +502,15 @@ Using: LegacyGLMesh
 def main():
     """Main function to run the molecular viewer."""
     app = QApplication(sys.argv)
-    pdb_path = pdb_path = Path(_EXAMPLES_DIR) / "data" / "2VUG.pdb"
-    pdb_path = os.path.abspath(pdb_path)
+    pdb_path = Path(_EXAMPLES_DIR) / "data" / "2VUG.pdb"
+    pdb_path = pdb_path.absolute()
     print(pdb_path)
 
-    if not os.path.exists(pdb_path):
+    if not pdb_path.exists():
         print(f"Error: PDB file not found at {pdb_path}")
         return 1
 
-    window = LegacyGLMeshMolecularViewerWindow(object_file_path=pdb_path)
+    window = LegacyGLMeshMolecularViewerWindow(object_file_path=str(pdb_path))
     window.show()
     return app.exec()
 
