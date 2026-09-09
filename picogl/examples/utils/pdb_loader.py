@@ -17,6 +17,7 @@ import numpy as np
 from molib.core.constants import MoLibConstant
 from molib.ligand.pdb.layouts.pdb_file import PDBFileLayout, PDBTitleLayout
 from picogl.examples.utils.bond_detection import atoms_should_bond
+from picogl.utils.strenum import StrEnum
 
 
 @dataclass
@@ -37,7 +38,7 @@ class Atom:
     b_factor: float = 0.0
 
 
-class BondType:
+class BondType(StrEnum):
     SINGLE: str = "single"
     DOUBLE: str = "double"
     TRIPLE: str = "triple"
@@ -73,7 +74,9 @@ class PDBStructure:
     bonds: List[Bond]
     residues: List[Residue]
     chains: List[str]
+    newline: str = "\n"
 
+    @property
     def calpha_atoms(self) -> list:
         """
         calpha_atoms
@@ -83,6 +86,20 @@ class PDBStructure:
             for atom in self.atoms
             if atom.name == MoLibConstant.PEPTIDE_CHAIN_ATOMNAME
         ]
+
+    @property
+    def calpha_bonds(self):
+        """Generate bonds between consecutive C-alpha atoms in the same chain."""
+        bonds = []
+        chain_atoms = {}
+        for atom in self.calpha_atoms:
+            chain_atoms.setdefault(atom.chain_id, []).append(atom)
+
+        for atoms in chain_atoms.values():
+            atoms.sort(key=lambda a: a.res_seq)
+            for i in range(len(atoms) - 1):
+                bonds.append((atoms[i], atoms[i + 1]))
+        return bonds
 
     def get_atom_positions(self) -> np.ndarray:
         """Get all atom positions as a numpy array"""
@@ -99,6 +116,16 @@ class PDBStructure:
         if 0 <= residue_idx < len(self.residues):
             return self.residues[residue_idx].atoms
         return []
+
+    @property
+    def report(self) -> str:
+        report = f"✓ Found {len(self.atoms)} total atoms{self.newline}"
+        report += f"✓ Structure: {self.title}{self.newline}"
+        report += f"✓ Chains: {self.chains}{self.newline}"
+        report += f"✓ Residues: {len(self.residues)}{self.newline}"
+        report += f"✓ Found {len(self.calpha_atoms)} C-alpha atoms{self.newline}"
+        report += f"✓ Generated {len(self.calpha_bonds)} C-alpha bonds{self.newline}"
+        return report
 
 
 def _pdb_line(raw_line: str) -> str:
@@ -188,30 +215,21 @@ def _generate_bonds(atoms: List[Atom], residues: List[Residue]) -> List[Bond]:
     bonds: List[Bond] = []
     atom_index = {id(atom): i for i, atom in enumerate(atoms)}
 
-    # Intra-residue bonds from distance + element heuristics.
-    for residue in residues:
-        res_atoms = residue.atoms
-        for i in range(len(res_atoms)):
-            for j in range(i + 1, len(res_atoms)):
-                atom1 = res_atoms[i]
-                atom2 = res_atoms[j]
-                dist = _atom_distance(atom1, atom2)
-                if atoms_should_bond(atom1, atom2, dist):
-                    bonds.append(
-                        Bond(
-                            atom1_idx=atom_index[id(atom1)],
-                            atom2_idx=atom_index[id(atom2)],
-                            bond_type=BondType.SINGLE,
-                        )
-                    )
+    _generate_intra_residue_bonds(atom_index, bonds, residues)
 
+    _generate_peptide_bonds(atom_index, bonds, residues)
+
+    return bonds
+
+
+def _generate_peptide_bonds(atom_index: dict[int, int], bonds: list[Bond], residues: list[Residue]):
     # Peptide bonds: carbonyl C of residue i to amide N of residue i+1.
     for i in range(len(residues) - 1):
         curr_res = residues[i]
         next_res = residues[i + 1]
         if (
-            curr_res.chain_id != next_res.chain_id
-            or next_res.seq_num != curr_res.seq_num + 1
+                curr_res.chain_id != next_res.chain_id
+                or next_res.seq_num != curr_res.seq_num + 1
         ):
             continue
         carbon = _find_named_atom(curr_res, "C")
@@ -228,7 +246,24 @@ def _generate_bonds(atoms: List[Atom], residues: List[Residue]) -> List[Bond]:
                 )
             )
 
-    return bonds
+
+def _generate_intra_residue_bonds(atom_index: dict[int, int], bonds: list[Bond], residues: list[Residue]):
+    # Intra-residue bonds from distance + element heuristics.
+    for residue in residues:
+        res_atoms = residue.atoms
+        for i in range(len(res_atoms)):
+            for j in range(i + 1, len(res_atoms)):
+                atom1 = res_atoms[i]
+                atom2 = res_atoms[j]
+                dist = _atom_distance(atom1, atom2)
+                if atoms_should_bond(atom1, atom2, dist):
+                    bonds.append(
+                        Bond(
+                            atom1_idx=atom_index[id(atom1)],
+                            atom2_idx=atom_index[id(atom2)],
+                            bond_type=BondType.SINGLE,
+                        )
+                    )
 
 
 def _merge_bonds(*bond_lists: List[Bond]) -> List[Bond]:
@@ -286,8 +321,8 @@ class PDBLoader:
             if path.exists():
                 path = path.absolute()
             else:
-                script_dir = os.path.dirname(os.path.abspath(__file__))
-                path = Path(script_dir).parent / path
+                script_dir = Path(__file__).parent
+                path = script_dir.parent / path
 
         if not path.exists():
             raise FileNotFoundError(f"PDB file not found: {path}")

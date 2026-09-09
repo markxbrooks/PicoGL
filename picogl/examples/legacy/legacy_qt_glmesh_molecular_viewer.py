@@ -46,7 +46,7 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QWidget, QPushButton, )
 
-from utils.pdb_loader import PDBStructure
+from picogl.examples.utils.pdb_loader import PDBStructure
 
 _EXAMPLES_PATH = Path(__file__).resolve().parent.parent
 _EXAMPLES_DIR = str(_EXAMPLES_PATH)
@@ -204,34 +204,14 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         try:
             self.pdb_loader = PDBLoader(self.pdb_path)
             structure = self.pdb_loader.structure
-
-            print(f"✓ Found {len(structure.atoms)} total atoms")
-            print(f"✓ Structure: {structure.title}")
-            print(f"✓ Chains: {structure.chains}")
-            print(f"✓ Residues: {len(structure.residues)}")
-
-            self.calpha_atoms = structure.ca
-            print(f"✓ Found {len(self.calpha_atoms)} C-alpha atoms")
-
-            self.calpha_bonds = self._generate_calpha_bonds()
-            print(f"✓ Generated {len(self.calpha_bonds)} C-alpha bonds")
+            self.calpha_atoms = structure.calpha_atoms
+            self.calpha_bonds = structure.calpha_bonds
+            print(structure.report)
 
         except Exception as e:
             print(f"Error loading PDB file: {e}")
             QMessageBox.critical(None, "Error", f"Failed to load PDB file: {e}")
 
-    def _generate_calpha_bonds(self):
-        """Generate bonds between consecutive C-alpha atoms in the same chain."""
-        bonds = []
-        chain_atoms = {}
-        for atom in self.calpha_atoms:
-            chain_atoms.setdefault(atom.chain_id, []).append(atom)
-
-        for atoms in chain_atoms.values():
-            atoms.sort(key=lambda a: a.res_seq)
-            for i in range(len(atoms) - 1):
-                bonds.append((atoms[i], atoms[i + 1]))
-        return bonds
 
     def _create_mesh_data(self):
         """Create molecular meshes and upload legacy GPU buffers."""

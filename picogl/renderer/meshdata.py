@@ -4,11 +4,16 @@ texture coordinates, colors, and indices. This class offers a set of utilities t
 handle OpenGL-related state objects and simplify rendering workflows.
 """
 
-from typing import Optional, Union
+from typing import Optional, Union, Any
 
 import numpy as np
+from numpy import dtype, ndarray, generic
+
 from decologr import Decologr as log
 from OpenGL import GL
+
+from picogl.gpu.buffers.factory.validation import validate_input_data
+from picogl.gpu.buffers.helper import as_vec3_array
 from picogl.backend.gl.api import (
     gl_disable_legacy_client_state,
     gl_draw_elements,
@@ -84,6 +89,76 @@ class MeshData:
             if vertices is not None
             else None
         )
+
+    @property
+    def normalized_indices(self) -> ndarray[Any, dtype[Any]] | None:
+        """
+        normalized indices
+        """
+        if self.indices is None:
+            return None
+
+        indices = np.asarray(self.indices)
+        if indices.size == 0:
+            return None
+
+        return indices.astype(np.uint32).ravel()
+
+    def validate(self):
+        """validate mesh data"""
+        validate_input_data(
+            vertices=self.vertices,
+            indices=self.indices,
+            normals=self.normals,
+            colors=self.colors,
+        )
+
+    def setup_atom_vao(self):
+        """Build an :class:`AtomVAO` from mesh data (layout included)."""
+        from elmo.gl.backend.modern.entities.atoms.setup import (
+            setup_atom_vao as _setup_atom_vao,
+        )
+
+        return _setup_atom_vao(self)
+
+    def setup_ribbon_vao(self):
+        from elmo.gl.backend.modern.primitives.ribbon.setup import setup_ribbon_vao as _setup_ribbon_vao
+
+        return _setup_ribbon_vao(self)
+
+    def setup_calpha_vao(self):
+        from elmo.gl.backend.modern.entities.calpha.setup_buffers import setup_calpha_vao as _setup_calpha_vao
+
+        return _setup_calpha_vao(self)
+
+    def setup_bond_vao(self):
+        """Build an :class:`AtomVAO` from mesh data (layout included)."""
+        from elmo.gl.backend.modern.entities.bonds.setup import (setup_bond_vao as _setup_bond_vao)
+
+        return _setup_bond_vao(self)
+
+    def setup_vertex_attributes(self):
+        """setup vertex attributes"""
+        from picogl.backend.modern.core.vertex.attribute import VertexAttribute
+
+        vertex_attributes = [
+            VertexAttribute(0, self.normalized_vertices, VBOType.VBO),
+            VertexAttribute(1, self.normalized_colors, VBOType.CBO),
+            VertexAttribute(2, self.normalized_normals, VBOType.NBO),
+        ]
+        return vertex_attributes
+
+    @property
+    def normalized_normals(self) -> ndarray[Any, dtype[generic]]:
+        return as_vec3_array(self.normals)
+
+    @property
+    def normalized_colors(self) -> ndarray[Any, dtype[generic]]:
+        return as_vec3_array(self.colors)
+
+    @property
+    def normalized_vertices(self) -> ndarray[Any, dtype[generic]]:
+        return as_vec3_array(self.vertices)
 
     @staticmethod
     def _ensure_xyz(arr, n=None):

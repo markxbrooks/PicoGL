@@ -11,7 +11,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from gpu.buffers.vertex.vbo import VBOType
+from picogl.gpu.buffers.vertex.vbo import VBOType
 
 
 @dataclass(frozen=True)
