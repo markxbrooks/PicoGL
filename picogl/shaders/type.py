@@ -6,6 +6,7 @@ class ShaderType(str, Enum):
 
     AXIS = "axis"
     ATOMS = "atoms"
+    ATOM_SPHERES = "atom_spheres"
     BONDS = "bonds"
     CALPHAS = "calphas"
     DEFAULT = "default"
