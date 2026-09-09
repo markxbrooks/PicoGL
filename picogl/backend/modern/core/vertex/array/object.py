@@ -40,7 +40,7 @@ from typing import Any, Optional, Union
 
 import numpy as np
 from decologr import Decologr as log
-from backend.modern.core.vertex.attribute import VertexAttribute
+from picogl.backend.modern.core.vertex.attribute import VertexAttribute
 
 # PicoGL must not import ElMo or PySide6 at module load (GLUT examples stay Qt-free).
 SILENT_VAO = True
