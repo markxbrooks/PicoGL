@@ -41,9 +41,7 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QSplitter,
     QVBoxLayout,
-    QWidget, QPushButton, )
-
-from picogl.examples.utils.pdb_loader import PDBStructure
+    QWidget, QPushButton)
 
 _EXAMPLES_PATH = Path(__file__).resolve().parent.parent
 _EXAMPLES_DIR = str(_EXAMPLES_PATH)
