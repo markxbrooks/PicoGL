@@ -8,6 +8,8 @@ import os
 import sys
 from pathlib import Path
 
+from molib.core.constants import MoLibConstant
+
 # Add the examples directory to the path so we can import the PDB loader
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "utils"))
 

@@ -17,6 +17,10 @@ from picogl.core.rgbcolor import RGBAColor
 from picogl.core.viewport import Viewport
 
 
+def to_rgba_tuple(color):
+    return color.r, color.g, color.b, color.a
+
+
 class GLFrameDriver:
     """Framebuffer execution helpers for clear and viewport operations."""
 

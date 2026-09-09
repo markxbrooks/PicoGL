@@ -40,6 +40,7 @@ from typing import Any, Optional, Union
 
 import numpy as np
 from decologr import Decologr as log
+from picogl.backend.modern.core.vertex.attribute import VertexAttribute
 
 # PicoGL must not import ElMo or PySide6 at module load (GLUT examples stay Qt-free).
 SILENT_VAO = True
@@ -163,6 +164,24 @@ class VertexArrayObject(VertexBase, GLResource):
         self.ebo = None  # Bond Index Buffer Object
         self.layout: Optional[LayoutDescriptor] = None
         self.bind()
+
+    def build(
+            self,
+            attributes: list[VertexAttribute],
+            indices: np.ndarray | None = None,
+    ) -> None:
+        """Populate self from attribute arrays and an optional element buffer."""
+        for attribute in attributes:
+            data = np.asarray(attribute.data)
+            size = 3 if data.ndim == 1 else int(data.shape[1])
+            self.add_vbo(
+                index=attribute.index,
+                data=data,
+                size=size,
+                name=attribute.name,
+            )
+        if indices is not None:
+            self.add_ebo(data=np.asarray(indices))
 
     def is_valid_in_current_context(self) -> bool:
         if _qopengl_context_class() is None:
