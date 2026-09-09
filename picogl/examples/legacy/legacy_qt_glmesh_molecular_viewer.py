@@ -11,12 +11,9 @@ This example demonstrates how to:
 
 from __future__ import annotations
 
-import os
 import sys
 from pathlib import Path
-from typing import Any
 
-from molib.core.constants import MoLibConstant
 from picogl.backend.gl.api.clear import gl_clear, gl_clear_rgba_color
 from picogl.backend.gl.api.enable import gl_enable_capability_list
 from picogl.backend.gl.api.legacy.matrix import gl_matrix_mode_context
@@ -54,15 +51,6 @@ if _EXAMPLES_DIR not in sys.path:
     sys.path.insert(0, _EXAMPLES_DIR)
 
 from picogl.examples.utils.pdb_loader import PDBLoader  # noqa: E402
-
-
-def generate_calpha_atoms_from_structure(structure: PDBStructure) -> list:
-    calpha_atoms = [
-        atom
-        for atom in structure.atoms
-        if atom.name == MoLibConstant.PEPTIDE_CHAIN_ATOMNAME
-    ]
-    return calpha_atoms
 
 
 class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):

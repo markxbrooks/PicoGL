@@ -8,6 +8,7 @@ from typing import Any
 import numpy as np
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.core.geometry.sphere import unit_sphere_mesh
+from picogl.renderer.draw_spec import MeshDrawInfo
 from picogl.renderer.meshdata import MeshData
 from picogl.renderer.molecular.base import MolecularMesh
 from picogl.renderer.molecular.colors import chain_rgb
@@ -57,10 +58,20 @@ class AtomsMesh(MolecularMesh):
     def build_mesh_data(self) -> MeshData:
         """Instance sphere geometry at each atom and assign per-atom colors."""
         if not self.atoms:
-            return MeshData.from_raw(
+            template_vertices, _, template_indices = unit_sphere_mesh(
+                self.radius, self.slices, self.stacks
+            )
+            data = MeshData.from_raw(
                 vertices=np.zeros((0, 3), dtype=np.float32),
                 indices=np.zeros((0,), dtype=np.uint32),
             )
+            data.draw_info = MeshDrawInfo(
+                mode=GLDrawMode.TRIANGLES,
+                indexed=True,
+                elements_per_item=int(template_indices.size),
+                vertices_per_item=int(template_vertices.shape[0]),
+            )
+            return data
 
         template_vertices, template_normals, template_indices = unit_sphere_mesh(
             self.radius, self.slices, self.stacks
@@ -81,6 +92,15 @@ class AtomsMesh(MolecularMesh):
             )
 
         verts, norms, cols, idxs = buf.to_arrays()
-        return MeshData.from_raw(
+        data = MeshData.from_raw(
             vertices=verts, normals=norms, colors=cols, indices=idxs
         )
+        n_template_verts = len(template_vertices)
+        n_template_idx = len(template_indices)
+        data.draw_info = MeshDrawInfo(
+            mode=GLDrawMode.TRIANGLES,
+            indexed=True,
+            elements_per_item=n_template_idx,
+            vertices_per_item=n_template_verts,
+        )
+        return data

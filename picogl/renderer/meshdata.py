@@ -14,6 +14,12 @@ from OpenGL import GL
 
 from picogl.gpu.buffers.factory.validation import validate_input_data
 from picogl.gpu.buffers.helper import as_vec3_array
+from picogl.renderer.draw_spec import (
+    MeshDrawInfo,
+    MeshDrawSpec,
+    compute_draw_spec,
+    infer_draw_info,
+)
 from picogl.backend.gl.api import (
     gl_disable_legacy_client_state,
     gl_draw_elements,
@@ -52,6 +58,10 @@ class MeshData:
         colors: Optional array of vertex colors as np.ndarray.
         indices: Optional array of vertex indices as np.ndarray.
         vertex_count: Optional count of vertices, computed from vertices input.
+        draw_info: Optional CPU draw layout (mode, indexed, per-item strides).
+        item_keys: Optional ``(N, K)`` identity table for logical items.
+        color_source_indices: Optional per-vertex gather indices into a
+            logical color array.
 
     Methods:
         bind:
@@ -74,8 +84,11 @@ class MeshData:
         texcoords: np.ndarray = None,
         colors: np.ndarray = None,
         indices: np.ndarray = None,
+        draw_info: MeshDrawInfo | None = None,
+        item_keys: np.ndarray | None = None,
+        color_source_indices: np.ndarray | None = None,
     ):
-        """set up the OpenGL context"""
+        """Store CPU mesh arrays and optional draw layout (no GL objects)."""
         self.vertices = self._ensure_xyz(vertices)
         n = self._xyz_row_count(self.vertices)
 
@@ -83,6 +96,9 @@ class MeshData:
         self.colors = self._ensure_xyz(colors, n)
         self.texcoords = texcoords
         self.indices = indices
+        self.draw_info = draw_info
+        self.item_keys = item_keys
+        self.color_source_indices = color_source_indices
 
         self.vertex_count = (
             len(np.asarray(vertices, dtype=np.float32).flatten()) // 3
@@ -103,6 +119,82 @@ class MeshData:
             return None
 
         return indices.astype(np.uint32).ravel()
+
+    def resolved_draw_info(self) -> MeshDrawInfo:
+        """Return explicit :attr:`draw_info` or a conservative inference."""
+        if self.draw_info is not None:
+            return self.draw_info
+        indices = self.normalized_indices
+        index_count = 0 if indices is None else int(indices.size)
+        return infer_draw_info(
+            has_indices=indices is not None,
+            index_count=index_count,
+        )
+
+    def draw_spec(
+        self,
+        item_count: int | None = None,
+        first_item: int = 0,
+    ) -> MeshDrawSpec:
+        """Build a GL-free draw for ``first_item`` .. ``first_item + item_count``.
+
+        When :attr:`MeshDrawInfo.elements_per_item` is set, ``first_item`` is a
+        logical item index (atom, bond, …) and is converted to an index range.
+
+        :param item_count: Number of items to draw; ``None`` draws the remainder.
+        :param first_item: First logical item (or first index/vertex if unstrided).
+        :return: :class:`MeshDrawSpec` clamped to the mesh buffers.
+        """
+        info = self.resolved_draw_info()
+        indices = self.normalized_indices
+        index_count = 0 if indices is None else int(indices.size)
+        vertex_count = int(self._xyz_row_count(self.vertices))
+        return compute_draw_spec(
+            info,
+            index_count=index_count,
+            vertex_count=vertex_count,
+            first_item=first_item,
+            item_count=item_count,
+        )
+
+    def expand_attribute_per_item(
+        self,
+        values: np.ndarray,
+        elements_per_item: int | None = None,
+    ) -> np.ndarray:
+        """Repeat one row per item across ``elements_per_item`` vertices.
+
+        :param values: Array of shape ``(N, 3)`` (one row per logical item).
+        :param elements_per_item: Repeat count; defaults to
+            :attr:`MeshDrawInfo.vertices_per_item`.
+        :return: float32 array of shape ``(N * count, 3)``.
+        """
+        rows = np.asarray(values, dtype=np.float32).reshape(-1, 3)
+        count = elements_per_item
+        if count is None and self.draw_info is not None:
+            count = self.draw_info.vertices_per_item
+        if count is None or int(count) <= 1:
+            return rows
+        return np.repeat(rows[:, None, :], int(count), axis=1).reshape(-1, 3)
+
+    def expand_colors(self, logical_colors: np.ndarray) -> np.ndarray:
+        """Expand per-item or per-source colors to one RGB row per vertex.
+
+        If ``logical_colors`` already matches the vertex count it is returned
+        unchanged. Otherwise :attr:`color_source_indices` (gather) or
+        :meth:`expand_attribute_per_item` is applied.
+
+        :param logical_colors: RGB rows (vertices, items, or gather sources).
+        :return: float32 array of shape ``(V, 3)``.
+        """
+        colors = np.asarray(logical_colors, dtype=np.float32).reshape(-1, 3)
+        n_verts = int(self._xyz_row_count(self.vertices))
+        if n_verts > 0 and colors.shape[0] == n_verts:
+            return colors
+        src = self.color_source_indices
+        if src is not None:
+            return colors[np.asarray(src, dtype=np.intp)]
+        return self.expand_attribute_per_item(colors)
 
     def validate(self):
         """validate mesh data"""
