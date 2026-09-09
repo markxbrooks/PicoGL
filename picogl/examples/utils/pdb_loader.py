@@ -9,9 +9,12 @@ This module provides functionality to:
 
 import os
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Dict, List, Optional
 
 import numpy as np
+
+from molib.core.constants import MoLibConstant
 from molib.ligand.pdb.layouts.pdb_file import PDBFileLayout, PDBTitleLayout
 from picogl.examples.utils.bond_detection import atoms_should_bond
 
@@ -70,6 +73,16 @@ class PDBStructure:
     bonds: List[Bond]
     residues: List[Residue]
     chains: List[str]
+
+    def calpha_atoms(self) -> list:
+        """
+        calpha_atoms
+        """
+        return [
+            atom
+            for atom in self.atoms
+            if atom.name == MoLibConstant.PEPTIDE_CHAIN_ATOMNAME
+        ]
 
     def get_atom_positions(self) -> np.ndarray:
         """Get all atom positions as a numpy array"""
@@ -266,20 +279,21 @@ class PDBLoaderResults:
 class PDBLoader:
     """Loads and parses PDB files"""
 
-    def __init__(self, path: str):
+    def __init__(self, path: str | Path):
         # Resolve the path
-        if not os.path.isabs(path):
-            if os.path.exists(path):
-                path = os.path.abspath(path)
+        path: Path = Path(path)
+        if not path.is_absolute():
+            if path.exists():
+                path = path.absolute()
             else:
                 script_dir = os.path.dirname(os.path.abspath(__file__))
-                path = os.path.abspath(os.path.join(script_dir, "..", path))
+                path = Path(script_dir).parent / path
 
-        if not os.path.exists(path):
+        if not path.exists():
             raise FileNotFoundError(f"PDB file not found: {path}")
 
         self.path = path
-        self.structure = None
+        self.structure: PDBStructure | None = None
         self._load_pdb()
 
     def _load_pdb(self) -> None:

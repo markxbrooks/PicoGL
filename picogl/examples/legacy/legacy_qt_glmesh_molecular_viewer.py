@@ -14,6 +14,7 @@ from __future__ import annotations
 import os
 import sys
 from pathlib import Path
+from typing import Any
 
 from molib.core.constants import MoLibConstant
 from picogl.backend.gl.api.clear import gl_clear, gl_clear_rgba_color
@@ -45,12 +46,23 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QWidget, QPushButton, )
 
+from utils.pdb_loader import PDBStructure
+
 _EXAMPLES_PATH = Path(__file__).resolve().parent.parent
 _EXAMPLES_DIR = str(_EXAMPLES_PATH)
 if _EXAMPLES_DIR not in sys.path:
     sys.path.insert(0, _EXAMPLES_DIR)
 
 from picogl.examples.utils.pdb_loader import PDBLoader  # noqa: E402
+
+
+def generate_calpha_atoms_from_structure(structure: PDBStructure) -> list:
+    calpha_atoms = [
+        atom
+        for atom in structure.atoms
+        if atom.name == MoLibConstant.PEPTIDE_CHAIN_ATOMNAME
+    ]
+    return calpha_atoms
 
 
 class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
@@ -198,11 +210,7 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
             print(f"✓ Chains: {structure.chains}")
             print(f"✓ Residues: {len(structure.residues)}")
 
-            self.calpha_atoms = [
-                atom
-                for atom in structure.atoms
-                if atom.name == MoLibConstant.PEPTIDE_CHAIN_ATOMNAME
-            ]
+            self.calpha_atoms = structure.ca
             print(f"✓ Found {len(self.calpha_atoms)} C-alpha atoms")
 
             self.calpha_bonds = self._generate_calpha_bonds()
