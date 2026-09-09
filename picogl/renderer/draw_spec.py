@@ -39,14 +39,12 @@ class MeshDrawSpec:
     :param mode: Primitive mode for ``glDrawArrays`` / ``glDrawElements``.
     :param count: Vertex count (non-indexed) or index count (indexed).
     :param first: First vertex for non-indexed draws.
-    :param indexed: Whether ``count`` refers to indices.
     :param pointer: Byte offset into the element buffer for indexed draws.
     """
 
     mode: GLDrawMode
     count: int
     first: int = 0
-    indexed: bool = False
     pointer: int = 0
 
 
@@ -99,18 +97,11 @@ def compute_draw_spec(
         if info.indexed and index_count > 0:
             count = min(count, max(0, index_count - first_index))
         if count <= 0:
-            return MeshDrawSpec(
-                mode=info.mode,
-                count=0,
-                first=0,
-                indexed=info.indexed,
-                pointer=0,
-            )
+            return MeshDrawSpec(mode=info.mode, count=0, first=0, pointer=0)
         return MeshDrawSpec(
             mode=info.mode,
             count=count,
             first=0 if info.indexed else first_index,
-            indexed=info.indexed,
             pointer=first_index * _UINT32_BYTES if info.indexed else 0,
         )
 
@@ -127,7 +118,6 @@ def compute_draw_spec(
             mode=info.mode,
             count=count,
             first=0,
-            indexed=True,
             pointer=first * _UINT32_BYTES,
         )
 
@@ -142,6 +132,5 @@ def compute_draw_spec(
         mode=info.mode,
         count=count,
         first=first_item,
-        indexed=False,
         pointer=0,
     )

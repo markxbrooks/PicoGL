@@ -58,7 +58,7 @@ class MeshData:
         colors: Optional array of vertex colors as np.ndarray.
         indices: Optional array of vertex indices as np.ndarray.
         vertex_count: Optional count of vertices, computed from vertices input.
-        draw_info: Optional CPU draw layout (mode, indexed, per-item strides).
+        draw_info: CPU draw layout (mode, indexed, per-item strides).
         item_keys: Optional ``(N, K)`` identity table for logical items.
         color_source_indices: Optional per-vertex gather indices into a
             logical color array.
@@ -88,7 +88,7 @@ class MeshData:
         item_keys: np.ndarray | None = None,
         color_source_indices: np.ndarray | None = None,
     ):
-        """Store CPU mesh arrays and optional draw layout (no GL objects)."""
+        """Store CPU mesh arrays and draw layout (no GL objects)."""
         self.vertices = self._ensure_xyz(vertices)
         n = self._xyz_row_count(self.vertices)
 
@@ -96,7 +96,6 @@ class MeshData:
         self.colors = self._ensure_xyz(colors, n)
         self.texcoords = texcoords
         self.indices = indices
-        self.draw_info = draw_info
         self.item_keys = item_keys
         self.color_source_indices = color_source_indices
 
@@ -105,6 +104,15 @@ class MeshData:
             if vertices is not None
             else None
         )
+        if draw_info is not None:
+            self.draw_info = draw_info
+        else:
+            indices_arr = self.normalized_indices
+            index_count = 0 if indices_arr is None else int(indices_arr.size)
+            self.draw_info = infer_draw_info(
+                has_indices=indices_arr is not None,
+                index_count=index_count,
+            )
 
     @property
     def normalized_indices(self) -> ndarray[Any, dtype[Any]] | None:
@@ -121,15 +129,8 @@ class MeshData:
         return indices.astype(np.uint32).ravel()
 
     def resolved_draw_info(self) -> MeshDrawInfo:
-        """Return explicit :attr:`draw_info` or a conservative inference."""
-        if self.draw_info is not None:
-            return self.draw_info
-        indices = self.normalized_indices
-        index_count = 0 if indices is None else int(indices.size)
-        return infer_draw_info(
-            has_indices=indices is not None,
-            index_count=index_count,
-        )
+        """Return the mesh draw layout (always set in ``__init__``)."""
+        return self.draw_info
 
     def draw_spec(
         self,
@@ -171,7 +172,7 @@ class MeshData:
         """
         rows = np.asarray(values, dtype=np.float32).reshape(-1, 3)
         count = elements_per_item
-        if count is None and self.draw_info is not None:
+        if count is None:
             count = self.draw_info.vertices_per_item
         if count is None or int(count) <= 1:
             return rows
@@ -195,6 +196,15 @@ class MeshData:
         if src is not None:
             return colors[np.asarray(src, dtype=np.intp)]
         return self.expand_attribute_per_item(colors)
+
+    def apply_logical_colors(self, logical_colors: np.ndarray) -> np.ndarray:
+        """Expand logical colors onto :attr:`colors` (CPU only; no GPU upload).
+
+        :param logical_colors: RGB rows (vertices, items, or gather sources).
+        :return: The expanded per-vertex color array now stored on this mesh.
+        """
+        self.colors = self.expand_colors(logical_colors)
+        return self.colors
 
     def validate(self):
         """validate mesh data"""

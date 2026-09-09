@@ -1,135 +1,94 @@
-"""Tests for MeshDrawInfo / MeshDrawSpec topology mapping."""
+"""Tests for MeshDrawInfo / MeshDrawSpec and MeshData.draw_spec."""
 
 from __future__ import annotations
 
 import numpy as np
 from picogl.backend.gl.enums import GLDrawMode
-from picogl.renderer.draw_spec import MeshDrawInfo, compute_draw_spec
+from picogl.renderer.draw_spec import MeshDrawInfo, MeshDrawSpec
 from picogl.renderer.meshdata import MeshData
-from picogl.renderer.molecular import AtomsMesh, BondsMesh
 
 
-def test_compute_draw_spec_cylinder_full_and_slice() -> None:
-    info = MeshDrawInfo(
-        mode=GLDrawMode.TRIANGLES,
-        indexed=True,
-        elements_per_item=96,
-        vertices_per_item=16,
+def test_meshdata_infers_draw_info_when_omitted():
+    points = MeshData(
+        vertices=np.zeros((3, 3), dtype=np.float32),
+        colors=np.zeros((3, 3), dtype=np.float32),
     )
-    full = compute_draw_spec(info, index_count=10 * 96, vertex_count=10 * 16)
-    assert full.mode == GLDrawMode.TRIANGLES
-    assert full.indexed is True
-    assert full.count == 960
-    assert full.pointer == 0
+    assert points.draw_info.mode == GLDrawMode.POINTS
+    assert points.draw_info.indexed is False
 
-    mid = compute_draw_spec(
-        info,
-        index_count=40 * 96,
-        vertex_count=40 * 16,
-        first_item=20,
-        item_count=10,
+    tris = MeshData(
+        vertices=np.zeros((3, 3), dtype=np.float32),
+        colors=np.zeros((3, 3), dtype=np.float32),
+        indices=np.array([0, 1, 2], dtype=np.uint32),
     )
-    assert mid.count == 960
-    assert mid.pointer == 20 * 96 * 4
-
-    past_end = compute_draw_spec(
-        info,
-        index_count=10 * 96,
-        vertex_count=10 * 16,
-        first_item=20,
-        item_count=10,
-    )
-    assert past_end.count == 0
+    assert tris.draw_info.mode == GLDrawMode.TRIANGLES
+    assert tris.draw_info.indexed is True
 
 
-def test_compute_draw_spec_clamps_to_index_buffer() -> None:
-    info = MeshDrawInfo(
-        mode=GLDrawMode.TRIANGLES, indexed=True, elements_per_item=6
-    )
-    spec = compute_draw_spec(info, index_count=10, first_item=1, item_count=3)
-    # 1*6=6 start, 3*6=18 requested, clamp to 10-6=4
-    assert spec.count == 4
-    assert spec.pointer == 6 * 4
-
-
-def test_compute_draw_spec_line_bonds() -> None:
-    info = MeshDrawInfo(mode=GLDrawMode.LINES, indexed=True)
-    spec = compute_draw_spec(info, index_count=20, item_count=None)
-    assert spec.mode == GLDrawMode.LINES
-    assert spec.count == 20
-    assert spec.indexed is True
-
-
-def test_compute_draw_spec_points() -> None:
-    info = MeshDrawInfo(mode=GLDrawMode.POINTS, indexed=False)
-    spec = compute_draw_spec(
-        info, vertex_count=100, first_item=10, item_count=5
-    )
-    assert spec.mode == GLDrawMode.POINTS
-    assert spec.count == 5
-    assert spec.first == 10
-    assert spec.indexed is False
-
-
-def test_meshdata_draw_spec_and_expand_colors() -> None:
+def test_draw_spec_points_range():
     mesh = MeshData(
-        vertices=np.zeros((6, 3), dtype=np.float32),
-        colors=np.zeros((6, 3), dtype=np.float32),
-        indices=np.arange(12, dtype=np.uint32),
+        vertices=np.zeros((10, 3), dtype=np.float32),
+        colors=np.zeros((10, 3), dtype=np.float32),
+        draw_info=MeshDrawInfo(mode=GLDrawMode.POINTS, indexed=False),
+    )
+    spec = mesh.draw_spec(first_item=2, item_count=3)
+    assert isinstance(spec, MeshDrawSpec)
+    assert spec.mode == GLDrawMode.POINTS
+    assert spec.count == 3
+    assert spec.first == 2
+    assert spec.pointer == 0
+    assert not hasattr(spec, "indexed")
+
+
+def test_draw_spec_triangle_items():
+    mesh = MeshData(
+        vertices=np.zeros((8, 3), dtype=np.float32),
+        colors=np.zeros((8, 3), dtype=np.float32),
+        indices=np.arange(24, dtype=np.uint32),
         draw_info=MeshDrawInfo(
             mode=GLDrawMode.TRIANGLES,
             indexed=True,
-            elements_per_item=6,
-            vertices_per_item=3,
+            elements_per_item=12,
+            vertices_per_item=4,
         ),
     )
     spec = mesh.draw_spec(first_item=1, item_count=1)
-    assert spec.count == 6
-    assert spec.pointer == 6 * 4
-
-    logical = np.array([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0]], dtype=np.float32)
-    expanded = mesh.expand_attribute_per_item(logical, 3)
-    assert expanded.shape == (6, 3)
-    np.testing.assert_allclose(expanded[0], (1.0, 0.0, 0.0))
-    np.testing.assert_allclose(expanded[3], (0.0, 1.0, 0.0))
-
-    mesh.color_source_indices = np.array([0, 0, 0, 1, 1, 1], dtype=np.uint32)
-    gathered = mesh.expand_colors(logical)
-    np.testing.assert_allclose(gathered[2], (1.0, 0.0, 0.0))
-    np.testing.assert_allclose(gathered[5], (0.0, 1.0, 0.0))
-
-
-def test_atoms_mesh_stamps_draw_info() -> None:
-    class _Atom:
-        def __init__(self) -> None:
-            self.x = 0.0
-            self.y = 0.0
-            self.z = 0.0
-            self.chain_id = "A"
-
-    data = AtomsMesh([_Atom()], slices=4, stacks=4).to_mesh_data()
-    assert data.draw_info is not None
-    assert data.draw_info.mode == GLDrawMode.TRIANGLES
-    assert data.draw_info.indexed is True
-    spec = data.draw_spec(item_count=1)
-    assert spec.count == data.draw_info.elements_per_item
-    assert spec.count == int(np.asarray(data.indices).size)
-
-
-def test_bonds_mesh_stamps_draw_info() -> None:
-    class _Atom:
-        def __init__(self, x: float) -> None:
-            self.x = x
-            self.y = 0.0
-            self.z = 0.0
-            self.chain_id = "A"
-
-    data = BondsMesh(
-        [(_Atom(0.0), _Atom(1.0))], segments=8
-    ).to_mesh_data()
-    assert data.draw_info is not None
-    assert data.draw_info.elements_per_item == 48
-    assert data.draw_info.vertices_per_item == 16
-    spec = data.draw_spec(item_count=1)
-    assert spec.count == 48
     assert spec.mode == GLDrawMode.TRIANGLES
+    assert spec.count == 12
+    assert spec.first == 0
+    assert spec.pointer == 12 * 4
+
+
+def test_apply_logical_colors_repeat():
+    mesh = MeshData(
+        vertices=np.zeros((8, 3), dtype=np.float32),
+        colors=np.zeros((8, 3), dtype=np.float32),
+        draw_info=MeshDrawInfo(
+            mode=GLDrawMode.TRIANGLES,
+            indexed=True,
+            elements_per_item=12,
+            vertices_per_item=4,
+        ),
+    )
+    logical = np.array([[1.0, 0.0, 0.0], [0.0, 0.0, 1.0]], dtype=np.float32)
+    expanded = mesh.apply_logical_colors(logical)
+    assert expanded.shape == (8, 3)
+    np.testing.assert_allclose(mesh.colors[0], (1.0, 0.0, 0.0))
+    np.testing.assert_allclose(mesh.colors[3], (1.0, 0.0, 0.0))
+    np.testing.assert_allclose(mesh.colors[4], (0.0, 0.0, 1.0))
+    np.testing.assert_allclose(mesh.colors[7], (0.0, 0.0, 1.0))
+
+
+def test_apply_logical_colors_gather():
+    mesh = MeshData(
+        vertices=np.zeros((4, 3), dtype=np.float32),
+        colors=np.zeros((4, 3), dtype=np.float32),
+        color_source_indices=np.array([0, 0, 1, 1], dtype=np.intp),
+        draw_info=MeshDrawInfo(mode=GLDrawMode.LINES, indexed=False),
+    )
+    logical = np.array([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0]], dtype=np.float32)
+    mesh.apply_logical_colors(logical)
+    np.testing.assert_allclose(mesh.colors[0], (1.0, 0.0, 0.0))
+    np.testing.assert_allclose(mesh.colors[1], (1.0, 0.0, 0.0))
+    np.testing.assert_allclose(mesh.colors[2], (0.0, 1.0, 0.0))
+    np.testing.assert_allclose(mesh.colors[3], (0.0, 1.0, 0.0))
