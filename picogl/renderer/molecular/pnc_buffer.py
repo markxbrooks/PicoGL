@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 from collections.abc import Iterable
 from typing import List, Tuple
 
@@ -73,6 +74,65 @@ class PNCBuffer:
         for idx in indices:
             self.indices.append(int(idx) + self.vertex_offset)
         self.vertex_offset += n_new
+
+    def add_cylinder(
+        self,
+        start: Iterable[float],
+        end: Iterable[float],
+        color: Tuple[float, float, float],
+        radius: float = 0.1,
+        segments: int = 8,
+    ) -> None:
+        """Append an open-sided cylinder spanning ``start`` to ``end``.
+
+        Generates ``2 * segments`` vertices (two rings around the axis) with
+        outward radial normals, so the shaft lights correctly regardless of
+        bond orientation. The cylinder is open at both ends.
+        """
+        s = np.asarray(start, dtype=np.float64)
+        e = np.asarray(end, dtype=np.float64)
+        axis = e - s
+        length = float(np.linalg.norm(axis))
+        if length < 1e-12:
+            return
+        direction = axis / length
+
+        reference = np.array([0.0, 0.0, 1.0])
+        if abs(float(np.dot(direction, reference))) > 0.99:
+            reference = np.array([1.0, 0.0, 0.0])
+        basis_u = np.cross(direction, reference)
+        basis_u /= np.linalg.norm(basis_u)
+        basis_v = np.cross(direction, basis_u)
+
+        positions: List[List[float]] = []
+        normals: List[List[float]] = []
+        for k in range(segments):
+            angle = 2.0 * np.pi * k / segments
+            radial = basis_u * math.cos(angle) + basis_v * math.sin(angle)
+            positions.append((s + radial * radius).tolist())
+            positions.append((e + radial * radius).tolist())
+            normals.append(radial.tolist())
+            normals.append(radial.tolist())
+
+        colors = [tuple(float(c) for c in color)] * len(positions)
+        indices: List[int] = []
+        for k in range(segments):
+            k1 = (k + 1) % segments
+            bottom_current, top_current = 2 * k, 2 * k + 1
+            bottom_next, top_next = 2 * k1, 2 * k1 + 1
+            indices.append(bottom_current)
+            indices.append(bottom_next)
+            indices.append(top_current)
+            indices.append(bottom_next)
+            indices.append(top_next)
+            indices.append(top_current)
+
+        self.extend_direct(
+            positions=positions,
+            normals=normals,
+            colors=colors,
+            indices=indices,
+        )
 
     def to_arrays(
         self, dtype: np.dtype | type = np.float32

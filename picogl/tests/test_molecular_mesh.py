@@ -76,10 +76,46 @@ def test_bonds_mesh_single_bond() -> None:
     mesh = BondsMesh([(atom1, atom2)])
     data = mesh.to_mesh_data()
 
-    assert data.vertices.shape == (2, 3)
-    assert data.colors.shape == (2, 3)
-    assert data.indices.tolist() == [0, 1]
-    assert mesh.draw_mode == GLDrawMode.LINES
+    segments = 8
+    assert data.vertices.shape == (2 * segments, 3)
+    assert data.normals.shape == (2 * segments, 3)
+    assert data.colors.shape == (2 * segments, 3)
+    assert data.indices.size == 6 * segments
+    assert mesh.draw_mode == GLDrawMode.TRIANGLES
+
+
+def test_bonds_mesh_cylinder_normals_perpendicular_to_axis() -> None:
+    atom1 = _Atom(0.0, 0.0, 0.0, "A")
+    atom2 = _Atom(1.0, 0.0, 0.0, "A")
+    data = BondsMesh([(atom1, atom2)], segments=12).to_mesh_data()
+
+    full_rings = np.reshape(data.vertices, (-1, 2, 3))
+    assert np.allclose(full_rings[:, 0, 0], 0.0)
+    assert np.allclose(full_rings[:, 1, 0], 1.0)
+    assert np.allclose(data.normals[:, 0], 0.0)
+    radial = np.linalg.norm(data.vertices[:, 1:], axis=1)
+    assert np.allclose(radial, 0.06)
+
+
+def test_bonds_mesh_custom_radius_and_color_fn() -> None:
+    atom1 = _Atom(0.0, 0.0, 0.0, "A")
+    atom2 = _Atom(1.0, 1.0, 1.0, "A")
+    data = BondsMesh(
+        [(atom1, atom2)],
+        radius=0.3,
+        segments=4,
+        color_fn=lambda _chain: (1.0, 0.0, 0.0),
+    ).to_mesh_data()
+
+    assert data.vertices.shape == (8, 3)
+    assert data.indices.size == 24
+    np.testing.assert_allclose(data.colors[0], (1.0, 0.0, 0.0))
+    start = np.array([0.0, 0.0, 0.0])
+    end = np.array([1.0, 1.0, 1.0])
+    bottom_ring = data.vertices[0::2]
+    top_ring = data.vertices[1::2]
+    np.testing.assert_allclose(np.linalg.norm(bottom_ring - start, axis=1), 0.3, rtol=1e-6)
+    np.testing.assert_allclose(np.linalg.norm(top_ring - end, axis=1), 0.3, rtol=1e-6)
 
 
 def test_to_legacy_glmesh_without_upload() -> None:

@@ -1,5 +1,5 @@
 """
-A module for GPU-resident indexed triangle meshes.
+A module for GPU-resident indexed and non-indexed geometry.
 
 This module defines the `GLMesh` class, which represents a 3D mesh stored on the
 GPU. It provides mechanisms for defining a mesh's vertices, faces, colors, normals,
@@ -26,14 +26,14 @@ if TYPE_CHECKING:
 
 class GLMesh:
     """
-    GPU‐resident mesh: owns VAO/VBO/EBO/CBO/NBO for an indexed triangle mesh.
+    GPU-resident geometry: owns VAO/VBO and optional EBO/CBO/NBO buffers.
     It does not know anything about shaders or matrices.
     """
 
     def __init__(
         self,
         vertices: np.ndarray,
-        faces: Optional[np.ndarray],
+        faces: Optional[np.ndarray] = None,
         colors: Optional[np.ndarray] = None,
         normals: Optional[np.ndarray] = None,
         uvs: Optional[np.ndarray] = None,
@@ -51,20 +51,20 @@ class GLMesh:
         # strict (N, 3)
         self.vertices = as_vec3_array(vertices)
 
-        # If using indices, expect a flat array of indices
-        if faces is not None:
-            self.indices = np.asarray(faces, dtype=np.uint32).reshape(-1)
-            if self.indices.size == 0:
-                raise ValueError("GLMesh requires non-empty faces")
-            # Validate that we have a multiple of 3 indices for triangles
-            if self.indices.size % 3 != 0:
-                raise ValueError(
-                    "GLMesh: faces must define a multiple of 3 indices (triangles)"
-                )
-        nverts = self.vertices.shape[0]
-        self.use_indices = (
-            use_indices  # present for compatibility and potential path changes
+        # Missing/empty faces select direct glDrawArrays rendering.
+        self.indices = (
+            np.asarray(faces, dtype=np.uint32).reshape(-1)
+            if faces is not None
+            else np.array([], dtype=np.uint32)
         )
+        nverts = self.vertices.shape[0]
+
+        if self.indices.size > 0 and self.indices.size % 3 != 0:
+            raise ValueError(
+                "GLMesh: faces must define a multiple of 3 indices (triangles)"
+            )
+
+        self.use_indices = bool(use_indices and self.indices.size > 0)
         if shader_type not in (
             ShaderType.ISOSURFACE,
             ShaderType.RIBBONS,
@@ -100,7 +100,7 @@ class GLMesh:
         self._expanded_uvs = None
         self._layouts = build_shader_layouts()
         self._layout_descriptor = self._layouts[shader_type]
-        if not self.use_indices:
+        if not self.use_indices and self.indices.size > 0:
             self._expand_to_non_indexed()
 
     def _get_buffer_data(self, vbo_type: VBOType) -> Optional[np.ndarray]:
@@ -186,7 +186,8 @@ class GLMesh:
         Parameters
         ----------
         mesh : MeshData
-            Must have .vertices (Nx3), .ebo (Mx1), optional .cbo (Nx3), .nbo (Nx3), uvs (Nx2)
+            Must have vertices (Nx3). Indices are optional; geometry without
+            indices is rendered directly with ``glDrawArrays``.
         vertex_layout :
             ``surface`` → attr order pos, color, normal (``surface_with_lighting`` / mesh).
             ``ribbon`` → pos, normal, color (``ribbons`` / RibbonVAO).

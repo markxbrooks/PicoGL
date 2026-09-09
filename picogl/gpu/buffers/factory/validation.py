@@ -56,13 +56,12 @@ def validate_input_data(
 
     # --- Indices (optional) ---
     if indices is not None:
-        if (
-            not isinstance(indices, np.ndarray)
-            or indices.ndim != 2
-            or indices.shape[1] != 3
-        ):
+        valid_ndim = indices.ndim == 1 or (
+            indices.ndim == 2 and indices.shape[1] == 3
+        )
+        if not isinstance(indices, np.ndarray) or not valid_ndim:
             raise ValueError(
-                f"indices must be a (M, 3) ndarray for triangular faces, got {indices.shape if isinstance(indices, np.ndarray) else type(indices)}"
+                f"indices must be a flat (K,) or (M, 3) ndarray for triangular faces, got {indices.shape if isinstance(indices, np.ndarray) else type(indices)}"
             )
         if np.any(indices < 0) or np.any(indices >= n_vertices):
             raise ValueError("indices contain out-of-bounds vertex references")

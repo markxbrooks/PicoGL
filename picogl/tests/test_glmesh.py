@@ -128,19 +128,18 @@ class TestGLMesh(unittest.TestCase):
         self.assertEqual(mesh.index_count, 0)
 
     def test_initialization_with_empty_faces(self):
-        """Test GLMesh initialization with empty faces raises error."""
-        with self.assertRaises(ValueError) as context:
-            GLMesh(vertices=self.test_vertices, faces=np.array([], dtype=np.uint32))
-
-        self.assertIn("GLMesh requires non-empty faces", str(context.exception))
+        """An empty face array selects non-indexed rendering."""
+        mesh = GLMesh(
+            vertices=self.test_vertices, faces=np.array([], dtype=np.uint32)
+        )
+        self.assertFalse(mesh.use_indices)
+        self.assertEqual(mesh.indices.size, 0)
 
     def test_initialization_with_none_faces(self):
-        """Test GLMesh initialization with None faces raises error."""
-        with self.assertRaises(TypeError) as context:
-            GLMesh(vertices=self.test_vertices, faces=None)
-
-        # The actual error is from numpy trying to convert None to uint32
-        self.assertIn("int() argument must be a string", str(context.exception))
+        """Missing faces select non-indexed rendering."""
+        mesh = GLMesh(vertices=self.test_vertices)
+        self.assertFalse(mesh.use_indices)
+        self.assertEqual(mesh.indices.size, 0)
 
     def test_initialization_data_type_conversion(self):
         """Test that data is properly converted to correct types."""
@@ -232,6 +231,16 @@ class TestGLMesh(unittest.TestCase):
         # Test VAO methods were called
         mock_vao.add_vbo.assert_called()
         mock_vao.add_ebo.assert_called_once()
+
+    def test_upload_without_indices_uses_vertex_count_and_no_ebo(self):
+        """Non-indexed meshes upload VBOs without creating an EBO."""
+        mesh = GLMesh(vertices=self.test_vertices)
+        mock_vao = MagicMock()
+        with patch("picogl.renderer.glmesh.VertexArrayObject", return_value=mock_vao):
+            mesh.upload()
+
+        mock_vao.add_ebo.assert_not_called()
+        self.assertEqual(mesh.index_count, len(self.test_vertices))
 
     def test_upload_already_uploaded(self):
         """Test upload method when already uploaded."""

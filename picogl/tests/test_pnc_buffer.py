@@ -40,3 +40,31 @@ def test_pnc_buffer_extend_direct() -> None:
     )
     _v, _n, _c, idxs = buf.to_arrays()
     assert idxs.tolist() == [0, 1, 2, 3]
+
+
+def test_pnc_buffer_add_cylinder() -> None:
+    buf = PNCBuffer()
+    buf.add_cylinder(
+        start=(0.0, 0.0, 0.0),
+        end=(1.0, 0.0, 0.0),
+        color=(1.0, 0.0, 0.0),
+        radius=0.5,
+        segments=4,
+    )
+    verts, norms, cols, idxs = buf.to_arrays()
+
+    assert verts.shape == (8, 3)
+    assert norms.shape == (8, 3)
+    assert cols.shape == (8, 3)
+    assert idxs.tolist() == [
+        0, 2, 1, 2, 3, 1,
+        2, 4, 3, 4, 5, 3,
+        4, 6, 5, 6, 7, 5,
+        6, 0, 7, 0, 1, 7,
+    ]
+    np.testing.assert_allclose(verts[0, 0], 0.0)
+    np.testing.assert_allclose(verts[1, 0], 1.0)
+    radial = np.linalg.norm(verts[:, 1:], axis=1)
+    np.testing.assert_allclose(radial, 0.5)
+    np.testing.assert_allclose(norms[0], [0.0, -1.0, 0.0])
+    np.testing.assert_allclose(cols[0], (1.0, 0.0, 0.0))
