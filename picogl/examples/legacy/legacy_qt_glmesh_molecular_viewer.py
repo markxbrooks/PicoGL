@@ -70,6 +70,8 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
 
         self.wireframe_mode = False
         self.lighting_enabled = False
+        self.bond_radius = 0.06
+        self.bond_segments = 12
 
         self.atoms_mesh = None
         self.bonds_mesh = None
@@ -235,7 +237,12 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
             self.atoms_mesh.to_legacy_glmesh(upload=True)
 
         if self.calpha_bonds:
-            self.bonds_mesh = BondsMesh(self.calpha_bonds, color_fn=chain_rgb)
+            self.bonds_mesh = BondsMesh(
+                self.calpha_bonds,
+                color_fn=chain_rgb,
+                radius=self.bond_radius,
+                segments=self.bond_segments,
+            )
             self.bonds_mesh.to_legacy_glmesh(upload=True)
 
     def _render_molecular_structure(self):
@@ -251,7 +258,6 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         if self.atoms_mesh is not None:
             self.atoms_mesh.draw_legacy()
 
-        gl_set_polygon_mode()
         if self.bonds_mesh is not None:
             self.bonds_mesh.draw_legacy()
 
@@ -354,9 +360,7 @@ class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
 
         self.label_specs = self._build_label_specs()
         self.button_specs = self.build_button_specs()
-        self.gl_widget: QtLegacyGLMeshMolecularViewer = QtLegacyGLMeshMolecularViewer(
-            pdb_path
-        )
+        self.gl_widget = QtLegacyGLMeshMolecularViewer(pdb_path)
         splitter = self.create_splitter()
         layout.addWidget(splitter)
 

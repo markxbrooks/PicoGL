@@ -1,4 +1,4 @@
-"""Line-segment bond mesh for molecular visualization."""
+"""Cylinder bond mesh for molecular visualization."""
 
 from __future__ import annotations
 
@@ -16,26 +16,30 @@ from picogl.renderer.molecular.pnc_buffer import PNCBuffer
 
 class BondsMesh(MolecularMesh):
     """
-    Build line meshes connecting pairs of atoms.
+    Build cylinder meshes connecting pairs of atoms.
 
     Each bond is a pair ``(atom1, atom2)`` with ``x``, ``y``, ``z``, and
     ``chain_id`` on each atom. Color is taken from the first atom's chain.
     """
 
-    draw_mode = GLDrawMode.LINES
+    draw_mode = GLDrawMode.TRIANGLES
 
     def __init__(
         self,
-        bonds: Sequence[tuple[Any, Any]],
+        bonds: Sequence[tuple["Atom3D", "Atom3D"]],
         *,
         color_fn: Callable[[str], tuple[float, float, float]] = chain_rgb,
+        radius: float = 0.06,
+        segments: int = 8,
     ) -> None:
         super().__init__()
         self.bonds = bonds
         self.color_fn = color_fn
+        self.radius = radius
+        self.segments = segments
 
     def build_mesh_data(self) -> MeshData:
-        """Build two-vertex line segments for each bond."""
+        """Build an oriented cylinder shaft for each bond."""
         if not self.bonds:
             return MeshData.from_raw(
                 vertices=np.zeros((0, 3), dtype=np.float32),
@@ -43,16 +47,13 @@ class BondsMesh(MolecularMesh):
             )
 
         buf = PNCBuffer()
-        zero_n = (0.0, 0.0, 1.0)
         for atom1, atom2 in self.bonds:
-            color = self.color_fn(atom1.chain_id)
-            x1, y1, z1 = atom_xyz(atom1)
-            x2, y2, z2 = atom_xyz(atom2)
-            buf.extend_direct(
-                positions=((x1, y1, z1), (x2, y2, z2)),
-                normals=(zero_n, zero_n),
-                colors=(color, color),
-                indices=(0, 1),
+            buf.add_cylinder(
+                start=atom_xyz(atom1),
+                end=atom_xyz(atom2),
+                color=self.color_fn(atom1.chain_id),
+                radius=self.radius,
+                segments=self.segments,
             )
 
         verts, _norms, cols, idxs = buf.to_arrays()
