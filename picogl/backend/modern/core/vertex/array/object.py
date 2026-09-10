@@ -42,8 +42,6 @@ from picogl.backend.gl.api.glcleanup import gl_delete_buffers, gl_delete_vertex_
 from picogl.backend.gl.api.vertex.arrays.bind import gl_bind_vertex_array
 from picogl.backend.gl.api.vertex.arrays.check_is import gl_is_vertex_array
 from picogl.backend.gl.api.vertex.arrays.generate import gl_gen_vertex_arrays
-from picogl.backend.gl.api.vertex.attrib_pointer import gl_vertex_attrib_pointer
-from picogl.backend.gl.api.vertex.enable_array import gl_enable_vertex_array
 from picogl.backend.gl.enums import (
     GLBufferTarget,
     GLDrawMode,
@@ -223,15 +221,7 @@ class VertexArrayObject(VertexBase, GLResource):
                     raise RuntimeError(f"No VBO bound for attribute '{attr.name}'")
 
                 vbo.bind()
-                gl_enable_vertex_array(attr.index)
-                gl_vertex_attrib_pointer(
-                    index=attr.index,
-                    size=attr.size,
-                    num_type=attr.type,
-                    normalized=attr.normalized,
-                    stride=attr.stride,
-                    offset=attr.offset,
-                )
+                gl_enable_vertex_array_attributes(attr)
 
             self._configured = True
 

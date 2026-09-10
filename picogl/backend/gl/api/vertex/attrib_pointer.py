@@ -17,7 +17,7 @@ from OpenGL.GL import glVertexAttribPointer
 
 from picogl.backend.gl.enums import GLNumeric
 from picogl.boolean import GLBoolean
-
+from picogl.gpu.buffers.attributes import AttributeSpec
 
 def _resolve_attrib_pointer(offset: Any) -> Any:
     """Accept ``None``, byte offset ints, or an existing ``c_void_p``."""
@@ -49,4 +49,17 @@ def gl_vertex_attrib_pointer(
         normalized,
         stride,
         _resolve_attrib_pointer(offset),
+    )
+
+def gl_enable_vertex_array_attributes(attr: AttributeSpec):
+    """gl enable vertex array attributes."""
+    from picogl.backend.gl.api import gl_enable_vertex_array
+    gl_enable_vertex_array(attr.index)
+    gl_vertex_attrib_pointer(
+        index=attr.index,
+        size=attr.size,
+        num_type=attr.type,
+        normalized=attr.normalized,
+        stride=attr.stride,
+        offset=attr.offset,
     )
