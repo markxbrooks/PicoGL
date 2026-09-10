@@ -4,6 +4,7 @@ from typing import Any
 
 from OpenGL.raw.GL.VERSION.GL_1_1 import glDrawElements
 
+from picogl.backend.modern.core.vertex.array.draw_spec import DrawSpec
 from picogl.backend.gl.api.draw.helper import draw_pointer, gl_enum
 from picogl.backend.gl.enums import GLDrawMode, GLIndexType
 
@@ -28,4 +29,15 @@ def gl_draw_elements(
         int(index_count),
         gl_enum(dtype),
         pointer,
+    )
+
+def gl_draw_elements_spec(spec: DrawSpec):
+    """gl draw elements from spec"""
+    if not spec.count:
+        return
+    gl_draw_elements(
+        spec.count,
+        spec.dtype,
+        spec.mode,
+        pointer=spec.pointer,
     )

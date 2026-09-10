@@ -35,8 +35,7 @@ import numpy as np
 from decologr import Decologr as log
 from picogl.backend.modern.core.vertex.array.draw_spec import DrawSpec
 from picogl.backend.modern.core.vertex.attribute import VertexAttribute
-from picogl.backend.gl.api import gl_draw_arrays, gl_draw_elements
-from picogl.backend.gl.api.buffer.subdata import gl_buffer_subdata
+from picogl.backend.gl.api import gl_draw_arrays_spec, gl_draw_elements_spec
 from picogl.backend.gl.api.glcleanup import gl_delete_buffers, gl_delete_vertex_arrays
 from picogl.backend.gl.api.vertex.arrays.bind import gl_bind_vertex_array
 from picogl.backend.gl.api.vertex.arrays.check_is import gl_is_vertex_array
@@ -44,7 +43,6 @@ from picogl.backend.gl.api.vertex.arrays.generate import gl_gen_vertex_arrays
 from picogl.backend.gl.api.vertex.attrib_pointer import gl_vertex_attrib_pointer
 from picogl.backend.gl.api.vertex.enable_array import gl_enable_vertex_array
 from picogl.backend.gl.enums import (
-    GLBufferTarget,
     GLDrawMode,
     GLUsageHint,
 )
@@ -129,6 +127,9 @@ class GLResource:
             raise RuntimeError(
                 f"Context mismatch: created in {self._creation_context}, current {ctx}"
             )
+
+
+
 
 
 class VertexArrayObject(VertexBase, GLResource):
@@ -435,18 +436,9 @@ class VertexArrayObject(VertexBase, GLResource):
         with context, self.bound():
             if self.ebo:
                 self.ebo.bind()
-                gl_draw_elements(
-                    spec.count,
-                    spec.dtype,
-                    spec.mode,
-                    pointer=spec.pointer,
-                )
+                gl_draw_elements_spec(spec)
             else:
-                gl_draw_arrays(
-                    spec.count,
-                    spec.mode,
-                    first=spec.first,
-                )
+                gl_draw_arrays_spec(spec)
 
     def _modern_vbo_for_attrib(self, attrib_index: int) -> Optional[ModernVBO]:
         """Return the :class:`ModernVBO` created for attribute ``attrib_index``."""

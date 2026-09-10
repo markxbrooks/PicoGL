@@ -18,7 +18,7 @@ from picogl.backend.gl.api.client_state import (
     gl_disable_legacy_client_state,
     gl_enable_legacy_client_state,
 )
-from picogl.backend.gl.api.draw import gl_draw_arrays, gl_draw_elements
+from picogl.backend.gl.api.draw import gl_draw_arrays, gl_draw_arrays_spec, gl_draw_elements, gl_draw_elements_spec
 from picogl.backend.gl.api.draw.indexed import gl_bind_elements
 from picogl.backend.gl.api.flush import gl_flush
 from picogl.backend.gl.api.pointer import (
@@ -64,7 +64,9 @@ __all__ = [
     "gl_enable_legacy_client_state",
     "gl_enable_vertex_array",
     "gl_draw_arrays",
+    "gl_draw_arrays_spec",
     "gl_draw_elements",
+    "gl_draw_elements_spec",
     "gl_flush",
     "gl_generate_buffers",
     "gl_active_texture",
