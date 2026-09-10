@@ -15,7 +15,8 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
-from boolean import GLBoolean
+from picogl.backend.gl.enums import GLNumeric
+from picogl.boolean import GLBoolean
 from elmo.glsl.layouts import VBOComponentType, StrideCalculator
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.gpu.buffers.vertex.aliases import VertexBufferRole
