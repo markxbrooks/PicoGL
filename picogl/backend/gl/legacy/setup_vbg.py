@@ -35,11 +35,11 @@ try:  # pragma: no cover
     from picogl.backend.gl.enums import GLDrawMode as _GLDrawMode
     from picogl.backend.gl.enums import GLNumeric as _GLNumeric
 
-    GL_FLOAT = _GLNumeric.FLOAT
+    GLNumeric.FLOAT = _GLNumeric.FLOAT
     GL_LINE_STRIP = _GLDrawMode.LINE_STRIP
     GL_TRIANGLE_STRIP = _GLDrawMode.TRIANGLE_STRIP
 except Exception:  # pragma: no cover - fallback constants for tests
-    GL_FLOAT = 0x1406
+    GLNumeric.FLOAT = 0x1406
     GL_LINE_STRIP = 0x0003
     GL_TRIANGLE_STRIP = 0x0005
 
@@ -53,7 +53,7 @@ if _HEADLESS:
             name: str,
             index: int,
             size: int,
-            dtype: int,
+            dtype: GLNumeric,
             normalized: GLBoolean,
             stride: int,
             offset: int,
@@ -74,7 +74,7 @@ if _HEADLESS:
         *,
         size: int = VBOComponentType.POSITIONS.size,
         name: str | VertexBufferRole | None = None,
-        dtype: int,
+        dtype: GLNumeric,
         normalized: GLBoolean = GLBoolean.FALSE,
         stride: int = StrideCalculator.TIGHTLY_PACKED,
         offset: int = 0,
@@ -135,9 +135,9 @@ else:
 
 
 def build_legacy_vbg_layout(
-    positions_size: int = 3,
-    normals_size: int = 3,
-    colors_size: int = 3,
+    positions_size: int = VBOComponentType.POSITIONS.size,
+    normals_size: int = VBOComponentType.NORMALS.size,
+    colors_size: int = VBOComponentType.COLOR_RGB.size,
 ) -> LayoutDescriptor:
     """
     Headless-safe triple layout (VBO / NBO / CBO). Prefer this from code that imports
@@ -150,19 +150,19 @@ def build_legacy_vbg_layout(
                     VertexBufferRole.VBO,
                     0,
                     size=positions_size,
-                    dtype=GL_FLOAT,
+                    dtype=GLNumeric.FLOAT,
                 ),
                 legacy_attribute_spec(
                     VertexBufferRole.NBO,
                     1,
                     size=normals_size,
-                    dtype=GL_FLOAT,
+                    dtype=GLNumeric.FLOAT,
                 ),
                 legacy_attribute_spec(
                     VertexBufferRole.CBO,
                     2,
                     size=colors_size,
-                    dtype=GL_FLOAT,
+                    dtype=GLNumeric.FLOAT,
                 ),
             ]
         )
@@ -240,7 +240,7 @@ def create_vertex_buffer_group(
                 index,
                 size=size,
                 name=NAME_ALIASES.get(name, name),
-                dtype=GL_FLOAT,
+                dtype=GLNumeric.FLOAT,
             )
         )
 
