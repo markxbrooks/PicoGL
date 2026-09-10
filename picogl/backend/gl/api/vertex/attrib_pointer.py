@@ -58,7 +58,7 @@ def gl_enable_vertex_array_attributes(attr: AttributeSpec):
     gl_vertex_attrib_pointer(
         index=attr.index,
         size=attr.size,
-        num_type=attr.type,
+        num_type=attr.dtype,
         normalized=attr.normalized,
         stride=attr.stride,
         offset=attr.offset,

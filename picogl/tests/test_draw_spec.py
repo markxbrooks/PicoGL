@@ -95,6 +95,24 @@ def test_apply_logical_colors_gather():
     np.testing.assert_allclose(mesh.colors[3], (0.0, 1.0, 0.0))
 
 
+def test_mesh_draw_spec_to_draw_spec():
+    """MeshDrawSpec must import GPU DrawSpec from picogl.backend (not ``backend``)."""
+    import ctypes
+
+    from picogl.backend.modern.core.vertex.array.draw_spec import DrawSpec
+
+    spec = MeshDrawSpec(
+        mode=GLDrawMode.TRIANGLES, count=9, first=0, pointer=12
+    )
+    gpu = spec.to_draw_spec()
+    assert isinstance(gpu, DrawSpec)
+    assert gpu.count == 9
+    assert gpu.mode == GLDrawMode.TRIANGLES
+    assert gpu.first == 0
+    assert isinstance(gpu.pointer, ctypes.c_void_p)
+    assert gpu.pointer.value == 12
+
+
 def test_meshdata_draw_requires_vao():
     mesh = MeshData(
         vertices=np.zeros((3, 3), dtype=np.float32),

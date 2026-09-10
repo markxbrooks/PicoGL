@@ -10,6 +10,16 @@ easier and consistent referencing.
 from enum import Enum
 
 from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
+from picogl.utils.strenum import StrEnum
+
+
+class VertexBufferName(StrEnum):
+    """Enum for vertex buffer types."""
+
+    VBO = "position"
+    CBO = "color"
+    NBO = "normal"
+    UV = "uv"
 
 
 class VertexBufferRole(str, Enum):

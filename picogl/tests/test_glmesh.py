@@ -36,8 +36,20 @@ from unittest.mock import MagicMock, call, patch
 import numpy as np
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT
 
+from picogl.gpu.buffers.attributes import AttributeSpec
 from picogl.renderer.glmesh import GLMesh
 from picogl.renderer.meshdata import MeshData
+
+
+def _add_vbo_specs(mock_vao) -> list[AttributeSpec]:
+    """Return AttributeSpec arguments from ``VAO.add_vbo(spec, data)`` calls."""
+    specs: list[AttributeSpec] = []
+    for call in mock_vao.add_vbo.call_args_list:
+        args, kwargs = call
+        spec = kwargs.get("spec", args[0] if args else None)
+        if spec is not None:
+            specs.append(spec)
+    return specs
 
 
 class TestGLMesh(unittest.TestCase):
@@ -67,11 +79,8 @@ class TestGLMesh(unittest.TestCase):
             [[0.0, 0.0], [1.0, 0.0], [0.0, 1.0], [1.0, 1.0]], dtype=np.float32
         )
 
-        # Mock OpenGL functions to avoid context issues
+        # Mock VertexArrayObject so upload() does not require a GL context.
         self.gl_patches = [
-            patch("picogl.renderer.glmesh.glDrawElements"),
-            patch("picogl.renderer.glmesh.delete_buffer_object"),
-            # Mock VertexArrayObject and its methods
             patch("picogl.renderer.glmesh.VertexArrayObject"),
         ]
 
@@ -266,13 +275,15 @@ class TestGLMesh(unittest.TestCase):
         with patch("picogl.renderer.glmesh.VertexArrayObject", return_value=mock_vao):
             mesh.upload()
 
-        # Test that UV VBO was added
-        calls = mock_vao.add_vbo.call_args_list
-        uv_call_found = any(
-            len(call[1]) > 0 and call[1].get("index") == 3 and call[1].get("size") == 2
-            for call in calls
-        )
-        self.assertTrue(uv_call_found)
+        specs = _add_vbo_specs(mock_vao)
+        uv_specs = [spec for spec in specs if spec.index == 3 and spec.size == 2]
+        self.assertTrue(uv_specs)
+        for spec in specs:
+            self.assertEqual(
+                spec.stride,
+                0,
+                "tightly packed surface VBOs must use OpenGL byte stride 0",
+            )
 
     def test_upload_without_uvs(self):
         """Test upload method without UVs."""
@@ -287,14 +298,9 @@ class TestGLMesh(unittest.TestCase):
             mesh.upload()
 
         # Test that UV VBO was not added (should have 3 calls: vertices, colors, normals)
-        calls = mock_vao.add_vbo.call_args_list
-        self.assertEqual(len(calls), 3)  # Only vertices, colors, normals
-
-        # Verify no UV call (index 3)
-        uv_call_found = any(
-            len(call[1]) > 0 and call[1].get("index") == 3 for call in calls
-        )
-        self.assertFalse(uv_call_found)
+        specs = _add_vbo_specs(mock_vao)
+        self.assertEqual(len(specs), 3)  # Only vertices, colors, normals
+        self.assertFalse(any(spec.index == 3 for spec in specs))
 
     def test_bind_with_uploaded_mesh(self):
         """Test bind method with uploaded mesh."""
@@ -515,31 +521,36 @@ class TestGLMesh(unittest.TestCase):
         with patch("picogl.renderer.glmesh.VertexArrayObject", return_value=mock_vao):
             mesh.upload()
 
-        # Test VBO calls
-        calls = mock_vao.add_vbo.call_args_list
+        specs_and_data = []
+        for call in mock_vao.add_vbo.call_args_list:
+            args, kwargs = call
+            spec = kwargs.get("spec", args[0])
+            data = kwargs.get("data", args[1] if len(args) > 1 else None)
+            specs_and_data.append((spec, data))
 
-        # Should have 4 VBO calls (vertices, colors, normals, uvs)
-        self.assertEqual(len(calls), 4)
+        self.assertEqual(len(specs_and_data), 4)
 
-        # Test vertex VBO (index 0, size 3)
-        vertex_call = next(call for call in calls if call[1].get("index") == 0)
-        self.assertEqual(vertex_call[1]["size"], 3)
-        np.testing.assert_array_equal(vertex_call[1]["data"], self.test_vertices)
+        by_index = {spec.index: (spec, data) for spec, data in specs_and_data}
 
-        # Test colour VBO (index 1, size 3)
-        color_call = next(call for call in calls if call[1].get("index") == 1)
-        self.assertEqual(color_call[1]["size"], 3)
-        np.testing.assert_array_equal(color_call[1]["data"], self.test_colors)
+        vertex_spec, vertex_data = by_index[0]
+        self.assertEqual(vertex_spec.size, 3)
+        self.assertEqual(vertex_spec.stride, 0)
+        np.testing.assert_array_equal(vertex_data, self.test_vertices)
 
-        # Test normal VBO (index 2, size 3)
-        normal_call = next(call for call in calls if call[1].get("index") == 2)
-        self.assertEqual(normal_call[1]["size"], 3)
-        np.testing.assert_array_equal(normal_call[1]["data"], self.test_normals)
+        color_spec, color_data = by_index[1]
+        self.assertEqual(color_spec.size, 3)
+        self.assertEqual(color_spec.stride, 0)
+        np.testing.assert_array_equal(color_data, self.test_colors)
 
-        # Test UV VBO (index 3, size 2)
-        uv_call = next(call for call in calls if call[1].get("index") == 3)
-        self.assertEqual(uv_call[1]["size"], 2)
-        np.testing.assert_array_equal(uv_call[1]["data"], self.test_uvs)
+        normal_spec, normal_data = by_index[2]
+        self.assertEqual(normal_spec.size, 3)
+        self.assertEqual(normal_spec.stride, 0)
+        np.testing.assert_array_equal(normal_data, self.test_normals)
+
+        uv_spec, uv_data = by_index[3]
+        self.assertEqual(uv_spec.size, 2)
+        self.assertEqual(uv_spec.stride, 0)
+        np.testing.assert_array_equal(uv_data, self.test_uvs)
 
     def test_ebo_parameters(self):
         """Test that EBO is added with correct parameters."""

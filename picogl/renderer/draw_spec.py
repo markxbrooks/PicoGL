@@ -12,8 +12,8 @@ from typing import Any
 
 import numpy as np
 
-from backend.modern.core.vertex.array.draw_spec import DrawSpec
 from picogl.backend.gl.enums import GLDrawMode
+from picogl.backend.modern.core.vertex.array.draw_spec import DrawSpec
 
 _UINT32_BYTES = int(np.dtype(np.uint32).itemsize)
 
@@ -51,7 +51,8 @@ class MeshDrawSpec:
     first: int = 0
     pointer: int = 0
 
-    def to_draw_spec(self):
+    def to_draw_spec(self) -> DrawSpec:
+        """Convert to the GPU :class:`~picogl.backend.modern.core.vertex.array.draw_spec.DrawSpec`."""
         return DrawSpec(
             count=self.count,
             mode=self.mode,
@@ -154,8 +155,6 @@ def execute_draw_spec(vao: Any, spec: MeshDrawSpec) -> None:
     :param vao: GPU vertex array that implements ``draw(...)``.
     :param spec: Count/mode/offset for one ``glDraw*`` call.
     """
-    from picogl.backend.modern.core.vertex.array.draw_spec import DrawSpec
-
     if spec.count <= 0:
         return
     vao.draw(spec.to_draw_spec())
