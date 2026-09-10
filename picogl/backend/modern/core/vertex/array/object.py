@@ -211,30 +211,28 @@ class VertexArrayObject(VertexBase, GLResource):
         return False
 
     def set_layout(self, layout: LayoutDescriptor | None) -> None:
-        """configure"""
-        if layout is None:
-            return
-        if self._configured:
+        """Configure the VAO from a layout descriptor."""
+        if layout is None or self._configured:
             return
 
         if self.vao is None:
             return
 
-        with self.bind():
-
+        with self.bound():
             self.layout = layout
 
             if self.ebo:
-                gl_bind_buffer(GLBufferTarget.ELEMENT, self.ebo.handle)
+                self.ebo.bind()
 
-            # Configure attributes
             for attr in layout.attributes:
-                vbo = self.get_vbo_object(attr.name)  # <-- CRITICAL
+                vbo = self.get_vbo_object(attr.name)
 
                 if vbo is None:
-                    raise RuntimeError(f"No VBO bound for attribute '{attr.name}'")
+                    raise RuntimeError(
+                        f"No VBO bound for attribute '{attr.name}'"
+                    )
 
-                vbo.bind()  # <-- THIS IS THE FIX
+                vbo.bind()
                 gl_enable_vertex_array(attr.index)
                 gl_vertex_attrib_pointer(
                     index=attr.index,
@@ -245,7 +243,6 @@ class VertexArrayObject(VertexBase, GLResource):
                     offset=attr.offset,
                 )
 
-            gl_bind_vertex_array(0)
             self._configured = True
 
     @contextmanager
