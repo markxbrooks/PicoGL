@@ -210,8 +210,10 @@ class VertexArrayObject(VertexBase, GLResource):
 
         return False
 
-    def set_layout(self, layout: LayoutDescriptor) -> None:
+    def set_layout(self, layout: LayoutDescriptor | None) -> None:
         """configure"""
+        if layout is None:
+            return
         if self._configured:
             return
 
@@ -313,7 +315,7 @@ class VertexArrayObject(VertexBase, GLResource):
         data: np.ndarray,
         index: int = 0,
         size: int = 3,
-        dtype: int = GLNumeric.FLOAT,
+        dtype: GLNumeric | None = GLNumeric.FLOAT,
         name: str = None,
         handle: int = None,
     ) -> ModernVBO:
@@ -336,7 +338,7 @@ class VertexArrayObject(VertexBase, GLResource):
         index: int,
         data: np.ndarray,
         size: int,
-        dtype: int = GLNumeric.FLOAT,
+        dtype: GLNumeric | None = GLNumeric.FLOAT,
         name: str = None,
         handle: int = None,
     ) -> ModernVBO:
