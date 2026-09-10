@@ -421,8 +421,7 @@ class VertexArrayObject(VertexBase, GLResource):
 
         :param spec: GPU draw command; defaults to :class:`DrawSpec` (POINTS).
         """
-        spec = spec or DrawSpec()
-        #count = self.index_count if spec.count is None else spec.count
+        spec = spec or DrawSpec(count=self.index_count)
         spec.count = self.index_count if spec.count is None else spec.count
         if not spec.count:
             return

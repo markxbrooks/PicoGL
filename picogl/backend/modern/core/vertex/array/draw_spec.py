@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from picogl.backend.gl.enums import GLDrawMode, GLIndexType
 
 
-@dataclass(frozen=True, slots=True)
+@dataclass(frozen=False, slots=True)
 class DrawSpec:
     """DrawSpec class"""
 
