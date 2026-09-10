@@ -9,6 +9,7 @@ from decologr import Decologr as log
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.renderer import GLResourceRegistry, MeshData, RendererBase
+from picogl.renderer.draw_spec import MeshDrawInfo
 from picogl.utils.loader.texture import TextureLoader
 from picogl.utils.texture import bind_texture_array
 
@@ -34,6 +35,9 @@ class ObjectRenderer(RendererBase):
         self.data = data
         if self.data is not None:
             self.data.vertex_count = len(self.data.vertices.flatten()) // 3
+            self.data.draw_info = MeshDrawInfo(
+                mode=GLDrawMode.TRIANGLES, indexed=False
+            )
 
         self.show_model = True
         self.glsl_dir = glsl_dir
@@ -78,6 +82,7 @@ class ObjectRenderer(RendererBase):
             if self.data.normals is not None:
                 model_vao.add_vbo(index=2, data=self.data.normals, size=3)
             self.context.vaos["model"] = model_vao
+        self.data.attach_vao(model_vao)
 
     def render(self) -> None:
         """Dispatch render pass."""
@@ -86,8 +91,10 @@ class ObjectRenderer(RendererBase):
         self._finalize_render()
 
     def _draw_model(self):
-        """Draw the model"""
+        """Draw the model via :meth:`MeshData.draw`."""
         model_vao = self.context.vaos["model"]
+        if self.data.vao is None:
+            self.data.attach_vao(model_vao)
         shader = self.context.shader
         with shader, model_vao:
             shader.uniform("mvp_matrix", self.context.mvp_matrix)
@@ -98,6 +105,4 @@ class ObjectRenderer(RendererBase):
                 bind_texture_array(self.context.texture_id)
                 shader.uniform("texture0", 0)
 
-            model_vao.draw(
-                mode=GLDrawMode.TRIANGLES, index_count=self.data.vertex_count
-            )
+            self.data.draw()

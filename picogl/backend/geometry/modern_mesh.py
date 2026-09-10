@@ -5,8 +5,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any, Optional
 
 from picogl.backend.geometry.mesh import GPUMesh
-from picogl.backend.gl.api import gl_draw_elements
-from picogl.backend.gl.enums import GLNumeric
 
 if TYPE_CHECKING:
     from picogl.renderer.glmesh import GLMesh
@@ -46,15 +44,11 @@ class ModernMesh(GPUMesh):
         if self._gl_mesh is not None:
             self._gl_mesh.draw(mode=mode)
             return
-        if getattr(self._vao, "ebo", None) is not None:
-            gl_draw_elements(
-                self._index_count,
-                GLNumeric.UNSIGNED_INT,
-                mode,
-                pointer=None,
-            )
-        elif hasattr(self._vao, "draw"):
-            self._vao.draw(index_count=self._index_count, mode=mode)
+        mesh = getattr(self._vao, "mesh", None)
+        if mesh is not None and hasattr(mesh, "draw"):
+            mesh.draw(mode=mode)
+            return
+        raise RuntimeError("ModernMesh has no GLMesh or MeshData to draw")
 
     def delete(self) -> None:
         if self._gl_mesh is not None:

@@ -228,12 +228,14 @@ class MeshData:
         first_item: int = 0,
         item_count: int | None = None,
         count: int | None = None,
+        mode: GLDrawMode | None = None,
     ) -> None:
         """Issue a modern ``glDraw*`` via the attached VAO and :meth:`draw_spec`.
 
         :param first_item: First logical item (atom, bond, …).
         :param item_count: Number of items; ``None`` draws the remainder.
         :param count: Override element/vertex count (HETATM temporary EBO).
+        :param mode: Override :attr:`MeshDrawSpec.mode` (e.g. gizmo ``LINES``).
         :raises RuntimeError: When no VAO has been attached.
         """
         vao = self.vao
@@ -246,6 +248,13 @@ class MeshData:
                 count=int(count),
                 first=0,
                 pointer=0,
+            )
+        if mode is not None:
+            spec = MeshDrawSpec(
+                mode=mode,
+                count=spec.count,
+                first=spec.first,
+                pointer=spec.pointer,
             )
         execute_draw_spec(vao, spec)
 

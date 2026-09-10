@@ -34,6 +34,7 @@ from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.globals import PICOGL_SHADER_SRC_DIRECTORY
 from picogl.renderer import MeshData
+from picogl.renderer.draw_spec import MeshDrawInfo
 from picogl.shaders.registry import ShaderRegistry
 from picogl.shaders.type import ShaderType
 from picogl.ui.backend.glut.window.object import RenderWindow
@@ -139,10 +140,12 @@ class MolecularViewer:
         )
         vertices = vertices - self._center
         colors = np.asarray(self.bond_data["colors"], dtype=np.float32).reshape(-1, 3)
-        return MeshData.from_raw(
+        mesh = MeshData.from_raw(
             vertices=vertices.reshape(-1),
             colors=colors.reshape(-1),
         )
+        mesh.draw_info = MeshDrawInfo(mode=GLDrawMode.LINES, indexed=False)
+        return mesh
 
     def export_molviewspec(self, output_path: str) -> None:
         if not self.pdb_loader:
@@ -175,7 +178,7 @@ def _build_mesh_vao(mesh: MeshData) -> VertexArrayObject:
             data=np.ascontiguousarray(mesh.colors, dtype=np.float32),
             size=3,
         )
-    return vao
+    return mesh.attach_vao(vao)
 
 
 def _enable_blending() -> None:
@@ -319,7 +322,4 @@ class MolecularRenderWindow(RenderWindow):
             return
         with gl_shader_bound(shader):
             self._bind_uniforms(shader, kind)
-            self.bond_vao.draw(
-                mode=GLDrawMode.LINES,
-                index_count=_mesh_vertex_count(self.bond_mesh),
-            )
+            self.bond_mesh.draw()

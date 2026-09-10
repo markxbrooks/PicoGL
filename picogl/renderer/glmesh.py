@@ -7,7 +7,6 @@ UVs, and vertex layout, along with functionality for uploading these attributes 
 GPU buffers and expanding indexed meshes into per-triangle vertex lists if needed.
 """
 
-import ctypes
 from typing import TYPE_CHECKING, Any, Literal, Optional, Union
 
 import numpy as np
@@ -16,10 +15,11 @@ from numpy import dtype, floating, generic, ndarray
 from numpy._typing import _64Bit
 
 from picogl.backend.gl.api.glcleanup import gl_release_vertex_array_object
-from picogl.backend.gl.enums import GLDrawMode, GLIndexType
+from picogl.backend.gl.enums import GLDrawMode
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.gpu.buffers.helper import as_vec3_array
 from picogl.gpu.buffers.vertex.vbo.vbo_class import MeshDataAttrs, VBOType
+from picogl.renderer.draw_spec import MeshDrawSpec, execute_draw_spec
 from picogl.shaders.type import ShaderType
 
 if TYPE_CHECKING:
@@ -332,13 +332,14 @@ class GLMesh:
     def __exit__(self, exc_type, exc, tb):
         self.unbind()
 
-    def draw(self, mode: GLDrawMode = GLDrawMode.TRIANGLES) -> None:
+    def draw(self, mode: GLDrawMode | None = None) -> None:
         """Draw via attached :class:`MeshData` when its CPU arrays are intact.
 
-        ElMo secondary-structure drawables copy arrays into this object then
-        call :meth:`MeshData.delete`. ``MeshData.draw`` needs those arrays for
-        :meth:`~picogl.renderer.meshdata.MeshData.draw_spec`; once they are
-        gone, issue ``glDraw*`` from the uploaded VAO and ``index_count``.
+        Callers that copy arrays into this object then drop the MeshData CPU
+        buffers (``MeshData.delete``) fall back to :func:`execute_draw_spec`
+        using the uploaded VAO and ``index_count``. ``mode`` overrides the
+        mesh :class:`~picogl.renderer.draw_spec.MeshDrawSpec` when given
+        (gizmo line draws).
         """
         if not self.vao:
             raise RuntimeError("GLMesh not uploaded. Call upload() first.")
@@ -348,12 +349,16 @@ class GLMesh:
             and getattr(mesh, "vao", None) is not None
             and getattr(mesh, "vertices", None) is not None
         ):
-            mesh.draw()
+            mesh.draw(mode=mode)
             return
-        with self.vao:
-            self.vao.draw(
-                index_count=self.index_count,
-                mode=mode,
-                dtype=GLIndexType.UNSIGNED_INT,
-                pointer=ctypes.c_void_p(0),
-            )
+        draw_mode = mode
+        if draw_mode is None:
+            info = getattr(mesh, "draw_info", None)
+            if info is not None:
+                draw_mode = info.mode
+            else:
+                draw_mode = GLDrawMode.TRIANGLES
+        execute_draw_spec(
+            self.vao,
+            MeshDrawSpec(mode=draw_mode, count=int(self.index_count), first=0, pointer=0),
+        )

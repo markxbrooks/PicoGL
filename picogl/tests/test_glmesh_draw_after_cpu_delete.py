@@ -5,6 +5,7 @@ from unittest.mock import MagicMock, patch
 import numpy as np
 
 from picogl.backend.gl.enums import GLDrawMode
+from picogl.renderer.draw_spec import MeshDrawInfo
 from picogl.renderer.glmesh import GLMesh
 from picogl.renderer.meshdata import MeshData
 
@@ -37,3 +38,27 @@ def test_draw_after_cpu_mesh_delete_uses_uploaded_index_count() -> None:
     kwargs = mock_vao.draw.call_args.kwargs
     assert kwargs.get("index_count") == len(faces)
     assert kwargs.get("mode") == GLDrawMode.TRIANGLES
+
+
+def test_draw_mode_override_with_cpu_mesh_intact() -> None:
+    """Gizmo path: attached CPU MeshData still honors GLMesh.draw(mode=LINES)."""
+    vertices = np.array(
+        [[0.0, 0.0, 0.0], [1.0, 0.0, 0.0]],
+        dtype=np.float32,
+    )
+    colors = np.ones((2, 3), dtype=np.float32)
+    mesh_data = MeshData(
+        vertices=vertices,
+        colors=colors,
+        draw_info=MeshDrawInfo(mode=GLDrawMode.TRIANGLES, indexed=False),
+    )
+    glmesh = GLMesh.from_mesh_data(mesh_data)
+    mock_vao = MagicMock()
+    with patch("picogl.renderer.glmesh.VertexArrayObject", return_value=mock_vao):
+        glmesh.upload()
+    glmesh.draw(mode=GLDrawMode.LINES)
+
+    mock_vao.draw.assert_called_once()
+    kwargs = mock_vao.draw.call_args.kwargs
+    assert kwargs.get("mode") == GLDrawMode.LINES
+    assert kwargs.get("index_count") == 2

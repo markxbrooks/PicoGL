@@ -65,6 +65,22 @@ class TestModernMesh(unittest.TestCase):
         gpu.delete()
         gl_mesh.delete.assert_called_once()
 
+    def test_vao_fallback_uses_attached_mesh_draw(self):
+        mesh = MagicMock()
+        vao = MagicMock()
+        vao.mesh = mesh
+        gpu = ModernMesh(vao=vao, index_count=6)
+
+        gpu.draw(GL_TRIANGLES)
+        mesh.draw.assert_called_once_with(mode=GL_TRIANGLES)
+
+    def test_vao_fallback_without_mesh_raises(self):
+        vao = MagicMock()
+        vao.mesh = None
+        gpu = ModernMesh(vao=vao, index_count=6)
+        with self.assertRaises(RuntimeError):
+            gpu.draw(GL_TRIANGLES)
+
 
 class TestModernBindingUpload(unittest.TestCase):
     def test_upload_gpu_object_wraps_ebo_mesh(self):
