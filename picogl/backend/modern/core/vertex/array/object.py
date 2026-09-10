@@ -453,28 +453,16 @@ class VertexArrayObject(VertexBase, GLResource):
         return self._vbos_by_attribute.get(attrib_index)
 
     def update_vbo(self, index: int, data: np.ndarray) -> None:
-        """
-        Upload new contents for the vertex buffer tied to attribute ``index``.
-
-        ``index`` is the attribute location from :class:`AttributeSpec` (e.g. ``0``
-        positions, ``1`` colours, ``2`` normals). If the new array has the same byte size as
-        the existing GPU store, :func:`glBufferSubData` is used; otherwise
-        :meth:`ModernVBO.set_data` (``glBufferData``) reallocates the buffer.
-
-        The VAO must have been built via :meth:`add_vbo`; arbitrary
-        :meth:`add_attribute` entries (raw handles only) are not updated here.
-        """
         if data is None:
             raise TypeError("update_vbo: data must be a numpy array")
-        arr = np.ascontiguousarray(np.asarray(data, dtype=np.float32))
-
+    
         if not self.bind():
             log.error(
                 "update_vbo: VAO not valid in current context",
                 scope=self.__class__.__name__,
             )
             return
-
+    
         vbo = self._modern_vbo_for_attrib(index)
         if vbo is None:
             log.warning(
@@ -483,18 +471,10 @@ class VertexArrayObject(VertexBase, GLResource):
             )
             self.unbind()
             return
-
+    
         try:
             with vbo:
-                old = getattr(vbo, "data", None)
-                if (
-                    old is not None
-                    and isinstance(old, np.ndarray)
-                    and old.dtype == arr.dtype
-                    and old.nbytes == arr.nbytes
-                ):
-                    gl_buffer_subdata(GLBufferTarget.ARRAY, 0, arr.nbytes, arr)
-                else:
-                    vbo.set_data(arr)
+                vbo.update(data)  # <-- moved decision logic into the VBO
         finally:
             self.unbind()
+    
