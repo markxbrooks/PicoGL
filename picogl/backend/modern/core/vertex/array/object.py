@@ -454,15 +454,9 @@ class VertexArrayObject(VertexBase, GLResource):
         return self._vbos_by_attribute.get(attrib_index)
 
     def update_vbo(self, index: int, data: np.ndarray) -> None:
+        """update vbo"""
         if data is None:
             raise TypeError("update_vbo: data must be a numpy array")
-    
-        if not self.bind():
-            log.error(
-                "update_vbo: VAO not valid in current context",
-                scope=self.__class__.__name__,
-            )
-            return
     
         vbo = self._modern_vbo_for_attrib(index)
         if vbo is None:
@@ -470,12 +464,10 @@ class VertexArrayObject(VertexBase, GLResource):
                 f"update_vbo: no ModernVBO for attribute index {index}",
                 scope=self.__class__.__name__,
             )
-            self.unbind()
             return
     
-        try:
+        with self.bound():
             with vbo:
-                vbo.update(data)  # <-- moved decision logic into the VBO
-        finally:
-            self.unbind()
+                vbo.update(data)
+
     
