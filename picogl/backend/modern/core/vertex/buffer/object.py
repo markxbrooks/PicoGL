@@ -4,6 +4,7 @@ import numpy as np
 
 from picogl.backend.gl.api.buffer.generate import gl_generate_buffers
 from picogl.backend.gl.api.glcleanup import gl_delete_buffers
+from picogl.backend.gl.api.buffer.subdata import gl_buffer_subdata
 from picogl.backend.gl.enums import GLBufferTarget
 from picogl.backend.modern.core.vertex.base import VertexBuffer
 
