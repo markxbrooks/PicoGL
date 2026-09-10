@@ -312,11 +312,21 @@ class GLMesh:
         self.unbind()
 
     def draw(self, mode=GLDrawMode.TRIANGLES) -> None:
-        """Draw the mesh via attached :class:`MeshData` when present."""
+        """Draw via attached :class:`MeshData` when its CPU arrays are intact.
+
+        ElMo secondary-structure drawables copy arrays into this object then
+        call :meth:`MeshData.delete`. ``MeshData.draw`` needs those arrays for
+        :meth:`~picogl.renderer.meshdata.MeshData.draw_spec`; once they are
+        gone, issue ``glDraw*`` from the uploaded VAO and ``index_count``.
+        """
         if not self.vao:
             raise RuntimeError("GLMesh not uploaded. Call upload() first.")
         mesh = self.mesh
-        if mesh is not None and getattr(mesh, "vao", None) is not None:
+        if (
+            mesh is not None
+            and getattr(mesh, "vao", None) is not None
+            and getattr(mesh, "vertices", None) is not None
+        ):
             mesh.draw()
             return
         with self.vao:
