@@ -72,7 +72,7 @@ if _HEADLESS:
         role: VertexBufferRole,
         index: int,
         *,
-        size: int = 3,
+        size: int = VBOComponentType.POSITIONS.size,
         name: str | VertexBufferRole | None = None,
         dtype: int,
         normalized: GLBoolean = GLBoolean.FALSE,
@@ -253,9 +253,9 @@ def setup_vbg(
     normals: np.ndarray,
     positions: np.ndarray,
     draw_mode: int = GLDrawMode.TRIANGLE_STRIP,
-    positions_size: int = VBOComponentType.POSITIONS,
-    normals_size: int = VBOComponentType.NORMALS,
-    colors_size: int = VBOComponentType.COLOR_RGB,
+    positions_size: int = VBOComponentType.POSITIONS.size,
+    normals_size: int = VBOComponentType.NORMALS.size,
+    colors_size: int = VBOComponentType.COLOR_RGB.size,
 ) -> VertexBufferGroup:
     """Create VBO"""
     # ✅ Optional sanity checks
