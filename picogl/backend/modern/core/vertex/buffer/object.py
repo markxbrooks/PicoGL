@@ -30,3 +30,24 @@ class ModernVBO(VertexBuffer):
         if self.handle:
             gl_delete_buffers(1, [self.handle])
             self.handle = None
+
+    def update(self, data: np.ndarray, *, dtype=np.float32) -> None:
+        if data is None:
+            raise TypeError("ModernVBO.update: data must be a numpy array")
+
+        arr = np.ascontiguousarray(np.asarray(data, dtype=dtype))
+
+        old = getattr(self, "data", None)
+        same_store = (
+            old is not None
+            and isinstance(old, np.ndarray)
+            and old.dtype == arr.dtype
+            and old.nbytes == arr.nbytes
+        )
+
+        if same_store:
+            # update in-place
+            gl_buffer_subdata(GLBufferTarget.ARRAY, 0, arr.nbytes, arr)
+        else:
+            # reallocate
+            self.set_data(arr)
