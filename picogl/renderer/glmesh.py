@@ -8,9 +8,12 @@ GPU buffers and expanding indexed meshes into per-triangle vertex lists if neede
 """
 
 import ctypes
-from typing import TYPE_CHECKING, Literal, Optional, Union
+from typing import TYPE_CHECKING, Literal, Optional, Union, Any
 
 import numpy as np
+from numpy import dtype, floating, generic, ndarray
+from numpy._typing import _64Bit
+
 from picogl.backend.gl.api.glcleanup import gl_release_vertex_array_object
 from picogl.backend.gl.enums import GLDrawMode, GLIndexType
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
@@ -22,6 +25,35 @@ from elmo.glsl.layouts import build_shader_layouts
 
 if TYPE_CHECKING:
     from picogl.renderer.meshdata import MeshData
+
+
+def expand_triangle_vertices_and_colors(
+    a: int,
+    b: int,
+    c: int,
+    colors: ndarray,
+    expanded_colors: ndarray,
+    expanded_vertices: ndarray,
+    triangle_index: int,
+    vertices: ndarray,
+) -> None:
+    """
+    expand_triangle_vertices_and_colors
+    """
+    expanded_vertices[3 * triangle_index + 0] = vertices[a]
+    expanded_vertices[3 * triangle_index + 1] = vertices[b]
+    expanded_vertices[3 * triangle_index + 2] = vertices[c]
+
+    expanded_colors[3 * triangle_index + 0] = colors[a]
+    expanded_colors[3 * triangle_index + 1] = colors[b]
+    expanded_colors[3 * triangle_index + 2] = colors[c]
+
+
+def empty_triangle_vertices(triangle_count: int, components: int = 3) -> ndarray:
+    """
+    empty_triangle_vertices
+    """
+    return np.empty((triangle_count * 3, components), dtype=np.float32)
 
 
 class GLMesh:
@@ -130,31 +162,19 @@ class GLMesh:
 
         # Build per-triangle vertex lists
         tri_count = self.indices.size // 3
-        expanded_v = np.empty((tri_count * 3, 3), dtype=np.float32)
-        expanded_c = np.empty((tri_count * 3, 3), dtype=np.float32)
-        expanded_n = np.empty((tri_count * 3, 3), dtype=np.float32)
-        expanded_t = np.empty((tri_count * 3, 2), dtype=np.float32)
+        expanded_v = empty_triangle_vertices(tri_count)
+        expanded_c = empty_triangle_vertices(tri_count)
+        expanded_n = empty_triangle_vertices(tri_count)
+        expanded_t = empty_triangle_vertices(tri_count, components=2) # np.empty((tri_count * 3, 2), dtype=np.float32)
 
         for i in range(tri_count):
             a = self.indices[3 * i + 0]
             b = self.indices[3 * i + 1]
             cidx = self.indices[3 * i + 2]
 
-            expanded_v[3 * i + 0] = v[a]
-            expanded_v[3 * i + 1] = v[b]
-            expanded_v[3 * i + 2] = v[cidx]
+            expand_vertices_colors(a, b, c, cidx, expanded_c, expanded_v, i, v)
 
-            expanded_c[3 * i + 0] = c[a]
-            expanded_c[3 * i + 1] = c[b]
-            expanded_c[3 * i + 2] = c[cidx]
-
-            expanded_n[3 * i + 0] = n[a]
-            expanded_n[3 * i + 1] = n[b]
-            expanded_n[3 * i + 2] = n[cidx]
-
-            expanded_t[3 * i + 0] = t[a]
-            expanded_t[3 * i + 1] = t[b]
-            expanded_t[3 * i + 2] = t[cidx]
+            expand_vertices_colors(a, b, t, cidx, expanded_t, expanded_n, i, n)
 
         self._expanded_vertices = expanded_v
         self._expanded_colors = expanded_c
@@ -311,7 +331,7 @@ class GLMesh:
     def __exit__(self, exc_type, exc, tb):
         self.unbind()
 
-    def draw(self, mode=GLDrawMode.TRIANGLES) -> None:
+    def draw(self, mode: GLDrawMode = GLDrawMode.TRIANGLES) -> None:
         """Draw via attached :class:`MeshData` when its CPU arrays are intact.
 
         ElMo secondary-structure drawables copy arrays into this object then

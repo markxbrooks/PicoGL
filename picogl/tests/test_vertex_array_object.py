@@ -176,26 +176,6 @@ class TestVertexArrayObject(unittest.TestCase):
             self.assertEqual(vao.named_vbos["position"], mock_vbo)
             self.assertEqual(result, mock_vbo)
 
-    def test_add_attribute(self):
-        """Test add_attribute method."""
-        vao = VertexArrayObject(handle=self.mock_handle)
-        vbo_handle = 789
-
-        vao.add_attribute(
-            index=1,
-            vbo=vbo_handle,
-            size=3,
-            dtype=GL_FLOAT,
-            normalized=False,
-            stride=0,
-            offset=0,
-        )
-
-        # Verify attribute was added to the list
-        self.assertEqual(len(vao.attributes), 1)
-        expected_attr = (1, vbo_handle, 3, GL_FLOAT, False, 0, 0)
-        self.assertEqual(vao.attributes[0], expected_attr)
-
     def test_add_ebo(self):
         """Test add_ebo method."""
         with patch(

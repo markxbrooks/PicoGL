@@ -22,13 +22,6 @@ Dependencies:
 - numpy
 - PyOpenGL (OpenGL.GL and OpenGL.raw.GL)
 
-Example usage:
-==============
->>> vao = VertexArrayObject()
->>> vao.add_attribute(index=0, vertices=vertices, size=3)
->>> vao.add_attribute(index=1, vertices=colors, size=3)
->>> vao.update(index_count=100)
-
 Intended for OpenGL 3.0+ with VAO support.
 
 """
@@ -39,6 +32,8 @@ from contextlib import contextmanager, nullcontext
 from typing import Any, Optional, Union
 
 import numpy as np
+
+from backend.modern.core.vertex.array.draw_spec import DrawSpec
 from decologr import Decologr as log
 from picogl.backend.modern.core.vertex.attribute import VertexAttribute
 
@@ -252,7 +247,7 @@ class VertexArrayObject(VertexBase, GLResource):
         try:
             yield
         finally:
-            gl_bind_vertex_array(0)
+            self.unbind()
 
     def bind(self) -> Union["VertexArrayObject", None]:
         """
@@ -307,29 +302,6 @@ class VertexArrayObject(VertexBase, GLResource):
         canonical = NAME_ALIASES.get(name, name)
         return self.named_vbos.get(canonical)
 
-    def add_vbo_data(
-        self,
-        data: np.ndarray,
-        index: int = 0,
-        size: int = 3,
-        dtype: GLNumeric | None = GLNumeric.FLOAT,
-        name: str = None,
-        handle: int = None,
-    ) -> ModernVBO:
-        """
-        Add VBO data to this VAO.
-
-        Compatibility wrapper for older callers that only supplied vertex data.
-        """
-        return self.add_vbo(
-            index=index,
-            data=data,
-            size=size,
-            dtype=dtype,
-            name=name,
-            handle=handle,
-        )
-
     def add_vbo(
         self,
         index: int,
@@ -376,31 +348,6 @@ class VertexArrayObject(VertexBase, GLResource):
             self.ebo = None
 
         self.named_vbos.clear()
-
-    def add_attribute(
-        self,
-        index: int,
-        vbo: int,
-        size: int = 3,
-        dtype: int = GLNumeric.FLOAT,
-        normalized: bool = False,
-        stride: int = 0,
-        offset: int = 0,
-    ):
-        """
-        add_attribute
-
-        :param index: int Index of the vertex attribute.
-        :param vbo: int Vertex Buffer Object (VBO) associated with this attribute.
-        :param size: int Size of the vertex attribute (e.g., 3 for a 3D vector).
-        :param dtype: int Data type of the vertex attribute (default is GL_FLOAT).
-        :param normalized: bool Whether the data is normalized (default is False).
-        :param stride: int Byte offset between consecutive vertex attributes (default is 0).
-        :param offset: int Byte offset to the first component of the
-        vertex attribute (default is 0).
-        Add a vertex attribute to the VAO.
-        """
-        self.attributes.append((index, vbo, size, dtype, normalized, stride, offset))
 
     def add_ebo(self, data: np.ndarray) -> ModernEBO:
         """
@@ -461,6 +408,36 @@ class VertexArrayObject(VertexBase, GLResource):
         idx = self.index_count
         return int(idx) if idx else 0
 
+    def draw_with_spec(self, spec: DrawSpec | None = None) -> None:
+        spec = spec or DrawSpec()
+
+        count = self.index_count if spec.count is None else spec.count
+
+        if count == 0:
+            return
+
+        context = (
+            point_rendering()
+            if GLDrawMode.POINTS == spec.mode
+            else nullcontext()
+        )
+
+        with context, self.bound():
+            if self.ebo:
+                self.ebo.bind()
+                gl_draw_elements(
+                    count,
+                    spec.dtype,
+                    spec.mode,
+                    pointer=spec.pointer,
+                )
+            else:
+                gl_draw_arrays(
+                    count,
+                    spec.mode,
+                    first=spec.first,
+                )
+
     def draw(
         self,
         index_count: Union[int, None] = None,
@@ -481,25 +458,18 @@ class VertexArrayObject(VertexBase, GLResource):
         """
         atom_count: int = int(index_count) or int(self.index_count)
         context = point_rendering() if mode == GLDrawMode.POINTS else nullcontext()
-        with context:
-            try:
-                if not self.bind():
-                    return
-                if index_count is None:
-                    index_count = self.index_count
-                if index_count == 0:
-                    self.unbind()
-                    return
-                if self.ebo:
-                    # Re-bind EBO: if it was not captured into this VAO at creation time,
-                    # glDrawElements can use a stale global EBO (e.g. from bond draws) and
-                    # produce fan/spike artefacts on indexed meshes such as ribbons.
-                    self.ebo.bind()
-                    gl_draw_elements(atom_count, dtype, mode, pointer=pointer)
-                else:
-                    gl_draw_arrays(atom_count, mode, first=int(first))
-            finally:
-                self.unbind()
+        with context, self.bound():
+            if index_count is None:
+                index_count = self.index_count
+
+            if index_count == 0:
+                return
+
+            if self.ebo:
+                self.ebo.bind()
+                gl_draw_elements(atom_count, dtype, mode, pointer=pointer)
+            else:
+                gl_draw_arrays(atom_count, mode, first=int(first))
 
     def _modern_vbo_for_attrib(self, attrib_index: int) -> Optional[ModernVBO]:
         """Return the :class:`ModernVBO` created for ``add_vbo(index=attrib_index, ...)``."""
@@ -545,17 +515,16 @@ class VertexArrayObject(VertexBase, GLResource):
             return
 
         try:
-            vbo.bind()
-            old = getattr(vbo, "data", None)
-            if (
-                old is not None
-                and isinstance(old, np.ndarray)
-                and old.dtype == arr.dtype
-                and old.nbytes == arr.nbytes
-            ):
-                gl_buffer_subdata(GLBufferTarget.ARRAY, 0, arr.nbytes, arr)
-            else:
-                vbo.set_data(arr)
+            with vbo:
+                old = getattr(vbo, "data", None)
+                if (
+                    old is not None
+                    and isinstance(old, np.ndarray)
+                    and old.dtype == arr.dtype
+                    and old.nbytes == arr.nbytes
+                ):
+                    gl_buffer_subdata(GLBufferTarget.ARRAY, 0, arr.nbytes, arr)
+                else:
+                    vbo.set_data(arr)
         finally:
-            gl_bind_buffer(GLBufferTarget.ARRAY, 0)
             self.unbind()
