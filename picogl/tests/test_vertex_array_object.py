@@ -37,8 +37,24 @@ from OpenGL.raw.GL._types import GL_FLOAT
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POINTS
 from OpenGL.raw.GL.VERSION.GL_1_5 import GL_STATIC_DRAW
 
+from picogl.backend.modern.core.vertex.array.draw_spec import DrawSpec
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
+from picogl.backend.modern.core.vertex.base import VertexBuffer
 from picogl.gpu.buffers.attributes import AttributeSpec, LayoutDescriptor
+from picogl.gpu.buffers.vertex.aliases import VertexBufferRole
+from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
+
+
+class _StubVBO(VertexBuffer):
+    """VertexBuffer stand-in that skips GL construction for unit tests."""
+
+    def __init__(self, handle=None):
+        self.handle = handle
+        self.bind = MagicMock()
+        self.unbind = MagicMock()
+        self.set_data = MagicMock()
+        self.set_vertex_attributes = MagicMock()
+        self.configure = MagicMock()
 
 
 class TestVertexArrayObject(unittest.TestCase):
@@ -52,23 +68,17 @@ class TestVertexArrayObject(unittest.TestCase):
 
         # Mock OpenGL functions to avoid context issues
         self.gl_patches = [
-            patch("picogl.backend.modern.core.vertex.array.object.glBindVertexArray"),
-            patch("picogl.backend.modern.core.vertex.array.object.glGenVertexArrays"),
+            patch("picogl.backend.modern.core.vertex.array.object.gl_bind_vertex_array"),
+            patch("picogl.backend.modern.core.vertex.array.object.gl_gen_vertex_arrays"),
             patch(
-                "picogl.backend.modern.core.vertex.array.object.glDeleteVertexArrays"
+                "picogl.backend.modern.core.vertex.array.object.gl_delete_vertex_arrays"
             ),
-            patch("picogl.backend.modern.core.vertex.array.object.glBindBuffer"),
+            patch("picogl.backend.modern.core.vertex.array.object.gl_enable_vertex_array"),
             patch(
-                "picogl.backend.modern.core.vertex.array.object.gl_enableVertexAttribArray"
-            ),
-            patch(
-                "picogl.backend.modern.core.vertex.array.object.glVertexAttribPointer"
+                "picogl.backend.modern.core.vertex.array.object.gl_vertex_attrib_pointer"
             ),
             patch("picogl.backend.modern.core.vertex.array.object.gl_draw_arrays"),
             patch("picogl.backend.modern.core.vertex.array.object.gl_draw_elements"),
-            patch(
-                "picogl.backend.modern.core.vertex.array.object.enable_points_rendering_state"
-            ),
             patch("picogl.backend.modern.core.vertex.array.object.gl_gen_safe"),
         ]
 
@@ -97,11 +107,12 @@ class TestVertexArrayObject(unittest.TestCase):
         """Test VertexArrayObject initialization without handle (auto-generate)."""
         # Mock glGenVertexArrays to return a handle
         with patch(
-            "picogl.backend.modern.core.vertex.array.object.glGenVertexArrays"
+            "picogl.backend.modern.core.vertex.array.object.gl_gen_vertex_arrays"
         ) as mock_gen:
             with patch(
                 "picogl.backend.modern.core.vertex.array.object.gl_gen_safe"
             ) as mock_gen_safe:
+                mock_gen.return_value = True
                 mock_gen_safe.return_value = self.mock_handle
                 vao = VertexArrayObject()
 
@@ -111,20 +122,13 @@ class TestVertexArrayObject(unittest.TestCase):
     def test_initialization_raises_error_when_no_context(self):
         """Test that initialization raises error when OpenGL context is not ready."""
         with patch(
-            "picogl.backend.modern.core.vertex.array.object.glGenVertexArrays"
-        ) as mock_gen:
-            with patch(
-                "picogl.backend.modern.core.vertex.array.object.gl_gen_safe"
-            ) as mock_gen_safe:
-                mock_gen.return_value = None
-                mock_gen_safe.side_effect = TypeError(
-                    "int() argument must be a string, a bytes-like object or a real number, not 'NoneType'"
-                )
+            "picogl.backend.modern.core.vertex.array.object.gl_gen_vertex_arrays",
+            return_value=None,
+        ):
+            with self.assertRaises(RuntimeError) as context:
+                VertexArrayObject()
 
-                with self.assertRaises(TypeError) as context:
-                    VertexArrayObject()
-
-                self.assertIn("int() argument must be a string", str(context.exception))
+            self.assertIn("OpenGL context not ready", str(context.exception))
 
     def test_bind(self):
         """Test bind method."""
@@ -153,27 +157,38 @@ class TestVertexArrayObject(unittest.TestCase):
         with patch(
             "picogl.backend.modern.core.vertex.array.object.ModernVBO"
         ) as mock_vbo_class:
-            mock_vbo = MagicMock()
-            mock_vbo.handle = 456
+            mock_vbo = _StubVBO(handle=456)
             mock_vbo_class.return_value = mock_vbo
 
             vao = VertexArrayObject(handle=self.mock_handle)
-            result = vao.add_vbo(
-                index=0, data=self.test_data, size=3, dtype=GL_FLOAT, name="position"
+            spec = AttributeSpec(
+                name="position",
+                index=0,
+                size=3,
+                dtype=GL_FLOAT,
             )
+            result = vao.add_vbo(spec, self.test_data)
 
             # Verify VBO was created and configured
             mock_vbo_class.assert_called_once_with(handle=None)
             mock_vbo.bind.assert_called_once()
             mock_vbo.set_data.assert_called_once_with(self.test_data)
             mock_vbo.set_vertex_attributes.assert_called_once_with(
-                index=0, data=self.test_data, size=3, dtype=GL_FLOAT
+                index=0,
+                data=self.test_data,
+                size=3,
+                dtype=GL_FLOAT,
+                normalized=spec.normalized,
+                stride=0,
+                offset=0,
             )
             mock_vbo.configure.assert_called_once()
 
             # Verify VBO was added to internal lists
             self.assertEqual(len(vao.attributes), 1)
+            self.assertIs(vao.attributes[0], spec)
             self.assertEqual(len(vao.vbos), 1)
+            self.assertIs(vao._vbos_by_attribute[0], mock_vbo)
             self.assertEqual(vao.named_vbos["position"], mock_vbo)
             self.assertEqual(result, mock_vbo)
 
@@ -229,7 +244,7 @@ class TestVertexArrayObject(unittest.TestCase):
             name="position",
             index=0,
             size=3,
-            type=GL_FLOAT,
+            dtype=GL_FLOAT,
             normalized=False,
             stride=0,
             offset=0,
@@ -243,8 +258,7 @@ class TestVertexArrayObject(unittest.TestCase):
         mock_ebo._id = 200
 
         vao = VertexArrayObject(handle=self.mock_handle)
-        vao.vao = mock_vbo  # Set vao to enable layout processing
-        vao.vbo = mock_vbo
+        vao.named_vbos["position"] = mock_vbo
         vao.ebo = mock_ebo
 
         vao.set_layout(layout)
@@ -253,21 +267,47 @@ class TestVertexArrayObject(unittest.TestCase):
         self.assertEqual(vao.layout, layout)
         self.assertTrue(vao._configured)
 
-    def test_set_layout_with_none_vao(self):
-        """Test set_layout method when vao is None."""
+    def test_set_layout_empty_attributes(self):
+        """Test set_layout with an empty descriptor still configures the VAO."""
         layout = LayoutDescriptor(attributes=[])
         vao = VertexArrayObject(handle=self.mock_handle)
-        vao.vao = None
 
         vao.set_layout(layout)
 
-        # Should return early without processing
         self.assertEqual(vao.layout, layout)
+        self.assertTrue(vao._configured)
+
+    def test_set_layout_skips_ebo_attribute(self):
+        """Element-buffer layout entries are not vertex attributes."""
+        pos_spec = AttributeSpec(
+            name="positions",
+            index=0,
+            size=3,
+            dtype=GL_FLOAT,
+        )
+        ebo_spec = AttributeSpec(
+            name=VBOType.EBO,
+            index=3,
+            size=2,
+            dtype=GL_FLOAT,
+            vbo_type=VBOType.EBO,
+            role=VertexBufferRole.EBO,
+        )
+        layout = LayoutDescriptor(attributes=[pos_spec, ebo_spec])
+        mock_vbo = MagicMock()
+        vao = VertexArrayObject(handle=self.mock_handle)
+        vao.named_vbos[VertexBufferRole.VBO] = mock_vbo
+
+        vao.set_layout(layout)
+
+        self.assertEqual(vao.layout, layout)
+        self.assertTrue(vao._configured)
+        mock_vbo.bind.assert_called()
 
     def test_add_vbo_object(self):
         """Test add_vbo_object method for VBO management."""
         vao = VertexArrayObject(handle=self.mock_handle)
-        mock_vbo = MagicMock()
+        mock_vbo = _StubVBO()
 
         # Test adding VBO with canonical name
         result = vao.add_vbo_object("position", mock_vbo)
@@ -276,7 +316,7 @@ class TestVertexArrayObject(unittest.TestCase):
         self.assertEqual(vao.named_vbos["position"], mock_vbo)
 
         # Test adding VBO with alias
-        mock_vbo2 = MagicMock()
+        mock_vbo2 = _StubVBO()
         result2 = vao.add_vbo_object(
             "pos", mock_vbo2
         )  # "pos" should be an alias for "position"
@@ -317,7 +357,7 @@ class TestVertexArrayObject(unittest.TestCase):
         vao = VertexArrayObject(handle=self.mock_handle)
         vao.ebo = None  # No EBO, should use glDrawArrays
 
-        vao.draw(index_count=10, mode=GL_POINTS)
+        vao.draw(DrawSpec(count=10, mode=GL_POINTS))
         # The draw calls are already mocked in setUp
 
     def test_draw_with_elements(self):
@@ -327,7 +367,7 @@ class TestVertexArrayObject(unittest.TestCase):
         mock_ebo.data = self.test_indices
         vao.ebo = mock_ebo
 
-        vao.draw(index_count=5, mode=GL_POINTS)
+        vao.draw(DrawSpec(count=5, mode=GL_POINTS))
         # The draw calls are already mocked in setUp
 
     def test_draw_with_auto_index_count(self):
@@ -337,13 +377,26 @@ class TestVertexArrayObject(unittest.TestCase):
         mock_ebo.data = self.test_indices
         vao.ebo = mock_ebo
 
-        vao.draw()  # No index_count provided, should use EBO data length
+        vao.draw()  # No DrawSpec: count is None, should use EBO data length
         # The draw calls are already mocked in setUp
+
+    def test_draw_explicit_zero_count_is_noop(self):
+        """Explicit count=0 must not fall back to the EBO length."""
+        vao = VertexArrayObject(handle=self.mock_handle)
+        mock_ebo = MagicMock()
+        mock_ebo.data = self.test_indices
+        vao.ebo = mock_ebo
+
+        with patch(
+            "picogl.backend.modern.core.vertex.array.object.gl_draw_elements"
+        ) as mock_draw:
+            vao.draw(DrawSpec(count=0))
+            mock_draw.assert_not_called()
 
     def test_delete_buffers(self):
         """Test delete_buffers method."""
         with patch(
-            "picogl.backend.modern.core.vertex.array.object.delete_buffer"
+            "picogl.backend.modern.core.vertex.array.object.gl_delete_buffers"
         ) as mock_delete:
             vao = VertexArrayObject(handle=self.mock_handle)
 
@@ -397,28 +450,28 @@ class TestVertexArrayObject(unittest.TestCase):
         self.assertTrue(repr_str.startswith("<"))
         self.assertTrue(repr_str.endswith(">"))
 
-    def test_error_handling_in_set_layout(self):
-        """Test error handling in set_layout method."""
-        layout = LayoutDescriptor(attributes=[])
+    def test_set_layout_missing_vbo_raises(self):
+        """set_layout raises when a layout attribute has no registered VBO."""
+        attr_spec = AttributeSpec(
+            name="position",
+            index=0,
+            size=3,
+            dtype=GL_FLOAT,
+        )
+        layout = LayoutDescriptor(attributes=[attr_spec])
         vao = VertexArrayObject(handle=self.mock_handle)
-        vao.vao = MagicMock()  # Set vao to enable processing
 
-        # Mock an exception during OpenGL calls
-        with patch(
-            "picogl.backend.modern.core.vertex.array.object.glBindVertexArray",
-            side_effect=Exception("OpenGL error"),
-        ):
-            with patch("picogl.logger.Logger.error") as mock_log_error:
-                vao.set_layout(layout)
-                mock_log_error.assert_called_once()
-                self.assertIn("error", mock_log_error.call_args[0][0])
+        with self.assertRaises(RuntimeError):
+            vao.set_layout(layout)
 
     def test_error_handling_in_index_count(self):
         """Test error handling in index_count property."""
         vao = VertexArrayObject(handle=self.mock_handle)
 
         # Mock an exception
-        with patch("picogl.logger.Logger.error") as mock_log_error:
+        with patch(
+            "picogl.backend.modern.core.vertex.array.object.log.error"
+        ) as mock_log_error:
             # Create a property that raises an exception
             class MockEBO:
                 @property

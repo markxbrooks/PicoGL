@@ -15,8 +15,9 @@ from numpy import dtype, floating, generic, ndarray
 from numpy._typing import _64Bit
 
 from picogl.backend.gl.api.glcleanup import gl_release_vertex_array_object
-from picogl.backend.gl.enums import GLDrawMode
+from picogl.backend.gl.enums import GLDrawMode, GLNumeric
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
+from picogl.gpu.buffers.attributes import AttributeSpec
 from picogl.gpu.buffers.helper import as_vec3_array
 from picogl.gpu.buffers.vertex.vbo.vbo_class import MeshDataAttrs, VBOType
 from picogl.renderer.draw_spec import MeshDrawSpec, execute_draw_spec
@@ -278,18 +279,22 @@ class GLMesh:
                 if data is None or getattr(data, "size", 0) == 0:
                     continue
 
-                vao.add_vbo(
-                    name=attr.name,
-                    data=data,
-                    index=attr.index,
-                    size=attr.size,
-                )
+                vao.add_vbo(attr, data)
 
             # Legacy fallback: older layouts omitted UV from the descriptor.
             if self.uvs is not None and not any(
                 attr.vbo_type == VBOType.UVS for attr in descriptor.attributes
             ):
-                vao.add_vbo(data=self.uvs, index=3, size=2)
+                vao.add_vbo(
+                    AttributeSpec(
+                        name=VBOType.UVS,
+                        index=3,
+                        size=2,
+                        dtype=GLNumeric.FLOAT,
+                        vbo_type=VBOType.UVS,
+                    ),
+                    self.uvs,
+                )
 
             if self.use_indices:
                 vao.add_ebo(data=self.indices)

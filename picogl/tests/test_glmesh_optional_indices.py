@@ -45,5 +45,5 @@ def test_non_indexed_upload_omits_ebo_and_draws_vertex_count() -> None:
 
     mesh.draw(mode=GLDrawMode.LINES)
     vao.draw.assert_called_once()
-    assert vao.draw.call_args.kwargs["index_count"] == 3
-    assert vao.draw.call_args.kwargs["mode"] == GLDrawMode.LINES
+    assert vao.draw.call_args.args[0].count == 3
+    assert vao.draw.call_args.args[0].mode == GLDrawMode.LINES

@@ -55,7 +55,9 @@ except ImportError as e:
 
 from OpenGL.GL import *
 
+from picogl.backend.gl.enums import GLNumeric
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
+from picogl.gpu.buffers.attributes import AttributeSpec
 from picogl.renderer import MeshData
 from picogl.ui.backend.glut.window.object import RenderWindow
 
@@ -63,8 +65,14 @@ from picogl.ui.backend.glut.window.object import RenderWindow
 def create_vao(mesh: MeshData) -> VertexArrayObject:
     """create VAO"""
     vao = VertexArrayObject()
-    vao.add_vbo(index=0, data=get_array(mesh.vertices), size=3)
-    vao.add_vbo(index=1, data=get_array(mesh.colors), size=3)
+    vao.add_vbo(
+        AttributeSpec(name="position", index=0, size=3, dtype=GLNumeric.FLOAT),
+        get_array(mesh.vertices),
+    )
+    vao.add_vbo(
+        AttributeSpec(name="color", index=1, size=3, dtype=GLNumeric.FLOAT),
+        get_array(mesh.colors),
+    )
     return vao
 
 

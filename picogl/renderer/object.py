@@ -6,10 +6,11 @@ from pathlib import Path
 
 from decologr import Decologr as log
 
-from picogl.backend.gl.enums import GLDrawMode
+from picogl.backend.gl.enums import GLDrawMode, GLNumeric
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.renderer import GLResourceRegistry, MeshData, RendererBase
 from picogl.renderer.draw_spec import MeshDrawInfo
+from picogl.gpu.buffers.attributes import AttributeSpec
 from picogl.utils.loader.texture import TextureLoader
 from picogl.utils.texture import bind_texture_array
 
@@ -70,17 +71,29 @@ class ObjectRenderer(RendererBase):
         if self.context.vaos is None:
             self.context.vaos = {}
         model_vao = VertexArrayObject()
-        model_vao.add_vbo(index=0, data=self.data.vertices, size=3)
+        model_vao.add_vbo(
+            AttributeSpec(name="position", index=0, size=3, dtype=GLNumeric.FLOAT),
+            self.data.vertices,
+        )
 
         if self.use_texture and self.data.texcoords is not None:
-            model_vao.add_vbo(index=1, data=self.data.texcoords, size=2)
+            model_vao.add_vbo(
+                AttributeSpec(name="texcoord", index=1, size=2, dtype=GLNumeric.FLOAT),
+                self.data.texcoords,
+            )
             self.context.vaos["model"] = model_vao
         else:
             # fall back to colors + normals
             if self.data.colors is not None:
-                model_vao.add_vbo(index=1, data=self.data.colors, size=3)
+                model_vao.add_vbo(
+                    AttributeSpec(name="color", index=1, size=3, dtype=GLNumeric.FLOAT),
+                    self.data.colors,
+                )
             if self.data.normals is not None:
-                model_vao.add_vbo(index=2, data=self.data.normals, size=3)
+                model_vao.add_vbo(
+                    AttributeSpec(name="normal", index=2, size=3, dtype=GLNumeric.FLOAT),
+                    self.data.normals,
+                )
             self.context.vaos["model"] = model_vao
         self.data.attach_vao(model_vao)
 

@@ -35,9 +35,9 @@ def test_draw_after_cpu_mesh_delete_uses_uploaded_index_count() -> None:
     glmesh.draw()
 
     mock_vao.draw.assert_called_once()
-    kwargs = mock_vao.draw.call_args.kwargs
-    assert kwargs.get("index_count") == len(faces)
-    assert kwargs.get("mode") == GLDrawMode.TRIANGLES
+    spec = mock_vao.draw.call_args.args[0]
+    assert spec.count == len(faces)
+    assert spec.mode == GLDrawMode.TRIANGLES
 
 
 def test_draw_mode_override_with_cpu_mesh_intact() -> None:
@@ -59,6 +59,6 @@ def test_draw_mode_override_with_cpu_mesh_intact() -> None:
     glmesh.draw(mode=GLDrawMode.LINES)
 
     mock_vao.draw.assert_called_once()
-    kwargs = mock_vao.draw.call_args.kwargs
-    assert kwargs.get("mode") == GLDrawMode.LINES
-    assert kwargs.get("index_count") == 2
+    spec = mock_vao.draw.call_args.args[0]
+    assert spec.mode == GLDrawMode.LINES
+    assert spec.count == 2

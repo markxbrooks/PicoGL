@@ -29,7 +29,7 @@ def test_draw_model_issues_mesh_draw_spec() -> None:
 
     assert mesh.vao is mock_vao
     mock_vao.draw.assert_called_once()
-    kwargs = mock_vao.draw.call_args.kwargs
-    assert kwargs.get("mode") == GLDrawMode.TRIANGLES
-    assert kwargs.get("index_count") == 4
-    assert kwargs.get("first") == 0
+    spec = mock_vao.draw.call_args.args[0]
+    assert spec.mode == GLDrawMode.TRIANGLES
+    assert spec.count == 4
+    assert spec.first == 0

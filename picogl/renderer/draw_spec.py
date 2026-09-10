@@ -145,11 +145,15 @@ def execute_draw_spec(vao: Any, spec: MeshDrawSpec) -> None:
     :param vao: GPU vertex array that implements ``draw(...)``.
     :param spec: Count/mode/offset for one ``glDraw*`` call.
     """
+    from picogl.backend.modern.core.vertex.array.draw_spec import DrawSpec
+
     if spec.count <= 0:
         return
     vao.draw(
-        index_count=spec.count,
-        mode=spec.mode,
-        first=spec.first,
-        pointer=ctypes.c_void_p(int(spec.pointer)),
+        DrawSpec(
+            count=spec.count,
+            mode=spec.mode,
+            first=spec.first,
+            pointer=ctypes.c_void_p(int(spec.pointer)),
+        )
     )

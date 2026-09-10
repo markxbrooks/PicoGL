@@ -416,9 +416,9 @@ class TestObjectRenderer(unittest.TestCase):
 
         # Test draw call via MeshData.draw → execute_draw_spec
         mock_draw.assert_called_once()
-        kwargs = mock_draw.call_args.kwargs
-        self.assertEqual(kwargs.get("mode"), GLDrawMode.TRIANGLES)
-        self.assertEqual(kwargs.get("index_count"), renderer.data.vertex_count)
+        spec = mock_draw.call_args.args[0]
+        self.assertEqual(spec.mode, GLDrawMode.TRIANGLES)
+        self.assertEqual(spec.count, renderer.data.vertex_count)
 
     def test_draw_model_with_texture(self):
         """Test _draw_model method with texture."""

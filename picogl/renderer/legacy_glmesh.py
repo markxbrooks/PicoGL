@@ -134,19 +134,19 @@ class LegacyGLMesh:
                 VertexBufferRole.VBO,
                 0,
                 name=CanonicalVertexAttrs.POSITIONS,
-                type=GLNumeric.FLOAT,
+                dtype=GLNumeric.FLOAT,
             ),
             legacy_attribute_spec(
                 VertexBufferRole.CBO,
                 1,
                 name=CanonicalVertexAttrs.COLORS,
-                type=GLNumeric.FLOAT,
+                dtype=GLNumeric.FLOAT,
             ),
             legacy_attribute_spec(
                 VertexBufferRole.NBO,
                 2,
                 name=CanonicalVertexAttrs.NORMALS,
-                type=GLNumeric.FLOAT,
+                dtype=GLNumeric.FLOAT,
             ),
         ]
         # Add UVs attribute if UVs are provided
@@ -156,7 +156,7 @@ class LegacyGLMesh:
                     name=VBOType.UVS,
                     index=3,
                     size=2,
-                    type=GLNumeric.FLOAT,
+                    dtype=GLNumeric.FLOAT,
                     normalized=False,
                     stride=0,
                     offset=0,

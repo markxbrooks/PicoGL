@@ -232,21 +232,21 @@ class TestLegacyGLMesh(unittest.TestCase):
         self.assertEqual(pos_attr.name, "positions")
         self.assertEqual(pos_attr.index, 0)
         self.assertEqual(pos_attr.components, 3)
-        self.assertEqual(pos_attr.type, GL_FLOAT)
+        self.assertEqual(pos_attr.dtype, GL_FLOAT)
 
         # Test colour attribute
         color_attr = attributes[1]
         self.assertEqual(color_attr.name, "colors")
         self.assertEqual(color_attr.index, 1)
         self.assertEqual(color_attr.components, 3)
-        self.assertEqual(color_attr.type, GL_FLOAT)
+        self.assertEqual(color_attr.dtype, GL_FLOAT)
 
         # Test normal attribute
         normal_attr = attributes[2]
         self.assertEqual(normal_attr.name, "normals")
         self.assertEqual(normal_attr.index, 2)
         self.assertEqual(normal_attr.components, 3)
-        self.assertEqual(normal_attr.type, GL_FLOAT)
+        self.assertEqual(normal_attr.dtype, GL_FLOAT)
 
     def test_generate_dynamic_attributes_with_uvs(self):
         """Test generate_dynamic_attributes with UVs."""
@@ -264,7 +264,7 @@ class TestLegacyGLMesh(unittest.TestCase):
         self.assertEqual(uv_attr.name, VBOType.UVS)
         self.assertEqual(uv_attr.index, 3)
         self.assertEqual(uv_attr.components, 2)
-        self.assertEqual(uv_attr.type, GL_FLOAT)
+        self.assertEqual(uv_attr.dtype, GL_FLOAT)
 
     def test_upload_first_time(self):
         """Test upload method for the first time."""
@@ -740,7 +740,7 @@ class TestLegacyGLMesh(unittest.TestCase):
             self.assertIsNotNone(attr.name)
             self.assertIsInstance(attr.index, int)
             self.assertIsInstance(attr.components, int)
-            self.assertEqual(attr.type, GL_FLOAT)
+            self.assertEqual(attr.dtype, GL_FLOAT)
             self.assertFalse(attr.normalized)
             self.assertEqual(attr.stride, 0)
             self.assertEqual(attr.offset, 0)

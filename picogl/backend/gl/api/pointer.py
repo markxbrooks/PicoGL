@@ -18,7 +18,7 @@ def gl_color_pointer_from_spec(attr: AttributeSpec):
     """gl color pointer"""
     gl_color_array_pointer(
         size=attr.size,
-        num_type=attr.type,
+        num_type=attr.dtype,
         stride=attr.stride,
         pointer=ctypes.c_void_p(attr.offset),
     )
@@ -27,7 +27,7 @@ def gl_color_pointer_from_spec(attr: AttributeSpec):
 def gl_normal_pointer_from_spec(attr: AttributeSpec):
     """gl normal pointer"""
     gl_normal_array_pointer(
-        num_type=attr.type,
+        num_type=attr.dtype,
         stride=attr.stride,
         pointer=ctypes.c_void_p(attr.offset),
     )
@@ -37,7 +37,7 @@ def gl_vertex_pointer_from_spec(attr: AttributeSpec):
     """gl legacy client state"""
     gl_vertex_array_pointer(
         size=attr.size,
-        num_type=attr.type,
+        num_type=attr.dtype,
         stride=attr.stride,
         pointer=ctypes.c_void_p(attr.offset),
     )
