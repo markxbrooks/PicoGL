@@ -15,6 +15,7 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
+from elmo.glsl.layouts import VBOComponentType
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.gpu.buffers.vertex.aliases import VertexBufferRole
 from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
@@ -199,7 +200,7 @@ def convert_to_numpy(colors, normals, positions):
 
 
 def create_vertex_buffer_group(
-    draw_mode: int = GL_TRIANGLE_STRIP,
+    draw_mode: int = GLDrawMode.TRIANGLE_STRIP,
     **attributes,
 ):
     """
@@ -250,9 +251,9 @@ def setup_vbg(
     normals: np.ndarray,
     positions: np.ndarray,
     draw_mode: int = GLDrawMode.TRIANGLE_STRIP,
-    positions_size: int = 3,
-    normals_size: int = 3,
-    colors_size: int = 3,
+    positions_size: int = VBOComponentType.POSITIONS,
+    normals_size: int = VBOComponentType.NORMALS,
+    colors_size: int = VBOComponentType.COLOR_RGB,
 ) -> VertexBufferGroup:
     """Create VBO"""
     # ✅ Optional sanity checks
@@ -283,19 +284,12 @@ def setup_vbg(
 def setup_vbg_from_mesh(
     mesh: MeshData, draw_mode: int = GLDrawMode.TRIANGLE_STRIP
 ) -> VertexBufferGroup:
-    from picogl.gpu.buffers.helper import as_vec3_array
-
-    return setup_vbg(
-        colors=as_vec3_array(mesh.colors),
-        normals=as_vec3_array(mesh.normals),
-        positions=as_vec3_array(mesh.vertices),
-        draw_mode=draw_mode,
-    )
+    return mesh.setup_vbg(draw_mode=draw_mode)
 
 
 def setup_position_vbg(positions_np: np.ndarray) -> VertexBufferGroup:
     """setup position vbg"""
-    vbg = VertexBufferGroup(draw_mode=GLDrawMode.LINE_STRIP)
+    vbg = VertexBufferGroup()
     vbg.add_vbo(VBOType.VBO, positions_np, size=3)
     vbg.set_layout(build_legacy_vbg_position_layout())
     return vbg
