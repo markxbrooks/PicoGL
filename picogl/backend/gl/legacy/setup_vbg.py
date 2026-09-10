@@ -15,7 +15,8 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
-from elmo.glsl.layouts import VBOComponentType
+from boolean import GLBoolean
+from elmo.glsl.layouts import VBOComponentType, StrideCalculator
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.gpu.buffers.vertex.aliases import VertexBufferRole
 from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
@@ -52,7 +53,7 @@ if _HEADLESS:
             index: int,
             size: int,
             dtype: int,
-            normalized: bool,
+            normalized: GLBoolean,
             stride: int,
             offset: int,
             role: VertexBufferRole = VertexBufferRole.VBO,
@@ -73,8 +74,8 @@ if _HEADLESS:
         size: int = 3,
         name: str | VertexBufferRole | None = None,
         dtype: int,
-        normalized: bool = False,
-        stride: int = 0,
+        normalized: GLBoolean = GLBoolean.FALSE,
+        stride: int = StrideCalculator.TIGHTLY_PACKED,
         offset: int = 0,
     ) -> AttributeSpec:
         return AttributeSpec(
@@ -182,7 +183,7 @@ def build_legacy_vbg_position_layout(component_size: int = 3) -> LayoutDescripto
                     VertexBufferRole.VBO,
                     0,
                     size=component_size,
-                    dtype=GL_FLOAT,
+                    dtype=GLNumeric.FLOAT,
                 ),
             ]
         )
