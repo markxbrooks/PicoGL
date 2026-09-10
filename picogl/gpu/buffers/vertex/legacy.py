@@ -305,7 +305,7 @@ class VertexBufferGroup(VertexBase):
                 log.parameter("attr", attr)
                 log.parameter("attr.index", attr.index)
                 log.parameter("attr.size", attr.size)
-                log.parameter("attr.type", int(attr.type))
+                log.parameter("attr.dtype", int(attr.dtype))
                 log.parameter("attr.normalized", attr.normalized)
                 log.parameter("attr.stride", attr.stride)
 

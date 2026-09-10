@@ -21,7 +21,7 @@ from picogl.backend.gl.api.hint import gl_hint
 from picogl.backend.gl.api.line import gl_line_width
 from picogl.backend.gl.api.point import gl_point_size
 from picogl.backend.gl.capability import GLBlendFactor, GLPipelineCapability
-from picogl.backend.gl.enums import GLDrawMode
+from picogl.backend.gl.enums import GLDrawMode, GLNumeric
 from picogl.backend.gl.enums.hint import GLHintMode, GLHintTarget
 from picogl.backend.gl.enums.point_size import (
     GLLegacyPointCapability,
@@ -33,6 +33,7 @@ from picogl.backend.gl.task.gl_init import legacy_init_gl_list, paint_gl_list
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.globals import PICOGL_SHADER_SRC_DIRECTORY
+from picogl.gpu.buffers.attributes import AttributeSpec
 from picogl.renderer import MeshData
 from picogl.renderer.draw_spec import MeshDrawInfo
 from picogl.shaders.registry import ShaderRegistry
@@ -168,15 +169,13 @@ def _build_mesh_vao(mesh: MeshData) -> VertexArrayObject:
     """Upload positions + colours for non-indexed glDrawArrays."""
     vao = VertexArrayObject()
     vao.add_vbo(
-        index=0,
-        data=np.ascontiguousarray(mesh.vertices, dtype=np.float32),
-        size=3,
+        AttributeSpec(name="position", index=0, size=3, dtype=GLNumeric.FLOAT),
+        np.ascontiguousarray(mesh.vertices, dtype=np.float32),
     )
     if mesh.colors is not None and len(mesh.colors):
         vao.add_vbo(
-            index=1,
-            data=np.ascontiguousarray(mesh.colors, dtype=np.float32),
-            size=3,
+            AttributeSpec(name="color", index=1, size=3, dtype=GLNumeric.FLOAT),
+            np.ascontiguousarray(mesh.colors, dtype=np.float32),
         )
     return mesh.attach_vao(vao)
 

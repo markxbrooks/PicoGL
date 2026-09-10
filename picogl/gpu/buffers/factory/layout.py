@@ -30,7 +30,7 @@ def create_element_attributes():
             VertexBufferRole.VBO,
             0,
             name="positions",
-            type=GLNumeric.FLOAT,
+            dtype=GLNumeric.FLOAT,
         )
     ]
 
@@ -41,12 +41,12 @@ def create_common_attributes():
             VertexBufferRole.VBO,
             0,
             name="positions",
-            type=GLNumeric.FLOAT,
+            dtype=GLNumeric.FLOAT,
         ),
         legacy_attribute_spec(
             VertexBufferRole.CBO,
             1,
             name="colors",
-            type=GLNumeric.FLOAT,
+            dtype=GLNumeric.FLOAT,
         ),
     ]

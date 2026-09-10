@@ -26,7 +26,6 @@ Intended for OpenGL 3.0+ with VAO support.
 
 """
 
-import ctypes
 import sys
 from contextlib import contextmanager, nullcontext
 from typing import Any, Optional, Union
@@ -47,15 +46,13 @@ from picogl.backend.gl.api.vertex.enable_array import gl_enable_vertex_array
 from picogl.backend.gl.enums import (
     GLBufferTarget,
     GLDrawMode,
-    GLIndexType,
-    GLNumeric,
     GLUsageHint,
 )
 from picogl.backend.modern.core.vertex.array.helpers import point_rendering
 from picogl.backend.modern.core.vertex.base import VertexBuffer
 from picogl.backend.modern.core.vertex.buffer.element import ModernEBO
 from picogl.backend.modern.core.vertex.buffer.object import ModernVBO
-from picogl.gpu.buffers.attributes import LayoutDescriptor
+from picogl.gpu.buffers.attributes import AttributeSpec, LayoutDescriptor
 from picogl.gpu.buffers.base import VertexBase
 from picogl.gpu.buffers.vertex.aliases import NAME_ALIASES
 from picogl.safe import gl_gen_safe
@@ -147,12 +144,10 @@ class VertexArrayObject(VertexBase, GLResource):
                     "glGenVertexArrays not available — OpenGL context not ready"
                 )
         super().__init__(handle)
-        self.attributes = []
+        self.attributes: list[AttributeSpec] = []
         self.vbos = []
         self.named_vbos: dict[str, VertexBuffer] = {}
-        self.vao: Optional[int] = (
-            None  # Bonds Vertex Array Object. Does absolutely nothing
-        )
+        self._vbos_by_attribute: dict[int, ModernVBO] = {}
         self.ebo = None  # Bond Index Buffer Object
         self.layout: Optional[LayoutDescriptor] = None
         self.bind()
@@ -164,14 +159,7 @@ class VertexArrayObject(VertexBase, GLResource):
     ) -> None:
         """Populate self from attribute arrays and an optional element buffer."""
         for attribute in attributes:
-            data = np.asarray(attribute.data)
-            size = 3 if data.ndim == 1 else int(data.shape[1])
-            self.add_vbo(
-                index=attribute.index,
-                data=data,
-                size=size,
-                name=attribute.name,
-            )
+            self.add_vbo(spec=attribute.spec, data=attribute.data)
         if indices is not None:
             self.add_ebo(data=np.asarray(indices))
 
@@ -207,9 +195,6 @@ class VertexArrayObject(VertexBase, GLResource):
         if layout is None or self._configured:
             return
 
-        if self.vao is None:
-            return
-
         with self.bound():
             self.layout = layout
 
@@ -227,7 +212,7 @@ class VertexArrayObject(VertexBase, GLResource):
                 gl_vertex_attrib_pointer(
                     index=attr.index,
                     size=attr.size,
-                    num_type=attr.type,
+                    num_type=attr.dtype,
                     normalized=attr.normalized,
                     stride=attr.stride,
                     offset=attr.offset,
@@ -299,33 +284,35 @@ class VertexArrayObject(VertexBase, GLResource):
 
     def add_vbo(
         self,
-        index: int,
+        spec: AttributeSpec,
         data: np.ndarray,
-        size: int,
-        dtype: GLNumeric | None = GLNumeric.FLOAT,
-        name: str = None,
-        handle: int = None,
+        *,
+        handle: int | None = None,
     ) -> ModernVBO:
-        """
-        Add a Vertex Buffer Object (VBO) to the VAO and set its attributes.
+        """Add a vertex buffer and configure its vertex attribute.
 
-        :param handle:
-        :param index: VAO attribute index
-        :param data: Vertex data
-        :param size: Size per vertex (e.g., 3 for vec3)
-        :param dtype: OpenGL data type (e.g., GL_FLOAT)
-        :param name: Optional semantic name (e.g., "position", "colour")
-        :return: OpenGL buffer handle (GLuint)
+        :param spec: Vertex attribute layout (index, size, dtype, name).
+        :param data: Vertex data uploaded into the VBO.
+        :param handle: Optional existing OpenGL buffer handle.
+        :return: The created :class:`ModernVBO`.
         """
         vbo = ModernVBO(handle=handle)
         vbo.bind()
         vbo.set_data(data)
-        vbo.set_vertex_attributes(index=index, data=data, size=size, dtype=dtype)
+        vbo.set_vertex_attributes(
+            index=spec.index,
+            data=data,
+            size=spec.size,
+            dtype=spec.dtype,
+            normalized=spec.normalized,
+            stride=spec.stride,
+            offset=spec.offset,
+        )
         vbo.configure()
-        self.attributes.append((index, vbo.handle, size, dtype, False, 0, 0))
+        self.attributes.append(spec)
         self.vbos.append(vbo)
-        if name:
-            self.named_vbos[name] = vbo
+        self._vbos_by_attribute[spec.index] = vbo
+        self.add_vbo_object(spec.name, vbo)
         return vbo
 
     def delete_buffers(self):
@@ -337,6 +324,8 @@ class VertexArrayObject(VertexBase, GLResource):
         for vbo in self.vbos:
             gl_delete_buffers(vbo)
         self.vbos.clear()
+        self.attributes.clear()
+        self._vbos_by_attribute.clear()
 
         if self.ebo:
             gl_delete_buffers(self.ebo)
@@ -403,15 +392,24 @@ class VertexArrayObject(VertexBase, GLResource):
         idx = self.index_count
         return int(idx) if idx else 0
 
-    def draw_with_spec(self, spec: DrawSpec | None = None) -> None:
+    def draw(self, spec: DrawSpec | None = None) -> None:
+        """Issue ``glDrawArrays`` or ``glDrawElements`` from a :class:`DrawSpec`.
+
+        ``spec.count is None`` uses :attr:`index_count`. An explicit ``count=0``
+        is a no-op and does not fall back to the element buffer length.
+
+        :param spec: GPU draw command; defaults to :class:`DrawSpec` (POINTS).
+        """
         spec = spec or DrawSpec()
-
         count = self.index_count if spec.count is None else spec.count
-
-        if count == 0:
+        if not count:
             return
 
-        context = point_rendering() if GLDrawMode.POINTS == spec.mode else nullcontext()
+        context = (
+            point_rendering()
+            if spec.mode == GLDrawMode.POINTS
+            else nullcontext()
+        )
 
         with context, self.bound():
             if self.ebo:
@@ -429,56 +427,16 @@ class VertexArrayObject(VertexBase, GLResource):
                     first=spec.first,
                 )
 
-    def draw(
-        self,
-        index_count: Union[int, None] = None,
-        dtype: int = GLIndexType.UNSIGNED_INT,
-        mode: int = GLDrawMode.POINTS,
-        pointer: Union[int, ctypes.c_void_p, None] = ctypes.c_void_p(0),
-        first: int = 0,
-    ):
-        """
-        draw
-
-        :param pointer: ctypes.c_void_p(0)
-        :param dtype: GL_UNSIGNED_INT or GLIndexType.UNSIGNED_INT
-        :param index_count: int Number of vertices to draw.
-        :param mode: int e.g. GL_POINT
-        :param first: First vertex for non-indexed draws.
-        :return: None
-        """
-        atom_count: int = int(index_count) or int(self.index_count)
-        context = point_rendering() if mode == GLDrawMode.POINTS else nullcontext()
-        with context, self.bound():
-            if index_count is None:
-                index_count = self.index_count
-
-            if index_count == 0:
-                return
-
-            if self.ebo:
-                self.ebo.bind()
-                gl_draw_elements(atom_count, dtype, mode, pointer=pointer)
-            else:
-                gl_draw_arrays(atom_count, mode, first=int(first))
-
     def _modern_vbo_for_attrib(self, attrib_index: int) -> Optional[ModernVBO]:
-        """Return the :class:`ModernVBO` created for ``add_vbo(index=attrib_index, ...)``."""
-        for j, attr in enumerate(self.attributes):
-            if not attr:
-                continue
-            if attr[0] == attrib_index and j < len(self.vbos):
-                vbo = self.vbos[j]
-                if isinstance(vbo, ModernVBO):
-                    return vbo
-        return None
+        """Return the :class:`ModernVBO` created for attribute ``attrib_index``."""
+        return self._vbos_by_attribute.get(attrib_index)
 
     def update_vbo(self, index: int, data: np.ndarray) -> None:
         """
         Upload new contents for the vertex buffer tied to attribute ``index``.
 
-        ``index`` is the same value passed to :meth:`add_vbo` (e.g. ``0`` positions,
-        ``1`` colours, ``2`` normals). If the new array has the same byte size as
+        ``index`` is the attribute location from :class:`AttributeSpec` (e.g. ``0``
+        positions, ``1`` colours, ``2`` normals). If the new array has the same byte size as
         the existing GPU store, :func:`glBufferSubData` is used; otherwise
         :meth:`ModernVBO.set_data` (``glBufferData``) reallocates the buffer.
 

@@ -302,9 +302,9 @@ class MeshData:
         from picogl.backend.modern.core.vertex.attribute import VertexAttribute
 
         vertex_attributes = [
-            VertexAttribute(0, self.normalized_vertices, VBOType.VBO),
-            VertexAttribute(1, self.normalized_colors, VBOType.CBO),
-            VertexAttribute(2, self.normalized_normals, VBOType.NBO),
+            VertexAttribute.slot(0, self.normalized_vertices, VBOType.VBO),
+            VertexAttribute.slot(1, self.normalized_colors, VBOType.CBO),
+            VertexAttribute.slot(2, self.normalized_normals, VBOType.NBO),
         ]
         return vertex_attributes
 

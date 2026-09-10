@@ -24,7 +24,7 @@ class AttributeSpec:
     name: str  # semantic name ("positions", "colors", "normals", etc.)
     index: int  # attribute location
     size: int  # number of components (e.g., 3 for vec3)
-    type: GLNumeric  # GL_FLOAT, GL_INT, etc.
+    dtype: GLNumeric  # GL_FLOAT, GL_INT, etc.
     normalized: GLBoolean = GLBoolean.FALSE
     stride: int = 0
     offset: int = 0  # in bytes
@@ -38,7 +38,7 @@ def legacy_attribute_spec(
     *,
     size: int = 3,
     name: str | VertexBufferRole | None = None,
-    type: GLNumeric,
+    dtype: GLNumeric,
     normalized: GLBoolean = GLBoolean.FALSE,
     stride: int = 0,
     offset: int = 0,
@@ -49,7 +49,7 @@ def legacy_attribute_spec(
         name=name if name is not None else role,
         index=index,
         size=size,
-        type=type,
+        dtype=dtype,
         normalized=normalized,
         stride=stride,
         offset=offset,

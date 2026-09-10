@@ -59,6 +59,7 @@ from picogl.backend.gl.api.vertex.vertex_array import gl_bind_vertex_array
 from picogl.backend.gl.enums import GLBufferTarget, GLNumeric, GLUsageHint
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.boolean import GLBoolean
+from picogl.gpu.buffers.attributes import AttributeSpec
 
 
 def upload_geometry_buffers(
@@ -90,7 +91,10 @@ def upload_geometry_buffers(
     vao = gl_generate_vertex_array(1)
     vao_object = VertexArrayObject()
     vbo = gl_generate_buffers(1)
-    vao_object.add_vbo(index=0, data=vertex_data, size=3, name=vbo_target)
+    vao_object.add_vbo(
+        AttributeSpec(name=vbo_target, index=0, size=3, dtype=GLNumeric.FLOAT),
+        vertex_data,
+    )
 
     setattr(render_buffers, vao_target, vao)
     setattr(render_buffers, vbo_target, vbo)

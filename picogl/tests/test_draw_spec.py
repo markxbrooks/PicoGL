@@ -120,10 +120,10 @@ def test_meshdata_draw_forwards_spec_to_vao():
     mesh.attach_vao(vao)
     mesh.draw(first_item=2, item_count=3)
     vao.draw.assert_called_once()
-    kwargs = vao.draw.call_args.kwargs
-    assert kwargs["index_count"] == 3
-    assert kwargs["mode"] == GLDrawMode.POINTS
-    assert kwargs["first"] == 2
+    spec = vao.draw.call_args.args[0]
+    assert spec.count == 3
+    assert spec.mode == GLDrawMode.POINTS
+    assert spec.first == 2
 
 
 def test_meshdata_draw_count_override():
@@ -138,8 +138,8 @@ def test_meshdata_draw_count_override():
     vao = MagicMock()
     mesh.attach_vao(vao)
     mesh.draw(count=2)
-    assert vao.draw.call_args.kwargs["index_count"] == 2
-    assert vao.draw.call_args.kwargs["mode"] == GLDrawMode.LINES
+    assert vao.draw.call_args.args[0].count == 2
+    assert vao.draw.call_args.args[0].mode == GLDrawMode.LINES
 
 
 def test_glmesh_draw_delegates_to_mesh_draw():
@@ -164,5 +164,5 @@ def test_glmesh_draw_delegates_to_mesh_draw():
     glmesh.mesh = mesh
     glmesh.draw()
     vao.draw.assert_called_once()
-    assert vao.draw.call_args.kwargs["index_count"] == 3
-    assert vao.draw.call_args.kwargs["mode"] == GLDrawMode.TRIANGLES
+    assert vao.draw.call_args.args[0].count == 3
+    assert vao.draw.call_args.args[0].mode == GLDrawMode.TRIANGLES

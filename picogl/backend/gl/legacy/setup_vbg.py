@@ -71,7 +71,7 @@ if _HEADLESS:
         *,
         size: int = 3,
         name: str | VertexBufferRole | None = None,
-        type: int,
+        dtype: int,
         normalized: bool = False,
         stride: int = 0,
         offset: int = 0,
@@ -80,7 +80,7 @@ if _HEADLESS:
             name if name is not None else role,
             index,
             size,
-            type,
+            dtype,
             normalized,
             stride,
             offset,
@@ -147,19 +147,19 @@ def build_legacy_vbg_layout(
                     VertexBufferRole.VBO,
                     0,
                     size=positions_size,
-                    type=GL_FLOAT,
+                    dtype=GL_FLOAT,
                 ),
                 legacy_attribute_spec(
                     VertexBufferRole.NBO,
                     1,
                     size=normals_size,
-                    type=GL_FLOAT,
+                    dtype=GL_FLOAT,
                 ),
                 legacy_attribute_spec(
                     VertexBufferRole.CBO,
                     2,
                     size=colors_size,
-                    type=GL_FLOAT,
+                    dtype=GL_FLOAT,
                 ),
             ]
         )
@@ -181,7 +181,7 @@ def build_legacy_vbg_position_layout(component_size: int = 3) -> LayoutDescripto
                     VertexBufferRole.VBO,
                     0,
                     size=component_size,
-                    type=GL_FLOAT,
+                    dtype=GL_FLOAT,
                 ),
             ]
         )
@@ -237,7 +237,7 @@ def create_vertex_buffer_group(
                 index,
                 size=size,
                 name=NAME_ALIASES.get(name, name),
-                type=GL_FLOAT,
+                dtype=GL_FLOAT,
             )
         )
 
