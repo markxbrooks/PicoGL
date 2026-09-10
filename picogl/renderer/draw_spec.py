@@ -12,6 +12,7 @@ from typing import Any
 
 import numpy as np
 
+from backend.modern.core.vertex.array.draw_spec import DrawSpec
 from picogl.backend.gl.enums import GLDrawMode
 
 _UINT32_BYTES = int(np.dtype(np.uint32).itemsize)
@@ -49,6 +50,14 @@ class MeshDrawSpec:
     count: int
     first: int = 0
     pointer: int = 0
+
+    def to_draw_spec(self):
+        return DrawSpec(
+            count=self.count,
+            mode=self.mode,
+            first=self.first,
+            pointer=ctypes.c_void_p(int(self.pointer)),
+        )
 
 
 def infer_draw_info(
@@ -149,11 +158,4 @@ def execute_draw_spec(vao: Any, spec: MeshDrawSpec) -> None:
 
     if spec.count <= 0:
         return
-    vao.draw(
-        DrawSpec(
-            count=spec.count,
-            mode=spec.mode,
-            first=spec.first,
-            pointer=ctypes.c_void_p(int(spec.pointer)),
-        )
-    )
+    vao.draw(spec.to_draw_spec())
