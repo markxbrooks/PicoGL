@@ -3,6 +3,7 @@ GL Rotate F
 """
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import glRotatef
+
 from picogl.core.vec3 import Vec3
 
 

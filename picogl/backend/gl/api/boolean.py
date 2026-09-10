@@ -3,6 +3,7 @@ boolean
 """
 
 from OpenGL.GL import glGetBooleanv
+
 from picogl.boolean import GLBoolean
 
 

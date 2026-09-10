@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import numpy as np
+
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.renderer.draw_spec import MeshDrawInfo, MeshDrawSpec
 from picogl.renderer.meshdata import MeshData

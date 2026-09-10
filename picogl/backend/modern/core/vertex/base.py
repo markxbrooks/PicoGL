@@ -36,6 +36,7 @@ import ctypes
 
 import numpy as np
 from OpenGL import error as _gl_err
+
 from picogl.backend.gl.api import gl_bind_buffer, gl_buffer_data
 from picogl.backend.gl.api.buffer.check_is import gl_is_buffer
 from picogl.backend.gl.api.buffer.subdata import gl_buffer_subdata

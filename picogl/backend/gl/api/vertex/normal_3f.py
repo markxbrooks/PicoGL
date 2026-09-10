@@ -3,6 +3,7 @@ Wrappers for glNormal3f.
 """
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import glNormal3f
+
 from picogl.core.vec3 import Vec3
 
 

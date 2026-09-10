@@ -14,6 +14,19 @@ from typing import Any
 
 import numpy as np
 from molib.core.constants import MoLibConstant
+from PySide6.QtCore import Qt
+from PySide6.QtOpenGLWidgets import QOpenGLWidget
+from PySide6.QtWidgets import (
+    QApplication,
+    QHBoxLayout,
+    QLabel,
+    QMessageBox,
+    QPushButton,
+    QSplitter,
+    QVBoxLayout,
+    QWidget,
+)
+
 from picogl.backend.geometry import LegacyBinding
 from picogl.backend.gl.api.color import gl_color_rgb
 from picogl.backend.gl.api.legacy.callist import gl_call_list
@@ -43,18 +56,6 @@ from picogl.core.setup.view import gl_setup_view
 from picogl.core.vec3 import Vec3
 from picogl.globals import PICOGL_EXAMPLES_DIR
 from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
-from PySide6.QtCore import Qt
-from PySide6.QtOpenGLWidgets import QOpenGLWidget
-from PySide6.QtWidgets import (
-    QApplication,
-    QHBoxLayout,
-    QLabel,
-    QMessageBox,
-    QPushButton,
-    QSplitter,
-    QVBoxLayout,
-    QWidget,
-)
 
 if str(PICOGL_EXAMPLES_DIR) not in sys.path:
     sys.path.insert(0, PICOGL_EXAMPLES_DIR)

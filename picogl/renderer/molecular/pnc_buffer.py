@@ -46,9 +46,7 @@ class PNCBuffer:
             self.colors.append(color)
             n_new += 1
         for normal in template_normals:
-            self.normals.append(
-                [float(normal[0]), float(normal[1]), float(normal[2])]
-            )
+            self.normals.append([float(normal[0]), float(normal[1]), float(normal[2])])
         for idx in template_indices:
             self.indices.append(int(idx) + self.vertex_offset)
         self.vertex_offset += n_new

@@ -8,6 +8,7 @@ It includes a utility static method to configure light properties via OpenGL fun
 from typing import Sequence
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import glLightfv
+
 from picogl.backend.gl.capability import GLFixedFunctionCapability
 from picogl.backend.gl.state.fill import GLLightParameter
 

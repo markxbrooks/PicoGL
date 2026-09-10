@@ -10,6 +10,7 @@ binding buffers and rendering the defined UV mesh content.
 from typing import Optional
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POLYGON_MODE
+
 from picogl.backend.gl.api import (
     gl_bind_buffer,
     gl_disable_vertex_array,

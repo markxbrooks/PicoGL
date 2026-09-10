@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 
 from molib.pdb.coordinate.coordinate import Coordinates
+
 from picogl.backend.gl.enums.legacy.scale import gl_translate_f
 from picogl.core.vec3 import Vec3
 from picogl.core.zoom.scale import gl_scale_by_zoom

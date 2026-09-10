@@ -35,6 +35,7 @@ from unittest.mock import MagicMock, call, patch
 
 import numpy as np
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT
+
 from picogl.renderer.glmesh import GLMesh
 from picogl.renderer.meshdata import MeshData
 
@@ -129,9 +130,7 @@ class TestGLMesh(unittest.TestCase):
 
     def test_initialization_with_empty_faces(self):
         """An empty face array selects non-indexed rendering."""
-        mesh = GLMesh(
-            vertices=self.test_vertices, faces=np.array([], dtype=np.uint32)
-        )
+        mesh = GLMesh(vertices=self.test_vertices, faces=np.array([], dtype=np.uint32))
         self.assertFalse(mesh.use_indices)
         self.assertEqual(mesh.indices.size, 0)
 

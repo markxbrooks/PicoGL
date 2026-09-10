@@ -9,6 +9,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     glDepthFunc,
     glDepthMask,
 )
+
 from picogl.boolean import GLBoolean
 
 

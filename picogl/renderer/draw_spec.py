@@ -11,6 +11,7 @@ from dataclasses import dataclass
 from typing import Any
 
 import numpy as np
+
 from picogl.backend.gl.enums import GLDrawMode
 
 _UINT32_BYTES = int(np.dtype(np.uint32).itemsize)

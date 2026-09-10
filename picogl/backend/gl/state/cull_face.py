@@ -5,8 +5,9 @@ gl Cull Face
 from contextlib import contextmanager
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_CULL_FACE, glDisable, glEnable, glIsEnabled
+
 from picogl.backend.gl.api.capabilities import GLCapabilities
-from picogl.backend.gl.api.enable import gl_enable, gl_disable
+from picogl.backend.gl.api.enable import gl_disable, gl_enable
 
 
 class GLCullFace:

@@ -6,8 +6,6 @@ from __future__ import annotations
 
 from typing import Callable
 
-# Before OpenGL.GLUT: prefer Apple GLUT (macOS) / GLX (Linux+Wayland).
-import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
 from OpenGL.GLUT import (
     glutDisplayFunc,
     glutIdleFunc,
@@ -17,6 +15,9 @@ from OpenGL.GLUT import (
     glutPostRedisplay,
     glutReshapeFunc,
 )
+
+# Before OpenGL.GLUT: prefer Apple GLUT (macOS) / GLX (Linux+Wayland).
+import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
 
 DisplayCallback = Callable[[], None]
 IdleCallback = Callable[[], None]

@@ -6,11 +6,11 @@ from collections.abc import Callable, Sequence
 from typing import Any
 
 import numpy as np
+
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.renderer.draw_spec import MeshDrawInfo
 from picogl.renderer.meshdata import MeshData
-from picogl.renderer.molecular.atoms import atom_xyz
-from picogl.renderer.molecular.atoms import _default_atom_color
+from picogl.renderer.molecular.atoms import _default_atom_color, atom_xyz
 from picogl.renderer.molecular.base import MolecularMesh
 from picogl.renderer.molecular.pnc_buffer import PNCBuffer
 

@@ -6,6 +6,7 @@ import math
 from collections.abc import Iterator
 
 import numpy as np
+
 from picogl.core.vec3 import Vec3
 
 

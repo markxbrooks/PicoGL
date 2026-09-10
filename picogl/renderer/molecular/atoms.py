@@ -6,6 +6,7 @@ from collections.abc import Callable, Sequence
 from typing import Any
 
 import numpy as np
+
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.core.geometry.sphere import unit_sphere_mesh
 from picogl.renderer.draw_spec import MeshDrawInfo

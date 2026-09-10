@@ -22,6 +22,7 @@ fails, an exception is raised with the compilation error message.
 """
 
 from OpenGL.GL import GL_COMPILE_STATUS
+
 from picogl.backend.gl.api.shader import (
     gl_attach_shader,
     gl_compile_shader,

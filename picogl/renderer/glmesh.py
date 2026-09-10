@@ -8,9 +8,10 @@ GPU buffers and expanding indexed meshes into per-triangle vertex lists if neede
 """
 
 import ctypes
-from typing import TYPE_CHECKING, Literal, Optional, Union, Any
+from typing import TYPE_CHECKING, Any, Literal, Optional, Union
 
 import numpy as np
+from elmo.glsl.layouts import build_shader_layouts
 from numpy import dtype, floating, generic, ndarray
 from numpy._typing import _64Bit
 
@@ -20,8 +21,6 @@ from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.gpu.buffers.helper import as_vec3_array
 from picogl.gpu.buffers.vertex.vbo.vbo_class import MeshDataAttrs, VBOType
 from picogl.shaders.type import ShaderType
-
-from elmo.glsl.layouts import build_shader_layouts
 
 if TYPE_CHECKING:
     from picogl.renderer.meshdata import MeshData
@@ -165,7 +164,9 @@ class GLMesh:
         expanded_v = empty_triangle_vertices(tri_count)
         expanded_c = empty_triangle_vertices(tri_count)
         expanded_n = empty_triangle_vertices(tri_count)
-        expanded_t = empty_triangle_vertices(tri_count, components=2) # np.empty((tri_count * 3, 2), dtype=np.float32)
+        expanded_t = empty_triangle_vertices(
+            tri_count, components=2
+        )  # np.empty((tri_count * 3, 2), dtype=np.float32)
 
         for i in range(tri_count):
             a = self.indices[3 * i + 0]

@@ -7,6 +7,8 @@ from pathlib import Path
 from typing import Callable
 
 from decologr import Decologr as log
+from pyglm import glm
+
 from picogl.backend.gl.api import gl_bind_texture, gl_get_active_texture0
 from picogl.backend.gl.api.clear import gl_clear
 from picogl.backend.gl.api.enable import gl_enable_capability_list
@@ -28,7 +30,6 @@ from picogl.ui.backend.glut.mouse import RotationInteraction
 from picogl.ui.backend.glut.window.glut import GlutRendererWindow
 from picogl.utils.loader.texture import TextureLoader
 from picogl.utils.mesh.protocol import MeshProtocol
-from pyglm import glm
 
 _MVP_UNIFORM = "mvp_matrix"
 _TEXTURE_UNIFORM = "texture0"

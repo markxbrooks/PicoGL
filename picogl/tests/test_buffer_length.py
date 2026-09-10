@@ -3,6 +3,7 @@
 import unittest
 
 import numpy as np
+
 from picogl.gpu.buffers.length import (
     drawable_data_length,
     length_from_array_data,

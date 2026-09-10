@@ -1,6 +1,7 @@
 """
 Validation of input data
 """
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
@@ -61,9 +62,7 @@ def validate_input_data(
 
     # --- Indices (optional) ---
     if indices is not None:
-        valid_ndim = indices.ndim == 1 or (
-            indices.ndim == 2 and indices.shape[1] == 3
-        )
+        valid_ndim = indices.ndim == 1 or (indices.ndim == 2 and indices.shape[1] == 3)
         if not isinstance(indices, np.ndarray) or not valid_ndim:
             raise ValueError(
                 f"indices must be a flat (K,) or (M, 3) ndarray for triangular faces, got {indices.shape if isinstance(indices, np.ndarray) else type(indices)}"

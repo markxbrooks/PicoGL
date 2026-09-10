@@ -22,6 +22,19 @@ import sys
 from pathlib import Path
 from typing import Optional
 
+from picoui.dimensions import Dimensions, Point, WindowGeometry
+from picoui.helpers import create_layout, create_layout_with_items
+from picoui.helpers.layout import add_items_to_layout
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtWidgets import (
+    QApplication,
+    QComboBox,
+    QLabel,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
+)
+
 from picogl.backend.gl.api import gl_bind_texture
 from picogl.backend.gl.api.clear import gl_clear
 from picogl.backend.gl.api.enable import (
@@ -46,18 +59,6 @@ from picogl.ui.backend.qt.legacy.renderer import LegacyQtObjectRenderer
 from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
 from picogl.utils.loader.object import ObjectLoader
 from picogl.utils.loader.texture import TextureLoader
-from picoui.dimensions import Dimensions, Point, WindowGeometry
-from picoui.helpers import create_layout, create_layout_with_items
-from picoui.helpers.layout import add_items_to_layout
-from PySide6.QtCore import Qt, QTimer
-from PySide6.QtWidgets import (
-    QApplication,
-    QComboBox,
-    QLabel,
-    QPushButton,
-    QVBoxLayout,
-    QWidget,
-)
 
 INITIAL_ZOOM = 20
 

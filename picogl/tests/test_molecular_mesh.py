@@ -6,6 +6,7 @@ from dataclasses import dataclass
 
 import numpy as np
 import pytest
+
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.core.geometry.sphere import unit_sphere_mesh
 from picogl.renderer.molecular import AtomsMesh, BondsMesh
@@ -114,7 +115,9 @@ def test_bonds_mesh_custom_radius_and_color_fn() -> None:
     end = np.array([1.0, 1.0, 1.0])
     bottom_ring = data.vertices[0::2]
     top_ring = data.vertices[1::2]
-    np.testing.assert_allclose(np.linalg.norm(bottom_ring - start, axis=1), 0.3, rtol=1e-6)
+    np.testing.assert_allclose(
+        np.linalg.norm(bottom_ring - start, axis=1), 0.3, rtol=1e-6
+    )
     np.testing.assert_allclose(np.linalg.norm(top_ring - end, axis=1), 0.3, rtol=1e-6)
 
 

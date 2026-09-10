@@ -5,8 +5,9 @@ ABC Window
 from abc import ABC, abstractmethod
 from typing import Optional
 
-import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
 from OpenGL.GLUT import glutMainLoop, glutSwapBuffers
+
+import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
 
 
 class AbstractGLWindow(ABC):

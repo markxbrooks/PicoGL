@@ -5,6 +5,7 @@ gl enable / disable / is-enabled helpers.
 from __future__ import annotations
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import glDisable, glEnable, glIsEnabled
+
 from picogl.backend.gl.api.capabilities import GLCapabilities
 
 __all__ = [

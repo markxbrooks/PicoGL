@@ -17,6 +17,7 @@ import contextlib
 from typing import Optional
 
 import numpy as np
+
 from picogl.backend.gl.api import gl_draw_elements
 from picogl.backend.gl.api.glcleanup import gl_release_vertex_array_object
 from picogl.backend.gl.enums import GLDrawMode, GLNumeric

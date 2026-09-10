@@ -48,6 +48,7 @@ import ctypes
 from typing import Optional
 
 import numpy as np
+
 from picogl.backend.gl.api import gl_bind_buffer
 from picogl.backend.gl.api.buffer.generate import gl_generate_buffers
 from picogl.backend.gl.api.buffer_data import gl_buffer_data

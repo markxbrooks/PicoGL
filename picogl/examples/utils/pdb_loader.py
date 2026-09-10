@@ -13,9 +13,9 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 import numpy as np
-
 from molib.core.constants import MoLibConstant
 from molib.ligand.pdb.layouts.pdb_file import PDBFileLayout, PDBTitleLayout
+
 from picogl.examples.utils.bond_detection import atoms_should_bond
 from picogl.utils.strenum import StrEnum
 
@@ -222,14 +222,16 @@ def _generate_bonds(atoms: List[Atom], residues: List[Residue]) -> List[Bond]:
     return bonds
 
 
-def _generate_peptide_bonds(atom_index: dict[int, int], bonds: list[Bond], residues: list[Residue]):
+def _generate_peptide_bonds(
+    atom_index: dict[int, int], bonds: list[Bond], residues: list[Residue]
+):
     # Peptide bonds: carbonyl C of residue i to amide N of residue i+1.
     for i in range(len(residues) - 1):
         curr_res = residues[i]
         next_res = residues[i + 1]
         if (
-                curr_res.chain_id != next_res.chain_id
-                or next_res.seq_num != curr_res.seq_num + 1
+            curr_res.chain_id != next_res.chain_id
+            or next_res.seq_num != curr_res.seq_num + 1
         ):
             continue
         carbon = _find_named_atom(curr_res, "C")
@@ -247,7 +249,9 @@ def _generate_peptide_bonds(atom_index: dict[int, int], bonds: list[Bond], resid
             )
 
 
-def _generate_intra_residue_bonds(atom_index: dict[int, int], bonds: list[Bond], residues: list[Residue]):
+def _generate_intra_residue_bonds(
+    atom_index: dict[int, int], bonds: list[Bond], residues: list[Residue]
+):
     # Intra-residue bonds from distance + element heuristics.
     for residue in residues:
         res_atoms = residue.atoms

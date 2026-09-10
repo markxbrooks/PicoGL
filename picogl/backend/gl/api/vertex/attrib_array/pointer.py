@@ -11,6 +11,7 @@ Functions:
 """
 
 from OpenGL.GL import glVertexAttribPointer
+
 from picogl.backend.gl.enums import GLNumeric
 from picogl.boolean import GLBoolean
 

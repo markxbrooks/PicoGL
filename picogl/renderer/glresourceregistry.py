@@ -18,6 +18,7 @@ from weakref import WeakKeyDictionary
 
 import numpy as np
 from decologr import Decologr as log
+
 from picogl.shaders import ShaderType
 
 if TYPE_CHECKING:

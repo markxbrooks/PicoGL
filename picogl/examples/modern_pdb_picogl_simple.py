@@ -23,10 +23,10 @@ if str(_EXAMPLES_DIR) not in sys.path:
 if sys.platform.startswith("linux"):
     os.environ.setdefault("PYOPENGL_PLATFORM", "glx")
 
-import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
-
 # Explicit module path — avoids shadowing by another ``molecular_viewer`` on sys.path.
 from utils.molecular_glut_window import MolecularRenderWindow, MolecularViewer
+
+import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
 
 
 def _resolve_pdb_path(argv: list[str]) -> Path:

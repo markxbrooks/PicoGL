@@ -22,6 +22,7 @@ from pathlib import Path
 from typing import Dict, Optional
 
 from decologr import Decologr as log
+
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.globals import PICOGL_SHADER_SRC_DIRECTORY
 from picogl.shaders.compile import compile_shaders

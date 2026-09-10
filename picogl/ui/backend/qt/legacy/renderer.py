@@ -6,6 +6,9 @@ from typing import Optional
 
 import numpy as np
 from decologr import Decologr as log
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtWidgets import QWidget
+
 from picogl.backend.gl.api.clear import gl_clear_color
 from picogl.backend.gl.api.color import gl_color_material
 from picogl.backend.gl.api.enable import gl_enable, gl_enable_capability_list
@@ -31,8 +34,6 @@ from picogl.examples import g_color_buffer_data, g_vertex_buffer_data
 from picogl.renderer import MeshData
 from picogl.renderer.legacy_glmesh import LegacyGLMesh
 from picogl.ui.backend.qt.base import GLBase
-from PySide6.QtCore import Qt, QTimer
-from PySide6.QtWidgets import QWidget
 
 
 class LegacyQtObjectRenderer(GLBase):

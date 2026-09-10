@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import cast
 
 from numpy.typing import ArrayLike
+
 from picogl.protocols.drawable_buffer import (
     BufferContainer,
     DrawableBuffer,

@@ -35,6 +35,7 @@ Example usage:
 from typing import Optional
 
 import numpy as np
+
 from picogl.backend.gl.api import gl_buffer_data
 from picogl.backend.gl.api.buffer.generate import gl_generate_buffers
 from picogl.backend.gl.enums import GLBufferTarget, GLUsageHint

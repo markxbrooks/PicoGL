@@ -10,6 +10,7 @@ from typing import Any, Protocol
 
 import numpy as np
 from numpy import ndarray
+
 from picogl.backend.gl.api import gl_draw_elements, gl_enable_legacy_client_state
 from picogl.backend.gl.api.blending import gl_blend_func
 from picogl.backend.gl.api.pointer import (

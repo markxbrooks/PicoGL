@@ -32,6 +32,7 @@ from pathlib import Path
 from unittest.mock import MagicMock, call, patch
 
 import numpy as np
+
 from picogl.renderer.meshdata import MeshData
 from picogl.renderer.texture import TextureRenderer
 

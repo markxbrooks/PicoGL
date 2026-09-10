@@ -11,6 +11,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     glTranslatef,
     glViewport,
 )
+
 from picogl.core.vec3 import Vec3
 
 

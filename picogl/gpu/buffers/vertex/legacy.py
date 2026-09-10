@@ -12,6 +12,7 @@ from typing import Any, Optional
 
 import numpy as np
 from decologr import Decologr as log
+
 from picogl.backend.gl.api import gl_bind_buffer
 from picogl.backend.gl.api.client_state import gl_enable_legacy_client_state
 from picogl.backend.gl.api.draw import gl_draw_arrays, gl_draw_elements

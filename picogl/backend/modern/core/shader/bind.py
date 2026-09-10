@@ -3,6 +3,7 @@ Bind the shader program for rendering.
 """
 
 from OpenGL.raw.GL.VERSION.GL_2_0 import glUseProgram
+
 from picogl.examples.utils.shader_loader import Shader
 
 

@@ -24,6 +24,7 @@ if sys.platform.startswith("linux"):
 
 
 import numpy as np
+
 import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
 from picogl.backend.draw import gl_draw_arrays
 from picogl.backend.gl.api.enable import gl_enable, gl_enable_capability_list
@@ -53,6 +54,7 @@ except ImportError as e:
     sys.exit(1)
 
 from OpenGL.GL import *
+
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.renderer import MeshData
 from picogl.ui.backend.glut.window.object import RenderWindow

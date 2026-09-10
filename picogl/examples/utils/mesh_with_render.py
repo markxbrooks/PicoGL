@@ -1,5 +1,6 @@
 import numpy as np
 from decologr import Decologr as log
+
 from picogl.backend.modern.core.shader.program import ShaderProgram
 
 

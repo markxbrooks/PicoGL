@@ -1,4 +1,5 @@
 import numpy as np
+
 from picogl.examples.utils.shader_loader import Shader
 
 

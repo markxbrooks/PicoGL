@@ -33,33 +33,10 @@ from typing import Any, Optional, Union
 
 import numpy as np
 
-from backend.modern.core.vertex.array.draw_spec import DrawSpec
 from decologr import Decologr as log
+from picogl.backend.modern.core.vertex.array.draw_spec import DrawSpec
 from picogl.backend.modern.core.vertex.attribute import VertexAttribute
-
-# PicoGL must not import ElMo or PySide6 at module load (GLUT examples stay Qt-free).
-SILENT_VAO = True
-
-
-def _qopengl_context_class() -> Any | None:
-    """Return QOpenGLContext only if PySide6.QtGui is already imported."""
-    qtgui = sys.modules.get("PySide6.QtGui")
-    if qtgui is None:
-        return None
-    return getattr(qtgui, "QOpenGLContext", None)
-
-
-def _current_qt_gl_context() -> Any | None:
-    qctx = _qopengl_context_class()
-    if qctx is None:
-        return None
-    try:
-        return qctx.currentContext()
-    except Exception:
-        return None
-
-
-from picogl.backend.gl.api import gl_bind_buffer, gl_draw_arrays, gl_draw_elements
+from picogl.backend.gl.api import gl_draw_arrays, gl_draw_elements
 from picogl.backend.gl.api.buffer.subdata import gl_buffer_subdata
 from picogl.backend.gl.api.glcleanup import gl_delete_buffers, gl_delete_vertex_arrays
 from picogl.backend.gl.api.vertex.arrays.bind import gl_bind_vertex_array
@@ -83,6 +60,26 @@ from picogl.gpu.buffers.base import VertexBase
 from picogl.gpu.buffers.vertex.aliases import NAME_ALIASES
 from picogl.safe import gl_gen_safe
 
+# PicoGL must not import ElMo or PySide6 at module load (GLUT examples stay Qt-free).
+SILENT_VAO = True
+
+
+def _qopengl_context_class() -> Any | None:
+    """Return QOpenGLContext only if PySide6.QtGui is already imported."""
+    qtgui = sys.modules.get("PySide6.QtGui")
+    if qtgui is None:
+        return None
+    return getattr(qtgui, "QOpenGLContext", None)
+
+
+def _current_qt_gl_context() -> Any | None:
+    qctx = _qopengl_context_class()
+    if qctx is None:
+        return None
+    try:
+        return qctx.currentContext()
+    except Exception:
+        return None
 
 def current_gl_context() -> int | None:
     try:
@@ -161,9 +158,9 @@ class VertexArrayObject(VertexBase, GLResource):
         self.bind()
 
     def build(
-            self,
-            attributes: list[VertexAttribute],
-            indices: np.ndarray | None = None,
+        self,
+        attributes: list[VertexAttribute],
+        indices: np.ndarray | None = None,
     ) -> None:
         """Populate self from attribute arrays and an optional element buffer."""
         for attribute in attributes:
@@ -223,9 +220,7 @@ class VertexArrayObject(VertexBase, GLResource):
                 vbo = self.get_vbo_object(attr.name)
 
                 if vbo is None:
-                    raise RuntimeError(
-                        f"No VBO bound for attribute '{attr.name}'"
-                    )
+                    raise RuntimeError(f"No VBO bound for attribute '{attr.name}'")
 
                 vbo.bind()
                 gl_enable_vertex_array(attr.index)
@@ -416,11 +411,7 @@ class VertexArrayObject(VertexBase, GLResource):
         if count == 0:
             return
 
-        context = (
-            point_rendering()
-            if GLDrawMode.POINTS == spec.mode
-            else nullcontext()
-        )
+        context = point_rendering() if GLDrawMode.POINTS == spec.mode else nullcontext()
 
         with context, self.bound():
             if self.ebo:

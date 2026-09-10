@@ -3,9 +3,11 @@ GlutRendererWindow
 """
 
 import numpy as np
-import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
 from decologr import Decologr as log
 from decologr import setup_logging
+from pyglm import glm
+
+import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
 from picogl.backend.geometry import LegacyBinding
 from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.task.gl_init import legacy_init_gl_list, paint_gl_list
@@ -16,7 +18,6 @@ from picogl.core.camera import CameraParameters, ProjectionConfig
 from picogl.renderer import GLResourceRegistry
 from picogl.ui.backend.glut.mouse import RotationInteraction
 from picogl.ui.backend.glut.window.gl import GLWindow
-from pyglm import glm
 
 
 class GlutRendererWindow(GLWindow):

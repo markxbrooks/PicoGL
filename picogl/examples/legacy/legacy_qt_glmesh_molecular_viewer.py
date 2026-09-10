@@ -14,6 +14,23 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+from picoui.dimensions import Dimensions, Point, WindowGeometry
+from picoui.helpers import create_layout_with_items, create_widget_with_layout
+from picoui.helpers.layout import create_splitter_with_items, create_widget_layout
+from picoui.specs.widgets import ButtonSpec, LabelSpec
+from picoui.widget.helper import create_button_from_spec, create_label_from_spec
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtOpenGLWidgets import QOpenGLWidget
+from PySide6.QtWidgets import (
+    QApplication,
+    QLabel,
+    QMessageBox,
+    QPushButton,
+    QSplitter,
+    QVBoxLayout,
+    QWidget,
+)
+
 from picogl.backend.gl.api.clear import gl_clear, gl_clear_rgba_color
 from picogl.backend.gl.api.enable import gl_enable_capability_list
 from picogl.backend.gl.api.legacy.matrix import gl_matrix_mode_context
@@ -28,20 +45,6 @@ from picogl.core.rgbcolor import RGBAColor
 from picogl.core.viewport import GLViewport
 from picogl.renderer.molecular import AtomsMesh, BondsMesh, chain_rgb
 from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
-from picoui.dimensions import Dimensions, Point, WindowGeometry
-from picoui.helpers import create_layout_with_items, create_widget_with_layout
-from picoui.helpers.layout import create_splitter_with_items, create_widget_layout
-from picoui.specs.widgets import ButtonSpec, LabelSpec
-from picoui.widget.helper import create_button_from_spec, create_label_from_spec
-from PySide6.QtCore import Qt, QTimer
-from PySide6.QtOpenGLWidgets import QOpenGLWidget
-from PySide6.QtWidgets import (
-    QApplication,
-    QLabel,
-    QMessageBox,
-    QSplitter,
-    QVBoxLayout,
-    QWidget, QPushButton)
 
 _EXAMPLES_PATH = Path(__file__).resolve().parent.parent
 _EXAMPLES_DIR = str(_EXAMPLES_PATH)
@@ -198,7 +201,6 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
             print(f"Error loading PDB file: {e}")
             QMessageBox.critical(None, "Error", f"Failed to load PDB file: {e}")
 
-
     def _create_mesh_data(self):
         """Create molecular meshes and upload legacy GPU buffers."""
         if self._initialized:
@@ -340,9 +342,7 @@ class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
 
     def create_splitter(self) -> QSplitter:
         splitter_items = self.create_splitter_items()
-        splitter = create_splitter_with_items(
-            items=splitter_items, sizes=[200, 800]
-        )
+        splitter = create_splitter_with_items(items=splitter_items, sizes=[200, 800])
         return splitter
 
     def create_splitter_items(self) -> list[QWidget]:
@@ -356,7 +356,10 @@ class LegacyGLMeshMolecularViewerWindow(LegacyQtObjectWindow):
             controls_layout_items, start_stretch=False, end_stretch=True
         )
         upper_layout = create_layout_with_items(
-            [info_label, controls_layout, instructions_label], start_stretch=False, end_stretch=True, vertical=False
+            [info_label, controls_layout, instructions_label],
+            start_stretch=False,
+            end_stretch=True,
+            vertical=False,
         )
         upper_widget = create_widget_with_layout(upper_layout)
         lower_widget = create_widget_with_layout(lower_layout)

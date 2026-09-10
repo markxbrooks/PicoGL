@@ -11,6 +11,8 @@ import os
 from pathlib import Path
 
 import numpy as np
+from utils.pdb_loader import PDBLoader
+
 from picogl.backend.gl.api.blending import gl_blend_func
 from picogl.backend.gl.api.clear import gl_clear_color
 from picogl.backend.gl.api.draw.array import gl_draw_arrays
@@ -35,7 +37,6 @@ from picogl.renderer import MeshData
 from picogl.shaders.registry import ShaderRegistry
 from picogl.shaders.type import ShaderType
 from picogl.ui.backend.glut.window.object import RenderWindow
-from utils.pdb_loader import PDBLoader
 
 _EXAMPLES_DIR = Path(__file__).resolve().parent.parent
 _PICOGL_ROOT = _EXAMPLES_DIR.parents[1]

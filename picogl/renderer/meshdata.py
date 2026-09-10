@@ -4,16 +4,37 @@ texture coordinates, colors, and indices. This class offers a set of utilities t
 handle OpenGL-related state objects and simplify rendering workflows.
 """
 
-from typing import Optional, Union, Any
+from typing import Any, Optional, Union
 
 import numpy as np
-from numpy import dtype, ndarray, generic
-
 from decologr import Decologr as log
-from OpenGL import GL
+from numpy import dtype, generic, ndarray
 
+from picogl.backend.gl.api import (
+    gl_disable_legacy_client_state,
+    gl_draw_elements,
+    gl_enable_legacy_client_state,
+)
+from picogl.backend.gl.api.blending import gl_blend_func
+from picogl.backend.gl.api.color import gl_color_4f
+from picogl.backend.gl.api.line import gl_line_width
+from picogl.backend.gl.api.pointer import (
+    gl_color_array_pointer,
+    gl_normal_array_pointer,
+    gl_texcoord_array_pointer,
+    gl_vertex_array_pointer,
+)
+from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
+from picogl.backend.gl.capability import GLBlendFactor, GLPipelineCapability
+from picogl.backend.gl.enums import GLDrawMode, GLIndexType, GLNumeric
+from picogl.backend.gl.legacy.setup_vbg import VertexBufferGroup, setup_vbg
+from picogl.backend.gl.state.client import GLClientState
+from picogl.backend.gl.state.fill import GLFillMode
+from picogl.core.rgbcolor import RGBColor
+from picogl.gpu.buffers.attributes import CanonicalVertexAttrs
 from picogl.gpu.buffers.factory.validation import validate_input_data
 from picogl.gpu.buffers.helper import as_vec3_array
+from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
 from picogl.renderer.draw_spec import (
     MeshDrawInfo,
     MeshDrawSpec,
@@ -21,24 +42,6 @@ from picogl.renderer.draw_spec import (
     execute_draw_spec,
     infer_draw_info,
 )
-from picogl.backend.gl.api import (
-    gl_disable_legacy_client_state,
-    gl_draw_elements,
-    gl_enable_legacy_client_state,
-)
-from picogl.backend.gl.api.pointer import (
-    gl_color_array_pointer,
-    gl_normal_array_pointer,
-    gl_texcoord_array_pointer,
-    gl_vertex_array_pointer,
-)
-from picogl.backend.gl.enums import GLDrawMode, GLIndexType, GLNumeric
-from picogl.backend.gl.legacy.setup_vbg import VertexBufferGroup, setup_vbg
-from picogl.backend.gl.state.client import GLClientState
-from picogl.backend.gl.state.fill import GLFace, GLFillMode
-from picogl.core.rgbcolor import RGBColor
-from picogl.gpu.buffers.attributes import CanonicalVertexAttrs
-from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
 from picogl.utils.loader.object_data import ObjectData
 
 
@@ -192,7 +195,7 @@ class MeshData:
         """
         colors = np.asarray(logical_colors, dtype=np.float32).reshape(-1, 3)
         n_verts = int(self._xyz_row_count(self.vertices))
-        if n_verts > 0 and colors.shape[0] == n_verts:
+        if 0 < n_verts == colors.shape[0]:
             return colors
         src = self.color_source_indices
         if src is not None:
@@ -264,18 +267,24 @@ class MeshData:
         return _setup_atom_vao(self)
 
     def setup_ribbon_vao(self):
-        from elmo.gl.backend.modern.primitives.ribbon.setup import setup_ribbon_vao as _setup_ribbon_vao
+        from elmo.gl.backend.modern.primitives.ribbon.setup import (
+            setup_ribbon_vao as _setup_ribbon_vao,
+        )
 
         return _setup_ribbon_vao(self)
 
     def setup_calpha_vao(self):
-        from elmo.gl.backend.modern.entities.calpha.setup_buffers import setup_calpha_vao as _setup_calpha_vao
+        from elmo.gl.backend.modern.entities.calpha.setup_buffers import (
+            setup_calpha_vao as _setup_calpha_vao,
+        )
 
         return _setup_calpha_vao(self)
 
     def setup_bond_vao(self):
         """Build a vertex array from bond mesh data (layout included)."""
-        from elmo.gl.backend.modern.entities.bonds.setup import (setup_bond_vao as _setup_bond_vao)
+        from elmo.gl.backend.modern.entities.bonds.setup import (
+            setup_bond_vao as _setup_bond_vao,
+        )
 
         return _setup_bond_vao(self)
 
@@ -349,9 +358,9 @@ class MeshData:
         from picogl.gpu.buffers.helper import as_vec3_array
 
         return setup_vbg(
-            colors=as_vec3_array(self.colors),
-            normals=as_vec3_array(self.normals),
-            positions=as_vec3_array(self.vertices),
+            colors=self.normalized_colors,
+            normals=self.normalized_normals,
+            positions=self.normalized_vertices,
             draw_mode=draw_mode,
         )
 
@@ -457,13 +466,13 @@ class MeshData:
 
     @classmethod
     def _default_colors_for_vertices(cls, vertex_count: int) -> np.ndarray:
-        # Simple default: red colour per vertex
+        """Simple default: red colour per vertex"""
         colors = np.tile(np.array([1.0, 0.0, 0.0], dtype=np.float32), (vertex_count, 1))
         return colors.reshape(-1)
 
     @classmethod
     def _default_normals_for_vertices(cls, vertex_count: int) -> np.ndarray:
-        # Simple default: red colour per vertex
+        """Simple default: simple normal per vertex"""
         normals = np.tile([0.0, 0.0, 1.0], (vertex_count, 1)).astype(np.float32)
         return normals.reshape(-1)
 
@@ -627,14 +636,14 @@ class MeshData:
             fill_mode = GLFillMode.LINE
 
         # Set material properties for the isosurface
-        GL.glLineWidth(line_width)
+        gl_line_width(line_width)
 
         # Enable alpha blending for transparency
         if alpha < 1.0:
-            GL.glEnable(GL.GL_BLEND)
-            GL.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
+            gl_enable(GLPipelineCapability.BLEND)
+            gl_blend_func(GLBlendFactor.SRC_ALPHA, GLBlendFactor.ONE_MINUS_SRC_ALPHA)
         else:
-            GL.glDisable(GL.GL_BLEND)
+            gl_disable(GLPipelineCapability.BLEND)
 
         # Check if we should use vertex colors or override colour
         if color is None and self.colors is not None:
@@ -650,10 +659,10 @@ class MeshData:
             if color is None:
                 color = (0.0, 0.0, 1.0)  # Default blue
             # Use glColor4f to include alpha value
-            GL.glColor4f(color[0], color[1], color[2], 1.0 - alpha)
+            gl_color_4f(color[0], color[1], color[2], 1.0 - alpha)
 
         # Draw as wireframe for better visibility
-        GL.glPolygonMode(GLFace.FRONT_AND_BACK, fill_mode)
+        gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, fill_mode)
 
         try:
             # Draw the mesh with additional safety checks
@@ -675,7 +684,7 @@ class MeshData:
             )
 
         # Restore fill mode
-        GL.glPolygonMode(GLFace.FRONT_AND_BACK, GLFillMode.FILL)
+        gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, GLFillMode.FILL)
 
         # Clean up colour array state if we used it
         if color is None and self.colors is not None:
