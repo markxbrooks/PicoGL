@@ -1,9 +1,14 @@
 """
 Validation of input data
 """
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 import numpy as np
-from picogl.renderer import MeshData
+
+if TYPE_CHECKING:
+    from picogl.renderer.meshdata import MeshData
 
 
 def validate_mesh_data(data: MeshData):

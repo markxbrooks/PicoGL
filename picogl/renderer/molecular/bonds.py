@@ -7,6 +7,7 @@ from typing import Any
 
 import numpy as np
 from picogl.backend.gl.enums import GLDrawMode
+from picogl.renderer.draw_spec import MeshDrawInfo
 from picogl.renderer.meshdata import MeshData
 from picogl.renderer.molecular.atoms import atom_xyz
 from picogl.renderer.molecular.atoms import _default_atom_color
@@ -42,10 +43,17 @@ class BondsMesh(MolecularMesh):
     def build_mesh_data(self) -> MeshData:
         """Build an oriented cylinder shaft for each bond."""
         if not self.bonds:
-            return MeshData.from_raw(
+            data = MeshData.from_raw(
                 vertices=np.zeros((0, 3), dtype=np.float32),
                 indices=np.zeros((0,), dtype=np.uint32),
             )
+            data.draw_info = MeshDrawInfo(
+                mode=GLDrawMode.TRIANGLES,
+                indexed=True,
+                elements_per_item=6 * self.segments,
+                vertices_per_item=2 * self.segments,
+            )
+            return data
 
         buf = PNCBuffer()
         for atom1, atom2 in self.bonds:
@@ -58,6 +66,13 @@ class BondsMesh(MolecularMesh):
             )
 
         verts, norms, cols, idxs = buf.to_arrays()
-        return MeshData.from_raw(
+        data = MeshData.from_raw(
             vertices=verts, normals=norms, colors=cols, indices=idxs
         )
+        data.draw_info = MeshDrawInfo(
+            mode=GLDrawMode.TRIANGLES,
+            indexed=True,
+            elements_per_item=6 * self.segments,
+            vertices_per_item=2 * self.segments,
+        )
+        return data

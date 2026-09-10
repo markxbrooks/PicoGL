@@ -11,11 +11,9 @@ This example demonstrates how to:
 
 from __future__ import annotations
 
-import os
 import sys
 from pathlib import Path
 
-from molib.core.constants import MoLibConstant
 from picogl.backend.gl.api.clear import gl_clear, gl_clear_rgba_color
 from picogl.backend.gl.api.enable import gl_enable_capability_list
 from picogl.backend.gl.api.legacy.matrix import gl_matrix_mode_context
@@ -43,7 +41,7 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QSplitter,
     QVBoxLayout,
-    QWidget, QPushButton, )
+    QWidget, QPushButton)
 
 _EXAMPLES_PATH = Path(__file__).resolve().parent.parent
 _EXAMPLES_DIR = str(_EXAMPLES_PATH)
@@ -56,7 +54,7 @@ from picogl.examples.utils.pdb_loader import PDBLoader  # noqa: E402
 class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
     """Qt OpenGL widget for displaying molecular structures using LegacyGLMesh."""
 
-    def __init__(self, pdb_path: str, parent=None):
+    def __init__(self, pdb_path: str, parent: QWidget | None = None):
         super().__init__(parent)
         self._initialized = False
         self.pdb_path = pdb_path
@@ -145,13 +143,13 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         """setup background"""
         gl_clear_rgba_color(RGBAColor.BLACK)
 
-    def resizeGL(self, width: int, height: int):
+    def resizeGL(self, w: int, h: int):
         """Handle window resize."""
-        self.viewport.update(0, 0, width, height)
+        self.viewport.update(0, 0, w, h)
         with gl_matrix_mode_context():
             glu_perspective(
                 CameraPerspective.FOVY,
-                width / max(height, 1),
+                w / max(h, 1),
                 CameraPerspective.NEAR,
                 CameraPerspective.FAR,
             )
@@ -192,38 +190,14 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         try:
             self.pdb_loader = PDBLoader(self.pdb_path)
             structure = self.pdb_loader.structure
-
-            print(f"✓ Found {len(structure.atoms)} total atoms")
-            print(f"✓ Structure: {structure.title}")
-            print(f"✓ Chains: {structure.chains}")
-            print(f"✓ Residues: {len(structure.residues)}")
-
-            self.calpha_atoms = [
-                atom
-                for atom in structure.atoms
-                if atom.name == MoLibConstant.PEPTIDE_CHAIN_ATOMNAME
-            ]
-            print(f"✓ Found {len(self.calpha_atoms)} C-alpha atoms")
-
-            self.calpha_bonds = self._generate_calpha_bonds()
-            print(f"✓ Generated {len(self.calpha_bonds)} C-alpha bonds")
+            self.calpha_atoms = structure.calpha_atoms
+            self.calpha_bonds = structure.calpha_bonds
+            print(structure.report)
 
         except Exception as e:
             print(f"Error loading PDB file: {e}")
             QMessageBox.critical(None, "Error", f"Failed to load PDB file: {e}")
 
-    def _generate_calpha_bonds(self):
-        """Generate bonds between consecutive C-alpha atoms in the same chain."""
-        bonds = []
-        chain_atoms = {}
-        for atom in self.calpha_atoms:
-            chain_atoms.setdefault(atom.chain_id, []).append(atom)
-
-        for atoms in chain_atoms.values():
-            atoms.sort(key=lambda a: a.res_seq)
-            for i in range(len(atoms) - 1):
-                bonds.append((atoms[i], atoms[i + 1]))
-        return bonds
 
     def _create_mesh_data(self):
         """Create molecular meshes and upload legacy GPU buffers."""

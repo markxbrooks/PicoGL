@@ -120,5 +120,5 @@ class GLViewport(Viewport):
     def apply(self):
         self.update(*self.rect)
 
-    def update(self, x: int, y: int, width: int, height: int):
-        gl_viewport(0, 0, width, height)
+    def update(self, x: int, y: int, w: int, h: int):
+        gl_viewport(0, 0, w, h)

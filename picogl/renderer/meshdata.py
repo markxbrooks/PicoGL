@@ -4,11 +4,23 @@ texture coordinates, colors, and indices. This class offers a set of utilities t
 handle OpenGL-related state objects and simplify rendering workflows.
 """
 
-from typing import Optional, Union
+from typing import Optional, Union, Any
 
 import numpy as np
+from numpy import dtype, ndarray, generic
+
 from decologr import Decologr as log
 from OpenGL import GL
+
+from picogl.gpu.buffers.factory.validation import validate_input_data
+from picogl.gpu.buffers.helper import as_vec3_array
+from picogl.renderer.draw_spec import (
+    MeshDrawInfo,
+    MeshDrawSpec,
+    compute_draw_spec,
+    execute_draw_spec,
+    infer_draw_info,
+)
 from picogl.backend.gl.api import (
     gl_disable_legacy_client_state,
     gl_draw_elements,
@@ -47,6 +59,10 @@ class MeshData:
         colors: Optional array of vertex colors as np.ndarray.
         indices: Optional array of vertex indices as np.ndarray.
         vertex_count: Optional count of vertices, computed from vertices input.
+        draw_info: CPU draw layout (mode, indexed, per-item strides).
+        item_keys: Optional ``(N, K)`` identity table for logical items.
+        color_source_indices: Optional per-vertex gather indices into a
+            logical color array.
 
     Methods:
         bind:
@@ -69,8 +85,11 @@ class MeshData:
         texcoords: np.ndarray = None,
         colors: np.ndarray = None,
         indices: np.ndarray = None,
+        draw_info: MeshDrawInfo | None = None,
+        item_keys: np.ndarray | None = None,
+        color_source_indices: np.ndarray | None = None,
     ):
-        """set up the OpenGL context"""
+        """Store CPU mesh arrays and draw layout (no GL objects)."""
         self.vertices = self._ensure_xyz(vertices)
         n = self._xyz_row_count(self.vertices)
 
@@ -78,12 +97,210 @@ class MeshData:
         self.colors = self._ensure_xyz(colors, n)
         self.texcoords = texcoords
         self.indices = indices
+        self.item_keys = item_keys
+        self.color_source_indices = color_source_indices
+        self.vao = None
 
         self.vertex_count = (
             len(np.asarray(vertices, dtype=np.float32).flatten()) // 3
             if vertices is not None
             else None
         )
+        if draw_info is not None:
+            self.draw_info = draw_info
+        else:
+            indices_arr = self.normalized_indices
+            index_count = 0 if indices_arr is None else int(indices_arr.size)
+            self.draw_info = infer_draw_info(
+                has_indices=indices_arr is not None,
+                index_count=index_count,
+            )
+
+    @property
+    def normalized_indices(self) -> ndarray[Any, dtype[Any]] | None:
+        """
+        normalized indices
+        """
+        if self.indices is None:
+            return None
+
+        indices = np.asarray(self.indices)
+        if indices.size == 0:
+            return None
+
+        return indices.astype(np.uint32).ravel()
+
+    def resolved_draw_info(self) -> MeshDrawInfo:
+        """Return the mesh draw layout (always set in ``__init__``)."""
+        return self.draw_info
+
+    def draw_spec(
+        self,
+        item_count: int | None = None,
+        first_item: int = 0,
+    ) -> MeshDrawSpec:
+        """Build a GL-free draw for ``first_item`` .. ``first_item + item_count``.
+
+        When :attr:`MeshDrawInfo.elements_per_item` is set, ``first_item`` is a
+        logical item index (atom, bond, …) and is converted to an index range.
+
+        :param item_count: Number of items to draw; ``None`` draws the remainder.
+        :param first_item: First logical item (or first index/vertex if unstrided).
+        :return: :class:`MeshDrawSpec` clamped to the mesh buffers.
+        """
+        info = self.resolved_draw_info()
+        indices = self.normalized_indices
+        index_count = 0 if indices is None else int(indices.size)
+        vertex_count = int(self._xyz_row_count(self.vertices))
+        return compute_draw_spec(
+            info,
+            index_count=index_count,
+            vertex_count=vertex_count,
+            first_item=first_item,
+            item_count=item_count,
+        )
+
+    def expand_attribute_per_item(
+        self,
+        values: np.ndarray,
+        elements_per_item: int | None = None,
+    ) -> np.ndarray:
+        """Repeat one row per item across ``elements_per_item`` vertices.
+
+        :param values: Array of shape ``(N, 3)`` (one row per logical item).
+        :param elements_per_item: Repeat count; defaults to
+            :attr:`MeshDrawInfo.vertices_per_item`.
+        :return: float32 array of shape ``(N * count, 3)``.
+        """
+        rows = np.asarray(values, dtype=np.float32).reshape(-1, 3)
+        count = elements_per_item
+        if count is None:
+            count = self.draw_info.vertices_per_item
+        if count is None or int(count) <= 1:
+            return rows
+        return np.repeat(rows[:, None, :], int(count), axis=1).reshape(-1, 3)
+
+    def expand_colors(self, logical_colors: np.ndarray) -> np.ndarray:
+        """Expand per-item or per-source colors to one RGB row per vertex.
+
+        If ``logical_colors`` already matches the vertex count it is returned
+        unchanged. Otherwise :attr:`color_source_indices` (gather) or
+        :meth:`expand_attribute_per_item` is applied.
+
+        :param logical_colors: RGB rows (vertices, items, or gather sources).
+        :return: float32 array of shape ``(V, 3)``.
+        """
+        colors = np.asarray(logical_colors, dtype=np.float32).reshape(-1, 3)
+        n_verts = int(self._xyz_row_count(self.vertices))
+        if n_verts > 0 and colors.shape[0] == n_verts:
+            return colors
+        src = self.color_source_indices
+        if src is not None:
+            return colors[np.asarray(src, dtype=np.intp)]
+        return self.expand_attribute_per_item(colors)
+
+    def apply_logical_colors(self, logical_colors: np.ndarray) -> np.ndarray:
+        """Expand logical colors onto :attr:`colors` (CPU only; no GPU upload).
+
+        :param logical_colors: RGB rows (vertices, items, or gather sources).
+        :return: The expanded per-vertex color array now stored on this mesh.
+        """
+        self.colors = self.expand_colors(logical_colors)
+        return self.colors
+
+    def attach_vao(self, vao: Any) -> Any:
+        """Bind *vao* to this mesh and this mesh to *vao* (bidirectional).
+
+        :param vao: GPU vertex array / buffer group that will issue ``glDraw*``.
+        :return: *vao* (for call chaining from setup helpers).
+        """
+        self.vao = vao
+        if vao is not None:
+            vao.mesh = self
+        return vao
+
+    def draw(
+        self,
+        *,
+        first_item: int = 0,
+        item_count: int | None = None,
+        count: int | None = None,
+    ) -> None:
+        """Issue a modern ``glDraw*`` via the attached VAO and :meth:`draw_spec`.
+
+        :param first_item: First logical item (atom, bond, …).
+        :param item_count: Number of items; ``None`` draws the remainder.
+        :param count: Override element/vertex count (HETATM temporary EBO).
+        :raises RuntimeError: When no VAO has been attached.
+        """
+        vao = self.vao
+        if vao is None:
+            raise RuntimeError("MeshData is not associated with a VAO")
+        spec = self.draw_spec(first_item=first_item, item_count=item_count)
+        if count is not None:
+            spec = MeshDrawSpec(
+                mode=spec.mode,
+                count=int(count),
+                first=0,
+                pointer=0,
+            )
+        execute_draw_spec(vao, spec)
+
+    def validate(self):
+        """validate mesh data"""
+        validate_input_data(
+            vertices=self.vertices,
+            indices=self.indices,
+            normals=self.normals,
+            colors=self.colors,
+        )
+
+    def setup_atom_vao(self):
+        """Build a vertex array from atom mesh data (layout included)."""
+        from elmo.gl.backend.modern.entities.atoms.setup import (
+            setup_atom_vao as _setup_atom_vao,
+        )
+
+        return _setup_atom_vao(self)
+
+    def setup_ribbon_vao(self):
+        from elmo.gl.backend.modern.primitives.ribbon.setup import setup_ribbon_vao as _setup_ribbon_vao
+
+        return _setup_ribbon_vao(self)
+
+    def setup_calpha_vao(self):
+        from elmo.gl.backend.modern.entities.calpha.setup_buffers import setup_calpha_vao as _setup_calpha_vao
+
+        return _setup_calpha_vao(self)
+
+    def setup_bond_vao(self):
+        """Build a vertex array from bond mesh data (layout included)."""
+        from elmo.gl.backend.modern.entities.bonds.setup import (setup_bond_vao as _setup_bond_vao)
+
+        return _setup_bond_vao(self)
+
+    def setup_vertex_attributes(self):
+        """setup vertex attributes"""
+        from picogl.backend.modern.core.vertex.attribute import VertexAttribute
+
+        vertex_attributes = [
+            VertexAttribute(0, self.normalized_vertices, VBOType.VBO),
+            VertexAttribute(1, self.normalized_colors, VBOType.CBO),
+            VertexAttribute(2, self.normalized_normals, VBOType.NBO),
+        ]
+        return vertex_attributes
+
+    @property
+    def normalized_normals(self) -> ndarray[Any, dtype[generic]]:
+        return as_vec3_array(self.normals)
+
+    @property
+    def normalized_colors(self) -> ndarray[Any, dtype[generic]]:
+        return as_vec3_array(self.colors)
+
+    @property
+    def normalized_vertices(self) -> ndarray[Any, dtype[generic]]:
+        return as_vec3_array(self.vertices)
 
     @staticmethod
     def _ensure_xyz(arr, n=None):
@@ -355,7 +572,7 @@ class MeshData:
             indices=indices_arr,
         )
 
-    def draw(
+    def draw_legacy(
         self,
         color: tuple | None = None,
         line_width: float = 1.0,
@@ -363,15 +580,14 @@ class MeshData:
         fill: bool = False,
         alpha: float = 1.0,
     ):
-        """
-        Draw the mesh with optional color override and transparency.
+        """Draw with legacy client arrays (``gl*Pointer`` + ``glDrawElements``).
 
-        Args:
-            color: Optional color override. If None and vertex colors exist, uses vertex colors.
-            line_width: Line width for wireframe mode
-            mode: OpenGL draw mode
-            fill: Whether to fill or use wireframe
-            alpha: Transparency value from 0.0 (opaque) to 1.0 (fully transparent)
+        :param color: Optional RGB override. If ``None`` and vertex colors exist,
+            uses the colour array.
+        :param line_width: Line width for wireframe mode.
+        :param mode: OpenGL draw mode.
+        :param fill: Whether to fill polygons or use wireframe.
+        :param alpha: Transparency (0.0 opaque … 1.0 fully transparent).
         """
         # Safety checks to prevent segfaults
         if self.vertices is None:
@@ -415,7 +631,7 @@ class MeshData:
 
         # Enable alpha blending for transparency
         if alpha < 1.0:
-            GL.gl_enable(GL.GL_BLEND)
+            GL.glEnable(GL.GL_BLEND)
             GL.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
         else:
             GL.glDisable(GL.GL_BLEND)

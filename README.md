@@ -277,8 +277,8 @@ qt_legacy_glmesh_molecular_viewer.py
         print(f"✓ Found {len(self.calpha_atoms)} C-alpha atoms")
 
         # Generate C-alpha bonds (sequential bonds within each chain)
-        self.calpha_bonds = self._generate_calpha_bonds()
-        print(f"✓ Generated {len(self.calpha_bonds)} C-alpha bonds")
+        self.calpha_bonds = structure.calpha_bonds()
+        print(f"✓ Generated {len(structure.calpha_bonds)} C-alpha bonds")
 
         # Note: Mesh data will be created in initializeGL when OpenGL context is ready
 

@@ -22,7 +22,7 @@ class DrawableBuffer(Protocol):
     Optional: is_valid() for validity checks; __enter__/__exit__ for
     context-manager support (with obj: obj.draw()).
 
-    Legacy VBO groups and modern VAOs (AtomVAO, BondsVAO, RibbonVAO, CalphasVAO,
+    Legacy VBO groups and modern VAOs (VertexArrayObject,
     RibbonVBG, etc.) conform to this protocol.
     """
 
