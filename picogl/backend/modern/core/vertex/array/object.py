@@ -382,7 +382,7 @@ class VertexArrayObject(VertexBase, GLResource):
         return ebo
 
     @property
-    def index_count(self) -> str | int | None:
+    def index_count(self) -> int | None:
         """
         Return the number of indices in the EBO.
 
