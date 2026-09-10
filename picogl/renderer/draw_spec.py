@@ -6,7 +6,9 @@ objects. A VAO/VBG consumes a :class:`MeshDrawSpec` to issue ``glDraw*``.
 
 from __future__ import annotations
 
+import ctypes
 from dataclasses import dataclass
+from typing import Any
 
 import numpy as np
 from picogl.backend.gl.enums import GLDrawMode
@@ -133,4 +135,20 @@ def compute_draw_spec(
         count=count,
         first=first_item,
         pointer=0,
+    )
+
+
+def execute_draw_spec(vao: Any, spec: MeshDrawSpec) -> None:
+    """Issue ``VertexArrayObject.draw`` from a resolved :class:`MeshDrawSpec`.
+
+    :param vao: GPU vertex array that implements ``draw(...)``.
+    :param spec: Count/mode/offset for one ``glDraw*`` call.
+    """
+    if spec.count <= 0:
+        return
+    vao.draw(
+        index_count=spec.count,
+        mode=spec.mode,
+        first=spec.first,
+        pointer=ctypes.c_void_p(int(spec.pointer)),
     )

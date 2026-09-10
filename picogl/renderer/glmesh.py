@@ -48,6 +48,7 @@ class GLMesh:
     ):
         self.vao: Optional[VertexArrayObject] = None
         self.index_count: int = 0
+        self.mesh: Optional["MeshData"] = None
         # strict (N, 3)
         self.vertices = as_vec3_array(vertices)
 
@@ -190,14 +191,14 @@ class GLMesh:
             indices is rendered directly with ``glDrawArrays``.
         vertex_layout :
             ``surface`` → attr order pos, color, normal (``surface_with_lighting`` / mesh).
-            ``ribbon`` → pos, normal, color (``ribbons`` / RibbonVAO).
+            ``ribbon`` → pos, normal, color (``ribbons``).
 
         Returns
         -------
         GLMesh
             Ready-to-upload mesh (GPU buffers are allocated only when `upload()` is called).
         """
-        return cls(
+        gl_mesh = cls(
             vertices=mesh.vertices,
             faces=mesh.indices,
             colors=mesh.colors,
@@ -206,6 +207,8 @@ class GLMesh:
             shader_type=vertex_layout,
             registry_label=registry_label,
         )
+        gl_mesh.mesh = mesh
+        return gl_mesh
 
     def _color_attrib_index(self) -> int:
         """Vertex attribute index for the color buffer in this mesh layout."""
@@ -272,6 +275,8 @@ class GLMesh:
 
             # vao.configure_from_descriptor(descriptor)
             self.vao = vao
+            if self.mesh is not None:
+                self.mesh.attach_vao(vao)
             self.index_count = (
                 self.indices.size if self.use_indices else self.vertices.shape[0]
             )
@@ -307,17 +312,17 @@ class GLMesh:
         self.unbind()
 
     def draw(self, mode=GLDrawMode.TRIANGLES) -> None:
-        """Draw the mesh."""
-        try:
-            if not self.vao:
-                raise RuntimeError("GLMesh not uploaded. Call upload() first.")
-            with self.vao:
-                self.vao.draw(
-                    index_count=self.index_count,
-                    mode=mode,
-                    dtype=GLIndexType.UNSIGNED_INT,
-                    pointer=ctypes.c_void_p(0),
-                )
-        except Exception as e:
-            # You might want to log e or re-raise
-            raise
+        """Draw the mesh via attached :class:`MeshData` when present."""
+        if not self.vao:
+            raise RuntimeError("GLMesh not uploaded. Call upload() first.")
+        mesh = self.mesh
+        if mesh is not None and getattr(mesh, "vao", None) is not None:
+            mesh.draw()
+            return
+        with self.vao:
+            self.vao.draw(
+                index_count=self.index_count,
+                mode=mode,
+                dtype=GLIndexType.UNSIGNED_INT,
+                pointer=ctypes.c_void_p(0),
+            )

@@ -18,6 +18,7 @@ from picogl.renderer.draw_spec import (
     MeshDrawInfo,
     MeshDrawSpec,
     compute_draw_spec,
+    execute_draw_spec,
     infer_draw_info,
 )
 from picogl.backend.gl.api import (
@@ -98,6 +99,7 @@ class MeshData:
         self.indices = indices
         self.item_keys = item_keys
         self.color_source_indices = color_source_indices
+        self.vao = None
 
         self.vertex_count = (
             len(np.asarray(vertices, dtype=np.float32).flatten()) // 3
@@ -206,6 +208,44 @@ class MeshData:
         self.colors = self.expand_colors(logical_colors)
         return self.colors
 
+    def attach_vao(self, vao: Any) -> Any:
+        """Bind *vao* to this mesh and this mesh to *vao* (bidirectional).
+
+        :param vao: GPU vertex array / buffer group that will issue ``glDraw*``.
+        :return: *vao* (for call chaining from setup helpers).
+        """
+        self.vao = vao
+        if vao is not None:
+            vao.mesh = self
+        return vao
+
+    def draw(
+        self,
+        *,
+        first_item: int = 0,
+        item_count: int | None = None,
+        count: int | None = None,
+    ) -> None:
+        """Issue a modern ``glDraw*`` via the attached VAO and :meth:`draw_spec`.
+
+        :param first_item: First logical item (atom, bond, …).
+        :param item_count: Number of items; ``None`` draws the remainder.
+        :param count: Override element/vertex count (HETATM temporary EBO).
+        :raises RuntimeError: When no VAO has been attached.
+        """
+        vao = self.vao
+        if vao is None:
+            raise RuntimeError("MeshData is not associated with a VAO")
+        spec = self.draw_spec(first_item=first_item, item_count=item_count)
+        if count is not None:
+            spec = MeshDrawSpec(
+                mode=spec.mode,
+                count=int(count),
+                first=0,
+                pointer=0,
+            )
+        execute_draw_spec(vao, spec)
+
     def validate(self):
         """validate mesh data"""
         validate_input_data(
@@ -216,7 +256,7 @@ class MeshData:
         )
 
     def setup_atom_vao(self):
-        """Build an :class:`AtomVAO` from mesh data (layout included)."""
+        """Build a vertex array from atom mesh data (layout included)."""
         from elmo.gl.backend.modern.entities.atoms.setup import (
             setup_atom_vao as _setup_atom_vao,
         )
@@ -234,7 +274,7 @@ class MeshData:
         return _setup_calpha_vao(self)
 
     def setup_bond_vao(self):
-        """Build an :class:`AtomVAO` from mesh data (layout included)."""
+        """Build a vertex array from bond mesh data (layout included)."""
         from elmo.gl.backend.modern.entities.bonds.setup import (setup_bond_vao as _setup_bond_vao)
 
         return _setup_bond_vao(self)
@@ -532,7 +572,7 @@ class MeshData:
             indices=indices_arr,
         )
 
-    def draw(
+    def draw_legacy(
         self,
         color: tuple | None = None,
         line_width: float = 1.0,
@@ -540,15 +580,14 @@ class MeshData:
         fill: bool = False,
         alpha: float = 1.0,
     ):
-        """
-        Draw the mesh with optional color override and transparency.
+        """Draw with legacy client arrays (``gl*Pointer`` + ``glDrawElements``).
 
-        Args:
-            color: Optional color override. If None and vertex colors exist, uses vertex colors.
-            line_width: Line width for wireframe mode
-            mode: OpenGL draw mode
-            fill: Whether to fill or use wireframe
-            alpha: Transparency value from 0.0 (opaque) to 1.0 (fully transparent)
+        :param color: Optional RGB override. If ``None`` and vertex colors exist,
+            uses the colour array.
+        :param line_width: Line width for wireframe mode.
+        :param mode: OpenGL draw mode.
+        :param fill: Whether to fill polygons or use wireframe.
+        :param alpha: Transparency (0.0 opaque … 1.0 fully transparent).
         """
         # Safety checks to prevent segfaults
         if self.vertices is None:
@@ -592,7 +631,7 @@ class MeshData:
 
         # Enable alpha blending for transparency
         if alpha < 1.0:
-            GL.gl_enable(GL.GL_BLEND)
+            GL.glEnable(GL.GL_BLEND)
             GL.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
         else:
             GL.glDisable(GL.GL_BLEND)

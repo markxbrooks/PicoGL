@@ -65,19 +65,19 @@ class TestMeshData(unittest.TestCase):
 
         # Mock OpenGL functions to avoid context issues
         self.gl_patches = [
-            patch("picogl.renderer.meshdata.gl_enableClientState"),
-            patch("picogl.renderer.meshdata.gl.glDisableClientState"),
-            patch("picogl.renderer.meshdata.gl.glVertexPointer"),
-            patch("picogl.renderer.meshdata.gl.glNormalPointer"),
-            patch("picogl.renderer.meshdata.gl.glColorPointer"),
-            patch("picogl.renderer.meshdata.gl.glTexCoordPointer"),
-            patch("picogl.renderer.meshdata.gl.glDrawElements"),
-            patch("picogl.renderer.meshdata.gl.glLineWidth"),
-            patch("picogl.renderer.meshdata.gl_enable"),
-            patch("picogl.renderer.meshdata.gl.glDisable"),
-            patch("picogl.renderer.meshdata.gl.glBlendFunc"),
-            patch("picogl.renderer.meshdata.gl.glColor4f"),
-            patch("picogl.renderer.meshdata.gl.glPolygonMode"),
+            patch("picogl.renderer.meshdata.gl_enable_legacy_client_state"),
+            patch("picogl.renderer.meshdata.gl_disable_legacy_client_state"),
+            patch("picogl.renderer.meshdata.gl_vertex_array_pointer"),
+            patch("picogl.renderer.meshdata.gl_normal_array_pointer"),
+            patch("picogl.renderer.meshdata.gl_color_array_pointer"),
+            patch("picogl.renderer.meshdata.gl_texcoord_array_pointer"),
+            patch("picogl.renderer.meshdata.gl_draw_elements"),
+            patch("picogl.renderer.meshdata.GL.glLineWidth"),
+            patch("picogl.renderer.meshdata.GL.glEnable"),
+            patch("picogl.renderer.meshdata.GL.glDisable"),
+            patch("picogl.renderer.meshdata.GL.glBlendFunc"),
+            patch("picogl.renderer.meshdata.GL.glColor4f"),
+            patch("picogl.renderer.meshdata.GL.glPolygonMode"),
         ]
 
         # Start all patches
@@ -385,7 +385,7 @@ class TestMeshData(unittest.TestCase):
             indices=self.test_indices,
         )
 
-        mesh.draw()
+        mesh.draw_legacy()
 
         # Verify OpenGL calls were made
         # The actual OpenGL calls are mocked in setUp
@@ -395,7 +395,7 @@ class TestMeshData(unittest.TestCase):
         mesh = MeshData(vertices=self.test_vertices, indices=self.test_indices)
 
         override_color = (1.0, 0.0, 0.0)
-        mesh.draw(color=override_color)
+        mesh.draw_legacy(color=override_color)
 
         # Verify OpenGL calls were made
         # The actual OpenGL calls are mocked in setUp
@@ -404,7 +404,7 @@ class TestMeshData(unittest.TestCase):
         """Test draw method with fill mode."""
         mesh = MeshData(vertices=self.test_vertices, indices=self.test_indices)
 
-        mesh.draw(fill=True)
+        mesh.draw_legacy(fill=True)
 
         # Verify OpenGL calls were made
         # The actual OpenGL calls are mocked in setUp
@@ -413,7 +413,7 @@ class TestMeshData(unittest.TestCase):
         """Test draw method with alpha blending."""
         mesh = MeshData(vertices=self.test_vertices, indices=self.test_indices)
 
-        mesh.draw(alpha=0.5)
+        mesh.draw_legacy(alpha=0.5)
 
         # Verify OpenGL calls were made
         # The actual OpenGL calls are mocked in setUp
@@ -422,7 +422,7 @@ class TestMeshData(unittest.TestCase):
         """Test draw method with custom line width."""
         mesh = MeshData(vertices=self.test_vertices, indices=self.test_indices)
 
-        mesh.draw(line_width=2.0)
+        mesh.draw_legacy(line_width=2.0)
 
         # Verify OpenGL calls were made
         # The actual OpenGL calls are mocked in setUp
@@ -431,18 +431,15 @@ class TestMeshData(unittest.TestCase):
         """Test draw method with custom draw mode."""
         mesh = MeshData(vertices=self.test_vertices, indices=self.test_indices)
 
-        mesh.draw(mode=GL.GL_LINES)
+        mesh.draw_legacy(mode=GL.GL_LINES)
 
         # Verify OpenGL calls were made
         # The actual OpenGL calls are mocked in setUp
 
     def test_draw_without_ebo(self):
-        """Test draw method without EBO."""
+        """Client-array draw_legacy returns without drawing when indices are missing."""
         mesh = MeshData(vertices=self.test_vertices)
-
-        # This should raise an error because draw method expects ebo
-        with self.assertRaises(TypeError):
-            mesh.draw()
+        mesh.draw_legacy()
 
     def test_vertex_count_calculation(self):
         """Test vertex count calculation."""
