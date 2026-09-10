@@ -422,8 +422,9 @@ class VertexArrayObject(VertexBase, GLResource):
         :param spec: GPU draw command; defaults to :class:`DrawSpec` (POINTS).
         """
         spec = spec or DrawSpec()
-        count = self.index_count if spec.count is None else spec.count
-        if not count:
+        #count = self.index_count if spec.count is None else spec.count
+        spec.count = self.index_count if spec.count is None else spec.count
+        if not spec.count:
             return
 
         context = (
@@ -436,14 +437,14 @@ class VertexArrayObject(VertexBase, GLResource):
             if self.ebo:
                 self.ebo.bind()
                 gl_draw_elements(
-                    count,
+                    spec.count,
                     spec.dtype,
                     spec.mode,
                     pointer=spec.pointer,
                 )
             else:
                 gl_draw_arrays(
-                    count,
+                    spec.count,
                     spec.mode,
                     first=spec.first,
                 )
