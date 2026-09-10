@@ -54,7 +54,8 @@ from picogl.backend.modern.core.vertex.buffer.element import ModernEBO
 from picogl.backend.modern.core.vertex.buffer.object import ModernVBO
 from picogl.gpu.buffers.attributes import AttributeSpec, LayoutDescriptor
 from picogl.gpu.buffers.base import VertexBase
-from picogl.gpu.buffers.vertex.aliases import NAME_ALIASES
+from picogl.gpu.buffers.vertex.aliases import NAME_ALIASES, VertexBufferRole
+from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
 from picogl.safe import gl_gen_safe
 
 # PicoGL must not import ElMo or PySide6 at module load (GLUT examples stay Qt-free).
@@ -84,6 +85,21 @@ def current_gl_context() -> int | None:
         return id(ctx) if ctx is not None else None
     except Exception:
         return None
+
+
+def _is_element_attribute(attr: AttributeSpec) -> bool:
+    """Return True when *attr* describes an element buffer, not a vertex attribute.
+
+    Index buffers are bound via :meth:`VertexArrayObject.add_ebo`, not as VBOs.
+    Layouts such as ``setup_bond_layout()`` still list EBO for documentation;
+    ``set_layout`` must skip them instead of requiring a vertex buffer.
+    """
+    if getattr(attr, "role", None) == VertexBufferRole.EBO:
+        return True
+    if getattr(attr, "vbo_type", None) == VBOType.EBO:
+        return True
+    name = getattr(attr, "name", None)
+    return name in (VBOType.EBO, VertexBufferRole.EBO, "ebo", "indices", "elements")
 
 
 class GLResource:
@@ -202,7 +218,12 @@ class VertexArrayObject(VertexBase, GLResource):
                 self.ebo.bind()
 
             for attr in layout.attributes:
+                if _is_element_attribute(attr):
+                    continue
+
                 vbo = self.get_vbo_object(attr.name)
+                if vbo is None:
+                    vbo = self._vbos_by_attribute.get(attr.index)
 
                 if vbo is None:
                     raise RuntimeError(f"No VBO bound for attribute '{attr.name}'")

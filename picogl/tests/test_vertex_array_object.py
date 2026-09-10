@@ -41,6 +41,8 @@ from picogl.backend.modern.core.vertex.array.draw_spec import DrawSpec
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.backend.modern.core.vertex.base import VertexBuffer
 from picogl.gpu.buffers.attributes import AttributeSpec, LayoutDescriptor
+from picogl.gpu.buffers.vertex.aliases import VertexBufferRole
+from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
 
 
 class _StubVBO(VertexBuffer):
@@ -274,6 +276,33 @@ class TestVertexArrayObject(unittest.TestCase):
 
         self.assertEqual(vao.layout, layout)
         self.assertTrue(vao._configured)
+
+    def test_set_layout_skips_ebo_attribute(self):
+        """Element-buffer layout entries are not vertex attributes."""
+        pos_spec = AttributeSpec(
+            name="positions",
+            index=0,
+            size=3,
+            dtype=GL_FLOAT,
+        )
+        ebo_spec = AttributeSpec(
+            name=VBOType.EBO,
+            index=3,
+            size=2,
+            dtype=GL_FLOAT,
+            vbo_type=VBOType.EBO,
+            role=VertexBufferRole.EBO,
+        )
+        layout = LayoutDescriptor(attributes=[pos_spec, ebo_spec])
+        mock_vbo = MagicMock()
+        vao = VertexArrayObject(handle=self.mock_handle)
+        vao.named_vbos[VertexBufferRole.VBO] = mock_vbo
+
+        vao.set_layout(layout)
+
+        self.assertEqual(vao.layout, layout)
+        self.assertTrue(vao._configured)
+        mock_vbo.bind.assert_called()
 
     def test_add_vbo_object(self):
         """Test add_vbo_object method for VBO management."""
