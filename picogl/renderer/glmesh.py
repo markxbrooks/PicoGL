@@ -10,7 +10,7 @@ GPU buffers and expanding indexed meshes into per-triangle vertex lists if neede
 from typing import TYPE_CHECKING, Any, Literal, Optional, Union
 
 import numpy as np
-from elmo.glsl.layouts import build_shader_layouts
+from elmo.glsl.layouts import get_layout_for_shader_type
 from numpy import dtype, floating, generic, ndarray
 from numpy._typing import _64Bit
 
@@ -131,8 +131,7 @@ class GLMesh:
         self._expanded_colors = None
         self._expanded_normals = None
         self._expanded_uvs = None
-        self._layouts = build_shader_layouts()
-        self._layout_descriptor = self._layouts[shader_type]
+        self._layout_descriptor = get_layout_for_shader_type(shader_type)
         if not self.use_indices and self.indices.size > 0:
             self._expand_to_non_indexed()
 
