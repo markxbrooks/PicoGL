@@ -15,12 +15,16 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
+from elmo.glsl.layouts import StrideCalculator, VBOComponents
 from picogl.backend.gl.enums import GLNumeric
 from picogl.boolean import GLBoolean
-from elmo.glsl.layouts import VBOComponentType, StrideCalculator
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.gpu.buffers.vertex.aliases import VertexBufferRole
 from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
+
+# OpenGL attribute ``size`` is a component count (1–4), not a byte width.
+_VEC3_COMPONENTS = VBOComponents.VEC3
+_TIGHTLY_PACKED_STRIDE = StrideCalculator.TIGHTLY_PACKED
 
 if TYPE_CHECKING:
     from picogl.renderer.meshdata import MeshData
@@ -29,19 +33,6 @@ if TYPE_CHECKING:
 _HEADLESS = bool(
     os.environ.get("ELMO_TEST_HEADLESS") or os.environ.get("PYTEST_CURRENT_TEST")
 )
-
-# Safe PicoGL enums for environments without a GL context
-try:  # pragma: no cover
-    from picogl.backend.gl.enums import GLDrawMode as _GLDrawMode
-    from picogl.backend.gl.enums import GLNumeric as _GLNumeric
-
-    GLNumeric.FLOAT = _GLNumeric.FLOAT
-    GL_LINE_STRIP = _GLDrawMode.LINE_STRIP
-    GL_TRIANGLE_STRIP = _GLDrawMode.TRIANGLE_STRIP
-except Exception:  # pragma: no cover - fallback constants for tests
-    GLNumeric.FLOAT = 0x1406
-    GL_LINE_STRIP = 0x0003
-    GL_TRIANGLE_STRIP = 0x0005
 
 # In headless mode, avoid importing PicoGL modules that may touch OpenGL.
 if _HEADLESS:
@@ -72,11 +63,11 @@ if _HEADLESS:
         role: VertexBufferRole,
         index: int,
         *,
-        size: int = VBOComponentType.POSITIONS.size,
+        size: int = _VEC3_COMPONENTS,
         name: str | VertexBufferRole | None = None,
         dtype: GLNumeric,
         normalized: GLBoolean = GLBoolean.FALSE,
-        stride: int = StrideCalculator.TIGHTLY_PACKED,
+        stride: int = _TIGHTLY_PACKED_STRIDE,
         offset: int = 0,
     ) -> AttributeSpec:
         return AttributeSpec(
@@ -99,7 +90,7 @@ if _HEADLESS:
             self.data = array
 
     class VertexBufferGroup:
-        def __init__(self, draw_mode: int = GL_TRIANGLE_STRIP):
+        def __init__(self, draw_mode: int = GLDrawMode.TRIANGLE_STRIP):
             self.draw_mode = draw_mode
             self.named_vbos = {}
             self._layout = None
@@ -135,9 +126,9 @@ else:
 
 
 def build_legacy_vbg_layout(
-    positions_size: int = VBOComponentType.POSITIONS.size,
-    normals_size: int = VBOComponentType.NORMALS.size,
-    colors_size: int = VBOComponentType.COLOR_RGB.size,
+    positions_size: int = _VEC3_COMPONENTS,
+    normals_size: int = _VEC3_COMPONENTS,
+    colors_size: int = _VEC3_COMPONENTS,
 ) -> LayoutDescriptor:
     """
     Headless-safe triple layout (VBO / NBO / CBO). Prefer this from code that imports
@@ -253,9 +244,9 @@ def setup_vbg(
     normals: np.ndarray,
     positions: np.ndarray,
     draw_mode: int = GLDrawMode.TRIANGLE_STRIP,
-    positions_size: int = VBOComponentType.POSITIONS.size,
-    normals_size: int = VBOComponentType.NORMALS.size,
-    colors_size: int = VBOComponentType.COLOR_RGB.size,
+    positions_size: int = _VEC3_COMPONENTS,
+    normals_size: int = _VEC3_COMPONENTS,
+    colors_size: int = _VEC3_COMPONENTS,
 ) -> VertexBufferGroup:
     """Create VBO"""
     # ✅ Optional sanity checks
