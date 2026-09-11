@@ -7,6 +7,8 @@ from typing import Any
 
 import numpy as np
 
+from molib.calc.math.vector import Vector3
+from molib.entities.atom import Atom3D
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.renderer.draw_spec import MeshDrawInfo
 from picogl.renderer.meshdata import MeshData
@@ -16,17 +18,17 @@ from picogl.renderer.molecular.colors import chain_rgb
 from picogl.renderer.molecular.pnc_buffer import PNCBuffer
 
 
-def atom_xyz(atom: Any) -> tuple[float, float, float]:
-    """Return ``(x, y, z)`` from ``atom.x/y/z`` or ``atom.coords`` (e.g. Atom3D)."""
+def atom_xyz(atom: Atom3D | Vector3) -> tuple[float, float, float]:
+    """Return ``(x, y, z)`` from ``atom.x/y/z`` (e.g. Vector3 object) or ``atom.coords`` (e.g. Atom3D)."""
     coords = getattr(atom, "coords", None)
     if coords is not None:
         return float(coords[0]), float(coords[1]), float(coords[2])
     return float(atom.x), float(atom.y), float(atom.z)
 
 
-def _default_atom_color(atom: Any) -> tuple[float, float, float]:
+def _default_atom_color(atom: Atom3D) -> tuple[float, float, float] | None | Any:
     """Default color from atom ``chain_id`` (compatible with :func:`chain_rgb`)."""
-    return chain_rgb(getattr(atom, "chain_id", ""))
+    return chain_rgb(getattr(atom, "chain_id", "")) # @@@ should use rgb_for_chain_id_among
 
 
 class AtomsMesh(MolecularMesh):
@@ -100,14 +102,11 @@ class AtomsMesh(MolecularMesh):
                 self.color_fn(atom),
             )
 
-        verts, norms, cols, idxs = buf.to_arrays()
-        data = MeshData.from_raw(
-            vertices=verts, normals=norms, colors=cols, indices=idxs
-        )
-        data.draw_info = MeshDrawInfo(
+        mesh_data = buf.to_mesh_data()
+        mesh_data.draw_info = MeshDrawInfo(
             mode=GLDrawMode.TRIANGLES,
             indexed=True,
             elements_per_item=self.geometry.elements_per_item,
             vertices_per_item=self.geometry.vertices_per_item,
         )
-        return data
+        return mesh_data

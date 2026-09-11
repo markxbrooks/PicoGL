@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 from picogl.core.rgbcolor import RGBColor
 
 _CHAIN_RGB = {
@@ -10,6 +12,6 @@ _CHAIN_RGB = {
 }
 
 
-def chain_rgb(chain_id: str) -> tuple[float, float, float]:
+def chain_rgb(chain_id: str) -> tuple[float, float, float] | None | Any:
     """Return an RGB tuple for a PDB chain identifier."""
     return _CHAIN_RGB.get(chain_id, RGBColor.WHITE.to_tuple())
