@@ -47,6 +47,12 @@ class LegacyGLRotation:
         gl_rotatef(self.y, 0.0, 1.0, 0.0)
         gl_rotatef(self.z, 0.0, 0.0, 1.0)
 
+    def initialize(self):
+        self.x = 0.0
+        self.y = 0.0
+        self.z = 0.0
+
+
 
 @dataclass
 class CameraPerspective:
