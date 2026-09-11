@@ -9,7 +9,7 @@ import pytest
 
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.core.geometry.sphere import unit_sphere_mesh
-from picogl.renderer.molecular import AtomsMesh, BondsMesh
+from picogl.renderer.molecular import AtomGeometry, AtomsMesh, BondGeometry, BondsMesh
 
 
 @dataclass
@@ -119,6 +119,33 @@ def test_bonds_mesh_custom_radius_and_color_fn() -> None:
         np.linalg.norm(bottom_ring - start, axis=1), 0.3, rtol=1e-6
     )
     np.testing.assert_allclose(np.linalg.norm(top_ring - end, axis=1), 0.3, rtol=1e-6)
+
+
+def test_atoms_mesh_custom_geometry() -> None:
+    atom = _Atom(0.0, 0.0, 0.0, "A")
+    geometry = AtomGeometry(radius=0.4, slices=4, stacks=4)
+    data = AtomsMesh([atom], geometry=geometry).to_mesh_data()
+    assert data.vertices.shape[0] == geometry.vertices_per_item
+    assert data.draw_info.elements_per_item == geometry.elements_per_item
+    assert data.draw_info.vertices_per_item == geometry.vertices_per_item
+
+
+def test_bonds_mesh_custom_geometry() -> None:
+    atom1 = _Atom(0.0, 0.0, 0.0, "A")
+    atom2 = _Atom(1.0, 0.0, 0.0, "A")
+    geometry = BondGeometry(radius=0.2, segments=6)
+    data = BondsMesh([(atom1, atom2)], geometry=geometry).to_mesh_data()
+    assert data.vertices.shape == (geometry.vertices_per_item, 3)
+    assert data.indices.size == geometry.elements_per_item
+    assert data.draw_info.elements_per_item == geometry.elements_per_item
+
+
+def test_atoms_mesh_empty_uses_geometry_draw_info() -> None:
+    geometry = AtomGeometry(slices=8, stacks=8)
+    data = AtomsMesh([], geometry=geometry).to_mesh_data()
+    assert data.vertices.shape[0] == 0
+    assert data.draw_info.vertices_per_item == geometry.vertices_per_item
+    assert data.draw_info.elements_per_item == geometry.elements_per_item
 
 
 def test_to_legacy_glmesh_without_upload() -> None:

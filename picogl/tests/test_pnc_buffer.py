@@ -29,15 +29,27 @@ def test_pnc_buffer_add_instance_offsets_indices() -> None:
     np.testing.assert_allclose(cols[2], (0.0, 1.0, 0.0))
 
 
-def test_pnc_buffer_extend_direct() -> None:
+def test_pnc_buffer_add_instance_uses_template_length() -> None:
     buf = PNCBuffer()
-    buf.extend_direct(
+    vertices = np.array([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]])
+    normals = np.array([[0.0, 0.0, 1.0], [0.0, 0.0, 1.0], [0.0, 0.0, 1.0]])
+    indices = np.array([0, 1, 2], dtype=np.uint32)
+    buf.add_instance((0.0, 0.0, 0.0), vertices, normals, indices, (1.0, 1.0, 1.0))
+    buf.add_instance((5.0, 0.0, 0.0), vertices, normals, indices, (1.0, 1.0, 1.0))
+    _v, _n, _c, idxs = buf.to_arrays()
+    assert buf.vertex_offset == 6
+    assert idxs.tolist() == [0, 1, 2, 3, 4, 5]
+
+
+def test_pnc_buffer_extend_offsets_indices() -> None:
+    buf = PNCBuffer()
+    buf.extend(
         positions=[[0.0, 0.0, 0.0], [1.0, 0.0, 0.0]],
         normals=[[0.0, 0.0, 1.0], [0.0, 0.0, 1.0]],
         colors=[(1.0, 0.0, 0.0), (1.0, 0.0, 0.0)],
         indices=[0, 1],
     )
-    buf.extend_direct(
+    buf.extend(
         positions=[[2.0, 0.0, 0.0], [3.0, 0.0, 0.0]],
         normals=[[0.0, 0.0, 1.0], [0.0, 0.0, 1.0]],
         colors=[(0.0, 1.0, 0.0), (0.0, 1.0, 0.0)],
@@ -45,51 +57,3 @@ def test_pnc_buffer_extend_direct() -> None:
     )
     _v, _n, _c, idxs = buf.to_arrays()
     assert idxs.tolist() == [0, 1, 2, 3]
-
-
-def test_pnc_buffer_add_cylinder() -> None:
-    buf = PNCBuffer()
-    buf.add_cylinder(
-        start=(0.0, 0.0, 0.0),
-        end=(1.0, 0.0, 0.0),
-        color=(1.0, 0.0, 0.0),
-        radius=0.5,
-        segments=4,
-    )
-    verts, norms, cols, idxs = buf.to_arrays()
-
-    assert verts.shape == (8, 3)
-    assert norms.shape == (8, 3)
-    assert cols.shape == (8, 3)
-    assert idxs.tolist() == [
-        0,
-        2,
-        1,
-        2,
-        3,
-        1,
-        2,
-        4,
-        3,
-        4,
-        5,
-        3,
-        4,
-        6,
-        5,
-        6,
-        7,
-        5,
-        6,
-        0,
-        7,
-        0,
-        1,
-        7,
-    ]
-    np.testing.assert_allclose(verts[0, 0], 0.0)
-    np.testing.assert_allclose(verts[1, 0], 1.0)
-    radial = np.linalg.norm(verts[:, 1:], axis=1)
-    np.testing.assert_allclose(radial, 0.5)
-    np.testing.assert_allclose(norms[0], [0.0, -1.0, 0.0])
-    np.testing.assert_allclose(cols[0], (1.0, 0.0, 0.0))
