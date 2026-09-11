@@ -19,7 +19,7 @@ from picogl.backend.gl.api.matrix import gl_matrix_mode
 from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.enums.legacy import GLLegacyMatrixMode
 from picogl.backend.gl.enums.legacy.scale import gl_load_identity
-from picogl.backend.gl.legacy.view import GLRotation, GLTranslation
+from picogl.backend.gl.legacy.view import LegacyGLRotation, GLTranslation
 from picogl.backend.gl.mode import GLMode
 from picogl.backend.gl.task.gl_init import legacy_init_gl_list, modern_init_gl_list
 from picogl.backend.legacy.core.camera.lighting import set_background_color
@@ -107,7 +107,7 @@ class GLBase(QOpenGLWidget, QOpenGLFunctions):
 
         # Set up view
         self.zoom = 1.0
-        self.rotation = GLRotation()
+        self.rotation = LegacyGLRotation()
         self.translation = GLTranslation()
 
     @property

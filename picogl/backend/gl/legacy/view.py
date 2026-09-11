@@ -37,7 +37,7 @@ class GLZoom:
 
 
 @dataclass
-class GLRotation:
+class LegacyGLRotation:
     x: float = 0.0
     y: float = 0.0
     z: float = 0.0
@@ -58,16 +58,16 @@ class CameraPerspective:
     These parameters can be used to set up a perspective projection for 3D rendering.
     """
 
-    FAR: float = 100.0
-    NEAR: float = 0.1
-    FOVY: float = 45.0
+    far: float = 100.0
+    near: float = 0.1
+    fovy: float = 45.0
 
 
 @dataclass
 class LegacyGLViewTransform:
     """Encapsulates legacy OpenGL view rotation, translation, and zoom."""
 
-    rotation: GLRotation = field(default_factory=GLRotation)
+    rotation: LegacyGLRotation = field(default_factory=LegacyGLRotation)
     translation: GLTranslation = field(default_factory=GLTranslation)
     zoom: GLZoom = field(default_factory=lambda: GLZoom(value=1.0))
 
@@ -110,6 +110,6 @@ class LegacyGLViewTransform:
 
     def reset(self) -> None:
         """Reset view transformation to defaults."""
-        self.rotation = GLRotation()
+        self.rotation = LegacyGLRotation()
         self.translation = GLTranslation()
         self.zoom = GLZoom(value=1.0)

@@ -150,10 +150,10 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         self.viewport.update(0, 0, w, h)
         with gl_matrix_mode_context():
             glu_perspective(
-                CameraPerspective.FOVY,
+                CameraPerspective.fovy,
                 w / max(h, 1),
-                CameraPerspective.NEAR,
-                CameraPerspective.FAR,
+                CameraPerspective.near,
+                CameraPerspective.far,
             )
 
     def paintGL(self):
