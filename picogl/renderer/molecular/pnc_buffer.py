@@ -1,8 +1,7 @@
-"""Builder for interleaved position / normal / color / index mesh arrays."""
+"""Accumulate position, normal, color, and index mesh arrays."""
 
 from __future__ import annotations
 
-import math
 from collections.abc import Iterable
 from typing import List, Tuple
 
@@ -10,15 +9,11 @@ import numpy as np
 
 
 class PNCBuffer:
-    """Hold and build arrays of positions, normals, colors and indices.
+    """Accumulate indexed position / normal / color geometry.
 
-    Usage::
-
-        buf = PNCBuffer()
-        buf.add_instance(
-            translation, template_vertices, template_normals, template_indices, color
-        )
-        vertices, normals, colors, indices = buf.to_arrays()
+    This class does not construct primitives. Geometry producers append via
+    :meth:`extend` or :meth:`add_instance`; :meth:`to_arrays` materializes
+    NumPy buffers for :meth:`MeshData.from_raw`.
     """
 
     def __init__(self) -> None:
@@ -36,106 +31,82 @@ class PNCBuffer:
         template_indices: Iterable[int],
         color: Tuple[float, float, float],
     ) -> None:
-        """Translate template vertices, copy normals/colors, offset indices."""
+        """Translate a geometry template and append it with a uniform color.
+
+        Parameters
+        ----------
+        translation
+            World-space offset applied to every template vertex.
+        template_vertices
+            Template positions, typically ``(N, 3)``.
+        template_normals
+            Template normals, same length as ``template_vertices``.
+        template_indices
+            Triangle indices relative to the template.
+        color
+            RGB triple copied onto every new vertex.
+        """
         tx, ty, tz = (float(c) for c in translation)
-        n_new = 0
-        for vertex in template_vertices:
+        vertices = list(template_vertices)
+        for vertex in vertices:
             self.positions.append(
                 [float(vertex[0]) + tx, float(vertex[1]) + ty, float(vertex[2]) + tz]
             )
             self.colors.append(color)
-            n_new += 1
         for normal in template_normals:
             self.normals.append([float(normal[0]), float(normal[1]), float(normal[2])])
         for idx in template_indices:
             self.indices.append(int(idx) + self.vertex_offset)
-        self.vertex_offset += n_new
+        self.vertex_offset += len(vertices)
 
-    def extend_direct(
+    def extend(
         self,
         positions: Iterable[Iterable[float]],
         normals: Iterable[Iterable[float]],
         colors: Iterable[Tuple[float, float, float]],
         indices: Iterable[int],
     ) -> None:
-        """Append already-world-space vertex attributes (indices relative to this batch)."""
-        n_new = 0
-        for position in positions:
+        """Append world-space vertex attributes and offset local indices.
+
+        Parameters
+        ----------
+        positions
+            Vertex positions already in world space.
+        normals
+            Per-vertex normals.
+        colors
+            Per-vertex RGB triples.
+        indices
+            Triangle indices relative to this batch (not the whole buffer).
+        """
+        vertices = list(positions)
+        for position in vertices:
             self.positions.append(
                 [float(position[0]), float(position[1]), float(position[2])]
             )
-            n_new += 1
         for normal in normals:
             self.normals.append([float(normal[0]), float(normal[1]), float(normal[2])])
         for color in colors:
             self.colors.append((float(color[0]), float(color[1]), float(color[2])))
         for idx in indices:
             self.indices.append(int(idx) + self.vertex_offset)
-        self.vertex_offset += n_new
-
-    def add_cylinder(
-        self,
-        start: Iterable[float],
-        end: Iterable[float],
-        color: Tuple[float, float, float],
-        radius: float = 0.1,
-        segments: int = 8,
-    ) -> None:
-        """Append an open-sided cylinder spanning ``start`` to ``end``.
-
-        Generates ``2 * segments`` vertices (two rings around the axis) with
-        outward radial normals, so the shaft lights correctly regardless of
-        bond orientation. The cylinder is open at both ends.
-        """
-        s = np.asarray(start, dtype=np.float64)
-        e = np.asarray(end, dtype=np.float64)
-        axis = e - s
-        length = float(np.linalg.norm(axis))
-        if length < 1e-12:
-            return
-        direction = axis / length
-
-        reference = np.array([0.0, 0.0, 1.0])
-        if abs(float(np.dot(direction, reference))) > 0.99:
-            reference = np.array([1.0, 0.0, 0.0])
-        basis_u = np.cross(direction, reference)
-        basis_u /= np.linalg.norm(basis_u)
-        basis_v = np.cross(direction, basis_u)
-
-        positions: List[List[float]] = []
-        normals: List[List[float]] = []
-        for k in range(segments):
-            angle = 2.0 * np.pi * k / segments
-            radial = basis_u * math.cos(angle) + basis_v * math.sin(angle)
-            positions.append((s + radial * radius).tolist())
-            positions.append((e + radial * radius).tolist())
-            normals.append(radial.tolist())
-            normals.append(radial.tolist())
-
-        colors = [tuple(float(c) for c in color)] * len(positions)
-        indices: List[int] = []
-        for k in range(segments):
-            k1 = (k + 1) % segments
-            bottom_current, top_current = 2 * k, 2 * k + 1
-            bottom_next, top_next = 2 * k1, 2 * k1 + 1
-            indices.append(bottom_current)
-            indices.append(bottom_next)
-            indices.append(top_current)
-            indices.append(bottom_next)
-            indices.append(top_next)
-            indices.append(top_current)
-
-        self.extend_direct(
-            positions=positions,
-            normals=normals,
-            colors=colors,
-            indices=indices,
-        )
+        self.vertex_offset += len(vertices)
 
     def to_arrays(
         self, dtype: np.dtype | type = np.float32
     ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-        """Return numpy arrays suitable for :meth:`MeshData.from_raw`."""
+        """Return NumPy arrays suitable for :meth:`MeshData.from_raw`.
+
+        Parameters
+        ----------
+        dtype
+            Floating-point dtype for positions, normals, and colors.
+
+        Returns
+        -------
+        tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]
+            ``(vertices, normals, colors, indices)``.
+        """
         vertices = (
             np.array(self.positions, dtype=dtype)
             if self.positions

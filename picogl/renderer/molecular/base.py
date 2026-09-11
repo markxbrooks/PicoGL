@@ -5,7 +5,10 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Any, Optional
 
+import numpy as np
+
 from picogl.backend.gl.enums import GLDrawMode
+from picogl.renderer.draw_spec import MeshDrawInfo
 from picogl.renderer.meshdata import MeshData
 
 if TYPE_CHECKING:
@@ -28,6 +31,33 @@ class MolecularMesh(ABC):
     @abstractmethod
     def build_mesh_data(self) -> MeshData:
         """Construct mesh arrays for this molecular primitive."""
+
+    def _empty_mesh_data(
+        self,
+        *,
+        elements_per_item: int,
+        vertices_per_item: int,
+    ) -> MeshData:
+        """Return an empty indexed mesh with per-item draw strides.
+
+        Parameters
+        ----------
+        elements_per_item
+            Triangle indices per logical item (atom, bond, …).
+        vertices_per_item
+            Vertices per logical item.
+        """
+        data = MeshData.from_raw(
+            vertices=np.zeros((0, 3), dtype=np.float32),
+            indices=np.zeros((0,), dtype=np.uint32),
+        )
+        data.draw_info = MeshDrawInfo(
+            mode=self.draw_mode,
+            indexed=True,
+            elements_per_item=elements_per_item,
+            vertices_per_item=vertices_per_item,
+        )
+        return data
 
     def to_mesh_data(self) -> MeshData:
         """Return cached :class:`MeshData`, building on first access."""
