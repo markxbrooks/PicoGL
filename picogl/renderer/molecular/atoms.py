@@ -9,6 +9,7 @@ import numpy as np
 
 from molib.calc.math.vector import Vector3
 from molib.entities.atom import Atom3D
+from molib.pdb.color import rgb_for_chain_id_among
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.renderer.draw_spec import MeshDrawInfo
 from picogl.renderer.meshdata import MeshData
@@ -49,7 +50,7 @@ class AtomsMesh(MolecularMesh):
         self,
         atoms: Sequence[Any],
         *,
-        color_fn: Callable[[Any], tuple[float, float, float]] = _default_atom_color,
+        color_fn: Callable[[Any], tuple[float, float, float]] = rgb_for_chain_id_among,
         radius: float = 0.2,
         slices: int = 16,
         stacks: int = 16,
