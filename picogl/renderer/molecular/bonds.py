@@ -83,14 +83,11 @@ class BondsMesh(MolecularMesh):
                 indices=indices,
             )
 
-        verts, norms, cols, idxs = buf.to_arrays()
-        data = MeshData.from_raw(
-            vertices=verts, normals=norms, colors=cols, indices=idxs
-        )
-        data.draw_info = MeshDrawInfo(
+        mesh_data = buf.to_mesh_data()
+        mesh_data.draw_info = MeshDrawInfo(
             mode=GLDrawMode.TRIANGLES,
             indexed=True,
             elements_per_item=self.geometry.elements_per_item,
             vertices_per_item=self.geometry.vertices_per_item,
         )
-        return data
+        return mesh_data

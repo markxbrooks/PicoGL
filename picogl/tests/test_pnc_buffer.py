@@ -57,3 +57,30 @@ def test_pnc_buffer_extend_offsets_indices() -> None:
     )
     _v, _n, _c, idxs = buf.to_arrays()
     assert idxs.tolist() == [0, 1, 2, 3]
+
+
+def test_pnc_buffer_to_mesh_data() -> None:
+    """Accumulated arrays become a MeshData with matching vertex counts."""
+    from picogl.renderer.meshdata import MeshData
+
+    buf = PNCBuffer()
+    buf.extend(
+        positions=[[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]],
+        normals=[[0.0, 0.0, 1.0], [0.0, 0.0, 1.0], [0.0, 0.0, 1.0]],
+        colors=[(1.0, 0.0, 0.0), (1.0, 0.0, 0.0), (1.0, 0.0, 0.0)],
+        indices=[0, 1, 2],
+    )
+    mesh = buf.to_mesh_data()
+    assert isinstance(mesh, MeshData)
+    assert mesh.vertices.shape[0] == 3
+    assert mesh.indices.size == 3
+
+
+def test_molecular_package_import_is_not_circular() -> None:
+    """Package exports must load without a BondsMesh circular import."""
+    from picogl.renderer.molecular import AtomsMesh, BondsMesh, PNCBuffer, chain_rgb
+
+    assert callable(chain_rgb)
+    assert AtomsMesh is not None
+    assert BondsMesh is not None
+    assert PNCBuffer is not None

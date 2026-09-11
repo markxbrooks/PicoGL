@@ -43,7 +43,6 @@ from picogl.backend.glu.perspective import glu_perspective
 from picogl.core.polygon.mode import gl_set_line_mode, gl_set_polygon_mode
 from picogl.core.rgbcolor import RGBAColor
 from picogl.core.viewport import GLViewport
-from picogl.renderer.molecular import AtomsMesh, BondsMesh, chain_rgb
 from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
 
 _EXAMPLES_PATH = Path(__file__).resolve().parent.parent
@@ -205,7 +204,7 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         """Create molecular meshes and upload legacy GPU buffers."""
         if self._initialized:
             return
-
+        from picogl.renderer.molecular import AtomsMesh, BondsMesh, chain_rgb
         if self.calpha_atoms:
             self.atoms_mesh = AtomsMesh(
                 self.calpha_atoms, color_fn=lambda a: chain_rgb(a.chain_id)
@@ -213,6 +212,7 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
             self.atoms_mesh.to_legacy_glmesh(upload=True)
 
         if self.calpha_bonds:
+
             self.bonds_mesh = BondsMesh(
                 self.calpha_bonds,
                 color_fn=lambda a: chain_rgb(a.chain_id),

@@ -7,6 +7,8 @@ from typing import List, Tuple
 
 import numpy as np
 
+from picogl.renderer.meshdata import MeshData
+
 
 class PNCBuffer:
     """Accumulate indexed position / normal / color geometry.
@@ -91,6 +93,16 @@ class PNCBuffer:
         for idx in indices:
             self.indices.append(int(idx) + self.vertex_offset)
         self.vertex_offset += len(vertices)
+
+    def to_mesh_data(self) -> MeshData:
+        """Build a :class:`~picogl.renderer.meshdata.MeshData` from accumulated arrays.
+
+        :return: Mesh with positions, normals, colors, and triangle indices
+        """
+        verts, norms, cols, idxs = self.to_arrays()
+        return MeshData.from_raw(
+            vertices=verts, normals=norms, colors=cols, indices=idxs
+        )
 
     def to_arrays(
         self, dtype: np.dtype | type = np.float32
