@@ -9,7 +9,7 @@ import numpy as np
 
 from molib.calc.math.vector import Vector3
 from molib.entities.atom import Atom3D
-from molib.pdb.color import rgb_for_chain_id_among
+from molib.pdb.color import rgb_for_chain_id_among, palette_rgb_at
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.renderer.draw_spec import MeshDrawInfo
 from picogl.renderer.meshdata import MeshData
@@ -17,6 +17,41 @@ from picogl.renderer.molecular.atom_geometry import AtomGeometry
 from picogl.renderer.molecular.base import MolecularMesh
 from picogl.renderer.molecular.colors import chain_rgb
 from picogl.renderer.molecular.pnc_buffer import PNCBuffer
+
+from collections.abc import Callable, Sequence
+from typing import Any
+
+def make_chain_color_fn(
+    chain_ids: Sequence[str],
+    ) -> Callable[[Any], tuple[float, float, float]]:
+    """
+    Create a per-atom color function that assigns colors by chain ID.
+
+    ```
+    Chain IDs are sorted and deduplicated so that the resulting colors are
+    deterministic and match :func:`generate_chain_colors` when ``chain_ids``
+    contains every chain in the structure.
+    """
+    unique_sorted = sorted(set(chain_ids))
+
+    # Precompute the mapping once rather than sorting/indexing for every atom.
+    color_map = {
+        chain_id: palette_rgb_at(index)
+        for index, chain_id in enumerate(unique_sorted)
+    }
+
+    def color_fn(atom: Any) -> tuple[float, float, float]:
+        """Return the palette color corresponding to ``atom.chain_id``."""
+        chain_id = atom.chain_id
+
+        if chain_id not in color_map:
+            # Preserve the behavior of the original function for an
+            # unexpected/missing chain ID.
+            color_map[chain_id] = palette_rgb_at(len(color_map))
+
+        return color_map[chain_id]
+
+    return color_fn
 
 
 def atom_xyz(atom: Atom3D | Vector3 | np.ndarray) -> tuple[float, float, float]:
@@ -50,7 +85,7 @@ class AtomsMesh(MolecularMesh):
         self,
         atoms: Sequence[Any],
         *,
-        color_fn: Callable[[Any], tuple[float, float, float]] = rgb_for_chain_id_among,
+        color_fn: Callable[[Any], tuple[float, float, float]] = None,
         radius: float = 0.2,
         slices: int = 16,
         stacks: int = 16,
