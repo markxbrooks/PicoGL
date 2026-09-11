@@ -18,7 +18,7 @@ from picogl.renderer.molecular.colors import chain_rgb
 from picogl.renderer.molecular.pnc_buffer import PNCBuffer
 
 
-def atom_xyz(atom: Atom3D | Vector3) -> tuple[float, float, float]:
+def atom_xyz(atom: Atom3D | Vector3 | np.ndarray) -> tuple[float, float, float]:
     """Return ``(x, y, z)`` from ``atom.x/y/z`` (e.g. Vector3 object) or ``atom.coords`` (e.g. Atom3D)."""
     coords = getattr(atom, "coords", None)
     if coords is not None:
