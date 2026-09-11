@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 from picogl.backend.gl.enums.legacy.scale import gl_rotatef, gl_scalef, gl_translate_f
 
 
-class GLTranslation:
+class LegacyGLTranslation:
     """Translation Parameters"""
 
     x: float = 0.0
@@ -20,7 +20,7 @@ class GLTranslation:
 
 
 @dataclass
-class GLZoom:
+class LegacyGLZoom:
     """Zoom parameters."""
 
     # translation: GLTranslation = None
@@ -68,8 +68,8 @@ class LegacyGLViewTransform:
     """Encapsulates legacy OpenGL view rotation, translation, and zoom."""
 
     rotation: LegacyGLRotation = field(default_factory=LegacyGLRotation)
-    translation: GLTranslation = field(default_factory=GLTranslation)
-    zoom: GLZoom = field(default_factory=lambda: GLZoom(value=1.0))
+    translation: LegacyGLTranslation = field(default_factory=LegacyGLTranslation)
+    zoom: LegacyGLZoom = field(default_factory=lambda: LegacyGLZoom(value=1.0))
 
     @property
     def rotation_x(self) -> float:
@@ -111,5 +111,5 @@ class LegacyGLViewTransform:
     def reset(self) -> None:
         """Reset view transformation to defaults."""
         self.rotation = LegacyGLRotation()
-        self.translation = GLTranslation()
-        self.zoom = GLZoom(value=1.0)
+        self.translation = LegacyGLTranslation()
+        self.zoom = LegacyGLZoom(value=1.0)
