@@ -5,7 +5,6 @@ from picogl.renderer.molecular.atoms import AtomsMesh
 from picogl.renderer.molecular.base import MolecularMesh
 from picogl.renderer.molecular.bond_geometry import BondGeometry
 from picogl.renderer.molecular.bonds import BondsMesh
-from picogl.renderer.molecular.colors import chain_rgb
 from picogl.renderer.molecular.pnc_buffer import PNCBuffer
 
 __all__ = [
@@ -15,5 +14,4 @@ __all__ = [
     "BondsMesh",
     "MolecularMesh",
     "PNCBuffer",
-    "chain_rgb",
 ]

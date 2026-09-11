@@ -9,13 +9,12 @@ import numpy as np
 
 from molib.calc.math.vector import Vector3
 from molib.entities.atom import Atom3D
-from molib.pdb.color import rgb_for_chain_id_among, palette_rgb_at
+from molib.pdb.color import palette_rgb_at
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.renderer.draw_spec import MeshDrawInfo
 from picogl.renderer.meshdata import MeshData
 from picogl.renderer.molecular.atom_geometry import AtomGeometry
 from picogl.renderer.molecular.base import MolecularMesh
-from picogl.renderer.molecular.colors import chain_rgb
 from picogl.renderer.molecular.pnc_buffer import PNCBuffer
 
 from collections.abc import Callable, Sequence
@@ -60,11 +59,6 @@ def atom_xyz(atom: Atom3D | Vector3 | np.ndarray) -> tuple[float, float, float]:
     if coords is not None:
         return float(coords[0]), float(coords[1]), float(coords[2])
     return float(atom.x), float(atom.y), float(atom.z)
-
-
-def _default_atom_color(atom: Atom3D) -> tuple[float, float, float] | None | Any:
-    """Default color from atom ``chain_id`` (compatible with :func:`chain_rgb`)."""
-    return chain_rgb(getattr(atom, "chain_id", "")) # @@@ should use rgb_for_chain_id_among
 
 
 class AtomsMesh(MolecularMesh):

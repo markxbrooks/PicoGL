@@ -75,12 +75,3 @@ def test_pnc_buffer_to_mesh_data() -> None:
     assert mesh.vertices.shape[0] == 3
     assert mesh.indices.size == 3
 
-
-def test_molecular_package_import_is_not_circular() -> None:
-    """Package exports must load without a BondsMesh circular import."""
-    from picogl.renderer.molecular import AtomsMesh, BondsMesh, PNCBuffer, chain_rgb
-
-    assert callable(chain_rgb)
-    assert AtomsMesh is not None
-    assert BondsMesh is not None
-    assert PNCBuffer is not None

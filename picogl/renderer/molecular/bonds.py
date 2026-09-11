@@ -10,7 +10,7 @@ import numpy as np
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.renderer.draw_spec import MeshDrawInfo
 from picogl.renderer.meshdata import MeshData
-from picogl.renderer.molecular.atoms import _default_atom_color, atom_xyz
+from picogl.renderer.molecular.atoms import atom_xyz
 from picogl.renderer.molecular.base import MolecularMesh
 from picogl.renderer.molecular.bond_geometry import BondGeometry
 from picogl.renderer.molecular.pnc_buffer import PNCBuffer
@@ -34,7 +34,7 @@ class BondsMesh(MolecularMesh):
         self,
         bonds: Sequence[tuple["Atom3D", "Atom3D"]],
         *,
-        color_fn: Callable[[Any], tuple[float, float, float]] = _default_atom_color,
+        color_fn: Callable[[Any], tuple[float, float, float]] = None,
         radius: float = 0.06,
         segments: int = 8,
         geometry: BondGeometry | None = None,
