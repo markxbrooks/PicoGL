@@ -16,7 +16,7 @@ class LegacyGLTranslation:
         gl_translate_f(self.x, self.y, self.z)
 
     def _apply_zoom(self, value: float = 0.01):
-        gl_translate_f(self.translation.x, self.translation.y, value)
+        gl_translate_f(self.x, self.y, value)
 
 
 @dataclass
