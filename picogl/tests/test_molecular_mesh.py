@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from types import SimpleNamespace
 
 import numpy as np
 import pytest
@@ -48,6 +49,21 @@ def test_atom_xyz_prefers_coords_over_xyz() -> None:
     assert vertices.shape == (17 * 17, 3)
     assert normals.shape == vertices.shape
     assert indices.size == 16 * 16 * 6
+
+
+def test_atom_radius_uses_atom3d_field_or_fallback() -> None:
+    from molib.entities.coords import atom_radius
+
+    class _WithRadius:
+        radius = 1.7
+
+    class _Missing:
+        pass
+
+    assert atom_radius(_WithRadius(), 0.2) == pytest.approx(1.7)
+    assert atom_radius(_Missing(), 0.2) == pytest.approx(0.2)
+    assert atom_radius(SimpleNamespace(radius=None), 0.3) == pytest.approx(0.3)
+    assert atom_radius(SimpleNamespace(radius=0.0), 0.3) == pytest.approx(0.3)
 
 
 def test_atoms_mesh_single_atom_counts() -> None:
@@ -139,6 +155,26 @@ def test_atoms_mesh_two_atoms_vectorized_expand() -> None:
     )
     assert data.draw_info.vertices_per_item == n_verts
     assert data.draw_info.elements_per_item == n_idx
+
+
+def test_atoms_mesh_per_atom_radii_override_uniform_radius() -> None:
+    """Per-atom radii scale the template independently of geometry.radius."""
+    atom_a = _Atom(0.0, 0.0, 0.0, "A")
+    atom_b = _Atom(5.0, 0.0, 0.0, "B")
+    data = AtomSpheresMesh(
+        [atom_a, atom_b],
+        radius=1.0,
+        slices=4,
+        stacks=4,
+        radii=(0.5, 2.0),
+    ).to_mesh_data()
+    template, _, _ = unit_sphere_mesh(1.0, 4, 4)
+    n_verts = template.shape[0]
+    np.testing.assert_allclose(data.vertices[:n_verts], template * 0.5)
+    np.testing.assert_allclose(
+        data.vertices[n_verts:],
+        template * 2.0 + np.array([5.0, 0.0, 0.0], dtype=np.float32),
+    )
 
 
 def test_atoms_mesh_default_color_fn_uses_chain_palette() -> None:
