@@ -284,6 +284,38 @@ def test_bonds_mesh_skips_zero_length_without_repeating_color() -> None:
     np.testing.assert_allclose(
         data.colors, np.broadcast_to((0.0, 0.0, 1.0), (n_verts, 3))
     )
+    np.testing.assert_array_equal(data.item_keys, np.array([[0, 1]], dtype=np.uint32))
+    np.testing.assert_array_equal(
+        data.color_source_indices,
+        np.repeat(np.array([0], dtype=np.uint32), n_verts),
+    )
+
+
+def test_bonds_mesh_item_keys_match_surviving_pairs() -> None:
+    """Pair metadata omits collapsed shafts and gathers from atom A."""
+    atom_a = _Atom(0.0, 0.0, 0.0, "A")
+    atom_b = _Atom(0.0, 0.0, 0.0, "A")
+    atom_c = _Atom(1.5, 0.0, 0.0, "A")
+    data = BondCylindersMesh(
+        [atom_a, atom_b, atom_c],
+        indices=[[0, 1], [0, 2]],
+        color_bonds=False,
+        segments=4,
+    ).to_mesh_data()
+    np.testing.assert_array_equal(data.item_keys, np.array([[0, 2]], dtype=np.uint32))
+    np.testing.assert_array_equal(
+        data.color_source_indices,
+        np.repeat(np.array([0], dtype=np.uint32), data.draw_info.vertices_per_item),
+    )
+
+
+def test_bonds_mesh_empty_has_empty_pair_metadata() -> None:
+    data = BondCylindersMesh([]).to_mesh_data()
+    assert data.vertices.shape[0] == 0
+    np.testing.assert_array_equal(data.item_keys, np.zeros((0, 2), dtype=np.uint32))
+    np.testing.assert_array_equal(
+        data.color_source_indices, np.zeros((0,), dtype=np.uint32)
+    )
 
 
 def test_bonds_mesh_color_bonds_false_broadcasts_bond_color() -> None:
