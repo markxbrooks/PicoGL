@@ -44,7 +44,7 @@ from picogl.renderer.draw_spec import (
 )
 from picogl.utils.loader.object_data import ObjectData
 
-def np_positions_to_normal_array(positions: ndarray[Any, dtype[Any]]) -> ndarray[Any, dtype[Any]]:
+def np_positions_to_normal_array(positions: ndarray[Any, dtype[Any]] | list[Any]) -> ndarray[Any, dtype[Any]]:
     """Create normals from positions."""
     normals = np.array(
         [

@@ -11,8 +11,11 @@ from picogl.backend.gl.enums import GLDrawMode
 from picogl.core.geometry.sphere import unit_sphere_mesh
 from picogl.renderer.molecular import BondGeometry
 from molib.gl.mesh.atom.sphere_geometry import AtomSphereGeometry
+from molib.gl.mesh.atom.point import AtomPointsMesh
+from molib.gl.mesh.atom.point_geometry import AtomPointGeometry
 from molib.gl.mesh.atom.sphere import AtomSpheresMesh
 from molib.gl.mesh.bond.cylinder import BondCylindersMesh
+from molib.gl.mesh.bond.line import BondLinesMesh
 
 
 @dataclass
@@ -282,3 +285,124 @@ def test_to_glmesh_without_upload() -> None:
     mesh = AtomSpheresMesh([atom])
     modern = mesh.to_glmesh(upload=False)
     assert modern.vao is None
+
+
+def test_atom_point_geometry_is_one_origin_vertex() -> None:
+    geometry = AtomPointGeometry(radius=0.4)
+    template = geometry.build()
+    assert geometry.vertices_per_item == 1
+    assert geometry.elements_per_item == 1
+    assert template.positions.shape == (1, 3)
+    np.testing.assert_allclose(template.positions, [[0.0, 0.0, 0.0]])
+    np.testing.assert_allclose(template.normals, [[0.0, 0.0, 0.0]])
+    assert template.indices is None
+
+
+def test_atom_points_mesh_two_atoms_unindexed() -> None:
+    """Two atoms: one vertex each, colors not repeated, no EBO."""
+    atom_a = _Atom(0.0, 0.0, 0.0, "A")
+    atom_b = _Atom(5.0, 1.0, 2.0, "B")
+
+    def color_fn(atom: _Atom) -> tuple[float, float, float]:
+        return (1.0, 0.0, 0.0) if atom.chain_id == "A" else (0.0, 1.0, 0.0)
+
+    data = AtomPointsMesh(
+        [atom_a, atom_b],
+        color_fn=color_fn,
+        radius=0.2,
+    ).to_mesh_data()
+
+    assert data.vertices.shape == (2, 3)
+    np.testing.assert_allclose(data.vertices[0], [0.0, 0.0, 0.0])
+    np.testing.assert_allclose(data.vertices[1], [5.0, 1.0, 2.0])
+    assert data.colors.shape == (2, 3)
+    np.testing.assert_allclose(data.colors[0], (1.0, 0.0, 0.0))
+    np.testing.assert_allclose(data.colors[1], (0.0, 1.0, 0.0))
+    assert data.indices is None or np.asarray(data.indices).size == 0
+    assert data.draw_info.mode == GLDrawMode.POINTS
+    assert data.draw_info.indexed is False
+    assert data.draw_info.vertices_per_item == 1
+    assert data.draw_info.elements_per_item == 1
+
+
+def test_atom_points_mesh_color_fn_called_once_per_atom() -> None:
+    atom_a = _Atom(0.0, 0.0, 0.0, "A")
+    atom_b = _Atom(1.0, 0.0, 0.0, "B")
+    seen: list[object] = []
+
+    def color_fn(atom: object) -> tuple[float, float, float]:
+        seen.append(atom)
+        return (0.1, 0.2, 0.3)
+
+    AtomPointsMesh([atom_a, atom_b], color_fn=color_fn).to_mesh_data()
+    assert seen == [atom_a, atom_b]
+
+
+def test_atom_points_mesh_empty_is_unindexed_points() -> None:
+    data = AtomPointsMesh([]).to_mesh_data()
+    assert data.vertices.shape[0] == 0
+    assert data.draw_info.mode == GLDrawMode.POINTS
+    assert data.draw_info.indexed is False
+    assert data.draw_info.vertices_per_item == 1
+    assert data.draw_info.elements_per_item == 1
+
+
+def test_bond_lines_mesh_two_atoms_one_pair() -> None:
+    """Two atoms and one pair: one vertex each, LINES indices [0, 1]."""
+    atom_a = _Atom(0.0, 0.0, 0.0, "A")
+    atom_b = _Atom(1.0, 0.0, 0.0, "A")
+    data = BondLinesMesh(
+        [atom_a, atom_b],
+        indices=[[0, 1]],
+        color_bonds=False,
+    ).to_mesh_data()
+
+    assert data.vertices.shape == (2, 3)
+    np.testing.assert_allclose(data.vertices[0], [0.0, 0.0, 0.0])
+    np.testing.assert_allclose(data.vertices[1], [1.0, 0.0, 0.0])
+    np.testing.assert_array_equal(np.asarray(data.indices).ravel(), [0, 1])
+    assert data.draw_info.mode == GLDrawMode.LINES
+    assert data.draw_info.indexed is True
+    assert data.draw_info.elements_per_item == 2
+    assert data.draw_info.vertices_per_item != 2
+
+
+def test_bond_lines_mesh_color_bonds_false_broadcasts_bond_color() -> None:
+    atom_a = _Atom(0.0, 0.0, 0.0, "A")
+    atom_b = _Atom(1.0, 0.0, 0.0, "B")
+    bond_color = (0.2, 0.4, 0.6)
+    data = BondLinesMesh(
+        [atom_a, atom_b],
+        indices=[[0, 1]],
+        bond_color=bond_color,
+        color_bonds=False,
+    ).to_mesh_data()
+    assert data.colors.shape == (2, 3)
+    np.testing.assert_allclose(data.colors, np.broadcast_to(bond_color, (2, 3)))
+
+
+def test_bond_lines_mesh_color_fn_called_once_per_atom() -> None:
+    atom_a = _Atom(0.0, 0.0, 0.0, "A")
+    atom_b = _Atom(1.0, 0.0, 0.0, "B")
+    seen: list[object] = []
+
+    def color_fn(atom: object) -> tuple[float, float, float]:
+        seen.append(atom)
+        return (0.1, 0.2, 0.3)
+
+    BondLinesMesh(
+        [atom_a, atom_b],
+        indices=[[0, 1]],
+        color_fn=color_fn,
+        color_bonds=True,
+    ).to_mesh_data()
+    assert seen == [atom_a, atom_b]
+
+
+def test_bond_lines_mesh_empty_is_indexed_lines() -> None:
+    data = BondLinesMesh([]).to_mesh_data()
+    assert data.vertices.shape[0] == 0
+    assert data.draw_info.mode == GLDrawMode.LINES
+    assert data.draw_info.indexed is True
+    assert data.draw_info.elements_per_item == 2
+    assert data.draw_info.vertices_per_item == 1

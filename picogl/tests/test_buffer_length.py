@@ -71,5 +71,22 @@ class TestBufferLengthHelpers(unittest.TestCase):
         self.assertEqual(group.data_length(), 4)
 
 
+    def test_drawable_data_length_does_not_recurse_into_self(self):
+        """Wrappers that implement data_length via drawable_data_length(self)."""
+
+        class _Wrapper:
+            vao = 0
+            vbo = None
+            named_vbos = {}
+            index_count = 0
+
+            def data_length(self) -> int:
+                return drawable_data_length(self)
+
+        wrapper = _Wrapper()
+        self.assertEqual(drawable_data_length(wrapper), 0)
+        self.assertEqual(wrapper.data_length(), 0)
+
+
 if __name__ == "__main__":
     unittest.main()

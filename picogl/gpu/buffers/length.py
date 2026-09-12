@@ -88,14 +88,14 @@ def drawable_data_length(drawable: DrawableLengthInput) -> int:
         return 0
 
     vao = getattr(drawable, "vao", None)
-    if vao is not None and vao != 0 and not isinstance(vao, int):
+    if vao is not None and vao != 0 and not isinstance(vao, int) and vao is not drawable:
         if not _is_mock(vao) or _has_measurable_data(vao):
             count = _data_length_from_buffer_like(vao)
             if count > 0:
                 return count
 
     vbo = getattr(drawable, "vbo", None)
-    if vbo is not None and not isinstance(vbo, int):
+    if vbo is not None and not isinstance(vbo, int) and vbo is not drawable:
         if not _is_mock(vbo) or _has_measurable_data(vbo):
             count = length_from_vbo(cast(VertexBufferDataSource, vbo))
             if count > 0:
@@ -113,11 +113,16 @@ def drawable_data_length(drawable: DrawableLengthInput) -> int:
                 if count > 0:
                     return count
 
-    count = _data_length_from_buffer_like(
-        cast(DrawableBuffer | VertexBufferDataSource, drawable)
-    )
-    if count > 0:
-        return count
+    # Do not call ``drawable.data_length()``: wrappers often implement it as
+    # ``drawable_data_length(self)`` and that recurses. Measure raw ``.data``.
+    data = getattr(drawable, "data", None)
+    if data is not None:
+        components = getattr(drawable, "components", None) or getattr(
+            drawable, "size", None
+        ) or 1
+        count = length_from_array_data(data, components=int(components))
+        if count > 0:
+            return count
 
     index_count = getattr(drawable, "index_count", 0)
     return int(index_count) if index_count else 0
