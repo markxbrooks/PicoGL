@@ -26,7 +26,24 @@ class _Atom:
     chain_id: str
 
 
-def test_unit_sphere_mesh_counts() -> None:
+def test_atom_xyz_prefers_coords_over_xyz() -> None:
+    """atom_xyz lives on entities.coords, not the sphere mesh module."""
+    from molib.entities.coords import atom_xyz
+
+    class _Coords:
+        coords = (1.0, 2.0, 3.0)
+        x = 9.0
+        y = 9.0
+        z = 9.0
+
+    class _XYZ:
+        x = 4.0
+        y = 5.0
+        z = 6.0
+
+    assert atom_xyz(_Coords()) == (1.0, 2.0, 3.0)
+    assert atom_xyz(_XYZ()) == (4.0, 5.0, 6.0)
+    assert atom_xyz(np.array([7.0, 8.0, 9.0])) == (7.0, 8.0, 9.0)
     vertices, normals, indices = unit_sphere_mesh(radius=0.2, slices=16, stacks=16)
     assert vertices.shape == (17 * 17, 3)
     assert normals.shape == vertices.shape
@@ -126,7 +143,7 @@ def test_atoms_mesh_two_atoms_vectorized_expand() -> None:
 
 def test_atoms_mesh_default_color_fn_uses_chain_palette() -> None:
     """Omitting color_fn must not crash; colors follow make_chain_color_fn."""
-    from molib.gl.mesh.atom.sphere import make_chain_color_fn
+    from molib.pdb.color import make_chain_color_fn
 
     atoms = [_Atom(0.0, 0.0, 0.0, "A"), _Atom(1.0, 0.0, 0.0, "B")]
     data = AtomSpheresMesh(atoms, radius=0.2, slices=4, stacks=4).to_mesh_data()
