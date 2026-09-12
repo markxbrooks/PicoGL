@@ -216,10 +216,16 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
             self.atoms_mesh.to_legacy_glmesh(upload=True)
 
         if self.calpha_bonds:
-
+            index_by_id = {id(atom): i for i, atom in enumerate(self.calpha_atoms)}
+            indices = [
+                [index_by_id[id(atom1)], index_by_id[id(atom2)]]
+                for atom1, atom2 in self.calpha_bonds
+            ]
             self.bonds_mesh = BondCylindersMesh(
-                self.calpha_bonds,
+                self.calpha_atoms,
+                indices=indices,
                 color_fn=color_fn,
+                color_bonds=True,
                 radius=self.bond_radius,
                 segments=self.bond_segments,
             )

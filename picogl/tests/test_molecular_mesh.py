@@ -139,7 +139,12 @@ def test_atoms_mesh_default_color_fn_uses_chain_palette() -> None:
 def test_bonds_mesh_single_bond() -> None:
     atom1 = _Atom(0.0, 0.0, 0.0, "A")
     atom2 = _Atom(1.0, 0.0, 0.0, "A")
-    mesh = BondCylindersMesh([(atom1, atom2)], color_fn=lambda _atom: (1.0, 0.0, 0.0))
+    mesh = BondCylindersMesh(
+        [atom1, atom2],
+        indices=[[0, 1]],
+        color_fn=lambda _atom: (1.0, 0.0, 0.0),
+        color_bonds=True,
+    )
     data = mesh.to_mesh_data()
 
     segments = 8
@@ -154,9 +159,11 @@ def test_bonds_mesh_cylinder_normals_perpendicular_to_axis() -> None:
     atom1 = _Atom(0.0, 0.0, 0.0, "A")
     atom2 = _Atom(1.0, 0.0, 0.0, "A")
     data = BondCylindersMesh(
-        [(atom1, atom2)],
+        [atom1, atom2],
+        indices=[[0, 1]],
         segments=12,
         color_fn=lambda _atom: (1.0, 0.0, 0.0),
+        color_bonds=True,
     ).to_mesh_data()
 
     full_rings = np.reshape(data.vertices, (-1, 2, 3))
@@ -171,10 +178,12 @@ def test_bonds_mesh_custom_radius_and_color_fn() -> None:
     atom1 = _Atom(0.0, 0.0, 0.0, "A")
     atom2 = _Atom(1.0, 1.0, 1.0, "A")
     data = BondCylindersMesh(
-        [(atom1, atom2)],
+        [atom1, atom2],
+        indices=[[0, 1]],
         radius=0.3,
         segments=4,
         color_fn=lambda _chain: (1.0, 0.0, 0.0),
+        color_bonds=True,
     ).to_mesh_data()
 
     assert data.vertices.shape == (8, 3)
@@ -204,9 +213,11 @@ def test_bonds_mesh_custom_geometry() -> None:
     atom2 = _Atom(1.0, 0.0, 0.0, "A")
     geometry = BondGeometry(radius=0.2, segments=6)
     data = BondCylindersMesh(
-        [(atom1, atom2)],
+        [atom1, atom2],
+        indices=[[0, 1]],
         geometry=geometry,
         color_fn=lambda _atom: (1.0, 0.0, 0.0),
+        color_bonds=True,
     ).to_mesh_data()
     assert data.vertices.shape == (geometry.vertices_per_item, 3)
     assert data.indices.size == geometry.elements_per_item
@@ -224,8 +235,10 @@ def test_bonds_mesh_two_bonds_vectorized_expand() -> None:
         return (1.0, 0.0, 0.0) if atom.chain_id == "A" else (0.0, 1.0, 0.0)
 
     data = BondCylindersMesh(
-        [(atom_a, atom_b), (atom_c, atom_d)],
+        [atom_a, atom_b, atom_c, atom_d],
+        indices=[[0, 1], [2, 3]],
         color_fn=color_fn,
+        color_bonds=True,
         segments=4,
     ).to_mesh_data()
     n_verts = 2 * 4
@@ -233,7 +246,13 @@ def test_bonds_mesh_two_bonds_vectorized_expand() -> None:
     assert data.vertices.shape == (2 * n_verts, 3)
     assert data.colors.shape == (2 * n_verts, 3)
     assert data.indices.size == 2 * n_idx
-    first = BondCylindersMesh([(atom_a, atom_b)], color_fn=color_fn, segments=4).to_mesh_data()
+    first = BondCylindersMesh(
+        [atom_a, atom_b],
+        indices=[[0, 1]],
+        color_fn=color_fn,
+        color_bonds=True,
+        segments=4,
+    ).to_mesh_data()
     np.testing.assert_allclose(data.vertices[:n_verts], first.vertices)
     np.testing.assert_allclose(
         data.colors[:n_verts], np.broadcast_to((1.0, 0.0, 0.0), (n_verts, 3))
@@ -253,8 +272,10 @@ def test_bonds_mesh_skips_zero_length_without_repeating_color() -> None:
     atom_b = _Atom(1.0, 0.0, 0.0, "A")
     collapsed = _Atom(0.0, 0.0, 0.0, "B")
     data = BondCylindersMesh(
-        [(atom_a, atom_a), (atom_a, atom_b), (collapsed, collapsed)],
+        [atom_a, atom_b, collapsed],
+        indices=[[0, 0], [0, 1], [2, 2]],
         color_fn=lambda atom: (0.0, 0.0, 1.0) if atom.chain_id == "A" else (1.0, 0.0, 0.0),
+        color_bonds=True,
         segments=4,
     ).to_mesh_data()
     n_verts = 2 * 4
@@ -263,6 +284,22 @@ def test_bonds_mesh_skips_zero_length_without_repeating_color() -> None:
     np.testing.assert_allclose(
         data.colors, np.broadcast_to((0.0, 0.0, 1.0), (n_verts, 3))
     )
+
+
+def test_bonds_mesh_color_bonds_false_broadcasts_bond_color() -> None:
+    atom_a = _Atom(0.0, 0.0, 0.0, "A")
+    atom_b = _Atom(1.0, 0.0, 0.0, "B")
+    bond_color = (0.2, 0.4, 0.6)
+    data = BondCylindersMesh(
+        [atom_a, atom_b],
+        indices=[[0, 1]],
+        bond_color=bond_color,
+        color_bonds=False,
+        segments=4,
+    ).to_mesh_data()
+    n_verts = 2 * 4
+    assert data.colors.shape == (n_verts, 3)
+    np.testing.assert_allclose(data.colors, np.broadcast_to(bond_color, (n_verts, 3)))
 
 
 def test_atoms_mesh_empty_uses_geometry_draw_info() -> None:

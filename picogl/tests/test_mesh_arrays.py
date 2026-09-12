@@ -104,3 +104,21 @@ def test_mesh_arrays_as_meshdata_defaults_to_triangles() -> None:
     ).as_meshdata()
     assert indexed.draw_info.indexed is True
     assert indexed.draw_info.mode == GLDrawMode.TRIANGLES
+
+
+def test_mesh_arrays_as_meshdata_accepts_draw_layout() -> None:
+    mesh = MeshArrays(
+        positions=np.array([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0]], dtype=np.float32),
+        normals=np.zeros((2, 3), dtype=np.float32),
+        colors=np.ones((2, 3), dtype=np.float32),
+        indices=np.array([0, 1], dtype=np.uint32),
+    )
+    data = mesh.as_meshdata(
+        mode=GLDrawMode.LINES,
+        indexed=True,
+        elements_per_item=2,
+    )
+    assert data.draw_info.mode == GLDrawMode.LINES
+    assert data.draw_info.indexed is True
+    assert data.draw_info.elements_per_item == 2
+    assert data.draw_info.vertices_per_item is None

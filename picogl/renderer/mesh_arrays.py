@@ -83,6 +83,9 @@ class MeshArrays:
         self,
         *,
         mode: GLDrawMode = GLDrawMode.TRIANGLES,
+        indexed: bool | None = None,
+        elements_per_item: int | None = None,
+        vertices_per_item: int | None = None,
     ) -> MeshData:
         """Convert these arrays into renderable :class:`~picogl.renderer.meshdata.MeshData`.
 
@@ -91,16 +94,32 @@ class MeshArrays:
         mode
             Primitive mode. Defaults to triangles so unindexed geometry is
             not inferred as points.
+        indexed
+            Whether drawing uses an element buffer. Defaults to
+            :attr:`indexed`.
+        elements_per_item
+            Indices (or vertices, when unindexed) per logical item.
+        vertices_per_item
+            Vertices per logical item, used when expanding per-item
+            attributes.
 
         Returns
         -------
         MeshData
-            CPU mesh with ``draw_info`` derived from *mode* and :attr:`indexed`.
+            CPU mesh with ``draw_info`` built from *mode* and the layout
+            arguments.
         """
+        if indexed is None:
+            indexed = self.indexed
         return MeshData(
             vertices=self.positions,
             normals=self.normals,
             colors=self.colors,
             indices=self.indices,
-            draw_info=MeshDrawInfo(mode=mode, indexed=self.indexed),
+            draw_info=MeshDrawInfo(
+                mode=mode,
+                indexed=indexed,
+                elements_per_item=elements_per_item,
+                vertices_per_item=vertices_per_item,
+            ),
         )
