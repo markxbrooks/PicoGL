@@ -1,5 +1,6 @@
 """Molecular mesh data builders shared by legacy and modern GL backends."""
 
+from picogl.renderer.mesh_arrays import MeshArrays
 from picogl.renderer.molecular.atom_geometry import AtomGeometry
 from picogl.renderer.molecular.atoms import AtomsMesh
 from picogl.renderer.molecular.base import MolecularMesh
@@ -12,6 +13,7 @@ __all__ = [
     "AtomsMesh",
     "BondGeometry",
     "BondsMesh",
+    "MeshArrays",
     "MolecularMesh",
     "PNCBuffer",
 ]

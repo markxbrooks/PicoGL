@@ -9,6 +9,7 @@ __all__ = [
     "GLMesh",
     "GLResourceRegistry",
     "Initializable",
+    "MeshArrays",
     "MeshData",
     "RendererBase",
 ]
@@ -27,6 +28,10 @@ def __getattr__(name):
         from .glresourceregistry import GLResourceRegistry
 
         return GLResourceRegistry
+    if name == "MeshArrays":
+        from .mesh_arrays import MeshArrays
+
+        return MeshArrays
     if name == "MeshData":
         from .meshdata import MeshData
 

@@ -12,6 +12,7 @@ from molib.entities.atom import Atom3D
 from molib.pdb.color import palette_rgb_at
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.renderer.draw_spec import MeshDrawInfo
+from picogl.renderer.mesh_arrays import MeshArrays
 from picogl.renderer.meshdata import MeshData
 from picogl.renderer.molecular.atom_geometry import AtomGeometry
 from picogl.renderer.molecular.base import MolecularMesh
@@ -124,8 +125,8 @@ class AtomsMesh(MolecularMesh):
             )
 
         template = self.geometry.build()
-        vertices = np.asarray(template.vertices, dtype=np.float32).reshape(-1, 3)
-        normals = np.asarray(template.normals, dtype=np.float32).reshape(-1, 3)
+        vertices = template.positions
+        normals = template.normals
         indices = np.asarray(template.indices, dtype=np.uint32).ravel()
 
         positions = np.asarray(
@@ -147,12 +148,13 @@ class AtomsMesh(MolecularMesh):
         out_colors = np.repeat(colors, n_vertices, axis=0)
         out_indices = (indices[None, :] + offsets[:, None]).reshape(-1)
 
-        mesh_data = MeshData.from_raw(
-            vertices=out_vertices,
+        expanded = MeshArrays(
+            positions=out_vertices,
             normals=out_normals,
             colors=out_colors,
             indices=out_indices,
         )
+        mesh_data = expanded.as_meshdata()
         mesh_data.draw_info = MeshDrawInfo(
             mode=GLDrawMode.TRIANGLES,
             indexed=True,

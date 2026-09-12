@@ -8,7 +8,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from picogl.renderer.meshdata import MeshData
+from picogl.renderer.mesh_arrays import MeshArrays
 
 _MIN_BOND_LENGTH = 1e-12
 
@@ -60,7 +60,7 @@ class BondGeometry:
         """Number of triangle indices in one cylinder."""
         return 6 * self.segments
 
-    def build(self, start: Iterable[float], end: Iterable[float]) -> MeshData:
+    def build(self, start: Iterable[float], end: Iterable[float]) -> MeshArrays:
         """Build an oriented cylinder spanning ``start`` to ``end``.
 
         Parameters
@@ -72,25 +72,21 @@ class BondGeometry:
 
         Returns
         -------
-        MeshData
+        MeshArrays
             Positions, radial normals, and indices. Empty when the axis
             length is below ``1e-12``.
         """
-        positions, normals, indices, _valid = self.build_many(
+        mesh, _valid = self.build_many(
             np.asarray(start, dtype=np.float64).reshape(1, 3),
             np.asarray(end, dtype=np.float64).reshape(1, 3),
         )
-        return MeshData.from_raw(
-            vertices=positions,
-            normals=normals,
-            indices=indices,
-        )
+        return mesh
 
     def build_many(
         self,
         starts: np.ndarray,
         ends: np.ndarray,
-    ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    ) -> tuple[MeshArrays, np.ndarray]:
         """Build cylinders for many bonds simultaneously.
 
         Zero-length shafts (axis shorter than ``1e-12``) are omitted from the
@@ -98,16 +94,14 @@ class BondGeometry:
 
         :param starts: ``(N, 3)`` world-space origins
         :param ends: ``(N, 3)`` world-space termini
-        :return: ``(positions, normals, indices, valid)``
+        :return: ``(mesh, valid)`` where *mesh* has no colors
         """
         starts_a = np.asarray(starts, dtype=np.float64).reshape(-1, 3)
         ends_a = np.asarray(ends, dtype=np.float64).reshape(-1, 3)
         n_in = int(starts_a.shape[0])
         if n_in == 0:
             return (
-                _EMPTY_POSITIONS,
-                _EMPTY_NORMALS,
-                _EMPTY_INDICES,
+                _empty_bond_arrays(),
                 np.zeros((0,), dtype=bool),
             )
 
@@ -115,12 +109,7 @@ class BondGeometry:
         lengths = np.linalg.norm(axis, axis=1)
         valid = lengths >= _MIN_BOND_LENGTH
         if not np.any(valid):
-            return (
-                _EMPTY_POSITIONS,
-                _EMPTY_NORMALS,
-                _EMPTY_INDICES,
-                valid,
-            )
+            return (_empty_bond_arrays(), valid)
 
         starts_a = starts_a[valid]
         ends_a = ends_a[valid]
@@ -156,8 +145,19 @@ class BondGeometry:
         indices = (local_indices[None, :] + vertex_offsets[:, None]).reshape(-1)
 
         return (
-            positions.astype(np.float32, copy=False),
-            normals.astype(np.float32, copy=False),
-            np.asarray(indices, dtype=np.uint32),
+            MeshArrays(
+                positions=positions.astype(np.float32, copy=False),
+                normals=normals.astype(np.float32, copy=False),
+                indices=np.asarray(indices, dtype=np.uint32),
+            ),
             valid,
         )
+
+
+def _empty_bond_arrays() -> MeshArrays:
+    """Return zero-vertex indexed cylinder arrays."""
+    return MeshArrays(
+        positions=_EMPTY_POSITIONS,
+        normals=_EMPTY_NORMALS,
+        indices=_EMPTY_INDICES,
+    )

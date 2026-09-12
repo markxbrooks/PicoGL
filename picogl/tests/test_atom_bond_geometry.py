@@ -5,6 +5,7 @@ from __future__ import annotations
 import numpy as np
 
 from picogl.core.geometry.sphere import unit_sphere_mesh
+from picogl.renderer.mesh_arrays import MeshArrays
 from picogl.renderer.molecular.atom_geometry import AtomGeometry
 from picogl.renderer.molecular.bond_geometry import BondGeometry
 
@@ -13,7 +14,9 @@ def test_atom_geometry_counts_match_unit_sphere() -> None:
     geometry = AtomGeometry(radius=0.2, slices=16, stacks=16)
     vertices, _normals, indices = unit_sphere_mesh(0.2, 16, 16)
     data = geometry.build()
-    built = np.asarray(data.vertices, dtype=np.float32).reshape(-1, 3)
+    built = np.asarray(data.positions, dtype=np.float32).reshape(-1, 3)
+    assert isinstance(data, MeshArrays)
+    assert data.colors is None
     assert geometry.vertices_per_item == 17 * 17
     assert geometry.elements_per_item == 16 * 16 * 6
     assert built.shape[0] == geometry.vertices_per_item
@@ -24,7 +27,7 @@ def test_atom_geometry_counts_match_unit_sphere() -> None:
 def test_bond_geometry_open_cylinder_topology() -> None:
     geometry = BondGeometry(radius=0.5, segments=4)
     data = geometry.build((0.0, 0.0, 0.0), (1.0, 0.0, 0.0))
-    verts = np.asarray(data.vertices, dtype=np.float32).reshape(-1, 3)
+    verts = np.asarray(data.positions, dtype=np.float32).reshape(-1, 3)
     norms = np.asarray(data.normals, dtype=np.float32).reshape(-1, 3)
     idxs = np.asarray(data.indices).ravel().tolist()
 
@@ -67,7 +70,7 @@ def test_bond_geometry_open_cylinder_topology() -> None:
 
 def test_bond_geometry_zero_length_is_empty() -> None:
     data = BondGeometry().build((0.0, 0.0, 0.0), (0.0, 0.0, 0.0))
-    verts = np.asarray(data.vertices, dtype=np.float32).reshape(-1, 3)
+    verts = np.asarray(data.positions, dtype=np.float32).reshape(-1, 3)
     assert verts.shape[0] == 0
     assert np.asarray(data.indices).size == 0
 
@@ -84,12 +87,13 @@ def test_bond_geometry_build_many_matches_sequential_build() -> None:
     geometry = BondGeometry(radius=0.5, segments=4)
     starts = np.array([[0.0, 0.0, 0.0], [3.0, 0.0, 0.0]])
     ends = np.array([[1.0, 0.0, 0.0], [3.0, 2.0, 0.0]])
-    positions, normals, indices, valid = geometry.build_many(starts, ends)
+    mesh, valid = geometry.build_many(starts, ends)
+    positions, normals, indices = mesh.positions, mesh.normals, mesh.indices
     assert np.all(valid)
     first = geometry.build(starts[0], ends[0])
     second = geometry.build(starts[1], ends[1])
-    v0 = np.asarray(first.vertices, dtype=np.float32).reshape(-1, 3)
-    v1 = np.asarray(second.vertices, dtype=np.float32).reshape(-1, 3)
+    v0 = np.asarray(first.positions, dtype=np.float32).reshape(-1, 3)
+    v1 = np.asarray(second.positions, dtype=np.float32).reshape(-1, 3)
     n0 = np.asarray(first.normals, dtype=np.float32).reshape(-1, 3)
     n1 = np.asarray(second.normals, dtype=np.float32).reshape(-1, 3)
     i0 = np.asarray(first.indices, dtype=np.uint32).ravel()
@@ -107,11 +111,12 @@ def test_bond_geometry_build_many_drops_zero_length() -> None:
     geometry = BondGeometry(segments=8)
     starts = np.array([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [5.0, 0.0, 0.0]])
     ends = np.array([[0.0, 0.0, 0.0], [2.0, 0.0, 0.0], [5.0, 0.0, 0.0]])
-    positions, _normals, indices, valid = geometry.build_many(starts, ends)
+    mesh, valid = geometry.build_many(starts, ends)
+    positions, indices = mesh.positions, mesh.indices
     np.testing.assert_array_equal(valid, [False, True, False])
     assert positions.shape[0] == geometry.vertices_per_item
     assert indices.size == geometry.elements_per_item
     solo = geometry.build(starts[1], ends[1])
     np.testing.assert_allclose(
-        positions, np.asarray(solo.vertices, dtype=np.float32).reshape(-1, 3)
+        positions, np.asarray(solo.positions, dtype=np.float32).reshape(-1, 3)
     )

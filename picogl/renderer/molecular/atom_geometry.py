@@ -7,7 +7,7 @@ from dataclasses import dataclass
 import numpy as np
 
 from picogl.core.geometry.sphere import unit_sphere_mesh
-from picogl.renderer.meshdata import MeshData
+from picogl.renderer.mesh_arrays import MeshArrays
 
 
 @dataclass(frozen=True, slots=True)
@@ -22,19 +22,19 @@ class AtomGeometry:
     slices: int = 16
     stacks: int = 16
 
-    def build(self) -> MeshData:
+    def build(self) -> MeshArrays:
         """Build a sphere template centered at the origin.
 
         Returns
         -------
-        MeshData
-            Vertices, normals, and indices with no per-atom colors.
+        MeshArrays
+            Positions, normals, and indices with no per-atom colors.
         """
         vertices, normals, indices = self._sphere()
-        return MeshData.from_raw(
-            vertices=vertices,
+        return MeshArrays(
+            positions=vertices,
             normals=normals,
-            indices=indices,
+            indices=np.asarray(indices, dtype=np.uint32).ravel(),
         )
 
     @property

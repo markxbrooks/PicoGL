@@ -79,8 +79,8 @@ class BondsMesh(MolecularMesh):
             [atom_xyz(atom2) for _atom1, atom2 in self.bonds],
             dtype=np.float64,
         )
-        positions, normals, indices, valid = self.geometry.build_many(starts, ends)
-        if positions.shape[0] == 0:
+        geometry, valid = self.geometry.build_many(starts, ends)
+        if geometry.positions.shape[0] == 0:
             return self._empty_mesh_data(
                 elements_per_item=self.geometry.elements_per_item,
                 vertices_per_item=self.geometry.vertices_per_item,
@@ -97,12 +97,7 @@ class BondsMesh(MolecularMesh):
             axis=0,
         )
 
-        mesh_data = MeshData.from_raw(
-            vertices=positions,
-            normals=normals,
-            colors=colors,
-            indices=indices,
-        )
+        mesh_data = geometry.with_colors(colors).as_meshdata()
         mesh_data.draw_info = MeshDrawInfo(
             mode=GLDrawMode.TRIANGLES,
             indexed=True,
