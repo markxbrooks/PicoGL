@@ -44,6 +44,16 @@ from picogl.renderer.draw_spec import (
 )
 from picogl.utils.loader.object_data import ObjectData
 
+def np_positions_to_normal_array(positions: ndarray[Any, dtype[Any]]) -> ndarray[Any, dtype[Any]]:
+    """Create normals from positions."""
+    normals = np.array(
+        [
+            pos / np.linalg.norm(pos) if np.linalg.norm(pos) > 0 else [0, 0, 1]
+            for pos in positions
+        ],
+        dtype=np.float32,
+    )
+    return normals
 
 class MeshData:
     """
@@ -132,6 +142,32 @@ class MeshData:
             return None
 
         return indices.astype(np.uint32).ravel()
+
+    def as_indexed_arrays(self) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+        """Unpack :meth:`spheres_for_atoms` output for tests and legacy tuple call sites."""
+        return (
+            np.asarray(self.vertices, dtype=np.float32),
+            np.asarray(self.normals, dtype=np.float32),
+            np.asarray(self.colors, dtype=np.float32),
+            np.asarray(self.indices, dtype=np.uint32),
+        )
+
+    def as_arrays(self) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+        """Unpack :meth:`make_unit_sphere` output (no per-vertex colors)."""
+        return (
+            np.asarray(self.vertices, dtype=np.float32),
+            np.asarray(self.normals, dtype=np.float32),
+            np.asarray(self.indices, dtype=np.uint32),
+        )
+
+    def as_arrays_with_normals(self) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+        """as arrays with normals"""
+        return (
+            np.asarray(self.vertices, dtype=np.float32),
+            np.asarray(self.colors, dtype=np.float32),
+            np_positions_to_normal_array(positions)
+        )
+
 
     def resolved_draw_info(self) -> MeshDrawInfo:
         """Return the mesh draw layout (always set in ``__init__``)."""
