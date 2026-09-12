@@ -15,18 +15,14 @@ from picogl.renderer.draw_spec import MeshDrawInfo
 from picogl.renderer.meshdata import MeshData
 from picogl.renderer.molecular.atom_geometry import AtomGeometry
 from picogl.renderer.molecular.base import MolecularMesh
-from picogl.renderer.molecular.pnc_buffer import PNCBuffer
 
-from collections.abc import Callable, Sequence
-from typing import Any
 
 def make_chain_color_fn(
     chain_ids: Sequence[str],
-    ) -> Callable[[Any], tuple[float, float, float]]:
+) -> Callable[[Any], tuple[float, float, float]]:
     """
     Create a per-atom color function that assigns colors by chain ID.
 
-    ```
     Chain IDs are sorted and deduplicated so that the resulting colors are
     deterministic and match :func:`generate_chain_colors` when ``chain_ids``
     contains every chain in the structure.
@@ -107,8 +103,20 @@ class AtomsMesh(MolecularMesh):
         """Latitudinal subdivisions from :attr:`geometry`."""
         return self.geometry.stacks
 
+    def _resolved_color_fn(self) -> Callable[[Any], tuple[float, float, float]]:
+        """Return *color_fn*, or a chain-palette sampler built from ``self.atoms``."""
+        if self.color_fn is not None:
+            return self.color_fn
+        return make_chain_color_fn([atom.chain_id for atom in self.atoms])
+
     def build_mesh_data(self) -> MeshData:
-        """Instance sphere geometry at each atom and assign per-atom colors."""
+        """Instance sphere geometry at each atom and assign per-atom colors.
+
+        Expands one :class:`~picogl.renderer.molecular.atom_geometry.AtomGeometry`
+        template with NumPy broadcasting. The result is a fully expanded
+        :class:`~picogl.renderer.meshdata.MeshData` (one sphere per atom) so
+        existing VAO / ``first_item`` draw paths stay unchanged.
+        """
         if not self.atoms:
             return self._empty_mesh_data(
                 elements_per_item=self.geometry.elements_per_item,
@@ -116,23 +124,35 @@ class AtomsMesh(MolecularMesh):
             )
 
         template = self.geometry.build()
-        template_vertices = np.asarray(template.vertices, dtype=np.float32).reshape(
-            -1, 3
+        vertices = np.asarray(template.vertices, dtype=np.float32).reshape(-1, 3)
+        normals = np.asarray(template.normals, dtype=np.float32).reshape(-1, 3)
+        indices = np.asarray(template.indices, dtype=np.uint32).ravel()
+
+        positions = np.asarray(
+            [atom_xyz(atom) for atom in self.atoms],
+            dtype=np.float32,
         )
-        template_normals = np.asarray(template.normals, dtype=np.float32).reshape(-1, 3)
-        template_indices = np.asarray(template.indices, dtype=np.uint32).ravel()
+        color_fn = self._resolved_color_fn()
+        colors = np.asarray(
+            [color_fn(atom) for atom in self.atoms],
+            dtype=np.float32,
+        ).reshape(-1, 3)
 
-        buf = PNCBuffer()
-        for atom in self.atoms:
-            buf.add_instance(
-                atom_xyz(atom),
-                template_vertices,
-                template_normals,
-                template_indices,
-                self.color_fn(atom),
-            )
+        n_atoms = int(positions.shape[0])
+        n_vertices = int(vertices.shape[0])
+        offsets = np.arange(n_atoms, dtype=np.uint32) * np.uint32(n_vertices)
 
-        mesh_data = buf.to_mesh_data()
+        out_vertices = (vertices[None, :, :] + positions[:, None, :]).reshape(-1, 3)
+        out_normals = np.tile(normals, (n_atoms, 1))
+        out_colors = np.repeat(colors, n_vertices, axis=0)
+        out_indices = (indices[None, :] + offsets[:, None]).reshape(-1)
+
+        mesh_data = MeshData.from_raw(
+            vertices=out_vertices,
+            normals=out_normals,
+            colors=out_colors,
+            indices=out_indices,
+        )
         mesh_data.draw_info = MeshDrawInfo(
             mode=GLDrawMode.TRIANGLES,
             indexed=True,

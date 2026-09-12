@@ -71,10 +71,69 @@ def test_atoms_mesh_color_fn_receives_atom() -> None:
     np.testing.assert_allclose(data.colors[0], (0.1, 0.2, 0.3))
 
 
+def test_atoms_mesh_two_atoms_vectorized_expand() -> None:
+    """Two atoms expand one template: tiled normals, repeated colors, offset EBO."""
+    atom_a = _Atom(0.0, 0.0, 0.0, "A")
+    atom_b = _Atom(5.0, 0.0, 0.0, "B")
+
+    def color_fn(atom: _Atom) -> tuple[float, float, float]:
+        return (1.0, 0.0, 0.0) if atom.chain_id == "A" else (0.0, 1.0, 0.0)
+
+    data = AtomsMesh(
+        [atom_a, atom_b],
+        color_fn=color_fn,
+        radius=0.2,
+        slices=4,
+        stacks=4,
+    ).to_mesh_data()
+
+    template_vertices, template_normals, template_indices = unit_sphere_mesh(
+        0.2, 4, 4
+    )
+    n_verts = template_vertices.shape[0]
+    n_idx = int(template_indices.size)
+
+    assert data.vertices.shape == (2 * n_verts, 3)
+    assert data.normals.shape == (2 * n_verts, 3)
+    assert data.colors.shape == (2 * n_verts, 3)
+    assert data.indices.size == 2 * n_idx
+
+    np.testing.assert_allclose(data.vertices[:n_verts], template_vertices)
+    np.testing.assert_allclose(
+        data.vertices[n_verts:], template_vertices + np.array([5.0, 0.0, 0.0])
+    )
+    np.testing.assert_allclose(
+        data.normals, np.tile(template_normals, (2, 1))
+    )
+    np.testing.assert_allclose(
+        data.colors[:n_verts], np.broadcast_to((1.0, 0.0, 0.0), (n_verts, 3))
+    )
+    np.testing.assert_allclose(
+        data.colors[n_verts:], np.broadcast_to((0.0, 1.0, 0.0), (n_verts, 3))
+    )
+    np.testing.assert_array_equal(
+        data.indices[n_idx:], np.asarray(template_indices) + n_verts
+    )
+    assert data.draw_info.vertices_per_item == n_verts
+    assert data.draw_info.elements_per_item == n_idx
+
+
+def test_atoms_mesh_default_color_fn_uses_chain_palette() -> None:
+    """Omitting color_fn must not crash; colors follow make_chain_color_fn."""
+    from picogl.renderer.molecular.atoms import make_chain_color_fn
+
+    atoms = [_Atom(0.0, 0.0, 0.0, "A"), _Atom(1.0, 0.0, 0.0, "B")]
+    data = AtomsMesh(atoms, radius=0.2, slices=4, stacks=4).to_mesh_data()
+    expected_fn = make_chain_color_fn(["A", "B"])
+    n_verts = data.vertices.shape[0] // 2
+    np.testing.assert_allclose(data.colors[0], expected_fn(atoms[0]))
+    np.testing.assert_allclose(data.colors[n_verts], expected_fn(atoms[1]))
+
+
 def test_bonds_mesh_single_bond() -> None:
     atom1 = _Atom(0.0, 0.0, 0.0, "A")
     atom2 = _Atom(1.0, 0.0, 0.0, "A")
-    mesh = BondsMesh([(atom1, atom2)])
+    mesh = BondsMesh([(atom1, atom2)], color_fn=lambda _atom: (1.0, 0.0, 0.0))
     data = mesh.to_mesh_data()
 
     segments = 8
@@ -88,7 +147,11 @@ def test_bonds_mesh_single_bond() -> None:
 def test_bonds_mesh_cylinder_normals_perpendicular_to_axis() -> None:
     atom1 = _Atom(0.0, 0.0, 0.0, "A")
     atom2 = _Atom(1.0, 0.0, 0.0, "A")
-    data = BondsMesh([(atom1, atom2)], segments=12).to_mesh_data()
+    data = BondsMesh(
+        [(atom1, atom2)],
+        segments=12,
+        color_fn=lambda _atom: (1.0, 0.0, 0.0),
+    ).to_mesh_data()
 
     full_rings = np.reshape(data.vertices, (-1, 2, 3))
     assert np.allclose(full_rings[:, 0, 0], 0.0)
@@ -134,10 +197,66 @@ def test_bonds_mesh_custom_geometry() -> None:
     atom1 = _Atom(0.0, 0.0, 0.0, "A")
     atom2 = _Atom(1.0, 0.0, 0.0, "A")
     geometry = BondGeometry(radius=0.2, segments=6)
-    data = BondsMesh([(atom1, atom2)], geometry=geometry).to_mesh_data()
+    data = BondsMesh(
+        [(atom1, atom2)],
+        geometry=geometry,
+        color_fn=lambda _atom: (1.0, 0.0, 0.0),
+    ).to_mesh_data()
     assert data.vertices.shape == (geometry.vertices_per_item, 3)
     assert data.indices.size == geometry.elements_per_item
     assert data.draw_info.elements_per_item == geometry.elements_per_item
+
+
+def test_bonds_mesh_two_bonds_vectorized_expand() -> None:
+    """Two shafts: doubled vertex count, per-shaft colors, offset EBO."""
+    atom_a = _Atom(0.0, 0.0, 0.0, "A")
+    atom_b = _Atom(1.0, 0.0, 0.0, "A")
+    atom_c = _Atom(0.0, 2.0, 0.0, "B")
+    atom_d = _Atom(0.0, 3.0, 0.0, "B")
+
+    def color_fn(atom: _Atom) -> tuple[float, float, float]:
+        return (1.0, 0.0, 0.0) if atom.chain_id == "A" else (0.0, 1.0, 0.0)
+
+    data = BondsMesh(
+        [(atom_a, atom_b), (atom_c, atom_d)],
+        color_fn=color_fn,
+        segments=4,
+    ).to_mesh_data()
+    n_verts = 2 * 4
+    n_idx = 6 * 4
+    assert data.vertices.shape == (2 * n_verts, 3)
+    assert data.colors.shape == (2 * n_verts, 3)
+    assert data.indices.size == 2 * n_idx
+    first = BondsMesh([(atom_a, atom_b)], color_fn=color_fn, segments=4).to_mesh_data()
+    np.testing.assert_allclose(data.vertices[:n_verts], first.vertices)
+    np.testing.assert_allclose(
+        data.colors[:n_verts], np.broadcast_to((1.0, 0.0, 0.0), (n_verts, 3))
+    )
+    np.testing.assert_allclose(
+        data.colors[n_verts:], np.broadcast_to((0.0, 1.0, 0.0), (n_verts, 3))
+    )
+    np.testing.assert_array_equal(
+        np.asarray(data.indices).ravel()[n_idx:],
+        np.asarray(first.indices).ravel() + n_verts,
+    )
+
+
+def test_bonds_mesh_skips_zero_length_without_repeating_color() -> None:
+    """A collapsed pair adds neither vertices nor a color block."""
+    atom_a = _Atom(0.0, 0.0, 0.0, "A")
+    atom_b = _Atom(1.0, 0.0, 0.0, "A")
+    collapsed = _Atom(0.0, 0.0, 0.0, "B")
+    data = BondsMesh(
+        [(atom_a, atom_a), (atom_a, atom_b), (collapsed, collapsed)],
+        color_fn=lambda atom: (0.0, 0.0, 1.0) if atom.chain_id == "A" else (1.0, 0.0, 0.0),
+        segments=4,
+    ).to_mesh_data()
+    n_verts = 2 * 4
+    assert data.vertices.shape == (n_verts, 3)
+    assert data.colors.shape == (n_verts, 3)
+    np.testing.assert_allclose(
+        data.colors, np.broadcast_to((0.0, 0.0, 1.0), (n_verts, 3))
+    )
 
 
 def test_atoms_mesh_empty_uses_geometry_draw_info() -> None:

@@ -10,10 +10,9 @@ import numpy as np
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.renderer.draw_spec import MeshDrawInfo
 from picogl.renderer.meshdata import MeshData
-from picogl.renderer.molecular.atoms import atom_xyz
+from picogl.renderer.molecular.atoms import atom_xyz, make_chain_color_fn
 from picogl.renderer.molecular.base import MolecularMesh
 from picogl.renderer.molecular.bond_geometry import BondGeometry
-from picogl.renderer.molecular.pnc_buffer import PNCBuffer
 
 
 class BondsMesh(MolecularMesh):
@@ -54,36 +53,56 @@ class BondsMesh(MolecularMesh):
         """Radial segment count from :attr:`geometry`."""
         return self.geometry.segments
 
+    def _resolved_color_fn(self) -> Callable[[Any], tuple[float, float, float]]:
+        """Return *color_fn*, or a chain-palette sampler from the first atoms."""
+        if self.color_fn is not None:
+            return self.color_fn
+        return make_chain_color_fn([atom1.chain_id for atom1, _atom2 in self.bonds])
+
     def build_mesh_data(self) -> MeshData:
-        """Build an oriented cylinder shaft for each bond."""
+        """Build oriented cylinder shafts for all bonds.
+
+        Geometry is generated in one :meth:`BondGeometry.build_many` call.
+        Colors are repeated only for shafts that survive the zero-length filter.
+        """
         if not self.bonds:
             return self._empty_mesh_data(
                 elements_per_item=self.geometry.elements_per_item,
                 vertices_per_item=self.geometry.vertices_per_item,
             )
 
-        buf = PNCBuffer()
-        for atom1, atom2 in self.bonds:
-            piece = self.geometry.build(atom_xyz(atom1), atom_xyz(atom2))
-            positions = np.asarray(piece.vertices, dtype=np.float32).reshape(-1, 3)
-            if positions.shape[0] == 0:
-                continue
-            normals = np.asarray(piece.normals, dtype=np.float32).reshape(-1, 3)
-            indices = np.asarray(piece.indices, dtype=np.uint32).ravel()
-            color = self.color_fn(atom1)
-            colors = np.repeat(
-                np.asarray(color, dtype=np.float32)[None, :],
-                len(positions),
-                axis=0,
-            )
-            buf.extend(
-                positions=positions,
-                normals=normals,
-                colors=colors,
-                indices=indices,
+        starts = np.asarray(
+            [atom_xyz(atom1) for atom1, _atom2 in self.bonds],
+            dtype=np.float64,
+        )
+        ends = np.asarray(
+            [atom_xyz(atom2) for _atom1, atom2 in self.bonds],
+            dtype=np.float64,
+        )
+        positions, normals, indices, valid = self.geometry.build_many(starts, ends)
+        if positions.shape[0] == 0:
+            return self._empty_mesh_data(
+                elements_per_item=self.geometry.elements_per_item,
+                vertices_per_item=self.geometry.vertices_per_item,
             )
 
-        mesh_data = buf.to_mesh_data()
+        color_fn = self._resolved_color_fn()
+        colors = np.asarray(
+            [color_fn(atom1) for atom1, _atom2 in self.bonds],
+            dtype=np.float32,
+        ).reshape(-1, 3)
+        colors = np.repeat(
+            colors[valid],
+            self.geometry.vertices_per_item,
+            axis=0,
+        )
+
+        mesh_data = MeshData.from_raw(
+            vertices=positions,
+            normals=normals,
+            colors=colors,
+            indices=indices,
+        )
         mesh_data.draw_info = MeshDrawInfo(
             mode=GLDrawMode.TRIANGLES,
             indexed=True,
