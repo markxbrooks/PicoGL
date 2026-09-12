@@ -9,7 +9,8 @@ import pytest
 
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.core.geometry.sphere import unit_sphere_mesh
-from picogl.renderer.molecular import AtomGeometry, BondGeometry
+from picogl.renderer.molecular import BondGeometry
+from molib.gl.mesh.atom.sphere_geometry import AtomSphereGeometry
 from molib.gl.mesh.atom.sphere import AtomSpheresMesh
 from molib.gl.mesh.bond.cylinder import BondCylindersMesh
 
@@ -188,7 +189,7 @@ def test_bonds_mesh_custom_radius_and_color_fn() -> None:
 
 def test_atoms_mesh_custom_geometry() -> None:
     atom = _Atom(0.0, 0.0, 0.0, "A")
-    geometry = AtomGeometry(radius=0.4, slices=4, stacks=4)
+    geometry = AtomSphereGeometry(radius=0.4, slices=4, stacks=4)
     data = AtomSpheresMesh([atom], geometry=geometry).to_mesh_data()
     assert data.vertices.shape[0] == geometry.vertices_per_item
     assert data.draw_info.elements_per_item == geometry.elements_per_item
@@ -262,7 +263,7 @@ def test_bonds_mesh_skips_zero_length_without_repeating_color() -> None:
 
 
 def test_atoms_mesh_empty_uses_geometry_draw_info() -> None:
-    geometry = AtomGeometry(slices=8, stacks=8)
+    geometry = AtomSphereGeometry(slices=8, stacks=8)
     data = AtomSpheresMesh([], geometry=geometry).to_mesh_data()
     assert data.vertices.shape[0] == 0
     assert data.draw_info.vertices_per_item == geometry.vertices_per_item

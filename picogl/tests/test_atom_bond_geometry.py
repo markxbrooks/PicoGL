@@ -6,12 +6,12 @@ import numpy as np
 
 from picogl.core.geometry.sphere import unit_sphere_mesh
 from picogl.renderer.mesh_arrays import MeshArrays
-from picogl.renderer.molecular.atom_geometry import AtomGeometry
+from molib.gl.mesh.atom.sphere_geometry import AtomSphereGeometry
 from picogl.renderer.molecular.bond_geometry import BondGeometry
 
 
 def test_atom_geometry_counts_match_unit_sphere() -> None:
-    geometry = AtomGeometry(radius=0.2, slices=16, stacks=16)
+    geometry = AtomSphereGeometry(radius=0.2, slices=16, stacks=16)
     vertices, _normals, indices = unit_sphere_mesh(0.2, 16, 16)
     data = geometry.build()
     built = np.asarray(data.positions, dtype=np.float32).reshape(-1, 3)
