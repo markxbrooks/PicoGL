@@ -9,7 +9,9 @@ import pytest
 
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.core.geometry.sphere import unit_sphere_mesh
-from picogl.renderer.molecular import AtomGeometry, AtomsMesh, BondGeometry, BondsMesh
+from picogl.renderer.molecular import AtomGeometry, BondGeometry
+from molib.gl.mesh.atom.sphere import AtomSpheresMesh
+from molib.gl.mesh.bond.cylinder import BondCylindersMesh
 
 
 @dataclass
@@ -29,7 +31,7 @@ def test_unit_sphere_mesh_counts() -> None:
 
 def test_atoms_mesh_single_atom_counts() -> None:
     atom = _Atom(1.0, 2.0, 3.0, "A")
-    mesh = AtomsMesh([atom], radius=0.2, slices=16, stacks=16)
+    mesh = AtomSpheresMesh([atom], radius=0.2, slices=16, stacks=16)
     data = mesh.to_mesh_data()
 
     template_vertices, _, template_indices = unit_sphere_mesh(0.2, 16, 16)
@@ -50,7 +52,7 @@ class _AtomCoords:
 def test_atoms_mesh_accepts_coords_attribute() -> None:
     """MoLib Atom3D-style objects expose coords, not x/y/z."""
     atom = _AtomCoords((1.0, 2.0, 3.0), "A")
-    data = AtomsMesh([atom], radius=0.2, slices=4, stacks=4).to_mesh_data()
+    data = AtomSpheresMesh([atom], radius=0.2, slices=4, stacks=4).to_mesh_data()
     template_vertices, _, _ = unit_sphere_mesh(0.2, 4, 4)
     assert data.vertices[0, 0] == pytest.approx(1.0 + template_vertices[0, 0])
 
@@ -63,7 +65,7 @@ def test_atoms_mesh_color_fn_receives_atom() -> None:
         seen.append(a)
         return (0.1, 0.2, 0.3)
 
-    data = AtomsMesh(
+    data = AtomSpheresMesh(
         [atom], color_fn=color_fn, radius=0.2, slices=4, stacks=4
     ).to_mesh_data()
     assert seen == [atom]
@@ -79,7 +81,7 @@ def test_atoms_mesh_two_atoms_vectorized_expand() -> None:
     def color_fn(atom: _Atom) -> tuple[float, float, float]:
         return (1.0, 0.0, 0.0) if atom.chain_id == "A" else (0.0, 1.0, 0.0)
 
-    data = AtomsMesh(
+    data = AtomSpheresMesh(
         [atom_a, atom_b],
         color_fn=color_fn,
         radius=0.2,
@@ -120,10 +122,10 @@ def test_atoms_mesh_two_atoms_vectorized_expand() -> None:
 
 def test_atoms_mesh_default_color_fn_uses_chain_palette() -> None:
     """Omitting color_fn must not crash; colors follow make_chain_color_fn."""
-    from picogl.renderer.molecular.atoms import make_chain_color_fn
+    from molib.gl.mesh.atom.sphere import make_chain_color_fn
 
     atoms = [_Atom(0.0, 0.0, 0.0, "A"), _Atom(1.0, 0.0, 0.0, "B")]
-    data = AtomsMesh(atoms, radius=0.2, slices=4, stacks=4).to_mesh_data()
+    data = AtomSpheresMesh(atoms, radius=0.2, slices=4, stacks=4).to_mesh_data()
     expected_fn = make_chain_color_fn(["A", "B"])
     n_verts = data.vertices.shape[0] // 2
     np.testing.assert_allclose(data.colors[0], expected_fn(atoms[0]))
@@ -133,7 +135,7 @@ def test_atoms_mesh_default_color_fn_uses_chain_palette() -> None:
 def test_bonds_mesh_single_bond() -> None:
     atom1 = _Atom(0.0, 0.0, 0.0, "A")
     atom2 = _Atom(1.0, 0.0, 0.0, "A")
-    mesh = BondsMesh([(atom1, atom2)], color_fn=lambda _atom: (1.0, 0.0, 0.0))
+    mesh = BondCylindersMesh([(atom1, atom2)], color_fn=lambda _atom: (1.0, 0.0, 0.0))
     data = mesh.to_mesh_data()
 
     segments = 8
@@ -147,7 +149,7 @@ def test_bonds_mesh_single_bond() -> None:
 def test_bonds_mesh_cylinder_normals_perpendicular_to_axis() -> None:
     atom1 = _Atom(0.0, 0.0, 0.0, "A")
     atom2 = _Atom(1.0, 0.0, 0.0, "A")
-    data = BondsMesh(
+    data = BondCylindersMesh(
         [(atom1, atom2)],
         segments=12,
         color_fn=lambda _atom: (1.0, 0.0, 0.0),
@@ -164,7 +166,7 @@ def test_bonds_mesh_cylinder_normals_perpendicular_to_axis() -> None:
 def test_bonds_mesh_custom_radius_and_color_fn() -> None:
     atom1 = _Atom(0.0, 0.0, 0.0, "A")
     atom2 = _Atom(1.0, 1.0, 1.0, "A")
-    data = BondsMesh(
+    data = BondCylindersMesh(
         [(atom1, atom2)],
         radius=0.3,
         segments=4,
@@ -187,7 +189,7 @@ def test_bonds_mesh_custom_radius_and_color_fn() -> None:
 def test_atoms_mesh_custom_geometry() -> None:
     atom = _Atom(0.0, 0.0, 0.0, "A")
     geometry = AtomGeometry(radius=0.4, slices=4, stacks=4)
-    data = AtomsMesh([atom], geometry=geometry).to_mesh_data()
+    data = AtomSpheresMesh([atom], geometry=geometry).to_mesh_data()
     assert data.vertices.shape[0] == geometry.vertices_per_item
     assert data.draw_info.elements_per_item == geometry.elements_per_item
     assert data.draw_info.vertices_per_item == geometry.vertices_per_item
@@ -197,7 +199,7 @@ def test_bonds_mesh_custom_geometry() -> None:
     atom1 = _Atom(0.0, 0.0, 0.0, "A")
     atom2 = _Atom(1.0, 0.0, 0.0, "A")
     geometry = BondGeometry(radius=0.2, segments=6)
-    data = BondsMesh(
+    data = BondCylindersMesh(
         [(atom1, atom2)],
         geometry=geometry,
         color_fn=lambda _atom: (1.0, 0.0, 0.0),
@@ -217,7 +219,7 @@ def test_bonds_mesh_two_bonds_vectorized_expand() -> None:
     def color_fn(atom: _Atom) -> tuple[float, float, float]:
         return (1.0, 0.0, 0.0) if atom.chain_id == "A" else (0.0, 1.0, 0.0)
 
-    data = BondsMesh(
+    data = BondCylindersMesh(
         [(atom_a, atom_b), (atom_c, atom_d)],
         color_fn=color_fn,
         segments=4,
@@ -227,7 +229,7 @@ def test_bonds_mesh_two_bonds_vectorized_expand() -> None:
     assert data.vertices.shape == (2 * n_verts, 3)
     assert data.colors.shape == (2 * n_verts, 3)
     assert data.indices.size == 2 * n_idx
-    first = BondsMesh([(atom_a, atom_b)], color_fn=color_fn, segments=4).to_mesh_data()
+    first = BondCylindersMesh([(atom_a, atom_b)], color_fn=color_fn, segments=4).to_mesh_data()
     np.testing.assert_allclose(data.vertices[:n_verts], first.vertices)
     np.testing.assert_allclose(
         data.colors[:n_verts], np.broadcast_to((1.0, 0.0, 0.0), (n_verts, 3))
@@ -246,7 +248,7 @@ def test_bonds_mesh_skips_zero_length_without_repeating_color() -> None:
     atom_a = _Atom(0.0, 0.0, 0.0, "A")
     atom_b = _Atom(1.0, 0.0, 0.0, "A")
     collapsed = _Atom(0.0, 0.0, 0.0, "B")
-    data = BondsMesh(
+    data = BondCylindersMesh(
         [(atom_a, atom_a), (atom_a, atom_b), (collapsed, collapsed)],
         color_fn=lambda atom: (0.0, 0.0, 1.0) if atom.chain_id == "A" else (1.0, 0.0, 0.0),
         segments=4,
@@ -261,7 +263,7 @@ def test_bonds_mesh_skips_zero_length_without_repeating_color() -> None:
 
 def test_atoms_mesh_empty_uses_geometry_draw_info() -> None:
     geometry = AtomGeometry(slices=8, stacks=8)
-    data = AtomsMesh([], geometry=geometry).to_mesh_data()
+    data = AtomSpheresMesh([], geometry=geometry).to_mesh_data()
     assert data.vertices.shape[0] == 0
     assert data.draw_info.vertices_per_item == geometry.vertices_per_item
     assert data.draw_info.elements_per_item == geometry.elements_per_item
@@ -269,13 +271,13 @@ def test_atoms_mesh_empty_uses_geometry_draw_info() -> None:
 
 def test_to_legacy_glmesh_without_upload() -> None:
     atom = _Atom(0.0, 0.0, 0.0, "B")
-    mesh = AtomsMesh([atom])
+    mesh = AtomSpheresMesh([atom])
     legacy = mesh.to_legacy_glmesh(upload=False)
     assert legacy.vao is None
 
 
 def test_to_glmesh_without_upload() -> None:
     atom = _Atom(0.0, 0.0, 0.0, "A")
-    mesh = AtomsMesh([atom])
+    mesh = AtomSpheresMesh([atom])
     modern = mesh.to_glmesh(upload=False)
     assert modern.vao is None
