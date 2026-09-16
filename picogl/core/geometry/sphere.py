@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import math
 from collections.abc import Iterator
+from dataclasses import dataclass
 
 import numpy as np
 from picogl.core.vec3 import Vec3
@@ -73,20 +74,46 @@ def sphere_mesh(
     )
 
 
+@dataclass(frozen=True, slots=True)
+class SphereGeometrySpec:
+    """Parameters controlling sphere mesh generation.
+
+    This is configuration only: it does not build geometry. Pass an instance
+    to :class:`SphereMesh`.
+    """
+
+    radius: float = 1.0
+    slices: int = 16
+    stacks: int = 16
+
+
 class SphereMesh:
-    """Unit Sphere Mesh"""
+    """Build origin-centered sphere geometry from a :class:`SphereGeometrySpec`.
 
-    def __init__(
-        self,
-        radius: float = 1.0,
-        slices: int = 16,
-        stacks: int = 16,
-    ):
-        self.radius = radius
-        self.slices = slices
-        self.stacks = stacks
+    Derived vertex and index counts live here so the spec stays parameters
+    only. :meth:`build` returns colorless :class:`~picogl.renderer.mesh_arrays.MeshArrays`.
+    """
 
-    def build(self):
+    def __init__(self, spec: SphereGeometrySpec) -> None:
+        self.spec = spec
+
+    @property
+    def vertices_per_item(self) -> int:
+        """Number of vertices in one sphere instance."""
+        return (self.spec.stacks + 1) * (self.spec.slices + 1)
+
+    @property
+    def elements_per_item(self) -> int:
+        """Number of triangle indices in one sphere instance."""
+        return 6 * self.spec.stacks * self.spec.slices
+
+    def build(self) -> MeshArrays:
+        """Build a sphere template centered at the origin.
+
+        :return: Positions, normals, and indices with no colors
+        """
         return sphere_mesh(
-            radius=self.radius, stacks=self.stacks, slices=self.slices
+            radius=self.spec.radius,
+            slices=self.spec.slices,
+            stacks=self.spec.stacks,
         )

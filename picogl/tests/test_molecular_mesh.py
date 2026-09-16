@@ -10,11 +10,10 @@ import pytest
 from molib.gl.mesh.atom.point import AtomPointsMesh
 from molib.gl.mesh.atom.point_geometry import AtomPointGeometry
 from molib.gl.mesh.atom.sphere import AtomSpheresMesh
-from molib.gl.mesh.atom.sphere_geometry import AtomSphereGeometry
 from molib.gl.mesh.bond.cylinder import BondCylindersMesh
 from molib.gl.mesh.bond.line import BondLinesMesh
 from picogl.backend.gl.enums import GLDrawMode
-from picogl.core.geometry.sphere import sphere_mesh
+from picogl.core.geometry.sphere import SphereGeometrySpec, SphereMesh, sphere_mesh
 from picogl.renderer.molecular import BondGeometry
 
 
@@ -249,11 +248,12 @@ def test_bonds_mesh_custom_radius_and_color_fn() -> None:
 
 def test_atoms_mesh_custom_geometry() -> None:
     atom = _Atom(0.0, 0.0, 0.0, "A")
-    geometry = AtomSphereGeometry(radius=0.4, slices=4, stacks=4)
-    data = AtomSpheresMesh([atom], geometry=geometry).to_mesh_data()
-    assert data.vertices.shape[0] == geometry.vertices_per_item
-    assert data.draw_info.elements_per_item == geometry.elements_per_item
-    assert data.draw_info.vertices_per_item == geometry.vertices_per_item
+    spec = SphereGeometrySpec(radius=0.4, slices=4, stacks=4)
+    sphere = SphereMesh(spec)
+    data = AtomSpheresMesh([atom], geometry=spec).to_mesh_data()
+    assert data.vertices.shape[0] == sphere.vertices_per_item
+    assert data.draw_info.elements_per_item == sphere.elements_per_item
+    assert data.draw_info.vertices_per_item == sphere.vertices_per_item
 
 
 def test_bonds_mesh_custom_geometry() -> None:
@@ -385,11 +385,12 @@ def test_bonds_mesh_color_bonds_false_broadcasts_bond_color() -> None:
 
 
 def test_atoms_mesh_empty_uses_geometry_draw_info() -> None:
-    geometry = AtomSphereGeometry(slices=8, stacks=8)
-    data = AtomSpheresMesh([], geometry=geometry).to_mesh_data()
+    spec = SphereGeometrySpec(slices=8, stacks=8)
+    sphere = SphereMesh(spec)
+    data = AtomSpheresMesh([], geometry=spec).to_mesh_data()
     assert data.vertices.shape[0] == 0
-    assert data.draw_info.vertices_per_item == geometry.vertices_per_item
-    assert data.draw_info.elements_per_item == geometry.elements_per_item
+    assert data.draw_info.vertices_per_item == sphere.vertices_per_item
+    assert data.draw_info.elements_per_item == sphere.elements_per_item
 
 
 def test_to_legacy_glmesh_without_upload() -> None:

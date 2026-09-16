@@ -3,24 +3,24 @@
 from __future__ import annotations
 
 import numpy as np
-from molib.gl.mesh.atom.sphere_geometry import AtomSphereGeometry
-from picogl.core.geometry.sphere import sphere_mesh
+from picogl.core.geometry.sphere import SphereGeometrySpec, SphereMesh, sphere_mesh
 from picogl.renderer.mesh_arrays import MeshArrays
 from picogl.renderer.molecular.bond_geometry import BondGeometry
 
 
-def test_atom_geometry_counts_match_unit_sphere() -> None:
-    geometry = AtomSphereGeometry(radius=0.2, slices=16, stacks=16)
-    sphere = sphere_mesh(0.2, 16, 16)
-    data = geometry.build()
+def test_sphere_mesh_counts_match_sphere_mesh() -> None:
+    spec = SphereGeometrySpec(radius=0.2, slices=16, stacks=16)
+    sphere = SphereMesh(spec)
+    data = sphere.build()
+    expected = sphere_mesh(0.2, 16, 16)
     built = np.asarray(data.positions, dtype=np.float32).reshape(-1, 3)
     assert isinstance(data, MeshArrays)
     assert data.colors is None
-    assert geometry.vertices_per_item == 17 * 17
-    assert geometry.elements_per_item == 16 * 16 * 6
-    assert built.shape[0] == geometry.vertices_per_item
-    assert np.asarray(data.indices).size == geometry.elements_per_item
-    np.testing.assert_allclose(built, sphere.positions)
+    assert sphere.vertices_per_item == 17 * 17
+    assert sphere.elements_per_item == 16 * 16 * 6
+    assert built.shape[0] == sphere.vertices_per_item
+    assert np.asarray(data.indices).size == sphere.elements_per_item
+    np.testing.assert_allclose(built, expected.positions)
 
 
 def test_bond_geometry_open_cylinder_topology() -> None:
