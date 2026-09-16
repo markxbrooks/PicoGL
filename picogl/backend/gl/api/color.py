@@ -16,7 +16,7 @@ from OpenGL.GL import glColorMaterial
 from OpenGL.raw.GL.VERSION.GL_1_0 import glColor3f, glColor4f
 from picogl.backend.gl.capability import GLMaterialFace
 from picogl.backend.gl.state.fill import GLColorMaterialMode
-from picogl.core.rgbcolor import RGBColor
+from picogl.core.rgbcolor import RGBColor, RGBTuple
 
 
 def gl_color_material(face: GLMaterialFace, mode: GLColorMaterialMode) -> None:
@@ -41,6 +41,9 @@ def gl_color_material(face: GLMaterialFace, mode: GLColorMaterialMode) -> None:
 
 
 def gl_color_4f(color: tuple[float, float, float, float]) -> None:
+    """
+    Sets the current OpenGL color using the RGB + alpha values provided.
+    """
     glColor4f(*color)
 
 
@@ -78,3 +81,12 @@ def gl_color_rgb(rgb_color: RGBColor) -> None:
         None
     """
     gl_color_3f(rgb_color.to_tuple())
+
+
+def gl_color_with_alpha(color: tuple | None, alpha: float) -> tuple[float, float, float]:
+    """Use override colour"""
+    if color is None:
+        color = RGBTuple.BLUE
+    # Use glColor4f to include alpha value
+    gl_color_4f((color[0], color[1], color[2], 1.0 - alpha))
+    return color

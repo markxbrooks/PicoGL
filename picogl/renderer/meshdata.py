@@ -711,11 +711,7 @@ class MeshData:
             # Note: Alpha blending for vertex colors would require 4-component colors
             # For now, we'll use the alpha value for the overall transparency
         else:
-            # Use override colour
-            if color is None:
-                color = RGBTuple.BLUE
-            # Use glColor4f to include alpha value
-            gl_color_4f(color[0], color[1], color[2], 1.0 - alpha)
+            color = gl_color_with_alpha(color, alpha)
 
         # Draw as wireframe for better visibility
         gl_polygon_mode(GLMaterialFace.FRONT_AND_BACK, fill_mode)
