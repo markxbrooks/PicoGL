@@ -33,6 +33,7 @@ from unittest.mock import MagicMock, call, patch
 
 import numpy as np
 from OpenGL import GL
+from picogl.core.rgbcolor import RGBTuple
 from picogl.renderer.meshdata import MeshData
 
 
@@ -72,12 +73,12 @@ class TestMeshData(unittest.TestCase):
             patch("picogl.renderer.meshdata.gl_color_array_pointer"),
             patch("picogl.renderer.meshdata.gl_texcoord_array_pointer"),
             patch("picogl.renderer.meshdata.gl_draw_elements"),
-            patch("picogl.renderer.meshdata.GL.glLineWidth"),
-            patch("picogl.renderer.meshdata.GL.glEnable"),
-            patch("picogl.renderer.meshdata.GL.glDisable"),
-            patch("picogl.renderer.meshdata.GL.glBlendFunc"),
-            patch("picogl.renderer.meshdata.GL.glColor4f"),
-            patch("picogl.renderer.meshdata.GL.glPolygonMode"),
+            patch("picogl.renderer.meshdata.gl_line_width"),
+            patch("picogl.renderer.meshdata.gl_enable"),
+            patch("picogl.renderer.meshdata.gl_disable"),
+            patch("picogl.renderer.meshdata.gl_blend_func"),
+            patch("picogl.renderer.meshdata.gl_color_4f"),
+            patch("picogl.renderer.meshdata.gl_polygon_mode"),
         ]
 
         # Start all patches
@@ -217,9 +218,7 @@ class TestMeshData(unittest.TestCase):
         vertex_count = 3
         result = MeshData._default_colors_for_vertices(vertex_count)
 
-        expected = np.array(
-            [1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0], dtype=np.float32
-        )
+        expected = np.tile(np.array(RGBTuple.RED, dtype=np.float32), (vertex_count, 1)).reshape(-1)
         np.testing.assert_array_equal(result, expected)
 
     def test_default_normals_for_vertices(self):

@@ -23,12 +23,13 @@ from picogl.backend.gl.api.pointer import (
     gl_vertex_array_pointer,
 )
 from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
-from picogl.backend.gl.capability import GLBlendFactor, GLPipelineCapability
+from picogl.backend.gl.api.enable import gl_disable, gl_enable
+from picogl.backend.gl.capability import GLBlendFactor, GLMaterialFace, GLPipelineCapability
 from picogl.backend.gl.enums import GLDrawMode, GLIndexType, GLNumeric
 from picogl.backend.gl.legacy.setup_vbg import VertexBufferGroup, setup_vbg
 from picogl.backend.gl.state.client import GLClientState
 from picogl.backend.gl.state.fill import GLFillMode
-from picogl.core.rgbcolor import RGBColor
+from picogl.core.rgbcolor import RGBColor, RGBTuple
 from picogl.gpu.buffers.attributes import CanonicalVertexAttrs
 from picogl.gpu.buffers.factory.validation import validate_input_data
 from picogl.gpu.buffers.helper import as_vec3_array
@@ -522,7 +523,7 @@ class MeshData:
     @classmethod
     def _default_colors_for_vertices(cls, vertex_count: int) -> np.ndarray:
         """Simple default: red colour per vertex"""
-        colors = np.tile(np.array([1.0, 0.0, 0.0], dtype=np.float32), (vertex_count, 1))
+        colors = np.tile(np.array(RGBTuple.RED, dtype=np.float32), (vertex_count, 1))
         return colors.reshape(-1)
 
     @classmethod
@@ -712,7 +713,7 @@ class MeshData:
         else:
             # Use override colour
             if color is None:
-                color = (0.0, 0.0, 1.0)  # Default blue
+                color = RGBTuple.BLUE
             # Use glColor4f to include alpha value
             gl_color_4f(color[0], color[1], color[2], 1.0 - alpha)
 

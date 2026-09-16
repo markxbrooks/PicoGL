@@ -132,6 +132,19 @@ for name, rgb in _COLOR_VALUES.items():
     setattr(RGBAColor, name, RGBAColor(*rgb, 1.0))
 
 
+class RGBTuple:
+    """Named RGB triples in ``[0, 1]`` (for numpy tiling and ``glColor``).
+
+    Values come from :data:`_COLOR_VALUES` so they stay aligned with
+    :class:`RGBColor`.
+    """
+
+    WHITE = _COLOR_VALUES["WHITE"]
+    BLACK = _COLOR_VALUES["BLACK"]
+    RED = _COLOR_VALUES["RED"]
+    BLUE = _COLOR_VALUES["BLUE"]
+
+
 @dataclass(frozen=False)
 class Coord:
     """RGB color"""

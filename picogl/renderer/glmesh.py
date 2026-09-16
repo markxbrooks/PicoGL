@@ -16,6 +16,7 @@ from numpy._typing import _64Bit
 from picogl.backend.gl.api.glcleanup import gl_release_vertex_array_object
 from picogl.backend.gl.enums import GLDrawMode, GLNumeric
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
+from picogl.core.rgbcolor import RGBTuple
 from picogl.gpu.buffers.attributes import AttributeSpec
 from picogl.gpu.buffers.helper import as_vec3_array
 from picogl.gpu.buffers.mesh_owner import MeshDataOwner
@@ -113,7 +114,7 @@ class GLMesh(MeshDataOwner):
         self.colors = (
             as_vec3_array(colors)
             if colors is not None
-            else np.tile((0.0, 0.0, 1.0), (nverts, 1)).astype(np.float32)
+            else np.tile(RGBTuple.BLUE, (nverts, 1)).astype(np.float32)
         )
         self.normals = (
             as_vec3_array(normals)

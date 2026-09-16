@@ -40,7 +40,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT
 from OpenGL.raw.GL.VERSION.GL_1_1 import GL_COLOR_ARRAY, GL_VERTEX_ARRAY
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
-from picogl.renderer.legacy_glmesh import LegacyGLMesh
+from picogl.renderer.legacy_glmesh import LegacyGLMesh, RGBTuple
 from picogl.renderer.meshdata import MeshData
 
 
@@ -73,8 +73,8 @@ class TestLegacyGLMesh(unittest.TestCase):
 
         # Mock OpenGL functions to avoid context issues
         self.gl_patches = [
-            patch("picogl.renderer.legacy_glmesh.glDrawElements"),
-            patch("picogl.renderer.legacy_glmesh.delete_buffer_object"),
+            patch("picogl.renderer.legacy_glmesh.gl_draw_elements"),
+            patch("picogl.renderer.legacy_glmesh.gl_release_vertex_array_object"),
             patch("picogl.renderer.legacy_glmesh.legacy_client_states"),
             patch("picogl.renderer.legacy_glmesh.create_layout"),
             patch("picogl.renderer.legacy_glmesh.VertexBufferGroup"),
@@ -120,7 +120,7 @@ class TestLegacyGLMesh(unittest.TestCase):
         np.testing.assert_array_equal(mesh.indices, self.test_faces)
 
         # Test default values
-        expected_colors = np.tile((0.0, 0.0, 1.0), (4, 1)).astype(np.float32)
+        expected_colors = np.tile(RGBTuple.BLUE, (4, 1)).astype(np.float32)
         np.testing.assert_array_equal(mesh.colors, expected_colors)
 
         expected_normals = np.zeros_like(self.test_vertices)
@@ -196,7 +196,7 @@ class TestLegacyGLMesh(unittest.TestCase):
         np.testing.assert_array_equal(legacy_mesh.indices, self.test_faces)
 
         # Test default values
-        expected_colors = np.tile((0.0, 0.0, 1.0), (4, 1)).astype(np.float32)
+        expected_colors = np.tile(RGBTuple.BLUE, (4, 1)).astype(np.float32)
         np.testing.assert_array_equal(legacy_mesh.colors, expected_colors)
 
     def test_from_mesh_data_without_uvs(self):
@@ -523,7 +523,7 @@ class TestLegacyGLMesh(unittest.TestCase):
         mesh.vao = mock_vao
         mesh.index_count = len(self.test_faces)
 
-        with patch("picogl.renderer.legacy_glmesh.glDrawElements") as mock_draw:
+        with patch("picogl.renderer.legacy_glmesh.gl_draw_elements") as mock_draw:
             with patch(
                 "picogl.renderer.legacy_glmesh.legacy_client_states"
             ) as mock_client_states:
@@ -560,7 +560,7 @@ class TestLegacyGLMesh(unittest.TestCase):
         mesh.vao = mock_vao
         mesh.index_count = len(self.test_faces)
 
-        with patch("picogl.renderer.legacy_glmesh.glDrawElements") as mock_draw:
+        with patch("picogl.renderer.legacy_glmesh.gl_draw_elements") as mock_draw:
             with patch(
                 "picogl.renderer.legacy_glmesh.legacy_client_states"
             ) as mock_client_states:
@@ -656,7 +656,7 @@ class TestLegacyGLMesh(unittest.TestCase):
         mesh = LegacyGLMesh(vertices=self.test_vertices, faces=self.test_faces)
 
         # Should generate blue colors for all vertices
-        expected_colors = np.tile((0.0, 0.0, 1.0), (4, 1)).astype(np.float32)
+        expected_colors = np.tile(RGBTuple.BLUE, (4, 1)).astype(np.float32)
         np.testing.assert_array_equal(mesh.colors, expected_colors)
 
     def test_default_normal_generation(self):

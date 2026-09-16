@@ -35,6 +35,7 @@ from unittest.mock import MagicMock, call, patch
 
 import numpy as np
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_TRIANGLES, GL_UNSIGNED_INT
+from picogl.core.rgbcolor import RGBTuple
 from picogl.gpu.buffers.attributes import AttributeSpec
 from picogl.renderer.glmesh import GLMesh
 from picogl.renderer.meshdata import MeshData
@@ -81,6 +82,7 @@ class TestGLMesh(unittest.TestCase):
         # Mock VertexArrayObject so upload() does not require a GL context.
         self.gl_patches = [
             patch("picogl.renderer.glmesh.VertexArrayObject"),
+            patch("picogl.renderer.glmesh.gl_release_vertex_array_object"),
         ]
 
         # Start all patches
@@ -123,7 +125,7 @@ class TestGLMesh(unittest.TestCase):
         np.testing.assert_array_equal(mesh.indices, self.test_faces)
 
         # Test default values
-        expected_colors = np.tile((0.0, 0.0, 1.0), (4, 1)).astype(np.float32)
+        expected_colors = np.tile(RGBTuple.BLUE, (4, 1)).astype(np.float32)
         np.testing.assert_array_equal(mesh.colors, expected_colors)
 
         expected_normals = np.zeros_like(self.test_vertices)
@@ -202,7 +204,7 @@ class TestGLMesh(unittest.TestCase):
         np.testing.assert_array_equal(glmesh.indices, self.test_faces)
 
         # Test default values
-        expected_colors = np.tile((0.0, 0.0, 1.0), (4, 1)).astype(np.float32)
+        expected_colors = np.tile(RGBTuple.BLUE, (4, 1)).astype(np.float32)
         np.testing.assert_array_equal(glmesh.colors, expected_colors)
 
     def test_from_mesh_data_without_uvs(self):
@@ -465,7 +467,7 @@ class TestGLMesh(unittest.TestCase):
         mesh = GLMesh(vertices=self.test_vertices, faces=self.test_faces)
 
         # Should generate blue colors for all vertices
-        expected_colors = np.tile((0.0, 0.0, 1.0), (4, 1)).astype(np.float32)
+        expected_colors = np.tile(RGBTuple.BLUE, (4, 1)).astype(np.float32)
         np.testing.assert_array_equal(mesh.colors, expected_colors)
 
     def test_default_normal_generation(self):
