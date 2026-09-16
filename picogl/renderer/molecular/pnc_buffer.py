@@ -3,10 +3,8 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
-from typing import Tuple
 
 import numpy as np
-
 from picogl.renderer.mesh_arrays import MeshArrays
 from picogl.renderer.meshdata import MeshData
 
@@ -15,8 +13,9 @@ class PNCBuffer:
     """Accumulate indexed position / normal / color geometry.
 
     This class does not construct primitives. Geometry producers append via
-    :meth:`extend` or :meth:`add_instance`; :meth:`to_arrays` materializes
-    NumPy buffers for :meth:`MeshData.from_raw`.
+    :meth:`extend` (world-space :class:`~picogl.renderer.mesh_arrays.MeshArrays`)
+    or :meth:`add_instance` (translated template). :meth:`to_mesh_arrays`
+    materializes combined geometry; :meth:`to_mesh_data` is the render boundary.
     """
 
     def __init__(self) -> None:
@@ -28,62 +27,72 @@ class PNCBuffer:
 
     def add_instance(
         self,
+        mesh: MeshArrays,
         translation: Iterable[float],
-        template: MeshArrays,
-        color: Tuple[float, float, float],
+        color: tuple[float, float, float],
         *,
         scale: float = 1.0,
     ) -> None:
         """Translate a geometry template and append it with a uniform color.
 
+        Template colors are ignored; *color* is tiled onto every new vertex.
+
+        :param mesh: Origin-centered positions, normals, and local indices
         :param translation: World-space offset applied to every template vertex
-        :param template: Origin-centered positions, normals, and local indices
         :param color: RGB triple copied onto every new vertex
         :param scale: Uniform scale applied to template positions before translation
         """
-        verts = np.asarray(template.positions, dtype=np.float32)
+        verts = np.asarray(mesh.positions, dtype=np.float32)
         if scale != 1.0:
             verts = verts * np.float32(scale)
         verts = verts + np.asarray(translation, dtype=np.float32).reshape(1, 3)
         n_verts = int(verts.shape[0])
         rgb = np.asarray(color, dtype=np.float32).reshape(3)
         colors = np.broadcast_to(rgb, (n_verts, 3)).copy()
-        normals = np.asarray(template.normals, dtype=np.float32)
-        if template.indices is None:
-            indices = np.zeros((0,), dtype=np.uint32)
-        else:
-            indices = np.asarray(template.indices, dtype=np.uint32).ravel()
-            indices = indices + np.uint32(self.vertex_offset)
+        normals = np.asarray(mesh.normals, dtype=np.float32)
+        indices = self._offset_indices(mesh.indices)
         self._append_chunk(verts, normals, colors, indices, n_verts)
 
     def extend(
         self,
-        positions: Iterable[Iterable[float]],
-        normals: Iterable[Iterable[float]],
-        colors: Iterable[Tuple[float, float, float]],
-        indices: Iterable[int],
+        mesh: MeshArrays,
+        *,
+        color: tuple[float, float, float] | None = None,
     ) -> None:
-        """Append world-space vertex attributes and offset local indices.
+        """Append world-space geometry and offset local indices.
 
-        :param positions: Vertex positions already in world space
-        :param normals: Per-vertex normals
-        :param colors: Per-vertex RGB triples
-        :param indices: Triangle indices relative to this batch (not the whole buffer)
+        :param mesh: Positions, normals, and indices already in world space
+        :param color: Optional RGB triple tiled onto every vertex. Used when
+            given; otherwise *mesh.colors* is required.
+        :raises ValueError: If neither *color* nor *mesh.colors* is present
         """
-        verts = np.asarray(positions, dtype=np.float32)
-        if verts.ndim != 2:
-            verts = verts.reshape(-1, 3)
+        verts = np.asarray(mesh.positions, dtype=np.float32)
         n_verts = int(verts.shape[0])
-        norms = np.asarray(normals, dtype=np.float32)
-        if norms.ndim != 2:
-            norms = norms.reshape(-1, 3)
-        cols = np.asarray(colors, dtype=np.float32)
-        if cols.ndim != 2:
-            cols = cols.reshape(-1, 3)
+        norms = np.asarray(mesh.normals, dtype=np.float32)
+        cols = self._resolve_colors(mesh, n_verts, color)
+        indices = self._offset_indices(mesh.indices)
+        self._append_chunk(verts, norms, cols, indices, n_verts)
+
+    def _resolve_colors(
+        self,
+        mesh: MeshArrays,
+        n_verts: int,
+        color: tuple[float, float, float] | None,
+    ) -> np.ndarray:
+        if color is not None:
+            rgb = np.asarray(color, dtype=np.float32).reshape(3)
+            return np.broadcast_to(rgb, (n_verts, 3)).copy()
+        if mesh.colors is None:
+            raise ValueError("PNCBuffer.extend requires mesh.colors or color=")
+        return np.asarray(mesh.colors, dtype=np.float32)
+
+    def _offset_indices(self, indices: np.ndarray | None) -> np.ndarray:
+        if indices is None:
+            return np.zeros((0,), dtype=np.uint32)
         idxs = np.asarray(indices, dtype=np.uint32).ravel()
         if idxs.size:
             idxs = idxs + np.uint32(self.vertex_offset)
-        self._append_chunk(verts, norms, cols, idxs, n_verts)
+        return idxs
 
     def _append_chunk(
         self,
@@ -99,20 +108,30 @@ class PNCBuffer:
         self._indices.append(indices)
         self.vertex_offset += n_verts
 
+    def to_mesh_arrays(self) -> MeshArrays:
+        """Materialize accumulated chunks as combined geometry.
+
+        :return: Positions, normals, colors, and offset triangle indices
+        """
+        verts, norms, cols, idxs = self.to_arrays()
+        return MeshArrays(
+            positions=verts,
+            normals=norms,
+            colors=cols,
+            indices=idxs,
+        )
+
     def to_mesh_data(self) -> MeshData:
-        """Build a :class:`~picogl.renderer.meshdata.MeshData` from accumulated arrays.
+        """Build renderable :class:`~picogl.renderer.meshdata.MeshData`.
 
         :return: Mesh with positions, normals, colors, and triangle indices
         """
-        verts, norms, cols, idxs = self.to_arrays()
-        return MeshData.from_raw(
-            vertices=verts, normals=norms, colors=cols, indices=idxs
-        )
+        return self.to_mesh_arrays().as_meshdata()
 
     def to_arrays(
         self, dtype: np.dtype | type = np.float32
     ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-        """Return NumPy arrays suitable for :meth:`MeshData.from_raw`.
+        """Return concatenated NumPy arrays for :meth:`to_mesh_arrays`.
 
         :param dtype: Floating-point dtype for positions, normals, and colors
         :return: ``(vertices, normals, colors, indices)``

@@ -11,11 +11,11 @@ Functions:
 """
 
 import numpy as np
-from decologr import Decologr as log
 from elmo.ui.state.view import ViewState
 from numpy import ndarray
-
 from picogl.renderer import MeshData
+
+from decologr import Decologr as log
 
 
 def attach_rgba_colors_to_mesh(colors: ndarray, mesh_data: MeshData, view: ViewState):

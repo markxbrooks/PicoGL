@@ -1,9 +1,7 @@
 from typing import Optional
 
-from decologr import Decologr as log
 from OpenGL.GL import *  # pylint: disable=W0614
 from OpenGL.GLUT import *  # pylint: disable=W0614
-
 from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
 from picogl.backend.gl.capability import GLMaterialFace
 from picogl.backend.gl.enums import GLBitMask
@@ -14,6 +12,8 @@ from picogl.backend.modern.core.shader.mvp.controller import MVPController
 from picogl.core.rgbcolor import RGBAColor
 from picogl.examples.utils.world_sheet import WorldSheet
 from picogl.ui.backend.glut.window.gl import GLWindow
+
+from decologr import Decologr as log
 
 
 class MeshViewWindow(GLWindow):

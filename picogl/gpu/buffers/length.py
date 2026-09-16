@@ -5,7 +5,6 @@ from __future__ import annotations
 from typing import cast
 
 from numpy.typing import ArrayLike
-
 from picogl.protocols.drawable_buffer import (
     BufferContainer,
     DrawableBuffer,
@@ -88,7 +87,12 @@ def drawable_data_length(drawable: DrawableLengthInput) -> int:
         return 0
 
     vao = getattr(drawable, "vao", None)
-    if vao is not None and vao != 0 and not isinstance(vao, int) and vao is not drawable:
+    if (
+        vao is not None
+        and vao != 0
+        and not isinstance(vao, int)
+        and vao is not drawable
+    ):
         if not _is_mock(vao) or _has_measurable_data(vao):
             count = _data_length_from_buffer_like(vao)
             if count > 0:
@@ -117,9 +121,11 @@ def drawable_data_length(drawable: DrawableLengthInput) -> int:
     # ``drawable_data_length(self)`` and that recurses. Measure raw ``.data``.
     data = getattr(drawable, "data", None)
     if data is not None:
-        components = getattr(drawable, "components", None) or getattr(
-            drawable, "size", None
-        ) or 1
+        components = (
+            getattr(drawable, "components", None)
+            or getattr(drawable, "size", None)
+            or 1
+        )
         count = length_from_array_data(data, components=int(components))
         if count > 0:
             return count

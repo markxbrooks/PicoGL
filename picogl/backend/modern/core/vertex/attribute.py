@@ -10,7 +10,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 import numpy as np
-
 from picogl.backend.gl.enums import GLNumeric
 from picogl.gpu.buffers.attributes import AttributeSpec
 from picogl.gpu.buffers.vertex.vbo import VBOType

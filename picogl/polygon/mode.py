@@ -8,7 +8,6 @@ from contextlib import contextmanager
 from typing import Iterator
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POLYGON_MODE
-
 from picogl.backend.gl.api.get_integerv import gl_get_integerv
 from picogl.backend.gl.capability import GLMaterialFace
 from picogl.backend.gl.state.fill import GLFillMode

@@ -21,13 +21,13 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, Optional
 
-from decologr import Decologr as log
-
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.globals import PICOGL_SHADER_SRC_DIRECTORY
 from picogl.shaders.compile import compile_shaders
 from picogl.shaders.load import load_fragment_and_vertex_for_shader_type
 from picogl.shaders.type import ShaderType
+
+from decologr import Decologr as log
 
 
 @dataclass

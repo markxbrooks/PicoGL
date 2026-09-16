@@ -1,10 +1,9 @@
 from __future__ import annotations
 
 from OpenGL.raw.GL.VERSION.GL_1_1 import glDrawArrays
-
-from picogl.backend.modern.core.vertex.array.draw_spec import DrawSpec
 from picogl.backend.gl.api.draw.helper import gl_enum
 from picogl.backend.gl.enums import GLDrawMode
+from picogl.backend.modern.core.vertex.array.draw_spec import DrawSpec
 
 
 def gl_draw_arrays(

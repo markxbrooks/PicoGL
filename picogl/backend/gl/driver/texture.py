@@ -7,7 +7,6 @@ custom driver and utility classes to abstract and simplify texture management.
 """
 
 from OpenGL.raw.GL.ARB.internalformat_query2 import GL_TEXTURE_2D
-
 from picogl.backend.gl.api import gl_bind_texture
 from picogl.backend.gl.api.texture.delete import gl_delete_textures
 from picogl.texture.gltexture_driver import GLTextureDriver

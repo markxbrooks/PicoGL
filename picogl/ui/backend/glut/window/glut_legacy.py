@@ -1,8 +1,4 @@
 import numpy as np
-from decologr import Decologr as log
-from decologr import setup_logging
-from pyglm import glm
-
 import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
 from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.task.gl_init import legacy_init_gl_list, paint_gl_list
@@ -15,6 +11,10 @@ from picogl.renderer import GLResourceRegistry
 from picogl.renderer.object import ObjectRenderer
 from picogl.ui.backend.glut.mouse import RotationInteraction
 from picogl.ui.backend.glut.window.gl import GLWindow
+from pyglm import glm
+
+from decologr import Decologr as log
+from decologr import setup_logging
 
 
 class GlutRendererWindow(GLWindow):

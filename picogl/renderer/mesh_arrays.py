@@ -6,7 +6,6 @@ from dataclasses import dataclass, replace
 from typing import Optional
 
 import numpy as np
-
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.renderer.draw_spec import MeshDrawInfo
 from picogl.renderer.meshdata import MeshData

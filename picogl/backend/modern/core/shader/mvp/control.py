@@ -1,8 +1,7 @@
 import math
 
-from pyglm import glm
-
 from picogl.core.camera import CameraParameters, ProjectionConfig
+from pyglm import glm
 
 
 class MVPControl:

@@ -6,7 +6,6 @@ from unittest.mock import MagicMock, patch
 
 import numpy as np
 from OpenGL.raw.GL.VERSION.GL_1_1 import GL_TRIANGLES
-
 from picogl.backend.geometry.adapter import DrawableBufferAdapter
 from picogl.backend.geometry.factory import LegacyBinding, ModernBinding
 from picogl.backend.geometry.legacy_mesh import LegacyMesh

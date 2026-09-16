@@ -1,7 +1,6 @@
 import ctypes
 
 import numpy as np
-
 from picogl.backend.gl.enums import GLBufferTarget, GLNumeric
 from picogl.backend.legacy.core.vertex.buffer.vertex import LegacyVBO
 

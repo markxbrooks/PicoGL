@@ -6,7 +6,6 @@ from typing import Callable
 
 import numpy as np
 from OpenGL.GL import GLuint
-
 from picogl.backend.gl.api import gl_bind_buffer, gl_generate_buffers
 from picogl.backend.gl.api.buffer.data import gl_buffer_data
 from picogl.backend.gl.api.buffer.upload import (

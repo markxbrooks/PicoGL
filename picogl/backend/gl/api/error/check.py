@@ -4,9 +4,10 @@ Error checking
 
 from __future__ import annotations
 
-from decologr import Decologr as log
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_NO_ERROR, glGetError
 from OpenGL.raw.GLU import gluErrorString
+
+from decologr import Decologr as log
 
 # Re-export for callers that must not import OpenGL directly.
 __all__ = [

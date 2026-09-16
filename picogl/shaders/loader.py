@@ -5,8 +5,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from decologr import Decologr as log
-
 from picogl.backend.modern.core.shader.context import gl_context_available
 from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.globals import SHADER_SRC_DIRECTORY
@@ -17,6 +15,8 @@ from picogl.shaders.load import (
     load_shader_source_string,
 )
 from picogl.shaders.type import ShaderType
+
+from decologr import Decologr as log
 
 
 @dataclass(frozen=True)

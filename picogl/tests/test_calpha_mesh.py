@@ -6,7 +6,6 @@ from types import SimpleNamespace
 from typing import Any
 
 import numpy as np
-
 from molib.core.constants import MoLibConstant
 from molib.gl.mesh.calpha import CalphaMeshBuilder
 from picogl.backend.gl.enums import GLDrawMode
@@ -74,12 +73,8 @@ def test_calpha_mesh_filters_to_ca_and_sorts_by_residue() -> None:
 def test_calpha_mesh_skips_chain_with_one_ca() -> None:
     atoms = [
         _atom(MoLibConstant.PEPTIDE_CHAIN_ATOMNAME, 1, (1.0, 0.0, 0.0), chain_id="A"),
-        _atom(
-            MoLibConstant.PEPTIDE_CHAIN_ATOMNAME, 1, (3.0, 0.0, 0.0), chain_id="B"
-        ),
-        _atom(
-            MoLibConstant.PEPTIDE_CHAIN_ATOMNAME, 2, (4.0, 0.0, 0.0), chain_id="B"
-        ),
+        _atom(MoLibConstant.PEPTIDE_CHAIN_ATOMNAME, 1, (3.0, 0.0, 0.0), chain_id="B"),
+        _atom(MoLibConstant.PEPTIDE_CHAIN_ATOMNAME, 2, (4.0, 0.0, 0.0), chain_id="B"),
     ]
     meshes = CalphaMeshBuilder(
         {"A": (1.0, 0.0, 0.0), "B": (0.0, 1.0, 0.0)},
@@ -122,9 +117,7 @@ def test_calpha_mesh_domain_mode_uses_atom_color() -> None:
             color=(0.4, 0.5, 0.6),
         ),
     ]
-    meshes = CalphaMeshBuilder({"A": (0.8, 0.1, 0.2)}, _domain_color_fn).build(
-        atoms
-    )
+    meshes = CalphaMeshBuilder({"A": (0.8, 0.1, 0.2)}, _domain_color_fn).build(atoms)
 
     np.testing.assert_array_equal(
         meshes["A"].colors,
@@ -137,9 +130,9 @@ def test_calpha_mesh_as_meshdata_is_unindexed_line_strip() -> None:
         _atom(MoLibConstant.PEPTIDE_CHAIN_ATOMNAME, 1, (1.0, 0.0, 0.0)),
         _atom(MoLibConstant.PEPTIDE_CHAIN_ATOMNAME, 2, (2.0, 0.0, 0.0)),
     ]
-    arrays = CalphaMeshBuilder({"A": (1.0, 0.0, 0.0)}, _chain_color_fn).build(
-        atoms
-    )["A"]
+    arrays = CalphaMeshBuilder({"A": (1.0, 0.0, 0.0)}, _chain_color_fn).build(atoms)[
+        "A"
+    ]
     mesh = arrays.as_meshdata(mode=GLDrawMode.LINE_STRIP, indexed=False)
 
     assert mesh.draw_info.mode == GLDrawMode.LINE_STRIP

@@ -17,9 +17,9 @@ from typing import TYPE_CHECKING, Callable, Optional, TypeVar
 from weakref import WeakKeyDictionary
 
 import numpy as np
-from decologr import Decologr as log
-
 from picogl.shaders import ShaderType
+
+from decologr import Decologr as log
 
 if TYPE_CHECKING:
     from picogl.backend.modern.core.shader.program import ShaderProgram

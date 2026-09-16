@@ -13,7 +13,6 @@ from typing import Any
 
 import numpy as np
 from elmo.globals import RESOURCE_DIR
-
 from picogl.backend.gl.api import gl_bind_texture
 from picogl.backend.gl.driver.capability import GLCapabilityDriver
 from picogl.texture.gltexture import GLTexture

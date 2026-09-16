@@ -7,9 +7,7 @@ handle OpenGL-related state objects and simplify rendering workflows.
 from typing import Any, Optional, Union
 
 import numpy as np
-from decologr import Decologr as log
 from numpy import dtype, generic, ndarray
-
 from picogl.backend.gl.api import (
     gl_disable_legacy_client_state,
     gl_draw_elements,
@@ -44,7 +42,12 @@ from picogl.renderer.draw_spec import (
 )
 from picogl.utils.loader.object_data import ObjectData
 
-def np_positions_to_normal_array(positions: ndarray[Any, dtype[Any]] | list[Any]) -> ndarray[Any, dtype[Any]]:
+from decologr import Decologr as log
+
+
+def np_positions_to_normal_array(
+    positions: ndarray[Any, dtype[Any]] | list[Any],
+) -> ndarray[Any, dtype[Any]]:
     """Create normals from positions."""
     normals = np.array(
         [
@@ -54,6 +57,7 @@ def np_positions_to_normal_array(positions: ndarray[Any, dtype[Any]] | list[Any]
         dtype=np.float32,
     )
     return normals
+
 
 class MeshData:
     """
@@ -143,7 +147,9 @@ class MeshData:
 
         return indices.astype(np.uint32).ravel()
 
-    def as_indexed_arrays(self) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    def as_indexed_arrays(
+        self,
+    ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
         """Unpack :meth:`spheres_for_atoms` output for tests and legacy tuple call sites."""
         return (
             np.asarray(self.vertices, dtype=np.float32),
@@ -165,9 +171,8 @@ class MeshData:
         return (
             np.asarray(self.vertices, dtype=np.float32),
             np.asarray(self.colors, dtype=np.float32),
-            np_positions_to_normal_array(positions)
+            np_positions_to_normal_array(positions),
         )
-
 
     def resolved_draw_info(self) -> MeshDrawInfo:
         """Return the mesh draw layout (always set in ``__init__``)."""

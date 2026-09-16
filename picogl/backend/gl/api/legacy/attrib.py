@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import glPopAttrib, glPushAttrib
-
 from picogl.backend.gl.enums.bitmask import GLBitMask
 
 

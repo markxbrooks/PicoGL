@@ -14,11 +14,9 @@ import os
 from typing import TYPE_CHECKING
 
 import numpy as np
-
 from elmo.glsl.layouts import StrideCalculator, VBOComponents
-from picogl.backend.gl.enums import GLNumeric
+from picogl.backend.gl.enums import GLDrawMode, GLNumeric
 from picogl.boolean import GLBoolean
-from picogl.backend.gl.enums import GLDrawMode
 from picogl.gpu.buffers.vertex.aliases import VertexBufferRole
 from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
 

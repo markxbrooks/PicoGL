@@ -6,7 +6,6 @@ import math
 from collections.abc import Iterator
 
 import numpy as np
-
 from picogl.core.vec3 import Vec3
 from picogl.renderer.mesh_arrays import MeshArrays
 
@@ -27,12 +26,12 @@ def generate_ring(radius: float, latitude: float, slices: int) -> list[Vec3]:
     return [Vec3.sphere(radius, latitude, lng) for lng in iter_longitudes(slices)]
 
 
-def unit_sphere_mesh(
+def sphere_mesh(
     radius: float = 1.0,
     slices: int = 16,
     stacks: int = 16,
 ) -> MeshArrays:
-    """Build a unit-sphere triangle mesh centered at the origin.
+    """Build a sphere triangle mesh centered at the origin.
 
     This is a geometry producer only: it does not instance, color, or batch
     spheres.
@@ -72,3 +71,22 @@ def unit_sphere_mesh(
         normals=np.array(normals, dtype=np.float32),
         indices=np.array(indices, dtype=np.uint32),
     )
+
+
+class SphereMesh:
+    """Unit Sphere Mesh"""
+
+    def __init__(
+        self,
+        radius: float = 1.0,
+        slices: int = 16,
+        stacks: int = 16,
+    ):
+        self.radius = radius
+        self.slices = slices
+        self.stacks = stacks
+
+    def build(self):
+        return sphere_mesh(
+            radius=self.radius, stacks=self.stacks, slices=self.slices
+        )

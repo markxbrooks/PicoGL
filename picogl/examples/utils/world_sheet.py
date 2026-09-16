@@ -3,8 +3,6 @@ World Sheet Widget
 """
 
 import numpy as np
-from pyglm import glm
-
 from picogl.backend.gl.api import (
     gl_bind_buffer,
     gl_buffer_data,
@@ -21,6 +19,7 @@ from picogl.backend.modern.core.shader.program import ShaderProgram
 from picogl.backend.modern.core.uniform.location import gl_get_uniform_location
 from picogl.backend.modern.renderers.mesh import ShaderMeshRenderer
 from picogl.boolean import GLBoolean
+from pyglm import glm
 
 
 class WorldSheet(ShaderMeshRenderer):

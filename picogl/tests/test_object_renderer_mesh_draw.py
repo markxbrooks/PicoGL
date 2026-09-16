@@ -3,7 +3,6 @@
 from unittest.mock import MagicMock
 
 import numpy as np
-
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.renderer.meshdata import MeshData
 from picogl.renderer.object import ObjectRenderer

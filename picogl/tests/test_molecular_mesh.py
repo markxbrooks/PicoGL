@@ -7,16 +7,15 @@ from types import SimpleNamespace
 
 import numpy as np
 import pytest
-
-from picogl.backend.gl.enums import GLDrawMode
-from picogl.core.geometry.sphere import unit_sphere_mesh
-from picogl.renderer.molecular import BondGeometry
-from molib.gl.mesh.atom.sphere_geometry import AtomSphereGeometry
 from molib.gl.mesh.atom.point import AtomPointsMesh
 from molib.gl.mesh.atom.point_geometry import AtomPointGeometry
 from molib.gl.mesh.atom.sphere import AtomSpheresMesh
+from molib.gl.mesh.atom.sphere_geometry import AtomSphereGeometry
 from molib.gl.mesh.bond.cylinder import BondCylindersMesh
 from molib.gl.mesh.bond.line import BondLinesMesh
+from picogl.backend.gl.enums import GLDrawMode
+from picogl.core.geometry.sphere import sphere_mesh
+from picogl.renderer.molecular import BondGeometry
 
 
 @dataclass
@@ -45,7 +44,7 @@ def test_atom_xyz_prefers_coords_over_xyz() -> None:
     assert atom_xyz(_Coords()) == (1.0, 2.0, 3.0)
     assert atom_xyz(_XYZ()) == (4.0, 5.0, 6.0)
     assert atom_xyz(np.array([7.0, 8.0, 9.0])) == (7.0, 8.0, 9.0)
-    sphere = unit_sphere_mesh(radius=0.2, slices=16, stacks=16)
+    sphere = sphere_mesh(radius=0.2, slices=16, stacks=16)
     assert sphere.positions.shape == (17 * 17, 3)
     assert sphere.normals.shape == sphere.positions.shape
     assert sphere.indices.size == 16 * 16 * 6
@@ -71,7 +70,7 @@ def test_atoms_mesh_single_atom_counts() -> None:
     mesh = AtomSpheresMesh([atom], radius=0.2, slices=16, stacks=16)
     data = mesh.to_mesh_data()
 
-    template = unit_sphere_mesh(0.2, 16, 16)
+    template = sphere_mesh(0.2, 16, 16)
     assert data.vertices.shape[0] == template.positions.shape[0]
     assert data.normals.shape[0] == template.positions.shape[0]
     assert data.colors.shape[0] == template.positions.shape[0]
@@ -90,7 +89,7 @@ def test_atoms_mesh_accepts_coords_attribute() -> None:
     """MoLib Atom3D-style objects expose coords, not x/y/z."""
     atom = _AtomCoords((1.0, 2.0, 3.0), "A")
     data = AtomSpheresMesh([atom], radius=0.2, slices=4, stacks=4).to_mesh_data()
-    template = unit_sphere_mesh(0.2, 4, 4)
+    template = sphere_mesh(0.2, 4, 4)
     assert data.vertices[0, 0] == pytest.approx(1.0 + template.positions[0, 0])
 
 
@@ -126,7 +125,7 @@ def test_atoms_mesh_two_atoms_vectorized_expand() -> None:
         stacks=4,
     ).to_mesh_data()
 
-    template = unit_sphere_mesh(0.2, 4, 4)
+    template = sphere_mesh(0.2, 4, 4)
     n_verts = template.positions.shape[0]
     n_idx = int(template.indices.size)
 
@@ -139,9 +138,7 @@ def test_atoms_mesh_two_atoms_vectorized_expand() -> None:
     np.testing.assert_allclose(
         data.vertices[n_verts:], template.positions + np.array([5.0, 0.0, 0.0])
     )
-    np.testing.assert_allclose(
-        data.normals, np.tile(template.normals, (2, 1))
-    )
+    np.testing.assert_allclose(data.normals, np.tile(template.normals, (2, 1)))
     np.testing.assert_allclose(
         data.colors[:n_verts], np.broadcast_to((1.0, 0.0, 0.0), (n_verts, 3))
     )
@@ -166,7 +163,7 @@ def test_atoms_mesh_per_atom_radii_override_uniform_radius() -> None:
         stacks=4,
         radii=(0.5, 2.0),
     ).to_mesh_data()
-    template = unit_sphere_mesh(1.0, 4, 4)
+    template = sphere_mesh(1.0, 4, 4)
     n_verts = template.positions.shape[0]
     np.testing.assert_allclose(data.vertices[:n_verts], template.positions * 0.5)
     np.testing.assert_allclose(
@@ -325,7 +322,9 @@ def test_bonds_mesh_skips_zero_length_without_repeating_color() -> None:
     data = BondCylindersMesh(
         [atom_a, atom_b, collapsed],
         indices=[[0, 0], [0, 1], [2, 2]],
-        color_fn=lambda atom: (0.0, 0.0, 1.0) if atom.chain_id == "A" else (1.0, 0.0, 0.0),
+        color_fn=lambda atom: (
+            (0.0, 0.0, 1.0) if atom.chain_id == "A" else (1.0, 0.0, 0.0)
+        ),
         color_bonds=True,
         segments=4,
     ).to_mesh_data()

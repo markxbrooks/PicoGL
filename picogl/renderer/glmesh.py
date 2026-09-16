@@ -13,7 +13,6 @@ import numpy as np
 from elmo.glsl.layouts import get_layout_for_shader_type
 from numpy import dtype, floating, generic, ndarray
 from numpy._typing import _64Bit
-
 from picogl.backend.gl.api.glcleanup import gl_release_vertex_array_object
 from picogl.backend.gl.enums import GLDrawMode, GLNumeric
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
@@ -364,5 +363,7 @@ class GLMesh:
                 draw_mode = GLDrawMode.TRIANGLES
         execute_draw_spec(
             self.vao,
-            MeshDrawSpec(mode=draw_mode, count=int(self.index_count), first=0, pointer=0),
+            MeshDrawSpec(
+                mode=draw_mode, count=int(self.index_count), first=0, pointer=0
+            ),
         )

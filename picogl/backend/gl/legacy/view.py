@@ -53,7 +53,6 @@ class LegacyGLRotation:
         self.z = 0.0
 
 
-
 @dataclass
 class CameraPerspective:
     """

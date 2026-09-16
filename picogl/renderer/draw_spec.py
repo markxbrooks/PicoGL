@@ -11,7 +11,6 @@ from dataclasses import dataclass
 from typing import Any
 
 import numpy as np
-
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.backend.modern.core.vertex.array.draw_spec import DrawSpec
 

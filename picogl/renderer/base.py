@@ -18,7 +18,6 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     glFlush,
     glLineWidth,
 )
-
 from picogl.backend.gl.api.enable import gl_disable, gl_enable
 from picogl.renderer.abstract import AbstractRenderer
 

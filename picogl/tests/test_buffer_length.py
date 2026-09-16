@@ -3,7 +3,6 @@
 import unittest
 
 import numpy as np
-
 from picogl.gpu.buffers.length import (
     drawable_data_length,
     length_from_array_data,
@@ -69,7 +68,6 @@ class TestBufferLengthHelpers(unittest.TestCase):
 
         group = _Group()
         self.assertEqual(group.data_length(), 4)
-
 
     def test_drawable_data_length_does_not_recurse_into_self(self):
         """Wrappers that implement data_length via drawable_data_length(self)."""

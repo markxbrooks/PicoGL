@@ -4,15 +4,15 @@ Object renderer module.
 
 from pathlib import Path
 
-from decologr import Decologr as log
-
 from picogl.backend.gl.enums import GLDrawMode, GLNumeric
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
+from picogl.gpu.buffers.attributes import AttributeSpec
 from picogl.renderer import GLResourceRegistry, MeshData, RendererBase
 from picogl.renderer.draw_spec import MeshDrawInfo
-from picogl.gpu.buffers.attributes import AttributeSpec
 from picogl.utils.loader.texture import TextureLoader
 from picogl.utils.texture import bind_texture_array
+
+from decologr import Decologr as log
 
 
 class ObjectRenderer(RendererBase):
@@ -36,9 +36,7 @@ class ObjectRenderer(RendererBase):
         self.data = data
         if self.data is not None:
             self.data.vertex_count = len(self.data.vertices.flatten()) // 3
-            self.data.draw_info = MeshDrawInfo(
-                mode=GLDrawMode.TRIANGLES, indexed=False
-            )
+            self.data.draw_info = MeshDrawInfo(mode=GLDrawMode.TRIANGLES, indexed=False)
 
         self.show_model = True
         self.glsl_dir = glsl_dir
@@ -91,7 +89,9 @@ class ObjectRenderer(RendererBase):
                 )
             if self.data.normals is not None:
                 model_vao.add_vbo(
-                    AttributeSpec(name="normal", index=2, size=3, dtype=GLNumeric.FLOAT),
+                    AttributeSpec(
+                        name="normal", index=2, size=3, dtype=GLNumeric.FLOAT
+                    ),
                     self.data.normals,
                 )
             self.context.vaos["model"] = model_vao

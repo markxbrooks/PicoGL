@@ -5,7 +5,6 @@ Unproject
 from typing import Optional, Tuple
 
 import numpy as np
-from decologr import Decologr as log
 from OpenGL.GL import glGetDoublev, glGetIntegerv
 from OpenGL.GLU import gluUnProject
 from OpenGL.raw.GL._types import GL_FLOAT
@@ -18,8 +17,9 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import (
     glIsEnabled,
     glReadPixels,
 )
-
 from picogl.backend.gl.capability import GLPipelineCapability
+
+from decologr import Decologr as log
 
 
 def unproject(x: int, y: int) -> Optional[Tuple[float, float, float]]:

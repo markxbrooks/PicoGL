@@ -14,6 +14,20 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+from molib.gl.mesh.atom.sphere import AtomSpheresMesh, make_chain_color_fn
+from picogl.backend.gl.api.clear import gl_clear, gl_clear_rgba_color
+from picogl.backend.gl.api.enable import gl_enable_capability_list
+from picogl.backend.gl.api.legacy.matrix import gl_matrix_mode_context
+from picogl.backend.gl.capability import GLPipelineCapability
+from picogl.backend.gl.enums import GLBitMask
+from picogl.backend.gl.enums.legacy.scale import gl_load_identity
+from picogl.backend.gl.legacy.lighting import GLFixedFunctionLightingModel
+from picogl.backend.gl.legacy.view import CameraPerspective, LegacyGLViewTransform
+from picogl.backend.glu.perspective import glu_perspective
+from picogl.core.polygon.mode import gl_set_line_mode, gl_set_polygon_mode
+from picogl.core.rgbcolor import RGBAColor
+from picogl.core.viewport import GLViewport
+from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
 from picoui.dimensions import Dimensions, Point, WindowGeometry
 from picoui.helpers import create_layout_with_items, create_widget_with_layout
 from picoui.helpers.layout import create_splitter_with_items, create_widget_layout
@@ -30,21 +44,6 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
-
-from picogl.backend.gl.api.clear import gl_clear, gl_clear_rgba_color
-from picogl.backend.gl.api.enable import gl_enable_capability_list
-from picogl.backend.gl.api.legacy.matrix import gl_matrix_mode_context
-from picogl.backend.gl.capability import GLPipelineCapability
-from picogl.backend.gl.enums import GLBitMask
-from picogl.backend.gl.enums.legacy.scale import gl_load_identity
-from picogl.backend.gl.legacy.lighting import GLFixedFunctionLightingModel
-from picogl.backend.gl.legacy.view import CameraPerspective, LegacyGLViewTransform
-from picogl.backend.glu.perspective import glu_perspective
-from picogl.core.polygon.mode import gl_set_line_mode, gl_set_polygon_mode
-from picogl.core.rgbcolor import RGBAColor
-from picogl.core.viewport import GLViewport
-from picogl.ui.backend.qt.legacy.window import LegacyQtObjectWindow
-from molib.gl.mesh.atom.sphere import make_chain_color_fn, AtomSpheresMesh
 
 _EXAMPLES_PATH = Path(__file__).resolve().parent.parent
 _EXAMPLES_DIR = str(_EXAMPLES_PATH)
@@ -206,13 +205,12 @@ class QtLegacyGLMeshMolecularViewer(QOpenGLWidget):
         if self._initialized:
             return
         chain_ids = [atom.chain_id for atom in self.calpha_atoms]
-        color_fn=make_chain_color_fn(chain_ids)
+        color_fn = make_chain_color_fn(chain_ids)
         from molib.gl.mesh.bond.cylinder import BondCylindersMesh
+
         if self.calpha_atoms:
 
-            self.atoms_mesh = AtomSpheresMesh(
-                self.calpha_atoms, color_fn=color_fn
-            )
+            self.atoms_mesh = AtomSpheresMesh(self.calpha_atoms, color_fn=color_fn)
             self.atoms_mesh.to_legacy_glmesh(upload=True)
 
         if self.calpha_bonds:

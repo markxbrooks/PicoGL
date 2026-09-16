@@ -13,8 +13,9 @@ from collections import Counter
 from dataclasses import dataclass, field
 from typing import Dict, Optional
 
-from decologr import Decologr as log
 from PySide6 import QtGui
+
+from decologr import Decologr as log
 
 
 class GLObjectAttrs:

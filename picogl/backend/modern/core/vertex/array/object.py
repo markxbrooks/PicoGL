@@ -31,22 +31,20 @@ from contextlib import contextmanager, nullcontext
 from typing import Any, Optional, Union
 
 import numpy as np
-
-from decologr import Decologr as log
-from picogl.backend.modern.core.vertex.array.draw_spec import DrawSpec
-from picogl.backend.modern.core.vertex.attribute import VertexAttribute
 from picogl.backend.gl.api import gl_draw_arrays_spec, gl_draw_elements_spec
 from picogl.backend.gl.api.glcleanup import gl_delete_buffers, gl_delete_vertex_arrays
 from picogl.backend.gl.api.vertex.arrays.bind import gl_bind_vertex_array
 from picogl.backend.gl.api.vertex.arrays.check_is import gl_is_vertex_array
 from picogl.backend.gl.api.vertex.arrays.generate import gl_gen_vertex_arrays
-from picogl.backend.gl.api.vertex.attrib_pointer import gl_vertex_attrib_pointer, gl_enable_vertex_array_attributes
-from picogl.backend.gl.api.vertex.enable_array import gl_enable_vertex_array
-from picogl.backend.gl.enums import (
-    GLDrawMode,
-    GLUsageHint,
+from picogl.backend.gl.api.vertex.attrib_pointer import (
+    gl_enable_vertex_array_attributes,
+    gl_vertex_attrib_pointer,
 )
+from picogl.backend.gl.api.vertex.enable_array import gl_enable_vertex_array
+from picogl.backend.gl.enums import GLDrawMode, GLUsageHint
+from picogl.backend.modern.core.vertex.array.draw_spec import DrawSpec
 from picogl.backend.modern.core.vertex.array.helpers import point_rendering
+from picogl.backend.modern.core.vertex.attribute import VertexAttribute
 from picogl.backend.modern.core.vertex.base import VertexBuffer
 from picogl.backend.modern.core.vertex.buffer.element import ModernEBO
 from picogl.backend.modern.core.vertex.buffer.object import ModernVBO
@@ -55,6 +53,8 @@ from picogl.gpu.buffers.base import VertexBase
 from picogl.gpu.buffers.vertex.aliases import NAME_ALIASES, VertexBufferRole
 from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
 from picogl.safe import gl_gen_safe
+
+from decologr import Decologr as log
 
 # PicoGL must not import ElMo or PySide6 at module load (GLUT examples stay Qt-free).
 SILENT_VAO = True
@@ -76,6 +76,7 @@ def _current_qt_gl_context() -> Any | None:
         return qctx.currentContext()
     except Exception:
         return None
+
 
 def current_gl_context() -> int | None:
     try:
@@ -127,7 +128,6 @@ class GLResource:
             raise RuntimeError(
                 f"Context mismatch: created in {self._creation_context}, current {ctx}"
             )
-
 
 
 class VertexArrayObject(VertexBase, GLResource):
@@ -417,11 +417,7 @@ class VertexArrayObject(VertexBase, GLResource):
         if not spec.count:
             return
 
-        context = (
-            point_rendering()
-            if spec.mode == GLDrawMode.POINTS
-            else nullcontext()
-        )
+        context = point_rendering() if spec.mode == GLDrawMode.POINTS else nullcontext()
 
         with context, self.bound():
             if self.ebo:
@@ -438,7 +434,7 @@ class VertexArrayObject(VertexBase, GLResource):
         """update vbo"""
         if data is None:
             raise TypeError("update_vbo: data must be a numpy array")
-    
+
         vbo = self._modern_vbo_for_attrib(index)
         if vbo is None:
             log.warning(
@@ -446,9 +442,7 @@ class VertexArrayObject(VertexBase, GLResource):
                 scope=self.__class__.__name__,
             )
             return
-    
+
         with self.bound():
             with vbo:
                 vbo.update(data)
-
-    

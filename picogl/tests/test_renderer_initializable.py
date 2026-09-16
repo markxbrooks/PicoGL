@@ -1,5 +1,4 @@
 import pytest
-
 from picogl.renderer.base import RendererBase
 from picogl.renderer.initializable import Bindable, Initializable
 

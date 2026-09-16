@@ -15,7 +15,6 @@ from typing import Dict, List, Optional
 import numpy as np
 from molib.core.constants import MoLibConstant
 from molib.ligand.pdb.layouts.pdb_file import PDBFileLayout, PDBTitleLayout
-
 from picogl.examples.utils.bond_detection import atoms_should_bond
 from picogl.utils.strenum import StrEnum
 

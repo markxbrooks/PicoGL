@@ -9,10 +9,7 @@ from pathlib import Path
 from typing import Union
 
 import numpy as np
-from decologr import Decologr as log
 from OpenGL.raw.GL.VERSION.GL_2_0 import GL_LINK_STATUS
-from pyglm import glm
-
 from picogl.backend.gl.api.shader import (
     GLShader,
     gl_get_program_info_log,
@@ -33,6 +30,9 @@ from picogl.backend.modern.core.shader.helpers import log_gl_error, read_shader_
 from picogl.backend.modern.core.uniform.location_value import set_uniform_location_value
 from picogl.boolean import GLBoolean
 from picogl.shaders.uniform import get_uniform_location
+from pyglm import glm
+
+from decologr import Decologr as log
 
 
 class ShaderCompiler:

@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import numpy as np
-
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.renderer.draw_spec import MeshDrawInfo, MeshDrawSpec
 from picogl.renderer.meshdata import MeshData
@@ -101,9 +100,7 @@ def test_mesh_draw_spec_to_draw_spec():
 
     from picogl.backend.modern.core.vertex.array.draw_spec import DrawSpec
 
-    spec = MeshDrawSpec(
-        mode=GLDrawMode.TRIANGLES, count=9, first=0, pointer=12
-    )
+    spec = MeshDrawSpec(mode=GLDrawMode.TRIANGLES, count=9, first=0, pointer=12)
     gpu = spec.to_draw_spec()
     assert isinstance(gpu, DrawSpec)
     assert gpu.count == 9

@@ -9,7 +9,6 @@ import os
 import sys
 
 import numpy as np
-
 from picogl.backend.glut.cube_data import CUBE_VERTICES
 
 

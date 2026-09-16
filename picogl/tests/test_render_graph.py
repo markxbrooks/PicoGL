@@ -4,7 +4,6 @@ import unittest
 from unittest.mock import MagicMock
 
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_RGBA
-
 from picogl.backend.render.executor import RenderGraphExecutor
 from picogl.backend.render.graph import DependencyGraph, RenderGraph, topo_sort
 from picogl.backend.render.pass_ import RenderPass

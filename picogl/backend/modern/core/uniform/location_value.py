@@ -15,7 +15,6 @@ Function:
 from typing import Sequence, Union
 
 import numpy as np
-from decologr import Decologr as log
 from OpenGL.GL import glUniformMatrix4fv
 from OpenGL.raw.GL._types import GL_FALSE
 from OpenGL.raw.GL.VERSION.GL_2_0 import (
@@ -26,6 +25,8 @@ from OpenGL.raw.GL.VERSION.GL_2_0 import (
     glUniform4fv,
 )
 from pyglm import glm
+
+from decologr import Decologr as log
 
 
 def set_uniform_location_value(

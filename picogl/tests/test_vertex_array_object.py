@@ -36,7 +36,6 @@ import numpy as np
 from OpenGL.raw.GL._types import GL_FLOAT
 from OpenGL.raw.GL.VERSION.GL_1_0 import GL_POINTS
 from OpenGL.raw.GL.VERSION.GL_1_5 import GL_STATIC_DRAW
-
 from picogl.backend.modern.core.vertex.array.draw_spec import DrawSpec
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.backend.modern.core.vertex.base import VertexBuffer
@@ -68,12 +67,18 @@ class TestVertexArrayObject(unittest.TestCase):
 
         # Mock OpenGL functions to avoid context issues
         self.gl_patches = [
-            patch("picogl.backend.modern.core.vertex.array.object.gl_bind_vertex_array"),
-            patch("picogl.backend.modern.core.vertex.array.object.gl_gen_vertex_arrays"),
+            patch(
+                "picogl.backend.modern.core.vertex.array.object.gl_bind_vertex_array"
+            ),
+            patch(
+                "picogl.backend.modern.core.vertex.array.object.gl_gen_vertex_arrays"
+            ),
             patch(
                 "picogl.backend.modern.core.vertex.array.object.gl_delete_vertex_arrays"
             ),
-            patch("picogl.backend.modern.core.vertex.array.object.gl_enable_vertex_array"),
+            patch(
+                "picogl.backend.modern.core.vertex.array.object.gl_enable_vertex_array"
+            ),
             patch(
                 "picogl.backend.modern.core.vertex.array.object.gl_vertex_attrib_pointer"
             ),

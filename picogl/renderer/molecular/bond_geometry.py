@@ -7,7 +7,6 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 
 import numpy as np
-
 from picogl.renderer.mesh_arrays import MeshArrays
 
 _MIN_BOND_LENGTH = 1e-12
@@ -139,8 +138,8 @@ class BondGeometry:
         normals = np.repeat(radial[:, :, None, :], 2, axis=2).reshape(-1, 3)
 
         n_kept = int(starts_a.shape[0])
-        vertex_offsets = (
-            np.arange(n_kept, dtype=np.uint32) * np.uint32(self.vertices_per_item)
+        vertex_offsets = np.arange(n_kept, dtype=np.uint32) * np.uint32(
+            self.vertices_per_item
         )
         indices = (local_indices[None, :] + vertex_offsets[:, None]).reshape(-1)
 

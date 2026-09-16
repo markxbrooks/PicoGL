@@ -11,8 +11,6 @@ Classes:
 from typing import Any, Optional
 
 import numpy as np
-from decologr import Decologr as log
-
 from picogl.backend.gl.api import gl_bind_buffer
 from picogl.backend.gl.api.client_state import gl_enable_legacy_client_state
 from picogl.backend.gl.api.draw import gl_draw_arrays, gl_draw_elements
@@ -34,6 +32,8 @@ from picogl.gpu.buffers.attributes import LayoutDescriptor, VBOAttrs
 from picogl.gpu.buffers.base import VertexBase
 from picogl.gpu.buffers.vertex.aliases import NAME_ALIASES, VertexBufferRole
 from picogl.gpu.buffers.vertex.vbo.vbo_class import VBOType
+
+from decologr import Decologr as log
 
 
 class VertexBufferGroup(VertexBase):

@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
 import argparse
-from pathlib import Path
 import difflib
+from pathlib import Path
+
 import libcst as cst
 
 STAGE_MAPS = {

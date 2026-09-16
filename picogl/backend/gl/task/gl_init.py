@@ -13,13 +13,13 @@ Classes and Functions:
 from dataclasses import dataclass
 from typing import Callable, Optional
 
-from decologr import Decologr as log
-
 # from picogl.backend.gl.backend import GLBackend
 from picogl.backend.gl.capability import GLPipelineCapability
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.legacy.core.camera.setup import enable_blending
 from picogl.info import get_gl_info
+
+from decologr import Decologr as log
 
 
 def set_clear_color_only(

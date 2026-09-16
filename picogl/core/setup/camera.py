@@ -1,5 +1,4 @@
 from molib.pdb.coordinate.coordinate import Coordinates
-
 from picogl.backend.glu.lookat import glu_look_at_coords
 
 
