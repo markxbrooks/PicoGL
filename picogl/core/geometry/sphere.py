@@ -5,6 +5,7 @@ from __future__ import annotations
 import math
 from collections.abc import Iterator
 from dataclasses import dataclass
+from typing import Any
 
 import numpy as np
 from picogl.core.vec3 import Vec3
@@ -95,7 +96,7 @@ def sphere_mesh_np(
     )
 
 
-def generate_indices(v1: ndarray[Any, dtype[unsignedinteger[Any]]] | Any, v2: int | Any, v3: int | Any,
+def generate_indices(v1: np.ndarray[Any, Any] | Any, v2: int | Any, v3: int | Any,
                      v4: int | Any) -> ndarray[Any, dtype[Any]]:
     indices = np.stack(
         (
@@ -111,7 +112,7 @@ def generate_indices(v1: ndarray[Any, dtype[unsignedinteger[Any]]] | Any, v2: in
     return indices
 
 
-def generate_normals(cos_lat, cos_lng, sin_lat, sin_lng) -> ndarray[Any, dtype[Any]]:
+def generate_normals(cos_lat, cos_lng, sin_lat, sin_lng) -> np.ndarray[Any, np.dtype[Any]]:
     normals = np.stack(
         (
             cos_lat * cos_lng,
