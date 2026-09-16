@@ -14,7 +14,7 @@ from picogl.backend.gl.api import (
     gl_enable_legacy_client_state,
 )
 from picogl.backend.gl.api.blending import gl_blend_func
-from picogl.backend.gl.api.color import gl_color_4f
+from picogl.backend.gl.api.color import gl_color_4f, gl_color_with_alpha
 from picogl.backend.gl.api.line import gl_line_width
 from picogl.backend.gl.api.pointer import (
     gl_color_array_pointer,
