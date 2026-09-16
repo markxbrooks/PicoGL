@@ -52,11 +52,17 @@ class DrawableBuffer(Protocol):
 
 @runtime_checkable
 class MeshDrawable(Protocol):
-    """GPU drawable that owns or delegates one CPU :class:`~picogl.renderer.meshdata.MeshData`."""
+    """GPU object that owns or delegates one CPU mesh.
+
+    The mesh **value** is always :class:`~picogl.renderer.meshdata.MeshData`.
+    Lookup helpers use ``isinstance(..., MeshData)``; this protocol does not
+    replace that check. Only ``mesh_data`` is part of the protocol. Draw and
+    color upload stay on :class:`DrawableBuffer` and the layout color helpers.
+    """
 
     @property
     def mesh_data(self) -> MeshData | None:
-        """Attached CPU mesh, or ``None`` when not uploaded yet."""
+        """Attached :class:`~picogl.renderer.meshdata.MeshData`, or ``None``."""
         ...
 
 
