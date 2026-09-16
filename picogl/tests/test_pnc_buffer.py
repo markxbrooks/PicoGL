@@ -122,6 +122,55 @@ def test_pnc_buffer_to_mesh_data() -> None:
     np.testing.assert_allclose(mesh.vertices, arrays.positions)
 
 
+def test_pnc_buffer_add_instances_two_translations() -> None:
+    buf = PNCBuffer()
+    mesh = _line_template()
+    buf.add_instances(
+        mesh,
+        np.array([[10.0, 0.0, 0.0], [0.0, 20.0, 0.0]], dtype=np.float32),
+        np.array([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0]], dtype=np.float32),
+    )
+    combined = buf.to_mesh_arrays()
+    assert combined.positions.shape == (4, 3)
+    np.testing.assert_allclose(combined.positions[0], (10.0, 0.0, 0.0))
+    np.testing.assert_allclose(combined.positions[2], (0.0, 20.0, 0.0))
+    assert combined.indices is not None
+    assert combined.indices.tolist() == [0, 1, 2, 3]
+    assert combined.colors is not None
+    np.testing.assert_allclose(combined.colors[0], (1.0, 0.0, 0.0))
+    np.testing.assert_allclose(combined.colors[2], (0.0, 1.0, 0.0))
+
+
+def test_pnc_buffer_add_instances_scales() -> None:
+    buf = PNCBuffer()
+    mesh = MeshArrays(
+        positions=[[1.0, 0.0, 0.0]],
+        normals=[[1.0, 0.0, 0.0]],
+        indices=[0],
+    )
+    buf.add_instances(
+        mesh,
+        np.array([[10.0, 0.0, 0.0], [0.0, 0.0, 0.0]], dtype=np.float32),
+        np.array([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0]], dtype=np.float32),
+        scales=np.array([2.0, 0.5], dtype=np.float32),
+    )
+    combined = buf.to_mesh_arrays()
+    np.testing.assert_allclose(combined.positions[0], (12.0, 0.0, 0.0))
+    np.testing.assert_allclose(combined.positions[1], (0.5, 0.0, 0.0))
+
+
+def test_pnc_buffer_add_instances_empty_is_noop() -> None:
+    buf = PNCBuffer()
+    buf.add_instances(
+        _line_template(),
+        np.zeros((0, 3), dtype=np.float32),
+        np.zeros((0, 3), dtype=np.float32),
+    )
+    combined = buf.to_mesh_arrays()
+    assert combined.positions.shape == (0, 3)
+    assert buf.vertex_offset == 0
+
+
 def test_pnc_buffer_instances_unit_sphere_mesh() -> None:
     """Sphere template stays a geometry producer; PNCBuffer instances it."""
     sphere = sphere_mesh(radius=0.2, slices=4, stacks=4)

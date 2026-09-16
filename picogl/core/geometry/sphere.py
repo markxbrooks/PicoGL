@@ -27,10 +27,118 @@ def generate_ring(radius: float, latitude: float, slices: int) -> list[Vec3]:
     return [Vec3.sphere(radius, latitude, lng) for lng in iter_longitudes(slices)]
 
 
-def sphere_mesh(
-    radius: float = 1.0,
-    slices: int = 16,
-    stacks: int = 16,
+def sphere_mesh_np(
+        radius: float = 1.0,
+        slices: int = 16,
+        stacks: int = 16,
+) -> MeshArrays:
+    """Build a sphere triangle mesh centered at the origin.
+
+    This is a geometry producer only: it does not instance, color, or batch
+    spheres.
+
+    Parameters
+    ----------
+    radius
+        Sphere radius.
+    slices
+        Longitudinal subdivisions.
+    stacks
+        Latitudinal subdivisions.
+
+    Returns
+    -------
+    MeshArrays
+        Origin-centered positions, normals, and triangle indices.
+    """
+    latitudes = np.linspace(
+        -np.pi / 2,
+        np.pi / 2,
+        stacks + 1,
+        dtype=np.float32,
+    )
+
+    longitudes = np.linspace(
+        0.0,
+        2.0 * np.pi,
+        slices + 1,
+        dtype=np.float32,
+    )
+
+    lat, lng = np.meshgrid(latitudes, longitudes, indexing="ij")
+
+    cos_lat = np.cos(lat)
+    sin_lat = np.sin(lat)
+    cos_lng = np.cos(lng)
+    sin_lng = np.sin(lng)
+
+    positions = generate_positions(cos_lat, cos_lng, radius, sin_lat, sin_lng)
+
+    normals = generate_normals(cos_lat, cos_lng, sin_lat, sin_lng)
+
+    row = np.arange(stacks, dtype=np.uint32)[:, None]
+    col = np.arange(slices, dtype=np.uint32)[None, :]
+
+    stride = slices + 1
+
+    v1 = row * stride + col
+    v2 = v1 + 1
+    v3 = v1 + stride
+    v4 = v3 + 1
+
+    indices = generate_indices(v1, v2, v3, v4)
+
+    return MeshArrays(
+        positions=positions.astype(np.float32, copy=False),
+        normals=normals.astype(np.float32, copy=False),
+        indices=indices,
+    )
+
+
+def generate_indices(v1: ndarray[Any, dtype[unsignedinteger[Any]]] | Any, v2: int | Any, v3: int | Any,
+                     v4: int | Any) -> ndarray[Any, dtype[Any]]:
+    indices = np.stack(
+        (
+            v1,
+            v2,
+            v3,
+            v2,
+            v4,
+            v3,
+        ),
+        axis=-1,
+    ).reshape(-1)
+    return indices
+
+
+def generate_normals(cos_lat, cos_lng, sin_lat, sin_lng) -> ndarray[Any, dtype[Any]]:
+    normals = np.stack(
+        (
+            cos_lat * cos_lng,
+            cos_lat * sin_lng,
+            sin_lat,
+        ),
+        axis=-1,
+    ).reshape(-1, 3)
+    return normals
+
+
+def generate_positions(cos_lat, cos_lng, radius: float, sin_lat, sin_lng) -> ndarray[Any, dtype[Any]]:
+    positions = np.stack(
+        (
+            radius * cos_lat * cos_lng,
+            radius * cos_lat * sin_lng,
+            radius * sin_lat,
+        ),
+        axis=-1,
+    ).reshape(-1, 3)
+    return positions
+
+
+def sphere_mesh_python(
+        radius: float = 1.0,
+        slices: int = 16,
+        stacks: int = 16,
 ) -> MeshArrays:
     """Build a sphere triangle mesh centered at the origin.
 
@@ -117,3 +225,9 @@ class SphereMesh:
             slices=self.spec.slices,
             stacks=self.spec.stacks,
         )
+
+
+# Use Numpy or python loops for Sphere generation
+# sphere_mesh = sphere_mesh_python
+
+sphere_mesh = sphere_mesh_np

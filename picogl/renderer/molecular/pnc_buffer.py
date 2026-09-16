@@ -14,8 +14,9 @@ class PNCBuffer:
 
     This class does not construct primitives. Geometry producers append via
     :meth:`extend` (world-space :class:`~picogl.renderer.mesh_arrays.MeshArrays`)
-    or :meth:`add_instance` (translated template). :meth:`to_mesh_arrays`
-    materializes combined geometry; :meth:`to_mesh_data` is the render boundary.
+    or :meth:`add_instance` / :meth:`add_instances` (translated templates).
+    :meth:`to_mesh_arrays` materializes combined geometry; :meth:`to_mesh_data`
+    is the render boundary.
     """
 
     def __init__(self) -> None:
@@ -42,16 +43,64 @@ class PNCBuffer:
         :param color: RGB triple copied onto every new vertex
         :param scale: Uniform scale applied to template positions before translation
         """
+        self.add_instances(
+            mesh,
+            np.asarray(translation, dtype=np.float32).reshape(1, 3),
+            np.asarray(color, dtype=np.float32).reshape(1, 3),
+            scales=np.asarray([scale], dtype=np.float32),
+        )
+
+    def add_instances(
+        self,
+        mesh: MeshArrays,
+        translations: np.ndarray,
+        colors: np.ndarray,
+        *,
+        scales: np.ndarray | None = None,
+    ) -> None:
+        """Translate one template to many instances in a single NumPy expand.
+
+        Template colors are ignored; each row of *colors* is tiled onto that
+        instance's vertices.
+
+        :param mesh: Origin-centered positions, normals, and local indices
+        :param translations: World-space offsets with shape ``(N, 3)``
+        :param colors: Per-instance RGB triples with shape ``(N, 3)``
+        :param scales: Optional per-instance uniform scales with shape ``(N,)``
+        """
+        translations = np.asarray(translations, dtype=np.float32)
+        if translations.ndim != 2:
+            translations = translations.reshape(-1, 3)
+        n_inst = int(translations.shape[0])
+        if n_inst == 0:
+            return
+        colors = np.asarray(colors, dtype=np.float32)
+        if colors.ndim != 2:
+            colors = colors.reshape(-1, 3)
+        if colors.shape[0] != n_inst:
+            raise ValueError("colors must have one RGB triple per translation")
         verts = np.asarray(mesh.positions, dtype=np.float32)
-        if scale != 1.0:
-            verts = verts * np.float32(scale)
-        verts = verts + np.asarray(translation, dtype=np.float32).reshape(1, 3)
         n_verts = int(verts.shape[0])
-        rgb = np.asarray(color, dtype=np.float32).reshape(3)
-        colors = np.broadcast_to(rgb, (n_verts, 3)).copy()
-        normals = np.asarray(mesh.normals, dtype=np.float32)
-        indices = self._offset_indices(mesh.indices)
-        self._append_chunk(verts, normals, colors, indices, n_verts)
+        instanced = verts[None, :, :]
+        if scales is not None:
+            scales_arr = np.asarray(scales, dtype=np.float32).reshape(-1)
+            if scales_arr.shape[0] != n_inst:
+                raise ValueError("scales must have one value per translation")
+            instanced = instanced * scales_arr.reshape(-1, 1, 1)
+        out_vertices = (instanced + translations[:, None, :]).reshape(-1, 3)
+        out_normals = np.tile(np.asarray(mesh.normals, dtype=np.float32), (n_inst, 1))
+        out_colors = np.repeat(colors, n_verts, axis=0)
+        if mesh.indices is None:
+            out_indices = np.zeros((0,), dtype=np.uint32)
+        else:
+            local = np.asarray(mesh.indices, dtype=np.uint32).ravel()
+            offsets = np.uint32(self.vertex_offset) + np.arange(
+                n_inst, dtype=np.uint32
+            ) * np.uint32(n_verts)
+            out_indices = (local[None, :] + offsets[:, None]).reshape(-1)
+        self._append_chunk(
+            out_vertices, out_normals, out_colors, out_indices, n_inst * n_verts
+        )
 
     def extend(
         self,
