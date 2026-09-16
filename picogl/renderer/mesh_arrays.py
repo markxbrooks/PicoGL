@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, replace
+from typing import Optional
 
 import numpy as np
 
@@ -24,8 +25,8 @@ class MeshArrays:
 
     positions: np.ndarray
     normals: np.ndarray
-    colors: np.ndarray | None = None
-    indices: np.ndarray | None = None
+    colors: Optional[np.ndarray] = None
+    indices: Optional[np.ndarray] = None
 
     def __post_init__(self) -> None:
         positions = np.asarray(self.positions, dtype=np.float32)
