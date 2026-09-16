@@ -8,6 +8,7 @@ from collections.abc import Iterator
 import numpy as np
 
 from picogl.core.vec3 import Vec3
+from picogl.renderer.mesh_arrays import MeshArrays
 
 
 def iter_longitudes(slices: int) -> Iterator[float]:
@@ -30,24 +31,17 @@ def unit_sphere_mesh(
     radius: float = 1.0,
     slices: int = 16,
     stacks: int = 16,
-) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """
-    Build a unit-sphere triangle mesh centered at the origin.
+) -> MeshArrays:
+    """Build a unit-sphere triangle mesh centered at the origin.
 
-    Parameters
-    ----------
-    radius :
-        Sphere radius.
-    slices :
-        Longitudinal subdivisions.
-    stacks :
-        Latitudinal subdivisions.
+    This is a geometry producer only: it does not instance, color, or batch
+    spheres.
 
-    Returns
-    -------
-    tuple[np.ndarray, np.ndarray, np.ndarray]
-        ``(vertices, normals, indices)`` as float32/int32 arrays suitable for
-        instancing at atom positions.
+    :param radius: Sphere radius
+    :param slices: Longitudinal subdivisions
+    :param stacks: Latitudinal subdivisions
+    :return: :class:`~picogl.renderer.mesh_arrays.MeshArrays` with origin-centered
+        positions, normals, and triangle indices (no colors)
     """
     vertices: list[list[float]] = []
     normals: list[list[float]] = []
@@ -73,8 +67,8 @@ def unit_sphere_mesh(
             indices.extend([v1, v2, v3])
             indices.extend([v2, v4, v3])
 
-    return (
-        np.array(vertices, dtype=np.float32),
-        np.array(normals, dtype=np.float32),
-        np.array(indices, dtype=np.uint32),
+    return MeshArrays(
+        positions=np.array(vertices, dtype=np.float32),
+        normals=np.array(normals, dtype=np.float32),
+        indices=np.array(indices, dtype=np.uint32),
     )

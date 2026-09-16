@@ -45,10 +45,10 @@ def test_atom_xyz_prefers_coords_over_xyz() -> None:
     assert atom_xyz(_Coords()) == (1.0, 2.0, 3.0)
     assert atom_xyz(_XYZ()) == (4.0, 5.0, 6.0)
     assert atom_xyz(np.array([7.0, 8.0, 9.0])) == (7.0, 8.0, 9.0)
-    vertices, normals, indices = unit_sphere_mesh(radius=0.2, slices=16, stacks=16)
-    assert vertices.shape == (17 * 17, 3)
-    assert normals.shape == vertices.shape
-    assert indices.size == 16 * 16 * 6
+    sphere = unit_sphere_mesh(radius=0.2, slices=16, stacks=16)
+    assert sphere.positions.shape == (17 * 17, 3)
+    assert sphere.normals.shape == sphere.positions.shape
+    assert sphere.indices.size == 16 * 16 * 6
 
 
 def test_atom_radius_uses_atom3d_field_or_fallback() -> None:
@@ -71,12 +71,12 @@ def test_atoms_mesh_single_atom_counts() -> None:
     mesh = AtomSpheresMesh([atom], radius=0.2, slices=16, stacks=16)
     data = mesh.to_mesh_data()
 
-    template_vertices, _, template_indices = unit_sphere_mesh(0.2, 16, 16)
-    assert data.vertices.shape[0] == template_vertices.shape[0]
-    assert data.normals.shape[0] == template_vertices.shape[0]
-    assert data.colors.shape[0] == template_vertices.shape[0]
-    assert data.indices.size == template_indices.size
-    assert data.vertices[0, 0] == pytest.approx(1.0 + template_vertices[0, 0])
+    template = unit_sphere_mesh(0.2, 16, 16)
+    assert data.vertices.shape[0] == template.positions.shape[0]
+    assert data.normals.shape[0] == template.positions.shape[0]
+    assert data.colors.shape[0] == template.positions.shape[0]
+    assert data.indices.size == template.indices.size
+    assert data.vertices[0, 0] == pytest.approx(1.0 + template.positions[0, 0])
     assert mesh.draw_mode == GLDrawMode.TRIANGLES
 
 
@@ -90,8 +90,8 @@ def test_atoms_mesh_accepts_coords_attribute() -> None:
     """MoLib Atom3D-style objects expose coords, not x/y/z."""
     atom = _AtomCoords((1.0, 2.0, 3.0), "A")
     data = AtomSpheresMesh([atom], radius=0.2, slices=4, stacks=4).to_mesh_data()
-    template_vertices, _, _ = unit_sphere_mesh(0.2, 4, 4)
-    assert data.vertices[0, 0] == pytest.approx(1.0 + template_vertices[0, 0])
+    template = unit_sphere_mesh(0.2, 4, 4)
+    assert data.vertices[0, 0] == pytest.approx(1.0 + template.positions[0, 0])
 
 
 def test_atoms_mesh_color_fn_receives_atom() -> None:
@@ -126,23 +126,21 @@ def test_atoms_mesh_two_atoms_vectorized_expand() -> None:
         stacks=4,
     ).to_mesh_data()
 
-    template_vertices, template_normals, template_indices = unit_sphere_mesh(
-        0.2, 4, 4
-    )
-    n_verts = template_vertices.shape[0]
-    n_idx = int(template_indices.size)
+    template = unit_sphere_mesh(0.2, 4, 4)
+    n_verts = template.positions.shape[0]
+    n_idx = int(template.indices.size)
 
     assert data.vertices.shape == (2 * n_verts, 3)
     assert data.normals.shape == (2 * n_verts, 3)
     assert data.colors.shape == (2 * n_verts, 3)
     assert data.indices.size == 2 * n_idx
 
-    np.testing.assert_allclose(data.vertices[:n_verts], template_vertices)
+    np.testing.assert_allclose(data.vertices[:n_verts], template.positions)
     np.testing.assert_allclose(
-        data.vertices[n_verts:], template_vertices + np.array([5.0, 0.0, 0.0])
+        data.vertices[n_verts:], template.positions + np.array([5.0, 0.0, 0.0])
     )
     np.testing.assert_allclose(
-        data.normals, np.tile(template_normals, (2, 1))
+        data.normals, np.tile(template.normals, (2, 1))
     )
     np.testing.assert_allclose(
         data.colors[:n_verts], np.broadcast_to((1.0, 0.0, 0.0), (n_verts, 3))
@@ -151,7 +149,7 @@ def test_atoms_mesh_two_atoms_vectorized_expand() -> None:
         data.colors[n_verts:], np.broadcast_to((0.0, 1.0, 0.0), (n_verts, 3))
     )
     np.testing.assert_array_equal(
-        data.indices[n_idx:], np.asarray(template_indices) + n_verts
+        data.indices[n_idx:], np.asarray(template.indices) + n_verts
     )
     assert data.draw_info.vertices_per_item == n_verts
     assert data.draw_info.elements_per_item == n_idx
@@ -168,12 +166,12 @@ def test_atoms_mesh_per_atom_radii_override_uniform_radius() -> None:
         stacks=4,
         radii=(0.5, 2.0),
     ).to_mesh_data()
-    template, _, _ = unit_sphere_mesh(1.0, 4, 4)
-    n_verts = template.shape[0]
-    np.testing.assert_allclose(data.vertices[:n_verts], template * 0.5)
+    template = unit_sphere_mesh(1.0, 4, 4)
+    n_verts = template.positions.shape[0]
+    np.testing.assert_allclose(data.vertices[:n_verts], template.positions * 0.5)
     np.testing.assert_allclose(
         data.vertices[n_verts:],
-        template * 2.0 + np.array([5.0, 0.0, 0.0], dtype=np.float32),
+        template.positions * 2.0 + np.array([5.0, 0.0, 0.0], dtype=np.float32),
     )
 
 

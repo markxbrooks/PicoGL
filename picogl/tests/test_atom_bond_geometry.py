@@ -12,7 +12,7 @@ from picogl.renderer.molecular.bond_geometry import BondGeometry
 
 def test_atom_geometry_counts_match_unit_sphere() -> None:
     geometry = AtomSphereGeometry(radius=0.2, slices=16, stacks=16)
-    vertices, _normals, indices = unit_sphere_mesh(0.2, 16, 16)
+    sphere = unit_sphere_mesh(0.2, 16, 16)
     data = geometry.build()
     built = np.asarray(data.positions, dtype=np.float32).reshape(-1, 3)
     assert isinstance(data, MeshArrays)
@@ -21,7 +21,7 @@ def test_atom_geometry_counts_match_unit_sphere() -> None:
     assert geometry.elements_per_item == 16 * 16 * 6
     assert built.shape[0] == geometry.vertices_per_item
     assert np.asarray(data.indices).size == geometry.elements_per_item
-    np.testing.assert_allclose(built, vertices)
+    np.testing.assert_allclose(built, sphere.positions)
 
 
 def test_bond_geometry_open_cylinder_topology() -> None:

@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
-from typing import List, Tuple
+from typing import Tuple
 
 import numpy as np
 
+from picogl.renderer.mesh_arrays import MeshArrays
 from picogl.renderer.meshdata import MeshData
 
 
@@ -19,47 +20,41 @@ class PNCBuffer:
     """
 
     def __init__(self) -> None:
-        self.positions: List[List[float]] = []
-        self.normals: List[List[float]] = []
-        self.colors: List[Tuple[float, float, float]] = []
-        self.indices: List[int] = []
+        self._positions: list[np.ndarray] = []
+        self._normals: list[np.ndarray] = []
+        self._colors: list[np.ndarray] = []
+        self._indices: list[np.ndarray] = []
         self.vertex_offset: int = 0
 
     def add_instance(
         self,
         translation: Iterable[float],
-        template_vertices: Iterable[Iterable[float]],
-        template_normals: Iterable[Iterable[float]],
-        template_indices: Iterable[int],
+        template: MeshArrays,
         color: Tuple[float, float, float],
+        *,
+        scale: float = 1.0,
     ) -> None:
         """Translate a geometry template and append it with a uniform color.
 
-        Parameters
-        ----------
-        translation
-            World-space offset applied to every template vertex.
-        template_vertices
-            Template positions, typically ``(N, 3)``.
-        template_normals
-            Template normals, same length as ``template_vertices``.
-        template_indices
-            Triangle indices relative to the template.
-        color
-            RGB triple copied onto every new vertex.
+        :param translation: World-space offset applied to every template vertex
+        :param template: Origin-centered positions, normals, and local indices
+        :param color: RGB triple copied onto every new vertex
+        :param scale: Uniform scale applied to template positions before translation
         """
-        tx, ty, tz = (float(c) for c in translation)
-        vertices = list(template_vertices)
-        for vertex in vertices:
-            self.positions.append(
-                [float(vertex[0]) + tx, float(vertex[1]) + ty, float(vertex[2]) + tz]
-            )
-            self.colors.append(color)
-        for normal in template_normals:
-            self.normals.append([float(normal[0]), float(normal[1]), float(normal[2])])
-        for idx in template_indices:
-            self.indices.append(int(idx) + self.vertex_offset)
-        self.vertex_offset += len(vertices)
+        verts = np.asarray(template.positions, dtype=np.float32)
+        if scale != 1.0:
+            verts = verts * np.float32(scale)
+        verts = verts + np.asarray(translation, dtype=np.float32).reshape(1, 3)
+        n_verts = int(verts.shape[0])
+        rgb = np.asarray(color, dtype=np.float32).reshape(3)
+        colors = np.broadcast_to(rgb, (n_verts, 3)).copy()
+        normals = np.asarray(template.normals, dtype=np.float32)
+        if template.indices is None:
+            indices = np.zeros((0,), dtype=np.uint32)
+        else:
+            indices = np.asarray(template.indices, dtype=np.uint32).ravel()
+            indices = indices + np.uint32(self.vertex_offset)
+        self._append_chunk(verts, normals, colors, indices, n_verts)
 
     def extend(
         self,
@@ -70,29 +65,39 @@ class PNCBuffer:
     ) -> None:
         """Append world-space vertex attributes and offset local indices.
 
-        Parameters
-        ----------
-        positions
-            Vertex positions already in world space.
-        normals
-            Per-vertex normals.
-        colors
-            Per-vertex RGB triples.
-        indices
-            Triangle indices relative to this batch (not the whole buffer).
+        :param positions: Vertex positions already in world space
+        :param normals: Per-vertex normals
+        :param colors: Per-vertex RGB triples
+        :param indices: Triangle indices relative to this batch (not the whole buffer)
         """
-        vertices = list(positions)
-        for position in vertices:
-            self.positions.append(
-                [float(position[0]), float(position[1]), float(position[2])]
-            )
-        for normal in normals:
-            self.normals.append([float(normal[0]), float(normal[1]), float(normal[2])])
-        for color in colors:
-            self.colors.append((float(color[0]), float(color[1]), float(color[2])))
-        for idx in indices:
-            self.indices.append(int(idx) + self.vertex_offset)
-        self.vertex_offset += len(vertices)
+        verts = np.asarray(positions, dtype=np.float32)
+        if verts.ndim != 2:
+            verts = verts.reshape(-1, 3)
+        n_verts = int(verts.shape[0])
+        norms = np.asarray(normals, dtype=np.float32)
+        if norms.ndim != 2:
+            norms = norms.reshape(-1, 3)
+        cols = np.asarray(colors, dtype=np.float32)
+        if cols.ndim != 2:
+            cols = cols.reshape(-1, 3)
+        idxs = np.asarray(indices, dtype=np.uint32).ravel()
+        if idxs.size:
+            idxs = idxs + np.uint32(self.vertex_offset)
+        self._append_chunk(verts, norms, cols, idxs, n_verts)
+
+    def _append_chunk(
+        self,
+        positions: np.ndarray,
+        normals: np.ndarray,
+        colors: np.ndarray,
+        indices: np.ndarray,
+        n_verts: int,
+    ) -> None:
+        self._positions.append(positions)
+        self._normals.append(normals)
+        self._colors.append(colors)
+        self._indices.append(indices)
+        self.vertex_offset += n_verts
 
     def to_mesh_data(self) -> MeshData:
         """Build a :class:`~picogl.renderer.meshdata.MeshData` from accumulated arrays.
@@ -109,34 +114,21 @@ class PNCBuffer:
     ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
         """Return NumPy arrays suitable for :meth:`MeshData.from_raw`.
 
-        Parameters
-        ----------
-        dtype
-            Floating-point dtype for positions, normals, and colors.
-
-        Returns
-        -------
-        tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]
-            ``(vertices, normals, colors, indices)``.
+        :param dtype: Floating-point dtype for positions, normals, and colors
+        :return: ``(vertices, normals, colors, indices)``
         """
-        vertices = (
-            np.array(self.positions, dtype=dtype)
-            if self.positions
-            else np.zeros((0, 3), dtype=dtype)
-        )
-        normals = (
-            np.array(self.normals, dtype=dtype)
-            if self.normals
-            else np.zeros((0, 3), dtype=dtype)
-        )
-        colors = (
-            np.array(self.colors, dtype=dtype)
-            if self.colors
-            else np.zeros((0, 3), dtype=dtype)
-        )
-        indices = (
-            np.array(self.indices, dtype=np.uint32)
-            if self.indices
-            else np.zeros((0,), dtype=np.uint32)
-        )
+        if not self._positions:
+            return (
+                np.zeros((0, 3), dtype=dtype),
+                np.zeros((0, 3), dtype=dtype),
+                np.zeros((0, 3), dtype=dtype),
+                np.zeros((0,), dtype=np.uint32),
+            )
+        vertices = np.concatenate(self._positions, axis=0).astype(dtype, copy=False)
+        normals = np.concatenate(self._normals, axis=0).astype(dtype, copy=False)
+        colors = np.concatenate(self._colors, axis=0).astype(dtype, copy=False)
+        if any(chunk.size for chunk in self._indices):
+            indices = np.concatenate(self._indices, axis=0)
+        else:
+            indices = np.zeros((0,), dtype=np.uint32)
         return vertices, normals, colors, indices
