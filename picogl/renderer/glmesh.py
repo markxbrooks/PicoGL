@@ -18,6 +18,7 @@ from picogl.backend.gl.enums import GLDrawMode, GLNumeric
 from picogl.backend.modern.core.vertex.array.object import VertexArrayObject
 from picogl.gpu.buffers.attributes import AttributeSpec
 from picogl.gpu.buffers.helper import as_vec3_array
+from picogl.gpu.buffers.mesh_owner import MeshDataOwner
 from picogl.gpu.buffers.vertex.vbo.vbo_class import MeshDataAttrs, VBOType
 from picogl.renderer.draw_spec import MeshDrawSpec, execute_draw_spec
 from picogl.shaders.type import ShaderType
@@ -55,7 +56,7 @@ def empty_triangle_vertices(triangle_count: int, components: int = 3) -> ndarray
     return np.empty((triangle_count * 3, components), dtype=np.float32)
 
 
-class GLMesh:
+class GLMesh(MeshDataOwner):
     """
     GPU-resident geometry: owns VAO/VBO and optional EBO/CBO/NBO buffers.
     It does not know anything about shaders or matrices.

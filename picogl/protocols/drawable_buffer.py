@@ -8,9 +8,12 @@ uniformly.
 
 from __future__ import annotations
 
-from typing import Any, Mapping, Protocol, TypeAlias, runtime_checkable
+from typing import TYPE_CHECKING, Any, Mapping, Protocol, TypeAlias, runtime_checkable
 
 import numpy as np
+
+if TYPE_CHECKING:
+    from picogl.renderer.meshdata import MeshData
 
 
 @runtime_checkable
@@ -44,6 +47,16 @@ class DrawableBuffer(Protocol):
 
     def data_length(self) -> int:
         """Number of vertices (or drawable elements) in this buffer."""
+        ...
+
+
+@runtime_checkable
+class MeshDrawable(Protocol):
+    """GPU drawable that owns or delegates one CPU :class:`~picogl.renderer.meshdata.MeshData`."""
+
+    @property
+    def mesh_data(self) -> MeshData | None:
+        """Attached CPU mesh, or ``None`` when not uploaded yet."""
         ...
 
 

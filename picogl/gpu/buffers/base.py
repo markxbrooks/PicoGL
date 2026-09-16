@@ -23,9 +23,10 @@ an optional ``StickyVAOBinding`` wrapper may be added later without changing thi
 
 from picogl.gpu.buffers.abstract import AbstractVertexGroup
 from picogl.gpu.buffers.attributes import LayoutDescriptor
+from picogl.gpu.buffers.mesh_owner import MeshDataOwner
 
 
-class VertexBase(AbstractVertexGroup):
+class VertexBase(MeshDataOwner, AbstractVertexGroup):
     """
     Generic OpenGL object interface with binding lifecycle.
 

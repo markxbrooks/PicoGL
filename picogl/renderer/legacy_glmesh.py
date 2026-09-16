@@ -29,12 +29,13 @@ from picogl.gpu.buffers.attributes import (
 )
 from picogl.gpu.buffers.factory import create_layout
 from picogl.gpu.buffers.helper import as_vec3_array
+from picogl.gpu.buffers.mesh_owner import MeshDataOwner
 from picogl.gpu.buffers.vertex.aliases import VertexBufferRole
 from picogl.gpu.buffers.vertex.legacy import VertexBufferGroup
 from picogl.gpu.buffers.vertex.vbo.vbo_class import MeshDataAttrs, VBOType
 
 
-class LegacyGLMesh:
+class LegacyGLMesh(MeshDataOwner):
     """
     gl Mesh fir Compatibility Profile
 
@@ -79,6 +80,7 @@ class LegacyGLMesh:
 
         self.vao: Optional[VertexBufferGroup] = None
         self.index_count: int = 0
+        self.mesh = None
 
     @classmethod
     def from_mesh_data(cls, mesh: "MeshData") -> "LegacyGLMesh":
@@ -95,13 +97,15 @@ class LegacyGLMesh:
         LegacyGLMesh
             Ready-to-upload mesh (GPU buffers are allocated only when `upload()` is called).
         """
-        return cls(
+        gl_mesh = cls(
             vertices=mesh.vertices,
             faces=mesh.indices,
             colors=mesh.colors,
             normals=mesh.normals,
             uvs=getattr(mesh, MeshDataAttrs.TEXCOORDS, None),
         )
+        gl_mesh.mesh = mesh
+        return gl_mesh
 
     def upload(self) -> None:
         """Allocate & fill GPU buffers."""

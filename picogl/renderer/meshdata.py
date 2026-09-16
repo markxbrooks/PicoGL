@@ -134,6 +134,11 @@ class MeshData:
             )
 
     @property
+    def mesh_data(self) -> "MeshData":
+        """This object is the canonical CPU mesh."""
+        return self
+
+    @property
     def normalized_indices(self) -> ndarray[Any, dtype[Any]] | None:
         """
         normalized indices
