@@ -125,6 +125,7 @@ _COLOR_VALUES = {
     "YELLOW": (1.0, 1.0, 0.0),
     "MAGENTA": (1.0, 0.0, 1.0),
     "CYAN": (0.0, 1.0, 1.0),
+    "TEAPOT_RED": (0.8, 0.2, 0.2)
 }
 
 for name, rgb in _COLOR_VALUES.items():
@@ -142,6 +143,7 @@ class RGBTuple:
     WHITE: ClassVar[RGB]
     BLACK: ClassVar[RGB]
     RED: ClassVar[RGB]
+    TEAPOT_RED: ClassVar[RGB]
     GREEN: ClassVar[RGB]
     BLUE: ClassVar[RGB]
 
@@ -152,6 +154,7 @@ class RGBATuple:
     WHITE: ClassVar[RGBA]
     BLACK: ClassVar[RGBA]
     RED: ClassVar[RGBA]
+    TEAPOT_RED: ClassVar[RGBA]
     GREEN: ClassVar[RGBA]
     BLUE: ClassVar[RGBA]
     

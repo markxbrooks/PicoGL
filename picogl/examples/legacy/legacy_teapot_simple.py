@@ -30,7 +30,7 @@ class SimpleTeapotRenderer(GlutRenderer):
         self.title = title
         self.zoom_distance = 5.0
         self.wireframe_mode = False
-        self.show_normals = False
+        self.show_normals = True
 
     def init_glut(self):
         """Initialize GLUT window."""

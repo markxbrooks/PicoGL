@@ -13,7 +13,7 @@ from picogl.backend.gl.state.fill import GLFillMode
 from picogl.backend.gl.state.immediate import gl_immediate_drawing
 from picogl.backend.gl.state.scoped import gl_disabled
 from picogl.backend.glut import glut_solid_teapot
-from picogl.core.rgbcolor import RGBColor
+from picogl.core.rgbcolor import RGBColor, RGBTuple
 from picogl.polygon.mode import gl_polygon_mode_context
 
 NORMAL_SAMPLE_COUNT = 12
@@ -29,9 +29,21 @@ def draw_teapot(wireframe_mode):
                 glut_solid_teapot(1.0)
         return
 
-    gl_color_rgb(RGBColor(0.8, 0.2, 0.2))
+    gl_color_rgb(RGBColor(*RGBTuple.TEAPOT_RED))
     glut_solid_teapot(1.0)
 
+def coordinate_pair_for_vector(
+    origin: Coordinates,
+    vector: Coordinates,
+    length: float,
+) -> tuple[Coordinates, Coordinates]:
+    """Return the start and end coordinates of a vector."""
+    end = Coordinates(
+        origin.x + vector.x * length,
+        origin.y + vector.y * length,
+        origin.z + vector.z * length,
+    )
+    return origin, end
 
 def generate_normal_lines(
     count: int = NORMAL_SAMPLE_COUNT,
@@ -85,7 +97,7 @@ def draw_teapot_with_normals(wireframe_mode, show_normals):
                 glut_solid_teapot(1.0)
         return
 
-    gl_color_rgb(RGBColor(0.8, 0.2, 0.2))
+    gl_color_rgb(RGBColor(*RGBTuple.TEAPOT_RED))
     glut_solid_teapot(1.0)
 
     if show_normals:
