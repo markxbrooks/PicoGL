@@ -134,6 +134,22 @@ class MeshData:
                 index_count=index_count,
             )
 
+    @classmethod
+    def from_arrays(
+        cls,
+        positions: np.ndarray,
+        normals: np.ndarray,
+        colors: np.ndarray,
+        *,
+        indices: Optional[np.ndarray] = None,
+    ) -> "MeshData":
+        return cls(
+            vertices=positions,
+            normals=normals,
+            colors=colors,
+            indices=indices,
+        )
+
     @property
     def mesh_data(self) -> "MeshData":
         """This object is the canonical CPU mesh."""
