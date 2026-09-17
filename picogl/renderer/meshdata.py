@@ -371,7 +371,7 @@ class MeshData:
     def setup_bond_vao(self):
         """Build a vertex array from bond mesh data (layout included)."""
         from elmo.gl.backend.modern.entities.bonds.setup import (
-            setup_bond_vao as _setup_bond_vao,
+            setup_vao as _setup_bond_vao,
         )
 
         return _setup_bond_vao(self)
