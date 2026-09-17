@@ -9,7 +9,6 @@ into standardized formats that are used in 3D rendering contexts, such as `MeshD
 from typing import Any
 
 import numpy as np
-from numpy import dtype, generic
 
 
 def as_vec3_array(data: Any) -> np.ndarray:
