@@ -153,13 +153,6 @@ class MeshData:
 
         return indices.astype(np.uint32).ravel()
 
-    def as_vec3_arrays(self) -> tuple[
-        ndarray[Any, dtype[generic]], ndarray[Any, dtype[generic]], ndarray[Any, dtype[generic]]]:
-        positions = as_vec3_array(data=self.vertices)
-        colors = as_vec3_array(data=self.colors)
-        normals = as_vec3_array(data=self.normals)
-        return colors, normals, positions
-
     def validate_data(self):
         """validate mesh data"""
         validate_input_data(
@@ -168,6 +161,13 @@ class MeshData:
             normals=self.normals,
             colors=self.colors,
         )
+
+    def as_vec3_arrays(self) -> tuple[
+        ndarray[Any, dtype[generic]], ndarray[Any, dtype[generic]], ndarray[Any, dtype[generic]]]:
+        positions = as_vec3_array(data=self.vertices)
+        colors = as_vec3_array(data=self.colors)
+        normals = as_vec3_array(data=self.normals)
+        return colors, normals, positions
 
     def as_indexed_arrays(
         self,
