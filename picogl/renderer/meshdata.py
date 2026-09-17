@@ -47,7 +47,7 @@ from decologr import Decologr as log
 
 
 def np_positions_to_normal_array(
-    positions: ndarray[Any, dtype[Any]] | list[Any],
+        positions: ndarray[Any, dtype[Any]] | list[Any],
 ) -> ndarray[Any, dtype[Any]]:
     """Create normals from positions."""
     normals = np.array(
@@ -97,15 +97,15 @@ class MeshData:
     """
 
     def __init__(
-        self,
-        vertices: np.ndarray = None,
-        normals: np.ndarray = None,
-        texcoords: np.ndarray = None,
-        colors: np.ndarray = None,
-        indices: np.ndarray = None,
-        draw_info: MeshDrawInfo | None = None,
-        item_keys: np.ndarray | None = None,
-        color_source_indices: np.ndarray | None = None,
+            self,
+            vertices: np.ndarray = None,
+            normals: np.ndarray = None,
+            texcoords: np.ndarray = None,
+            colors: np.ndarray = None,
+            indices: np.ndarray = None,
+            draw_info: MeshDrawInfo | None = None,
+            item_keys: np.ndarray | None = None,
+            color_source_indices: np.ndarray | None = None,
     ):
         """Store CPU mesh arrays and draw layout (no GL objects)."""
         self.vertices = self._ensure_xyz(vertices)
@@ -170,7 +170,7 @@ class MeshData:
         return colors, normals, positions
 
     def as_indexed_arrays(
-        self,
+            self,
     ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
         """Unpack :meth:`spheres_for_atoms` output for tests and legacy tuple call sites."""
         return (
@@ -201,9 +201,9 @@ class MeshData:
         return self.draw_info
 
     def draw_spec(
-        self,
-        item_count: int | None = None,
-        first_item: int = 0,
+            self,
+            item_count: int | None = None,
+            first_item: int = 0,
     ) -> MeshDrawSpec:
         """Build a GL-free draw for ``first_item`` .. ``first_item + item_count``.
 
@@ -227,9 +227,9 @@ class MeshData:
         )
 
     def expand_attribute_per_item(
-        self,
-        values: np.ndarray,
-        elements_per_item: int | None = None,
+            self,
+            values: np.ndarray,
+            elements_per_item: int | None = None,
     ) -> np.ndarray:
         """Repeat one row per item across ``elements_per_item`` vertices.
 
@@ -286,12 +286,12 @@ class MeshData:
         return vao
 
     def draw(
-        self,
-        *,
-        first_item: int = 0,
-        item_count: int | None = None,
-        count: int | None = None,
-        mode: GLDrawMode | None = None,
+            self,
+            *,
+            first_item: int = 0,
+            item_count: int | None = None,
+            count: int | None = None,
+            mode: GLDrawMode | None = None,
     ) -> None:
         """Issue a modern ``glDraw*`` via the attached VAO and :meth:`draw_spec`.
 
@@ -425,7 +425,7 @@ class MeshData:
             self.uvs = uvs if self.uvs is None else np.vstack([self.uvs, uvs])
 
     def setup_vbg(
-        self, draw_mode: int | GLDrawMode = GLDrawMode.TRIANGLE_STRIP
+            self, draw_mode: int | GLDrawMode = GLDrawMode.TRIANGLE_STRIP
     ) -> VertexBufferGroup:
 
         return _setup_vbg(
@@ -585,13 +585,13 @@ class MeshData:
 
     @classmethod
     def from_raw(
-        cls,
-        vertices: Union[np.ndarray, list[float]],
-        normals: Optional[Union[np.ndarray, list[float]]] = None,
-        uvs: Optional[Union[np.ndarray, list[float]]] = None,
-        colors: Optional[Union[np.ndarray, list[float], list[tuple | int]]] = None,
-        indices: Optional[Union[np.ndarray, list[float]]] = None,
-        color_per_vertex: Optional[Union[np.ndarray, list[float]]] = None,
+            cls,
+            vertices: Union[np.ndarray, list[float]],
+            normals: Optional[Union[np.ndarray, list[float]]] = None,
+            uvs: Optional[Union[np.ndarray, list[float]]] = None,
+            colors: Optional[Union[np.ndarray, list[float], list[tuple | int]]] = None,
+            indices: Optional[Union[np.ndarray, list[float]]] = None,
+            color_per_vertex: Optional[Union[np.ndarray, list[float]]] = None,
     ):
         """
         Build a MeshData from raw/python inputs.
@@ -653,12 +653,12 @@ class MeshData:
         )
 
     def draw_legacy(
-        self,
-        color: tuple | None = None,
-        line_width: float = 1.0,
-        mode: int = GLDrawMode.TRIANGLES,
-        fill: bool = False,
-        alpha: float = 1.0,
+            self,
+            color: tuple | None = None,
+            line_width: float = 1.0,
+            mode: int = GLDrawMode.TRIANGLES,
+            fill: bool = False,
+            alpha: float = 1.0,
     ):
         """Draw with legacy client arrays (``gl*Pointer`` + ``glDrawElements``).
 
@@ -784,9 +784,9 @@ class MeshData:
 
     @staticmethod
     def _as_xyz_f32(
-        arr: Optional[np.ndarray],
-        n: int,
-        name: str,
+            arr: Optional[np.ndarray],
+            n: int,
+            name: str,
     ) -> np.ndarray:
         """Return (n, 3) float32; ``None`` becomes zeros."""
         if arr is None:
