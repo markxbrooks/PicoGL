@@ -26,7 +26,7 @@ from picogl.backend.gl.api.polygon_mode import gl_polygon_mode
 from picogl.backend.gl.api.enable import gl_disable, gl_enable
 from picogl.backend.gl.capability import GLBlendFactor, GLMaterialFace, GLPipelineCapability
 from picogl.backend.gl.enums import GLDrawMode, GLIndexType, GLNumeric
-from picogl.backend.gl.legacy.setup_vbg import VertexBufferGroup, setup_vbg
+from picogl.backend.gl.legacy.setup_vbg import VertexBufferGroup, setup_vbg as _setup_vbg
 from picogl.backend.gl.state.client import GLClientState
 from picogl.backend.gl.state.fill import GLFillMode
 from picogl.core.rgbcolor import RGBColor, RGBTuple
@@ -427,9 +427,8 @@ class MeshData:
     def setup_vbg(
         self, draw_mode: int | GLDrawMode = GLDrawMode.TRIANGLE_STRIP
     ) -> VertexBufferGroup:
-        from picogl.gpu.buffers.helper import as_vec3_array
 
-        return setup_vbg(
+        return _setup_vbg(
             colors=self.normalized_colors,
             normals=self.normalized_normals,
             positions=self.normalized_vertices,
