@@ -12,9 +12,27 @@ import numpy as np
 from numpy import dtype, generic
 
 
-def as_vec3_array(data) -> np.ndarray[Any, dtype[generic]]:
-    """as vec3 array"""
-    return np.asarray(data, dtype=np.float32).reshape(-1, 3)
+def as_vec3_array(data: Any) -> np.ndarray:
+    """Convert data to a float32 ``(N, 3)`` NumPy array.
+
+    Raises
+    ------
+    ValueError
+        If the resulting array does not have shape ``(N, 3)``.
+        positions = np.asarray(data, dtype=np.float32).reshape(-1, 3) is the faster way of doing this
+        [1, 2, 3, 4, 5, 6]
+        becomes
+        [[1, 2, 3],
+        [4, 5, 6]]
+    """
+    array = np.asarray(data, dtype=np.float32)
+
+    if array.ndim != 2 or array.shape[1] != 3:
+        raise ValueError(
+            f"expected data with shape (N, 3), got {array.shape}"
+        )
+
+    return array
 
 
 def as_meshdata(
