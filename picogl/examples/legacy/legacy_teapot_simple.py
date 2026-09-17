@@ -25,8 +25,6 @@ class SimpleTeapotRenderer(GlutRenderer):
     def __init__(self, width=800, height=600, title="Simple Legacy Teapot"):
         self.dimensions = Dimensions(width=width, height=height)
         super().__init__(self.dimensions.width, self.dimensions.height, title)
-        self.width = width
-        self.height = height
         self.title = title
         self.zoom_distance = 5.0
         self.wireframe_mode = False
