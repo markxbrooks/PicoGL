@@ -145,10 +145,27 @@ class RGBTuple:
     BLUE = _COLOR_VALUES["BLUE"]
     
     
-class RGBATuple:
-    """RGBA tuple"""
-    WHITE = (1.0, 1.0, 1.0, 1.0)
-    BLACK = (0.0, 0.0, 0.0, 1.0)
+class RGBTuple:
+    """Named RGB triples in ``[0, 1]``."""
+    WHITE: ClassVar["Self"]
+    BLACK: ClassVar["Self"]
+    RED: ClassVar["Self"]
+    GREEN: ClassVar["Self"]
+    BLUE: ClassVar["Self"]
+
+
+class RGBATuple(RGBTuple):
+    """Named RGBA quadruples in ``[0, 1]``."""
+    WHITE: ClassVar["Self"]
+    BLACK: ClassVar["Self"]
+    RED: ClassVar["Self"]
+    GREEN: ClassVar["Self"]
+    BLUE: ClassVar["Self"]
+
+
+for name, rgb in _COLOR_VALUES.items():
+    setattr(RGBTuple, name, rgb)
+    setattr(RGBATuple, name, (*rgb, 1.0))
     
 
 @dataclass(frozen=False)
