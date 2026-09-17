@@ -132,6 +132,9 @@ for name, rgb in _COLOR_VALUES.items():
     setattr(RGBAColor, name, RGBAColor(*rgb, 1.0))
 
 
+RGB = tuple[float, float, float]
+RGBA = tuple[float, float, float, float]
+
 
 class RGBTuple:
     """Named RGB triples in ``[0, 1]``."""
