@@ -9,11 +9,6 @@ def clamp01(x: float) -> float:
     return max(0.0, min(1.0, float(x)))
 
 
-def as_vec3_array_old(data) -> np.ndarray:
-    """as vec3 array"""
-    return np.asarray(data, dtype=np.float32).reshape(-1, 3)
-
-
 class Vec3Mixin:
     """Vec3 Mixin"""
 
