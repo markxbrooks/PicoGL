@@ -42,9 +42,9 @@ class LightSource:
     ) -> "LightSource":
         return cls(
             position=Vec4(direction, 0.0),
-            ambient=RGBAColor(0.0, 0.0, 0.0, 1.0),
-            diffuse=RGBAColor(1.0, 1.0, 1.0, 1.0),
-            specular=RGBAColor(0.0, 0.0, 0.0, 1.0),
+            ambient=RGBAColor.BLACK,
+            diffuse=RGBAColor.WHITE,
+            specular=RGBAColor.BLACK,
         )
 
     @classmethod

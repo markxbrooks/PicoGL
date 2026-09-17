@@ -2,6 +2,8 @@
 Enable blending
 """
 
+from picogl.core.rgbcolor import RGBATuple
+
 
 def enable_blending(backend: "GLBackend") -> None:
     """
@@ -12,5 +14,4 @@ def enable_blending(backend: "GLBackend") -> None:
     """
     backend.blend.set_blend(True)
     backend.blend.set_alpha_blending()
-    black = (0.0, 0.0, 0.0, 1.0)
-    backend.frame.set_clear_color(black)
+    backend.frame.set_clear_color(RGBATuple.BLACK)

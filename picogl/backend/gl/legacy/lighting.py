@@ -29,13 +29,13 @@ DEFAULT_LEGACY_LIGHT = LightSource(
     position=Vec4(1.0, 1.0, 1.0, 0.0),
     ambient=RGBAColor(0.3, 0.3, 0.3, 1.0),
     diffuse=RGBAColor(0.8, 0.8, 0.8, 1.0),
-    specular=RGBAColor(1.0, 1.0, 1.0, 1.0),
+    specular=RGBAColor.WHITE,
 )
 
 DEFAULT_LEGACY_MATERIAL = PhongMaterial(
     ambient=RGBAColor(0.2, 0.2, 0.2, 1.0),
     diffuse=RGBAColor(0.8, 0.8, 0.8, 1.0),
-    specular=RGBAColor(1.0, 1.0, 1.0, 1.0),
+    specular=RGBAColor.WHITE,
     shininess=50.0,
 )
 

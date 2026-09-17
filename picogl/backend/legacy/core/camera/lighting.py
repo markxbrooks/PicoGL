@@ -51,9 +51,9 @@ def set_background_color(show_white_background: bool) -> None:
     Choose bg color_array
     """
     if show_white_background:
-        color = RGBAColor(1.0, 1.0, 1.0, 1.0)  # White background
+        color = RGBAColor.WHITE
     else:
-        color = RGBAColor(0.0, 0.0, 0.0, 1.0)
+        color = RGBAColor.BLACK
     buffer = GLFramebuffer()
     buffer.clear(color=color.tuple)
 

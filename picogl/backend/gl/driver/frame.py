@@ -13,7 +13,7 @@ from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.gl.enums.legacy.scale import gl_viewport
 from picogl.backend.state import gl_value
 from picogl.core.mixin.vec3 import clamp01
-from picogl.core.rgbcolor import RGBAColor
+from picogl.core.rgbcolor import RGBAColor, RGBATuple
 from picogl.core.viewport import Viewport
 
 
@@ -32,7 +32,7 @@ class GLFrameDriver:
         gl_clear(gl_value(mask))
 
     def set_clear_background_and_color_from_rgba(
-        self, color: RGBAColor = RGBAColor(0.0, 0.0, 0.0, 1.0)
+        self, color: RGBAColor = RGBAColor.BLACK
     ) -> None:
         """
         Clears the screen to a specified color using OpenGL commands.
@@ -51,7 +51,7 @@ class GLFrameDriver:
 
         self.clear_background()
 
-    def set_clear_background_and_color(self, color=(0.0, 0.0, 0.0, 1.0)):
+    def set_clear_background_and_color(self, color=RGBATuple.BLACK):
         """
         Clears the screen to a specified color using OpenGL commands.
 
@@ -62,7 +62,7 @@ class GLFrameDriver:
         Args:
             color (tuple[float, float, float, float]): A tuple representing the RGBA
                 color values to clear the screen. Each value should be between
-                0.0 and 1.0. Defaults to (0.0, 0.0, 0.0, 1.0).
+                0.0 and 1.0. Defaults to :data:`RGBATuple.BLACK`.
         """
         self.set_clear_color(color)
         self.clear_background()
@@ -82,7 +82,7 @@ class GLFrameDriver:
         self.set_clear_color(color)
 
     @staticmethod
-    def set_clear_color(color=(0.0, 0.0, 0.0, 1.0)):
+    def set_clear_color(color=RGBATuple.BLACK):
         gl_clear_color(color)
 
     def set_viewport(self, viewport: Viewport):

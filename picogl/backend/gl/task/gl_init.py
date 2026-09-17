@@ -17,6 +17,7 @@ from typing import Callable, Optional
 from picogl.backend.gl.capability import GLPipelineCapability
 from picogl.backend.gl.enums import GLBitMask
 from picogl.backend.legacy.core.camera.setup import enable_blending
+from picogl.core.rgbcolor import RGBATuple
 from picogl.info import get_gl_info
 
 from decologr import Decologr as log
@@ -94,7 +95,7 @@ modern_init_gl_list = [
     GLTask("✅ Enabling depth test", lambda b: b.depth.set_depth_test(True)),
     GLTask(
         "✅ Setting clear colour",
-        lambda b: set_clear_color_only(b, (0.0, 0.0, 0.0, 1.0)),
+        lambda b: set_clear_color_only(b, RGBATuple.BLACK),
     ),
     GLTask("✅ Enabling blending", lambda b: enable_blending(b)),
     # glMaterial* / GL_LIGHTING are invalid in Core Profile; modern shaders own lighting.
