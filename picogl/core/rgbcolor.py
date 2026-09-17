@@ -143,7 +143,13 @@ class RGBTuple:
     BLACK = _COLOR_VALUES["BLACK"]
     RED = _COLOR_VALUES["RED"]
     BLUE = _COLOR_VALUES["BLUE"]
-
+    
+    
+class RGBATuple:
+    """RGBA tuple"""
+    WHITE = (1.0, 1.0, 1.0, 1.0)
+    BLACK = (0.0, 0.0, 0.0, 1.0)
+    
 
 @dataclass(frozen=False)
 class Coord:
