@@ -33,15 +33,15 @@ class AttributeSpec:
 
 
 def legacy_attribute_spec(
-    role: VertexBufferRole,
-    index: int,
+        role: VertexBufferRole,
+        index: int,
     *,
-    size: int = 3,
-    name: str | VertexBufferRole | None = None,
-    dtype: GLNumeric,
-    normalized: GLBoolean = GLBoolean.FALSE,
-    stride: int = 0,
-    offset: int = 0,
+        size: int = 3,
+        name: str | VertexBufferRole | None = None,
+        dtype: GLNumeric,
+        normalized: GLBoolean = GLBoolean.FALSE,
+        stride: int = 0,
+        offset: int = 0,
 ) -> AttributeSpec:
     """Build an AttributeSpec with aligned legacy role, vbo_type, and name."""
     vbo_type = role.value if isinstance(role.value, VBOType) else VBOType(role.value)
