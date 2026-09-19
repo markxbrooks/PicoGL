@@ -33,6 +33,7 @@ class VBOType(StrEnum):
 class MeshDataAttrs(StrEnum):
     """Mesh Data Attrs"""
 
+    POSITIONS = "positions"
     VERTICES = "vertices"
     COLORS = "colors"
     NORMALS = "normals"
