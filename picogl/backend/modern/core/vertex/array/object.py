@@ -90,7 +90,7 @@ def _is_element_attribute(attr: AttributeSpec) -> bool:
     """Return True when *attr* describes an element buffer, not a vertex attribute.
 
     Index buffers are bound via :meth:`VertexArrayObject.add_ebo`, not as VBOs.
-    Layouts such as ``setup_bond_layout()`` still list EBO for documentation;
+    Some layouts still list EBO for documentation;
     ``set_layout`` must skip them instead of requiring a vertex buffer.
     """
     if getattr(attr, "role", None) == VertexBufferRole.EBO:
