@@ -16,7 +16,7 @@ Functions:
 """
 
 from picogl.backend.gl.enums import GLNumeric
-from picogl.gpu.buffers.attributes import LayoutDescriptor, legacy_attribute_spec
+from picogl.gpu.buffers.attributes import LayoutDescriptor, attribute_spec
 from picogl.gpu.buffers.vertex.aliases import VertexBufferRole
 
 
@@ -26,7 +26,7 @@ def create_layout(attributes):
 
 def create_element_attributes():
     return [
-        legacy_attribute_spec(
+        attribute_spec(
             VertexBufferRole.VBO,
             0,
             name="positions",
@@ -37,13 +37,13 @@ def create_element_attributes():
 
 def create_common_attributes():
     return [
-        legacy_attribute_spec(
+        attribute_spec(
             VertexBufferRole.VBO,
             0,
             name="positions",
             dtype=GLNumeric.FLOAT,
         ),
-        legacy_attribute_spec(
+        attribute_spec(
             VertexBufferRole.CBO,
             1,
             name="colors",

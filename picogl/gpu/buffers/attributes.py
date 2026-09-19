@@ -32,13 +32,13 @@ class AttributeSpec:
     role: VertexBufferRole = VertexBufferRole.VBO
 
 
-def legacy_attribute_spec(
+def attribute_spec(
         role: VertexBufferRole,
         index: int,
     *,
         size: int = 3,
         name: str | VertexBufferRole | None = None,
-        dtype: GLNumeric,
+        dtype: GLNumeric = GLNumeric.FLOAT,
         normalized: GLBoolean = GLBoolean.FALSE,
         stride: int = 0,
         offset: int = 0,
