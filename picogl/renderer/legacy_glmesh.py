@@ -26,7 +26,7 @@ from picogl.core.rgbcolor import RGBTuple
 from picogl.gpu.buffers.attributes import (
     AttributeSpec,
     CanonicalVertexAttrs,
-    legacy_attribute_spec,
+    attribute_spec,
 )
 from picogl.gpu.buffers.factory import create_layout
 from picogl.gpu.buffers.helper import as_vec3_array
@@ -134,19 +134,19 @@ class LegacyGLMesh(MeshDataOwner):
         Create layout that matches the VBOs being added
         """
         attributes = [
-            legacy_attribute_spec(
+            attribute_spec(
                 VertexBufferRole.VBO,
                 0,
                 name=CanonicalVertexAttrs.POSITIONS,
                 dtype=GLNumeric.FLOAT,
             ),
-            legacy_attribute_spec(
+            attribute_spec(
                 VertexBufferRole.CBO,
                 1,
                 name=CanonicalVertexAttrs.COLORS,
                 dtype=GLNumeric.FLOAT,
             ),
-            legacy_attribute_spec(
+            attribute_spec(
                 VertexBufferRole.NBO,
                 2,
                 name=CanonicalVertexAttrs.NORMALS,

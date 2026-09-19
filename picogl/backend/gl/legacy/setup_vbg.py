@@ -115,7 +115,7 @@ else:
     from picogl.gpu.buffers.attributes import (
         AttributeSpec,
         LayoutDescriptor,
-        legacy_attribute_spec,
+        attribute_spec,
     )
     from picogl.gpu.buffers.vertex.aliases import NAME_ALIASES
     from picogl.gpu.buffers.vertex.legacy import VertexBufferGroup as VertexBufferGroup
@@ -135,19 +135,19 @@ def build_legacy_vbg_layout(
     if _HEADLESS:
         return LayoutDescriptor(
             [
-                legacy_attribute_spec(
+                attribute_spec(
                     VertexBufferRole.VBO,
                     0,
                     size=positions_size,
                     dtype=GLNumeric.FLOAT,
                 ),
-                legacy_attribute_spec(
+                attribute_spec(
                     VertexBufferRole.NBO,
                     1,
                     size=normals_size,
                     dtype=GLNumeric.FLOAT,
                 ),
-                legacy_attribute_spec(
+                attribute_spec(
                     VertexBufferRole.CBO,
                     2,
                     size=colors_size,
@@ -169,7 +169,7 @@ def build_legacy_vbg_position_layout(component_size: int = 3) -> LayoutDescripto
     if _HEADLESS:
         return LayoutDescriptor(
             [
-                legacy_attribute_spec(
+                attribute_spec(
                     VertexBufferRole.VBO,
                     0,
                     size=component_size,
@@ -224,7 +224,7 @@ def create_vertex_buffer_group(
         if not isinstance(role, VertexBufferRole):
             role = VertexBufferRole.VBO
         layout_specs.append(
-            legacy_attribute_spec(
+            attribute_spec(
                 role,
                 index,
                 size=size,
