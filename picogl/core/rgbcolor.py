@@ -48,8 +48,6 @@ class RGBColor(Vec3Mixin):
     MAGENTA: ClassVar["Self"]
     CYAN: ClassVar["Self"]
 
-    COMPONENTS: ClassVar[int] = 3
-
     def __post_init__(self):
         # Enforce constraints on init
         object.__setattr__(self, "r", clamp01(self.r))

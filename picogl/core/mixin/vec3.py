@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Tuple
+from typing import Tuple, ClassVar
 
 import numpy as np
 
@@ -11,6 +11,7 @@ def clamp01(x: float) -> float:
 
 class Vec3Mixin:
     """Vec3 Mixin"""
+    COMPONENTS: ClassVar[int] = 3
 
     def to_tuple(self) -> Tuple[float, float, float]:
         raise NotImplementedError

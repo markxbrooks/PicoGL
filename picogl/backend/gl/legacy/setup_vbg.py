@@ -157,11 +157,7 @@ def build_legacy_vbg_layout(
         )
     from elmo.gl.layout import legacy_position_normal_color_layout
 
-    return legacy_position_normal_color_layout(
-        positions_size=positions_size,
-        normals_size=normals_size,
-        colors_size=colors_size,
-    )
+    return legacy_position_normal_color_layout()
 
 
 def build_legacy_vbg_position_layout(component_size: int = 3) -> LayoutDescriptor:
@@ -179,7 +175,7 @@ def build_legacy_vbg_position_layout(component_size: int = 3) -> LayoutDescripto
         )
     from elmo.gl.layout import legacy_position_layout
 
-    return legacy_position_layout(component_size)
+    return legacy_position_layout()
 
 
 def convert_to_numpy(colors, normals, positions):
