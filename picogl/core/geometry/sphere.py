@@ -11,6 +11,12 @@ import numpy as np
 from picogl.core.vec3 import Vec3
 from picogl.renderer.mesh_arrays import MeshArrays
 
+DEFAULT_SPHERE_STACKS = 16
+
+DEFAULT_SPHERE_SLICES = 16
+
+DEFAULT_SPHERE_RADIUS = 1.0
+
 
 def iter_longitudes(slices: int) -> Iterator[float]:
     """Yield longitude angles for each slice (including closure vertex)."""
@@ -191,9 +197,9 @@ class SphereGeometrySpec:
     to :class:`SphereMesh`.
     """
 
-    radius: float = 1.0
-    slices: int = 16
-    stacks: int = 16
+    radius: float = DEFAULT_SPHERE_RADIUS
+    slices: int = DEFAULT_SPHERE_SLICES
+    stacks: int = DEFAULT_SPHERE_STACKS
 
 
 class SphereMesh:
