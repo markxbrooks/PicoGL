@@ -11,6 +11,8 @@ Classes:
 from typing import Any, Optional
 
 import numpy as np
+
+from backend.legacy.core.vertex.buffer.vertex import LegacyVBO
 from picogl.backend.gl.api import gl_bind_buffer
 from picogl.backend.gl.api.client_state import gl_enable_legacy_client_state
 from picogl.backend.gl.api.draw import gl_draw_arrays, gl_draw_elements
@@ -67,7 +69,7 @@ class VertexBufferGroup(VertexBase):
         pass
 
     @property
-    def vbo(self) -> Optional[LegacyPositionVBO | int]:
+    def vbo(self) -> LegacyVBO | None:
         return self.named_vbos.get(VertexBufferRole.VBO)
 
     @vbo.setter
@@ -75,7 +77,7 @@ class VertexBufferGroup(VertexBase):
         self._set_named_vbo(VertexBufferRole.VBO, value)
 
     @property
-    def cbo(self) -> Optional[LegacyColorVBO | int]:
+    def cbo(self) -> LegacyVBO | None:
         return self.named_vbos.get(VertexBufferRole.CBO)
 
     @cbo.setter
@@ -83,7 +85,7 @@ class VertexBufferGroup(VertexBase):
         self._set_named_vbo(VertexBufferRole.CBO, value)
 
     @property
-    def nbo(self) -> Optional[LegacyNormalVBO | int]:
+    def nbo(self) -> LegacyVBO | None:
         return self.named_vbos.get(VertexBufferRole.NBO)
 
     @nbo.setter
@@ -91,7 +93,7 @@ class VertexBufferGroup(VertexBase):
         self._set_named_vbo(VertexBufferRole.NBO, value)
 
     @property
-    def ebo(self) -> Optional[LegacyEBO | int]:
+    def ebo(self) -> LegacyVBO | None:
         return self.named_vbos.get(VertexBufferRole.EBO)
 
     @ebo.setter
@@ -112,7 +114,7 @@ class VertexBufferGroup(VertexBase):
         self.named_vbos[canonical] = vbo
         return vbo
 
-    def get_vbo_object(self, name: str) -> "LegacyVBO":
+    def get_vbo_object(self, name: str) -> LegacyVBO | None:
         """Retrieve a VBO by its semantic or shorthand name."""
         canonical = NAME_ALIASES.get(name, name)
         return self.named_vbos.get(canonical)
