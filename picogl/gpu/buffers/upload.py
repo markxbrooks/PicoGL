@@ -21,7 +21,7 @@ Parameters:
 -----------
 - `vao_target`: Name of the VAO attribute in the target object.
 - `vbo_target`: Name of the VBO attribute in the target object.
-- `render_buffers`: Object or dataclass holding OpenGL buffer handles.
+- `gpu_buffers`: Object or dataclass holding OpenGL buffer handles.
 - `vertex_data`: Interleaved vertex attributes (e.g., positions, normals).
 - `attributes`: List of tuples (location, size, offset) for attribute pointers.
 - `element_data`: Optional index data for indexed rendering.
@@ -36,7 +36,7 @@ Usage Example:
     upload_geometry_buffers(
         vao_target="mesh_vao",
         vbo_target="mesh_vbo",
-        render_buffers=my_buffers,
+        gpu_buffers=my_buffers,
         vertex_data=vertices,
         attributes=[(0, 3, 0), (1, 3, 12)],
         element_data=indices,
@@ -64,7 +64,7 @@ from picogl.gpu.buffers.attributes import AttributeSpec
 def upload_geometry_buffers(
     vao_target: str,
     vbo_target: str,
-    render_buffers: object,
+    gpu_buffers: object,
     vertex_data: np.ndarray,
     attributes: list[tuple[int, int, int]],  # (location, size, offset)
     *,
@@ -75,13 +75,13 @@ def upload_geometry_buffers(
     """
     upload_geometry_buffers
 
-    :param vao_target: Name of the VAO attribute in render_buffers (e.g. "calpha_vao")
-    :param vbo_target: Name of the VBO attribute in render_buffers (e.g. "calpha_buffer_group")
-    :param render_buffers: Any object or dataclass holding OpenGL buffer handles
+    :param vao_target: Name of the VAO attribute in gpu_buffers (e.g. "calpha_vao")
+    :param vbo_target: Name of the VBO attribute in gpu_buffers (e.g. "calpha_buffer_group")
+    :param gpu_buffers: Any object or dataclass holding OpenGL buffer handles
     :param vertex_data: Interleaved vertex attributes (e.g. position_array + normal)
     :param attributes: List of tuples (location, size, offset) for glVertexAttribPointer
     :param element_data: Optional index data (e.g. for GL_TRIANGLES)
-    :param ebo_target: Name of the EBO attribute in render_buffers
+    :param ebo_target: Name of the EBO attribute in gpu_buffers
     :param usage: GL_STATIC_DRAW or GL_DYNAMIC_DRAW
 
     General-purpose VAO/VBO upload function for vertex meshdata.
@@ -95,8 +95,8 @@ def upload_geometry_buffers(
         vertex_data,
     )
 
-    setattr(render_buffers, vao_target, vao)
-    setattr(render_buffers, vbo_target, vbo)
+    setattr(gpu_buffers, vao_target, vao)
+    setattr(gpu_buffers, vbo_target, vbo)
 
     gl_bind_vertex_array(vao)
     gl_bind_buffer(GLBufferTarget.ARRAY, vbo)
@@ -122,7 +122,7 @@ def upload_geometry_buffers(
 
     if element_data is not None and ebo_target is not None:
         ebo = gl_generate_buffers(1)
-        setattr(render_buffers, ebo_target, ebo)
+        setattr(gpu_buffers, ebo_target, ebo)
         gl_bind_buffer(GLBufferTarget.ELEMENT, ebo)
         gl_buffer_data(
             target=GLBufferTarget.ELEMENT,
