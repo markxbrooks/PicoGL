@@ -64,7 +64,7 @@ class RendererBase(AbstractRenderer):
     def initialized(self) -> bool:
         return self._initialized
 
-    def render(self, mvp_matrix: Optional[np.ndarray] = None) -> None:
+    def render(self) -> None:
         """
         render dispatcher
 
