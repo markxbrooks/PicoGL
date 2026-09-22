@@ -1,7 +1,12 @@
 """Minimal PicoGL Cube. Compare to modern_colored_cube.py"""
+import os
 
+import sys
 from pathlib import Path
-
+# freeglut creates GLX contexts; under Wayland PyOpenGL may pick EGL first.
+# Must be set before any OpenGL / picogl import.
+if sys.platform.startswith("linux"):
+    os.environ.setdefault("PYOPENGL_PLATFORM", "glx")
 from picogl.examples.data.cube_data import g_color_buffer_data, g_vertex_buffer_data
 from picogl.globals import PICOGL_EXAMPLES_DIR
 from picogl.renderer import MeshData
