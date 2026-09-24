@@ -24,12 +24,7 @@ from picogl.core.mixin.vec3 import Vec3Mixin, clamp01
 from picogl.core.mixin.vec4 import Vec4Mixin
 from typing_extensions import Self
 
-# Utility
 
-# Vec3 mixin to share common RGB-like behavior
-
-
-# RGBColor
 @dataclass(frozen=True)
 class RGBColor(Vec3Mixin):
     """RGB color"""
@@ -47,6 +42,7 @@ class RGBColor(Vec3Mixin):
     YELLOW: ClassVar["Self"]
     MAGENTA: ClassVar["Self"]
     CYAN: ClassVar["Self"]
+    GREY: ClassVar["Self"]
 
     def __post_init__(self):
         # Enforce constraints on init
@@ -127,7 +123,8 @@ _COLOR_VALUES = {
     "YELLOW": (1.0, 1.0, 0.0),
     "MAGENTA": (1.0, 0.0, 1.0),
     "CYAN": (0.0, 1.0, 1.0),
-    "TEAPOT_RED": (0.8, 0.2, 0.2)
+    "TEAPOT_RED": (0.8, 0.2, 0.2),
+    "GREY": (0.5, 0.5, 0.5)
 }
 
 for name, rgb in _COLOR_VALUES.items():
