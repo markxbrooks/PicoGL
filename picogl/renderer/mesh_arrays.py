@@ -8,7 +8,7 @@ from typing import Optional
 import numpy as np
 from picogl.backend.gl.enums import GLDrawMode
 from picogl.renderer.draw_spec import MeshDrawInfo
-from picogl.renderer.meshdata import MeshData
+from picogl.renderer.meshdata import MeshData, PNCPart
 
 
 @dataclass(frozen=True, slots=True)
@@ -63,6 +63,36 @@ class MeshArrays:
     def indexed(self) -> bool:
         """Whether this mesh carries an index buffer."""
         return self.indices is not None
+
+    @classmethod
+    def from_pnc(
+        cls,
+        part: PNCPart,
+        *,
+        indices: Optional[np.ndarray] = None,
+    ) -> "MeshArrays":
+        """Build :class:`MeshArrays` from a :data:`~picogl.renderer.meshdata.PNCPart`.
+
+        :param part: ``(positions, normals, colors)``
+        :param indices: Optional element buffer
+        :return: New MeshArrays value
+        """
+        positions, normals, colors = part
+        return cls(
+            positions=positions,
+            normals=normals,
+            colors=colors,
+            indices=indices,
+        )
+
+    def as_pnc(self) -> PNCPart:
+        """Return ``(positions, normals, colors)``.
+
+        :raises ValueError: When colors are missing
+        """
+        if self.colors is None:
+            raise ValueError("MeshArrays.as_pnc requires colors")
+        return self.positions, self.normals, self.colors
 
     def with_colors(self, colors: np.ndarray) -> MeshArrays:
         """Return a copy with *colors* replacing the current color array.

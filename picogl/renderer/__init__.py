@@ -10,8 +10,13 @@ __all__ = [
     "GLResourceRegistry",
     "Initializable",
     "MeshArrays",
+    "MeshBuilder",
     "MeshData",
+    "MeshPart",
+    "PNCPart",
     "RendererBase",
+    "mesh_part_from_pnc",
+    "solid_color_mesh_part",
 ]
 
 
@@ -32,10 +37,30 @@ def __getattr__(name):
         from .mesh_arrays import MeshArrays
 
         return MeshArrays
+    if name == "MeshBuilder":
+        from .mesh_builder import MeshBuilder
+
+        return MeshBuilder
+    if name == "MeshPart":
+        from .mesh_builder import MeshPart
+
+        return MeshPart
+    if name == "mesh_part_from_pnc":
+        from .mesh_builder import mesh_part_from_pnc
+
+        return mesh_part_from_pnc
+    if name == "solid_color_mesh_part":
+        from .mesh_builder import solid_color_mesh_part
+
+        return solid_color_mesh_part
     if name == "MeshData":
         from .meshdata import MeshData
 
         return MeshData
+    if name == "PNCPart":
+        from .meshdata import PNCPart
+
+        return PNCPart
     if name == "Initializable":
         from .initializable import Initializable
 

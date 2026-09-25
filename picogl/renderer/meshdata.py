@@ -4,7 +4,7 @@ texture coordinates, colors, and indices. This class offers a set of utilities t
 handle OpenGL-related state objects and simplify rendering workflows.
 """
 
-from typing import Any, Optional, Union
+from typing import Any, Optional, Union, Tuple
 
 import numpy as np
 from numpy import dtype, generic, ndarray
@@ -44,6 +44,9 @@ from picogl.renderer.draw_spec import (
 from picogl.utils.loader.object_data import ObjectData
 
 from decologr import Decologr as log
+
+# Unindexed attribute triple: (positions, normals, colors), each ``(N, 3)``.
+PNCPart = Tuple[np.ndarray, np.ndarray, np.ndarray]
 
 
 def np_positions_to_normal_array(
@@ -135,6 +138,30 @@ class MeshData:
             )
 
     @classmethod
+    def from_pnc(
+        cls,
+        part: PNCPart,
+        *,
+        indices: Optional[np.ndarray] = None,
+        draw_info: MeshDrawInfo | None = None,
+    ) -> "MeshData":
+        """Build a :class:`MeshData` from a :data:`PNCPart`.
+
+        :param part: ``(positions, normals, colors)`` float arrays
+        :param indices: Optional element buffer
+        :param draw_info: Optional draw layout; inferred when omitted
+        :return: New MeshData instance
+        """
+        positions, normals, colors = part
+        return cls(
+            vertices=positions,
+            normals=normals,
+            colors=colors,
+            indices=indices,
+            draw_info=draw_info,
+        )
+
+    @classmethod
     def from_arrays(
         cls,
         positions: np.ndarray,
@@ -143,12 +170,53 @@ class MeshData:
         *,
         indices: Optional[np.ndarray] = None,
     ) -> "MeshData":
-        return cls(
-            vertices=positions,
-            normals=normals,
-            colors=colors,
+        """Build MeshData from separate P/N/C arrays (see also :meth:`from_pnc`)."""
+        return cls.from_pnc(
+            (positions, normals, colors),
             indices=indices,
         )
+
+    def as_pnc(self) -> PNCPart:
+        """Return ``(positions, normals, colors)`` as float32 ``(N, 3)`` arrays.
+
+        Missing normals/colors are filled with zeros to match the vertex count.
+        An empty mesh returns three empty ``(0, 3)`` arrays.
+        """
+        if self.vertices is None:
+            empty = np.empty((0, 3), dtype=np.float32)
+            return empty, empty.copy(), empty.copy()
+        positions = as_vec3_array(self.vertices)
+        n = int(positions.shape[0])
+        normals = (
+            as_vec3_array(self.normals)
+            if self.normals is not None
+            else np.zeros((n, 3), dtype=np.float32)
+        )
+        colors = (
+            as_vec3_array(self.colors)
+            if self.colors is not None
+            else np.zeros((n, 3), dtype=np.float32)
+        )
+        return positions, normals, colors
+
+    def with_pnc_colors(self, colors: np.ndarray) -> "MeshData":
+        """Return a new mesh with the colour channel replaced.
+
+        Positions, normals, indices, and :attr:`draw_info` are preserved.
+
+        :param colors: RGB rows ``(N, 3)`` or a broadcastable colour array
+        :return: New :class:`MeshData`
+        """
+        positions, normals, _old = self.as_pnc()
+        return self.from_pnc(
+            (positions, normals, np.asarray(colors, dtype=np.float32)),
+            indices=self.indices,
+            draw_info=self.draw_info,
+        )
+
+    def as_vec3_arrays(self) -> PNCPart:
+        """Alias for :meth:`as_pnc` (positions, normals, colors)."""
+        return self.as_pnc()
 
     @property
     def mesh_data(self) -> "MeshData":
@@ -177,13 +245,6 @@ class MeshData:
             normals=self.normals,
             colors=self.colors,
         )
-
-    def as_vec3_arrays(self) -> tuple[
-        ndarray[Any, dtype[generic]], ndarray[Any, dtype[generic]], ndarray[Any, dtype[generic]]]:
-        positions = as_vec3_array(data=self.vertices)
-        colors = as_vec3_array(data=self.colors)
-        normals = as_vec3_array(data=self.normals)
-        return colors, normals, positions
 
     def as_indexed_arrays(
             self,
