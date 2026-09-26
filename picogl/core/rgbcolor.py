@@ -145,6 +145,7 @@ class RGBTuple:
     TEAPOT_RED: ClassVar[RGB]
     GREEN: ClassVar[RGB]
     BLUE: ClassVar[RGB]
+    BLUE_ISOSURFACE: ClassVar[RGB]
 
 
 class RGBATuple:
