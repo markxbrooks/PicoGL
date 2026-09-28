@@ -51,7 +51,7 @@ class LegacyQtObjectRenderer(GLBase):
         # Cube data
         self._initialized: bool = False
         self.gl_mesh_data = None
-        self.mesh_data: Optional[MeshData] = None
+        self.mesh_data: Optional["MeshData"] = None
         self.vertices = np.array(g_vertex_buffer_data, dtype=np.float32)
         self.colors = np.array(g_color_buffer_data, dtype=np.float32)
 
