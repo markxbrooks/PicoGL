@@ -125,7 +125,7 @@ _COLOR_VALUES = {
     "CYAN": (0.0, 1.0, 1.0),
     "TEAPOT_RED": (0.8, 0.2, 0.2),
     "GREY": (0.5, 0.5, 0.5),
-    "ISOSURFACE": (0.2, 0.6, 1.0)
+    "CONNOLLY_SURFACE": (0.2, 0.6, 1.0)
 }
 
 for name, rgb in _COLOR_VALUES.items():
