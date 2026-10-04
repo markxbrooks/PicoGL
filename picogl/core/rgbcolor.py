@@ -124,7 +124,8 @@ _COLOR_VALUES = {
     "MAGENTA": (1.0, 0.0, 1.0),
     "CYAN": (0.0, 1.0, 1.0),
     "TEAPOT_RED": (0.8, 0.2, 0.2),
-    "GREY": (0.5, 0.5, 0.5)
+    "GREY": (0.5, 0.5, 0.5),
+    "ISOSURFACE": (0.2, 0.6, 1.0)
 }
 
 for name, rgb in _COLOR_VALUES.items():
@@ -139,6 +140,7 @@ RGBA = tuple[float, float, float, float]
 class RGBTuple:
     """Named RGB triples in ``[0, 1]``."""
 
+    CONNOLLY_SURFACE: ClassVar[RGB]
     WHITE: ClassVar[RGB]
     BLACK: ClassVar[RGB]
     RED: ClassVar[RGB]
