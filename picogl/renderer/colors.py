@@ -21,7 +21,7 @@ from decologr import Decologr as log
 def attach_rgba_colors_to_mesh(colors: ndarray, mesh_data: MeshData, view: ViewState):
     """Attach RGBA colors expected by legacy isosurface renderer"""
     try:
-        opacity = 1.0 - float(view.connolly_surface_transparency)
+        opacity = 1.0 - float(view.connolly_surface.transparency)
         rgba = np.hstack(
             (
                 colors.astype(np.float32),
