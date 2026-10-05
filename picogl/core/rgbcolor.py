@@ -125,6 +125,7 @@ _COLOR_VALUES = {
     "CYAN": (0.0, 1.0, 1.0),
     "TEAPOT_RED": (0.8, 0.2, 0.2),
     "GREY": (0.5, 0.5, 0.5),
+    "LIGHT_GREY": (0.8, 0.8, 0.8),
     "CONNOLLY_SURFACE": (0.2, 0.6, 1.0)
 }
 
@@ -141,6 +142,9 @@ class RGBTuple:
     """Named RGB triples in ``[0, 1]``."""
 
     CONNOLLY_SURFACE: ClassVar[RGB]
+    WHITE: ClassVar[RGB]
+    GREY: ClassVar[RGB]
+    LIGHT_GREY: ClassVar[RGB]
     WHITE: ClassVar[RGB]
     BLACK: ClassVar[RGB]
     RED: ClassVar[RGB]
