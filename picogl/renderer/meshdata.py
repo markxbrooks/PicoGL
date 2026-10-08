@@ -137,6 +137,12 @@ class MeshData:
                 index_count=index_count,
             )
 
+    def log_contents(self):
+        """log contents of mesh data"""
+        n_vert = 0 if self.vertices is None else len(self.vertices)
+        n_face = 0 if self.faces is None else len(self.faces)
+        log.message(f"mesh extracted: {n_vert} vertices, {n_face} faces ")
+
     @classmethod
     def from_pnc(
         cls,
