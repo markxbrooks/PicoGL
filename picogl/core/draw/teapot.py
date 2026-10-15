@@ -4,7 +4,7 @@ Draw the teapot using built-in GLUT primitives.
 from typing import Any
 
 import numpy as np
-from molib.pdb.coordinate.coordinate import Coordinates
+from molib.pdb.coordinate.coordinate import Coordinate3D
 from picogl.backend.gl.api.color import gl_color_rgb
 from picogl.backend.gl.api.vertex.vertex_3f import gl_vertex_line
 from picogl.backend.gl.capability import GLFixedFunctionCapability
@@ -33,12 +33,12 @@ def draw_teapot(wireframe_mode):
     glut_solid_teapot(1.0)
 
 def coordinate_pair_for_vector(
-    origin: Coordinates,
-    vector: Coordinates,
+    origin: Coordinate3D,
+    vector: Coordinate3D,
     length: float,
-) -> tuple[Coordinates, Coordinates]:
+) -> tuple[Coordinate3D, Coordinate3D]:
     """Return the start and end coordinates of a vector."""
-    end = Coordinates(
+    end = Coordinate3D(
         origin.x + vector.x * length,
         origin.y + vector.y * length,
         origin.z + vector.z * length,
@@ -49,7 +49,7 @@ def generate_normal_lines(
     count: int = NORMAL_SAMPLE_COUNT,
     radius: float = NORMAL_RADIUS,
     length: float = NORMAL_LENGTH,
-) -> list[tuple[Coordinates, Coordinates]]:
+) -> list[tuple[Coordinate3D, Coordinate3D]]:
     """Generate radial normal vectors around a circle."""
     lines = []
 
@@ -59,8 +59,8 @@ def generate_normal_lines(
         x = radius * np.cos(angle)
         y = radius * np.sin(angle)
 
-        start = Coordinates(x, y, 0.0)
-        normal = Coordinates(
+        start = Coordinate3D(x, y, 0.0)
+        normal = Coordinate3D(
             np.cos(angle),
             np.sin(angle),
             0.0,

@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from molib.pdb.coordinate.coordinate import Coordinates
+from molib.pdb.coordinate.coordinate import Coordinate3D
 from picogl.backend.gl.enums.legacy.scale import gl_translate_f
 from picogl.core.vec3 import Vec3
 from picogl.core.zoom.scale import gl_scale_by_zoom
@@ -14,7 +14,7 @@ class GLViewTransform:
     zoom: float
     rotation: Vec3
     scale: float = 20.0
-    origin: Coordinates = field(default_factory=lambda: Coordinates(0.5, 0.5, 0.5))
+    origin: Coordinate3D = field(default_factory=lambda: Coordinate3D(0.5, 0.5, 0.5))
     axes: Axes = field(default_factory=lambda: Axes())
 
     def apply(self) -> None:

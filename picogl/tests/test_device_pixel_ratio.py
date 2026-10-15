@@ -8,21 +8,26 @@ import pytest
 
 from picogl.backend.gl.api import dpr as dpr_module
 from picogl.backend.gl.enums.frame import GLFrameBufferObjectType
+from picoui.dimensions import Dimensions
+
+
+def _size(width: int, height: int) -> Dimensions:
+    return Dimensions(width=width, height=height)
 
 
 @patch.object(dpr_module, "framebuffer_attachment_size", return_value=(800, 600))
 def test_device_pixel_ratio_averages_axes(_mock_size):
-    assert dpr_module.device_pixel_ratio(400, 300) == pytest.approx(2.0)
+    assert dpr_module.device_pixel_ratio(_size(400, 300)) == pytest.approx(2.0)
 
 
 @patch.object(dpr_module, "framebuffer_attachment_size", return_value=None)
 def test_device_pixel_ratio_returns_one_when_unsupported(_mock_size):
-    assert dpr_module.device_pixel_ratio(400, 300) == pytest.approx(1.0)
+    assert dpr_module.device_pixel_ratio(_size(400, 300)) == pytest.approx(1.0)
 
 
 def test_device_pixel_ratio_returns_one_for_empty_logical_size():
-    assert dpr_module.device_pixel_ratio(0, 300) == pytest.approx(1.0)
-    assert dpr_module.device_pixel_ratio(400, 0) == pytest.approx(1.0)
+    assert dpr_module.device_pixel_ratio(_size(0, 300)) == pytest.approx(1.0)
+    assert dpr_module.device_pixel_ratio(_size(400, 0)) == pytest.approx(1.0)
 
 
 @patch.object(dpr_module, "gl_get_tex_level_parameteriv", side_effect=[800, 600])

@@ -8,6 +8,7 @@ import platform
 from typing import Union
 
 from decologr import Decologr as log
+from molib.pdb.coordinate.coordinate import Coordinate2D
 
 from picogl.backend.gl.api.framebuffer.parameter import (
     gl_bind_renderbuffer,
@@ -30,6 +31,7 @@ from picogl.backend.gl.enums.target.renderbuffer import (
 )
 from picogl.texture.gltexlevel import GLTexLevelParameter
 from picogl.texture.gltexture import GLTexture
+from picoui.dimensions import Dimensions
 
 
 def get_dpr() -> int:
@@ -110,8 +112,7 @@ def _gl_get_framebuffer_parameter(attachment: GLFrameBufferAttachment,
 
 
 def device_pixel_ratio(
-        logical_width: int,
-        logical_height: int,
+        logical_size: Dimensions,
         *,
         target: GLFrameBufferTarget = GLFrameBufferTarget.FRAMEBUFFER,
         attachment: GLFrameBufferAttachment = GLFrameBufferAttachment.COLOR0,
@@ -120,12 +121,14 @@ def device_pixel_ratio(
 
     Must be called while an OpenGL context is current.
 
-    :param logical_width: Widget width in logical (CSS / Qt) pixels.
-    :param logical_height: Widget height in logical pixels.
+    :param logical_size: Widget size in logical (CSS / Qt) pixels
+        (``logical_size.width`` / ``logical_size.height``).
     :param target: Framebuffer target to query.
     :param attachment: Color attachment point to measure.
     :returns: Average of width and height scale factors, or ``1.0`` on failure.
     """
+    logical_width = int(logical_size.width)
+    logical_height = int(logical_size.height)
     if logical_width <= 0 or logical_height <= 0:
         return 1.0
 
@@ -139,12 +142,13 @@ def device_pixel_ratio(
 
     scale_x = framebuffer_width / logical_width
     scale_y = framebuffer_height / logical_height
+    effective = Coordinate2D(x=scale_x, y=scale_y)
 
     log.message(
         f"Framebuffer={framebuffer_width}x{framebuffer_height}, "
         f"logical={logical_width}x{logical_height}, "
-        f"effective scale=({scale_x:.4f}, {scale_y:.4f})",
+        f"effective scale=({effective.x:.4f}, {effective.y:.4f})",
         silent=True,
     )
 
-    return (scale_x + scale_y) / 2.0
+    return (effective.x + effective.y) / 2.0

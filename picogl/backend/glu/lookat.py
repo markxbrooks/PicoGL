@@ -9,7 +9,7 @@ x, y, and z attributes.
 from collections.abc import Sequence
 from typing import Any, Protocol, Union
 
-from molib.pdb.coordinate.coordinate import Coordinates
+from molib.pdb.coordinate.coordinate import Coordinate3D
 from OpenGL.raw.GLU import gluLookAt
 
 
@@ -21,10 +21,10 @@ class SupportsXYZ(Protocol):
     z: float
 
 
-def _to_xyz(v: Coordinates | Sequence[float] | Any) -> tuple[float, float, float]:
+def _to_xyz(v: Coordinate3D | Sequence[float] | Any) -> tuple[float, float, float]:
     """Return *v* as an ``(x, y, z)`` tuple."""
 
-    if isinstance(v, Coordinates):
+    if isinstance(v, Coordinate3D):
         return v.x, v.y, v.z
 
     # Sequence-like (tuple, list, numpy array)
@@ -60,9 +60,9 @@ def glu_look_at(
 
 
 def glu_look_at_coords(
-    eye: Union[Coordinates, Sequence[float], Any],
-    center: Union[Coordinates, Sequence[float], Any],
-    up: Union[Coordinates, Sequence[float], Any],
+    eye: Union[Coordinate3D, Sequence[float], Any],
+    center: Union[Coordinate3D, Sequence[float], Any],
+    up: Union[Coordinate3D, Sequence[float], Any],
 ) -> None:
     """Preferred API: pass three Coordinates (or 3-element sequences / objects with x,y,z)."""
     ex, ey, ez = _to_xyz(eye)

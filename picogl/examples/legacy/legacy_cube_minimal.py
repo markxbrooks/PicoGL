@@ -33,7 +33,7 @@ if sys.platform.startswith("linux"):
 
 import numpy as np
 import picogl.ui.backend.glut.prefer_glut_platform  # noqa: F401
-from molib.pdb.coordinate.coordinate import Coordinates
+from molib.pdb.coordinate.coordinate import Coordinate3D
 from picogl.backend.gl.api.color import gl_color_rgb
 from picogl.backend.gl.api.vertex.vertex_3f import gl_vertex_coord, gl_vertex_line
 from picogl.backend.gl.capability import GLFixedFunctionCapability
@@ -93,7 +93,7 @@ class MinimalCubeRenderer(LegacyRenderer):
                     color = self.get_color(vertex_idx)
                     gl_color_rgb(RGBColor(color[0], color[1], color[2]))
                 vertex = self.vertices[vertex_idx]
-                gl_vertex_coord(Coordinates.from_array(vertex))
+                gl_vertex_coord(Coordinate3D.from_array(vertex))
 
     def get_color(self, vertex_idx: int) -> Sequence:
         """get color"""
@@ -118,8 +118,8 @@ class MinimalCubeRenderer(LegacyRenderer):
                     normal /= norm
                     center = (v1 + v2 + v3) / 3.0
                     endpoint = center + normal * 0.5
-                    coord_start = Coordinates.from_array(center)
-                    coord_end = Coordinates.from_array(endpoint)
+                    coord_start = Coordinate3D.from_array(center)
+                    coord_end = Coordinate3D.from_array(endpoint)
                     gl_vertex_line(coord_end, coord_start)
 
     def handle_key(self, key: bytes) -> None:

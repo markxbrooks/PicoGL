@@ -1,6 +1,6 @@
 from typing import Sequence
 
-from molib.pdb.coordinate.coordinate import Coordinates
+from molib.pdb.coordinate.coordinate import Coordinate3D
 from picogl.backend.gl.api.legacy.vertex import gl_vertex_vec3
 from picogl.backend.gl.api.vertex.normal_3f import gl_normal_vec3
 from picogl.backend.gl.api.vertex.vertex_3f import gl_vertex_line
@@ -9,10 +9,10 @@ from picogl.core.vec3 import Vec3
 Point3 = Vec3 | Sequence[float]
 
 
-def _point_to_coordinates(point: Point3) -> Coordinates:
+def _point_to_coordinates(point: Point3) -> Coordinate3D:
     if isinstance(point, Vec3):
-        return Coordinates(point.x, point.y, point.z)
-    return Coordinates.from_array(point)
+        return Coordinate3D(point.x, point.y, point.z)
+    return Coordinate3D.from_array(point)
 
 
 def gl_legacy_draw_line(pos1: Point3, pos2: Point3) -> None:
