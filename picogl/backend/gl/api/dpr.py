@@ -140,13 +140,13 @@ def device_pixel_ratio(
     if framebuffer_width <= 0 or framebuffer_height <= 0:
         return 1.0
 
-    scale_x = framebuffer_width / logical_width
-    scale_y = framebuffer_height / logical_height
+    scale_x = framebuffer_width / logical_size.width
+    scale_y = framebuffer_height / logical_size.height
     effective = Coordinate2D(x=scale_x, y=scale_y)
 
     log.message(
         f"Framebuffer={framebuffer_width}x{framebuffer_height}, "
-        f"logical={logical_width}x{logical_height}, "
+        f"logical={logical_size.width}x{logical_size.height}, "
         f"effective scale=({effective.x:.4f}, {effective.y:.4f})",
         silent=True,
     )
