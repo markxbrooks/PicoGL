@@ -24,10 +24,9 @@ def gl_context_available() -> bool:
             from PySide6.QtGui import QOpenGLContext
 
             ctx = QOpenGLContext.currentContext()
-            if ctx is not None and ctx.isValid():
-                return True
+            return bool(ctx is not None and ctx.isValid())
         except Exception:
-            pass
+            return False
     try:
         return gl.glGetString(gl.GL_VERSION) is not None
     except Exception:

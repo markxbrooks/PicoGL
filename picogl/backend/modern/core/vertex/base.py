@@ -37,7 +37,7 @@ import ctypes
 import numpy as np
 from OpenGL import error as _gl_err
 from picogl.backend.gl.api import gl_bind_buffer, gl_buffer_data
-from picogl.backend.gl.api.buffer.check_is import gl_is_buffer
+from picogl.backend.gl.api.buffer.check_is import buffer_name
 from picogl.backend.gl.api.buffer.subdata import gl_buffer_subdata
 from picogl.backend.gl.api.vertex.attrib_pointer import gl_vertex_attrib_pointer
 from picogl.backend.gl.api.vertex.enable_array import gl_enable_vertex_array
@@ -92,12 +92,16 @@ class VertexBuffer(VertexBase):
     # ----------------------------
     def bind(self) -> None:
         """Bind this buffer."""
-        gl_bind_buffer(self.target, self.handle)
+        gl_bind_buffer(self.target, buffer_name(self.handle))
 
     def unbind(self) -> None:
-        """Unbind this buffer, ensuring the handle is valid."""
-        if not gl_is_buffer(self.handle):
-            raise RuntimeError(f"Invalid buffer handle: {self.handle}")
+        """Release this buffer target.
+
+        ``glBindBuffer(target, 0)`` does not need the previous name. Raising
+        when ``glIsBuffer`` is false aborts the draw that is leaving its
+        ``with`` block, which is how a stale or array handle shows up as
+        ``Invalid buffer handle`` for atoms, ribbons, and selections.
+        """
         gl_bind_buffer(self.target, 0)
 
     def update(self, data: np.ndarray):

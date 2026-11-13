@@ -7,8 +7,10 @@ import ctypes
 import numpy as np
 from OpenGL.raw.GL.VERSION.GL_1_5 import glBufferSubData
 from picogl.backend.gl.api import gl_buffer_data
+from picogl.backend.gl.api.buffer.check_is import buffer_name
 from picogl.backend.gl.api.buffer.generate import gl_generate_buffers
 from picogl.backend.gl.enums import GLBufferTarget, GLNumeric, GLUsageHint
+from picogl.backend.modern.core.shader.context import require_gl_context
 from picogl.backend.modern.core.vertex.base import VertexBuffer
 
 
@@ -28,8 +30,14 @@ class LegacyVBO(VertexBuffer):
     ):
         self.nbytes = None
         self.components = size
+        # glGenBuffers with no current context returns 0 and the following
+        # unbind used to raise "Invalid buffer handle: 0".
+        require_gl_context("Legacy buffer upload")
         if handle is None:
             handle = gl_generate_buffers(1)
+        handle = buffer_name(handle)
+        if handle <= 0:
+            raise RuntimeError("OpenGL buffer name was 0")
 
         super().__init__(
             handle=handle,

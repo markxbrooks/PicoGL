@@ -15,12 +15,21 @@ from typing import Any
 
 from OpenGL.GL import glGenBuffers
 
+from picogl.backend.gl.api.buffer.check_is import buffer_name
+
 
 def gl_generate_buffers(num: int = 1) -> Any:
-    """
-    gl_generate_buffers
+    """Generate buffer object names.
 
-    :param num: int
+    A request for one name returns a Python ``int``. ``glGenBuffers(1)``
+    otherwise returns a length-1 array, which ``glIsBuffer`` does not accept
+    as a buffer name.
+
+    :param num: How many names to generate
+    :return: One buffer name, or the array of names when *num* is greater than 1
     """
     assert num > 0
-    return glGenBuffers(num)
+    names = glGenBuffers(num)
+    if num == 1:
+        return buffer_name(names)
+    return names

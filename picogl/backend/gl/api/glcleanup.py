@@ -110,9 +110,12 @@ def gl_delete_buffer_object(buffer: Optional["VertexBuffer"]) -> None:
     if callable(release_vao) and hasattr(buffer, "handle"):
         gl_release_vertex_array_object(buffer)
         return
-    handle = getattr(buffer, "handle", buffer)
-    if handle is not None and int(handle) > 0:
-        glDeleteBuffers(1, [int(handle)])
+    from picogl.backend.gl.api.buffer.check_is import buffer_name, gl_is_buffer
+
+    name = buffer_name(getattr(buffer, "handle", buffer))
+    if name <= 0 or not gl_is_buffer(name):
+        return
+    glDeleteBuffers(1, [name])
 
 
 def gl_delete_buffers(buffer: Optional[int]) -> None:
