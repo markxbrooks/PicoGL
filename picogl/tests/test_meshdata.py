@@ -112,6 +112,17 @@ class TestMeshData(unittest.TestCase):
         expected_vertex_count = len(self.test_vertices.flatten()) // 3
         self.assertEqual(mesh.vertex_count, expected_vertex_count)
 
+    def test_faces_alias_and_log_contents(self):
+        """``faces`` is derived from ``indices``; log_contents must not raise."""
+        mesh = MeshData(
+            vertices=self.test_vertices,
+            indices=self.test_indices,
+        )
+        faces = mesh.faces
+        self.assertEqual(faces.shape, (2, 3))
+        np.testing.assert_array_equal(faces.reshape(-1), self.test_indices)
+        mesh.log_contents()
+
     def test_initialization_with_minimal_data(self):
         """Test MeshData initialization with only vertices."""
         mesh = MeshData(vertices=self.test_vertices)

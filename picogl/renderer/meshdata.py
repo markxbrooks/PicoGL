@@ -137,10 +137,44 @@ class MeshData:
                 index_count=index_count,
             )
 
-    def log_contents(self):
-        """log contents of mesh data"""
+    @property
+    def faces(self) -> Optional[np.ndarray]:
+        """Triangle faces derived from :attr:`indices`.
+
+        PicoGL stores the element buffer on ``indices``. Callers that still
+        say ``faces`` get that buffer, reshaped to ``(M, 3)`` when the
+        length is a multiple of 3.
+
+        :return: Face array, or ``None`` when there is no index buffer
+        """
+        indices = self.indices
+        if indices is None:
+            return None
+        arr = np.asarray(indices)
+        if arr.size == 0:
+            return arr.reshape(0, 3) if arr.ndim <= 1 else arr
+        if arr.ndim == 2:
+            return arr
+        if arr.size % 3 == 0:
+            return arr.reshape(-1, 3)
+        return arr
+
+    @faces.setter
+    def faces(self, value: Optional[np.ndarray]) -> None:
+        """Store triangle faces on :attr:`indices`.
+
+        :param value: Face array, or ``None`` to clear indices
+        """
+        if value is None:
+            self.indices = None
+            return
+        self.indices = np.asarray(value)
+
+    def log_contents(self) -> None:
+        """Log vertex and triangle counts from vertices/indices."""
         n_vert = 0 if self.vertices is None else len(self.vertices)
-        n_face = 0 if self.faces is None else len(self.faces)
+        faces = self.faces
+        n_face = 0 if faces is None else len(faces)
         log.message(f"mesh extracted: {n_vert} vertices, {n_face} faces ")
 
     @classmethod
